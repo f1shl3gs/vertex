@@ -4,7 +4,8 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::{configurable_component, Configurable};
-use event::log::Value;
+use event::log::path::parse_target_path;
+use event::log::{OwnedTargetPath, Value};
 use event::{Events, LogRecord};
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
@@ -40,7 +41,7 @@ struct Config {
     match_type: MatchType,
 
     #[serde(default, with = "serde_yaml::with::singleton_map")]
-    fields: Vec<String>,
+    fields: Vec<OwnedTargetPath>,
 }
 
 fn default_cache_config() -> NonZeroUsize {
@@ -54,9 +55,9 @@ impl TransformConfig for Config {
         let cache = Arc::new(Mutex::new(LruCache::new(self.cache)));
         let fields = if self.fields.is_empty() {
             vec![
-                log_schema().timestamp_key().into(),
-                log_schema().host_key().into(),
-                log_schema().message_key().into(),
+                log_schema().timestamp_key().clone(),
+                log_schema().host_key().clone(),
+                log_schema().message_key().clone(),
             ]
         } else {
             self.fields.clone()
@@ -87,7 +88,7 @@ const fn type_id_for_value(value: &Value) -> TypeId {
     match value {
         Value::Bytes(_) => 1,
         Value::Float(_) => 2,
-        Value::Int64(_) => 3,
+        Value::Integer(_) => 3,
         Value::Boolean(_) => 4,
         Value::Array(_) => 5,
         Value::Object(_) => 6,
@@ -128,7 +129,7 @@ enum CacheEntry {
 struct Dedup {
     cache: Arc<Mutex<LruCache<CacheEntry, bool>>>,
     match_type: MatchType,
-    fields: Vec<String>,
+    fields: Vec<OwnedTargetPath>,
 }
 
 impl Dedup {
@@ -141,7 +142,7 @@ impl Dedup {
                 let mut entry = Vec::new();
 
                 for field_name in self.fields.iter() {
-                    if let Some(value) = log.get_field(field_name.as_str()) {
+                    if let Some(value) = log.get_field(field_name) {
                         entry.push(Some((type_id_for_value(value), value.coerce_to_bytes())));
                     } else {
                         entry.push(None);
@@ -156,8 +157,14 @@ impl Dedup {
 
                 if let Some(all_fields) = log.all_fields() {
                     for (name, value) in all_fields {
-                        if !self.fields.contains(&name) {
-                            entry.push((name, type_id_for_value(value), value.coerce_to_bytes()));
+                        if let Ok(path) = parse_target_path(name.as_str()) {
+                            if !self.fields.contains(&path) {
+                                entry.push((
+                                    name,
+                                    type_id_for_value(value),
+                                    value.coerce_to_bytes(),
+                                ));
+                            }
                         }
                     }
                 }
@@ -203,6 +210,11 @@ mod tests {
             NonZeroUsize::try_from(size).unwrap(),
         )));
 
+        let fields = fields
+            .iter()
+            .map(|f| parse_target_path(f).unwrap())
+            .collect();
+
         Dedup {
             cache,
             fields,
@@ -212,21 +224,21 @@ mod tests {
 
     fn basic(mut transform: Dedup) {
         let event1 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => "some value",
             "unmatched" => "another value",
         ));
 
         // Test that unmatched field isn't considered
         let event2 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => "some value2",
             "unmatched" => "another value",
         ));
 
         // Test that matched field is considered
         let event3 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => "some value",
             "unmatched" => "another value2",
         ));
@@ -252,8 +264,11 @@ mod tests {
 
     fn make_ignore_transform(size: usize, given_fields: Vec<String>) -> Dedup {
         // "message" and "timestamp" are added automatically to all Events
-        let mut fields = vec!["message".into(), "timestamp".into()];
-        fields.extend(given_fields);
+        let mut fields = vec![
+            parse_target_path("message").unwrap(),
+            parse_target_path("timestamp").unwrap(),
+        ];
+        fields.extend(given_fields.iter().map(|f| parse_target_path(f).unwrap()));
 
         let cache = Arc::new(Mutex::new(LruCache::new(
             NonZeroUsize::try_from(size).unwrap(),
@@ -268,11 +283,11 @@ mod tests {
 
     fn field_name_matters(mut transform: Dedup) {
         let event1 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched1" => "some value"
         ));
         let event2 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched2" => "some value",
         ));
 
@@ -297,14 +312,14 @@ mod tests {
     /// two.
     fn field_order_irrelevant(mut transform: Dedup) {
         let event1 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched1" => "value1",
             "matched2" => "value2",
         ));
 
         // Add fields in opposite order
         let event2 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched2" => "value2",
             "matched1" => "value1",
         ));
@@ -327,11 +342,11 @@ mod tests {
     // Test the eviction behavior of the underlying LruCache
     fn age_out(mut transform: Dedup) {
         let event1 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => "some value",
         ));
         let event2 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => "some value2",
         ));
 
@@ -361,11 +376,11 @@ mod tests {
     // but the same string representation aren't considered duplicates.
     fn type_matching(mut transform: Dedup) {
         let event1 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => "123",
         ));
         let event2 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => 123
         ));
 
@@ -396,13 +411,13 @@ mod tests {
     // aren't considered duplicates.
     fn type_matching_nested_objects(mut transform: Dedup) {
         let event1 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => fields!(
                 "key" => "123"
             )
         ));
         let event2 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => fields!(
                 "key" => 123
             )
@@ -432,7 +447,7 @@ mod tests {
 
     fn ignore_vs_missing(mut transform: Dedup) {
         let event1 = Event::from(fields!(
-            log_schema().message_key() => "message",
+            log_schema().message_key().to_string() => "message",
             "matched" => Value::Null,
         ));
         let event2 = Event::from("message");

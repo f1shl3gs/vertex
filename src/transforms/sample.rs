@@ -61,6 +61,7 @@ impl Sample {
             0x6fe2e5aaf078ebc9,
             0x14f994a4c5259381,
         );
+
         Self {
             rate,
             count: 0,
@@ -137,7 +138,7 @@ mod tests {
 
         for rate in [2, 5, 10, 20, 50, 100] {
             let events = random_events(num);
-            let mut sampler = Sample::new(rate, Some(log_schema().message_key().into()));
+            let mut sampler = Sample::new(rate, Some(log_schema().message_key().to_string()));
             let passed = events
                 .into_iter()
                 .filter_map(|event| {
@@ -155,7 +156,7 @@ mod tests {
     #[test]
     fn hash_consistently_samples_the_same_events() {
         let events = random_events(1000);
-        let mut sampler = Sample::new(2, Some(log_schema().message_key().into()));
+        let mut sampler = Sample::new(2, Some(log_schema().message_key().to_string()));
 
         let first_run = events
             .clone()

@@ -10,7 +10,7 @@ impl fmt::Display for Value {
         match self {
             Self::Bytes(b) => write!(
                 f,
-                "\"{}\"",
+                r#""{}""#,
                 String::from_utf8_lossy(b)
                     .replace('\\', r"\\")
                     .replace('"', r#"\""#)

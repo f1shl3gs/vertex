@@ -3,11 +3,12 @@ mod lexer;
 
 use std::str::FromStr;
 
-use crate::Error;
 use event::LogRecord;
 use field::{FieldExpr, FieldOp, OrderingOp};
 use lexer::Lexer;
-use lookup::parse_path;
+use value::path::parse_target_path;
+
+use crate::Error;
 
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, PartialEq)]
@@ -137,10 +138,11 @@ impl<'a> Parser<'a> {
             }
         };
 
-        Ok(Expression::Field(FieldExpr {
-            lhs: parse_path(var.strip_prefix('.').unwrap()),
-            op,
-        }))
+        let lhs = parse_target_path(var).map_err(|_err| Error::InvalidPath {
+            path: var.to_string(),
+        })?;
+
+        Ok(Expression::Field(FieldExpr { lhs, op }))
     }
 
     fn term(&mut self) -> Result<Expression, Error> {
@@ -202,8 +204,9 @@ impl<'a> Parser<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use event::{fields, tags};
+
+    use super::*;
 
     #[test]
     fn test_eval() {
@@ -240,10 +243,10 @@ mod tests {
                 ".message contains abc && ( .upper >= 8 && .lower == 0 )",
                 Ok(false),
             ),
-            (".abc contains abc", Err(Error::MissingField("abc".into()))),
+            (".abc contains abc", Err(Error::MissingField(".abc".into()))),
             (
                 ".message contains info && .abc < 8",
-                Err(Error::MissingField("abc".into())),
+                Err(Error::MissingField(".abc".into())),
             ),
         ];
 
@@ -266,12 +269,18 @@ mod tests {
 
     #[test]
     fn parse() {
+        let foo = parse_target_path(".foo").unwrap();
+        let bar = parse_target_path(".bar").unwrap();
+        let message = parse_target_path(".message").unwrap();
+        let upper = parse_target_path(".upper").unwrap();
+        let lower = parse_target_path(".lower").unwrap();
+
         let tests = [
             // Ordering
             (
                 ".foo lt 10.1",
                 Ok(Expression::Field(FieldExpr {
-                    lhs: "foo".into(),
+                    lhs: foo.clone(),
                     op: FieldOp::Ordering {
                         op: OrderingOp::LessThan,
                         rhs: 10.1,
@@ -283,7 +292,7 @@ mod tests {
                 Ok(Expression::Binary {
                     op: CombiningOp::And,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: "foo".into(),
+                        lhs: foo.clone(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::LessThan,
                             rhs: 10.0,
@@ -291,7 +300,7 @@ mod tests {
                     })
                     .boxed(),
                     rhs: Expression::Field(FieldExpr {
-                        lhs: "bar".into(),
+                        lhs: bar.clone(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::GreaterThan,
                             rhs: 2.0,
@@ -305,7 +314,7 @@ mod tests {
                 Ok(Expression::Binary {
                     op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: "foo".into(),
+                        lhs: foo.clone(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::LessThan,
                             rhs: 10.0,
@@ -313,7 +322,7 @@ mod tests {
                     })
                     .boxed(),
                     rhs: Expression::Field(FieldExpr {
-                        lhs: "bar".into(),
+                        lhs: bar.clone(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::Equal,
                             rhs: 3.0,
@@ -327,12 +336,12 @@ mod tests {
                 Ok(Expression::Binary {
                     op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: "foo".into(),
+                        lhs: foo,
                         op: FieldOp::Contains("abc".into()),
                     })
                     .boxed(),
                     rhs: Expression::Field(FieldExpr {
-                        lhs: "bar".into(),
+                        lhs: bar,
                         op: FieldOp::Ordering {
                             op: OrderingOp::Equal,
                             rhs: 3.0,
@@ -346,14 +355,14 @@ mod tests {
                 Ok(Expression::Binary {
                     op: CombiningOp::And,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: "message".into(),
+                        lhs: message,
                         op: FieldOp::Contains("info".into()),
                     })
                     .boxed(),
                     rhs: Expression::Binary {
                         op: CombiningOp::Or,
                         lhs: Expression::Field(FieldExpr {
-                            lhs: "upper".into(),
+                            lhs: upper,
                             op: FieldOp::Ordering {
                                 op: OrderingOp::GreaterThan,
                                 rhs: 10.0,
@@ -361,7 +370,7 @@ mod tests {
                         })
                         .boxed(),
                         rhs: Expression::Field(FieldExpr {
-                            lhs: "lower".into(),
+                            lhs: lower,
                             op: FieldOp::Ordering {
                                 op: OrderingOp::LessThan,
                                 rhs: -1.0,

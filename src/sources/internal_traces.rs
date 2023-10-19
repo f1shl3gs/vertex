@@ -46,7 +46,7 @@ impl SourceConfig for Config {
                 let mut trace = Trace::new(
                     service.clone(),
                     tags!(
-                        log_schema().source_type_key() => "internal_traces"
+                        log_schema().source_type_key().to_string() => "internal_traces"
                     ),
                     spans,
                 );

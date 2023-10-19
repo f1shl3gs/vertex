@@ -149,6 +149,10 @@ pub fn configurable_component_impl(
         #maybe_description
         #input
 
+        impl #ident {
+            pub const NAME: &'static str = #name;
+        }
+
         impl #impl_generics ::configurable::NamedComponent for #ident #type_generics #where_clause {
             fn component_name(&self) -> &'static str {
                 #name

@@ -296,24 +296,24 @@ fn handle_events(
 fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<Bytes>) {
     let log = event.as_mut_log();
 
-    log.insert_field(log_schema().source_type_key(), "syslog");
+    log.insert(log_schema().source_type_key(), "syslog");
 
     if let Some(default_host) = &default_host {
-        log.insert_field("source_ip", default_host.clone());
+        log.insert("source_ip", default_host.clone());
     }
 
     let parsed_hostname = log
         .get_field("hostname")
-        .map(|hostname| hostname.as_bytes());
+        .map(|hostname| hostname.coerce_to_bytes());
     if let Some(parsed_host) = parsed_hostname.or(default_host) {
-        log.insert_field(host_key, parsed_host);
+        log.insert(host_key, parsed_host);
     }
 
     let timestamp = log
         .get_field("timestamp")
         .and_then(|timestamp| timestamp.as_timestamp().cloned())
         .unwrap_or_else(Utc::now);
-    log.insert_field(log_schema().timestamp_key(), timestamp);
+    log.insert(log_schema().timestamp_key(), timestamp);
 
     trace!(
         message = "Processing one event.",
@@ -433,29 +433,36 @@ address: 127.0.0.1:12345
             msg
         );
 
-        let log = LogRecord::from(fields!(
-            log_schema().message_key() => msg,
-            log_schema().timestamp_key() => Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
-            log_schema().source_type_key() => "syslog",
-            "host" => "74794bfb6795",
-            "hostname" => "74794bfb6795",
-            "meta" => fields!(
-                "sequenceId" => "1",
-                "sysUpTime" => "37",
-                "language" => "EN",
-            ),
-            "origin" => fields!(
-                "software" => "test",
-                "ip" => "192.168.0.1",
-            ),
-            "severity" => "notice",
-            "facility" => "user",
-            "version" => 1,
-            "appname" => "root",
-            "procid" => 8449,
-        ));
+        let want = {
+            let mut log = LogRecord::from(fields!(
+                "host" => "74794bfb6795",
+                "hostname" => "74794bfb6795",
+                "meta" => fields!(
+                    "sequenceId" => "1",
+                    "sysUpTime" => "37",
+                    "language" => "EN",
+                ),
+                "origin" => fields!(
+                    "software" => "test",
+                    "ip" => "192.168.0.1",
+                ),
+                "severity" => "notice",
+                "facility" => "user",
+                "version" => 1,
+                "appname" => "root",
+                "procid" => 8449,
+            ));
 
-        let want = Event::from(log);
+            log.insert(log_schema().message_key(), msg);
+            log.insert(
+                log_schema().timestamp_key(),
+                Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
+            );
+            log.insert(log_schema().source_type_key(), "syslog");
+
+            log.into()
+        };
+
         assert_event_data_eq!(event_from_bytes("host", None, raw.into()).unwrap(), want);
     }
 
@@ -468,19 +475,24 @@ address: 127.0.0.1:12345
         );
 
         let event = event_from_bytes("host", None, raw.into()).unwrap();
+        let want = {
+            let mut log = LogRecord::from(msg);
 
-        let want = Event::from(LogRecord::from(fields!(
-            log_schema().timestamp_key() => Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
-            log_schema().host_key() => "74794bfb6795",
-            log_schema().source_type_key() => "syslog",
-            "hostname" => "74794bfb6795",
-            "severity" => "notice",
-            "facility" => "user",
-            "version" => 1,
-            "appname" => "root",
-            "procid" => 8449,
-            log_schema().message_key() => msg,
-        )));
+            log.insert(
+                log_schema().timestamp_key(),
+                Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
+            );
+            log.insert(log_schema().host_key(), "74794bfb6795");
+            log.insert(log_schema().source_type_key(), "syslog");
+            log.insert("hostname", "74794bfb6795");
+            log.insert("severity", "notice");
+            log.insert("facility", "user");
+            log.insert("version", 1);
+            log.insert("appname", "root");
+            log.insert("procid", 8449);
+
+            Event::from(log)
+        };
 
         assert_event_data_eq!(event, want);
 
@@ -566,18 +578,22 @@ address: 127.0.0.1:12345
             .unwrap()
             .into();
 
-        let want: Event = LogRecord::from(fields!(
-            log_schema().timestamp_key() => date,
-            log_schema().host_key() => "74794bfb6795",
-            log_schema().source_type_key() => "syslog",
-            "hostname" => "74794bfb6795",
-            "severity" => "notice",
-            "facility" => "user",
-            "appname" => "root",
-            "procid" => 8539,
-            log_schema().message_key() => msg,
-        ))
-        .into();
+        let want = {
+            let mut log = LogRecord::from(fields!(
+                "hostname" => "74794bfb6795",
+                "severity" => "notice",
+                "facility" => "user",
+                "appname" => "root",
+                "procid" => 8539,
+            ));
+
+            log.insert(log_schema().timestamp_key(), date);
+            log.insert(log_schema().host_key(), "74794bfb6795");
+            log.insert(log_schema().source_type_key(), "syslog");
+            log.insert(log_schema().message_key(), msg);
+
+            log.into()
+        };
 
         assert_event_data_eq!(event, want);
     }
@@ -600,23 +616,27 @@ address: 127.0.0.1:12345
             .with_ymd_and_hms(year, 2, 13, 21, 31, 56)
             .unwrap()
             .into();
-        let want: Event = LogRecord::from(fields!(
-            log_schema().timestamp_key() => date,
-            log_schema().message_key() => msg,
-            log_schema().source_type_key() => "syslog",
-            "host" => "74794bfb6795",
-            "hostname" => "74794bfb6795",
-            "severity" => "info",
-            "facility" => "local7",
-            "appname" => "liblogging-stdlog",
-            "origin" => fields!(
-                "software" => "rsyslogd",
-                "swVersion" => "8.24.0",
-                "x-pid" => "8979",
-                "x-info" => "http://www.rsyslog.com",
-            )
-        ))
-        .into();
+
+        let want = {
+            let mut log = LogRecord::from(fields!(
+                "host" => "74794bfb6795",
+                "hostname" => "74794bfb6795",
+                "severity" => "info",
+                "facility" => "local7",
+                "appname" => "liblogging-stdlog",
+                "origin" => fields!(
+                    "software" => "rsyslogd",
+                    "swVersion" => "8.24.0",
+                    "x-pid" => "8979",
+                    "x-info" => "http://www.rsyslog.com",
+                )
+            ));
+
+            log.insert(log_schema().timestamp_key(), date);
+            log.insert(log_schema().message_key(), msg);
+            log.insert(log_schema().source_type_key(), "syslog");
+            log.into()
+        };
 
         assert_event_data_eq!(event, want);
     }
@@ -635,23 +655,27 @@ address: 127.0.0.1:12345
             .and_hms_micro_opt(21, 53, 30, 605_850)
             .unwrap();
 
-        let want: Event = LogRecord::from(fields!(
-            log_schema().timestamp_key() => Utc.from_utc_datetime(&dt),
-            log_schema().message_key() => msg,
-            log_schema().source_type_key() => "syslog",
-            "host" => "74794bfb6795",
-            "hostname" => "74794bfb6795",
-            "severity" => "info",
-            "facility" => "local7",
-            "appname" => "liblogging-stdlog",
-            "origin" => fields!(
-                "software" => "rsyslogd",
-                "swVersion" => "8.24.0",
-                "x-pid" => "9043",
-                "x-info" => "http://www.rsyslog.com",
-            )
-        ))
-        .into();
+        let want = {
+            let mut log = LogRecord::from(fields!(
+                "host" => "74794bfb6795",
+                "hostname" => "74794bfb6795",
+                "severity" => "info",
+                "facility" => "local7",
+                "appname" => "liblogging-stdlog",
+                "origin" => fields!(
+                    "software" => "rsyslogd",
+                    "swVersion" => "8.24.0",
+                    "x-pid" => "9043",
+                    "x-info" => "http://www.rsyslog.com",
+                )
+            ));
+
+            log.insert(log_schema().timestamp_key(), Utc.from_utc_datetime(&dt));
+            log.insert(log_schema().message_key(), msg);
+            log.insert(log_schema().source_type_key(), "syslog");
+
+            log.into()
+        };
 
         assert_event_data_eq!(event, want);
     }

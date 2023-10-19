@@ -1,3 +1,5 @@
+mod external;
+
 use std::collections::BTreeMap;
 
 use bytes::{Bytes, BytesMut};

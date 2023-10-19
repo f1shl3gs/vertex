@@ -3,9 +3,8 @@ use std::collections::BTreeMap;
 use bytes::Bytes;
 use chrono::{DateTime, Datelike, Utc};
 use event::log::Value;
-use event::{Event, LogRecord};
+use event::{event_path, Event, LogRecord};
 use log_schema::log_schema;
-use lookup::path;
 use smallvec::{smallvec, SmallVec};
 use syslog_loose::{IncompleteDate, Message, ProcId, Protocol, Variant};
 
@@ -47,40 +46,40 @@ fn convert(parsed: Message<&str>) -> LogRecord {
     let mut log = LogRecord::from(parsed.msg);
 
     if let Some(ts) = parsed.timestamp {
-        log.insert_field(log_schema().timestamp_key(), DateTime::<Utc>::from(ts));
+        log.insert(log_schema().timestamp_key(), DateTime::<Utc>::from(ts));
     }
 
     if let Some(host) = parsed.hostname {
-        log.insert_field("hostname", host.to_string());
+        log.insert(event_path!("hostname"), host.to_string());
     }
 
     if let Some(severity) = parsed.severity {
-        log.insert_field("severity", severity.as_str().to_owned());
+        log.insert(event_path!("severity"), severity.as_str().to_owned());
     }
 
     if let Some(facility) = parsed.facility {
-        log.insert_field("facility", facility.as_str().to_owned());
+        log.insert(event_path!("facility"), facility.as_str().to_owned());
     }
 
     if let Protocol::RFC5424(version) = parsed.protocol {
-        log.insert_field("version", version as i64);
+        log.insert(event_path!("version"), version as i64);
     }
 
     if let Some(app) = parsed.appname {
-        log.insert_field("appname", app.to_owned());
+        log.insert(event_path!("appname"), app.to_owned());
     }
 
     if let Some(msg_id) = parsed.msgid {
-        log.insert_field("msgid", msg_id.to_owned());
+        log.insert(event_path!("msgid"), msg_id.to_owned());
     }
 
     if let Some(procid) = parsed.procid {
         let value: Value = match procid {
-            ProcId::PID(pid) => pid.into(),
+            ProcId::PID(pid) => Value::Integer(pid as i64),
             ProcId::Name(name) => name.to_string().into(),
         };
 
-        log.insert_field("procid", value);
+        log.insert(event_path!("procid"), value);
     }
 
     for elmt in parsed.structured_data.into_iter() {
@@ -89,7 +88,7 @@ fn convert(parsed: Message<&str>) -> LogRecord {
             structured.insert(name.to_string(), value.into());
         }
 
-        log.insert_field(path!(elmt.id), structured);
+        log.insert(event_path!(elmt.id), structured);
     }
 
     log

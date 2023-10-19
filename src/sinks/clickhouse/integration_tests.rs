@@ -153,7 +153,7 @@ async fn insert_events() {
     let (mut input_event, mut receiver) = make_event();
     input_event
         .as_mut_log()
-        .insert_field("items", vec!["item1", "item2"]);
+        .insert("items", vec!["item1", "item2"]);
 
     run_and_assert_sink_compliance(
         sink,

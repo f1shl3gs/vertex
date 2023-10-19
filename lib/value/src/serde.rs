@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::fmt::Formatter;
 
@@ -7,6 +8,52 @@ use serde::de::{Error, MapAccess, SeqAccess};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::Value;
+
+impl Value {
+    /// Converts self into a Bytes, using JSON for Map/Array.
+    ///
+    /// # Panics
+    ///
+    /// If map or array serialization fails.
+    pub fn coerce_to_bytes(&self) -> Bytes {
+        match self {
+            Value::Bytes(b) => b.clone(),
+            Value::Float(f) => Bytes::from(f.to_string()),
+            Value::Integer(i) => Bytes::from(i.to_string()),
+            Value::Boolean(b) => if *b { "true" } else { "false" }.into(),
+            Value::Timestamp(ts) => timestamp_to_string(ts).into(),
+            Value::Object(map) => serde_json::to_vec(map)
+                .expect("Cannot serialize map")
+                .into(),
+            Value::Array(arr) => serde_json::to_vec(arr)
+                .expect("Cannot serialize array")
+                .into(),
+            Value::Null => "<null>".into(),
+        }
+    }
+
+    /// Converts self into a String representation, using JSON for Map/Array.
+    ///
+    /// # Panics
+    ///
+    /// If map or array serialization fails.
+    pub fn to_string_lossy(&self) -> Cow<'_, str> {
+        match self {
+            Value::Bytes(b) => String::from_utf8_lossy(b),
+            Value::Float(f) => f.to_string().into(),
+            Value::Integer(i) => i.to_string().into(),
+            Value::Boolean(b) => if *b { "true" } else { "false" }.into(),
+            Value::Timestamp(ts) => timestamp_to_string(ts).into(),
+            Value::Object(map) => serde_json::to_string(map)
+                .expect("Cannot serialize map")
+                .into(),
+            Value::Array(arr) => serde_json::to_string(arr)
+                .expect("Cannot  serialize array")
+                .into(),
+            Value::Null => "<null>".into(),
+        }
+    }
+}
 
 impl Serialize for Value {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

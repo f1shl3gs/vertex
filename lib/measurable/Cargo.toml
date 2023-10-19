@@ -6,3 +6,6 @@ publish = false
 
 [dependencies]
 bytes = { version = "1.5.0", default-features = false }
+
+# external
+value = { path = "../value" }

@@ -528,7 +528,7 @@ mod mock {
                 .iter()
                 .map(|line| {
                     let mut log = LogRecord::from(line.to_string());
-                    log.insert_field(log_schema().timestamp_key(), now);
+                    log.insert(log_schema().timestamp_key(), now);
                     log
                 })
                 .collect::<Vec<_>>();

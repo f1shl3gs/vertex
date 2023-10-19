@@ -213,7 +213,7 @@ impl FunctionTransform for Geoip {
                         error!(
                             message = "IP Address not parsed correctly",
                             %err,
-                            address = value,
+                            address = ?value,
                             internal_log_rate_limit = true
                         )
                     }
@@ -233,7 +233,7 @@ impl FunctionTransform for Geoip {
             };
 
             if let Ok(value) = json_value {
-                log.insert_field(self.target.as_str(), value);
+                log.insert(self.target.as_str(), value);
             }
         });
 

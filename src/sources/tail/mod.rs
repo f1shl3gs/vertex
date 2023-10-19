@@ -387,12 +387,12 @@ fn tail_source(
                 tags!(
                     &file_key => line.filename,
                     &host_key => &hostname,
-                    source_type_key => "tail"
+                    source_type_key.to_string() => "tail"
                 ),
                 fields!(
                     "message" => line.text,
                     "offset" => line.offset,
-                    timestamp_key =>  Utc::now()
+                    timestamp_key.to_string() =>  Utc::now()
                 ),
             );
 
@@ -857,6 +857,7 @@ mod tests {
                 log.get_field(log_schema().message_key())
                     .unwrap()
                     .to_string_lossy()
+                    .to_string()
             })
             .collect()
     }

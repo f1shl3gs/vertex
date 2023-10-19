@@ -50,7 +50,7 @@ impl KafkaSink {
             transformer,
             encoder,
             service: KafkaService::new(client, config.compression),
-            topic: Template::try_from(config.topic)?,
+            topic: Template::parse(&config.topic)?,
             key_field: config.key_field,
             batch_settings,
         })
@@ -84,7 +84,7 @@ pub async fn health_check(config: Config) -> crate::Result<()> {
         .build()
         .await?;
 
-    let topic = match Template::try_from(config.topic)?.render_string(&Event::from("")) {
+    let topic = match Template::parse(&config.topic)?.render_string(&Event::from("")) {
         Ok(topic) => Some(topic),
         Err(err) => {
             warn!(

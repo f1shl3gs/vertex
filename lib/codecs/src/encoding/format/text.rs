@@ -58,7 +58,7 @@ mod tests {
                 "log",
                 Event::from(fields!(
                     "foo" => "bar",
-                    log_schema().message_key() => "msg"
+                    log_schema().message_key().path.to_string() => "msg"
                 )),
                 "msg",
             ),

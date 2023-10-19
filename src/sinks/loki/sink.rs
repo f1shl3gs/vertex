@@ -349,10 +349,11 @@ mod tests {
 
         let mut event = Event::from("hello");
         let log = event.as_mut_log();
-        log.insert_field(log_schema().timestamp_key(), chrono::Utc::now());
+        log.insert(log_schema().timestamp_key(), chrono::Utc::now());
 
         let record = encoder.encode_event(event);
-        assert!(String::from_utf8_lossy(&record.event.event).contains(log_schema().timestamp_key()));
+        assert!(String::from_utf8_lossy(&record.event.event)
+            .contains(&log_schema().timestamp_key().path.to_string()));
         assert_eq!(record.labels.len(), 1);
         assert_eq!(
             record.labels[0],
@@ -384,11 +385,12 @@ mod tests {
 
         let mut event = Event::from("hello");
         let log = event.as_mut_log();
-        log.insert_field(log_schema().timestamp_key(), chrono::Utc::now());
-        log.insert_field("name", "k2");
-        log.insert_field("value", "v2");
+        log.insert(log_schema().timestamp_key(), chrono::Utc::now());
+        log.insert("name", "k2");
+        log.insert("value", "v2");
         let record = encoder.encode_event(event);
-        assert!(String::from_utf8_lossy(&record.event.event).contains(log_schema().timestamp_key()));
+        assert!(String::from_utf8_lossy(&record.event.event)
+            .contains(&log_schema().timestamp_key().path.to_string()));
         assert_eq!(record.labels.len(), 2);
         let labels: HashMap<String, String> = record.labels.into_iter().collect();
         assert_eq!(labels["k1"], "v1".to_string());
@@ -408,11 +410,10 @@ mod tests {
 
         let mut event = Event::from("hello");
         let log = event.as_mut_log();
-        log.insert_field(log_schema().timestamp_key(), chrono::Utc::now());
+        log.insert(log_schema().timestamp_key(), chrono::Utc::now());
         let record = encoder.encode_event(event);
-        assert!(
-            !String::from_utf8_lossy(&record.event.event).contains(log_schema().timestamp_key())
-        );
+        assert!(!String::from_utf8_lossy(&record.event.event)
+            .contains(&log_schema().timestamp_key().to_string()));
     }
 
     #[test]
@@ -438,8 +439,8 @@ mod tests {
 
         let mut event = Event::from("hello");
         let log = event.as_mut_log();
-        log.insert_field("name", "k2");
-        log.insert_field("value", "v2");
+        log.insert("name", "k2");
+        log.insert("value", "v2");
         let record = encoder.encode_event(event);
         assert!(!String::from_utf8_lossy(&record.event.event).contains("value"));
     }
@@ -467,7 +468,7 @@ mod tests {
                     base + chrono::Duration::seconds(i as i64)
                 };
 
-                log.insert_field(log_schema().timestamp_key(), ts);
+                log.insert(log_schema().timestamp_key(), ts);
                 event
             })
             .collect::<Vec<_>>();

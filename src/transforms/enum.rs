@@ -69,7 +69,7 @@ impl Serialize for Value {
 impl From<&Value> for event::log::Value {
     fn from(value: &Value) -> Self {
         match value {
-            Value::Integer(i) => event::log::Value::Int64(*i),
+            Value::Integer(i) => event::log::Value::Integer(*i),
             Value::Float(f) => event::log::Value::Float(*f),
             Value::String(s) => event::log::Value::Bytes(Bytes::from(s.to_owned())),
             Value::Bool(b) => event::log::Value::Boolean(*b),
@@ -157,7 +157,7 @@ impl FunctionTransform for Enum {
             if let Some(got) = log.get_field(self.source.as_str()) {
                 for MappingItem { key, value } in &self.mapping {
                     let equal = match (key, got) {
-                        (Value::Integer(ai), event::log::Value::Int64(bi)) => ai == bi,
+                        (Value::Integer(ai), event::log::Value::Integer(bi)) => ai == bi,
                         (Value::Float(af), event::log::Value::Float(bf)) => af == bf,
                         (Value::String(astr), event::log::Value::Bytes(bs)) => astr == bs,
                         (Value::Bool(ab), event::log::Value::Boolean(bb)) => ab == bb,
@@ -166,7 +166,7 @@ impl FunctionTransform for Enum {
 
                     if equal {
                         let n: event::log::Value = From::from(value);
-                        log.insert_field(self.target.as_str(), n);
+                        log.insert(self.target.as_str(), n);
                         return;
                     }
                 }

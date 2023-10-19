@@ -30,6 +30,9 @@ pub enum Error {
         token: String,
         err: regex::Error,
     },
+    InvalidPath {
+        path: String,
+    },
 
     // Eval errors
     MissingField(String),
@@ -51,6 +54,9 @@ impl Display for Error {
             }
             Error::InvalidRegex { pos, token, err } => {
                 write!(f, "invalid regex \"{}\" at {}, err: {}", token, pos, err)
+            }
+            Error::InvalidPath { path } => {
+                write!(f, "invalid path \"{}\"", path)
             }
             Error::MissingField(field) => write!(f, "filed \"{}\" is not found", field),
         }

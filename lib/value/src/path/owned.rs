@@ -1,13 +1,12 @@
 use std::fmt::{Debug, Display, Formatter};
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use super::PathPrefix;
-use super::{parse_target_path, parse_value_path, BorrowedSegment, PathParseError, ValuePath};
+use super::{parse_target_path, parse_value_path};
+use super::{BorrowedSegment, PathParseError, PathPrefix, ValuePath};
 
 /// A lookup path.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-#[serde(try_from = "String", into = "String")]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct OwnedValuePath {
     pub segments: Vec<OwnedSegment>,
 }
@@ -115,6 +114,115 @@ impl OwnedValuePath {
     }
 }
 
+impl Display for OwnedValuePath {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", String::from(self.clone()))
+    }
+}
+
+impl TryFrom<String> for OwnedValuePath {
+    type Error = PathParseError;
+
+    fn try_from(src: String) -> Result<Self, Self::Error> {
+        parse_value_path(&src).map_err(|_| PathParseError::InvalidPathSyntax {
+            path: src.to_owned(),
+        })
+    }
+}
+
+impl From<OwnedValuePath> for String {
+    fn from(owned: OwnedValuePath) -> Self {
+        let mut coalesce_i = 0;
+        owned
+            .segments
+            .iter()
+            .enumerate()
+            .map(|(i, segment)| match segment {
+                OwnedSegment::Field(field) => {
+                    serialize_field(field.as_ref(), (i != 0).then_some("."))
+                }
+                OwnedSegment::Index(index) => format!("[{}]", index),
+                OwnedSegment::Coalesce(fields) => {
+                    let mut output = String::new();
+                    let (last, fields) = fields.split_last().expect("coalesce must not be empty");
+                    for field in fields {
+                        let field_output = serialize_field(
+                            field.as_ref(),
+                            Some(if coalesce_i == 0 {
+                                if i == 0 {
+                                    "("
+                                } else {
+                                    ".("
+                                }
+                            } else {
+                                "|"
+                            }),
+                        );
+                        coalesce_i += 1;
+                        output.push_str(&field_output);
+                    }
+                    output += &serialize_field(last.as_ref(), (coalesce_i != 0).then_some("|"));
+                    output += ")";
+                    output
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("")
+    }
+}
+
+impl From<Vec<OwnedSegment>> for OwnedValuePath {
+    fn from(segments: Vec<OwnedSegment>) -> Self {
+        Self { segments }
+    }
+}
+
+impl Serialize for OwnedValuePath {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(self.to_string().as_str())
+    }
+}
+
+impl<'de> Deserialize<'de> for OwnedValuePath {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct PathVisitor;
+        impl<'de> serde::de::Visitor<'de> for PathVisitor {
+            type Value = OwnedValuePath;
+
+            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                formatter.write_str("string is expected")
+            }
+
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                parse_value_path(v).map_err(|_err| {
+                    serde::de::Error::invalid_value(
+                        serde::de::Unexpected::Str(v),
+                        &"valid event ValuePath",
+                    )
+                })
+            }
+
+            fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                self.visit_str(&v)
+            }
+        }
+
+        deserializer.deserialize_str(PathVisitor)
+    }
+}
+
 /// An owned path that contains a target (pointing to either an Event or Metadata)
 #[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
@@ -199,22 +307,6 @@ impl From<OwnedTargetPath> for String {
     }
 }
 
-impl Display for OwnedValuePath {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", String::from(self.clone()))
-    }
-}
-
-impl TryFrom<String> for OwnedValuePath {
-    type Error = PathParseError;
-
-    fn try_from(src: String) -> Result<Self, Self::Error> {
-        parse_value_path(&src).map_err(|_| PathParseError::InvalidPathSyntax {
-            path: src.to_owned(),
-        })
-    }
-}
-
 impl TryFrom<String> for OwnedTargetPath {
     type Error = PathParseError;
 
@@ -222,47 +314,6 @@ impl TryFrom<String> for OwnedTargetPath {
         parse_target_path(&src).map_err(|_| PathParseError::InvalidPathSyntax {
             path: src.to_owned(),
         })
-    }
-}
-
-impl From<OwnedValuePath> for String {
-    fn from(owned: OwnedValuePath) -> Self {
-        let mut coalesce_i = 0;
-        owned
-            .segments
-            .iter()
-            .enumerate()
-            .map(|(i, segment)| match segment {
-                OwnedSegment::Field(field) => {
-                    serialize_field(field.as_ref(), (i != 0).then_some("."))
-                }
-                OwnedSegment::Index(index) => format!("[{}]", index),
-                OwnedSegment::Coalesce(fields) => {
-                    let mut output = String::new();
-                    let (last, fields) = fields.split_last().expect("coalesce must not be empty");
-                    for field in fields {
-                        let field_output = serialize_field(
-                            field.as_ref(),
-                            Some(if coalesce_i == 0 {
-                                if i == 0 {
-                                    "("
-                                } else {
-                                    ".("
-                                }
-                            } else {
-                                "|"
-                            }),
-                        );
-                        coalesce_i += 1;
-                        output.push_str(&field_output);
-                    }
-                    output += &serialize_field(last.as_ref(), (coalesce_i != 0).then_some("|"));
-                    output += ")";
-                    output
-                }
-            })
-            .collect::<Vec<_>>()
-            .join("")
     }
 }
 
@@ -292,12 +343,6 @@ fn serialize_field(field: &str, separator: Option<&str>) -> String {
     } else {
         string.push_str(field);
         string
-    }
-}
-
-impl From<Vec<OwnedSegment>> for OwnedValuePath {
-    fn from(segments: Vec<OwnedSegment>) -> Self {
-        Self { segments }
     }
 }
 

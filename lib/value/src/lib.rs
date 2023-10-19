@@ -1,16 +1,16 @@
 mod convert;
 mod crud;
 mod display;
-mod path;
+pub mod path;
 mod serde;
 
 use std::collections::BTreeMap;
 
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
-
 use path::ValuePath;
-pub use path::{parse_value_path, OwnedValuePath};
+
+pub use path::{parse_value_path, OwnedTargetPath, OwnedValuePath};
 
 /// The main value type used in Vertex events.
 #[derive(Clone, Debug, PartialEq)]
@@ -79,7 +79,7 @@ impl Value {
 #[macro_export]
 macro_rules! map_value {
     ( $($x:expr => $y:expr),* ) => ({
-        let mut _map: std::collections::BTreeMap<String, $crate::Value> = std::collections::BTreeMap::new();
+        let mut _map = std::collections::BTreeMap::<String, $crate::Value>::new();
         $(
             _map.insert($x.into(), $y.into());
         )*
@@ -90,6 +90,6 @@ macro_rules! map_value {
         fields!{$($x => $y),*}
     );
     () => ({
-        std::collections::BTreeMap<String, $crate::Value> = std::collections::BTreeMap::new();
+        std::collections::BTreeMap::<String, $crate::Value>::new();
     })
 }

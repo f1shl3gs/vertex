@@ -62,7 +62,7 @@ impl FunctionTransform for Coercer {
                 if let Some(value) = log.remove_field(field.as_str()) {
                     match conv.convert::<Value>(value.coerce_to_bytes()) {
                         Ok(converted) => {
-                            log.insert_field(field.as_str(), converted);
+                            log.insert(field.as_str(), converted);
                         }
                         Err(err) => {
                             error!(

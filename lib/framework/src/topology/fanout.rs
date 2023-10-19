@@ -620,11 +620,12 @@ mod tests {
             .into_events()
             .next()
             .expect("must have at least one event");
+
         event
             .into_log()
             .get_field("message")
             .expect("log must have a `message` filed")
-            .to_string_lossy()
+            .to_string()
     }
 
     #[tokio::test]

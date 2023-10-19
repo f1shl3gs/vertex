@@ -3,6 +3,10 @@ name = "value"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+default = []
+string_path = []
+
 [dev-dependencies]
 quickcheck = { version = "1.0.3", default-features = false }
 

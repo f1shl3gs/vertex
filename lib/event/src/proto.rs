@@ -35,7 +35,7 @@ fn encode_value(value: crate::log::Value) -> Value {
         kind: match value {
             crate::log::Value::Bytes(bytes) => Some(value::Kind::Bytes(bytes)),
             crate::log::Value::Float(f) => Some(value::Kind::Float(f)),
-            crate::log::Value::Int64(i) => Some(value::Kind::I64(i)),
+            crate::log::Value::Integer(i) => Some(value::Kind::I64(i)),
             crate::log::Value::Boolean(b) => Some(value::Kind::Boolean(b)),
             crate::log::Value::Array(arr) => Some(value::Kind::Array(encode_array(arr))),
             crate::log::Value::Object(m) => Some(value::Kind::Map(encode_map(m))),
@@ -54,7 +54,7 @@ fn decode_value(input: Value) -> Option<crate::log::Value> {
     match input.kind {
         Some(value::Kind::Bytes(b)) => Some(crate::log::Value::Bytes(b)),
         Some(value::Kind::Float(f)) => Some(crate::log::Value::Float(f)),
-        Some(value::Kind::I64(i)) => Some(crate::log::Value::Int64(i)),
+        Some(value::Kind::I64(i)) => Some(crate::log::Value::Integer(i)),
         Some(value::Kind::Boolean(b)) => Some(crate::log::Value::Boolean(b)),
         Some(value::Kind::Array(a)) => decode_array(a.items),
         Some(value::Kind::Map(m)) => decode_map(m.map),

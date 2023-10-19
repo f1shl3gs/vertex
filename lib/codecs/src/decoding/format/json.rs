@@ -39,7 +39,7 @@ impl Deserializer for JsonDeserializer {
         for event in &mut events {
             let log = event.as_mut_log();
             if !log.contains(timestamp_key) {
-                log.insert_field(timestamp_key, timestamp);
+                log.insert(timestamp_key, timestamp);
             }
         }
 
@@ -49,6 +49,8 @@ impl Deserializer for JsonDeserializer {
 
 #[cfg(test)]
 mod tests {
+    use event::event_path;
+
     use super::*;
 
     #[test]
@@ -62,7 +64,10 @@ mod tests {
         {
             let event = events.next().unwrap();
             let log = event.as_log();
-            assert_eq!(log.get_field("foo").unwrap().clone(), 123.into());
+            assert_eq!(
+                log.get_field(event_path!("foo")).unwrap().clone(),
+                123.into()
+            );
             assert!(log.get_field(log_schema().timestamp_key()).is_some())
         }
 

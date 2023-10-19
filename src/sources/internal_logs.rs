@@ -1,5 +1,7 @@
 use chrono::Utc;
 use configurable::configurable_component;
+use event::log::path::parse_target_path;
+use event::log::OwnedTargetPath;
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -9,15 +11,24 @@ use futures::StreamExt;
 use futures_util::stream;
 use log_schema::log_schema;
 
+fn default_host_key() -> Option<OwnedTargetPath> {
+    Some(log_schema().host_key().clone())
+}
+
+fn default_pid_key() -> Option<OwnedTargetPath> {
+    Some(parse_target_path("pid").unwrap())
+}
+
 #[configurable_component(source, name = "internal_logs")]
-#[derive(Default)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// Host key
-    host_key: Option<String>,
+    #[serde(default = "default_host_key")]
+    host_key: Option<OwnedTargetPath>,
 
     /// Pid key
-    pid_key: Option<String>,
+    #[serde(default = "default_pid_key")]
+    pid_key: Option<OwnedTargetPath>,
 }
 
 /// The internal logs source exposes all log and trace messages emitted
@@ -26,12 +37,8 @@ pub struct Config {
 #[typetag::serde(name = "internal_logs")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let host_key = self
-            .host_key
-            .as_deref()
-            .unwrap_or_else(|| log_schema().host_key())
-            .to_owned();
-        let pid_key = self.pid_key.as_deref().unwrap_or("pid").to_owned();
+        let host_key = self.host_key.clone();
+        let pid_key = self.pid_key.clone();
 
         Ok(Box::pin(run(host_key, pid_key, cx.output, cx.shutdown)))
     }
@@ -42,8 +49,8 @@ impl SourceConfig for Config {
 }
 
 async fn run(
-    host_key: String,
-    pid_key: String,
+    host_key: Option<OwnedTargetPath>,
+    pid_key: Option<OwnedTargetPath>,
     mut output: Pipeline,
     shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
@@ -63,10 +70,15 @@ async fn run(
     while let Some(mut logs) = rx.next().await {
         let timestamp = Utc::now();
         logs.iter_mut().for_each(|log| {
-            log.insert_field(host_key.as_str(), hostname.as_str());
-            log.insert_field(pid_key.as_str(), pid);
-            log.insert_field(log_schema().source_type_key(), "internal_log");
-            log.insert_field(log_schema().timestamp_key(), timestamp);
+            if let Some(key) = &host_key {
+                log.insert(key, hostname.as_str());
+            }
+            if let Some(key) = &pid_key {
+                log.insert(key, pid);
+            }
+
+            log.insert(log_schema().source_type_key(), "internal_log");
+            log.insert(log_schema().timestamp_key(), timestamp);
         });
 
         if let Err(err) = output.send_batch(logs).await {
@@ -136,10 +148,13 @@ mod tests {
 
     async fn start_source() -> impl Stream<Item = LogRecord> {
         let (tx, rx) = Pipeline::new_test();
-        let source = Config::default()
-            .build(SourceContext::new_test(tx))
-            .await
-            .unwrap();
+        let source = Config {
+            host_key: None,
+            pid_key: None,
+        }
+        .build(SourceContext::new_test(tx))
+        .await
+        .unwrap();
 
         tokio::spawn(source);
         sleep(Duration::from_millis(10)).await;

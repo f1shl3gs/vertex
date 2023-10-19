@@ -315,7 +315,7 @@ fn create_log(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>) 
     };
 
     // Add source type
-    log.insert_tag(log_schema().source_type_key(), "kubernetes_log");
+    log.insert_tag(log_schema().source_type_key().to_string(), "kubernetes_log");
 
     // Add file
     log.insert_tag(FILE_KEY, file.to_owned());
@@ -323,10 +323,10 @@ fn create_log(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>) 
     // Add ingestion timestamp if requested
     let now = Utc::now();
     if let Some(ingestion_timestamp_field) = ingestion_timestamp_field {
-        log.insert_field(ingestion_timestamp_field, now);
+        log.insert(ingestion_timestamp_field, now);
     }
 
-    log.try_insert_field(log_schema().timestamp_key(), now);
+    log.try_insert(log_schema().timestamp_key(), now);
 
     log
 }

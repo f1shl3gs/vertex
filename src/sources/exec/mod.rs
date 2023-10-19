@@ -363,24 +363,24 @@ fn handle_event(
 ) {
     if let Event::Log(log) = event {
         // Add timestamp and hostname
-        log.insert_field(log_schema().timestamp_key(), Utc::now());
-        log.insert_field(log_schema().host_key(), hostname);
+        log.insert(log_schema().timestamp_key(), Utc::now());
+        log.insert(log_schema().host_key(), hostname);
 
         // Add source type
-        log.insert_tag(log_schema().source_type_key(), EXEC);
+        log.insert_tag(log_schema().source_type_key().to_string(), EXEC);
 
         // Add data stream of stdin or stderr(if needed)
         if let Some(data_stream) = data_stream {
-            log.try_insert_field(STREAM_KEY, data_stream.to_string());
+            log.try_insert(STREAM_KEY, data_stream.to_string());
         }
 
         // Add pid (if needed)
         if let Some(pid) = pid {
-            log.try_insert_field(PID_KEY, pid);
+            log.try_insert(PID_KEY, pid);
         }
 
         // Add command
-        log.try_insert_field(COMMAND_KEY, command.to_owned())
+        log.try_insert(COMMAND_KEY, command.to_owned())
     }
 }
 

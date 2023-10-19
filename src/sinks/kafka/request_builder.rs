@@ -58,7 +58,7 @@ fn get_key(event: &Event, key_field: &Option<String>) -> Option<Vec<u8>> {
     key_field.as_ref().and_then(|key_field| match event {
         Event::Log(log) => log
             .get_field(key_field.as_str())
-            .map(|v| v.as_bytes().to_vec()),
+            .map(|v| v.coerce_to_bytes().to_vec()),
         Event::Metric(metric) => metric
             .tag_value(key_field)
             .map(|v| v.to_string().into_bytes()),

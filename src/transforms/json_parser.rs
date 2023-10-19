@@ -101,7 +101,7 @@ impl FunctionTransform for JsonParser {
 
                 let parsed = value
                     .and_then(|value| {
-                        let to_parse = value.as_bytes();
+                        let to_parse = value.coerce_to_bytes();
                         serde_json::from_slice::<Value>(to_parse.as_ref())
                             .map_err(|err| {
                                 warn!(
@@ -145,7 +145,7 @@ impl FunctionTransform for JsonParser {
                                     log.remove_field(self.field.as_str());
                                 }
 
-                                log.insert_field(target_field.as_str(), Value::Object(object));
+                                log.insert(target_field.as_str(), Value::Object(object));
                             }
                         }
                         None => {
@@ -314,7 +314,7 @@ mod test {
         let mut event = Event::from("message");
         event
             .as_mut_log()
-            .insert_field("data", r#"{"greeting": "hello", "name": "bob"}"#);
+            .insert("data", r#"{"greeting": "hello", "name": "bob"}"#);
         let metadata = event.metadata().clone();
 
         let event = transform_one(&mut parser, event).unwrap();
@@ -407,7 +407,7 @@ mod test {
         });
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", invalid);
+        event.as_mut_log().insert("data", invalid);
 
         let event = transform_one(&mut parser, event).unwrap();
 
@@ -445,15 +445,15 @@ mod test {
         });
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", valid);
+        event.as_mut_log().insert("data", valid);
         assert!(transform_one(&mut parser, event).is_some());
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", invalid);
+        event.as_mut_log().insert("data", invalid);
         assert!(transform_one(&mut parser, event).is_none());
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", not_object);
+        event.as_mut_log().insert("data", not_object);
         assert!(transform_one(&mut parser, event).is_none());
 
         // Missing field

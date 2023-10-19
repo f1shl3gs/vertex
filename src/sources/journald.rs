@@ -240,7 +240,7 @@ impl JournaldSource {
 
                 if let Some(tmp) = entry.remove(CURSOR) {
                     if let Value::Bytes(_) = tmp {
-                        *cursor = Some(tmp.to_string_lossy());
+                        *cursor = Some(tmp.to_string());
                     }
                 }
 
@@ -302,10 +302,10 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
 
     // Convert some journald-specific field names into LogSchema's
     if let Some(msg) = log.remove_field(MESSAGE) {
-        log.insert_field(log_schema().message_key(), msg);
+        log.insert(log_schema().message_key(), msg);
     }
     if let Some(host) = log.remove_field(HOSTNAME) {
-        log.insert_field(log_schema().host_key(), host);
+        log.insert(log_schema().host_key(), host);
     }
     // Translate the timestamp, and so leave both old and new names
     if let Some(Value::Bytes(timestamp)) = log
@@ -319,12 +319,12 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
             )
             .expect("valid timestamp");
 
-            log.insert_field(log_schema().timestamp_key(), Value::Timestamp(timestamp));
+            log.insert(log_schema().timestamp_key(), Value::Timestamp(timestamp));
         }
     }
 
     // Add source type
-    log.insert_field(log_schema().source_type_key(), "journald");
+    log.insert(log_schema().source_type_key(), "journald");
 
     log.into()
 }

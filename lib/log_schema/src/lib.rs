@@ -1,8 +1,11 @@
 use std::sync::OnceLock;
 
 use serde::{Deserialize, Serialize};
+use value::{owned_value_path, OwnedTargetPath};
 
 static LOG_SCHEMA: OnceLock<LogSchema> = OnceLock::new();
+
+static LOG_SCHEMA_DEFAULT: OnceLock<LogSchema> = OnceLock::new();
 
 /// Loads `LogSchema` from configurations and sets global schema. Once this is
 /// done, configurations can be correctly loaded using configured log schema
@@ -27,8 +30,6 @@ where
     Ok(())
 }
 
-static LOG_SCHEMA_DEFAULT: OnceLock<LogSchema> = OnceLock::new();
-
 /// Components should use global `LogSchema` returned by this function. The
 /// returned value can differ from `LogSchema::default()` which is unchanging.
 pub fn log_schema() -> &'static LogSchema {
@@ -41,45 +42,45 @@ pub fn log_schema() -> &'static LogSchema {
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct LogSchema {
     #[serde(default = "default_message_key")]
-    message_key: String,
+    message_key: OwnedTargetPath,
     #[serde(default = "default_timestamp_key")]
-    timestamp_key: String,
+    timestamp_key: OwnedTargetPath,
     #[serde(default = "default_host_key")]
-    host_key: String,
+    host_key: OwnedTargetPath,
     #[serde(default = "default_source_type_key")]
-    source_type_key: String,
+    source_type_key: OwnedTargetPath,
 }
 
-fn default_message_key() -> String {
-    "message".into()
+fn default_message_key() -> OwnedTargetPath {
+    OwnedTargetPath::event(owned_value_path!("message"))
 }
 
-fn default_timestamp_key() -> String {
-    "timestamp".into()
+fn default_timestamp_key() -> OwnedTargetPath {
+    OwnedTargetPath::event(owned_value_path!("timestamp"))
 }
 
-fn default_host_key() -> String {
-    "host".into()
+fn default_host_key() -> OwnedTargetPath {
+    OwnedTargetPath::event(owned_value_path!("host"))
 }
 
-fn default_source_type_key() -> String {
-    "source_type".into()
+fn default_source_type_key() -> OwnedTargetPath {
+    OwnedTargetPath::event(owned_value_path!("source_type"))
 }
 
 impl LogSchema {
-    pub fn message_key(&self) -> &str {
+    pub fn message_key(&self) -> &OwnedTargetPath {
         &self.message_key
     }
 
-    pub fn timestamp_key(&self) -> &str {
+    pub fn timestamp_key(&self) -> &OwnedTargetPath {
         &self.timestamp_key
     }
 
-    pub fn host_key(&self) -> &str {
+    pub fn host_key(&self) -> &OwnedTargetPath {
         &self.host_key
     }
 
-    pub fn source_type_key(&self) -> &str {
+    pub fn source_type_key(&self) -> &OwnedTargetPath {
         &self.source_type_key
     }
 
@@ -98,7 +99,7 @@ impl LogSchema {
             if self.host_key() != default_value.host_key() && self.host_key() != other.host_key() {
                 errors.push("conflicting values for 'log_schema.host_key' found".to_owned());
             } else {
-                self.host_key = other.host_key.to_string();
+                self.host_key = other.host_key.clone();
             }
 
             if self.message_key() != default_value.message_key()
@@ -106,7 +107,7 @@ impl LogSchema {
             {
                 errors.push("conflicting values for 'log_schema.message_key' found".to_owned());
             } else {
-                self.message_key = other.message_key.to_string();
+                self.message_key = other.message_key.clone();
             }
 
             if self.timestamp_key() != default_value.timestamp_key()
@@ -114,7 +115,7 @@ impl LogSchema {
             {
                 errors.push("conflicting values for 'log_schema.timestamp_key' found".to_owned());
             } else {
-                self.timestamp_key = other.timestamp_key.to_string();
+                self.timestamp_key = other.timestamp_key.clone();
             }
         }
 

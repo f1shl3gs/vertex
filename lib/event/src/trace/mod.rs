@@ -510,7 +510,7 @@ impl fmt::LowerHex for TraceFlags {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct Trace {
     pub service: Cow<'static, str>,
 

@@ -79,7 +79,7 @@ impl MetricConfig {
         };
 
         let value = match log.get_field(field.as_str())? {
-            Value::Int64(i) => *i as f64,
+            Value::Integer(i) => *i as f64,
             Value::Float(f) => *f,
             Value::Bytes(b) => {
                 if parse_value {
@@ -94,7 +94,8 @@ impl MetricConfig {
         let mut attrs = Tags::new();
         for (k, v) in tags {
             let value = match log.get_field(v.as_str()) {
-                Some(value) => value.to_string_lossy(),
+                // TODO: avoid allocation
+                Some(value) => value.to_string_lossy().to_string(),
                 None => String::new(),
             };
 

@@ -9,10 +9,11 @@ default = []
 syslog = ["syslog_loose"]
 
 [dev-dependencies]
-tokio = { version = "1.33.0", default-features = false, features = ["test-util", "macros"] }
+event = { path = "../event", features = ["string_path"] }
 futures-util = { version = "0.3.28", default-features = false }
 serde_yaml = { version = "0.9.25" }
 serde_path_to_error = { version = "0.1.14" }
+tokio = { version = "1.33.0", default-features = false, features = ["test-util", "macros"] }
 
 [dependencies]
 bytes = { version = "1.5.0", default-features = false }
@@ -22,7 +23,6 @@ event = { path = "../event" }
 futures = { version = "0.3.28" }
 futures-util = { version = "0.3.28", default-features = false }
 log_schema = { path = "../log_schema" }
-lookup = { path = "../lookup" }
 memchr = { version = "2.6.4", default-features = false }
 serde_json = { version = "1.0.107", default-features = false, features = ["std"] }
 tokio = { version = "1.33.0", default-features = false }

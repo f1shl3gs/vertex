@@ -8,7 +8,7 @@ use crate::{
 };
 
 /// An array of one of the `Event` variants exclusively
-#[derive(Clone, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Events {
     /// An array of type `LogRecord`
     Logs(Logs),

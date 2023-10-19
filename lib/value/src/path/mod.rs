@@ -89,7 +89,7 @@ pub use borrowed::BorrowedSegment;
 pub use concat::PathConcat;
 pub use owned::{OwnedSegment, OwnedTargetPath, OwnedValuePath};
 
-use self::jit::JitValuePath;
+use jit::JitValuePath;
 
 mod borrowed;
 mod concat;

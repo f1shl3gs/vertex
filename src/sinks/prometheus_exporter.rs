@@ -428,6 +428,7 @@ mod tests {
 
     #[test]
     fn test_metrics_insert() {
+        #[allow(clippy::mutable_key_type)]
         let mut set = BTreeSet::new();
         let m1 = Metric::gauge("foo", "", 0.1);
         let mut m2 = m1.clone();
