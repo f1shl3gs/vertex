@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697813056741,
+  "lastUpdate": 1697813137226,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6ecb380b2027880eb8f8f70ce99b35fd6c9eed9b",
-          "message": "chore(deps): bump mimalloc from 0.1.38 to 0.1.39 (#1256)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.38 to 0.1.39.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.38...v0.1.39)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-14T23:18:58+08:00",
-          "tree_id": "0cadcf9db4feee640a281060c06a8255b30615f0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6ecb380b2027880eb8f8f70ce99b35fd6c9eed9b"
-        },
-        "date": 1694705848964,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 979,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42614,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4249fd748f1c167b2eca419d855df5d9e0b825b9",
           "message": "chore(deps): bump chrono from 0.4.30 to 0.4.31 (#1257)\n\n* chore(deps): bump chrono from 0.4.30 to 0.4.31\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.30 to 0.4.31.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.30...v0.4.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecated method\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2023-09-16T01:02:16+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 962,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 53443.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "531ed19c548c95a9481f7af4b0f86263c25f7b76",
+          "message": "bump serde to 1.0.189 (#1362)",
+          "timestamp": "2023-10-20T22:26:35+08:00",
+          "tree_id": "b70a0101f3e53b4f935a5c9f10a548b765539d85",
+          "url": "https://github.com/f1shl3gs/vertex/commit/531ed19c548c95a9481f7af4b0f86263c25f7b76"
+        },
+        "date": 1697813118973,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 997,
             "unit": "s"
           },
           {
