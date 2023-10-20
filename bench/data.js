@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697792524866,
+  "lastUpdate": 1697792532983,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f89502aa898ef06d1f268235fd502f09c30a7a3e",
-          "message": "fix vertex version (#1250)",
-          "timestamp": "2023-09-14T00:39:51+08:00",
-          "tree_id": "9c9fe0b15b85f28e20f8ff0b1b9963ad8eb79875",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f89502aa898ef06d1f268235fd502f09c30a7a3e"
-        },
-        "date": 1694623444033,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.345,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.636,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 43.915,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 54.831,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 48.865,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7c1139f0bb2d4821b837ad5926e3b9dde9243711",
+          "message": "chore(deps): bump thiserror from 1.0.49 to 1.0.50 (#1360)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.49 to 1.0.50.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.49...1.0.50)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-20T16:57:59+08:00",
+          "tree_id": "31dbbf5359b217c0c88ebcfab55aae79d808a4cc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c1139f0bb2d4821b837ad5926e3b9dde9243711"
+        },
+        "date": 1697792513426,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.416,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.693,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.451,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 148.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 49.233,
             "unit": "ns/op"
           }
         ]
