@@ -1,5 +1,6 @@
 use codecs::encoding::Transformer;
 use codecs::Encoder;
+use event::log::OwnedTargetPath;
 use event::{Event, EventContainer, Events};
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::KeyPartitioner;
@@ -28,8 +29,8 @@ pub struct KafkaSink {
     encoder: Encoder<()>,
     service: KafkaService,
     topic: Template,
-    key_field: Option<String>,
-    headers_field: Option<String>,
+    key_field: Option<OwnedTargetPath>,
+    headers_field: Option<OwnedTargetPath>,
     batch_settings: BatcherSettings,
 }
 
@@ -46,12 +47,12 @@ impl KafkaSink {
             .await?;
 
         Ok(KafkaSink {
-            headers_field: config.headers_field,
+            headers_field: config.headers_field.clone(),
             transformer,
             encoder,
             service: KafkaService::new(client, config.compression),
             topic: Template::parse(&config.topic)?,
-            key_field: config.key_field,
+            key_field: config.key_field.clone(),
             batch_settings,
         })
     }

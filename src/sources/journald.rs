@@ -7,7 +7,7 @@ use std::{cmp, io, path::PathBuf, time::Duration};
 use bytes::{Buf, BytesMut};
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{log::Value, Event};
+use event::{event_path, log::Value, Event};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -301,16 +301,16 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
     let mut log: event::LogRecord = entry.into();
 
     // Convert some journald-specific field names into LogSchema's
-    if let Some(msg) = log.remove_field(MESSAGE) {
+    if let Some(msg) = log.remove_field(event_path!(MESSAGE)) {
         log.insert(log_schema().message_key(), msg);
     }
-    if let Some(host) = log.remove_field(HOSTNAME) {
+    if let Some(host) = log.remove_field(event_path!(HOSTNAME)) {
         log.insert(log_schema().host_key(), host);
     }
     // Translate the timestamp, and so leave both old and new names
     if let Some(Value::Bytes(timestamp)) = log
-        .get_field(SOURCE_TIMESTAMP)
-        .or_else(|| log.get_field(RECEIVED_TIMESTAMP))
+        .get_field(event_path!(SOURCE_TIMESTAMP))
+        .or_else(|| log.get_field(event_path!(RECEIVED_TIMESTAMP)))
     {
         if let Ok(timestamp) = String::from_utf8_lossy(timestamp).parse::<u64>() {
             let timestamp = DateTime::<Utc>::from_timestamp(

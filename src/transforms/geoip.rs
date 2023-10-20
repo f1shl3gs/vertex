@@ -4,13 +4,15 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use configurable::configurable_component;
+use event::log::path::parse_target_path;
+use event::log::OwnedTargetPath;
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::Serialize;
 
-fn default_target() -> String {
-    "geoip".to_string()
+fn default_target() -> OwnedTargetPath {
+    parse_target_path("geoip").unwrap()
 }
 
 fn default_locale() -> String {
@@ -31,12 +33,12 @@ struct Config {
     /// The field to insert the resulting GeoIP data into.
     #[serde(default = "default_target")]
     #[configurable(required)]
-    pub target: String,
+    pub target: OwnedTargetPath,
 
     /// The field name that contains the IP address. This field should contain a
     /// valid IPv4 or IPv6 address.
     #[configurable(required, example = ".foo.bar[2]")]
-    pub source: String,
+    pub source: OwnedTargetPath,
 
     /// valid locales are: “de”, "en", “es”, “fr”, “ja”, “pt-BR”, “ru”, and “zh-CN” .
     ///
@@ -77,8 +79,8 @@ const ISP_TYPE: &str = "GeoIP2-ISP";
 #[derive(Clone, Debug)]
 struct Geoip {
     database: Arc<maxminddb::Reader<Vec<u8>>>,
-    source: String,
-    target: String,
+    source: OwnedTargetPath,
+    target: OwnedTargetPath,
     locale: String,
 }
 
@@ -120,9 +122,7 @@ impl FunctionTransform for Geoip {
         events.for_each_log(|log| {
             let mut isp: Isp = Default::default();
             let mut city: City = Default::default();
-            let ipaddress = log
-                .get_field(self.source.as_str())
-                .map(|s| s.to_string_lossy());
+            let ipaddress = log.get_field(&self.source).map(|s| s.to_string_lossy());
 
             if let Some(value) = &ipaddress {
                 match FromStr::from_str(value) {
@@ -221,7 +221,7 @@ impl FunctionTransform for Geoip {
             } else {
                 error!(
                     message = "Failed does not exist",
-                    field = &self.source,
+                    field = ?self.source,
                     internal_log_rate_limit = true
                 )
             }
@@ -233,7 +233,7 @@ impl FunctionTransform for Geoip {
             };
 
             if let Ok(value) = json_value {
-                log.insert(self.target.as_str(), value);
+                log.insert(&self.target, value);
             }
         });
 
@@ -319,8 +319,8 @@ mod tests {
                 maxminddb::Reader::open_readfile(database).expect("Open geoip database success");
             let mut transform = Geoip {
                 database: Arc::new(database),
-                source: "remote_addr".to_string(),
-                target: "geo".to_string(),
+                source: parse_target_path("remote_addr").unwrap(),
+                target: parse_target_path("geo").unwrap(),
                 locale: "en".to_string(),
             };
             let event = transform_one(&mut transform, input).unwrap();

@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
 use configurable::configurable_component;
+use event::log::path::TargetPath;
+use event::log::OwnedTargetPath;
 use event::Events;
 use framework::config::{default_true, Output, TransformContext};
 use framework::config::{DataType, TransformConfig};
@@ -11,7 +13,7 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 #[serde(deny_unknown_fields)]
 pub struct Config {
     #[configurable(required)]
-    pub fields: HashMap<String, String>,
+    pub fields: HashMap<OwnedTargetPath, String>,
 
     #[serde(default = "default_true")]
     pub overwrite: bool,
@@ -39,7 +41,7 @@ impl TransformConfig for Config {
 
 #[derive(Clone, Debug)]
 struct AddFields {
-    fields: HashMap<String, String>,
+    fields: HashMap<OwnedTargetPath, String>,
     overwrite: bool,
 }
 
@@ -56,11 +58,11 @@ impl FunctionTransform for AddFields {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
             for (path, v) in self.fields.iter() {
-                if log.fields.contains(path.as_str()) && !self.overwrite {
+                if log.fields.contains(path.value_path()) && !self.overwrite {
                     continue;
                 }
 
-                log.fields.insert(path.as_str(), v.to_string());
+                log.fields.insert(path.value_path(), v.to_string());
             }
         });
 

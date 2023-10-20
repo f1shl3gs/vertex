@@ -6,6 +6,7 @@ use std::num::{ParseFloatError, ParseIntError};
 
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
+use event::log::OwnedTargetPath;
 use framework::timezone::{datetime_to_utc, TimeZone};
 use thiserror::Error;
 
@@ -43,9 +44,9 @@ pub enum Error {
 /// Helper function to parse a mapping of conversion descriptions into actual
 /// Conversion values.
 pub fn parse_conversion_map(
-    types: &HashMap<String, String>,
+    types: &HashMap<OwnedTargetPath, String>,
     tz: TimeZone,
-) -> Result<HashMap<String, Conversion>, Error> {
+) -> Result<HashMap<OwnedTargetPath, Conversion>, Error> {
     types
         .iter()
         .map(|(field, typename)| Conversion::parse(typename, tz).map(|conv| (field.clone(), conv)))

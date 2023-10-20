@@ -35,7 +35,7 @@ async fn sets_create_action_when_configured() {
         .request_builder
         .encoder
         .encode(
-            vec![process_log(log, &es.mode, &None).unwrap()],
+            vec![process_log(log, &es.mode, None).unwrap()],
             &mut encoded,
         )
         .unwrap();
@@ -78,7 +78,7 @@ async fn encode_datastream_mode() {
         .request_builder
         .encoder
         .encode(
-            vec![process_log(log, &es.mode, &None).unwrap()],
+            vec![process_log(log, &es.mode, None).unwrap()],
             &mut encoded,
         )
         .unwrap();
@@ -118,7 +118,7 @@ async fn encode_datastream_mode_no_routing() {
         .request_builder
         .encoder
         .encode(
-            vec![process_log(log, &es.mode, &None).unwrap()],
+            vec![process_log(log, &es.mode, None).unwrap()],
             &mut encoded,
         )
         .unwrap();
@@ -198,7 +198,7 @@ async fn encode_datastream_mode_no_sync() {
         .request_builder
         .encoder
         .encode(
-            vec![process_log(log, &es.mode, &None).unwrap()],
+            vec![process_log(log, &es.mode, None).unwrap()],
             &mut encoded,
         )
         .unwrap();
@@ -241,7 +241,7 @@ async fn allow_using_excepted_fields() {
         .request_builder
         .encoder
         .encode(
-            vec![process_log(log, &es.mode, &None).unwrap()],
+            vec![process_log(log, &es.mode, None).unwrap()],
             &mut encoded,
         )
         .unwrap();

@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, HashMap};
 use async_trait::async_trait;
 use codecs::encoding::Transformer;
 use configurable::{configurable_component, Configurable};
-use event::log::Value;
+use event::log::{OwnedValuePath, Value};
 use event::{event_path, EventRef, LogRecord};
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::{skip_serializing_if_default, DataType, SinkConfig, SinkContext};
@@ -216,7 +216,9 @@ impl DataStreamConfig {
         let (dtype, dataset, namespace) = if !self.auto_routing {
             (self.dtype(log)?, self.dataset(log)?, self.namespace(log)?)
         } else {
-            let data_stream = log.get_field("data_stream").and_then(|ds| ds.as_object());
+            let data_stream = log
+                .get_field(event_path!("data_stream"))
+                .and_then(|ds| ds.as_object());
             let dtype = data_stream
                 .and_then(|ds| ds.get("type"))
                 .map(|value| value.to_string_lossy().into_owned())
@@ -262,7 +264,7 @@ pub struct Config {
     /// Elasticsearch IDs, since this can "hinder performance".
     ///
     /// https://www.elastic.co/guide/en/elasticsearch/reference/master/tune-for-indexing-speed.html#_use_auto_generated_ids
-    pub id_key: Option<String>,
+    pub id_key: Option<OwnedValuePath>,
 
     /// Name of the pipeline to apply.
     pub pipeline: Option<String>,

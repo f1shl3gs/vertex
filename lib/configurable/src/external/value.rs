@@ -1,7 +1,7 @@
 use value::{OwnedTargetPath, OwnedValuePath};
 
 use crate::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
-use crate::{Configurable, GenerateError};
+use crate::{Configurable, ConfigurableString, GenerateError};
 
 impl Configurable for OwnedValuePath {
     fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
@@ -14,3 +14,5 @@ impl Configurable for OwnedTargetPath {
         Ok(generate_string_schema())
     }
 }
+
+impl ConfigurableString for OwnedTargetPath {}

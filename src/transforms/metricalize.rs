@@ -7,6 +7,8 @@ use async_stream::stream;
 use async_trait::async_trait;
 use chrono::Utc;
 use configurable::{configurable_component, Configurable};
+use event::log::path::parse_target_path;
+use event::log::OwnedTargetPath;
 use event::tags::Tags;
 use event::{
     log::Value, Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue,
@@ -56,10 +58,12 @@ struct MetricConfig {
     ///
     /// Path is support too, e.g. field: value.i64
     #[configurable(required)]
-    field: String,
+    field: OwnedTargetPath,
 
     /// Tags to set, this field is not required,
     /// but is is recommend to set some tags to identify your metrics.
+    ///
+    /// The key is the tag key for metrics, the value is the path to the log field.
     #[serde(default)]
     tags: BTreeMap<String, String>,
 
@@ -78,7 +82,7 @@ impl MetricConfig {
             _ => true,
         };
 
-        let value = match log.get_field(field.as_str())? {
+        let value = match log.get_field(field)? {
             Value::Integer(i) => *i as f64,
             Value::Float(f) => *f,
             Value::Bytes(b) => {
@@ -93,12 +97,11 @@ impl MetricConfig {
 
         let mut attrs = Tags::new();
         for (k, v) in tags {
-            let value = match log.get_field(v.as_str()) {
-                Some(value) => value.to_string_lossy().into_owned(),
-                None => String::new(),
-            };
-
-            attrs.insert(k.to_string(), value);
+            if let Ok(path) = parse_target_path(v) {
+                if let Some(value) = log.get_field(&path) {
+                    attrs.insert(k.to_string(), value.to_string_lossy().into_owned());
+                }
+            }
         }
 
         Some((
@@ -291,8 +294,9 @@ impl Metricalize {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use event::{btreemap, fields, tags, Bucket, LogRecord};
+
+    use super::*;
 
     #[test]
     fn generate_config() {
@@ -307,7 +311,7 @@ mod tests {
                 "sample_counter",
                 MetricConfig {
                     name: "sample_counter".to_string(),
-                    field: "foo".to_string(),
+                    field: parse_target_path("foo").unwrap(),
                     tags: Default::default(),
                     typ: MetricType::Counter {
                         increment_by_value: false,
@@ -323,7 +327,7 @@ mod tests {
                 "sample_counter_with_increase_by_value",
                 MetricConfig {
                     name: "test".into(),
-                    field: "foo".into(),
+                    field: parse_target_path("foo").unwrap(),
                     tags: Default::default(),
                     typ: MetricType::Counter {
                         increment_by_value: true,
@@ -343,7 +347,7 @@ mod tests {
                 "sample_counter_with_tags_and_complex_field",
                 MetricConfig {
                     name: "test".to_string(),
-                    field: "foo.bar".to_string(),
+                    field: parse_target_path("foo.bar").unwrap(),
                     tags: btreemap!(
                         "tag1" => "tag1",
                         "tag2" => "tags.k1",
@@ -380,7 +384,7 @@ mod tests {
                 "gauge",
                 MetricConfig {
                     name: "test".into(),
-                    field: "foo".to_string(),
+                    field: parse_target_path("foo").unwrap(),
                     tags: Default::default(),
                     typ: MetricType::Gauge,
                 },
@@ -391,7 +395,7 @@ mod tests {
                 "histogram",
                 MetricConfig {
                     name: "test".to_string(),
-                    field: "foo".to_string(),
+                    field: parse_target_path("foo").unwrap(),
                     tags: Default::default(),
                     typ: MetricType::Histogram {
                         buckets: default_buckets(),
@@ -483,7 +487,7 @@ mod tests {
     fn test_build_series_and_value() {
         let config = MetricConfig {
             name: "name".to_string(),
-            field: "value".to_string(),
+            field: parse_target_path("value").unwrap(),
             tags: Default::default(),
             typ: MetricType::Counter {
                 increment_by_value: false,
@@ -499,7 +503,7 @@ mod tests {
 
         let config = MetricConfig {
             name: "name".to_string(),
-            field: "a.b".to_string(),
+            field: parse_target_path("a.b").unwrap(),
             tags: Default::default(),
             typ: MetricType::Counter {
                 increment_by_value: false,

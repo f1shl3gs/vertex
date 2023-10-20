@@ -5,6 +5,7 @@ use std::num::NonZeroUsize;
 use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use codecs::Encoder;
+use event::log::path::parse_target_path;
 use event::{Event, EventContainer, EventFinalizers, Events, Finalizable};
 use framework::config::SinkContext;
 use framework::http::HttpClient;
@@ -153,7 +154,9 @@ impl EventEncoder {
                 let log = event.as_mut_log();
 
                 for field in fields {
-                    log.remove_field(field.as_str());
+                    if let Ok(path) = parse_target_path(field.as_str()) {
+                        log.remove_field(&path);
+                    }
                 }
             }
         }

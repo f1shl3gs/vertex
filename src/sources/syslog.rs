@@ -9,7 +9,9 @@ use codecs::decoding::{
 };
 use codecs::Decoder;
 use configurable::{configurable_component, Configurable};
-use event::Event;
+use event::log::path::PathPrefix;
+use event::log::OwnedValuePath;
+use event::{event_path, Event};
 use framework::config::Output;
 use framework::config::{DataType, Resource, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
@@ -91,7 +93,7 @@ pub struct Config {
     /// be globally set via the global "host_key" option.
     ///
     /// The host key of the log. This differs from `hostname`
-    pub host_key: Option<String>,
+    pub host_key: Option<OwnedValuePath>,
 }
 
 #[async_trait::async_trait]
@@ -101,7 +103,7 @@ impl SourceConfig for Config {
         let host_key = self
             .host_key
             .clone()
-            .unwrap_or_else(|| log_schema().host_key().to_string());
+            .unwrap_or_else(|| log_schema().host_key().path.clone());
 
         match self.mode.clone() {
             Mode::Tcp {
@@ -178,7 +180,7 @@ impl SourceConfig for Config {
 #[derive(Debug, Clone)]
 struct SyslogTcpSource {
     max_length: usize,
-    host_key: String,
+    host_key: OwnedValuePath,
 }
 
 impl TcpSource for SyslogTcpSource {
@@ -206,7 +208,7 @@ impl TcpSource for SyslogTcpSource {
 pub fn udp(
     addr: SocketAddr,
     _max_length: usize,
-    host_key: String,
+    host_key: OwnedValuePath,
     receive_buffer_bytes: Option<usize>,
     shutdown: ShutdownSignal,
     mut output: Pipeline,
@@ -282,7 +284,7 @@ pub fn udp(
 
 fn handle_events(
     events: &mut [Event],
-    host_key: &str,
+    host_key: &OwnedValuePath,
     default_host: Option<Bytes>,
     _byte_size: usize,
 ) {
@@ -293,24 +295,24 @@ fn handle_events(
     }
 }
 
-fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<Bytes>) {
+fn enrich_syslog_event(event: &mut Event, host_key: &OwnedValuePath, default_host: Option<Bytes>) {
     let log = event.as_mut_log();
 
     log.insert(log_schema().source_type_key(), "syslog");
 
     if let Some(default_host) = &default_host {
-        log.insert("source_ip", default_host.clone());
+        log.insert(event_path!("source_ip"), default_host.clone());
     }
 
     let parsed_hostname = log
-        .get_field("hostname")
+        .get_field(event_path!("hostname"))
         .map(|hostname| hostname.coerce_to_bytes());
     if let Some(parsed_host) = parsed_hostname.or(default_host) {
-        log.insert(host_key, parsed_host);
+        log.insert((PathPrefix::Event, host_key), parsed_host);
     }
 
     let timestamp = log
-        .get_field("timestamp")
+        .get_field(event_path!("timestamp"))
         .and_then(|timestamp| timestamp.as_timestamp().cloned())
         .unwrap_or_else(Utc::now);
     log.insert(log_schema().timestamp_key(), timestamp);
@@ -325,7 +327,7 @@ fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<B
 mod tests {
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
-    use event::log::Value;
+    use event::log::{parse_value_path, Value};
     use event::{fields, LogRecord};
     use testify::assert_event_data_eq;
 
@@ -418,7 +420,8 @@ address: 127.0.0.1:12345
         let byte_size = bytes.len();
         let parser = SyslogDeserializer;
         let mut events = parser.parse(bytes).ok()?;
-        handle_events(&mut events, host_key, default_host, byte_size);
+        let host_key = parse_value_path(host_key).unwrap();
+        handle_events(&mut events, &host_key, default_host, byte_size);
         Some(events.remove(0))
     }
 

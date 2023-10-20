@@ -9,7 +9,7 @@ use codecs::decoding::StreamDecodingError;
 use codecs::decoding::{DeserializerConfig, FramingConfig};
 use codecs::DecodingConfig;
 use configurable::{configurable_component, Configurable};
-use event::Event;
+use event::{event_path, Event};
 use framework::async_read::VecAsyncReadExt;
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -371,16 +371,16 @@ fn handle_event(
 
         // Add data stream of stdin or stderr(if needed)
         if let Some(data_stream) = data_stream {
-            log.try_insert(STREAM_KEY, data_stream.to_string());
+            log.try_insert(event_path!(STREAM_KEY), data_stream.to_string());
         }
 
         // Add pid (if needed)
         if let Some(pid) = pid {
-            log.try_insert(PID_KEY, pid);
+            log.try_insert(event_path!(PID_KEY), pid);
         }
 
         // Add command
-        log.try_insert(COMMAND_KEY, command.to_owned())
+        log.try_insert(event_path!(COMMAND_KEY), command.to_owned())
     }
 }
 

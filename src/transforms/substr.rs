@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use bytes::Buf;
 use configurable::configurable_component;
+use event::log::OwnedTargetPath;
 use event::{log::Value, Events};
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
@@ -9,8 +10,8 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Which field to transform.
-    #[configurable(required)]
-    field: String,
+    #[configurable(required, example = ".some_field")]
+    field: OwnedTargetPath,
 
     /// Offset from start, count from zero.
     #[serde(default)]
@@ -45,7 +46,7 @@ impl TransformConfig for Config {
 
 #[derive(Clone)]
 struct Substr {
-    field: String,
+    field: OwnedTargetPath,
     offset: Option<usize>,
     length: Option<usize>,
 }
@@ -53,7 +54,7 @@ struct Substr {
 impl FunctionTransform for Substr {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
-            if let Some(Value::Bytes(value)) = log.get_field_mut(self.field.as_str()) {
+            if let Some(Value::Bytes(value)) = log.get_field_mut(&self.field) {
                 if let Some(offset) = self.offset {
                     let offset = value.remaining().min(offset);
                     value.advance(offset);
@@ -71,6 +72,7 @@ impl FunctionTransform for Substr {
 
 #[cfg(test)]
 mod tests {
+    use event::log::path::parse_target_path;
     use event::{fields, Event};
     use testify::assert_event_data_eq;
 
@@ -90,7 +92,7 @@ mod tests {
                 "without_offset_and_length",
                 fields!("value" => "some_value"),
                 Substr {
-                    field: "value".to_string(),
+                    field: parse_target_path("value").unwrap(),
                     offset: None,
                     length: None,
                 },
@@ -100,7 +102,7 @@ mod tests {
                 "with_offset",
                 fields!("value" => "some_value"),
                 Substr {
-                    field: "value".to_string(),
+                    field: parse_target_path("value").unwrap(),
                     offset: Some(5),
                     length: None,
                 },
@@ -110,7 +112,7 @@ mod tests {
                 "with_length",
                 fields!("value" => "some_value"),
                 Substr {
-                    field: "value".to_string(),
+                    field: parse_target_path("value").unwrap(),
                     offset: None,
                     length: Some(4),
                 },
@@ -120,7 +122,7 @@ mod tests {
                 "with_offset_and_length",
                 fields!("value" => "some_value"),
                 Substr {
-                    field: "value".to_string(),
+                    field: parse_target_path("value").unwrap(),
                     offset: Some(5),
                     length: Some(3),
                 },
@@ -130,7 +132,7 @@ mod tests {
                 "offset_large_than_input_length",
                 fields!("value" => "some_value"),
                 Substr {
-                    field: "value".to_string(),
+                    field: parse_target_path("value").unwrap(),
                     offset: Some(20),
                     length: None,
                 },

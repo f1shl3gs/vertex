@@ -10,7 +10,7 @@ use async_trait::async_trait;
 use bytes::Bytes;
 use chrono::Utc;
 use configurable::configurable_component;
-use event::log::Value;
+use event::log::{OwnedTargetPath, Value};
 use event::tags::Key;
 use event::LogRecord;
 use framework::config::{default_true, DataType, Output, SourceConfig, SourceContext};
@@ -173,7 +173,7 @@ struct LogSource {
     data_dir: PathBuf,
     max_read_bytes: usize,
     max_line_bytes: usize,
-    ingestion_timestamp_field: Option<String>,
+    ingestion_timestamp_field: Option<OwnedTargetPath>,
 }
 
 impl LogSource {
@@ -249,7 +249,7 @@ impl LogSource {
             let mut log = create_log(
                 line.text,
                 &line.filename,
-                ingestion_timestamp_field.as_deref(),
+                ingestion_timestamp_field.as_ref(),
             );
 
             match pod_annotator.annotate(&mut log, &line.filename) {
@@ -297,7 +297,11 @@ impl LogSource {
 
 const FILE_KEY: Key = Key::from_static("file");
 
-fn create_log(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>) -> LogRecord {
+fn create_log(
+    line: Bytes,
+    file: &str,
+    ingestion_timestamp_field: Option<&OwnedTargetPath>,
+) -> LogRecord {
     let mut log = match serde_json::from_slice::<Value>(line.as_ref()) {
         Ok(value) => match value {
             Value::Object(map) => LogRecord::from(map),

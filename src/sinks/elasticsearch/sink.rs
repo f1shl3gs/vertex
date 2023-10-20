@@ -3,7 +3,8 @@ use std::num::NonZeroUsize;
 
 use async_trait::async_trait;
 use codecs::encoding::Transformer;
-use event::log::Value;
+use event::log::path::PathPrefix;
+use event::log::{OwnedValuePath, Value};
 use event::{Event, EventContainer, Events, LogRecord};
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::stream::{BatcherSettings, DriverResponse};
@@ -41,7 +42,7 @@ pub struct ElasticsearchSink<S> {
     pub transformer: Transformer,
     pub service: S,
     pub mode: ElasticsearchCommonMode,
-    pub id_key_field: Option<String>,
+    pub id_key_field: Option<OwnedValuePath>,
 }
 
 impl<S> ElasticsearchSink<S>
@@ -68,7 +69,7 @@ where
             })
             .filter_map(|x| async move { x })
             .filter_map(move |log| {
-                futures_util::future::ready(process_log(log, &mode, &id_key_field))
+                futures_util::future::ready(process_log(log, &mode, id_key_field.as_ref()))
             })
             .batched(self.batch_settings.into_byte_size_config())
             .request_builder(request_builder_concurrency_limit, self.request_builder)
@@ -93,7 +94,7 @@ where
 pub fn process_log(
     mut log: LogRecord,
     mode: &ElasticsearchCommonMode,
-    id_key_field: &Option<String>,
+    id_key_field: Option<&OwnedValuePath>,
 ) -> Option<ProcessedEvent> {
     let index = mode.index(&log)?;
     let bulk_action = mode.bulk_action(&log)?;
@@ -103,9 +104,8 @@ pub fn process_log(
         cfg.remap_timestamp(&mut log);
     };
 
-    let id = if let Some(Value::Bytes(key)) = id_key_field
-        .as_ref()
-        .and_then(|key| log.remove_field(key.as_str()))
+    let id = if let Some(Value::Bytes(key)) =
+        id_key_field.and_then(|key| log.remove_field((PathPrefix::Event, key)))
     {
         Some(String::from_utf8_lossy(&key).into_owned())
     } else {

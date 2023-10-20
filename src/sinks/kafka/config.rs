@@ -2,6 +2,7 @@ use std::time::Duration;
 
 use codecs::encoding::EncodingConfig;
 use configurable::configurable_component;
+use event::log::OwnedTargetPath;
 use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink};
@@ -75,7 +76,7 @@ pub struct Config {
     /// does not exist in the log or in tags, a blank value will be used. If
     /// unspecified, the key is not sent. Kafka uses a hash of the key to choose
     /// the partition or uses round-robin if the record has no key.
-    pub key_field: Option<String>,
+    pub key_field: Option<OwnedTargetPath>,
 
     /// Configures the encoding specific sink behavior.
     pub encoding: EncodingConfig,
@@ -91,7 +92,7 @@ pub struct Config {
 
     /// The log field name to use for the Kafka headers. If omitted,
     /// no headers will be written.
-    pub headers_field: Option<String>,
+    pub headers_field: Option<OwnedTargetPath>,
 }
 
 #[async_trait::async_trait]
