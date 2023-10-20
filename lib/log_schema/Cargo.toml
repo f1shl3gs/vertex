@@ -6,3 +6,4 @@ publish = false
 
 [dependencies]
 serde = { version = "1.0.189", default-features = false }
+value = { path = "../value" }

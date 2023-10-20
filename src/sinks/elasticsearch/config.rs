@@ -3,8 +3,8 @@ use std::collections::{BTreeMap, HashMap};
 use async_trait::async_trait;
 use codecs::encoding::Transformer;
 use configurable::{configurable_component, Configurable};
-use event::log::Value;
-use event::{EventRef, LogRecord};
+use event::log::{OwnedValuePath, Value};
+use event::{event_path, EventRef, LogRecord};
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::{skip_serializing_if_default, DataType, SinkConfig, SinkContext};
 use framework::http::HttpClient;
@@ -119,15 +119,17 @@ impl DataStreamConfig {
         true
     }
 
+    /// If there is a `timestamp` field, rename it to the expected `@timestamp`
+    /// for Elastic Common Schema.
     pub fn remap_timestamp(&self, log: &mut LogRecord) {
         // we keep it if the timestamp field is @timestamp
         let timestamp_key = log_schema().timestamp_key();
-        if timestamp_key == DATA_STREAM_TIMESTAMP_KEY {
+        if timestamp_key.to_string() == DATA_STREAM_TIMESTAMP_KEY {
             return;
         }
 
         if let Some(value) = log.remove_field(timestamp_key) {
-            log.insert_field(DATA_STREAM_TIMESTAMP_KEY, value);
+            log.insert(event_path!(DATA_STREAM_TIMESTAMP_KEY), value);
         }
     }
 
@@ -191,7 +193,8 @@ impl DataStreamConfig {
             .expect("must be a map")
             .entry("data_stream".into())
             .or_insert_with(|| Value::Object(BTreeMap::new()))
-            .as_object_mut_unwrap();
+            .as_object_mut()
+            .unwrap();
         if let Some(dtype) = dtype {
             existing
                 .entry("type".into())
@@ -213,18 +216,20 @@ impl DataStreamConfig {
         let (dtype, dataset, namespace) = if !self.auto_routing {
             (self.dtype(log)?, self.dataset(log)?, self.namespace(log)?)
         } else {
-            let data_stream = log.get_field("data_stream").and_then(|ds| ds.as_object());
+            let data_stream = log
+                .get_field(event_path!("data_stream"))
+                .and_then(|ds| ds.as_object());
             let dtype = data_stream
                 .and_then(|ds| ds.get("type"))
-                .map(|value| value.to_string_lossy())
+                .map(|value| value.to_string_lossy().into_owned())
                 .or_else(|| self.dtype(log))?;
             let dataset = data_stream
                 .and_then(|ds| ds.get("dataset"))
-                .map(|value| value.to_string_lossy())
+                .map(|value| value.to_string_lossy().into_owned())
                 .or_else(|| self.dataset(log))?;
             let namespace = data_stream
                 .and_then(|ds| ds.get("namespace"))
-                .map(|value| value.to_string_lossy())
+                .map(|value| value.to_string_lossy().into_owned())
                 .or_else(|| self.namespace(log))?;
             (dtype, dataset, namespace)
         };
@@ -259,7 +264,7 @@ pub struct Config {
     /// Elasticsearch IDs, since this can "hinder performance".
     ///
     /// https://www.elastic.co/guide/en/elasticsearch/reference/master/tune-for-indexing-speed.html#_use_auto_generated_ids
-    pub id_key: Option<String>,
+    pub id_key: Option<OwnedValuePath>,
 
     /// Name of the pipeline to apply.
     pub pipeline: Option<String>,

@@ -61,7 +61,7 @@ impl SourceConfig for Config {
                                         "priority" => priority,
                                         "sequence" => seq,
                                         "message" => msg,
-                                        timestamp_key => timestamp
+                                        timestamp_key.to_string() => timestamp
                                     ));
 
                                 output.send(record).await.unwrap();

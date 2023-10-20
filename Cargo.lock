@@ -530,7 +530,6 @@ dependencies = [
  "futures",
  "futures-util",
  "log_schema",
- "lookup",
  "memchr",
  "serde",
  "serde_json",
@@ -549,9 +548,9 @@ version = "0.1.0"
 dependencies = [
  "criterion",
  "event",
- "lookup",
  "regex",
  "serde",
+ "value",
 ]
 
 [[package]]
@@ -564,12 +563,12 @@ dependencies = [
  "humanize",
  "indexmap 2.0.2",
  "inventory",
- "lookup",
  "regex",
  "serde",
  "serde_json",
  "serde_yaml",
  "url",
+ "value",
 ]
 
 [[package]]
@@ -897,7 +896,6 @@ dependencies = [
  "finalize",
  "futures",
  "log_schema",
- "lookup",
  "measurable",
  "prost",
  "prost-build",
@@ -907,6 +905,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "tracing",
+ "value",
 ]
 
 [[package]]
@@ -1034,7 +1033,6 @@ dependencies = [
  "ipnet",
  "listenfd",
  "log_schema",
- "lookup",
  "measurable",
  "memchr",
  "metrics",
@@ -1907,15 +1905,7 @@ name = "log_schema"
 version = "0.1.0"
 dependencies = [
  "serde",
-]
-
-[[package]]
-name = "lookup"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "serde",
- "serde_json",
+ "value",
 ]
 
 [[package]]
@@ -1992,6 +1982,7 @@ name = "measurable"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "value",
 ]
 
 [[package]]
@@ -4124,6 +4115,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "830b7e5d4d90034032940e4ace0d9a9a057e7a45cd94e6c007832e39edb82f6d"
 
 [[package]]
+name = "value"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "chrono",
+ "quickcheck",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4167,7 +4169,6 @@ dependencies = [
  "kube",
  "libc",
  "log_schema",
- "lookup",
  "lru",
  "maxminddb",
  "measurable",

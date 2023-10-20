@@ -5,18 +5,13 @@ use tokio_util::codec::Decoder;
 
 use super::{CharacterDelimitedDecoder, FramingError};
 
-#[inline]
-pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
-    e == &E::default()
-}
-
 /// Config used to build a `NewlineDelimitedDecoder`
 #[derive(Configurable, Debug, Clone, Default, Deserialize, Serialize, PartialEq)]
 pub struct NewlineDelimitedDecoderConfig {
     /// The maximum length of the byte buffer
     ///
     /// This length does *not* include the trailing delimiter
-    #[serde(skip_serializing_if = "skip_serializing_if_default")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     max_length: Option<usize>,
 }
 

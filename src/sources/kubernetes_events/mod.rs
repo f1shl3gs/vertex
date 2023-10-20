@@ -11,6 +11,7 @@ use futures_util::stream;
 use k8s_openapi::api::core::v1::Event;
 use kube::runtime::{watcher, WatchStreamExt};
 use kube::{Api, Client};
+use log_schema::log_schema;
 
 /// The Kubernetes events source collects events from the Kubernetes API server.
 /// It collects all the new or updated events that come in.
@@ -60,9 +61,9 @@ impl SourceConfig for Config {
                 .take_until(shutdown);
 
             while let Some(evs) = combined.next().await {
-                let message_key = log_schema::log_schema().message_key();
-                let timestamp_key = log_schema::log_schema().timestamp_key();
-                let source_type_key = log_schema::log_schema().source_type_key();
+                let message_key = log_schema().message_key();
+                let timestamp_key = log_schema().timestamp_key();
+                let source_type_key = log_schema().source_type_key();
 
                 let records = evs
                     .into_iter()
@@ -99,11 +100,11 @@ impl SourceConfig for Config {
                                 "name" => ev.metadata.name.unwrap_or_default(),
                                 "namespace" => ev.metadata.namespace.unwrap_or_default(),
                                 "uid" => ev.metadata.uid.unwrap_or_default(),
-                                source_type_key => "kubernetes_events",
+                                source_type_key.to_string() => "kubernetes_events",
                             ),
                             fields!(
-                                message_key => ev.message.unwrap_or_default(),
-                                timestamp_key => timestamp,
+                                message_key.to_string() => ev.message.unwrap_or_default(),
+                                timestamp_key.to_string() => timestamp,
                             ),
                         )
                     });

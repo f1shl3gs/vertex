@@ -3,6 +3,7 @@ use std::fmt::Formatter;
 use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::{configurable_component, Configurable};
+use event::log::OwnedTargetPath;
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
@@ -69,7 +70,7 @@ impl Serialize for Value {
 impl From<&Value> for event::log::Value {
     fn from(value: &Value) -> Self {
         match value {
-            Value::Integer(i) => event::log::Value::Int64(*i),
+            Value::Integer(i) => event::log::Value::Integer(*i),
             Value::Float(f) => event::log::Value::Float(*f),
             Value::String(s) => event::log::Value::Bytes(Bytes::from(s.to_owned())),
             Value::Bool(b) => event::log::Value::Boolean(*b),
@@ -110,12 +111,12 @@ struct MappingItem {
 #[serde(deny_unknown_fields)]
 struct Config {
     /// source is the filed to evaluate.
-    #[configurable(required)]
-    source: String,
+    #[configurable(required, example = ".some_field")]
+    source: OwnedTargetPath,
 
     /// target the field to store mapped value
-    #[configurable(required)]
-    target: String,
+    #[configurable(required, example = ".other_field")]
+    target: OwnedTargetPath,
 
     /// mapping table
     #[configurable(required)]
@@ -146,18 +147,18 @@ impl TransformConfig for Config {
 
 #[derive(Clone)]
 struct Enum {
-    source: String,
-    target: String,
+    source: OwnedTargetPath,
+    target: OwnedTargetPath,
     mapping: Vec<MappingItem>,
 }
 
 impl FunctionTransform for Enum {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
-            if let Some(got) = log.get_field(self.source.as_str()) {
+            if let Some(got) = log.get_field(&self.source) {
                 for MappingItem { key, value } in &self.mapping {
                     let equal = match (key, got) {
-                        (Value::Integer(ai), event::log::Value::Int64(bi)) => ai == bi,
+                        (Value::Integer(ai), event::log::Value::Integer(bi)) => ai == bi,
                         (Value::Float(af), event::log::Value::Float(bf)) => af == bf,
                         (Value::String(astr), event::log::Value::Bytes(bs)) => astr == bs,
                         (Value::Bool(ab), event::log::Value::Boolean(bb)) => ab == bb,
@@ -166,7 +167,7 @@ impl FunctionTransform for Enum {
 
                     if equal {
                         let n: event::log::Value = From::from(value);
-                        log.insert_field(self.target.as_str(), n);
+                        log.insert(&self.target, n);
                         return;
                     }
                 }
@@ -179,6 +180,7 @@ impl FunctionTransform for Enum {
 
 #[cfg(test)]
 mod tests {
+    use event::log::path::parse_target_path;
     use event::{fields, Event};
 
     use super::*;
@@ -198,8 +200,8 @@ mod tests {
                     "source" => 0,
                 ),
                 Config {
-                    source: "source".into(),
-                    target: "target".into(),
+                    source: parse_target_path("source").unwrap(),
+                    target: parse_target_path("target").unwrap(),
                     mapping: vec![
                         MappingItem {
                             key: 0.into(),
@@ -222,8 +224,8 @@ mod tests {
                     "other_source" => 0,
                 ),
                 Config {
-                    source: "source".into(),
-                    target: "target".into(),
+                    source: parse_target_path("source").unwrap(),
+                    target: parse_target_path("target").unwrap(),
                     mapping: vec![
                         MappingItem {
                             key: 0.into(),
@@ -245,8 +247,8 @@ mod tests {
                     "source" => "success"
                 ),
                 Config {
-                    source: "source".into(),
-                    target: "target".into(),
+                    source: parse_target_path("source").unwrap(),
+                    target: parse_target_path("target").unwrap(),
                     mapping: vec![MappingItem {
                         key: "success".into(),
                         value: 0.into(),
@@ -263,8 +265,8 @@ mod tests {
                     "source" => "success",
                 ),
                 Config {
-                    source: "source".into(),
-                    target: "source".into(),
+                    source: parse_target_path("source").unwrap(),
+                    target: parse_target_path("source").unwrap(),
                     mapping: vec![MappingItem {
                         key: "success".into(),
                         value: 0.into(),
@@ -280,8 +282,8 @@ mod tests {
                     "foo" => "bar",
                 ),
                 Config {
-                    source: "source".into(),
-                    target: "target".into(),
+                    source: parse_target_path("source").unwrap(),
+                    target: parse_target_path("target").unwrap(),
                     mapping: vec![MappingItem {
                         key: "success".into(),
                         value: 0.into(),

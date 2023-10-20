@@ -126,7 +126,7 @@ impl MetricValue {
 /// The type alias for an array of `Metric` elements
 pub type Metrics = Vec<Metric>;
 
-#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct Metric {
     #[serde(flatten)]
     pub series: MetricSeries,

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use async_trait::async_trait;
 use configurable::configurable_component;
 use conversion::{parse_conversion_map, Conversion};
-use event::log::Value;
+use event::log::{OwnedTargetPath, Value};
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::timezone::TimeZone;
@@ -18,7 +18,7 @@ struct Config {
     ///
     /// NB: nonconvertible filed will be dropped.
     #[configurable(required)]
-    types: HashMap<String, String>,
+    types: HashMap<OwnedTargetPath, String>,
 
     timezone: Option<TimeZone>,
 }
@@ -44,11 +44,11 @@ impl TransformConfig for Config {
 
 #[derive(Clone, Debug)]
 struct Coercer {
-    types: HashMap<String, Conversion>,
+    types: HashMap<OwnedTargetPath, Conversion>,
 }
 
 impl Coercer {
-    pub const fn new(types: HashMap<String, Conversion>) -> Self {
+    pub const fn new(types: HashMap<OwnedTargetPath, Conversion>) -> Self {
         Self { types }
     }
 }
@@ -59,10 +59,10 @@ impl FunctionTransform for Coercer {
 
         events.for_each_log(|log| {
             for (field, conv) in &self.types {
-                if let Some(value) = log.remove_field(field.as_str()) {
+                if let Some(value) = log.remove_field(field) {
                     match conv.convert::<Value>(value.coerce_to_bytes()) {
                         Ok(converted) => {
-                            log.insert_field(field.as_str(), converted);
+                            log.insert(field, converted);
                         }
                         Err(err) => {
                             error!(

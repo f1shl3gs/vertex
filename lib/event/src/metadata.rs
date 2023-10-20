@@ -1,20 +1,41 @@
+use std::collections::BTreeMap;
+
 use finalize::{EventFinalizers, EventStatus};
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
+use value::Value;
 
 use crate::{BatchNotifier, EventFinalizer};
 
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[allow(clippy::module_name_repetitions)]
-#[derive(Clone, Debug, Default, Deserialize, PartialOrd, PartialEq, Serialize)]
+fn default_metadata_value() -> Value {
+    Value::Object(BTreeMap::new())
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct EventMetadata {
     #[serde(default, skip)]
     finalizers: EventFinalizers,
+
+    /// Arbitrary data stored with an event
+    #[serde(default = "default_metadata_value")]
+    pub(crate) value: Value,
+}
+
+impl Default for EventMetadata {
+    fn default() -> Self {
+        Self {
+            finalizers: EventFinalizers::default(),
+            value: Value::Object(BTreeMap::new()),
+        }
+    }
 }
 
 impl From<EventFinalizers> for EventMetadata {
     fn from(finalizers: EventFinalizers) -> Self {
-        Self { finalizers }
+        Self {
+            finalizers,
+            value: default_metadata_value(),
+        }
     }
 }
 

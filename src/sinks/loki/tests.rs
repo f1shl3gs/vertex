@@ -74,7 +74,7 @@ encoding:
     let mut sink = LokiSink::new(config, client, cx).unwrap();
 
     let mut event = Event::from("hello");
-    event.as_mut_log().insert_field("foo", "bar");
+    event.as_mut_log().insert("foo", "bar");
     let record = sink.encoder.encode_event(event);
     let want = serde_json::to_string(&serde_json::json!({
             "message": "hello",

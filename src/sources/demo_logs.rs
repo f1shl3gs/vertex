@@ -1,8 +1,9 @@
 use std::time::Duration;
 
 use async_trait::async_trait;
+use chrono::Utc;
 use configurable::configurable_component;
-use event::{fields, tags, LogRecord};
+use event::LogRecord;
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
 use log_schema::log_schema;
@@ -47,14 +48,10 @@ impl SourceConfig for Config {
                     _ = ticker.tick() => {}
                 }
 
-                let log = LogRecord::new(
-                    tags!(
-                        "source_type" => "demo_logs",
-                    ),
-                    fields!(
-                        log_schema().message_key() => message.as_str()
-                    ),
-                );
+                let mut log = LogRecord::default();
+                log.insert(log_schema().message_key(), message.as_str());
+                log.insert(log_schema().source_type_key(), "demo_logs");
+                log.insert(log_schema().timestamp_key(), Utc::now());
 
                 if let Err(err) = output.send(log).await {
                     error!(message = "send demo log to output failed", ?err);

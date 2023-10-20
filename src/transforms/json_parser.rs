@@ -1,4 +1,5 @@
 use configurable::configurable_component;
+use event::log::OwnedTargetPath;
 use event::Events;
 use framework::config::{default_true, DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
@@ -11,7 +12,7 @@ use serde_json::Value;
 #[serde(deny_unknown_fields, default)]
 pub struct Config {
     /// Which field to parse, by default log_schema's message key is used.
-    pub field: Option<String>,
+    pub field: Option<OwnedTargetPath>,
 
     /// Should Vertex drop the invalid event.
     #[serde(default = "default_true")]
@@ -22,7 +23,7 @@ pub struct Config {
 
     /// Which field to store the parsed result. If this is not set, the resultd
     /// will set as log's fields, which means other filed will dropped.
-    pub target_field: Option<String>,
+    pub target_field: Option<OwnedTargetPath>,
 
     /// Overwrite target filed.
     #[serde(default)]
@@ -63,10 +64,10 @@ impl TransformConfig for Config {
 
 #[derive(Debug, Clone)]
 pub struct JsonParser {
-    field: String,
+    field: OwnedTargetPath,
     drop_invalid: bool,
     drop_field: bool,
-    target_field: Option<String>,
+    target_field: Option<OwnedTargetPath>,
     overwrite_target: bool,
 
     // metrics
@@ -78,7 +79,7 @@ impl From<Config> for JsonParser {
     fn from(config: Config) -> JsonParser {
         let field = config
             .field
-            .unwrap_or_else(|| log_schema().message_key().to_string());
+            .unwrap_or_else(|| log_schema().message_key().clone());
 
         JsonParser {
             field,
@@ -97,11 +98,11 @@ impl FunctionTransform for JsonParser {
     fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
         if let Events::Logs(logs) = events {
             for mut log in logs {
-                let value = log.get_field(self.field.as_str());
+                let value = log.get_field(&self.field);
 
                 let parsed = value
                     .and_then(|value| {
-                        let to_parse = value.as_bytes();
+                        let to_parse = value.coerce_to_bytes();
                         serde_json::from_slice::<Value>(to_parse.as_ref())
                             .map_err(|err| {
                                 warn!(
@@ -130,27 +131,27 @@ impl FunctionTransform for JsonParser {
                 if let Some(object) = parsed {
                     match self.target_field {
                         Some(ref target_field) => {
-                            let contains_target = log.contains(target_field.as_str());
+                            let contains_target = log.contains(target_field);
 
                             if contains_target && !self.overwrite_target {
                                 warn!(
                                     message = "Target field already exists",
-                                    target = target_field.as_str(),
+                                    target = ?target_field,
                                     internal_log_rate_limit = true
                                 );
 
                                 // TODO: metrics
                             } else {
                                 if self.drop_field {
-                                    log.remove_field(self.field.as_str());
+                                    log.remove_field(&self.field);
                                 }
 
-                                log.insert_field(target_field.as_str(), Value::Object(object));
+                                log.insert(target_field, Value::Object(object));
                             }
                         }
                         None => {
                             if self.drop_field {
-                                log.remove_field(self.field.as_str());
+                                log.remove_field(&self.field);
                             }
 
                             if let event::log::Value::Object(ref mut map) = log.fields {
@@ -173,6 +174,7 @@ impl FunctionTransform for JsonParser {
 
 #[cfg(test)]
 mod test {
+    use event::log::path::parse_target_path;
     use event::Event;
     use serde_json::json;
 
@@ -304,7 +306,7 @@ mod test {
     #[test]
     fn json_parser_parse_field() {
         let mut parser = JsonParser::from(Config {
-            field: Some("data".into()),
+            field: Some(parse_target_path("data").unwrap()),
             drop_field: false,
             ..Default::default()
         });
@@ -314,7 +316,7 @@ mod test {
         let mut event = Event::from("message");
         event
             .as_mut_log()
-            .insert_field("data", r#"{"greeting": "hello", "name": "bob"}"#);
+            .insert("data", r#"{"greeting": "hello", "name": "bob"}"#);
         let metadata = event.metadata().clone();
 
         let event = transform_one(&mut parser, event).unwrap();
@@ -349,7 +351,7 @@ mod test {
         });
 
         let mut parser_inner = JsonParser::from(Config {
-            field: Some("log".into()),
+            field: Some(parse_target_path("log").unwrap()),
             ..Default::default()
         });
 
@@ -401,13 +403,13 @@ mod test {
 
         // Field
         let mut parser = JsonParser::from(Config {
-            field: Some("data".into()),
+            field: Some(parse_target_path("data").unwrap()),
             drop_field: false,
             ..Default::default()
         });
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", invalid);
+        event.as_mut_log().insert("data", invalid);
 
         let event = transform_one(&mut parser, event).unwrap();
 
@@ -439,21 +441,21 @@ mod test {
 
         // Field
         let mut parser = JsonParser::from(Config {
-            field: Some("data".into()),
+            field: Some(parse_target_path("data").unwrap()),
             drop_invalid: true,
             ..Default::default()
         });
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", valid);
+        event.as_mut_log().insert("data", valid);
         assert!(transform_one(&mut parser, event).is_some());
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", invalid);
+        event.as_mut_log().insert("data", invalid);
         assert!(transform_one(&mut parser, event).is_none());
 
         let mut event = Event::from("message");
-        event.as_mut_log().insert_field("data", not_object);
+        event.as_mut_log().insert("data", not_object);
         assert!(transform_one(&mut parser, event).is_none());
 
         // Missing field
@@ -467,7 +469,7 @@ mod test {
             ..Default::default()
         });
         let mut parser2 = JsonParser::from(Config {
-            field: Some("nested".into()),
+            field: Some(parse_target_path("nested").unwrap()),
             ..Default::default()
         });
 
@@ -598,7 +600,7 @@ mod test {
     fn target_field_works() {
         let mut parser = JsonParser::from(Config {
             drop_field: false,
-            target_field: Some("that".into()),
+            target_field: Some(parse_target_path("that").unwrap()),
             ..Default::default()
         });
 
@@ -616,7 +618,7 @@ mod test {
     fn target_field_preserves_existing() {
         let mut parser = JsonParser::from(Config {
             drop_field: false,
-            target_field: Some("message".into()),
+            target_field: Some(parse_target_path("message").unwrap()),
             ..Default::default()
         });
 
@@ -636,7 +638,7 @@ mod test {
     fn target_field_overwrites_existing() {
         let mut parser = JsonParser::from(Config {
             drop_field: false,
-            target_field: Some("message".into()),
+            target_field: Some(parse_target_path("message").unwrap()),
             overwrite_target: true,
             ..Default::default()
         });

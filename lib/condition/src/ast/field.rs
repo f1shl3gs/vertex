@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use event::{log::Value, LogRecord};
-use lookup::OwnedPath;
+use value::OwnedTargetPath;
 
 use crate::ast::Evaluator;
 use crate::Error;
@@ -57,7 +57,7 @@ impl PartialEq for FieldOp {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FieldExpr {
-    pub lhs: OwnedPath,
+    pub lhs: OwnedTargetPath,
 
     pub op: FieldOp,
 }
@@ -71,7 +71,7 @@ impl Evaluator for FieldExpr {
                     .ok_or_else(|| Error::MissingField(self.lhs.to_string()))?;
                 let value = match value {
                     Value::Float(f) => *f,
-                    Value::Int64(i) => *i as f64,
+                    Value::Integer(i) => *i as f64,
                     _ => return Ok(false),
                 };
 

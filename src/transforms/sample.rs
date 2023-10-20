@@ -1,5 +1,7 @@
 use ahash::RandomState;
 use configurable::configurable_component;
+use event::log::path::TargetPath;
+use event::log::OwnedTargetPath;
 use event::{Event, EventContainer, Events};
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
@@ -20,7 +22,7 @@ struct Config {
     /// differ from the configured one if values in the field are not
     /// uniformly distributed. If left unspecified, or if the event doesn't
     /// have "key_field", events will be count rated.
-    key_field: Option<String>,
+    key_field: Option<OwnedTargetPath>,
 }
 
 #[async_trait::async_trait]
@@ -46,7 +48,7 @@ impl TransformConfig for Config {
 struct Sample {
     rate: u64,
     count: u64,
-    key_field: Option<String>,
+    key_field: Option<OwnedTargetPath>,
     state: RandomState,
 
     // metrics
@@ -54,13 +56,14 @@ struct Sample {
 }
 
 impl Sample {
-    pub fn new(rate: u64, key_field: Option<String>) -> Self {
+    pub fn new(rate: u64, key_field: Option<OwnedTargetPath>) -> Self {
         let state = RandomState::with_seeds(
             0x16f11fe89b0d677c,
             0xb480a793d8e6c86c,
             0x6fe2e5aaf078ebc9,
             0x14f994a4c5259381,
         );
+
         Self {
             rate,
             count: 0,
@@ -83,7 +86,7 @@ impl FunctionTransform for Sample {
                 let value = self
                     .key_field
                     .as_ref()
-                    .and_then(|field| log.fields.get(field.as_str()))
+                    .and_then(|field| log.fields.get(field.value_path()))
                     .map(|v| v.to_string_lossy());
 
                 let num = if let Some(value) = value {
@@ -137,7 +140,7 @@ mod tests {
 
         for rate in [2, 5, 10, 20, 50, 100] {
             let events = random_events(num);
-            let mut sampler = Sample::new(rate, Some(log_schema().message_key().into()));
+            let mut sampler = Sample::new(rate, Some(log_schema().message_key().clone()));
             let passed = events
                 .into_iter()
                 .filter_map(|event| {
@@ -155,7 +158,7 @@ mod tests {
     #[test]
     fn hash_consistently_samples_the_same_events() {
         let events = random_events(1000);
-        let mut sampler = Sample::new(2, Some(log_schema().message_key().into()));
+        let mut sampler = Sample::new(2, Some(log_schema().message_key().clone()));
 
         let first_run = events
             .clone()

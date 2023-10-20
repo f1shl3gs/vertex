@@ -41,7 +41,6 @@ members = [
     "lib/framework",
     "lib/jaeger",
     "lib/log_schema",
-    "lib/lookup",
     "lib/measurable",
     "lib/metrics",
     "lib/multiline",
@@ -52,6 +51,7 @@ members = [
     "lib/tracing-internal",
     "lib/tracing-limit",
     "lib/tripwire",
+    "lib/value",
     "lib/virt",
 ]
 
@@ -319,6 +319,7 @@ prost-build = { version = "0.12.1", default-features = false }
 [dev-dependencies]
 base64 = { version = "0.21.4", default-features = false }
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
+event = { path = "lib/event", features = ["string_path"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.0", default-features = false, features = ["std"] }
 rand = { version = "0.8.5", default-features = false }
@@ -341,7 +342,6 @@ framework = { path = "lib/framework" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
-lookup = { path = "lib/lookup" }
 multiline = { path = "lib/multiline", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 measurable = { path = "lib/measurable" }

@@ -4,7 +4,7 @@ use bytes::BytesMut;
 use chrono::{DateTime, Utc};
 use codecs::encoding::Transformer;
 use codecs::Encoder;
-use event::log::Value;
+use event::log::{OwnedTargetPath, Value};
 use event::{Event, Finalizable};
 use log_schema::LogSchema;
 use rskafka::record::Record;
@@ -13,8 +13,8 @@ use tokio_util::codec::Encoder as _;
 use super::service::KafkaRequest;
 
 pub struct KafkaRequestBuilder {
-    pub key_field: Option<String>,
-    pub headers_field: Option<String>,
+    pub key_field: Option<OwnedTargetPath>,
+    pub headers_field: Option<OwnedTargetPath>,
 
     pub transformer: Transformer,
     pub encoder: Encoder<()>,
@@ -54,13 +54,13 @@ impl KafkaRequestBuilder {
     }
 }
 
-fn get_key(event: &Event, key_field: &Option<String>) -> Option<Vec<u8>> {
+fn get_key(event: &Event, key_field: &Option<OwnedTargetPath>) -> Option<Vec<u8>> {
     key_field.as_ref().and_then(|key_field| match event {
         Event::Log(log) => log
-            .get_field(key_field.as_str())
-            .map(|v| v.as_bytes().to_vec()),
+            .get_field(key_field)
+            .map(|v| v.coerce_to_bytes().to_vec()),
         Event::Metric(metric) => metric
-            .tag_value(key_field)
+            .tag_value(key_field.to_string().as_str())
             .map(|v| v.to_string().into_bytes()),
         Event::Trace(_span) => None,
     })
@@ -77,10 +77,13 @@ fn get_timestamp(event: &Event, log_schema: &'static LogSchema) -> Option<DateTi
     }
 }
 
-fn get_headers(ev: &Event, headers_field: &Option<String>) -> Option<BTreeMap<String, Vec<u8>>> {
+fn get_headers(
+    ev: &Event,
+    headers_field: &Option<OwnedTargetPath>,
+) -> Option<BTreeMap<String, Vec<u8>>> {
     headers_field.as_ref().and_then(|headers_field| {
         if let Event::Log(log) = ev {
-            if let Some(value) = log.get_field(headers_field.as_str()) {
+            if let Some(value) = log.get_field(headers_field) {
                 match value {
                     Value::Object(map) => {
                         let mut headers = BTreeMap::new();

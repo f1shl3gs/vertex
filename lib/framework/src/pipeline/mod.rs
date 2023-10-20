@@ -353,7 +353,7 @@ mod tests {
     async fn emits_lag_time_for_log() {
         emit_and_test(|timestamp| {
             let mut log = LogRecord::from("log message");
-            log.insert_field(log_schema::log_schema().timestamp_key(), timestamp);
+            log.insert(log_schema::log_schema().timestamp_key(), timestamp);
             log.into()
         })
         .await

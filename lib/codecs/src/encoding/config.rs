@@ -164,10 +164,9 @@ where
 
 #[cfg(test)]
 mod tests {
-    use lookup::parse_path;
-
     use super::*;
     use crate::encoding::TimestampFormat;
+    use event::log::parse_value_path;
 
     #[test]
     fn deserialize() {
@@ -183,8 +182,8 @@ timestamp_format: unix
 "##,
                 SerializerConfig::Json,
                 Transformer::new(
-                    Some(vec![parse_path("a.b[0]")]),
-                    Some(vec!["ignore_me".to_string()]),
+                    Some(vec![parse_value_path("a.b[0]").unwrap()]),
+                    Some(vec![parse_value_path("ignore_me").unwrap()]),
                     Some(TimestampFormat::Unix),
                 )
                 .unwrap(),
@@ -201,8 +200,11 @@ timestamp_format: unix
 "##,
                 SerializerConfig::Logfmt,
                 Transformer::new(
-                    Some(vec![parse_path("a.b[0]"), parse_path("b.a")]),
-                    Some(vec!["ignore_me".to_string()]),
+                    Some(vec![
+                        parse_value_path("a.b[0]").unwrap(),
+                        parse_value_path("b.a").unwrap(),
+                    ]),
+                    Some(vec![parse_value_path("ignore_me").unwrap()]),
                     Some(TimestampFormat::Unix),
                 )
                 .unwrap(),
@@ -232,7 +234,8 @@ encoding:
 "#,
                 Some(FramingConfig::NewlineDelimited),
                 SerializerConfig::Json,
-                Transformer::new(Some(vec![parse_path("a.b.c")]), None, None).unwrap(),
+                Transformer::new(Some(vec![parse_value_path("a.b.c").unwrap()]), None, None)
+                    .unwrap(),
             ),
             (
                 r#"
@@ -242,7 +245,8 @@ encoding:
 "#,
                 None,
                 SerializerConfig::Json,
-                Transformer::new(Some(vec![parse_path("a.b.c")]), None, None).unwrap(),
+                Transformer::new(Some(vec![parse_value_path("a.b.c").unwrap()]), None, None)
+                    .unwrap(),
             ),
         ];
 
