@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697809672996,
+  "lastUpdate": 1697812172470,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7fbcea61b30742e895e56d2eb0969f16fafd4822",
-          "message": "chore(deps): bump syn from 2.0.32 to 2.0.33 (#1252)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.32 to 2.0.33.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.32...2.0.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-14T15:45:57+08:00",
-          "tree_id": "0df829b90476a527faca773217e88fe8d91fa338",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7fbcea61b30742e895e56d2eb0969f16fafd4822"
-        },
-        "date": 1694677746154,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 824080,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 713250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "531ed19c548c95a9481f7af4b0f86263c25f7b76",
+          "message": "bump serde to 1.0.189 (#1362)",
+          "timestamp": "2023-10-20T22:26:35+08:00",
+          "tree_id": "b70a0101f3e53b4f935a5c9f10a548b765539d85",
+          "url": "https://github.com/f1shl3gs/vertex/commit/531ed19c548c95a9481f7af4b0f86263c25f7b76"
+        },
+        "date": 1697812154359,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 748410,
             "unit": "ns/op"
           }
         ]
