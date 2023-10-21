@@ -67,7 +67,7 @@ impl Evaluator for FieldExpr {
         match &self.op {
             FieldOp::Ordering { op, rhs } => {
                 let value = log
-                    .get_field(&self.lhs)
+                    .get(&self.lhs)
                     .ok_or_else(|| Error::MissingField(self.lhs.to_string()))?;
                 let value = match value {
                     Value::Float(f) => *f,
@@ -86,7 +86,7 @@ impl Evaluator for FieldExpr {
             }
             FieldOp::Contains(s) => {
                 let value = log
-                    .get_field(&self.lhs)
+                    .get(&self.lhs)
                     .ok_or_else(|| Error::MissingField(self.lhs.to_string()))?;
 
                 match value {
@@ -100,7 +100,7 @@ impl Evaluator for FieldExpr {
             }
             FieldOp::Matches(re) => {
                 let value = log
-                    .get_field(&self.lhs)
+                    .get(&self.lhs)
                     .ok_or_else(|| Error::MissingField(self.lhs.to_string()))?;
                 match value {
                     Value::Bytes(b) => Ok(re.is_match(b)),

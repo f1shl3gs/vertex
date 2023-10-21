@@ -25,10 +25,7 @@ impl Encoder<Event> for TextSerializer {
             Event::Log(log) => {
                 let message_key = log_schema().message_key();
 
-                if let Some(bytes) = log
-                    .get_field(message_key)
-                    .map(|value| value.coerce_to_bytes())
-                {
+                if let Some(bytes) = log.get(message_key).map(|value| value.coerce_to_bytes()) {
                     dst.put(bytes);
                 }
             }

@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::fmt;
 use std::fmt::Formatter;
 
 use bytes::Bytes;
@@ -150,7 +151,7 @@ fn render_timestamp(items: &ParsedStrftime, event: EventRef<'_>) -> String {
     match event {
         EventRef::Log(log) => {
             let path = log_schema().timestamp_key();
-            log.get_field(path).and_then(Value::as_timestamp).copied()
+            log.get(path).and_then(Value::as_timestamp).copied()
         }
 
         EventRef::Metric(metric) => metric.timestamp(),
@@ -265,6 +266,12 @@ impl TryFrom<&str> for Template {
     }
 }
 
+impl fmt::Display for Template {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.src)
+    }
+}
+
 impl Template {
     pub fn parse(src: &str) -> Result<Self, TemplateParseError> {
         parse_template(src).map(|parts| {
@@ -327,7 +334,7 @@ impl Template {
                     out.push_str(
                         &match event {
                             EventRef::Log(log) => match parse_target_path(key) {
-                                Ok(path) => log.get_field(&path).map(|v| v.to_string_lossy()),
+                                Ok(path) => log.get(&path).map(|v| v.to_string_lossy()),
                                 Err(_err) => None,
                             },
                             EventRef::Metric(metric) => {

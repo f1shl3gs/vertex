@@ -155,7 +155,7 @@ struct Enum {
 impl FunctionTransform for Enum {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
-            if let Some(got) = log.get_field(&self.source) {
+            if let Some(got) = log.get(&self.source) {
                 for MappingItem { key, value } in &self.mapping {
                     let equal = match (key, got) {
                         (Value::Integer(ai), event::log::Value::Integer(bi)) => ai == bi,

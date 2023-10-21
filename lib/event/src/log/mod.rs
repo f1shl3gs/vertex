@@ -10,14 +10,14 @@ use chrono::Utc;
 use log_schema::log_schema;
 use measurable::ByteSizeOf;
 use serde::Serialize;
-use value::path::{PathPrefix, TargetPath, ValuePath};
+use value::path::{PathPrefix, ValuePath};
 pub use value::{
-    event_path, metadata_path, parse_value_path, path, OwnedTargetPath, OwnedValuePath, Value,
+    event_path, metadata_path, owned_value_path, parse_value_path, path, path::TargetPath,
+    OwnedTargetPath, OwnedValuePath, Value,
 };
 
 use crate::log::keys::{all_fields, keys};
 use crate::metadata::EventMetadata;
-use crate::tags::{skip_serializing_if_empty, Key, Tags};
 use crate::{
     BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, MaybeAsLogMut,
 };
@@ -27,33 +27,43 @@ pub type Logs = Vec<LogRecord>;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct LogRecord {
-    #[serde(skip_serializing_if = "skip_serializing_if_empty")]
-    pub tags: Tags,
-
-    #[serde(flatten)]
-    pub fields: Value,
-
     #[serde(skip)]
     metadata: EventMetadata,
+
+    #[serde(flatten)]
+    fields: Value,
 }
 
 impl Default for LogRecord {
     fn default() -> Self {
         Self {
-            tags: Tags::default(),
             fields: Value::Object(BTreeMap::new()),
             metadata: EventMetadata::default(),
         }
     }
 }
 
-impl From<BTreeMap<String, Value>> for LogRecord {
-    fn from(fields: BTreeMap<String, Value>) -> Self {
-        Self {
-            tags: Tags::default(),
-            fields: Value::Object(fields),
-            metadata: EventMetadata::default(),
-        }
+impl EventDataEq for LogRecord {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.fields == other.fields
+    }
+}
+
+impl MaybeAsLogMut for LogRecord {
+    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
+        Some(self)
+    }
+}
+
+impl ByteSizeOf for LogRecord {
+    fn allocated_bytes(&self) -> usize {
+        self.metadata.allocated_bytes() + self.fields.allocated_bytes()
+    }
+}
+
+impl Finalizable for LogRecord {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        self.metadata.take_finalizers()
     }
 }
 
@@ -80,64 +90,53 @@ impl From<Bytes> for LogRecord {
     }
 }
 
-impl EventDataEq for LogRecord {
-    fn event_data_eq(&self, other: &Self) -> bool {
-        self.fields == other.fields
+impl From<BTreeMap<String, Value>> for LogRecord {
+    fn from(fields: BTreeMap<String, Value>) -> Self {
+        Self {
+            fields: Value::Object(fields),
+            metadata: EventMetadata::default(),
+        }
     }
 }
 
-impl MaybeAsLogMut for LogRecord {
-    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
-        Some(self)
-    }
-}
-
-impl ByteSizeOf for LogRecord {
-    fn allocated_bytes(&self) -> usize {
-        self.tags.allocated_bytes() + self.fields.allocated_bytes()
-    }
-}
-
-impl Finalizable for LogRecord {
-    fn take_finalizers(&mut self) -> EventFinalizers {
-        self.metadata.take_finalizers()
+impl From<Value> for LogRecord {
+    fn from(value: Value) -> Self {
+        Self {
+            metadata: EventMetadata::default(),
+            fields: value,
+        }
     }
 }
 
 impl LogRecord {
-    pub fn new(tags: Tags, fields: BTreeMap<String, Value>) -> Self {
-        Self {
-            tags,
-            fields: fields.into(),
-            metadata: EventMetadata::default(),
-        }
+    #[inline]
+    pub fn into_parts(self) -> (EventMetadata, Value) {
+        (self.metadata, self.fields)
     }
 
     #[inline]
-    pub fn into_parts(self) -> (Tags, Value, EventMetadata) {
-        (self.tags, self.fields, self.metadata)
-    }
-
-    #[must_use]
-    pub fn with_batch_notifier(mut self, batch: &BatchNotifier) -> Self {
-        self.metadata = self.metadata.with_batch_notifier(batch);
-        self
+    pub fn metadata(&self) -> &EventMetadata {
+        &self.metadata
     }
 
     #[inline]
-    pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<crate::tags::Value>) {
-        self.tags.insert(key, value);
+    pub fn metadata_mut(&mut self) -> &mut EventMetadata {
+        &mut self.metadata
+    }
+
+    /// This is added to the "event metadata", nested under the name "vertex".
+    pub fn insert_metadata<'a>(&mut self, key: impl ValuePath<'a>, value: impl Into<Value>) {
+        self.metadata
+            .value
+            .insert(path!("vertex").concat(key), value);
     }
 
     #[inline]
-    pub fn get_tag(&self, key: &Key) -> Option<&crate::tags::Value> {
-        self.tags.get(key)
-    }
-
     pub fn value(&self) -> &Value {
         &self.fields
     }
 
+    #[inline]
     pub fn value_mut(&mut self) -> &mut Value {
         &mut self.fields
     }
@@ -170,7 +169,7 @@ impl LogRecord {
     }
 
     #[allow(clippy::needless_pass_by_value)]
-    pub fn get_field<'a>(&self, path: impl TargetPath<'a>) -> Option<&Value> {
+    pub fn get<'a>(&self, path: impl TargetPath<'a>) -> Option<&Value> {
         match path.prefix() {
             PathPrefix::Event => self.fields.get(path.value_path()),
             PathPrefix::Metadata => self.metadata.value.get(path.value_path()),
@@ -178,7 +177,7 @@ impl LogRecord {
     }
 
     #[allow(clippy::needless_pass_by_value)]
-    pub fn get_field_mut<'a>(&mut self, path: impl TargetPath<'a>) -> Option<&mut Value> {
+    pub fn get_mut<'a>(&mut self, path: impl TargetPath<'a>) -> Option<&mut Value> {
         match path.prefix() {
             PathPrefix::Event => self.fields.get_mut(path.value_path()),
             PathPrefix::Metadata => self.metadata.value.get_mut(path.value_path()),
@@ -186,16 +185,12 @@ impl LogRecord {
     }
 
     #[allow(clippy::needless_pass_by_value)]
-    pub fn remove_field<'a>(&mut self, path: impl TargetPath<'a>) -> Option<Value> {
-        self.remove_field_prune(path, false)
+    pub fn remove<'a>(&mut self, path: impl TargetPath<'a>) -> Option<Value> {
+        self.remove_prune(path, false)
     }
 
     #[allow(clippy::needless_pass_by_value)]
-    pub fn remove_field_prune<'a>(
-        &mut self,
-        path: impl TargetPath<'a>,
-        prune: bool,
-    ) -> Option<Value> {
+    pub fn remove_prune<'a>(&mut self, path: impl TargetPath<'a>, prune: bool) -> Option<Value> {
         match path.prefix() {
             PathPrefix::Event => self.fields.remove(path.value_path(), prune),
             PathPrefix::Metadata => self.metadata.value.remove(path.value_path(), prune),
@@ -227,16 +222,14 @@ impl LogRecord {
         }
     }
 
+    #[must_use]
+    pub fn with_batch_notifier(mut self, batch: &BatchNotifier) -> Self {
+        self.metadata = self.metadata.with_batch_notifier(batch);
+        self
+    }
+
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
         self.metadata.add_finalizer(finalizer);
-    }
-
-    pub fn metadata(&self) -> &EventMetadata {
-        &self.metadata
-    }
-
-    pub fn metadata_mut(&mut self) -> &mut EventMetadata {
-        &mut self.metadata
     }
 
     #[must_use]

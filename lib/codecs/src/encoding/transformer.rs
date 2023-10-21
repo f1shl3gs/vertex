@@ -180,7 +180,7 @@ impl Transformer {
     fn apply_except_fields(&self, log: &mut LogRecord) {
         if let Some(except_fields) = self.except_fields.as_ref() {
             for field in except_fields {
-                log.remove_field((PathPrefix::Event, field));
+                log.remove((PathPrefix::Event, field));
             }
         }
     }
@@ -189,7 +189,7 @@ impl Transformer {
         if let Some(timestamp_format) = self.timestamp_format.as_ref() {
             match timestamp_format {
                 TimestampFormat::Unix => {
-                    if log.fields.as_object().is_some() {
+                    if log.value().as_object().is_some() {
                         let mut timestamps = Vec::new();
                         for (k, v) in log.all_fields().expect("must be an object") {
                             if let Value::Timestamp(ts) = v {
@@ -203,7 +203,7 @@ impl Transformer {
                         }
                     } else {
                         // root is not an object
-                        let timestamp = if let Value::Timestamp(ts) = log.fields {
+                        let timestamp = if let Value::Timestamp(ts) = log.value() {
                             Some(ts.timestamp())
                         } else {
                             None
@@ -340,7 +340,7 @@ mod tests {
         let mut event = Event::Log(LogRecord::from("Demo"));
         let timestamp = event
             .as_mut_log()
-            .get_field(log_schema().timestamp_key())
+            .get(log_schema().timestamp_key())
             .unwrap()
             .clone();
         let timestamp = match timestamp {
@@ -355,7 +355,7 @@ mod tests {
 
         match event
             .as_mut_log()
-            .get_field(log_schema().timestamp_key())
+            .get(log_schema().timestamp_key())
             .unwrap()
         {
             Value::Integer(_) => {}
@@ -364,7 +364,7 @@ mod tests {
                 e
             ),
         }
-        match event.as_mut_log().get_field("another").unwrap() {
+        match event.as_mut_log().get("another").unwrap() {
             Value::Integer(_) => {}
             e => panic!(
                 "Timestamp was not transformed into a Unix timestamp. Was {:?}",

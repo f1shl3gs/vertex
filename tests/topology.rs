@@ -23,7 +23,7 @@ use util::{
 fn into_message(event: Event) -> String {
     event
         .as_log()
-        .get_field(log_schema().message_key())
+        .get(log_schema().message_key())
         .unwrap()
         .to_string_lossy()
         .into_owned()
@@ -92,7 +92,7 @@ async fn shutdown_while_active() {
         assert_eq!(
             event
                 .as_log()
-                .get_field(log_schema().message_key())
+                .get(log_schema().message_key())
                 .unwrap()
                 .to_string_lossy(),
             "test transformed".to_string()

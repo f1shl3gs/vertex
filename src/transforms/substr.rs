@@ -54,7 +54,7 @@ struct Substr {
 impl FunctionTransform for Substr {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
-            if let Some(Value::Bytes(value)) = log.get_field_mut(&self.field) {
+            if let Some(Value::Bytes(value)) = log.get_mut(&self.field) {
                 if let Some(offset) = self.offset {
                     let offset = value.remaining().min(offset);
                     value.advance(offset);

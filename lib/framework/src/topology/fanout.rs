@@ -623,7 +623,7 @@ mod tests {
 
         event
             .into_log()
-            .get_field("message")
+            .get("message")
             .expect("log must have a `message` filed")
             .to_string()
     }

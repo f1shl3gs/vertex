@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use configurable::{configurable_component, Configurable};
+use event::array::EventMutRef;
 use event::tags::{Key, Tags, Value};
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
@@ -61,7 +62,6 @@ impl TransformConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![
             Output::default(DataType::Metric),
-            Output::default(DataType::Log),
             Output::default(DataType::Trace),
         ]
     }
@@ -75,7 +75,11 @@ struct Rewrite {
 impl FunctionTransform for Rewrite {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_event(|event| {
-            let tags = event.tags();
+            let tags = match event {
+                EventMutRef::Metric(log) => log.tags_mut(),
+                EventMutRef::Trace(trace) => &mut trace.tags,
+                _ => unreachable!(),
+            };
 
             for op in &self.operations {
                 op.apply(tags);
@@ -115,7 +119,7 @@ mod tests {
 
         let event = transform_one(&mut rewrite, event).expect("transform should success");
 
-        assert_eq!(event.tags(), &tags);
+        assert_eq!(event.into_metric().tags(), &tags);
     }
 
     #[test]

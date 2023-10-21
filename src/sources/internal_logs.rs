@@ -121,23 +121,23 @@ mod tests {
         sleep(Duration::from_millis(10)).await;
         let mut logs = collect_ready(rx).await;
         let test_id = Value::from(test_id.to_string());
-        logs.retain(|log| log.get_field("test_id") == Some(&test_id));
+        logs.retain(|log| log.get("test_id") == Some(&test_id));
 
         let end = Utc::now();
 
         assert_eq!(logs.len(), 2);
         assert_eq!(
-            logs[0].get_field("message").unwrap(),
+            logs[0].get("message").unwrap(),
             &Value::from("Before source started")
         );
         assert_eq!(
-            logs[1].get_field("message").unwrap().to_string_lossy(),
+            logs[1].get("message").unwrap().to_string_lossy(),
             "After source started"
         );
 
         for log in logs {
             let timestamp = log
-                .get_field("timestamp")
+                .get("timestamp")
                 .unwrap()
                 .as_timestamp()
                 .expect("timestamp isn't a timestamp");

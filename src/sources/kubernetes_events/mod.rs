@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use async_trait::async_trait;
 use chrono::Utc;
 use configurable::configurable_component;
-use event::{fields, tags, LogRecord};
+use event::{fields, LogRecord};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures::StreamExt;
@@ -92,21 +92,18 @@ impl SourceConfig for Config {
                             None => Utc::now(),
                         };
 
-                        LogRecord::new(
-                            tags!(
-                                "reason" => ev.reason.unwrap_or_default(),
-                                "action" => ev.action.unwrap_or_default(),
-                                "type" => ev.type_.unwrap_or_default(),
-                                "name" => ev.metadata.name.unwrap_or_default(),
-                                "namespace" => ev.metadata.namespace.unwrap_or_default(),
-                                "uid" => ev.metadata.uid.unwrap_or_default(),
-                                source_type_key.to_string() => "kubernetes_events",
-                            ),
-                            fields!(
-                                message_key.to_string() => ev.message.unwrap_or_default(),
-                                timestamp_key.to_string() => timestamp,
-                            ),
-                        )
+                        LogRecord::from(fields!(
+                            "reason" => ev.reason.unwrap_or_default(),
+                            "action" => ev.action.unwrap_or_default(),
+                            "type" => ev.type_.unwrap_or_default(),
+                            "name" => ev.metadata.name.unwrap_or_default(),
+                            "namespace" => ev.metadata.namespace.unwrap_or_default(),
+                            "uid" => ev.metadata.uid.unwrap_or_default(),
+                            source_type_key.to_string() => "kubernetes_events",
+
+                            message_key.to_string() => ev.message.unwrap_or_default(),
+                            timestamp_key.to_string() => timestamp,
+                        ))
                     });
 
                 if let Err(err) = output.send_batch(records).await {

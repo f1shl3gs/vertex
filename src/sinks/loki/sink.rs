@@ -6,6 +6,7 @@ use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use codecs::Encoder;
 use event::log::path::parse_target_path;
+use event::log::Value;
 use event::{Event, EventContainer, EventFinalizers, Events, Finalizable};
 use framework::config::SinkContext;
 use framework::http::HttpClient;
@@ -23,6 +24,7 @@ use tokio_util::codec::Encoder as _;
 
 use super::config::{Config, OutOfOrderAction};
 use super::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
+use super::sanitize::sanitize_label_key;
 use super::service::{LokiRequest, LokiService};
 
 struct RecordPartitionner;
@@ -127,21 +129,90 @@ pub(super) struct EventEncoder {
 
 impl EventEncoder {
     fn build_labels(&self, event: &Event) -> Vec<(String, String)> {
-        let log = event.as_log();
-        log.tags
-            .iter()
-            .map(|(k, v)| (k.to_string(), v.to_string()))
-            .chain(self.labels.iter().filter_map(|(key_tmpl, value_tmpl)| {
-                if let (Ok(key), Ok(value)) = (
-                    key_tmpl.render_string(event),
-                    value_tmpl.render_string(event),
-                ) {
-                    Some((key, value))
-                } else {
-                    None
+        let mut static_labels = HashMap::new();
+        let mut dynamic_labels = HashMap::new();
+
+        for (key_template, value_template) in &self.labels {
+            let key = match key_template.render_string(event) {
+                Ok(key) => key,
+                Err(err) => {
+                    warn!(
+                        message = "failed to render template for label key",
+                        ?err,
+                        template = key_template.to_string(),
+                        internal_log_rate_limit = true
+                    );
+                    continue;
                 }
-            }))
-            .collect()
+            };
+
+            let value = match value_template.render_string(event) {
+                Ok(value) => value,
+                Err(err) => {
+                    warn!(
+                        message = "failed to render template for label value",
+                        ?err,
+                        template = value_template.to_string(),
+                        internal_log_rate_limit = true,
+                    );
+                    continue;
+                }
+            };
+
+            if let Some(opening_prefix) = key.strip_prefix('*') {
+                match serde_json::from_str::<serde_json::map::Map<String, serde_json::Value>>(
+                    &value,
+                ) {
+                    Ok(output) => {
+                        // key_* -> key_one, key_two, key_three
+                        // * -> one, two, three
+                        for (k, v) in output {
+                            if v.is_null() {
+                                warn!(
+                                    message = "encountered null value for dynamic label",
+                                    key = k,
+                                );
+
+                                continue;
+                            }
+
+                            let key = sanitize_label_key(opening_prefix);
+                            let value = Value::from(v).to_string_lossy().into_owned();
+
+                            if let Some(prev) = dynamic_labels.insert(key.clone(), value.clone()) {
+                                warn!(
+                                    message = "encountered duplicated dynamic label",
+                                    key,
+                                    value,
+                                    prev,
+                                    internal_log_rate_limit = true,
+                                );
+                            }
+                        }
+                    }
+                    Err(err) => {
+                        warn!(message = "failed to expand dynamic label", ?err, value);
+                        continue;
+                    }
+                }
+            } else {
+                static_labels.insert(key, value);
+            }
+        }
+
+        for (key, value) in static_labels {
+            if let Some(discarded_value) = dynamic_labels.insert(key.clone(), value.clone()) {
+                warn!(
+                    message = "static label overrides dynamic label",
+                    key,
+                    value,
+                    discarded_value,
+                    internal_log_rate_limit = true,
+                );
+            }
+        }
+
+        Vec::from_iter(dynamic_labels)
     }
 
     fn remove_label_fields(&self, event: &mut Event) {
@@ -155,7 +226,7 @@ impl EventEncoder {
 
                 for field in fields {
                     if let Ok(path) = parse_target_path(field.as_str()) {
-                        log.remove_field(&path);
+                        log.remove(&path);
                     }
                 }
             }
@@ -170,7 +241,7 @@ impl EventEncoder {
 
         let schema = log_schema::log_schema();
         let timestamp_key = schema.timestamp_key();
-        let timestamp = match event.as_log().get_field(timestamp_key) {
+        let timestamp = match event.as_log().get(timestamp_key) {
             Some(event::log::Value::Timestamp(ts)) => ts.timestamp_nanos_opt().unwrap(),
             _ => chrono::Utc::now()
                 .timestamp_nanos_opt()
@@ -178,7 +249,7 @@ impl EventEncoder {
         };
 
         if self.remove_timestamp {
-            event.as_mut_log().remove_field(timestamp_key);
+            event.as_mut_log().remove(timestamp_key);
         }
 
         self.transformer.transform(&mut event);

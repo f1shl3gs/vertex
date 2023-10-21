@@ -91,7 +91,7 @@ impl SyncTransform for Route {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{fields, tags, Event, EventContainer, LogRecord};
+    use event::{fields, Event, EventContainer, LogRecord};
 
     #[test]
     fn generate_config() {
@@ -101,14 +101,11 @@ mod tests {
     #[test]
     fn route() {
         let outputs = ["first", "second", "third", UNMATCHED_ROUTE];
-        let event: Event = LogRecord::new(
-            tags!(),
-            fields!(
-                "message" => "hello world",
-                "second" => "second",
-                "third" => "third",
-            ),
-        )
+        let event: Event = LogRecord::from(fields!(
+            "message" => "hello world",
+            "second" => "second",
+            "third" => "third",
+        ))
         .into();
 
         let tests = [

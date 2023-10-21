@@ -3,9 +3,7 @@ use std::{iter, slice, vec};
 use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
 use measurable::ByteSizeOf;
 
-use crate::{
-    Event, EventMetadata, EventRef, LogRecord, Logs, Metric, Metrics, Tags, Trace, Traces,
-};
+use crate::{Event, EventMetadata, EventRef, LogRecord, Logs, Metric, Metrics, Trace, Traces};
 
 /// An array of one of the `Event` variants exclusively
 #[derive(Clone, Debug, PartialEq)]
@@ -245,14 +243,6 @@ impl<'a> EventMutRef<'a> {
         match self {
             Self::Metric(metric) => metric.clone(),
             _ => panic!("Failed type coercion, {self:?} is not a metric reference"),
-        }
-    }
-
-    pub fn tags(self) -> &'a mut Tags {
-        match self {
-            Self::Log(log) => &mut log.tags,
-            Self::Metric(metric) => &mut metric.series.tags,
-            Self::Trace(trace) => &mut trace.tags,
         }
     }
 

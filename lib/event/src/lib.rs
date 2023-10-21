@@ -30,7 +30,6 @@ pub use metadata::EventMetadata;
 pub use metric::*;
 pub use trace::{Trace, Traces};
 
-use std::collections::btree_map;
 use std::collections::BTreeMap;
 
 use bytes::Bytes;
@@ -201,30 +200,6 @@ impl Event {
         }
     }
 
-    pub fn tags(&self) -> &Tags {
-        match self {
-            Event::Log(log) => &log.tags,
-            Event::Metric(metric) => metric.tags(),
-            Event::Trace(trace) => &trace.tags,
-        }
-    }
-
-    pub fn tags_mut(&mut self) -> &mut Tags {
-        match self {
-            Event::Log(log) => &mut log.tags,
-            Event::Metric(metric) => metric.tags_mut(),
-            Event::Trace(trace) => &mut trace.tags,
-        }
-    }
-
-    pub fn tag_entry(&mut self, key: impl Into<Key>) -> btree_map::Entry<Key, tags::Value> {
-        match self {
-            Self::Log(log) => log.tags.entry(key),
-            Self::Metric(metric) => metric.series.tags.entry(key),
-            Self::Trace(trace) => trace.tags.entry(key),
-        }
-    }
-
     pub fn metadata(&self) -> &EventMetadata {
         match self {
             Self::Log(log) => log.metadata(),
@@ -239,11 +214,6 @@ impl Event {
             Self::Log(log) => log.metadata_mut(),
             Self::Trace(span) => span.metadata_mut(),
         }
-    }
-
-    #[inline]
-    pub fn new_empty_log() -> Self {
-        Event::Log(LogRecord::default())
     }
 
     pub fn add_batch_notifier(&mut self, batch: BatchNotifier) {

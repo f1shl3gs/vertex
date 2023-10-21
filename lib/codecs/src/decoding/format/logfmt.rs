@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 
 use bytes::Bytes;
 use event::log::Value;
-use event::{tags, Event, LogRecord};
+use event::{Event, LogRecord};
 use smallvec::{smallvec, SmallVec};
 
 use super::{DeserializeError, Deserializer};
@@ -108,7 +108,7 @@ impl Deserializer for LogfmtDeserializer {
         let line = std::str::from_utf8(&buf)?;
         let pairs = parse(line);
 
-        let log = LogRecord::new(tags!(), pairs);
+        let log = LogRecord::from(pairs);
         Ok(smallvec![log.into()])
     }
 }
@@ -194,8 +194,7 @@ mod tests {
             assert_eq!(events.len(), 1);
             let event = events.next().unwrap();
             let log = event.as_log();
-            assert_eq!(log.tags, tags!());
-            let got = log.fields.as_object().unwrap();
+            let got = log.value().as_object().unwrap();
             assert_eq!(got.len(), want.len(), "input: {}\ngot: {:?}", input, got);
             for (key, value) in got {
                 assert_eq!(

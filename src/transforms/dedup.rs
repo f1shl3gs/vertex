@@ -142,7 +142,7 @@ impl Dedup {
                 let mut entry = Vec::new();
 
                 for field_name in self.fields.iter() {
-                    if let Some(value) = log.get_field(field_name) {
+                    if let Some(value) = log.get(field_name) {
                         entry.push(Some((type_id_for_value(value), value.coerce_to_bytes())));
                     } else {
                         entry.push(None);

@@ -56,9 +56,7 @@ impl KafkaRequestBuilder {
 
 fn get_key(event: &Event, key_field: &Option<OwnedTargetPath>) -> Option<Vec<u8>> {
     key_field.as_ref().and_then(|key_field| match event {
-        Event::Log(log) => log
-            .get_field(key_field)
-            .map(|v| v.coerce_to_bytes().to_vec()),
+        Event::Log(log) => log.get(key_field).map(|v| v.coerce_to_bytes().to_vec()),
         Event::Metric(metric) => metric
             .tag_value(key_field.to_string().as_str())
             .map(|v| v.to_string().into_bytes()),
@@ -69,7 +67,7 @@ fn get_key(event: &Event, key_field: &Option<OwnedTargetPath>) -> Option<Vec<u8>
 fn get_timestamp(event: &Event, log_schema: &'static LogSchema) -> Option<DateTime<Utc>> {
     match &event {
         Event::Log(log) => log
-            .get_field(log_schema.timestamp_key())
+            .get(log_schema.timestamp_key())
             .and_then(|v| v.as_timestamp())
             .copied(),
         Event::Metric(metric) => metric.timestamp,
@@ -83,7 +81,7 @@ fn get_headers(
 ) -> Option<BTreeMap<String, Vec<u8>>> {
     headers_field.as_ref().and_then(|headers_field| {
         if let Event::Log(log) = ev {
-            if let Some(value) = log.get_field(headers_field) {
+            if let Some(value) = log.get(headers_field) {
                 match value {
                     Value::Object(map) => {
                         let mut headers = BTreeMap::new();

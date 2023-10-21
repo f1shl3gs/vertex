@@ -64,11 +64,8 @@ mod tests {
         {
             let event = events.next().unwrap();
             let log = event.as_log();
-            assert_eq!(
-                log.get_field(event_path!("foo")).unwrap().clone(),
-                123.into()
-            );
-            assert!(log.get_field(log_schema().timestamp_key()).is_some())
+            assert_eq!(log.get(event_path!("foo")).unwrap().clone(), 123.into());
+            assert!(log.get(log_schema().timestamp_key()).is_some())
         }
 
         assert_eq!(events.next(), None);

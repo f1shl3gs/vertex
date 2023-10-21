@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 
 use finalize::{EventFinalizers, EventStatus};
@@ -16,9 +17,15 @@ pub struct EventMetadata {
     #[serde(default, skip)]
     finalizers: EventFinalizers,
 
-    /// Arbitrary data stored with an event
+    /// Arbitrary data stored with an event.
     #[serde(default = "default_metadata_value")]
     pub(crate) value: Value,
+
+    /// The id of the source.
+    pub(crate) source_id: Option<Cow<'static, str>>,
+
+    /// The type of the source.
+    pub(crate) source_type: Option<Cow<'static, str>>,
 }
 
 impl Default for EventMetadata {
@@ -26,6 +33,8 @@ impl Default for EventMetadata {
         Self {
             finalizers: EventFinalizers::default(),
             value: Value::Object(BTreeMap::new()),
+            source_id: None,
+            source_type: None,
         }
     }
 }
@@ -35,6 +44,8 @@ impl From<EventFinalizers> for EventMetadata {
         Self {
             finalizers,
             value: default_metadata_value(),
+            source_id: None,
+            source_type: None,
         }
     }
 }
@@ -49,6 +60,30 @@ impl ByteSizeOf for EventMetadata {
 }
 
 impl EventMetadata {
+    /// Returns a reference to the metadata value.
+    #[inline]
+    pub fn value(&self) -> &Value {
+        &self.value
+    }
+
+    /// Returns a mutable reference to the metadata value.
+    #[inline]
+    pub fn value_mut(&mut self) -> &mut Value {
+        &mut self.value
+    }
+
+    /// Returns a reference to the metadata source id.
+    #[inline]
+    pub fn source_id(&self) -> Option<&str> {
+        self.source_id.as_deref()
+    }
+
+    /// Returns a reference to the metadata source type.
+    #[inline]
+    pub fn source_type(&self) -> Option<&str> {
+        self.source_type.as_deref()
+    }
+
     /// Replace the finalizers array with the given one.
     #[must_use]
     pub fn with_finalizer(mut self, finalizer: EventFinalizer) -> Self {
@@ -116,6 +151,7 @@ pub struct WithMetadata<T> {
     pub metadata: EventMetadata,
 }
 
+/*
 impl<T> WithMetadata<T> {
     /// Covert from one wrapped type to another, where the underlying
     /// type allows direct conversion.
@@ -128,3 +164,4 @@ impl<T> WithMetadata<T> {
         }
     }
 }
+*/

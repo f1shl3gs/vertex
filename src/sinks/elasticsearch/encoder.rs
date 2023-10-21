@@ -54,7 +54,7 @@ impl Encoder<Vec<ProcessedEvent>> for ElasticsearchEncoder {
                 &event.id,
             )?;
             written +=
-                as_tracked_write::<_, _, io::Error>(writer, &log.fields, |mut writer, log| {
+                as_tracked_write::<_, _, io::Error>(writer, log.value(), |mut writer, log| {
                     writer.write_all(&[b'\n'])?;
                     serde_json::to_writer(&mut writer, log)?;
                     writer.write_all(&[b'\n'])?;

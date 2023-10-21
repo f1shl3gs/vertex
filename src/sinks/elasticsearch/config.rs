@@ -128,7 +128,7 @@ impl DataStreamConfig {
             return;
         }
 
-        if let Some(value) = log.remove_field(timestamp_key) {
+        if let Some(value) = log.remove(timestamp_key) {
             log.insert(event_path!(DATA_STREAM_TIMESTAMP_KEY), value);
         }
     }
@@ -185,7 +185,7 @@ impl DataStreamConfig {
         let namespace = self.namespace(&*log);
 
         if log.as_map().is_none() {
-            log.fields = Value::Object(BTreeMap::new());
+            *log.value_mut() = Value::Object(BTreeMap::new());
         }
 
         let existing = log
@@ -217,7 +217,7 @@ impl DataStreamConfig {
             (self.dtype(log)?, self.dataset(log)?, self.namespace(log)?)
         } else {
             let data_stream = log
-                .get_field(event_path!("data_stream"))
+                .get(event_path!("data_stream"))
                 .and_then(|ds| ds.as_object());
             let dtype = data_stream
                 .and_then(|ds| ds.get("type"))

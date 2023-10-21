@@ -305,14 +305,14 @@ fn enrich_syslog_event(event: &mut Event, host_key: &OwnedValuePath, default_hos
     }
 
     let parsed_hostname = log
-        .get_field(event_path!("hostname"))
+        .get(event_path!("hostname"))
         .map(|hostname| hostname.coerce_to_bytes());
     if let Some(parsed_host) = parsed_hostname.or(default_host) {
         log.insert((PathPrefix::Event, host_key), parsed_host);
     }
 
     let timestamp = log
-        .get_field(event_path!("timestamp"))
+        .get(event_path!("timestamp"))
         .and_then(|timestamp| timestamp.as_timestamp().cloned())
         .unwrap_or_else(Utc::now);
     log.insert(log_schema().timestamp_key(), timestamp);
@@ -511,7 +511,7 @@ address: 127.0.0.1:12345
     #[test]
     fn handles_empty_sd_element() {
         fn there_is_map_called_empty(event: Event) -> bool {
-            let value = event.as_log().get_field("empty").expect("empty exists");
+            let value = event.as_log().get("empty").expect("empty exists");
 
             matches!(value, Value::Object(_))
         }
@@ -571,10 +571,7 @@ address: 127.0.0.1:12345
         let raw = format!(r#"<13>Feb 13 20:07:26 74794bfb6795 root[8539]: {}"#, msg);
         let event = event_from_bytes("host", None, raw.into()).unwrap();
 
-        let value = event
-            .as_log()
-            .get_field(log_schema().timestamp_key())
-            .unwrap();
+        let value = event.as_log().get(log_schema().timestamp_key()).unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
         let date: DateTime<Utc> = chrono::Local
             .with_ymd_and_hms(year, 2, 13, 20, 7, 26)
@@ -610,10 +607,7 @@ address: 127.0.0.1:12345
         );
         let event = event_from_bytes("host", None, raw.into()).unwrap();
 
-        let value = event
-            .as_log()
-            .get_field(log_schema().timestamp_key())
-            .unwrap();
+        let value = event.as_log().get(log_schema().timestamp_key()).unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
         let date: DateTime<Utc> = chrono::Local
             .with_ymd_and_hms(year, 2, 13, 21, 31, 56)

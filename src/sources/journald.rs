@@ -301,16 +301,16 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
     let mut log: event::LogRecord = entry.into();
 
     // Convert some journald-specific field names into LogSchema's
-    if let Some(msg) = log.remove_field(event_path!(MESSAGE)) {
+    if let Some(msg) = log.remove(event_path!(MESSAGE)) {
         log.insert(log_schema().message_key(), msg);
     }
-    if let Some(host) = log.remove_field(event_path!(HOSTNAME)) {
+    if let Some(host) = log.remove(event_path!(HOSTNAME)) {
         log.insert(log_schema().host_key(), host);
     }
     // Translate the timestamp, and so leave both old and new names
     if let Some(Value::Bytes(timestamp)) = log
-        .get_field(event_path!(SOURCE_TIMESTAMP))
-        .or_else(|| log.get_field(event_path!(RECEIVED_TIMESTAMP)))
+        .get(event_path!(SOURCE_TIMESTAMP))
+        .or_else(|| log.get(event_path!(RECEIVED_TIMESTAMP)))
     {
         if let Ok(timestamp) = String::from_utf8_lossy(timestamp).parse::<u64>() {
             let timestamp = DateTime::<Utc>::from_timestamp(
@@ -856,7 +856,7 @@ MESSAGE=audit log
 
     fn message(event: &Event) -> Value {
         let log = event.as_log();
-        let v = log.fields.get("message").unwrap();
+        let v = log.get("message").unwrap();
         match v {
             Value::Bytes(_) => v.clone(),
             _ => panic!("invalid event"),
@@ -869,7 +869,7 @@ MESSAGE=audit log
 
     fn timestamp(event: &Event) -> Value {
         let log = event.as_log();
-        let v = log.fields.get("_SOURCE_REALTIME_TIMESTAMP").unwrap();
+        let v = log.get("_SOURCE_REALTIME_TIMESTAMP").unwrap();
         let ns = match v {
             Value::Bytes(s) => {
                 let s = String::from_utf8_lossy(s);
@@ -883,7 +883,7 @@ MESSAGE=audit log
 
     fn priority(event: &Event) -> Value {
         let log = event.as_log();
-        let v = log.fields.get("PRIORITY").unwrap();
+        let v = log.get("PRIORITY").unwrap();
         match v {
             Value::Bytes(_) => v.clone(),
             _ => panic!("invalid event"),

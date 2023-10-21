@@ -90,7 +90,7 @@ impl FunctionTransform for Filter {
 
 #[cfg(test)]
 mod tests {
-    use event::{fields, tags, Event, LogRecord};
+    use event::{fields, Event, LogRecord};
 
     use super::*;
     use crate::transforms::transform_one;
@@ -102,15 +102,12 @@ mod tests {
 
     #[test]
     fn transform() {
-        let log = LogRecord::new(
-            tags!(),
-            fields!(
-                "message" => "info blah blah blah",
-                "meta" => fields!(
-                    "array" => vec![1, 2, 3],
-                )
-            ),
-        );
+        let log = LogRecord::from(fields!(
+            "message" => "info blah blah blah",
+            "meta" => fields!(
+                "array" => vec![1, 2, 3],
+            )
+        ));
 
         let tests = [
             (".message contains info", Some(Event::from(log.clone()))),
