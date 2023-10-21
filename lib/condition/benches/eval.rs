@@ -1,19 +1,16 @@
 use condition::parse;
 use criterion::{criterion_group, criterion_main, Criterion};
-use event::{fields, tags, LogRecord};
+use event::{fields, LogRecord};
 
 fn bench_eval(c: &mut Criterion) {
     let mut group = c.benchmark_group("condition");
-    let log = &LogRecord::new(
-        tags!(),
-        fields!(
-            "number" => "1",
-            "message" => "info blah blah",
-            "map" => fields!(
-                "number" => 1.2
-            )
-        ),
-    );
+    let log = &LogRecord::from(fields!(
+        "number" => "1",
+        "message" => "info blah blah",
+        "map" => fields!(
+            "number" => 1.2
+        )
+    ));
 
     let expressions = [
         ("ordering", ".number >= 1"),

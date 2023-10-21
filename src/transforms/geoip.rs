@@ -122,7 +122,7 @@ impl FunctionTransform for Geoip {
         events.for_each_log(|log| {
             let mut isp: Isp = Default::default();
             let mut city: City = Default::default();
-            let ipaddress = log.get_field(&self.source).map(|s| s.to_string_lossy());
+            let ipaddress = log.get(&self.source).map(|s| s.to_string_lossy());
 
             if let Some(value) = &ipaddress {
                 match FromStr::from_str(value) {
@@ -327,7 +327,7 @@ mod tests {
 
             for field in want.keys() {
                 let key = format!("geo.{}", field);
-                let got = event.as_log().get_field(key.as_str()).unwrap();
+                let got = event.as_log().get(key.as_str()).unwrap();
                 assert_eq!(
                     got,
                     want.get(field).expect("field exists"),

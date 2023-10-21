@@ -204,22 +204,17 @@ impl<'a> Parser<'a> {
 
 #[cfg(test)]
 mod tests {
-    use event::{fields, tags};
+    use event::fields;
 
     use super::*;
 
     #[test]
     fn test_eval() {
-        let log = LogRecord::new(
-            tags!(
-                "foo" => "bar"
-            ),
-            fields!(
-                "message" => "info warn error",
-                "upper" => 8,
-                "lower" => 0,
-            ),
-        );
+        let log = LogRecord::from(fields!(
+            "message" => "info warn error",
+            "upper" => 8,
+            "lower" => 0,
+        ));
 
         let tests: Vec<(&str, Result<bool, Error>)> = vec![
             (".message contains info", Ok(true)),

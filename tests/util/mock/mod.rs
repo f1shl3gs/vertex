@@ -162,7 +162,7 @@ impl FunctionTransform for MockTransform {
         match &mut events {
             Events::Logs(logs) => logs.iter_mut().for_each(|log| {
                 let v = log
-                    .get_field(log_schema().message_key())
+                    .get(log_schema().message_key())
                     .unwrap()
                     .to_string_lossy();
 

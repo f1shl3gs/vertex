@@ -1,5 +1,6 @@
 use configurable::Configurable;
-use event::{tags::Key, LogRecord};
+use event::log::{owned_value_path, path, OwnedValuePath};
+use event::LogRecord;
 use k8s_openapi::{
     api::core::v1::{Container, ContainerStatus, Pod, PodSpec, PodStatus},
     apimachinery::pkg::apis::meta::v1::ObjectMeta,
@@ -15,46 +16,46 @@ const LOG_PATH_DELIMITER: &str = "_";
 #[serde(deny_unknown_fields, default)]
 pub struct FieldsSpec {
     /// Event field for the Pod's name.
-    pub pod_name: Key,
+    pub pod_name: OwnedValuePath,
     /// Event field for the Pod's namespace.
-    pub pod_namespace: Key,
+    pub pod_namespace: OwnedValuePath,
     /// Event field for the Pod's uid.
-    pub pod_uid: Key,
+    pub pod_uid: OwnedValuePath,
     /// Event field for the Pod's IPv4 address.
-    pub pod_ip: Key,
+    pub pod_ip: OwnedValuePath,
     /// Event field for the Pod's IPv4 and IPv6 addresses.
-    pub pod_ips: Key,
+    pub pod_ips: OwnedValuePath,
     /// Event field for the `Pod`'s labels.
-    pub pod_labels: Key,
+    pub pod_labels: OwnedValuePath,
     /// Event field for the Pod's annotations.
-    pub pod_annotations: Key,
+    pub pod_annotations: OwnedValuePath,
     /// Event field for the Pod's node_name.
-    pub pod_node_name: Key,
+    pub pod_node_name: OwnedValuePath,
     /// Event field for the Pod's owner reference.
-    pub pod_owner: Key,
+    pub pod_owner: OwnedValuePath,
     /// Event field for the Container's name.
-    pub container_name: Key,
+    pub container_name: OwnedValuePath,
     /// Event field for the Container's ID.
-    pub container_id: Key,
+    pub container_id: OwnedValuePath,
     /// Event field for the Container's image.
-    pub container_image: Key,
+    pub container_image: OwnedValuePath,
 }
 
 impl Default for FieldsSpec {
     fn default() -> Self {
         Self {
-            pod_name: "kubernetes.pod_name".into(),
-            pod_namespace: "kubernetes.pod_namespace".into(),
-            pod_uid: "kubernetes.pod_uid".into(),
-            pod_ip: "kubernetes.pod_ip".into(),
-            pod_ips: "kubernetes.pod_ips".into(),
-            pod_labels: "kubernetes.pod_labels".into(),
-            pod_annotations: "kubernetes.pod_annotations".into(),
-            pod_node_name: "kubernetes.pod_node_name".into(),
-            pod_owner: "kubernetes.pod_owner".into(),
-            container_name: "kubernetes.container_name".into(),
-            container_id: "kubernetes.container_id".into(),
-            container_image: "kubernetes.container_image".into(),
+            pod_name: owned_value_path!("kubernetes", "pod_name"),
+            pod_namespace: owned_value_path!("kubernetes", "pod_namespace"),
+            pod_uid: owned_value_path!("kubernetes", "pod_uid"),
+            pod_ip: owned_value_path!("kubernetes", "pod_ip"),
+            pod_ips: owned_value_path!("kubernetes", "pod_ips"),
+            pod_labels: owned_value_path!("kubernetes", "pod_labels"),
+            pod_annotations: owned_value_path!("kubernetes", "pod_annotations"),
+            pod_node_name: owned_value_path!("kubernetes", "pod_node_name"),
+            pod_owner: owned_value_path!("kubernetes", "pod_owner"),
+            container_name: owned_value_path!("kubernetes", "container_name"),
+            container_id: owned_value_path!("kubernetes", "container_id"),
+            container_image: owned_value_path!("kubernetes", "container_image"),
         }
     }
 }
@@ -149,62 +150,57 @@ fn annotate_from_file_info(
     fields_spec: &FieldsSpec,
     file_info: &LogFileInfo<'_>,
 ) {
-    log.insert_tag(
-        fields_spec.container_name.clone(),
-        file_info.container_name.to_owned(),
-    );
+    log.insert_metadata(&fields_spec.container_name, file_info.container_name);
 }
 
 fn annotate_from_metadata(log: &mut LogRecord, fields_spec: &FieldsSpec, metadata: &ObjectMeta) {
     if let Some(name) = &metadata.name {
-        log.insert_tag(fields_spec.pod_name.clone(), name);
+        log.insert_metadata(&fields_spec.pod_name, name.to_owned());
     }
 
     if let Some(namespace) = &metadata.namespace {
-        log.insert_tag(fields_spec.pod_namespace.clone(), namespace);
+        log.insert_metadata(&fields_spec.pod_namespace, namespace.to_owned());
     }
 
     if let Some(uid) = &metadata.uid {
-        log.insert_tag(fields_spec.pod_uid.clone(), uid);
+        log.insert_metadata(&fields_spec.pod_uid, uid.to_owned());
     }
 
     if let Some(owner_references) = &metadata.owner_references {
-        log.insert_tag(
-            fields_spec.pod_owner.clone(),
+        log.insert_metadata(
+            &fields_spec.pod_owner,
             format!("{}/{}", owner_references[0].kind, owner_references[0].name),
         );
     }
 
     if let Some(labels) = &metadata.labels {
-        for (key, value) in labels.iter() {
-            let key = format!("kubernetes_pod_labels_{}", key);
-            log.insert_tag(key, value);
+        for (key, value) in labels {
+            log.insert_metadata(path!("pod_labels", key), value.to_owned());
         }
     }
 
     if let Some(annotations) = &metadata.annotations {
-        for (key, value) in annotations.iter() {
-            let key = format!("kubernetes_pod_annotations_{}", key);
-            log.insert_tag(key, value);
+        for (key, value) in annotations {
+            log.insert_metadata(path!("pod_annotations", key), value.to_owned());
         }
     }
 }
 
 fn annotate_from_pod_spec(log: &mut LogRecord, fields_spec: &FieldsSpec, pod_spec: &PodSpec) {
     if let Some(node_name) = &pod_spec.node_name {
-        log.insert_tag(fields_spec.pod_node_name.clone(), node_name);
+        log.insert_metadata(&fields_spec.pod_node_name, node_name.to_owned());
     }
 }
 
 fn annotate_from_container(log: &mut LogRecord, fields_spec: &FieldsSpec, container: &Container) {
     if let Some(image) = &container.image {
-        log.insert_tag(fields_spec.container_image.clone(), image);
+        log.insert_metadata(&fields_spec.container_image, image.to_owned());
     }
 }
 
 fn annotate_from_pod_status(log: &mut LogRecord, fields_spec: &FieldsSpec, pod_status: &PodStatus) {
     if let Some(pod_id) = &pod_status.pod_ip {
-        log.insert_tag(fields_spec.pod_ip.clone(), pod_id);
+        log.insert_metadata(&fields_spec.pod_ip, pod_id.to_owned());
     }
 
     if let Some(pod_ips) = &pod_status.pod_ips {
@@ -212,7 +208,7 @@ fn annotate_from_pod_status(log: &mut LogRecord, fields_spec: &FieldsSpec, pod_s
             .iter()
             .filter_map(|v| v.ip.clone())
             .collect::<Vec<String>>();
-        log.insert_tag(fields_spec.pod_ips.clone(), value);
+        log.insert_metadata(&fields_spec.pod_ips, value);
     }
 }
 
@@ -222,7 +218,7 @@ fn annotate_from_container_status(
     container_status: &ContainerStatus,
 ) {
     if let Some(container_id) = &container_status.container_id {
-        log.insert_tag(fields_spec.container_id.clone(), container_id);
+        log.insert_metadata(&fields_spec.container_id, container_id.to_owned());
     }
 }
 
@@ -241,19 +237,19 @@ mod tests {
                 "/var/log/pods/sandbox0-ns_sandbox0-name_sandbox0-uid/sandbox0-container0-name/1.log",
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("kubernetes.container_name", "sandbox0-container0-name");
+                    log.insert_metadata(path!("kubernetes", "container_name"), "sandbox0-container0-name");
                     log
                 },
             ),
             (
                 FieldsSpec {
-                    container_name: "container_name".into(),
+                    container_name: owned_value_path!("container_name"),
                     ..Default::default()
                 },
                 "/var/log/pods/sandbox0-ns_sandbox0-name_sandbox0-uid/sandbox0-container0-name/1.log",
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("container_name", "sandbox0-container0-name");
+                    log.insert_metadata(path!("container_name"), "sandbox0-container0-name");
                     log
                 },
             )
@@ -283,13 +279,13 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("kubernetes.pod_node_name", "sandbox0-node-name");
+                    log.insert_metadata(path!("kubernetes", "pod_node_name"), "sandbox0-node-name");
                     log
                 },
             ),
             (
                 FieldsSpec {
-                    pod_node_name: "node_name".into(),
+                    pod_node_name: owned_value_path!("node_name"),
                     ..Default::default()
                 },
                 PodSpec {
@@ -298,7 +294,7 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("node_name", "sandbox0-node-name");
+                    log.insert_metadata(path!("node_name"), "sandbox0-node-name");
                     log
                 },
             ),
@@ -351,13 +347,16 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("kubernetes.container_image", "sandbox0-container-image");
+                    log.insert_metadata(
+                        path!("kubernetes", "container_image"),
+                        "sandbox0-container-image",
+                    );
                     log
                 },
             ),
             (
                 FieldsSpec {
-                    container_image: "container_image".into(),
+                    container_image: owned_value_path!("container_image"),
                     ..Default::default()
                 },
                 Container {
@@ -366,7 +365,7 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("container_image", "sandbox0-container-image");
+                    log.insert_metadata(path!("container_image"), "sandbox0-container-image");
                     log
                 },
             ),
@@ -397,7 +396,7 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("kubernetes.container_id", "container_id_foo");
+                    log.insert_metadata(path!("kubernetes", "container_id"), "container_id_foo");
                     log
                 },
             ),
@@ -425,7 +424,7 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("kubernetes.pod_ip", "192.168.1.2");
+                    log.insert_metadata(path!("kubernetes", "pod_ip"), "192.168.1.2");
                     log
                 },
             ),
@@ -440,14 +439,14 @@ mod tests {
                 {
                     let mut log = LogRecord::default();
                     let ips_vec = vec!["192.168.1.2"];
-                    log.insert_tag("kubernetes.pod_ips", ips_vec);
+                    log.insert_metadata(path!("kubernetes", "pod_ips"), ips_vec);
                     log
                 },
             ),
             (
                 FieldsSpec {
-                    pod_ip: "kubernetes.custom_pod_ip".into(),
-                    pod_ips: "kubernetes.custom_pod_ips".into(),
+                    pod_ip: owned_value_path!("kubernetes", "custom_pod_ip"),
+                    pod_ips: owned_value_path!("kubernetes", "custom_pod_ips"),
                     ..FieldsSpec::default()
                 },
                 PodStatus {
@@ -464,15 +463,15 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("kubernetes.custom_pod_ip", "192.168.1.2");
+                    log.insert_metadata(path!("kubernetes", "custom_pod_ip"), "192.168.1.2");
                     let ips_vec = vec!["192.168.1.2", "192.168.1.3"];
-                    log.insert_tag("kubernetes.custom_pod_ips", ips_vec);
+                    log.insert_metadata(path!("kubernetes", "custom_pod_ips"), ips_vec);
                     log
                 },
             ),
             (
                 FieldsSpec {
-                    pod_node_name: "node_name".into(),
+                    pod_node_name: owned_value_path!("node_name"),
                     ..FieldsSpec::default()
                 },
                 PodStatus {
@@ -489,9 +488,9 @@ mod tests {
                 },
                 {
                     let mut log = LogRecord::default();
-                    log.insert_tag("kubernetes.pod_ip", "192.168.1.2");
+                    log.insert_metadata(path!("kubernetes", "pod_ip"), "192.168.1.2");
                     let ips_vec = vec!["192.168.1.2", "192.168.1.3"];
-                    log.insert_tag("kubernetes.pod_ips", ips_vec);
+                    log.insert_metadata(path!("kubernetes", "pod_ips"), ips_vec);
                     log
                 },
             ),

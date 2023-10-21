@@ -10,8 +10,7 @@ use async_trait::async_trait;
 use bytes::Bytes;
 use chrono::Utc;
 use configurable::configurable_component;
-use event::log::{OwnedTargetPath, Value};
-use event::tags::Key;
+use event::log::{path, OwnedTargetPath, TargetPath, Value};
 use event::LogRecord;
 use framework::config::{default_true, DataType, Output, SourceConfig, SourceContext};
 use framework::timezone::TimeZone;
@@ -295,8 +294,6 @@ impl LogSource {
     }
 }
 
-const FILE_KEY: Key = Key::from_static("file");
-
 fn create_log(
     line: Bytes,
     file: &str,
@@ -319,10 +316,13 @@ fn create_log(
     };
 
     // Add source type
-    log.insert_tag(log_schema().source_type_key().to_string(), "kubernetes_log");
+    log.insert_metadata(
+        log_schema().source_type_key().value_path(),
+        "kubernetes_log",
+    );
 
     // Add file
-    log.insert_tag(FILE_KEY, file.to_owned());
+    log.insert_metadata(path!("file"), file.to_owned());
 
     // Add ingestion timestamp if requested
     let now = Utc::now();

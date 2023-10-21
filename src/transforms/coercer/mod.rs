@@ -59,7 +59,7 @@ impl FunctionTransform for Coercer {
 
         events.for_each_log(|log| {
             for (field, conv) in &self.types {
-                if let Some(value) = log.remove_field(field) {
+                if let Some(value) = log.remove(field) {
                     match conv.convert::<Value>(value.coerce_to_bytes()) {
                         Ok(converted) => {
                             log.insert(field, converted);
@@ -86,7 +86,7 @@ impl FunctionTransform for Coercer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{fields, tags, LogRecord};
+    use event::{fields, LogRecord};
 
     #[test]
     fn generate_config() {
@@ -94,17 +94,12 @@ mod tests {
     }
 
     async fn run() -> LogRecord {
-        let log = LogRecord::new(
-            tags!(
-                "foo" => "bar",
-            ),
-            fields!(
-                "number" => "1234",
-                "bool" => "yes",
-                "other" => "no",
-                "float" => "broken"
-            ),
-        );
+        let log = LogRecord::from(fields!(
+            "number" => "1234",
+            "bool" => "yes",
+            "other" => "no",
+            "float" => "broken"
+        ));
         let metadata = log.metadata().clone();
 
         let mut coercer = serde_yaml::from_str::<Config>(
@@ -134,13 +129,13 @@ types:
         let log = run().await;
 
         // valid fields
-        assert_eq!(log.get_field("number").unwrap().clone(), 1234.into());
-        assert_eq!(log.get_field("bool").unwrap().clone(), true.into());
+        assert_eq!(log.get("number").unwrap().clone(), 1234.into());
+        assert_eq!(log.get("bool").unwrap().clone(), true.into());
 
         // drops non convertible fields
-        assert!(log.get_field("float").is_none());
+        assert!(log.get("float").is_none());
 
         // leaves unnamed fields
-        assert_eq!(log.get_field("other").unwrap().clone(), "no".into());
+        assert_eq!(log.get("other").unwrap().clone(), "no".into());
     }
 }

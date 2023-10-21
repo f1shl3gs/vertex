@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use configurable::configurable_component;
-use event::log::path::TargetPath;
 use event::log::OwnedTargetPath;
 use event::Events;
 use framework::config::{default_true, Output, TransformContext};
@@ -58,11 +57,11 @@ impl FunctionTransform for AddFields {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
             for (path, v) in self.fields.iter() {
-                if log.fields.contains(path.value_path()) && !self.overwrite {
+                if log.contains(path) && !self.overwrite {
                     continue;
                 }
 
-                log.fields.insert(path.value_path(), v.to_string());
+                log.insert(path, v.to_string());
             }
         });
 

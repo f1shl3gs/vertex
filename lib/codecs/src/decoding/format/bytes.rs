@@ -32,10 +32,7 @@ mod tests {
         let events = deserializer.parse(input).unwrap();
         assert_eq!(events.len(), 1);
         assert_eq!(
-            events[0]
-                .as_log()
-                .get_field(event_path!("message"))
-                .unwrap(),
+            events[0].as_log().get(event_path!("message")).unwrap(),
             &Value::from("foo")
         );
     }

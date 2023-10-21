@@ -9,6 +9,7 @@ use codecs::decoding::StreamDecodingError;
 use codecs::decoding::{DeserializerConfig, FramingConfig};
 use codecs::DecodingConfig;
 use configurable::{configurable_component, Configurable};
+use event::log::path::TargetPath;
 use event::{event_path, Event};
 use framework::async_read::VecAsyncReadExt;
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
@@ -367,7 +368,7 @@ fn handle_event(
         log.insert(log_schema().host_key(), hostname);
 
         // Add source type
-        log.insert_tag(log_schema().source_type_key().to_string(), EXEC);
+        log.insert_metadata(log_schema().source_type_key().value_path(), EXEC);
 
         // Add data stream of stdin or stderr(if needed)
         if let Some(data_stream) = data_stream {
@@ -520,20 +521,17 @@ mod tests {
         let log = event.as_log();
 
         assert_eq!(
-            log.get_field(log_schema().host_key()).unwrap(),
+            log.get(log_schema().host_key()).unwrap(),
             &Value::from("localhost")
         );
-        assert_eq!(log.get_field(STREAM_KEY).unwrap(), &Value::from(STDOUT));
-        assert_eq!(log.get_field(PID_KEY).unwrap(), &Value::from(123));
+        assert_eq!(log.get(STREAM_KEY).unwrap(), &Value::from(STDOUT));
+        assert_eq!(log.get(PID_KEY).unwrap(), &Value::from(123));
+        assert_eq!(log.get(COMMAND_KEY).unwrap(), &Value::from(vec!["ls"]));
         assert_eq!(
-            log.get_field(COMMAND_KEY).unwrap(),
-            &Value::from(vec!["ls"])
-        );
-        assert_eq!(
-            log.get_field(log_schema().message_key()).unwrap(),
+            log.get(log_schema().message_key()).unwrap(),
             &Value::from("hello")
         );
-        assert!(log.get_field(log_schema().timestamp_key()).is_some())
+        assert!(log.get(log_schema().timestamp_key()).is_some())
     }
 
     #[test]
@@ -578,7 +576,7 @@ mod tests {
 
             let log = events[0].as_log();
             assert_eq!(
-                log.get_field(log_schema().message_key()).unwrap(),
+                log.get(log_schema().message_key()).unwrap(),
                 &Value::from("hello")
             );
             assert_eq!(origin, STDOUT);
@@ -591,7 +589,7 @@ mod tests {
 
             let log = events[0].as_log();
             assert_eq!(
-                log.get_field(log_schema().message_key()).unwrap(),
+                log.get(log_schema().message_key()).unwrap(),
                 &Value::from("world"),
             );
             assert_eq!(origin, STDOUT);
@@ -633,18 +631,18 @@ mod tests {
 
         if let Poll::Ready(Some(event)) = futures::poll!(rx.next()) {
             let log = event.as_log();
-            assert_eq!(log.get_field(COMMAND_KEY).unwrap(), &Value::from(command));
-            assert_eq!(log.get_field(STREAM_KEY).unwrap(), &Value::from(STDOUT));
+            assert_eq!(log.get(COMMAND_KEY).unwrap(), &Value::from(command));
+            assert_eq!(log.get(STREAM_KEY).unwrap(), &Value::from(STDOUT));
             assert_eq!(
-                log.get_field(log_schema().message_key()).unwrap(),
+                log.get(log_schema().message_key()).unwrap(),
                 &Value::from("hello")
             );
             assert_eq!(
-                log.get_field(log_schema().host_key()).unwrap(),
+                log.get(log_schema().host_key()).unwrap(),
                 &Value::from("localhost")
             );
-            assert!(log.get_field(PID_KEY).is_some());
-            assert!(log.get_field(log_schema().timestamp_key()).is_some());
+            assert!(log.get(PID_KEY).is_some());
+            assert!(log.get(log_schema().timestamp_key()).is_some());
             assert_eq!(7, log.all_fields().unwrap().count());
         }
     }

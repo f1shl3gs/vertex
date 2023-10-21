@@ -82,7 +82,7 @@ impl MetricConfig {
             _ => true,
         };
 
-        let value = match log.get_field(field)? {
+        let value = match log.get(field)? {
             Value::Integer(i) => *i as f64,
             Value::Float(f) => *f,
             Value::Bytes(b) => {
@@ -98,7 +98,7 @@ impl MetricConfig {
         let mut attrs = Tags::new();
         for (k, v) in tags {
             if let Ok(path) = parse_target_path(v) {
-                if let Some(value) = log.get_field(&path) {
+                if let Some(value) = log.get(&path) {
                     attrs.insert(k.to_string(), value.to_string_lossy().into_owned());
                 }
             }

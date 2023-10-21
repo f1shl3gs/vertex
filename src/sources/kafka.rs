@@ -8,8 +8,7 @@ use chrono::Utc;
 use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::{Decoder, DecodingConfig};
 use configurable::{configurable_component, Configurable};
-use event::log::path::parse_target_path;
-use event::log::OwnedTargetPath;
+use event::log::{parse_value_path, OwnedValuePath, TargetPath};
 use event::{log::Value, LogRecord};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
@@ -39,24 +38,24 @@ const fn default_commit_interval() -> Duration {
     Duration::from_secs(5)
 }
 
-fn default_key_field() -> OwnedTargetPath {
-    parse_target_path("message_key").unwrap()
+fn default_key_field() -> OwnedValuePath {
+    parse_value_path("message_key").unwrap()
 }
 
-fn default_topic_key() -> OwnedTargetPath {
-    parse_target_path("topic").unwrap()
+fn default_topic_key() -> OwnedValuePath {
+    parse_value_path("topic").unwrap()
 }
 
-fn default_partition_key() -> OwnedTargetPath {
-    parse_target_path("partition").unwrap()
+fn default_partition_key() -> OwnedValuePath {
+    parse_value_path("partition").unwrap()
 }
 
-fn default_offset_key() -> OwnedTargetPath {
-    parse_target_path("offset").unwrap()
+fn default_offset_key() -> OwnedValuePath {
+    parse_value_path("offset").unwrap()
 }
 
-fn default_headers_key() -> OwnedTargetPath {
-    parse_target_path("headers").unwrap()
+fn default_headers_key() -> OwnedValuePath {
+    parse_value_path("headers").unwrap()
 }
 
 const fn default_decoding() -> DeserializerConfig {
@@ -132,23 +131,23 @@ struct Config {
 
     /// The log field name to use for the Kafka message key.
     #[serde(default = "default_key_field")]
-    key_field: OwnedTargetPath,
+    key_field: OwnedValuePath,
 
     /// The log field name to use for the Kafka topic.
     #[serde(default = "default_topic_key")]
-    topic_key: OwnedTargetPath,
+    topic_key: OwnedValuePath,
 
     /// The log field name to use for the Kafka partition name.
     #[serde(default = "default_partition_key")]
-    partition_key: OwnedTargetPath,
+    partition_key: OwnedValuePath,
 
     /// The log field name to use for the Kafka offset
     #[serde(default = "default_offset_key")]
-    offset_key: OwnedTargetPath,
+    offset_key: OwnedValuePath,
 
     /// The log field name to use for the Kafka headers.
     #[serde(default = "default_headers_key")]
-    headers_key: OwnedTargetPath,
+    headers_key: OwnedValuePath,
 
     #[serde(default = "default_framing_message_based")]
     framing: FramingConfig,
@@ -196,18 +195,18 @@ impl SourceConfig for Config {
 
 #[derive(Debug)]
 struct Keys {
-    timestamp: OwnedTargetPath,
-    key: OwnedTargetPath,
-    topic: OwnedTargetPath,
-    partition: OwnedTargetPath,
-    offset: OwnedTargetPath,
-    headers: OwnedTargetPath,
+    timestamp: OwnedValuePath,
+    key: OwnedValuePath,
+    topic: OwnedValuePath,
+    partition: OwnedValuePath,
+    offset: OwnedValuePath,
+    headers: OwnedValuePath,
 }
 
 impl Keys {
     fn from(config: &Config) -> Self {
         Self {
-            timestamp: log_schema().timestamp_key().clone(),
+            timestamp: log_schema().timestamp_key().value_path().clone(),
             key: config.key_field.clone(),
             topic: config.topic_key.clone(),
             partition: config.partition_key.clone(),
@@ -545,13 +544,13 @@ async fn convert_message(
                 for event in events {
                     let mut log = event.into_log();
 
-                    log.insert_tag(log_schema().source_type_key().to_string(), "kafka");
-                    log.insert(&keys.timestamp, timestamp);
-                    log.insert(&keys.key, key.clone());
-                    log.insert(&keys.topic, topic.to_string());
-                    log.insert(&keys.partition, partition);
-                    log.insert(&keys.offset, offset);
-                    log.insert(&keys.headers, headers.clone());
+                    log.insert_metadata(log_schema().source_type_key().value_path(), "kafka");
+                    log.insert_metadata(&keys.timestamp, timestamp);
+                    log.insert_metadata(&keys.key, key.clone());
+                    log.insert_metadata(&keys.topic, topic.to_string());
+                    log.insert_metadata(&keys.partition, partition);
+                    log.insert_metadata(&keys.offset, offset);
+                    log.insert_metadata(&keys.headers, headers.clone());
 
                     logs.push(log);
                 }

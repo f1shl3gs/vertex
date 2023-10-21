@@ -98,7 +98,7 @@ impl FunctionTransform for JsonParser {
     fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
         if let Events::Logs(logs) = events {
             for mut log in logs {
-                let value = log.get_field(&self.field);
+                let value = log.get(&self.field);
 
                 let parsed = value
                     .and_then(|value| {
@@ -143,7 +143,7 @@ impl FunctionTransform for JsonParser {
                                 // TODO: metrics
                             } else {
                                 if self.drop_field {
-                                    log.remove_field(&self.field);
+                                    log.remove(&self.field);
                                 }
 
                                 log.insert(target_field, Value::Object(object));
@@ -151,10 +151,10 @@ impl FunctionTransform for JsonParser {
                         }
                         None => {
                             if self.drop_field {
-                                log.remove_field(&self.field);
+                                log.remove(&self.field);
                             }
 
-                            if let event::log::Value::Object(ref mut map) = log.fields {
+                            if let event::log::Value::Object(map) = log.value_mut() {
                                 for (key, value) in object {
                                     map.insert(key, value.into());
                                 }
@@ -194,10 +194,7 @@ mod test {
         let metadata = event.metadata().clone();
 
         let event = transform_one(&mut parser, event).unwrap();
-        assert!(event
-            .as_log()
-            .get_field(log_schema().message_key())
-            .is_none());
+        assert!(event.as_log().get(log_schema().message_key()).is_none());
         assert_eq!(event.metadata(), &metadata);
     }
 
@@ -212,10 +209,7 @@ mod test {
         let metadata = event.metadata().clone();
 
         let event = transform_one(&mut parser, event).unwrap();
-        assert!(event
-            .as_log()
-            .get_field(log_schema().message_key())
-            .is_some());
+        assert!(event.as_log().get(log_schema().message_key()).is_some());
         assert_eq!(event.metadata(), &metadata);
     }
 
@@ -231,16 +225,10 @@ mod test {
 
         let event = transform_one(&mut parser, event).unwrap();
 
+        assert_eq!(*event.as_log().get("greeting").unwrap(), "hello".into());
+        assert_eq!(*event.as_log().get("name").unwrap(), "bob".into());
         assert_eq!(
-            *event.as_log().get_field("greeting").unwrap(),
-            "hello".into()
-        );
-        assert_eq!(*event.as_log().get_field("name").unwrap(), "bob".into());
-        assert_eq!(
-            *event
-                .as_log()
-                .get_field(log_schema().message_key())
-                .unwrap(),
+            *event.as_log().get(log_schema().message_key()).unwrap(),
             r#"{"greeting": "hello", "name": "bob"}"#.into()
         );
         assert_eq!(event.metadata(), &metadata);
@@ -266,11 +254,11 @@ mod test {
         let event = transform_one(&mut parser, event).unwrap();
 
         assert_eq!(
-            event.as_log().get_field("\"field.with.dots\""),
+            event.as_log().get("\"field.with.dots\""),
             Some(&event::log::Value::from("hello")),
         );
         assert_eq!(
-            event.as_log().get_field("\"sub.field\""),
+            event.as_log().get("\"sub.field\""),
             Some(&event::log::Value::from(json!({ "another.one": "bob", }))),
         );
         assert_eq!(event.metadata(), &metadata);
@@ -288,16 +276,10 @@ mod test {
 
         let event = transform_one(&mut parser, event).unwrap();
 
+        assert_eq!(*event.as_log().get("greeting").unwrap(), "hello".into());
+        assert_eq!(*event.as_log().get("name").unwrap(), "bob".into());
         assert_eq!(
-            *event.as_log().get_field("greeting").unwrap(),
-            "hello".into()
-        );
-        assert_eq!(*event.as_log().get_field("name").unwrap(), "bob".into());
-        assert_eq!(
-            *event
-                .as_log()
-                .get_field(log_schema().message_key())
-                .unwrap(),
+            *event.as_log().get(log_schema().message_key()).unwrap(),
             r#" {"greeting": "hello", "name": "bob"}    "#.into()
         );
         assert_eq!(event.metadata(), &metadata);
@@ -321,15 +303,12 @@ mod test {
 
         let event = transform_one(&mut parser, event).unwrap();
 
-        event.as_log().get_field("greeting").unwrap();
+        event.as_log().get("greeting").unwrap();
 
+        assert_eq!(*event.as_log().get("greeting").unwrap(), "hello".into(),);
+        assert_eq!(*event.as_log().get("name").unwrap(), "bob".into());
         assert_eq!(
-            *event.as_log().get_field("greeting").unwrap(),
-            "hello".into(),
-        );
-        assert_eq!(*event.as_log().get_field("name").unwrap(), "bob".into());
-        assert_eq!(
-            *event.as_log().get_field("data").unwrap(),
+            *event.as_log().get("data").unwrap(),
             r#"{"greeting": "hello", "name": "bob"}"#.into()
         );
         assert_eq!(event.metadata(), &metadata);
@@ -363,7 +342,7 @@ mod test {
         let parsed_event = transform_one(&mut parser_outer, event).unwrap();
 
         assert_eq!(
-            *parsed_event.as_log().get_field("stream").unwrap(),
+            *parsed_event.as_log().get("stream").unwrap(),
             "stdout".into()
         );
         assert_eq!(parsed_event.metadata(), &metadata);
@@ -371,8 +350,8 @@ mod test {
         let parsed_inner_event = transform_one(&mut parser_inner, parsed_event).unwrap();
         let log = parsed_inner_event.into_log();
 
-        assert_eq!(*log.get_field("type").unwrap(), "response".into());
-        assert_eq!(*log.get_field("statusCode").unwrap(), 200.into());
+        assert_eq!(*log.get("type").unwrap(), "response".into());
+        assert_eq!(*log.get("statusCode").unwrap(), 200.into());
         assert_eq!(log.metadata(), &metadata);
     }
 
@@ -393,10 +372,7 @@ mod test {
 
         assert_eq!(event, parsed);
         assert_eq!(
-            *event
-                .as_log()
-                .get_field(log_schema().message_key())
-                .unwrap(),
+            *event.as_log().get(log_schema().message_key()).unwrap(),
             invalid.into()
         );
         assert_eq!(event.metadata(), &metadata);
@@ -413,8 +389,8 @@ mod test {
 
         let event = transform_one(&mut parser, event).unwrap();
 
-        assert_eq!(*event.as_log().get_field("data").unwrap(), invalid.into());
-        assert!(event.as_log().get_field("greeting").is_none());
+        assert_eq!(*event.as_log().get("data").unwrap(), invalid.into());
+        assert!(event.as_log().get("greeting").is_none());
     }
 
     #[test]
@@ -480,13 +456,10 @@ mod test {
         let event = transform_one(&mut parser1, event).unwrap();
         let event = transform_one(&mut parser2, event).unwrap();
 
+        assert_eq!(*event.as_log().get("greeting").unwrap(), "hello".into());
+        assert_eq!(*event.as_log().get("name").unwrap(), "bob".into());
         assert_eq!(
-            *event.as_log().get_field("greeting").unwrap(),
-            "hello".into()
-        );
-        assert_eq!(*event.as_log().get_field("name").unwrap(), "bob".into());
-        assert_eq!(
-            *event.as_log().get_field("message").unwrap(),
+            *event.as_log().get("message").unwrap(),
             "help i'm trapped under many layers of json".into()
         );
         assert_eq!(event.metadata(), &metadata);
@@ -515,38 +488,23 @@ mod test {
         let event = transform_one(&mut parser, event).unwrap();
 
         assert_eq!(
-            *event.as_log().get_field("string").unwrap(),
+            *event.as_log().get("string").unwrap(),
             "this is text".into()
         );
         assert_eq!(
-            *event.as_log().get_field("null").unwrap(),
+            *event.as_log().get("null").unwrap(),
             event::log::Value::Null
         );
-        assert_eq!(*event.as_log().get_field("float").unwrap(), 12.34.into());
-        assert_eq!(*event.as_log().get_field("int").unwrap(), 56.into());
+        assert_eq!(*event.as_log().get("float").unwrap(), 12.34.into());
+        assert_eq!(*event.as_log().get("int").unwrap(), 56.into());
+        assert_eq!(*event.as_log().get("\"bool true\"").unwrap(), true.into());
+        assert_eq!(*event.as_log().get("\"bool false\"").unwrap(), false.into());
+        assert_eq!(*event.as_log().get("array[0]").unwrap(), "z".into());
+        assert_eq!(*event.as_log().get("array[1]").unwrap(), 7.into());
+        assert_eq!(*event.as_log().get("object.nested").unwrap(), "data".into());
+        assert_eq!(*event.as_log().get("object.more").unwrap(), "values".into());
         assert_eq!(
-            *event.as_log().get_field("\"bool true\"").unwrap(),
-            true.into()
-        );
-        assert_eq!(
-            *event.as_log().get_field("\"bool false\"").unwrap(),
-            false.into()
-        );
-        assert_eq!(*event.as_log().get_field("array[0]").unwrap(), "z".into());
-        assert_eq!(*event.as_log().get_field("array[1]").unwrap(), 7.into());
-        assert_eq!(
-            *event.as_log().get_field("object.nested").unwrap(),
-            "data".into()
-        );
-        assert_eq!(
-            *event.as_log().get_field("object.more").unwrap(),
-            "values".into()
-        );
-        assert_eq!(
-            *event
-                .as_log()
-                .get_field("deep[0][0][0].a.b.c[0][0][0]")
-                .unwrap(),
+            *event.as_log().get("deep[0][0][0].a.b.c[0][0][0]").unwrap(),
             1234.into()
         );
         assert_eq!(event.metadata(), &metadata);
@@ -569,11 +527,8 @@ mod test {
 
         let event = transform_one(&mut parser, event).unwrap();
 
-        assert_eq!(*event.as_log().get_field("key").unwrap(), "data".into());
-        assert_eq!(
-            *event.as_log().get_field("message").unwrap(),
-            "inner".into()
-        );
+        assert_eq!(*event.as_log().get("key").unwrap(), "data".into());
+        assert_eq!(*event.as_log().get("message").unwrap(), "inner".into());
         assert_eq!(event.metadata(), &metadata);
     }
 
@@ -590,7 +545,7 @@ mod test {
         let event = transform_one(&mut parser, event).unwrap();
 
         assert_eq!(
-            *event.as_log().get_field("message").unwrap(),
+            *event.as_log().get("message").unwrap(),
             "invalid json".into()
         );
         assert_eq!(event.metadata(), &metadata);
@@ -609,8 +564,8 @@ mod test {
         let event = transform_one(&mut parser, event).unwrap();
         let event = event.as_log();
 
-        assert_eq!(*event.get_field("that.greeting").unwrap(), "hello".into());
-        assert_eq!(*event.get_field("that.name").unwrap(), "bob".into());
+        assert_eq!(*event.get("that.greeting").unwrap(), "hello".into());
+        assert_eq!(*event.get("that.name").unwrap(), "bob".into());
         assert_eq!(event.metadata(), &metadata);
     }
 
@@ -628,9 +583,9 @@ mod test {
         let event = transform_one(&mut parser, event).unwrap();
         let event = event.as_log();
 
-        assert_eq!(*event.get_field("message").unwrap(), message.into());
-        assert_eq!(event.get_field("message.greeting"), None);
-        assert_eq!(event.get_field("message.name"), None);
+        assert_eq!(*event.get("message").unwrap(), message.into());
+        assert_eq!(event.get("message.greeting"), None);
+        assert_eq!(event.get("message.name"), None);
         assert_eq!(event.metadata(), &metadata);
     }
 
@@ -649,15 +604,12 @@ mod test {
         let event = transform_one(&mut parser, event).unwrap();
         let event = event.as_log();
 
-        match event.get_field("message") {
+        match event.get("message") {
             Some(event::log::Value::Object(_)) => (),
             _ => panic!("\"message\" is not a map"),
         }
-        assert_eq!(
-            *event.get_field("message.greeting").unwrap(),
-            "hello".into()
-        );
-        assert_eq!(*event.get_field("message.name").unwrap(), "bob".into());
+        assert_eq!(*event.get("message.greeting").unwrap(), "hello".into());
+        assert_eq!(*event.get("message.name").unwrap(), "bob".into());
         assert_eq!(event.metadata(), &metadata);
     }
 }

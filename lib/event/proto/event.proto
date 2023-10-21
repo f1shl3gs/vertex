@@ -20,7 +20,7 @@ message Value {
   oneof kind {
     bytes bytes = 1;
     double float = 2;
-    int64 i64 = 3;
+    int64 integer = 3;
     bool boolean = 4;
     google.protobuf.Timestamp timestamp = 5;
     ValueArray array = 6;
@@ -56,9 +56,16 @@ message TagValue {
   }
 }
 
+message Metadata {
+  Value value = 1;
+  optional string source_id = 2;
+  optional string source_type = 3;
+}
+
 message Log {
-  map<string, TagValue> tags = 1;
-  map<string, Value> fields = 2;
+  Metadata metadata = 1;
+
+  Value fields = 2;
 }
 
 message Counter {
@@ -92,18 +99,19 @@ message Summary {
 }
 
 message Metric {
-  string name = 1;
-  map<string, TagValue> tags = 2;
+  Metadata metadata = 1;
 
-  string description = 3;
-  string unit = 4;
+  string name = 2;
+  map<string, TagValue> tags = 3;
+  string description = 4;
+  string unit = 5;
+  google.protobuf.Timestamp timestamp = 6;
 
-  google.protobuf.Timestamp timestamp = 5;
   oneof value {
-    Counter counter = 6;
-    Gauge gauge = 7;
-    Histogram histogram = 8;
-    Summary summary = 9;
+    Counter counter = 7;
+    Gauge gauge = 8;
+    Histogram histogram = 9;
+    Summary summary = 10;
   }
 }
 

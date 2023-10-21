@@ -105,7 +105,7 @@ pub fn process_log(
     };
 
     let id = if let Some(Value::Bytes(key)) =
-        id_key_field.and_then(|key| log.remove_field((PathPrefix::Event, key)))
+        id_key_field.and_then(|key| log.remove((PathPrefix::Event, key)))
     {
         Some(String::from_utf8_lossy(&key).into_owned())
     } else {

@@ -164,7 +164,7 @@ fn structures_events_correctly() {
             drop(batch);
 
             let timestamp = input
-                .get_field(log_schema().timestamp_key())
+                .get(log_schema().timestamp_key())
                 .unwrap()
                 .clone();
             let events = stream::once(ready(Events::from(input)));

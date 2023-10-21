@@ -9,7 +9,7 @@ use bytes::Bytes;
 use chrono::Utc;
 use configurable::{configurable_component, Configurable};
 use encoding_transcode::{Decoder, Encoder};
-use event::{fields, tags, BatchNotifier, BatchStatus, LogRecord};
+use event::{fields, BatchNotifier, BatchStatus, LogRecord};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::source::util::OrderedFinalizer;
 use framework::{hostname, Pipeline, ShutdownSignal, Source};
@@ -383,18 +383,14 @@ fn tail_source(
         // Once harvester ends this will run until it has finished processing remaining
         // logs in the queue
         let mut messages = messages.map(move |line| {
-            let mut log = LogRecord::new(
-                tags!(
-                    &file_key => line.filename,
-                    &host_key => &hostname,
-                    source_type_key.to_string() => "tail"
-                ),
-                fields!(
-                    "message" => line.text,
-                    "offset" => line.offset,
-                    timestamp_key.to_string() =>  Utc::now()
-                ),
-            );
+            let mut log = LogRecord::from(fields!(
+                &file_key => line.filename,
+                &host_key => hostname.as_str(),
+                source_type_key.to_string() => "tail",
+                "message" => line.text,
+                "offset" => line.offset,
+                timestamp_key.to_string() =>  Utc::now()
+            ));
 
             if let Some(finalizer) = &finalizer {
                 let (batch, receiver) = BatchNotifier::new_with_receiver();
@@ -441,10 +437,9 @@ mod tests {
     use std::io::Write;
 
     use encoding_rs::UTF_16LE;
-    use event::log::Value;
-    use event::tags::Key;
-    use event::Event;
+    use event::log::{path, Value};
     use event::EventStatus;
+    use event::{event_path, Event};
     use framework::{Pipeline, ShutdownSignal};
     use multiline::Mode;
     use tempfile::tempdir;
@@ -576,21 +571,21 @@ mod tests {
         for event in received {
             let log = event.as_log();
             let line = log
-                .get_field(log_schema().message_key())
+                .get(log_schema().message_key())
                 .unwrap()
                 .to_string_lossy();
 
             if line.starts_with("foo") {
                 assert_eq!(line, format!("foo {}", foo));
                 assert_eq!(
-                    log.tags.get(&Key::from("file")).unwrap().to_string(),
+                    log.get("file").unwrap().to_string_lossy(),
                     path1.to_str().unwrap()
                 );
                 foo += 1;
             } else {
                 assert_eq!(line, format!("bar {}", bar));
                 assert_eq!(
-                    log.tags.get(&Key::from("file")).unwrap().to_string(),
+                    log.get("file").unwrap().to_string_lossy(),
                     path2.to_str().unwrap()
                 );
                 bar += 1;
@@ -688,11 +683,12 @@ mod tests {
         let mut i = 0;
         let mut pre_rot = true;
 
-        for event in received {
+        for mut event in received {
             assert_eq!(
                 event
-                    .tags()
-                    .get(&Key::from("filename"))
+                    .metadata_mut()
+                    .value_mut()
+                    .get(path!("filename"))
                     .unwrap()
                     .to_string(),
                 path.to_str().unwrap()
@@ -700,7 +696,7 @@ mod tests {
 
             let line = event
                 .as_log()
-                .get_field(log_schema().message_key())
+                .get(log_schema().message_key())
                 .unwrap()
                 .to_string_lossy();
             if pre_rot {
@@ -763,7 +759,7 @@ mod tests {
         for event in received {
             let line = event
                 .as_log()
-                .get_field(log_schema().message_key())
+                .get(log_schema().message_key())
                 .unwrap()
                 .to_string_lossy();
             let mut split = line.split(' ');
@@ -808,12 +804,7 @@ mod tests {
 
             assert_eq!(received.len(), 1);
             assert_eq!(
-                received[0]
-                    .as_log()
-                    .tags
-                    .get(&Key::from("file"))
-                    .unwrap()
-                    .to_string(),
+                received[0].as_log().get("file").unwrap().to_string_lossy(),
                 path.to_str().unwrap()
             );
         }
@@ -840,10 +831,9 @@ mod tests {
             assert_eq!(
                 received[0]
                     .as_log()
-                    .tags
-                    .get(&Key::from("source"))
+                    .get("source")
                     .unwrap()
-                    .to_string(),
+                    .to_string_lossy(),
                 path.to_str().unwrap()
             );
         }
@@ -854,7 +844,7 @@ mod tests {
             .into_iter()
             .map(Event::into_log)
             .map(|log| {
-                log.get_field(log_schema().message_key())
+                log.get(log_schema().message_key())
                     .unwrap()
                     .to_string_lossy()
                     .into_owned()
@@ -1015,21 +1005,21 @@ mod tests {
         })
         .await;
 
-        let file_key = Key::from("file");
+        let file_path = event_path!("file");
         let before_lines = received
             .iter()
             .filter(|event| {
                 event
                     .as_log()
-                    .get_tag(&file_key)
+                    .get(file_path)
                     .unwrap()
-                    .to_string()
+                    .to_string_lossy()
                     .ends_with("before")
             })
             .map(|event| {
                 event
                     .as_log()
-                    .get_field(log_schema().message_key())
+                    .get(log_schema().message_key())
                     .unwrap()
                     .to_string_lossy()
             })
@@ -1039,15 +1029,15 @@ mod tests {
             .filter(|event| {
                 event
                     .as_log()
-                    .get_tag(&file_key)
+                    .get(file_path)
                     .unwrap()
-                    .to_string()
+                    .to_string_lossy()
                     .ends_with("after")
             })
             .map(|event| {
                 event
                     .as_log()
-                    .get_field(log_schema().message_key())
+                    .get(log_schema().message_key())
                     .unwrap()
                     .to_string_lossy()
             })
@@ -1313,7 +1303,7 @@ mod tests {
         received
             .into_iter()
             .map(Event::into_log)
-            .map(|log| log.get_field(log_schema().message_key()).unwrap().clone())
+            .map(|log| log.get(log_schema().message_key()).unwrap().clone())
             .collect()
     }
 }
