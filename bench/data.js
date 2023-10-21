@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697896452293,
+  "lastUpdate": 1697897512552,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "22a5318d6d77c6b7ca5aabc1b600326b9e59e2ea",
-          "message": "chore(deps): bump the prost group with 3 updates (#1258)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\nUpdates `prost-types` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\nUpdates `prost-build` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-16T16:48:42+08:00",
-          "tree_id": "22f12223886cc8b26d9c7ee5c2b2de7effbc892a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/22a5318d6d77c6b7ca5aabc1b600326b9e59e2ea"
-        },
-        "date": 1694855181645,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 934,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42621.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "68f1eff80d211933979fa8770e9322834a8d4a99",
           "message": "chore(deps): bump syn from 2.0.33 to 2.0.34 (#1259)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.33 to 2.0.34.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.33...2.0.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-16T16:48:34+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 53441.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4bf743d8f0c6abae0131959b13be3b65aaf4a9c8",
+          "message": "remove tag from LogRecord (#1364)",
+          "timestamp": "2023-10-21T21:49:37+08:00",
+          "tree_id": "e0071ba049d168b60e2ac306cce84c7c7c2a9ec6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4bf743d8f0c6abae0131959b13be3b65aaf4a9c8"
+        },
+        "date": 1697897490499,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1176,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 53446.1,
             "unit": "KiB"
           }
         ]
