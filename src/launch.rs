@@ -21,6 +21,12 @@ use vertex::extensions::heartbeat;
 
 use crate::{top, validate};
 
+fn default_worker_threads() -> usize {
+    std::thread::available_parallelism()
+        .expect("get available working threads")
+        .get()
+}
+
 #[derive(FromArgs)]
 #[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
 pub struct RootCommand {
@@ -55,7 +61,7 @@ pub struct RootCommand {
     #[argh(
         option,
         short = 't',
-        default = "framework::num_workers()",
+        default = "default_worker_threads()",
         description = "specify how many threads the Tokio runtime will use"
     )]
     pub threads: usize,
