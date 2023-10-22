@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697961027222,
+  "lastUpdate": 1697961075040,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "717e1926d9ef49a120c0b7f36055de342ba1935d",
-          "message": "add `transport-tls` to rskafka (#1255)",
-          "timestamp": "2023-09-14T21:40:45+08:00",
-          "tree_id": "98cb5cf5c994c346a07a1f33476f729bd7e92bb9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/717e1926d9ef49a120c0b7f36055de342ba1935d"
-        },
-        "date": 1694699090503,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.282,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 27.116,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 43.501,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 60.146,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.57,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "65b83268c7ae1cd7fe020091a6a5091ede1c7311",
+          "message": "fix default worker threads (#1365)",
+          "timestamp": "2023-10-22T15:46:04+08:00",
+          "tree_id": "33726bb38ea413ae2f53747ba0efc005e7a0be0c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/65b83268c7ae1cd7fe020091a6a5091ede1c7311"
+        },
+        "date": 1697961052000,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.018,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.169,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.977,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 180.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.564,
             "unit": "ns/op"
           }
         ]
