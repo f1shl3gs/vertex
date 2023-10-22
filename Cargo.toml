@@ -339,7 +339,7 @@ condition = { path = "lib/condition", optional = true }
 configurable = { path = "lib/configurable" }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
 multiline = { path = "lib/multiline", optional = true }
