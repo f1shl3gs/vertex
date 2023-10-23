@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698079301786,
+  "lastUpdate": 1698079956891,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6f9803719feee876fb44527b35fe1357b20f8bd2",
-          "message": "chore(deps): bump syn from 2.0.34 to 2.0.35 (#1260)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.34 to 2.0.35.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.34...2.0.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-16T18:31:40+08:00",
-          "tree_id": "f981b7e5614cdd9d7eee3769c5900f49c40e1364",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6f9803719feee876fb44527b35fe1357b20f8bd2"
-        },
-        "date": 1694860485374,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 671710,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 749430,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "282d49cffac243f04bd058203ce9992281baf4d4",
+          "message": "deps: bump base64 to 0.21.5 (#1371)",
+          "timestamp": "2023-10-24T00:49:28+08:00",
+          "tree_id": "bfffb3e125c6f30f0d70f1eb1003b57232026497",
+          "url": "https://github.com/f1shl3gs/vertex/commit/282d49cffac243f04bd058203ce9992281baf4d4"
+        },
+        "date": 1698079937702,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 740290,
             "unit": "ns/op"
           }
         ]
