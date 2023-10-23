@@ -23,7 +23,7 @@ async fn sets_create_action_when_configured() {
         endpoint: String::from("https://example.com"),
         ..Default::default()
     };
-    let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
+    let es = ElasticsearchCommon::parse_config(&config).unwrap();
     let log = LogRecord::from(fields!(
         "message" => "hi there",
         "timestamp" => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
@@ -65,7 +65,7 @@ async fn encode_datastream_mode() {
         mode: ElasticsearchMode::DataStream,
         ..Default::default()
     };
-    let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
+    let es = ElasticsearchCommon::parse_config(&config).unwrap();
 
     let log = LogRecord::from(fields!(
         "message" => "hi there",
@@ -106,7 +106,7 @@ async fn encode_datastream_mode_no_routing() {
         }),
         ..Default::default()
     };
-    let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
+    let es = ElasticsearchCommon::parse_config(&config).unwrap();
     let log = LogRecord::from(fields!(
         "message" => "hi there",
         "timestamp" => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
@@ -140,7 +140,7 @@ async fn decode_bulk_action_error() {
         endpoint: "https://example.com".into(),
         ..Default::default()
     };
-    let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
+    let es = ElasticsearchCommon::parse_config(&config).unwrap();
 
     let log = LogRecord::from(fields!(
         "message" => "hi there",
@@ -161,7 +161,7 @@ async fn decode_bulk_action() {
         endpoint: "https://example.com".into(),
         ..Default::default()
     };
-    let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
+    let es = ElasticsearchCommon::parse_config(&config).unwrap();
     let log = LogRecord::from(fields!(
         "message" => "hi there",
     ));
@@ -186,7 +186,7 @@ async fn encode_datastream_mode_no_sync() {
         ..Default::default()
     };
 
-    let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
+    let es = ElasticsearchCommon::parse_config(&config).unwrap();
     let log = LogRecord::from(fields!(
         "message" => "hi there",
         "timestamp" => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
@@ -229,7 +229,7 @@ async fn allow_using_excepted_fields() {
         endpoint: "https://example.com".into(),
         ..Default::default()
     };
-    let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
+    let es = ElasticsearchCommon::parse_config(&config).unwrap();
     let log = LogRecord::from(fields!(
         "message" => "hi there",
         "foo" => "bar",

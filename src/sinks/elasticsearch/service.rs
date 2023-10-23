@@ -50,7 +50,7 @@ impl ElasticsearchService {
         let batch_service = HttpBatchService::new(client, move |req| {
             let builder = Arc::clone(&builder);
             let fut: BoxFuture<'static, Result<Request<Bytes>, crate::Error>> =
-                Box::pin(async move { builder.build_request(req).await });
+                Box::pin(async move { builder.build_request(req) });
 
             fut
         });
@@ -68,10 +68,7 @@ pub struct HttpRequestBuilder {
 }
 
 impl HttpRequestBuilder {
-    pub async fn build_request(
-        &self,
-        req: ElasticsearchRequest,
-    ) -> Result<Request<Bytes>, crate::Error> {
+    pub fn build_request(&self, req: ElasticsearchRequest) -> Result<Request<Bytes>, crate::Error> {
         let mut builder = Request::post(&self.bulk_uri);
 
         builder = builder.header("Content-Type", "application/x-ndjson");

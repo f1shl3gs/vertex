@@ -27,7 +27,7 @@ pub struct ElasticsearchCommon {
 }
 
 impl ElasticsearchCommon {
-    pub async fn parse_config(config: &Config) -> crate::Result<Self> {
+    pub fn parse_config(config: &Config) -> crate::Result<Self> {
         // Test the configured host, but ignore the result
         let uri = format!("{}/_test", &config.endpoint);
         let uri = uri.parse::<Uri>().map_err(|err| ParseError::InvalidHost {

@@ -25,7 +25,7 @@ fn default_ignores() -> regex::Regex {
 }
 
 pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let devices = net_class_devices(sys_path).await?;
+    let devices = net_class_devices(sys_path)?;
 
     let mut metrics = Vec::new();
     for device in devices {
@@ -261,7 +261,7 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
     Ok(metrics)
 }
 
-async fn net_class_devices(sys_path: &str) -> Result<Vec<String>, Error> {
+fn net_class_devices(sys_path: &str) -> Result<Vec<String>, Error> {
     let path = format!("{}/class/net", sys_path);
     let mut dirs = std::fs::read_dir(path)?;
     let mut devices = Vec::new();

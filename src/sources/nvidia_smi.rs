@@ -51,7 +51,7 @@ impl SourceConfig for Config {
                     _ = ticker.tick() => {}
                 }
 
-                match gather(&path).await {
+                match gather(&path) {
                     Ok(metrics) => {
                         if let Err(err) = output.send(metrics).await {
                             error!(
@@ -80,7 +80,7 @@ impl SourceConfig for Config {
     }
 }
 
-async fn gather(path: &Path) -> Result<Vec<Metric>, Error> {
+fn gather(path: &Path) -> Result<Vec<Metric>, Error> {
     let start = Instant::now();
     let output = Command::new(path).args(["-q", "-x"]).output()?;
     let reader = std::io::Cursor::new(output.stdout);

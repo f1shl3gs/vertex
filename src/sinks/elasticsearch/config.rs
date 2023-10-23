@@ -334,7 +334,7 @@ impl Config {
 #[typetag::serde(name = "elasticsearch")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
-        let common = ElasticsearchCommon::parse_config(self).await?;
+        let common = ElasticsearchCommon::parse_config(self)?;
         let http_client = HttpClient::new(&self.tls, cx.proxy())?;
         let batch_settings = self.batch.into_batcher_settings()?;
         let request_limits = self.request.unwrap_with(&RequestConfig::default());
