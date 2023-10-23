@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698079118601,
+  "lastUpdate": 1698079135615,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f2fcb6bcca41223ab54770e989a0083de9610d01",
-          "message": "chore(deps): bump inferno from 0.11.16 to 0.11.17 (#1262)\n\nBumps [inferno](https://github.com/jonhoo/inferno) from 0.11.16 to 0.11.17.\r\n- [Changelog](https://github.com/jonhoo/inferno/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/jonhoo/inferno/compare/v0.11.16...v0.11.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inferno\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-17T04:52:03+08:00",
-          "tree_id": "b1baf39d239d03f1438b025e4e5a0d85c7cb4de7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f2fcb6bcca41223ab54770e989a0083de9610d01"
-        },
-        "date": 1694898605045,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 963,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42624.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "099922639b26b63ae3a127337dd0485c4bb87880",
           "message": "chore(deps): bump syn from 2.0.35 to 2.0.36 (#1263)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.35 to 2.0.36.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.35...2.0.36)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-17T10:57:29+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 53450.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4a8aa30c9506b54f7559c4ba83cc7c5a74574f50",
+          "message": "remove `serde` features from bytes crate (#1369)",
+          "timestamp": "2023-10-24T00:19:13+08:00",
+          "tree_id": "b17104b7f4067747c971b4fa83fecf66635a7ea9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4a8aa30c9506b54f7559c4ba83cc7c5a74574f50"
+        },
+        "date": 1698079116638,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1043,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 53450.2,
             "unit": "KiB"
           }
         ]
