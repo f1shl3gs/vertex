@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698079173224,
+  "lastUpdate": 1698079211642,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "22a5318d6d77c6b7ca5aabc1b600326b9e59e2ea",
-          "message": "chore(deps): bump the prost group with 3 updates (#1258)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\nUpdates `prost-types` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\nUpdates `prost-build` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-16T16:48:42+08:00",
-          "tree_id": "22f12223886cc8b26d9c7ee5c2b2de7effbc892a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/22a5318d6d77c6b7ca5aabc1b600326b9e59e2ea"
-        },
-        "date": 1694854395676,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.652,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.579,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 51.399,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 66.145,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6f9803719feee876fb44527b35fe1357b20f8bd2",
           "message": "chore(deps): bump syn from 2.0.34 to 2.0.35 (#1260)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.34 to 2.0.35.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.34...2.0.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-16T18:31:40+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.096,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e5c5dd2c9d2b6bcc9edc44ba41c0836448e62920",
+          "message": "remove unused function (#1370)",
+          "timestamp": "2023-10-24T00:36:18+08:00",
+          "tree_id": "9e6e1dc50eb8034bf9fb07cbd8bc60e6a67e4943",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e5c5dd2c9d2b6bcc9edc44ba41c0836448e62920"
+        },
+        "date": 1698079193608,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.913,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.781,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 149.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 49.974,
             "unit": "ns/op"
           }
         ]
