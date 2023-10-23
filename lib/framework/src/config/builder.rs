@@ -42,8 +42,8 @@ pub struct Builder {
     /// Configured provider.
     pub provider: Option<Box<dyn ProviderConfig>>,
 
-    #[serde(default, rename = "health_checks")]
-    pub health_checks: HealthcheckOptions,
+    #[serde(default)]
+    pub healthcheck: HealthcheckOptions,
 }
 
 impl Builder {
@@ -90,7 +90,7 @@ impl Builder {
             errors.extend(merge_errs)
         }
 
-        self.health_checks.merge(with.health_checks);
+        self.healthcheck.merge(with.healthcheck);
 
         with.sources.keys().for_each(|k| {
             if self.sources.contains_key(k) {
@@ -214,7 +214,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
         transforms,
         sinks,
         global,
-        health_checks,
+        healthcheck,
         extensions,
         ..
     } = builder;
@@ -256,7 +256,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
     if errors.is_empty() {
         let config = Config {
             global,
-            healthchecks: health_checks,
+            healthcheck,
             sources,
             sinks,
             transforms,

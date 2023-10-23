@@ -49,10 +49,18 @@ pub use crate::config::sink::SinkOuter;
 use crate::config::source::SourceOuter;
 use crate::config::transform::TransformOuter;
 
+/// Healthcheck options
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
-#[serde(default)]
 pub struct HealthcheckOptions {
+    /// Whether or not healthcheck are enabled for all sinks
+    ///
+    /// Can be overriden on a per-sink basis.
     pub enabled: bool,
+
+    /// Whether or not to require a sink to report as being healthy during startup.
+    ///
+    /// When enabled and a sink reports not being healthy, Vertex will exit during
+    /// start-up.
     pub require_healthy: bool,
 }
 
@@ -214,7 +222,7 @@ pub struct Config {
 
     pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
-    pub healthchecks: HealthcheckOptions,
+    pub healthcheck: HealthcheckOptions,
 
     #[serde(skip_serializing, skip_deserializing)]
     expansions: IndexMap<ComponentKey, Vec<ComponentKey>>,

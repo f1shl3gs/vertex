@@ -604,7 +604,7 @@ async fn topology_rebuild_connected_transform() {
 #[tokio::test]
 async fn topology_required_healthcheck_fails_start() {
     let mut config = basic_config_with_sink_failing_healthcheck();
-    config.healthchecks.require_healthy = true;
+    config.healthcheck.require_healthy = true;
     let diff = framework::config::ConfigDiff::initial(&config);
     let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new())
         .await
@@ -641,7 +641,7 @@ async fn topology_healthcheck_not_run_on_unchanged_reload() {
 
     let (mut topology, _crash) = start_topology(config, false).await;
     let mut config = basic_config_with_sink_failing_healthcheck();
-    config.healthchecks.require_healthy = true;
+    config.healthcheck.require_healthy = true;
     assert!(topology.reload_config_and_respawn(config).await.unwrap());
 }
 
@@ -662,7 +662,7 @@ async fn topology_healthcheck_run_for_changes_on_reload() {
     config.add_sink("out2", &["in1"], sink_failing_healthcheck(10).1);
 
     let mut config = config.build().unwrap();
-    config.healthchecks.require_healthy = true;
+    config.healthcheck.require_healthy = true;
     assert!(!topology.reload_config_and_respawn(config).await.unwrap());
 }
 
