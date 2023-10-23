@@ -402,7 +402,7 @@ argh = { version = "0.1.12" }
 # External libs
 ahash = { version = "0.8.3", default-features = false, optional = true }
 bloomy = { version = "1.2.0", default-features = false, optional = true }
-bytes = { version = "1.5.0", default-features = false, features = ["serde"] }
+bytes = { version = "1.5.0", default-features = false }
 chrono = { version = "0.4.31", default-features = false }
 chrono-tz = { version = "0.8.3", default-features = false }
 encoding_rs = { version = "0.8.33", optional = true, features = ["serde"] }
