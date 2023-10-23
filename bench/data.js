@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698033173679,
+  "lastUpdate": 1698033950180,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "612f67e5b4dfc5f4f8f15b8aae226fd37b52646c",
-          "message": "fix some typo (#1261)",
-          "timestamp": "2023-09-17T01:54:18+08:00",
-          "tree_id": "0407f1eb851974ca288683a74e957cc520912ca8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/612f67e5b4dfc5f4f8f15b8aae226fd37b52646c"
-        },
-        "date": 1694887934784,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 959,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42624.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 53450.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e20b2d549672494325c30a57811cd64f25ba599",
+          "message": "chore(deps): bump ipnet from 2.8.0 to 2.9.0 (#1367)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.8.0 to 2.9.0.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/compare/2.8.0...2.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-23T11:47:04+08:00",
+          "tree_id": "9ddfc2b7b2ee51fe85e7cb57aa94ebd5bd7e04b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e20b2d549672494325c30a57811cd64f25ba599"
+        },
+        "date": 1698033931826,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 981,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 53450.5,
             "unit": "KiB"
           }
         ]
