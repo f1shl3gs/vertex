@@ -84,7 +84,7 @@ impl Serialize for LokiEvent {
     {
         let mut seq = serializer.serialize_seq(Some(2))?;
         seq.serialize_element(&self.timestamp.to_string())?;
-        seq.serialize_element(&self.event)?;
+        seq.serialize_element(self.event.as_ref())?;
         seq.end()
     }
 }
