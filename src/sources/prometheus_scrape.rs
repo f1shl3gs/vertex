@@ -51,11 +51,8 @@ impl SourceConfig for Config {
         let urls = self
             .endpoints
             .iter()
-            .map(|s| {
-                s.parse::<Uri>()
-                    .map_err(crate::sources::BuildError::UriParseError)
-            })
-            .collect::<Result<Vec<Uri>, crate::sources::BuildError>>()?;
+            .map(|s| s.parse::<Uri>())
+            .collect::<Result<Vec<Uri>, _>>()?;
         let client = HttpClient::new(&self.tls, &cx.proxy)?;
 
         Ok(scrape(

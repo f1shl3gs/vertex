@@ -66,9 +66,3 @@ pub mod syslog;
 mod tail;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
-
-#[derive(Debug, thiserror::Error)]
-enum BuildError {
-    #[error("URI parse error: {0}")]
-    UriParseError(::http::uri::InvalidUri),
-}
