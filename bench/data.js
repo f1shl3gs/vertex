@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698120353735,
+  "lastUpdate": 1698120370802,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25418,50 +25418,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "099922639b26b63ae3a127337dd0485c4bb87880",
-          "message": "chore(deps): bump syn from 2.0.35 to 2.0.36 (#1263)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.35 to 2.0.36.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.35...2.0.36)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-17T10:57:29+08:00",
-          "tree_id": "3744d032e7a984eacdbb511ec088a456936a0449",
-          "url": "https://github.com/f1shl3gs/vertex/commit/099922639b26b63ae3a127337dd0485c4bb87880"
-        },
-        "date": 1694919677481,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 51.905,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 351.83,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1021.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1191.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6377b9a732f3336a1ba097ab05dce7997cdf6c17",
+          "message": "chore(deps): bump quick-xml from 0.30.0 to 0.31.0 (#1373)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.30.0 to 0.31.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.30.0...v0.31.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-24T12:01:52+08:00",
+          "tree_id": "ff0a865653444ae9df4a7fdd365528e622c50ab5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6377b9a732f3336a1ba097ab05dce7997cdf6c17"
+        },
+        "date": 1698120348896,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 63.813,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 202.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 498.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1432.1,
             "unit": "ns/op"
           }
         ]
