@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698124091995,
+  "lastUpdate": 1698124102516,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8bd15c1089caaa292521f3cc5f56707cb1b9a4f7",
-          "message": "Small refactor (#1264)\n\n* simplify subscription\r\n\r\n* simplify `Pipeline`'s send",
-          "timestamp": "2023-09-17T14:35:20+08:00",
-          "tree_id": "223e2761df621b8a8d47cc736fb8b114aad1f976",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8bd15c1089caaa292521f3cc5f56707cb1b9a4f7"
-        },
-        "date": 1694932759355,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.306,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.208,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.852,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 44.627,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 58.192,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.099,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3c7a09fcf5bd510a5265eab863f26bc8788026bb",
+          "message": "remove inferno (#1375)",
+          "timestamp": "2023-10-24T13:04:23+08:00",
+          "tree_id": "f10527157053857b7ccd8af80b0286d3d09b315b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3c7a09fcf5bd510a5265eab863f26bc8788026bb"
+        },
+        "date": 1698124084186,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.141,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.869,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.777,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 149.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 49.948,
             "unit": "ns/op"
           }
         ]
