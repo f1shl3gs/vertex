@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698144984937,
+  "lastUpdate": 1698145013803,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "874ebdee8c1cd2cce223aff7d4c5e8c6e9275108",
-          "message": "chore(deps): bump syn from 2.0.36 to 2.0.37 (#1265)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.36 to 2.0.37.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.36...2.0.37)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-18T18:18:22+08:00",
-          "tree_id": "fe9d1aaf6b69ae608054d8489ea11aad0c1a4c13",
-          "url": "https://github.com/f1shl3gs/vertex/commit/874ebdee8c1cd2cce223aff7d4c5e8c6e9275108"
-        },
-        "date": 1695032546284,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.461,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.947,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.108,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.897,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 49.145,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 49.948,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0c9c2b577a497b6a4b8e12a41ae373cee7d52c1b",
+          "message": "fix vertex bench (#1377)",
+          "timestamp": "2023-10-24T18:51:39+08:00",
+          "tree_id": "74bb3370980dabe9c6767e435e9f66d4fcbcfe66",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0c9c2b577a497b6a4b8e12a41ae373cee7d52c1b"
+        },
+        "date": 1698144988809,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 33.802,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.526,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 34.698,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 201.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 70.258,
             "unit": "ns/op"
           }
         ]
