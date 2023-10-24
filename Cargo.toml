@@ -131,7 +131,7 @@ extensions-jemalloc = [
     "tikv-jemallocator/stats",
     "tikv-jemallocator/profiling",
 ]
-extensions-pprof = ["dep:pprof", "dep:inferno"]
+extensions-pprof = ["dep:pprof"]
 extensions-zpages = []
 
 # Extensions
@@ -393,8 +393,6 @@ prost-types = { version = "0.12.1", default-features = false }
 
 # Profile
 pprof = { version = "0.13.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
-# pin inferno, so rustc will not warning us for inferno using older quick-xml.
-inferno = { version = "0.11.17", default-features = false, features = ["nameattr"], optional = true }
 
 # Cli
 argh = { version = "0.1.12" }

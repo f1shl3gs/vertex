@@ -4160,7 +4160,6 @@ dependencies = [
  "humanize",
  "hyper",
  "indexmap 2.0.2",
- "inferno",
  "inventory",
  "jaeger",
  "k8s-openapi",
