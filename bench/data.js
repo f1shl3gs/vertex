@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698211602778,
+  "lastUpdate": 1698211618021,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6c4a6e58dc43cba785e6929c7de2a5674ffff779",
-          "message": "fix unused_qualifications (#1266)",
-          "timestamp": "2023-09-18T20:11:34+08:00",
-          "tree_id": "769a1de750711d6d9ff95cae910b22b5f8b60716",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6c4a6e58dc43cba785e6929c7de2a5674ffff779"
-        },
-        "date": 1695039336346,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.802,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.815,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 44.719,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 59.56,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 70.258,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "936c04ec48c0511fb741df1171b72a763bf0c006",
+          "message": "chore(deps): bump rustls from 0.21.7 to 0.21.8 (#1378)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.7 to 0.21.8.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.7...v/0.21.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-25T13:21:46+08:00",
+          "tree_id": "28d1b7c1d33be204c51ed5f600e34775e78e9749",
+          "url": "https://github.com/f1shl3gs/vertex/commit/936c04ec48c0511fb741df1171b72a763bf0c006"
+        },
+        "date": 1698211593972,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 32.485,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.148,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.787,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 188.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 68.087,
             "unit": "ns/op"
           }
         ]
