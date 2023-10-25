@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698212694181,
+  "lastUpdate": 1698212705300,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "91fc8ad231556765417ecdaea422618263837744",
-          "message": "chore(deps): bump dyn-clone from 1.0.13 to 1.0.14 (#1267)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.13 to 1.0.14.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.13...1.0.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-19T19:01:22+08:00",
-          "tree_id": "6aa11e37bf174c9d699e57b321fd825d6e4a5cd0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/91fc8ad231556765417ecdaea422618263837744"
-        },
-        "date": 1695121518926,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.421,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.847,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.165,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.788,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 49.453,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 68.087,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29",
+          "message": "deps: bump ahash to 0.8.6 (#1379)",
+          "timestamp": "2023-10-25T13:40:16+08:00",
+          "tree_id": "8b2c77932a0630de556fcc9b7eded2f61ec697b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29"
+        },
+        "date": 1698212681972,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.648,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.232,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.662,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 183.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.986,
             "unit": "ns/op"
           }
         ]
