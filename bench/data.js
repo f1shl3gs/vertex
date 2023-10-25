@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698244512335,
+  "lastUpdate": 1698244517077,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7d3981f531bba5b323fd6ec05a4a49ed34028722",
-          "message": "remove unused qualification (#1269)",
-          "timestamp": "2023-09-20T21:09:31+08:00",
-          "tree_id": "ec5176b804e1533145b6d95345eda7b6b721d2d3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7d3981f531bba5b323fd6ec05a4a49ed34028722"
-        },
-        "date": 1695215658224,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 64.586,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 198.75,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 474.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1340.7,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9e06d28118f4e94af2c57a946a16bb636007e08b",
           "message": "fix tracing-limit bench (#1271)",
           "timestamp": "2023-09-21T01:39:46+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 2459.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9c22a62d88d50875f1fd79ab49ff1483eb759a75",
+          "message": "deps: bump tokio-util to 0.7.10 (#1382)",
+          "timestamp": "2023-10-25T22:30:32+08:00",
+          "tree_id": "597821ffd6afebdcad927b6202dd0fc537845d53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9c22a62d88d50875f1fd79ab49ff1483eb759a75"
+        },
+        "date": 1698244493038,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 66.031,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 191.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 466.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1354.8,
             "unit": "ns/op"
           }
         ]
