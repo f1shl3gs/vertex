@@ -1,5 +1,4 @@
-global:
-  data_dir: /tmp
+data_dir: ./temp
 
 sources:
   tail:

@@ -1,5 +1,3 @@
-global: {}
-
 sources:
   metrics:
     type: internal_metrics

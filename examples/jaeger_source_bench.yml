@@ -1,6 +1,4 @@
 # This config is used with `tracegen` in the jaeger repository.
-#
-#
 
 sources:
   jaeger:
