@@ -20,8 +20,14 @@ use crate::config::{SinkConfig, SourceConfig, TransformConfig};
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Builder {
-    #[serde(default)]
+    #[serde(default, flatten)]
     pub global: GlobalOptions,
+
+    /// Optional configuration provider to use.
+    pub provider: Option<Box<dyn ProviderConfig>>,
+
+    #[serde(default)]
+    pub healthcheck: HealthcheckOptions,
 
     /// All configured sources.
     #[serde(default)]
@@ -38,12 +44,6 @@ pub struct Builder {
     /// All configured extensions
     #[serde(default)]
     pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
-
-    /// Configured provider.
-    pub provider: Option<Box<dyn ProviderConfig>>,
-
-    #[serde(default)]
-    pub healthcheck: HealthcheckOptions,
 }
 
 impl Builder {

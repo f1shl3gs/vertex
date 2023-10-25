@@ -1,5 +1,4 @@
-global:
-  data_dir: ./temp
+data_dir: ./temp
 
 health_checks:
   enabled: false
