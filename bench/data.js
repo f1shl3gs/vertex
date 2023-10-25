@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698212616361,
+  "lastUpdate": 1698212624764,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a5f9d45c0abc63878458d6f7fb8a5a799a6b3619",
-          "message": "fix clippy warnings (#1268)",
-          "timestamp": "2023-09-20T14:22:18+08:00",
-          "tree_id": "9987807a5674e7a9a6ac633e16a8e7c6df80ff15",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a5f9d45c0abc63878458d6f7fb8a5a799a6b3619"
-        },
-        "date": 1695191123953,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 85.354,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 196.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 336.24,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 318.96,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29",
+          "message": "deps: bump ahash to 0.8.6 (#1379)",
+          "timestamp": "2023-10-25T13:40:16+08:00",
+          "tree_id": "8b2c77932a0630de556fcc9b7eded2f61ec697b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29"
+        },
+        "date": 1698212602886,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 101.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 233.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 376.86,
             "unit": "ns/op"
           }
         ]
