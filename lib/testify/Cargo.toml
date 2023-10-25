@@ -11,4 +11,4 @@ futures = { version = "0.3.28" }
 futures-util = { version = "0.3.28", default-features = false }
 rand = { version = "0.8.5", default-features = false }
 tokio = { version = "1.33.0", default-features = false, features = ["io-util", "net", "time", "fs"] }
-tokio-util = { version = "0.7.9", default-features = false, features = ["codec"] }
+tokio-util = { version = "0.7.10", default-features = false, features = ["codec"] }
