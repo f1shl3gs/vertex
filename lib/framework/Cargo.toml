@@ -64,7 +64,7 @@ percent-encoding = { version = "2.3.0", default-features = false }
 pin-project-lite = { version = "0.2.13", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 regex = { version = "1.10.2", default-features = false }
-rustls = { version = "0.21.7", default-features = false, features = ["dangerous_configuration"] }
+rustls = { version = "0.21.8", default-features = false, features = ["dangerous_configuration"] }
 rustls-native-certs = { version = "0.6.3", default-features = false }
 rustls-pemfile = { version = "1.0.3", default-features = false }
 smallvec = { version = "1.11.1", default-features = false }
