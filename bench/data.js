@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698239507670,
+  "lastUpdate": 1698239787344,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5134f79e94138e64dc2ad7851953c01662ca3d26",
-          "message": "update dependencies (#1274)",
-          "timestamp": "2023-09-21T03:45:19+08:00",
-          "tree_id": "c16f2549290a3d258d9487f9e658d7383c1d6107",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5134f79e94138e64dc2ad7851953c01662ca3d26"
-        },
-        "date": 1695240191607,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 944,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42641.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55108.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3156267e5d028abcbdcf51cf70aee4a62664c90b",
+          "message": "flatten global options (#1381)",
+          "timestamp": "2023-10-25T20:53:26+08:00",
+          "tree_id": "18d614c19941bb79976a3431f9ea163faec7ecf1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3156267e5d028abcbdcf51cf70aee4a62664c90b"
+        },
+        "date": 1698239764289,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1200,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55123.4,
             "unit": "KiB"
           }
         ]
