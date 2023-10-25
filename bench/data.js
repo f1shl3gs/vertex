@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698212720881,
+  "lastUpdate": 1698213655334,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4f393ae9c90c7e6e06a1ba22d9617c1cfa803b8c",
-          "message": "chore(deps): bump tokio-util from 0.7.8 to 0.7.9 (#1272)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.8 to 0.7.9.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.8...tokio-util-0.7.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-21T02:42:19+08:00",
-          "tree_id": "0332685c4fc400957a172cb0cc149c21d0373219",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4f393ae9c90c7e6e06a1ba22d9617c1cfa803b8c"
-        },
-        "date": 1695236442779,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 974,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42645.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "69c7f72e455355a0a01203eb10ec62b6ffa94429",
           "message": "chore(deps): bump smallvec from 1.11.0 to 1.11.1 (#1273)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.11.0 to 1.11.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.11.0...v1.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-21T02:43:21+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55108.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29",
+          "message": "deps: bump ahash to 0.8.6 (#1379)",
+          "timestamp": "2023-10-25T13:40:16+08:00",
+          "tree_id": "8b2c77932a0630de556fcc9b7eded2f61ec697b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29"
+        },
+        "date": 1698213635415,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1079,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55108.4,
             "unit": "KiB"
           }
         ]
