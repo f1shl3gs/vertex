@@ -7,6 +7,6 @@ publish = false
 [dependencies]
 
 [dev-dependencies]
-futures = { version = "0.3.28" }
+futures = { version = "0.3.29", default-features = false }
 tokio = { version = "1.33.0", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
 tokio-stream = { version = "0.1.14" }
