@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698327361564,
+  "lastUpdate": 1698328148721,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e747443d2c1614a9a587429b4323546b9ccc59e6",
-          "message": "add tonic group (#1278)",
-          "timestamp": "2023-09-22T05:44:53+08:00",
-          "tree_id": "83e40e64dc4cff00c83def52b9989b78e82606d7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e747443d2c1614a9a587429b4323546b9ccc59e6"
-        },
-        "date": 1695333804421,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 978,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42641.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0a7402607a08a1b01057dbbb77455a5189c293c3",
           "message": "update rust to 1.72.1 (#1280)",
           "timestamp": "2023-09-22T10:05:17+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55107.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9b8dcb3582fc05391f57ff172840d4a7b4b48e11",
+          "message": "chore(deps): bump serde_yaml from 0.9.26 to 0.9.27 (#1385)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.26 to 0.9.27.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.26...0.9.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-26T21:29:52+08:00",
+          "tree_id": "c435b33f3419b7e551066495c3227a34f7cc4880",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9b8dcb3582fc05391f57ff172840d4a7b4b48e11"
+        },
+        "date": 1698328129978,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 997,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55109.7,
             "unit": "KiB"
           }
         ]
