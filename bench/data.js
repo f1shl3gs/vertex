@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698297519366,
+  "lastUpdate": 1698297527524,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9e06d28118f4e94af2c57a946a16bb636007e08b",
-          "message": "fix tracing-limit bench (#1271)",
-          "timestamp": "2023-09-21T01:39:46+08:00",
-          "tree_id": "74a267d73fb3e897a659223cdd333d07d9c5f4cb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9e06d28118f4e94af2c57a946a16bb636007e08b"
-        },
-        "date": 1695231897337,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 32.172,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.617,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 32.398,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 52.294,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 67.205,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.029,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "86154b685211af2553d9f87050c2ae29c602d407",
+          "message": "chore(deps): bump serde from 1.0.189 to 1.0.190 (#1383)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.189 to 1.0.190.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.189...v1.0.190)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-26T13:14:39+08:00",
+          "tree_id": "94906ab08ec11e953da870334ba6a0264e70bc54",
+          "url": "https://github.com/f1shl3gs/vertex/commit/86154b685211af2553d9f87050c2ae29c602d407"
+        },
+        "date": 1698297508281,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.186,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.468,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 144.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 50.857,
             "unit": "ns/op"
           }
         ]
