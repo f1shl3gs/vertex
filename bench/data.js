@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698328353357,
+  "lastUpdate": 1698337034399,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2b08c5726b5c3a5746497a1da7357ede8fabe368",
-          "message": "chore(deps): bump tonic-build from 0.10.0 to 0.10.1 (#1275)\n\nBumps [tonic-build](https://github.com/hyperium/tonic) from 0.10.0 to 0.10.1.\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.0...v0.10.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-22T05:25:43+08:00",
-          "tree_id": "6fcb79b2b34ff5da54e2bbff25ef6666ca88f9a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2b08c5726b5c3a5746497a1da7357ede8fabe368"
-        },
-        "date": 1695331757383,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 105.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 249.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 382.08,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 322.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e26149cb2b85b84fd0ee1282a0c76917007a5710",
+          "message": "deps: bump futures and futures-util to 0.3.29 (#1386)",
+          "timestamp": "2023-10-27T00:14:00+08:00",
+          "tree_id": "05551c3d821210b06a357579a43e3913cd02446a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e26149cb2b85b84fd0ee1282a0c76917007a5710"
+        },
+        "date": 1698337015712,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 87.925,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 196.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 322.73,
             "unit": "ns/op"
           }
         ]
