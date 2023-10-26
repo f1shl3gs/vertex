@@ -20,4 +20,4 @@ value = { path = "../value" }
 
 [dev-dependencies]
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
-serde_yaml = { version = "0.9.25" }
+serde_yaml = { version = "0.9.26", default-features = false }
