@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698337216081,
+  "lastUpdate": 1698338197072,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0a7402607a08a1b01057dbbb77455a5189c293c3",
-          "message": "update rust to 1.72.1 (#1280)",
-          "timestamp": "2023-09-22T10:05:17+08:00",
-          "tree_id": "7805438668803c1a3f278ae05796c4950fd23b63",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0a7402607a08a1b01057dbbb77455a5189c293c3"
-        },
-        "date": 1695349427396,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 978,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42654.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "73a534b50e2e59282539dd9b9fe362d77b0f315b",
           "message": "fix unwrap (#1279)",
           "timestamp": "2023-09-22T10:20:04+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55109.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a460cf8e1dab69d569bf8cd54a9699b7a69cbacd",
+          "message": "deps: bump hyper-rustls to 0.24.2 (#1387)",
+          "timestamp": "2023-10-27T00:14:18+08:00",
+          "tree_id": "a54682b76561de09416dee08576a8f9cf273e75d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a460cf8e1dab69d569bf8cd54a9699b7a69cbacd"
+        },
+        "date": 1698338174682,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1180,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55113.3,
             "unit": "KiB"
           }
         ]
