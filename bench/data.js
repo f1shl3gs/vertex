@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698304498782,
+  "lastUpdate": 1698305314239,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8482d8a429dc2769ca01755eb7a2d6823ff69cec",
-          "message": "chore(deps): bump tonic from 0.10.0 to 0.10.1 (#1277)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.10.0 to 0.10.1.\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.0...v0.10.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-09-22T05:44:41+08:00",
-          "tree_id": "8f7f4f3fe35b230503c6150ea6c26c6208c79ff5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8482d8a429dc2769ca01755eb7a2d6823ff69cec"
-        },
-        "date": 1695333787995,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 976,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42641.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55111.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f6202e36f133fc093259c3f98bbdf6d9f81e57d",
+          "message": "deps: bump serde_yaml to 0.9.26 (#1384)",
+          "timestamp": "2023-10-26T15:08:42+08:00",
+          "tree_id": "8f54c203b85126fbdd4e61888b333ab230e13f02",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f6202e36f133fc093259c3f98bbdf6d9f81e57d"
+        },
+        "date": 1698305294365,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 979,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55107.7,
             "unit": "KiB"
           }
         ]
