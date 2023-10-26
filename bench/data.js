@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698327230485,
+  "lastUpdate": 1698327268128,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25418,50 +25418,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "69c7f72e455355a0a01203eb10ec62b6ffa94429",
-          "message": "chore(deps): bump smallvec from 1.11.0 to 1.11.1 (#1273)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.11.0 to 1.11.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.11.0...v1.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-21T02:43:21+08:00",
-          "tree_id": "8cc9330fd9f2405da702bec2e02cb25dfd806290",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69c7f72e455355a0a01203eb10ec62b6ffa94429"
-        },
-        "date": 1695235648191,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 58.192,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 173.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 443.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1264.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1210.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9b8dcb3582fc05391f57ff172840d4a7b4b48e11",
+          "message": "chore(deps): bump serde_yaml from 0.9.26 to 0.9.27 (#1385)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.26 to 0.9.27.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.26...0.9.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-26T21:29:52+08:00",
+          "tree_id": "c435b33f3419b7e551066495c3227a34f7cc4880",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9b8dcb3582fc05391f57ff172840d4a7b4b48e11"
+        },
+        "date": 1698327246094,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 63.176,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 188.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 455.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1367,
             "unit": "ns/op"
           }
         ]
