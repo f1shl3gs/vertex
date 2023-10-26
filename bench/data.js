@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698339764645,
+  "lastUpdate": 1698340722871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "acf77e486ee7a54ba0bd47718c38de7c92565cde",
-          "message": "chore(deps): bump tonic-health from 0.10.0 to 0.10.1 (#1276)\n\nBumps [tonic-health](https://github.com/hyperium/tonic) from 0.10.0 to 0.10.1.\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.0...v0.10.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-health\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-22T05:25:50+08:00",
-          "tree_id": "4b0d55d2c74857b402bf70d67db04c9df5180c86",
-          "url": "https://github.com/f1shl3gs/vertex/commit/acf77e486ee7a54ba0bd47718c38de7c92565cde"
-        },
-        "date": 1695332825982,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 34214000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1111500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 24.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8482d8a429dc2769ca01755eb7a2d6823ff69cec",
           "message": "chore(deps): bump tonic from 0.10.0 to 0.10.1 (#1277)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.10.0 to 0.10.1.\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.0...v0.10.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2023-09-22T05:44:41+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 68.467,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1be8cef10ebbcf038942cc795580e9f80d742752",
+          "message": "deps: remove unused features of tracing-futures (#1388)",
+          "timestamp": "2023-10-27T00:57:13+08:00",
+          "tree_id": "22ebe2de5f57559778b666de3a167aeaf4e68d80",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1be8cef10ebbcf038942cc795580e9f80d742752"
+        },
+        "date": 1698340703450,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 48400000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1048900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 62.206,
             "unit": "ns/op"
           }
         ]
