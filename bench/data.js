@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698340722871,
+  "lastUpdate": 1698340828612,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8cb5081d8e89d0f261ad0811c3e431ede0e934a4",
-          "message": "replace env::var_os with env::var (#1281)",
-          "timestamp": "2023-09-23T03:51:25+08:00",
-          "tree_id": "0830e9bbb17c1e7ea31b7e546be223f3ef46d2a5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8cb5081d8e89d0f261ad0811c3e431ede0e934a4"
-        },
-        "date": 1695413351894,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 937,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42654.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5adf4bb744a7cc2b43986678cbb8495fa359f5b9",
           "message": "disable smallvec's features (#1282)",
           "timestamp": "2023-09-23T11:03:35+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55110.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1be8cef10ebbcf038942cc795580e9f80d742752",
+          "message": "deps: remove unused features of tracing-futures (#1388)",
+          "timestamp": "2023-10-27T00:57:13+08:00",
+          "tree_id": "22ebe2de5f57559778b666de3a167aeaf4e68d80",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1be8cef10ebbcf038942cc795580e9f80d742752"
+        },
+        "date": 1698340805504,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1221,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55106.7,
             "unit": "KiB"
           }
         ]
