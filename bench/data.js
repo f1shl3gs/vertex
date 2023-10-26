@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698304376330,
+  "lastUpdate": 1698304389470,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "69c7f72e455355a0a01203eb10ec62b6ffa94429",
-          "message": "chore(deps): bump smallvec from 1.11.0 to 1.11.1 (#1273)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.11.0 to 1.11.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.11.0...v1.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-21T02:43:21+08:00",
-          "tree_id": "8cc9330fd9f2405da702bec2e02cb25dfd806290",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69c7f72e455355a0a01203eb10ec62b6ffa94429"
-        },
-        "date": 1695235573297,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 702180,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 740080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f6202e36f133fc093259c3f98bbdf6d9f81e57d",
+          "message": "deps: bump serde_yaml to 0.9.26 (#1384)",
+          "timestamp": "2023-10-26T15:08:42+08:00",
+          "tree_id": "8f54c203b85126fbdd4e61888b333ab230e13f02",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f6202e36f133fc093259c3f98bbdf6d9f81e57d"
+        },
+        "date": 1698304364835,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 977100,
             "unit": "ns/op"
           }
         ]
