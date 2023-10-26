@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698327226250,
+  "lastUpdate": 1698327230485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "69c7f72e455355a0a01203eb10ec62b6ffa94429",
-          "message": "chore(deps): bump smallvec from 1.11.0 to 1.11.1 (#1273)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.11.0 to 1.11.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.11.0...v1.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-21T02:43:21+08:00",
-          "tree_id": "8cc9330fd9f2405da702bec2e02cb25dfd806290",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69c7f72e455355a0a01203eb10ec62b6ffa94429"
-        },
-        "date": 1695235648891,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.969,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.112,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.474,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 44.376,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.499,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 51.073,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9b8dcb3582fc05391f57ff172840d4a7b4b48e11",
+          "message": "chore(deps): bump serde_yaml from 0.9.26 to 0.9.27 (#1385)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.26 to 0.9.27.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.26...0.9.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-26T21:29:52+08:00",
+          "tree_id": "c435b33f3419b7e551066495c3227a34f7cc4880",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9b8dcb3582fc05391f57ff172840d4a7b4b48e11"
+        },
+        "date": 1698327207571,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.695,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.149,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.184,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 139.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 48.935,
             "unit": "ns/op"
           }
         ]
