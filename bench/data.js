@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698384562280,
+  "lastUpdate": 1698384723880,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5adf4bb744a7cc2b43986678cbb8495fa359f5b9",
-          "message": "disable smallvec's features (#1282)",
-          "timestamp": "2023-09-23T11:03:35+08:00",
-          "tree_id": "62fa4bd077483b0aed8d38016672d1b6988325d8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5adf4bb744a7cc2b43986678cbb8495fa359f5b9"
-        },
-        "date": 1695439302666,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 960,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42658.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "40ee01994fc9554d755ce25b73839df6732c32aa",
           "message": "remove hyper-proxy (#1283)",
           "timestamp": "2023-09-24T13:35:05+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55106.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e88bea920c4c6989acbad122372a964a1a36c856",
+          "message": "chore(deps): bump tempfile from 3.8.0 to 3.8.1 (#1389)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.8.0 to 3.8.1.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-27T13:10:10+08:00",
+          "tree_id": "1a649abc14d0905486b8fdef0a3606e2ba3f02a7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e88bea920c4c6989acbad122372a964a1a36c856"
+        },
+        "date": 1698384703433,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1138,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55106.9,
             "unit": "KiB"
           }
         ]
