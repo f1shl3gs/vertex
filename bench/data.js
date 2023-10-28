@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698503237226,
+  "lastUpdate": 1698503260218,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a20e16112bdf55f791c2aacbd4c32495274f847c",
-          "message": "Rollback tracing to 0.1.37 (#1284)\n\n* remove no-proxy\r\n\r\n* rollback tracing to 0.1.37",
-          "timestamp": "2023-09-24T14:05:51+08:00",
-          "tree_id": "98ce6ff782fb22270f36052e08491f0b0fc12cf7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a20e16112bdf55f791c2aacbd4c32495274f847c"
-        },
-        "date": 1695535755274,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 796600,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 737210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9c75ba8a8215b329ee5f80a5b1eaa83af94e94b1",
+          "message": "just serde fields without `serde_yaml` (#1392)",
+          "timestamp": "2023-10-28T22:24:07+08:00",
+          "tree_id": "dae7b5370854d36076444b9ccd714134c51b697c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9c75ba8a8215b329ee5f80a5b1eaa83af94e94b1"
+        },
+        "date": 1698503237055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 873670,
             "unit": "ns/op"
           }
         ]
