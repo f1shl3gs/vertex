@@ -16,15 +16,15 @@ struct Config {
     /// e.g.
     ///   .meta.foo[0] contains bar
     ///   .message contains bar && (.upper > 10 or .lower lt 5.001)
-    #[configurable(required, example = ".meta.foo[0]")]
-    condition: String,
+    #[configurable(required, example = ".meta.foo[0] contains bar")]
+    condition: Expression,
 }
 
 #[async_trait]
 #[typetag::serde(name = "filter")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let filter = Filter::new(self.condition.as_str())?;
+        let filter = Filter::new(self.condition.clone())?;
         Ok(Transform::function(filter))
     }
 
@@ -46,9 +46,7 @@ struct Filter {
 }
 
 impl Filter {
-    fn new(cond: &str) -> Result<Self, crate::Error> {
-        let expr = condition::parse(cond)?;
-
+    fn new(expr: Expression) -> Result<Self, crate::Error> {
         let discarded = metrics::register_counter(
             "events_discarded_total",
             "The total number of events discarded by this component",
@@ -118,7 +116,8 @@ mod tests {
         ];
 
         for (input, want) in tests {
-            let mut transform = Filter::new(input).unwrap();
+            let expr = Expression::parse(input).unwrap();
+            let mut transform = Filter::new(expr).unwrap();
             let got = transform_one(&mut transform, log.clone());
             assert_eq!(
                 got, want,

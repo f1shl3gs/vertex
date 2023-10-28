@@ -14,7 +14,7 @@ where
 
     if let Err(err) = serde_yaml::from_str::<T>(&cfg) {
         panic!(
-            "{}\n\n----------------- Generated config -------------\n{}\n{}\n",
+            "Deserialize error: {}\n\n----------------- Generated config -------------\n{}\n{}\n",
             err, cfg, schema
         )
     }

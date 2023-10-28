@@ -5,7 +5,6 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytes::{Bytes, BytesMut};
-use configurable::Configurable;
 use futures::Stream;
 use futures::StreamExt;
 use pin_project_lite::pin_project;
@@ -18,7 +17,7 @@ use super::serde_regex;
 
 /// The mode of operation of the line aggregator
 #[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Configurable, Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Mode {
     /// All consecutive lines matching this pattern are included in the group.
@@ -440,7 +439,7 @@ mod tests {
 
     async fn run_and_assert(lines: &[&'static str], rule: impl Rule, expected: &[&'static str]) {
         let stream = stream_from_lines(lines);
-        let logic = Logic::new(rule, std::time::Duration::from_secs(5));
+        let logic = Logic::new(rule, Duration::from_secs(5));
         let aggr = LineAgg::new(stream, logic);
         let results = aggr.collect().await;
         assert_results(results, expected)

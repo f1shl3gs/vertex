@@ -2,11 +2,10 @@ use std::borrow::Cow;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
-use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
 /// Array of homogeneous values
-#[derive(Clone, Configurable, Debug, Deserialize, Serialize, PartialOrd)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
 #[serde(untagged)]
 pub enum Array {
     /// Array of bools
@@ -118,7 +117,7 @@ impl From<Vec<String>> for Array {
 }
 
 /// Value types for use in `KeyValue` pairs.
-#[derive(Clone, Configurable, Debug, Deserialize, Serialize, PartialOrd)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
 #[serde(untagged)]
 pub enum Value {
     /// bool values
