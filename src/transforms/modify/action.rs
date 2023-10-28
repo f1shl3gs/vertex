@@ -1,4 +1,4 @@
-use bytes::Buf;
+use bytes::{Buf, Bytes};
 use event::log::{OwnedTargetPath, Value};
 use event::LogRecord;
 use serde::{Deserialize, Serialize};
@@ -13,7 +13,7 @@ pub enum Error {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(tag = "type")]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub enum Action {
     /// Set a key/value pair with path and value, if the path already exists,
     /// this field is overwritten.
@@ -32,6 +32,8 @@ pub enum Action {
     ToInteger { path: OwnedTargetPath },
     /// Convert a log field from i64/f64/string to bool.
     ToBool { path: OwnedTargetPath },
+    /// Convert a log filed to string
+    ToString { path: OwnedTargetPath },
 
     /// Parse a string field, and put it to path or target(when it is not provide).
     ParseJson {
@@ -132,6 +134,13 @@ impl Action {
                     }
                 }
             }
+            Action::ToString { path } => match log.get_mut(path) {
+                Some(value) => {
+                    let b = Bytes::from(value.to_string_lossy().into_owned());
+                    *value = Value::Bytes(b);
+                }
+                None => return Err(Error::NotFound),
+            },
 
             // Parse
             Action::ParseJson { path, target } => match log.remove(path) {
@@ -301,6 +310,16 @@ mod tests {
                 fields!(
                     "bool" => false
                 ),
+            ),
+            (
+                "to string",
+                Some(fields!("int" => 1)),
+                Action::ToString {
+                    path: parse_target_path(".int").unwrap(),
+                },
+                fields!(
+                    "int" => "1"
+                )
             ),
             (
                 "parse json",
