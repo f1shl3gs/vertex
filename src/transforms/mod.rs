@@ -1,29 +1,21 @@
-#[cfg(feature = "transforms-add_fields")]
-mod add_fields;
 #[cfg(feature = "transforms-cardinality")]
 mod cardinality;
-#[cfg(feature = "transforms-coercer")]
-mod coercer;
 #[cfg(feature = "transforms-dedup")]
 mod dedup;
-#[cfg(feature = "transforms-enum")]
-mod r#enum;
 #[cfg(feature = "transforms-filter")]
 mod filter;
 #[cfg(feature = "transforms-geoip")]
 mod geoip;
-#[cfg(feature = "transforms-json_parser")]
-mod json_parser;
 #[cfg(feature = "transforms-metricalize")]
 mod metricalize;
+#[cfg(feature = "transforms-modify")]
+mod modify;
 #[cfg(feature = "transforms-rewrite")]
 mod rewrite;
 #[cfg(feature = "transforms-route")]
 mod route;
 #[cfg(feature = "transforms-sample")]
 mod sample;
-#[cfg(feature = "transforms-substr")]
-mod substr;
 #[cfg(feature = "transforms-throttle")]
 mod throttle;
 

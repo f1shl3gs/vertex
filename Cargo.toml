@@ -220,36 +220,28 @@ sources = [
     "sources-zookeeper",
 ]
 
-transforms-add_fields = []
 transforms-cardinality = ["dep:bloomy"]
-transforms-coercer = []
 transforms-dedup = ["dep:lru"]
-transforms-enum = []
 transforms-filter = ["dep:condition"]
 transforms-geoip = ["dep:maxminddb"]
-transforms-json_parser = []
 transforms-metricalize = ["dep:async-stream"]
+transforms-modify = []
 transforms-rewrite = []
 transforms-route = ["dep:condition"]
 transforms-sample = []
-transforms-substr = []
 transforms-throttle = ["dep:gcra"]
 
 # transforms
 transforms = [
-    "transforms-add_fields",
     "transforms-cardinality",
-    "transforms-coercer",
     "transforms-dedup",
-    "transforms-enum",
     "transforms-filter",
     "transforms-geoip",
-    "transforms-json_parser",
     "transforms-metricalize",
+    "transforms-modify",
     "transforms-rewrite",
     "transforms-route",
     "transforms-sample",
-    "transforms-substr",
     "transforms-throttle"
 ]
 
