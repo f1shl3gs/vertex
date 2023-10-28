@@ -1,72 +1,60 @@
 mod ast;
+mod error;
+mod serde;
 
-use std::fmt::{Display, Formatter};
-use std::num::ParseFloatError;
+use ast::{CombiningOp, FieldExpr, Parser};
+pub use error::Error;
+use event::LogRecord;
 
-pub use ast::Expression;
+#[derive(Clone, Debug)]
+pub enum Expression {
+    Field(FieldExpr),
 
-#[derive(Debug, PartialEq)]
-pub enum Error {
-    // Parse
-    PathExpected {
-        pos: usize,
+    Binary {
+        op: CombiningOp,
+        lhs: Box<Expression>,
+        rhs: Box<Expression>,
     },
-    EarlyEOF,
-    UnknownCombiningOp {
-        pos: usize,
-        token: String,
-    },
-    InvalidNumber {
-        pos: usize,
-        token: String,
-        err: ParseFloatError,
-    },
-    UnknownFieldOp {
-        pos: usize,
-        token: String,
-    },
-    InvalidRegex {
-        pos: usize,
-        token: String,
-        err: regex::Error,
-    },
-    InvalidPath {
-        path: String,
-    },
-
-    // Eval errors
-    MissingField(String),
+    // support Unary !?
 }
 
-impl Display for Error {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Error::PathExpected { pos } => write!(f, "path expected at {}", pos),
-            Error::EarlyEOF => write!(f, "unexpected eof"),
-            Error::UnknownCombiningOp { pos, token } => {
-                write!(f, "unknown combining operator \"{}\" at {}", token, pos)
-            }
-            Error::InvalidNumber { pos, token, err } => {
-                write!(f, "invalid number \"{}\" at {}, err: {}", token, pos, err)
-            }
-            Error::UnknownFieldOp { pos, token } => {
-                write!(f, "unknown field operator \"{}\" at {}", token, pos)
-            }
-            Error::InvalidRegex { pos, token, err } => {
-                write!(f, "invalid regex \"{}\" at {}, err: {}", token, pos, err)
-            }
-            Error::InvalidPath { path } => {
-                write!(f, "invalid path \"{}\"", path)
-            }
-            Error::MissingField(field) => write!(f, "filed \"{}\" is not found", field),
+impl PartialEq for Expression {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Expression::Field(a), Expression::Field(b)) => a.eq(b),
+            (
+                Expression::Binary {
+                    lhs: al,
+                    op: ao,
+                    rhs: ar,
+                },
+                Expression::Binary {
+                    lhs: bl,
+                    op: bo,
+                    rhs: br,
+                },
+            ) => ao.eq(bo) && al.eq(bl) && ar.eq(br),
+            _ => false,
         }
     }
 }
 
-impl std::error::Error for Error {}
+impl Expression {
+    fn boxed(self) -> Box<Self> {
+        Box::new(self)
+    }
 
-pub fn parse(input: &str) -> Result<Expression, Error> {
-    let mut parser = ast::Parser::new(input);
+    pub fn parse(input: impl AsRef<str>) -> Result<Self, Error> {
+        Parser::new(input.as_ref()).parse()
+    }
 
-    parser.parse()
+    pub fn eval(&self, log: &LogRecord) -> Result<bool, Error> {
+        match self {
+            Expression::Field(f) => f.eval(log),
+            Expression::Binary { op, lhs, rhs } => match op {
+                CombiningOp::And => Ok(lhs.eval(log)? && rhs.eval(log)?),
+                CombiningOp::Or => Ok(lhs.eval(log)? || rhs.eval(log)?),
+            },
+        }
+    }
 }

@@ -1,4 +1,4 @@
-use condition::parse;
+use condition::Expression;
 use criterion::{criterion_group, criterion_main, Criterion};
 use event::{fields, LogRecord};
 
@@ -25,7 +25,7 @@ fn bench_eval(c: &mut Criterion) {
 
     for (name, expr) in expressions {
         group.bench_function(name, |b| {
-            let expr = parse(expr).unwrap();
+            let expr = Expression::parse(expr).unwrap();
 
             b.iter(|| expr.eval(log).expect("eval failed"))
         });

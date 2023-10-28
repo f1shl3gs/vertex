@@ -1,8 +1,6 @@
 use std::borrow::Cow;
 use std::fmt;
 
-use configurable::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
-use configurable::{Configurable, GenerateError};
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
@@ -33,12 +31,6 @@ impl ByteSizeOf for Key {
             Cow::Borrowed(_) => 0,
             Cow::Owned(s) => s.len(),
         }
-    }
-}
-
-impl Configurable for Key {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(generate_string_schema())
     }
 }
 

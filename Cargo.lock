@@ -556,8 +556,10 @@ name = "configurable"
 version = "0.1.0"
 dependencies = [
  "chrono-tz",
+ "condition",
  "configurable-derive",
  "encoding_rs",
+ "event",
  "humanize",
  "indexmap 2.0.2",
  "inventory",
@@ -889,7 +891,6 @@ version = "0.1.0"
 dependencies = [
  "bytes",
  "chrono",
- "configurable",
  "criterion",
  "finalize",
  "futures",
@@ -2072,7 +2073,6 @@ name = "multiline"
 version = "0.1.0"
 dependencies = [
  "bytes",
- "configurable",
  "futures",
  "humanize",
  "pin-project-lite",

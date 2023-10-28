@@ -22,7 +22,6 @@ criterion = { version = "0.5.1", default-features = false }
 [dependencies]
 bytes = { version = "1.5.0", default-features = false }
 chrono = { version = "0.4.31", default-features = false, features = ["clock", "serde"] }
-configurable = { path = "../configurable" }
 finalize = { path = "../finalize" }
 futures = { version = "0.3.29", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }

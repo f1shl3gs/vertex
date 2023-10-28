@@ -13,18 +13,18 @@ const UNMATCHED_ROUTE: &str = "_unmatched";
 struct Config {
     /// A table of route identifiers to logical conditions representing the filter of the route.
     /// Each route can then be referenced as an input by other components with the name
-    /// <transform_name>.<route_id>. If an event doesn’t match any route, it will be sent to
+    /// <transform_name>.<route_id>. If an event does not match any route, it will be sent to
     /// the <transform_name>._unmatched output. Note, _unmatched is a reserved output name and
     /// cannot be used as a route name. _default is also reserved for future use.
     #[configurable(required)]
-    route: IndexMap<String, String>,
+    route: IndexMap<String, Expression>,
 }
 
 #[async_trait]
 #[typetag::serde(name = "route")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let route = Route::new(&self.route)?;
+        let route = Route::new(self.route.clone())?;
         Ok(Transform::synchronous(route))
     }
 
@@ -54,15 +54,7 @@ struct Route {
 }
 
 impl Route {
-    fn new(routes: &IndexMap<String, String>) -> Result<Self, condition::Error> {
-        let routes = routes
-            .iter()
-            .map(|(name, expr)| {
-                let expr = condition::parse(expr)?;
-                Ok((name.to_string(), expr))
-            })
-            .collect::<Result<IndexMap<String, Expression>, condition::Error>>()?;
-
+    fn new(routes: IndexMap<String, Expression>) -> Result<Self, condition::Error> {
         Ok(Self { routes })
     }
 }
@@ -148,7 +140,7 @@ route:
 
         for (_test, config, wants) in tests {
             let config = serde_yaml::from_str::<Config>(config).unwrap();
-            let mut transform = Route::new(&config.route).unwrap();
+            let mut transform = Route::new(config.route).unwrap();
             let mut buf = TransformOutputsBuf::new_with_capacity(
                 outputs
                     .iter()
