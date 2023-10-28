@@ -319,7 +319,7 @@ mod tests {
                 },
                 fields!(
                     "int" => "1"
-                )
+                ),
             ),
             (
                 "parse json",
