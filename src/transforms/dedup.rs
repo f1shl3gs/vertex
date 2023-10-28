@@ -36,7 +36,7 @@ fn default_fields() -> Vec<OwnedTargetPath> {
     ]
 }
 
-/// Deduplicates events to reduce data volume by eliminating copies of data.
+/// De-duplicates events to reduce data volume by eliminating copies of data.
 #[configurable_component(transform, name = "dedup")]
 #[serde(deny_unknown_fields)]
 struct Config {
