@@ -53,7 +53,7 @@ impl Tags {
     }
 
     #[inline]
-    pub fn contains_key(&self, key: &Key) -> bool {
+    pub fn contains(&self, key: &Key) -> bool {
         self.0.contains_key(key)
     }
 

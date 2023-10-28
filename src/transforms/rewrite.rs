@@ -8,7 +8,7 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
-#[serde(tag = "type", rename_all = "lowercase")]
+#[serde(tag = "action", rename_all = "lowercase")]
 enum Operation {
     Set { key: Key, value: Value },
     Add { key: Key, value: Value },
@@ -21,7 +21,7 @@ impl Operation {
         match self {
             Operation::Set { key, value } => tags.insert(key.clone(), value.clone()),
             Operation::Add { key, value } => {
-                if !tags.contains_key(key) {
+                if !tags.contains(key) {
                     tags.insert(key.clone(), value.clone());
                 }
             }
@@ -56,7 +56,7 @@ impl TransformConfig for Config {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::All
+        DataType::Metric | DataType::Trace
     }
 
     fn outputs(&self) -> Vec<Output> {

@@ -126,7 +126,8 @@ impl ComponentTester {
 /// Tests if the given metric contains all the given tag names
 fn has_tags(metric: &Metric, names: &[&str]) -> bool {
     for name in names {
-        if metric.has_tag(name) {
+        let key = name.to_string().into();
+        if metric.tags().contains(&key) {
             return true;
         }
     }
