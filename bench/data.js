@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698504190893,
+  "lastUpdate": 1698522873802,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b9c881f4dd53338892a60e61c150c29a041deba7",
-          "message": "chore(deps): bump memmap2 from 0.7.1 to 0.8.0 (#1285)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.7.1 to 0.8.0.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.7.1...v0.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-25T08:51:20+08:00",
-          "tree_id": "3678ed8fab1826a156caff709c187e2f70520c7d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b9c881f4dd53338892a60e61c150c29a041deba7"
-        },
-        "date": 1695603309966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 912220,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 873670,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9818223105b4ac73a9f5b4e324f04ead290a94db",
+          "message": "transforms/modify: add (#1393)\n\n* implement transforms/modify",
+          "timestamp": "2023-10-29T03:51:39+08:00",
+          "tree_id": "b5da4dca5e1a1570596ab4ea311feed1a9b9bafa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9818223105b4ac73a9f5b4e324f04ead290a94db"
+        },
+        "date": 1698522854994,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 736900,
             "unit": "ns/op"
           }
         ]
