@@ -28,6 +28,14 @@ enum MatchType {
     Ignore,
 }
 
+fn default_fields() -> Vec<OwnedTargetPath> {
+    vec![
+        log_schema().timestamp_key().clone(),
+        log_schema().host_key().clone(),
+        log_schema().message_key().clone(),
+    ]
+}
+
 /// Deduplicates events to reduce data volume by eliminating copies of data.
 #[configurable_component(transform, name = "dedup")]
 #[serde(deny_unknown_fields)]
@@ -40,7 +48,7 @@ struct Config {
     #[serde(default)]
     match_type: MatchType,
 
-    #[serde(default, with = "serde_yaml::with::singleton_map")]
+    #[serde(default = "default_fields")]
     fields: Vec<OwnedTargetPath>,
 }
 
@@ -53,19 +61,10 @@ fn default_cache_config() -> NonZeroUsize {
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         let cache = Arc::new(Mutex::new(LruCache::new(self.cache)));
-        let fields = if self.fields.is_empty() {
-            vec![
-                log_schema().timestamp_key().clone(),
-                log_schema().host_key().clone(),
-                log_schema().message_key().clone(),
-            ]
-        } else {
-            self.fields.clone()
-        };
 
         let dedup = Dedup {
             cache,
-            fields,
+            fields: self.fields.clone(),
             match_type: self.match_type.clone(),
         };
 
