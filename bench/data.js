@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698663927230,
+  "lastUpdate": 1698664182907,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "96d84edf7dd4d914f976449febd9e94732b6f44c",
-          "message": "remove mock_instant (#1287)",
-          "timestamp": "2023-09-25T12:32:47+08:00",
-          "tree_id": "d1d9ee85c0b897000fb699c31722157a53abdb93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/96d84edf7dd4d914f976449febd9e94732b6f44c"
-        },
-        "date": 1695617431232,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 936,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42472.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a6168c7ea7a218f24f2526c02535b904d77c777d",
           "message": "re-order imports (#1288)\n\n* format\r\n\r\n* add `std` feature to pretty_assertion",
           "timestamp": "2023-09-25T18:14:06+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52815.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a3f885879e40e44d7c8c43e9cc63bcd95488cbd1",
+          "message": "bump chrono-tz to 0.8.4 (#1394)",
+          "timestamp": "2023-10-30T18:45:09+08:00",
+          "tree_id": "a1a8969e41132304b406e8c76c524528d190c555",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a3f885879e40e44d7c8c43e9cc63bcd95488cbd1"
+        },
+        "date": 1698664158826,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1297,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52813.7,
             "unit": "KiB"
           }
         ]
