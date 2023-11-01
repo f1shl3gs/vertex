@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 prost = { version = "0.12.1", default-features = false, features = ["prost-derive"] }
-indexmap = { version = "2.0.2" }
+indexmap = { version = "2.1.0", default-features = false }
 
 [build-dependencies]
 prost-build = { version = "0.12.1", default-features = false }
