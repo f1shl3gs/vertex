@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698813236247,
+  "lastUpdate": 1698837646821,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca6cce835262497d212b4488c2796212850a003f",
-          "message": "rewrite prometheus export sink (#1290)\n\n* add `ansi` feature to tracing-subscriber\r\n\r\n* rewrite and simplify\r\n\r\n* style",
-          "timestamp": "2023-09-27T03:47:06+08:00",
-          "tree_id": "76584b5a14514480b3d7fbaa15a3dae87df9d56f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca6cce835262497d212b4488c2796212850a003f"
-        },
-        "date": 1695758672899,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 921,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42420.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "43185ab86d27b20296c0811ce57f4938395d4259",
           "message": "remove unused (#1291)",
           "timestamp": "2023-09-27T10:07:55+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52815.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1e5dac3a151d2178ecf170f297a3a0e73dfe4571",
+          "message": "bump inventory to 0.3.13 (#1397)",
+          "timestamp": "2023-11-01T19:01:21+08:00",
+          "tree_id": "7fd21ab2c7fb65e7df1fc94306ea1dd866a038e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1e5dac3a151d2178ecf170f297a3a0e73dfe4571"
+        },
+        "date": 1698837627376,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1024,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52820.1,
             "unit": "KiB"
           }
         ]
