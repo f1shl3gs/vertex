@@ -400,7 +400,7 @@ exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.28", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "6473b6da31cf1bd35e5e63790c9503a02c076f96", optional = true }
 glob = { version = "0.3.1" }
-indexmap = { version = "2.0.2", default-features = false, features = ["serde"] }
+indexmap = { version = "2.1.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.12", default-features = false }
 k8s-openapi = { version = "0.20.0", default-features = false, optional = true, features = ["v1_22"] }
 kube = { version = "0.86.0", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
