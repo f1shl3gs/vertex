@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698941043584,
+  "lastUpdate": 1698941052680,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ca6cce835262497d212b4488c2796212850a003f",
-          "message": "rewrite prometheus export sink (#1290)\n\n* add `ansi` feature to tracing-subscriber\r\n\r\n* rewrite and simplify\r\n\r\n* style",
-          "timestamp": "2023-09-27T03:47:06+08:00",
-          "tree_id": "76584b5a14514480b3d7fbaa15a3dae87df9d56f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca6cce835262497d212b4488c2796212850a003f"
-        },
-        "date": 1695757831426,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 865330,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 890770,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c634a716049bc56b912a91ee58ad0a4a6cba17fb",
+          "message": "chore: style & simplify launch command (#1402)\n\n* remove unnecessary qualifications\r\n\r\n* style & remove unnecessary pub",
+          "timestamp": "2023-11-03T00:01:03+08:00",
+          "tree_id": "94ac7b6fd197c8ffdf66db24510d16a36a5b648f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c634a716049bc56b912a91ee58ad0a4a6cba17fb"
+        },
+        "date": 1698941033243,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 738020,
             "unit": "ns/op"
           }
         ]
