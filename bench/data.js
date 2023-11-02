@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698895732399,
+  "lastUpdate": 1698941031025,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e0a9b2a7e86288a2ac4791b2f9293c8ed9362284",
-          "message": "refine configs (#1289)\n\n* rename Config name\r\n\r\n* simplify",
-          "timestamp": "2023-09-26T15:53:02+08:00",
-          "tree_id": "7ac2be4a08c07d3df8eeeef2637b688b0dd82829",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e0a9b2a7e86288a2ac4791b2f9293c8ed9362284"
-        },
-        "date": 1695715025409,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 66.401,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 201.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 504.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1430.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ca6cce835262497d212b4488c2796212850a003f",
           "message": "rewrite prometheus export sink (#1290)\n\n* add `ansi` feature to tracing-subscriber\r\n\r\n* rewrite and simplify\r\n\r\n* style",
           "timestamp": "2023-09-27T03:47:06+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1436.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c634a716049bc56b912a91ee58ad0a4a6cba17fb",
+          "message": "chore: style & simplify launch command (#1402)\n\n* remove unnecessary qualifications\r\n\r\n* style & remove unnecessary pub",
+          "timestamp": "2023-11-03T00:01:03+08:00",
+          "tree_id": "94ac7b6fd197c8ffdf66db24510d16a36a5b648f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c634a716049bc56b912a91ee58ad0a4a6cba17fb"
+        },
+        "date": 1698941017622,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 42.449,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 115.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 275.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 831.03,
             "unit": "ns/op"
           }
         ]
