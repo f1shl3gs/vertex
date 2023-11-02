@@ -59,17 +59,14 @@ transforms in your pipeline, and how they are composed is up to you.
 
 | Name        | Description                                          | Metric  |   Log   |  Trace  |
 |-------------|------------------------------------------------------|:-------:|:-------:|:-------:|
-| coercer     | Coerce log field to another type                     | &cross; | &check; | &cross; |
 | dedup       | Dedup logs                                           | &cross; | &check; | &cross; |
-| enum        | Map log fileds                                       | &cross; | &check; | &cross; |
 | filter      | Filter out logs according field value                | &cross; | &check; | &cross; |
 | geoip       | Add GeoIP to log field                               | &cross; | &check; | &cross; |
-| json_parser | Parse log field and store it into another field      | &cross; | &check; | &cross; |
 | metricalize | Consume logs and calculate value to produce metrics  | &cross; | &check; | &cross; |
+| modify      | Modify log event, e.g. insert/delete by path         | &cross; | &check; | &cross; |
 | rewrite     | Add, Set, Delete or rename event tags                | &check; | &check; | &check; |
 | route       | Route data to other transforms or sinks              | &cross; | &check; | &cross; |
 | sample      | Sample data according specific log fields            | &cross; | &check; | &cross; |
-| substr      | Act like bash's substr, eg: `${variable:4:6}`        | &cross; | &check; | &cross; |
 | throttle    | Limit the rate of events                             | &cross; | &check; | &cross; |
 
 #### Sinks
