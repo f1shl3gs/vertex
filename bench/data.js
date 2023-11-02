@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698894613337,
+  "lastUpdate": 1698894966465,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
-          "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
-          "timestamp": "2023-09-27T11:55:54+08:00",
-          "tree_id": "4a37cf8e2fea6d3e6e206058a9b17cbe8d64e715",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7245d2ff188881dd80856f39cbc2edc6ddac6813"
-        },
-        "date": 1695788108460,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1025,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42420.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 640,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52820.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed7fd2b644c1f0d7c591415d324ced26850bd5a0",
+          "message": "fix prometheus bench (#1399)",
+          "timestamp": "2023-11-02T10:58:00+08:00",
+          "tree_id": "5f51bb2fe06d79b24f5891c3f43c1df6422bdb5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed7fd2b644c1f0d7c591415d324ced26850bd5a0"
+        },
+        "date": 1698894946125,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 950,
             "unit": "s"
           },
           {
