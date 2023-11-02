@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698894125787,
+  "lastUpdate": 1698894130646,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a6168c7ea7a218f24f2526c02535b904d77c777d",
-          "message": "re-order imports (#1288)\n\n* format\r\n\r\n* add `std` feature to pretty_assertion",
-          "timestamp": "2023-09-25T18:14:06+08:00",
-          "tree_id": "b67d83621a6b1bac591f30fa01d509b78205955f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a6168c7ea7a218f24f2526c02535b904d77c777d"
-        },
-        "date": 1695637093106,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.264,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.759,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.875,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 157.15,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e0a9b2a7e86288a2ac4791b2f9293c8ed9362284",
           "message": "refine configs (#1289)\n\n* rename Config name\r\n\r\n* simplify",
           "timestamp": "2023-09-26T15:53:02+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 39.561,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed7fd2b644c1f0d7c591415d324ced26850bd5a0",
+          "message": "fix prometheus bench (#1399)",
+          "timestamp": "2023-11-02T10:58:00+08:00",
+          "tree_id": "5f51bb2fe06d79b24f5891c3f43c1df6422bdb5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed7fd2b644c1f0d7c591415d324ced26850bd5a0"
+        },
+        "date": 1698894109883,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.193,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.788,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 163.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.44,
             "unit": "ns/op"
           }
         ]
