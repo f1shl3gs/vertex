@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698894068349,
+  "lastUpdate": 1698894087412,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "96d84edf7dd4d914f976449febd9e94732b6f44c",
-          "message": "remove mock_instant (#1287)",
-          "timestamp": "2023-09-25T12:32:47+08:00",
-          "tree_id": "d1d9ee85c0b897000fb699c31722157a53abdb93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/96d84edf7dd4d914f976449febd9e94732b6f44c"
-        },
-        "date": 1695616599212,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.389,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.869,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.631,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 156.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.541,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a6168c7ea7a218f24f2526c02535b904d77c777d",
           "message": "re-order imports (#1288)\n\n* format\r\n\r\n* add `std` feature to pretty_assertion",
           "timestamp": "2023-09-25T18:14:06+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 46.419,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b410b1b5e15ed4a9a57e66c48cdd45beee4cca9b",
+          "message": "chore(deps): bump kube from 0.86.0 to 0.87.1 (#1400)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.86.0 to 0.87.1.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.86.0...0.87.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-02T10:58:26+08:00",
+          "tree_id": "05018db0a5bc8b2d6b99c64eb99f29a1a7b88a28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b410b1b5e15ed4a9a57e66c48cdd45beee4cca9b"
+        },
+        "date": 1698894074441,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 17.799,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 17.314,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 17.063,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 114.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 39.561,
             "unit": "ns/op"
           }
         ]
