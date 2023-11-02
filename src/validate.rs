@@ -83,7 +83,7 @@ impl Validate {
 
     fn validate_config(&self, fmt: &mut Formatter) -> Option<Config> {
         let paths = config::merge_path_lists(vec![(&self.configs, None)])
-            .map(|(path, hint)| config::ConfigPath::File(path, hint))
+            .map(|(path, hint)| ConfigPath::File(path, hint))
             .collect::<Vec<_>>();
 
         let paths = if let Some(paths) = config::process_paths(&paths) {
@@ -135,7 +135,7 @@ impl Validate {
     }
 
     async fn validate_environment(&self, config: &Config, fmt: &mut Formatter) -> bool {
-        let diff = config::ConfigDiff::initial(config);
+        let diff = ConfigDiff::initial(config);
 
         let mut pieces = if let Some(pieces) = validate_components(config, &diff, fmt).await {
             pieces
