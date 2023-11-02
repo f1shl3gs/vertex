@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698837646821,
+  "lastUpdate": 1698894048214,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "96d84edf7dd4d914f976449febd9e94732b6f44c",
-          "message": "remove mock_instant (#1287)",
-          "timestamp": "2023-09-25T12:32:47+08:00",
-          "tree_id": "d1d9ee85c0b897000fb699c31722157a53abdb93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/96d84edf7dd4d914f976449febd9e94732b6f44c"
-        },
-        "date": 1695616585792,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 43.378,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 139.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 337.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 992.03,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a6168c7ea7a218f24f2526c02535b904d77c777d",
           "message": "re-order imports (#1288)\n\n* format\r\n\r\n* add `std` feature to pretty_assertion",
           "timestamp": "2023-09-25T18:14:06+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1464.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed7fd2b644c1f0d7c591415d324ced26850bd5a0",
+          "message": "fix prometheus bench (#1399)",
+          "timestamp": "2023-11-02T10:58:00+08:00",
+          "tree_id": "5f51bb2fe06d79b24f5891c3f43c1df6422bdb5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed7fd2b644c1f0d7c591415d324ced26850bd5a0"
+        },
+        "date": 1698894035160,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 42.407,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 116.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 275.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 806.97,
             "unit": "ns/op"
           }
         ]
