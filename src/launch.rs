@@ -4,10 +4,6 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use argh::FromArgs;
-use configurable::component::{
-    ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
-    TransformDescription,
-};
 use exitcode::ExitCode;
 use framework::{config, signal, topology, SignalTo};
 use tokio_stream::wrappers::UnboundedReceiverStream;
@@ -31,7 +27,7 @@ fn default_worker_threads() -> usize {
 #[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
 pub struct RootCommand {
     #[argh(switch, short = 'v', description = "show version")]
-    pub version: bool,
+    version: bool,
 
     #[argh(
         option,
@@ -39,7 +35,7 @@ pub struct RootCommand {
         default = "\"info\".to_string()",
         description = "log level"
     )]
-    pub log_level: String,
+    log_level: String,
 
     #[argh(
         option,
@@ -47,7 +43,7 @@ pub struct RootCommand {
         long = "config",
         description = "read configuration from one or more files, wildcard paths are supported"
     )]
-    pub configs: Vec<PathBuf>,
+    configs: Vec<PathBuf>,
 
     #[cfg(all(unix, not(target_os = "macos")))]
     #[argh(
@@ -56,7 +52,7 @@ pub struct RootCommand {
         long = "watch",
         description = "watch config files and reload when it changed"
     )]
-    pub watch: bool,
+    watch: bool,
 
     #[argh(
         option,
@@ -64,24 +60,24 @@ pub struct RootCommand {
         default = "default_worker_threads()",
         description = "specify how many threads the Tokio runtime will use"
     )]
-    pub threads: usize,
+    threads: usize,
 
     #[argh(
         option,
         default = "20",
         description = "specify keepalive of blocking threads, in seconds"
     )]
-    pub blocking_thread_keepalive: u64,
+    blocking_thread_keepalive: u64,
 
     #[argh(
         option,
         default = "512",
         description = "specifies the limit for additional blocking threads spawned by the Runtime"
     )]
-    pub max_blocking_threads: usize,
+    max_blocking_threads: usize,
 
     #[argh(subcommand)]
-    pub sub_commands: Option<SubCommands>,
+    sub_commands: Option<SubCommands>,
 }
 
 impl RootCommand {
@@ -137,8 +133,6 @@ impl RootCommand {
                     format!("framework={}", level),
                     format!("tail={}", level),
                     format!("codec={}", level),
-                    format!("tail={}", level),
-                    "tower_limit=trace".to_owned(),
                     "runtime=trace".to_owned(),
                     "tokio=trace".to_owned(),
                     format!("rskafka={}", level),
@@ -151,8 +145,6 @@ impl RootCommand {
                     format!("framework={}", level),
                     format!("tail={}", level),
                     format!("codec={}", level),
-                    format!("file_source={}", level),
-                    "tower_limit=trace".to_owned(),
                     format!("rskafka={}", level),
                     format!("buffers={}", level),
                 ]
@@ -342,8 +334,68 @@ pub fn handle_config_errors(errors: Vec<String>) -> ExitCode {
 }
 
 #[derive(Debug, FromArgs)]
+#[argh(subcommand, name = "sources", description = "List sources")]
+struct Sources {
+    #[argh(positional, description = "source name")]
+    name: Option<String>,
+}
+
+#[derive(Debug, FromArgs)]
+#[argh(subcommand, name = "transforms", description = "List transforms")]
+struct Transforms {
+    #[argh(positional, description = "transform name")]
+    name: Option<String>,
+}
+
+#[derive(Debug, FromArgs)]
+#[argh(subcommand, name = "sinks", description = "List sinks")]
+struct Sinks {
+    #[argh(positional, description = "sink name")]
+    name: Option<String>,
+}
+
+#[derive(Debug, FromArgs)]
+#[argh(subcommand, name = "extensions", description = "List extensions")]
+struct Extensions {
+    #[argh(positional, description = "extension name")]
+    name: Option<String>,
+}
+
+#[derive(Debug, FromArgs)]
+#[argh(subcommand, name = "providers", description = "List providers")]
+struct Providers {
+    #[argh(positional, description = "provider name")]
+    name: Option<String>,
+}
+
+macro_rules! list_or_example {
+    ($name:expr, $desc:ident) => {
+        match $name {
+            Some(name) => match configurable::component::$desc::example(&name) {
+                Ok(example) => {
+                    println!("{}", example.trim());
+                    Ok(())
+                }
+                Err(err) => {
+                    println!("Generate example failed: {}", err);
+                    Err(exitcode::USAGE)
+                }
+            },
+
+            _ => {
+                for item in configurable::component::$desc::types() {
+                    println!("{}", item);
+                }
+
+                Ok(())
+            }
+        }
+    };
+}
+
+#[derive(Debug, FromArgs)]
 #[argh(subcommand)]
-pub enum SubCommands {
+enum SubCommands {
     Sources(Sources),
     Transforms(Transforms),
     Sinks(Sinks),
@@ -354,13 +406,19 @@ pub enum SubCommands {
 }
 
 impl SubCommands {
-    pub fn run(&self) -> Result<(), ExitCode> {
+    fn run(&self) -> Result<(), ExitCode> {
         match self {
-            SubCommands::Sources(sources) => sources.run(),
-            SubCommands::Transforms(transforms) => transforms.run(),
-            SubCommands::Sinks(sinks) => sinks.run(),
-            SubCommands::Extensions(extensions) => extensions.run(),
-            SubCommands::Providers(providers) => providers.run(),
+            SubCommands::Sources(sources) => list_or_example!(&sources.name, SourceDescription),
+            SubCommands::Transforms(transforms) => {
+                list_or_example!(&transforms.name, TransformDescription)
+            }
+            SubCommands::Sinks(sinks) => list_or_example!(&sinks.name, SinkDescription),
+            SubCommands::Extensions(extensions) => {
+                list_or_example!(&extensions.name, ExtensionDescription)
+            }
+            SubCommands::Providers(providers) => {
+                list_or_example!(&providers.name, ProviderDescription)
+            }
             SubCommands::Validate(validate) => match validate.run() {
                 exitcode::OK => Ok(()),
                 other => Err(other),
@@ -369,78 +427,3 @@ impl SubCommands {
         }
     }
 }
-
-macro_rules! impl_list_and_example {
-    ($typ:ident, $desc:ident) => {
-        impl $typ {
-            #![allow(clippy::print_stdout)]
-            pub fn run(&self) -> Result<(), ExitCode> {
-                match &self.name {
-                    Some(name) => match $desc::example(&name) {
-                        Ok(example) => {
-                            println!("{}", example.trim());
-                            Ok(())
-                        }
-                        Err(err) => {
-                            println!("Generate example failed: {}", err);
-                            Err(exitcode::USAGE)
-                        }
-                    },
-
-                    _ => {
-                        for item in $desc::types() {
-                            println!("{}", item);
-                        }
-
-                        Ok(())
-                    }
-                }
-            }
-        }
-    };
-}
-
-#[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "sources", description = "List all sources")]
-pub struct Sources {
-    #[argh(positional, description = "source name")]
-    name: Option<String>,
-}
-
-impl_list_and_example!(Sources, SourceDescription);
-
-#[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "transforms", description = "List transforms")]
-pub struct Transforms {
-    #[argh(positional, description = "transform name")]
-    name: Option<String>,
-}
-
-impl_list_and_example!(Transforms, TransformDescription);
-
-#[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "sinks", description = "List sinks")]
-pub struct Sinks {
-    #[argh(positional, description = "sink name")]
-    name: Option<String>,
-}
-
-impl_list_and_example!(Sinks, SinkDescription);
-
-#[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "extensions", description = "List extensions")]
-pub struct Extensions {
-    #[argh(positional, description = "extension name")]
-    name: Option<String>,
-}
-
-impl_list_and_example!(Extensions, ExtensionDescription);
-
-#[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "providers", description = "List providers")]
-pub struct Providers {
-    #[argh(positional, description = "provider name")]
-    name: Option<String>,
-}
-
-impl_list_and_example!(Providers, ProviderDescription);
