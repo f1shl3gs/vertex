@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698894246234,
+  "lastUpdate": 1698894613337,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "43185ab86d27b20296c0811ce57f4938395d4259",
-          "message": "remove unused (#1291)",
-          "timestamp": "2023-09-27T10:07:55+08:00",
-          "tree_id": "0d9cac7ba77a55837586514b0ff7fdfd665fb4f2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43185ab86d27b20296c0811ce57f4938395d4259"
-        },
-        "date": 1695781895806,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1258,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42420.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
           "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
           "timestamp": "2023-09-27T11:55:54+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1024,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52820.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d19793d6b644f8ac882d0d1f52234d090790bfb5",
+          "message": "bump inventory to 0.3.13 (#1398)",
+          "timestamp": "2023-11-02T10:57:46+08:00",
+          "tree_id": "62f96fc85344410bec0c041fa0cd5b3f2b582db4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d19793d6b644f8ac882d0d1f52234d090790bfb5"
+        },
+        "date": 1698894600279,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 640,
             "unit": "s"
           },
           {
