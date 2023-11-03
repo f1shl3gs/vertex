@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699004674260,
+  "lastUpdate": 1699004735471,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca6cce835262497d212b4488c2796212850a003f",
-          "message": "rewrite prometheus export sink (#1290)\n\n* add `ansi` feature to tracing-subscriber\r\n\r\n* rewrite and simplify\r\n\r\n* style",
-          "timestamp": "2023-09-27T03:47:06+08:00",
-          "tree_id": "76584b5a14514480b3d7fbaa15a3dae87df9d56f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca6cce835262497d212b4488c2796212850a003f"
-        },
-        "date": 1695757899492,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.386,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 29.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 179.77,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 57.342,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "43185ab86d27b20296c0811ce57f4938395d4259",
           "message": "remove unused (#1291)",
           "timestamp": "2023-09-27T10:07:55+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 38.978,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0e3ad0bd3cd52a128dd4dda4b49e8342ff3ed21b",
+          "message": "deps: bump dyn-clone to 1.0.16 (#1403)",
+          "timestamp": "2023-11-03T17:40:54+08:00",
+          "tree_id": "7eade022a3cb87bf60d80c8c824036e29f2ec35f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0e3ad0bd3cd52a128dd4dda4b49e8342ff3ed21b"
+        },
+        "date": 1699004712046,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.341,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 28.448,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.887,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 188.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 62.164,
             "unit": "ns/op"
           }
         ]
