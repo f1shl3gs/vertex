@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699004641654,
+  "lastUpdate": 1699004672473,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca6cce835262497d212b4488c2796212850a003f",
-          "message": "rewrite prometheus export sink (#1290)\n\n* add `ansi` feature to tracing-subscriber\r\n\r\n* rewrite and simplify\r\n\r\n* style",
-          "timestamp": "2023-09-27T03:47:06+08:00",
-          "tree_id": "76584b5a14514480b3d7fbaa15a3dae87df9d56f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca6cce835262497d212b4488c2796212850a003f"
-        },
-        "date": 1695757849578,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 44.05,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 140.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 337.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1012.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "43185ab86d27b20296c0811ce57f4938395d4259",
           "message": "remove unused (#1291)",
           "timestamp": "2023-09-27T10:07:55+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 831.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0e3ad0bd3cd52a128dd4dda4b49e8342ff3ed21b",
+          "message": "deps: bump dyn-clone to 1.0.16 (#1403)",
+          "timestamp": "2023-11-03T17:40:54+08:00",
+          "tree_id": "7eade022a3cb87bf60d80c8c824036e29f2ec35f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0e3ad0bd3cd52a128dd4dda4b49e8342ff3ed21b"
+        },
+        "date": 1699004653788,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 58.927,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 432.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1183.4,
             "unit": "ns/op"
           }
         ]
