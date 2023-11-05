@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699187373560,
+  "lastUpdate": 1699188182384,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "68b316157b278ecb8f8824740e7789fe9403890c",
-          "message": "chore(deps): bump pprof from 0.12.1 to 0.13.0 (#1298)\n\nBumps [pprof](https://github.com/tikv/pprof-rs) from 0.12.1 to 0.13.0.\r\n- [Changelog](https://github.com/tikv/pprof-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/pprof-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pprof\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-28T06:08:12+08:00",
-          "tree_id": "ca1f5f859977c6ce703a630a083118f0aec61c60",
-          "url": "https://github.com/f1shl3gs/vertex/commit/68b316157b278ecb8f8824740e7789fe9403890c"
-        },
-        "date": 1695853560852,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 939,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42412.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fb94769c870196f76f9159c3b8bd26a80c1516af",
           "message": "chore(deps): bump indexmap from 2.0.0 to 2.0.1 (#1297)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 2.0.0 to 2.0.1.\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-28T06:08:26+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52750.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2833fa297ca8c7874246f612ee0f1d70079dd427",
+          "message": "deps: bump libc to 0.2.150 (#1404)",
+          "timestamp": "2023-11-05T20:24:18+08:00",
+          "tree_id": "7f72475e5c04317e0f762ce9789e3733af50a312",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2833fa297ca8c7874246f612ee0f1d70079dd427"
+        },
+        "date": 1699188162549,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 979,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52745.9,
             "unit": "KiB"
           }
         ]
