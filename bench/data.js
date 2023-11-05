@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699005580883,
+  "lastUpdate": 1699187244231,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
-          "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
-          "timestamp": "2023-09-27T11:55:54+08:00",
-          "tree_id": "4a37cf8e2fea6d3e6e206058a9b17cbe8d64e715",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7245d2ff188881dd80856f39cbc2edc6ddac6813"
-        },
-        "date": 1695787143087,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 97.477,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 228.52,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 384.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 386.88,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2833fa297ca8c7874246f612ee0f1d70079dd427",
+          "message": "deps: bump libc to 0.2.150 (#1404)",
+          "timestamp": "2023-11-05T20:24:18+08:00",
+          "tree_id": "7f72475e5c04317e0f762ce9789e3733af50a312",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2833fa297ca8c7874246f612ee0f1d70079dd427"
+        },
+        "date": 1699187225580,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 86.774,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 192.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 313.69,
             "unit": "ns/op"
           }
         ]
