@@ -11,7 +11,7 @@ harness = false
 [dependencies]
 event = { path = "../event" }
 regex = { version = "1.10.2", default-features = false }
-serde = { version = "1.0.190", default-features = false }
+serde = { version = "1.0.191", default-features = false }
 value = { path = "../value" }
 
 [dev-dependencies]
