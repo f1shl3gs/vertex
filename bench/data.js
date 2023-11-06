@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699268828066,
+  "lastUpdate": 1699268860940,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "58e3acc1af8c7db09caf6dc1ec28a6b142a99fe4",
-          "message": "chore(deps): bump sqlx from 0.7.1 to 0.7.2 (#1293)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.1 to 0.7.2.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-27T15:47:39+08:00",
-          "tree_id": "e600e45780a2ec0e99a7ea287f64ff91c9e65bd6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/58e3acc1af8c7db09caf6dc1ec28a6b142a99fe4"
-        },
-        "date": 1695801034093,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 693390,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 859380,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2771428c393cb9b920577dbae1082421a696d94",
+          "message": "deps: bump syn to 2.0.39 (#1405)",
+          "timestamp": "2023-11-06T19:03:36+08:00",
+          "tree_id": "9d72b7089afb60f4ab0cbd7ada29ade5b51a06b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2771428c393cb9b920577dbae1082421a696d94"
+        },
+        "date": 1699268838690,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 858250,
             "unit": "ns/op"
           }
         ]
