@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699268819405,
+  "lastUpdate": 1699268828066,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
-          "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
-          "timestamp": "2023-09-27T11:55:54+08:00",
-          "tree_id": "4a37cf8e2fea6d3e6e206058a9b17cbe8d64e715",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7245d2ff188881dd80856f39cbc2edc6ddac6813"
-        },
-        "date": 1695787192716,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.343,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.764,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.962,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 156.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.443,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 43.348,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2771428c393cb9b920577dbae1082421a696d94",
+          "message": "deps: bump syn to 2.0.39 (#1405)",
+          "timestamp": "2023-11-06T19:03:36+08:00",
+          "tree_id": "9d72b7089afb60f4ab0cbd7ada29ade5b51a06b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2771428c393cb9b920577dbae1082421a696d94"
+        },
+        "date": 1699268812438,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 17.771,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 17.618,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 17.422,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 110.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 39.837,
             "unit": "ns/op"
           }
         ]
