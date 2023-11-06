@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699269333395,
+  "lastUpdate": 1699269341090,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fb94769c870196f76f9159c3b8bd26a80c1516af",
-          "message": "chore(deps): bump indexmap from 2.0.0 to 2.0.1 (#1297)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 2.0.0 to 2.0.1.\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-28T06:08:26+08:00",
-          "tree_id": "d39c402c28878dd8aca038e0bc8f115e2810fe52",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fb94769c870196f76f9159c3b8bd26a80c1516af"
-        },
-        "date": 1695853588981,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 950,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42421.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52745.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2771428c393cb9b920577dbae1082421a696d94",
+          "message": "deps: bump syn to 2.0.39 (#1405)",
+          "timestamp": "2023-11-06T19:03:36+08:00",
+          "tree_id": "9d72b7089afb60f4ab0cbd7ada29ade5b51a06b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2771428c393cb9b920577dbae1082421a696d94"
+        },
+        "date": 1699269327945,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 627,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52749.7,
             "unit": "KiB"
           }
         ]
