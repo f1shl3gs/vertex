@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699358455975,
+  "lastUpdate": 1699359500519,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f",
-          "message": "move assert_event_data_eq to lib/testify (#1300)",
-          "timestamp": "2023-09-28T10:09:21+08:00",
-          "tree_id": "d56f75cd1db57ea1880eb75d0876de30ba60690c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f"
-        },
-        "date": 1695868095743,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1000,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42421.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5636a1391782918cc4d888a6b9622bdd3a02a7f3",
           "message": "refactor error (#1301)\n\n* refine Error\r\n\r\n* fix test",
           "timestamp": "2023-09-28T14:21:48+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52760.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "21147220515c4d09800e54ff3d5d78c31b32cb8e",
+          "message": "deps: bump serde to 1.0.192 (#1407)\n\n* bump serde to 1.0.192",
+          "timestamp": "2023-11-07T19:55:47+08:00",
+          "tree_id": "6259958cea58220259845318296043d91496265a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/21147220515c4d09800e54ff3d5d78c31b32cb8e"
+        },
+        "date": 1699359477423,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1192,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52761.2,
             "unit": "KiB"
           }
         ]
