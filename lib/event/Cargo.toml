@@ -28,7 +28,7 @@ log_schema = { path = "../log_schema" }
 prost = { version = "0.12.1", default-features = false, features = ["std"] }
 prost-types = { version = "0.12.1", default-features = false }
 rand = { version = "0.8.5" }
-serde = { version = "1.0.191", features = ["derive"] }
+serde = { version = "1.0.192", features = ["derive"] }
 serde_json = { version = "1.0.108", default-features = false }
 measurable = { path = "../measurable" }
 tokio = { version = "1.33.0", default-features = false, features = ["sync"] }
