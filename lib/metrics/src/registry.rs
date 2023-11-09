@@ -9,7 +9,7 @@ use crate::Counter;
 use crate::Gauge;
 use crate::Histogram;
 
-static GLOBAL_REGISTRY: OnceLock<Registry> = OnceLock::new();
+pub(crate) static GLOBAL_REGISTRY: OnceLock<Registry> = OnceLock::new();
 
 #[derive(Clone, Default)]
 pub struct Registry {
@@ -71,8 +71,6 @@ impl Registry {
     ) -> Metric<Histogram> {
         assert_legal_key(name);
 
-        let options = buckets.collect::<Vec<f64>>();
-
         self.histograms
             .lock()
             .entry(name)
@@ -80,7 +78,7 @@ impl Registry {
                 name,
                 description,
                 shard: Arc::new(Mutex::new(BTreeMap::new())),
-                options,
+                options: buckets.collect::<Vec<f64>>(),
             })
             .clone()
     }
@@ -140,65 +138,6 @@ pub fn register_histogram(
     GLOBAL_REGISTRY
         .get_or_init(Registry::new)
         .register_histogram(name, description, buckets)
-}
-
-// RwLock is not used, case most time we don't read SUB_REGISTRIES
-static SUB_REGISTRIES: OnceLock<Mutex<BTreeMap<&'static str, Registry>>> = OnceLock::new();
-
-#[derive(Default)]
-pub struct SubRegistry {
-    key: &'static str,
-    registry: Registry,
-}
-
-impl Drop for SubRegistry {
-    fn drop(&mut self) {
-        SUB_REGISTRIES
-            .get()
-            .expect("SUB_REGISTRY should be init already")
-            .lock()
-            .remove(self.key);
-    }
-}
-
-impl SubRegistry {
-    pub fn key(&self) -> &'static str {
-        self.key
-    }
-
-    pub fn register_counter(
-        &self,
-        name: &'static str,
-        description: &'static str,
-    ) -> Metric<Counter> {
-        self.registry.register_counter(name, description)
-    }
-
-    pub fn register_gauge(&self, name: &'static str, description: &'static str) -> Metric<Gauge> {
-        self.registry.register_gauge(name, description)
-    }
-
-    pub fn register_histogram(
-        &self,
-        name: &'static str,
-        description: &'static str,
-        buckets: impl Iterator<Item = f64>,
-    ) -> Metric<Histogram> {
-        self.registry.register_histogram(name, description, buckets)
-    }
-}
-
-pub fn sub_registry(key: impl Into<&'static str>) -> Arc<SubRegistry> {
-    let key = key.into();
-
-    let registry = SUB_REGISTRIES
-        .get_or_init(|| Mutex::new(BTreeMap::new()))
-        .lock()
-        .entry(key)
-        .or_default()
-        .clone();
-
-    Arc::new(SubRegistry { key, registry })
 }
 
 #[cfg(test)]
@@ -331,36 +270,5 @@ mod tests {
         assert_eq!(c1.fetch(), 0);
         c1.inc(1);
         assert_eq!(c1.fetch(), 1);
-    }
-
-    #[test]
-    fn test_sub_registry() {
-        let reg = sub_registry("foo");
-
-        assert_eq!(reg.key(), "foo");
-
-        let cs = reg.register_counter("counter", "counter desc");
-        let c = cs.recorder(&[]);
-        assert_eq!(c.fetch(), 0);
-        c.inc(1);
-        assert_eq!(c.fetch(), 1);
-
-        let gs = reg.register_gauge("gauge", "gauge desc");
-        let g = gs.recorder(&[]);
-        assert_eq!(g.fetch(), 0.0);
-        g.inc(1);
-        assert_eq!(g.fetch(), 1.0);
-
-        let hs = reg.register_histogram(
-            "histogram",
-            "histogram desc",
-            exponential_buckets(1.0, 2.0, 10),
-        );
-        let h = hs.recorder(&[]);
-        let ho = h.get();
-        assert_eq!(ho.sum, 0.0);
-        h.record(2.0);
-        let ho = h.get();
-        assert_eq!(ho.sum, 2.0);
     }
 }
