@@ -4,24 +4,25 @@ pub fn register(c: &mut Criterion) {
     let mut group = c.benchmark_group("metrics");
 
     group.bench_function("without_labels", |b| {
+        let counter = metrics::register_counter("foo", "foo description");
         b.iter(|| {
-            metrics::register_counter("foo", "foo description")
-                .recorder(&[])
-                .inc(1);
+            counter.recorder(&[]).inc(1);
         })
     });
 
     group.bench_function("with_2_labels", |b| {
+        let counter = metrics::register_counter("counter2", "counter 2 description");
         b.iter(|| {
-            metrics::register_counter("counter2", "counter 2 description")
+            counter
                 .recorder(&[("key1", "value"), ("key2", "value")])
                 .inc(1);
         })
     });
 
     group.bench_function("with_4_labels", |b| {
+        let counter = metrics::register_counter("counter2", "counter 2 description");
         b.iter(|| {
-            metrics::register_counter("counter2", "counter 2 description")
+            counter
                 .recorder(&[
                     ("key1", "value"),
                     ("key2", "value"),
