@@ -13,7 +13,7 @@ event = { path = "../event", features = ["string_path"] }
 futures-util = { version = "0.3.29", default-features = false }
 serde_yaml = { version = "0.9.27", default-features = false }
 serde_path_to_error = { version = "0.1.14" }
-tokio = { version = "1.33.0", default-features = false, features = ["test-util", "macros"] }
+tokio = { version = "1.34.0", default-features = false, features = ["test-util", "macros"] }
 
 [dependencies]
 bytes = { version = "1.5.0", default-features = false }
@@ -25,7 +25,7 @@ futures-util = { version = "0.3.29", default-features = false }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.6.4", default-features = false }
 serde_json = { version = "1.0.108", default-features = false, features = ["std"] }
-tokio = { version = "1.33.0", default-features = false }
+tokio = { version = "1.34.0", default-features = false }
 tokio-util = { version = "0.7.10", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.40", default-features = false }
 serde = { version = "1.0.192", default-features = false }
