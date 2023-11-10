@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699608734515,
+  "lastUpdate": 1699608735708,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fb94769c870196f76f9159c3b8bd26a80c1516af",
-          "message": "chore(deps): bump indexmap from 2.0.0 to 2.0.1 (#1297)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 2.0.0 to 2.0.1.\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-28T06:08:26+08:00",
-          "tree_id": "d39c402c28878dd8aca038e0bc8f115e2810fe52",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fb94769c870196f76f9159c3b8bd26a80c1516af"
-        },
-        "date": 1695852814791,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 31.248,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.443,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 32.544,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 194.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 65.931,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 38.765,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b60ab7698ed8b101c9296c66317b4126452ba076",
+          "message": "deps: bump smallvec to 1.11.2 (#1412)",
+          "timestamp": "2023-11-10T17:28:20+08:00",
+          "tree_id": "2a8c915d3e04a55dc6d4c76a4b858b6a3b34a04d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b60ab7698ed8b101c9296c66317b4126452ba076"
+        },
+        "date": 1699608715302,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 21.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 21.609,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.661,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 141.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 45.599,
             "unit": "ns/op"
           }
         ]
