@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699696656464,
+  "lastUpdate": 1699696704125,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5636a1391782918cc4d888a6b9622bdd3a02a7f3",
-          "message": "refactor error (#1301)\n\n* refine Error\r\n\r\n* fix test",
-          "timestamp": "2023-09-28T14:21:48+08:00",
-          "tree_id": "a140e0203df674c4b75ed063c4b0959a6f6dbcb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5636a1391782918cc4d888a6b9622bdd3a02a7f3"
-        },
-        "date": 1695882289043,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 89.573,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 183.28,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 300.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 173.28,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4886a27244a1cca61cd738e8c1f2b8c8872cafd",
+          "message": "chore(deps): bump http from 0.2.9 to 0.2.10 (#1413)\n\nBumps [http](https://github.com/hyperium/http) from 0.2.9 to 0.2.10.\r\n- [Release notes](https://github.com/hyperium/http/releases)\r\n- [Changelog](https://github.com/hyperium/http/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/http/compare/v0.2.9...v0.2.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: http\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-11T17:55:16+08:00",
+          "tree_id": "a6e056ff6def6e4df5540896b588643a385be8a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4886a27244a1cca61cd738e8c1f2b8c8872cafd"
+        },
+        "date": 1699696685313,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 47.535,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 147.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 268.88,
             "unit": "ns/op"
           }
         ]
