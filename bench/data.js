@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699696747895,
+  "lastUpdate": 1699696771605,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f",
-          "message": "move assert_event_data_eq to lib/testify (#1300)",
-          "timestamp": "2023-09-28T10:09:21+08:00",
-          "tree_id": "d56f75cd1db57ea1880eb75d0876de30ba60690c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f"
-        },
-        "date": 1695867219542,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 32.149,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 33.104,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 32.466,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 185.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 70.657,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5636a1391782918cc4d888a6b9622bdd3a02a7f3",
           "message": "refactor error (#1301)\n\n* refine Error\r\n\r\n* fix test",
           "timestamp": "2023-09-28T14:21:48+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.509,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4886a27244a1cca61cd738e8c1f2b8c8872cafd",
+          "message": "chore(deps): bump http from 0.2.9 to 0.2.10 (#1413)\n\nBumps [http](https://github.com/hyperium/http) from 0.2.9 to 0.2.10.\r\n- [Release notes](https://github.com/hyperium/http/releases)\r\n- [Changelog](https://github.com/hyperium/http/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/http/compare/v0.2.9...v0.2.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: http\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-11T17:55:16+08:00",
+          "tree_id": "a6e056ff6def6e4df5540896b588643a385be8a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4886a27244a1cca61cd738e8c1f2b8c8872cafd"
+        },
+        "date": 1699696750767,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.017,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.889,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.142,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 160.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.993,
             "unit": "ns/op"
           }
         ]
