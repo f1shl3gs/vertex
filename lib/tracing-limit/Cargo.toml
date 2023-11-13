@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-tracing-subscriber = { version = "0.3.17", default-features = false }
+tracing-subscriber = { version = "0.3.18", default-features = false }
 tracing-core = { version = "0.1.32", default-features = false }
 dashmap = { version = "5.5.3", default-features = false }
 
@@ -13,7 +13,7 @@ dashmap = { version = "5.5.3", default-features = false }
 criterion = { version = "0.5.1", default-features = false }
 tracing = { version = "0.1.40", default-features = false, features = ["std"] }
 testify = { path = "../testify" }
-tracing-subscriber = { version = "0.3.17", default-features = false, features = ["env-filter", "registry"] }
+tracing-subscriber = { version = "0.3.18", default-features = false, features = ["env-filter", "registry"] }
 
 [[bench]]
 name = "limit"
