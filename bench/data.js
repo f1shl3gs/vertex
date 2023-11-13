@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699894003219,
+  "lastUpdate": 1699894006350,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f5cac7999ae3bda27626f03a98bb4dd7af3ef1a0",
-          "message": "chore(deps): bump the tonic group with 3 updates (#1303)\n\nBumps the tonic group with 3 updates: [tonic](https://github.com/hyperium/tonic), [tonic-health](https://github.com/hyperium/tonic) and [tonic-build](https://github.com/hyperium/tonic).\r\n\r\n\r\nUpdates `tonic` from 0.10.1 to 0.10.2\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.1...v0.10.2)\r\n\r\nUpdates `tonic-health` from 0.10.1 to 0.10.2\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.1...v0.10.2)\r\n\r\nUpdates `tonic-build` from 0.10.1 to 0.10.2\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.1...v0.10.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: tonic\r\n- dependency-name: tonic-health\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: tonic\r\n- dependency-name: tonic-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: tonic\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-29T06:03:24+08:00",
-          "tree_id": "1bde730e8dcb3ce4605366391c7c0a36461ddb1d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f5cac7999ae3bda27626f03a98bb4dd7af3ef1a0"
-        },
-        "date": 1695938818656,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.212,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.637,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 22.878,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 135.86,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 51.46,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "114cc39b01f6880f9487e9ec3610eaacc7f1e5be",
           "message": "chore(deps): bump console-subscriber from 0.1.10 to 0.2.0 (#1305)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.1.10 to 0.2.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.1.10...console-subscriber-v0.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-30T07:05:20+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 39.279,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bef2ea5ca9c4100c98f58d3884ab0965fc668c1f",
+          "message": "deps: bump http to 0.2.11 (#1416)",
+          "timestamp": "2023-11-14T00:43:50+08:00",
+          "tree_id": "59898860dc1996fd1a8918ddef4dbf8ed1f06332",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bef2ea5ca9c4100c98f58d3884ab0965fc668c1f"
+        },
+        "date": 1699893993280,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 17.848,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 17.317,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 16.911,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 106.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 38.676,
             "unit": "ns/op"
           }
         ]
