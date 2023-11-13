@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699893990306,
+  "lastUpdate": 1699894003219,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25418,50 +25418,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "114cc39b01f6880f9487e9ec3610eaacc7f1e5be",
-          "message": "chore(deps): bump console-subscriber from 0.1.10 to 0.2.0 (#1305)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.1.10 to 0.2.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.1.10...console-subscriber-v0.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-30T07:05:20+08:00",
-          "tree_id": "dbc9739a6ab947db8dfdff587e7569349f4a5936",
-          "url": "https://github.com/f1shl3gs/vertex/commit/114cc39b01f6880f9487e9ec3610eaacc7f1e5be"
-        },
-        "date": 1696028938249,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 49.238,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 145.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 343.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 978.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 807.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bef2ea5ca9c4100c98f58d3884ab0965fc668c1f",
+          "message": "deps: bump http to 0.2.11 (#1416)",
+          "timestamp": "2023-11-14T00:43:50+08:00",
+          "tree_id": "59898860dc1996fd1a8918ddef4dbf8ed1f06332",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bef2ea5ca9c4100c98f58d3884ab0965fc668c1f"
+        },
+        "date": 1699893987826,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 45.161,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 121.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 281.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 812.64,
             "unit": "ns/op"
           }
         ]
