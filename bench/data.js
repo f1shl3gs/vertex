@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1699894523133,
+  "lastUpdate": 1699894547339,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4edfe8f1c2a18febe55caa610856b37d692c626c",
-          "message": "chore(deps): bump regex from 1.9.5 to 1.9.6 (#1310)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.9.5 to 1.9.6.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.9.5...1.9.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-30T21:00:34+08:00",
-          "tree_id": "c3a5056e1958c6cb45460b2f6b75246830e94eb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4edfe8f1c2a18febe55caa610856b37d692c626c"
-        },
-        "date": 1696080132045,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1142,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42389.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52760.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56b3293703d418458f4182623d9407e9ba6376de",
+          "message": "deps: bump syslog_loose to 0.21.0 (#1417)",
+          "timestamp": "2023-11-14T00:43:26+08:00",
+          "tree_id": "b1004bfc1b90c5726251b8dc79b6c7a7ea41c05c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56b3293703d418458f4182623d9407e9ba6376de"
+        },
+        "date": 1699894534008,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 639,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52756,
             "unit": "KiB"
           }
         ]
