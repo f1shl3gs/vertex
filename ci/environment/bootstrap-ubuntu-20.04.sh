@@ -20,7 +20,7 @@ apt install --yes \
     build-essential \
     ca-certificates \
     curl \
-    libclang-dev \
+    llvm \
     locales \
     pkg-config \
     shellcheck \
