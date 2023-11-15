@@ -1,12 +1,10 @@
-use std::borrow::Cow;
-use std::io::BufRead;
 use std::time::Duration;
 
 use bytes::Buf;
 use chrono::Utc;
 use configurable::configurable_component;
-use event::tags::Key;
-use event::{tags, Metric};
+use event::tags::{Key, Tags};
+use event::{tags, Kind as MetricKind, Metric};
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
@@ -206,38 +204,42 @@ pub enum ParseError {
     UnknownTypeOfMetrics(String),
 }
 
-pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
+pub fn parse_csv(mut reader: impl std::io::BufRead) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
-    let lines = reader.lines();
+    let mut buf = String::new();
 
-    for line in lines {
-        let line = match line {
-            Ok(line) => line,
-            _ => continue,
-        };
+    loop {
+        buf.clear();
+        match reader.read_line(&mut buf) {
+            Ok(0) => break,
+            Err(_err) => break,
+            _ => {}
+        }
 
-        let parts = line.split(',').collect::<Vec<_>>();
+        let parts = buf.split(',').collect::<Vec<_>>();
         if parts.len() < MINIMUM_CSV_FIELD_COUNT {
             return Err(ParseError::RowTooShort);
         }
 
         let pxname = parts[PXNAME_FIELD];
         let svname = parts[SVNAME_FIELD];
-        let typ = parts[TYPE_FIELD];
 
-        let partial = match typ {
-            "0" => {
-                // frontend
-                parse_frontend(parts, pxname)
-            }
-            "1" => {
-                // backend
-                parse_backend(parts, pxname)
-            }
-            "2" => {
-                // server
-                parse_server(parts, pxname, svname)
-            }
+        let partial = match parts[TYPE_FIELD] {
+            "0" => parse_row(
+                parts,
+                &FRONTEND_METRIC_INFOS,
+                tags!(FRONTEND_KEY => pxname.to_string()),
+            ),
+            "1" => parse_row(
+                parts,
+                &BACKEND_METRIC_INFOS,
+                tags!(BACKEND_KEY => pxname.to_string()),
+            ),
+            "2" => parse_row(
+                parts,
+                &SERVER_METRIC_INFOS,
+                tags!(BACKEND_KEY => pxname.to_string(), SERVER_KEY => svname.to_string()),
+            ),
             _ => continue,
         };
 
@@ -276,812 +278,708 @@ pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
 //     Ok((release_date, version))
 // }
 
-macro_rules! try_push_metric {
-    ($metrics:expr, $row:expr, $index:expr, $name:expr, $desc:expr, $typ:expr) => {
-        try_push_metric!($metrics, $row, $index, $name, $desc, $typ, tags!())
-    };
-    ($metrics:expr, $row:expr, $index:expr, $name:expr, $desc:expr, $typ:expr, $tags:expr) => {
-        if $index <= $row.len() - 1 {
-            let text = $row[$index];
-            if text != "" {
-                let value = match $index {
-                    STATUS_FIELD => Some(parse_status_field(text)),
-                    CHECK_DURATION_FIELD | QTIME_MS_FIELD | CTIME_MS_FIELD | RTIME_MS_FIELD
-                    | TTIME_MS_FIELD => match text.parse::<f64>() {
-                        Ok(v) => Some(v / 1000.0),
-                        Err(err) => {
-                            warn!(message = "Can't parse CSV field value", value = text, ?err);
+struct MetricInfo {
+    index: usize,
 
-                            None
-                        }
-                    },
-                    _ => match text.parse() {
-                        Ok(v) => Some(v),
-                        Err(err) => {
-                            warn!(message = "Can't parse CSV failed value", value = text, ?err);
+    name: &'static str,
+    desc: &'static str,
+    kind: MetricKind,
+    tags: &'static [(&'static str, &'static str)],
+}
 
-                            None
-                        }
-                    },
-                };
-
-                if let Some(value) = value {
-                    match $typ {
-                        "gauge" => {
-                            $metrics.push(Metric::gauge_with_tags($name, $desc, value, $tags))
-                        }
-                        "counter" => {
-                            $metrics.push(Metric::sum_with_tags($name, $desc, value, $tags))
-                        }
-                        _ => unreachable!(),
-                    }
-                }
-            }
+impl MetricInfo {
+    fn build(&self, value: f64, mut tags: Tags) -> Metric {
+        for (key, value) in self.tags {
+            tags.insert(*key, *value);
         }
-    };
+
+        match self.kind {
+            MetricKind::Sum => Metric::sum_with_tags(self.name, self.desc, value, tags),
+            MetricKind::Gauge => Metric::gauge_with_tags(self.name, self.desc, value, tags),
+            _ => unreachable!(),
+        }
+    }
 }
 
-fn parse_server(row: Vec<&str>, pxname: &str, svname: &str) -> Vec<Metric> {
-    #![allow(clippy::int_plus_one)]
-    let mut metrics = Vec::with_capacity(32);
+const SERVER_METRIC_INFOS: [MetricInfo; 32] = [
+    MetricInfo {
+        index: 2,
+        name: "haproxy_server_current_queue",
+        desc: "Current number of queued requests assigned to this server.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 3,
+        name: "haproxy_server_max_queue",
+        desc: "Maximum observed number of queued requests assigned to this server.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 4,
+        name: "haproxy_server_current_sessions",
+        desc: "Current number of active sessions.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 5,
+        name: "haproxy_server_max_sessions",
+        desc: "Maximum observed number of active sessions.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 6,
+        name: "haproxy_server_limit_sessions",
+        desc: "Configured session limit.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 7,
+        name: "haproxy_server_sessions_total",
+        desc: "Total number of sessions.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 8,
+        name: "haproxy_server_bytes_in_total",
+        desc: "Current total of incoming bytes.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 9,
+        name: "haproxy_server_bytes_out_total",
+        desc: "Current total of outgoing bytes.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 13,
+        name: "haproxy_server_connection_errors_total",
+        desc: "Total of connection errors.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 14,
+        name: "haproxy_server_response_errors_total",
+        desc: "Total of response errors.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 15,
+        name: "haproxy_server_retry_warnings_total",
+        desc: "Total of retry warnings.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 16,
+        name: "haproxy_server_redispatch_warnings_total",
+        desc: "Total of redispatch warnings.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 17,
+        name: "haproxy_server_up",
+        desc: "Current health status of the server (1 = UP, 0 = DOWN).",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 18,
+        name: "haproxy_server_weight",
+        desc: "Current weight of the server.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 21,
+        name: "haproxy_server_check_failures_total",
+        desc: "Total number of failed health checks.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 24,
+        name: "haproxy_server_downtime_seconds_total",
+        desc: "Total downtime in seconds.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 30,
+        name: "haproxy_server_server_selected_total",
+        desc: "Total number of times a server was selected, either for new sessions, or when re-dispatching.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 33,
+        name: "haproxy_server_current_session_rate",
+        desc: "Current number of sessions per second over last elapsed second.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 35,
+        name: "haproxy_server_max_session_rate",
+        desc: "Maximum observed number of sessions per second.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 38,
+        name: "haproxy_server_check_duration_seconds",
+        desc: "Previously run health check duration, in seconds",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 39,
+        name: "haproxy_server_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "1xx")],
+    },
+    MetricInfo {
+        index: 40,
+        name: "haproxy_server_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "2xx")],
+    },
+    MetricInfo {
+        index: 41,
+        name: "haproxy_server_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "3xx")],
+    },
+    MetricInfo {
+        index: 42,
+        name: "haproxy_server_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "4xx")],
 
-    try_push_metric!(
-        metrics,
-        row,
-        2,
-        "haproxy_server_current_queue",
-        "Current number of queued requests assigned to this server.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        3,
-        "haproxy_server_max_queue",
-        "Maximum observed number of queued requests assigned to this server.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        4,
-        "haproxy_server_current_sessions",
-        "Current number of active sessions.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        5,
-        "haproxy_server_max_sessions",
-        "Maximum observed number of active sessions.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        6,
-        "haproxy_server_limit_sessions",
-        "Configured session limit.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        7,
-        "haproxy_server_sessions_total",
-        "Total number of sessions.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        8,
-        "haproxy_server_bytes_in_total",
-        "Current total of incoming bytes.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        9,
-        "haproxy_server_bytes_out_total",
-        "Current total of outgoing bytes.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        13,
-        "haproxy_server_connection_errors_total",
-        "Total of connection errors.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        14,
-        "haproxy_server_response_errors_total",
-        "Total of response errors.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        15,
-        "haproxy_server_retry_warnings_total",
-        "Total of retry warnings.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        16,
-        "haproxy_server_redispatch_warnings_total",
-        "Total of redispatch warnings.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        17,
-        "haproxy_server_up",
-        "Current health status of the server (1 = UP, 0 = DOWN).",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        18,
-        "haproxy_server_weight",
-        "Current weight of the server.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        21,
-        "haproxy_server_check_failures_total",
-        "Total number of failed health checks.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        24,
-        "haproxy_server_downtime_seconds_total",
-        "Total downtime in seconds.",
-        "counter"
-    );
-    try_push_metric!(metrics, row, 30, "haproxy_server_server_selected_total", "Total number of times a server was selected, either for new sessions, or when re-dispatching.", "counter");
-    try_push_metric!(
-        metrics,
-        row,
-        33,
-        "haproxy_server_current_session_rate",
-        "Current number of sessions per second over last elapsed second.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        35,
-        "haproxy_server_max_session_rate",
-        "Maximum observed number of sessions per second.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        38,
-        "haproxy_server_check_duration_seconds",
-        "Previously run health check duration, in seconds",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        39,
-        "haproxy_server_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "1xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        40,
-        "haproxy_server_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "2xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        41,
-        "haproxy_server_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "3xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        42,
-        "haproxy_server_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "4xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        43,
-        "haproxy_server_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "5xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        44,
-        "haproxy_server_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "other")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        49,
-        "haproxy_server_client_aborts_total",
-        "Total number of data transfers aborted by the client.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        50,
-        "haproxy_server_server_aborts_total",
-        "Total number of data transfers aborted by the server.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        58,
-        "haproxy_server_http_queue_time_average_seconds",
-        "Avg. HTTP queue time for last 1024 successful connections.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        59,
-        "haproxy_server_http_connect_time_average_seconds",
-        "Avg. HTTP connect time for last 1024 successful connections.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        60,
-        "haproxy_server_http_response_time_average_seconds",
-        "Avg. HTTP response time for last 1024 successful connections.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        61,
-        "haproxy_server_http_total_time_average_seconds",
-        "Avg. HTTP total time for last 1024 successful connections.",
-        "gauge"
-    );
+    },
+    MetricInfo {
+        index: 43,
+        name: "haproxy_server_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "5xx")],
+    },
+    MetricInfo {
+        index: 44,
+        name: "haproxy_server_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "other")],
+    },
+    MetricInfo {
+        index: 49,
+        name: "haproxy_server_client_aborts_total",
+        desc: "Total number of data transfers aborted by the client.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 50,
+        name: "haproxy_server_server_aborts_total",
+        desc: "Total number of data transfers aborted by the server.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 58,
+        name: "haproxy_server_http_queue_time_average_seconds",
+        desc: "Avg. HTTP queue time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 59,
+        name: "haproxy_server_http_connect_time_average_seconds",
+        desc: "Avg. HTTP connect time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 60,
+        name: "haproxy_server_http_response_time_average_seconds",
+        desc: "Avg. HTTP response time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 61,
+        name: "haproxy_server_http_total_time_average_seconds",
+        desc: "Avg. HTTP total time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+];
 
-    let pxname = Cow::from(pxname.to_string());
-    let svname = Cow::from(svname.to_string());
+const BACKEND_METRIC_INFOS: [MetricInfo; 34] = [
+    MetricInfo {
+        index: 2,
+        name: "haproxy_backend_current_queue",
+        desc: "Current number of queued requests not assigned to any server.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 3,
+        name: "haproxy_backend_max_queue",
+        desc: "Maximum observed number of queued requests not assigned to any server.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 4,
+        name: "haproxy_backend_current_sessions",
+        desc: "Current number of active sessions.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 5,
+        name: "haproxy_backend_max_sessions",
+        desc: "Maximum observed number of active sessions.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 6,
+        name: "haproxy_backend_limit_sessions",
+        desc: "Configured session limit.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 7,
+        name: "haproxy_backend_sessions_total",
+        desc: "Total number of sessions.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 8,
+        name: "haproxy_backend_bytes_in_total",
+        desc: "Current total of incoming bytes.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 9,
+        name: "haproxy_backend_bytes_out_total",
+        desc: "Current total of outgoing bytes.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 13,
+        name: "haproxy_backend_connection_errors_total",
+        desc: "Total of connection errors.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 14,
+        name: "haproxy_backend_response_errors_total",
+        desc: "Total of response errors.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 15,
+        name: "haproxy_backend_retry_warnings_total",
+        desc: "Total of retry warnings.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 16,
+        name: "haproxy_backend_redispatch_warnings_total",
+        desc: "Total of redispatch warnings.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 17,
+        name: "haproxy_backend_up",
+        desc: "Current health status of the backend (1 = UP, 0 = DOWN).",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 18,
+        name: "haproxy_backend_weight",
+        desc: "Total weight of the servers in the backend.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 19,
+        name: "haproxy_backend_current_server",
+        desc: "Current number of active servers",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 30,
+        name: "haproxy_backend_server_selected_total",
+        desc: "Total number of times a server was selected, either for new sessions, or when re-dispatching.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 33,
+        name: "haproxy_backend_current_session_rate",
+        desc: "Current number of sessions per second over last elapsed second.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 35,
+        name: "haproxy_backend_max_session_rate",
+        desc: "Maximum number of sessions per second.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 39,
+        name: "haproxy_backend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "1xx")],
+    },
+    MetricInfo {
+        index: 40,
+        name: "haproxy_backend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "2xx")],
+    },
+    MetricInfo {
+        index: 41,
+        name: "haproxy_backend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "3xx")],
+    },
+    MetricInfo {
+        index: 42,
+        name: "haproxy_backend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "4xx")],
+    },
+    MetricInfo {
+        index: 43,
+        name: "haproxy_backend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "5xx")],
+    },
+    MetricInfo {
+        index: 44,
+        name: "haproxy_backend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "other")],
+    },
+    MetricInfo {
+        index: 49,
+        name: "haproxy_backend_client_aborts_total",
+        desc: "Total number of data transfers aborted by the client.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 50,
+        name: "haproxy_backend_server_aborts_total",
+        desc: "Total number of data transfers aborted by the server.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 51,
+        name: "haproxy_backend_compressor_bytes_in_total",
+        desc: "Number of HTTP response bytes fed to the compressor",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 52,
+        name: "haproxy_backend_compressor_bytes_out_total",
+        desc: "Number of HTTP response bytes emitted by the compressor",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 53,
+        name: "haproxy_backend_compressor_bytes_bypassed_total",
+        desc: "Number of bytes that bypassed the HTTP compressor",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 54,
+        name: "haproxy_backend_http_responses_compressed_total",
+        desc: "Number of HTTP responses that were compressed",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 58,
+        name: "haproxy_backend_http_queue_time_average_seconds",
+        desc: "Avg. HTTP queue time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 59,
+        name: "haproxy_backend_http_connect_time_average_seconds",
+        desc: "Avg. HTTP connect time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 60,
+        name: "haproxy_backend_http_response_time_average_seconds",
+        desc: "Avg. HTTP response time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 61,
+        name: "haproxy_backend_http_total_time_average_seconds",
+        desc: "Avg. HTTP total time for last 1024 successful connections.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+];
 
-    metrics.iter_mut().for_each(|m| {
-        m.insert_tag(BACKEND_KEY, pxname.clone());
-        m.insert_tag(SERVER_KEY, svname.clone());
-    });
+const FRONTEND_METRIC_INFOS: [MetricInfo; 23] = [
+    MetricInfo {
+        index: 4,
+        name: "haproxy_frontend_current_sessions",
+        desc: "Current number of active sessions.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 5,
+        name: "haproxy_frontend_max_sessions",
+        desc: "Maximum observed number of active sessions.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 6,
+        name: "haproxy_frontend_limit_sessions",
+        desc: "Configured session limit.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 7,
+        name: "haproxy_frontend_sessions_total",
+        desc: "Total number of sessions.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 8,
+        name: "haproxy_frontend_bytes_in_total",
+        desc: "Current total of incoming bytes.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 9,
+        name: "haproxy_frontend_bytes_out_total",
+        desc: "Current total of outgoing bytes.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 10,
+        name: "haproxy_frontend_requests_denied_total",
+        desc: "Total of requests denied for security.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 12,
+        name: "haproxy_frontend_request_errors_total",
+        desc: "Total of request errors.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 33,
+        name: "haproxy_frontend_current_session_rate",
+        desc: "Current number of sessions per second over last elapsed second.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 34,
+        name: "haproxy_frontend_limit_session_rate",
+        desc: "Configured limit on new sessions per second.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 35,
+        name: "haproxy_frontend_max_session_rate",
+        desc: "Maximum observed number of sessions per second.",
+        kind: MetricKind::Gauge,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 39,
+        name: "haproxy_frontend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "1xx")],
+    },
+    MetricInfo {
+        index: 40,
+        name: "haproxy_frontend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "2xx")],
+    },
+    MetricInfo {
+        index: 41,
+        name: "haproxy_frontend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "3xx")],
+    },
+    MetricInfo {
+        index: 42,
+        name: "haproxy_frontend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "4xx")],
+    },
+    MetricInfo {
+        index: 43,
+        name: "haproxy_frontend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "5xx")],
+    },
+    MetricInfo {
+        index: 44,
+        name: "haproxy_frontend_http_responses_total",
+        desc: "Total of HTTP responses.",
+        kind: MetricKind::Sum,
+        tags: &[("code", "other")],
+    },
+    MetricInfo {
+        index: 48,
+        name: "haproxy_frontend_http_requests_total",
+        desc: "Total HTTP requests.",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 51,
+        name: "haproxy_frontend_compressor_bytes_in_total",
+        desc: "Number of HTTP response bytes fed to the compressor",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 52,
+        name: "haproxy_frontend_compressor_bytes_out_total",
+        desc: "Number of HTTP response bytes emitted by the compressor",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 53,
+        name: "haproxy_frontend_compressor_bytes_bypassed_total",
+        desc: "Number of bytes that bypassed the HTTP compressor",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 54,
+        name: "haproxy_frontend_http_responses_compressed_total",
+        desc: "Number of HTTP responses that were compressed",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+    MetricInfo {
+        index: 79,
+        name: "haproxy_frontend_connections_total",
+        desc: "Total number of connections",
+        kind: MetricKind::Sum,
+        tags: &[],
+    },
+];
 
-    metrics
-}
+fn parse_row(row: Vec<&str>, infos: &[MetricInfo], tags: Tags) -> Vec<Metric> {
+    let mut metrics = Vec::with_capacity(infos.len());
 
-fn parse_frontend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
-    #![allow(clippy::int_plus_one)]
-    let mut metrics = Vec::with_capacity(23);
+    for info in infos {
+        let field = match row.get(info.index) {
+            Some(field) => {
+                if field.is_empty() {
+                    continue;
+                }
 
-    try_push_metric!(
-        metrics,
-        row,
-        4,
-        "haproxy_frontend_current_sessions",
-        "Current number of active sessions.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        5,
-        "haproxy_frontend_max_sessions",
-        "Maximum observed number of active sessions.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        6,
-        "haproxy_frontend_limit_sessions",
-        "Configured session limit.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        7,
-        "haproxy_frontend_sessions_total",
-        "Total number of sessions.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        8,
-        "haproxy_frontend_bytes_in_total",
-        "Current total of incoming bytes.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        9,
-        "haproxy_frontend_bytes_out_total",
-        "Current total of outgoing bytes.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        10,
-        "haproxy_frontend_requests_denied_total",
-        "Total of requests denied for security.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        12,
-        "haproxy_frontend_request_errors_total",
-        "Total of request errors.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        33,
-        "haproxy_frontend_current_session_rate",
-        "Current number of sessions per second over last elapsed second.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        34,
-        "haproxy_frontend_limit_session_rate",
-        "Configured limit on new sessions per second.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        35,
-        "haproxy_frontend_max_session_rate",
-        "Maximum observed number of sessions per second.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        39,
-        "haproxy_frontend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "1xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        40,
-        "haproxy_frontend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "2xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        41,
-        "haproxy_frontend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "3xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        42,
-        "haproxy_frontend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "4xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        43,
-        "haproxy_frontend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "5xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        44,
-        "haproxy_frontend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "other")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        48,
-        "haproxy_frontend_http_requests_total",
-        "Total HTTP requests.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        51,
-        "haproxy_frontend_compressor_bytes_in_total",
-        "Number of HTTP response bytes fed to the compressor",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        52,
-        "haproxy_frontend_compressor_bytes_out_total",
-        "Number of HTTP response bytes emitted by the compressor",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        53,
-        "haproxy_frontend_compressor_bytes_bypassed_total",
-        "Number of bytes that bypassed the HTTP compressor",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        54,
-        "haproxy_frontend_http_responses_compressed_total",
-        "Number of HTTP responses that were compressed",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        79,
-        "haproxy_frontend_connections_total",
-        "Total number of connections",
-        "counter"
-    );
+                *field
+            }
+            None => break,
+        };
 
-    let pxname = Cow::from(pxname.to_string());
-    metrics.iter_mut().for_each(|m| {
-        m.insert_tag(FRONTEND_KEY, pxname.clone());
-    });
+        let value = match info.index {
+            STATUS_FIELD => parse_status_field(field),
+            CHECK_DURATION_FIELD | QTIME_MS_FIELD | CTIME_MS_FIELD | RTIME_MS_FIELD
+            | TTIME_MS_FIELD => match field.parse::<f64>() {
+                Ok(value) => value / 1000.0,
+                Err(err) => {
+                    warn!(
+                        message = "parse csv field to f64 failed",
+                        field,
+                        ?err,
+                        internal_log_rate_limit = true,
+                    );
+                    continue;
+                }
+            },
+            _ => match field.parse::<i64>() {
+                Ok(value) => value as f64,
+                Err(err) => {
+                    warn!(
+                        message = "parse csv field to i64 failed",
+                        field,
+                        ?err,
+                        internal_log_rate_limit = true,
+                    );
+                    continue;
+                }
+            },
+        };
 
-    metrics
-}
-
-fn parse_backend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
-    #![allow(clippy::int_plus_one)]
-    let mut metrics = Vec::with_capacity(34);
-
-    try_push_metric!(
-        metrics,
-        row,
-        2,
-        "haproxy_backend_current_queue",
-        "Current number of queued requests not assigned to any server.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        3,
-        "haproxy_backend_max_queue",
-        "Maximum observed number of queued requests not assigned to any server.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        4,
-        "haproxy_backend_current_sessions",
-        "Current number of active sessions.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        5,
-        "haproxy_backend_max_sessions",
-        "Maximum observed number of active sessions.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        6,
-        "haproxy_backend_limit_sessions",
-        "Configured session limit.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        7,
-        "haproxy_backend_sessions_total",
-        "Total number of sessions.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        8,
-        "haproxy_backend_bytes_in_total",
-        "Current total of incoming bytes.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        9,
-        "haproxy_backend_bytes_out_total",
-        "Current total of outgoing bytes.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        13,
-        "haproxy_backend_connection_errors_total",
-        "Total of connection errors.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        14,
-        "haproxy_backend_response_errors_total",
-        "Total of response errors.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        15,
-        "haproxy_backend_retry_warnings_total",
-        "Total of retry warnings.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        16,
-        "haproxy_backend_redispatch_warnings_total",
-        "Total of redispatch warnings.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        17,
-        "haproxy_backend_up",
-        "Current health status of the backend (1 = UP, 0 = DOWN).",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        18,
-        "haproxy_backend_weight",
-        "Total weight of the servers in the backend.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        19,
-        "haproxy_backend_current_server",
-        "Current number of active servers",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        30,
-        "haproxy_backend_server_selected_total",
-        "Total number of times a server was selected, either for new sessions, or when re-dispatching.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        33,
-        "haproxy_backend_current_session_rate",
-        "Current number of sessions per second over last elapsed second.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        35,
-        "haproxy_backend_max_session_rate",
-        "Maximum number of sessions per second.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        39,
-        "haproxy_backend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "1xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        40,
-        "haproxy_backend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "2xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        41,
-        "haproxy_backend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "3xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        42,
-        "haproxy_backend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "4xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        43,
-        "haproxy_backend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "5xx")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        44,
-        "haproxy_backend_http_responses_total",
-        "Total of HTTP responses.",
-        "counter",
-        tags!("code" => "other")
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        49,
-        "haproxy_backend_client_aborts_total",
-        "Total number of data transfers aborted by the client.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        50,
-        "haproxy_backend_server_aborts_total",
-        "Total number of data transfers aborted by the server.",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        51,
-        "haproxy_backend_compressor_bytes_in_total",
-        "Number of HTTP response bytes fed to the compressor",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        52,
-        "haproxy_backend_compressor_bytes_out_total",
-        "Number of HTTP response bytes emitted by the compressor",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        53,
-        "haproxy_backend_compressor_bytes_bypassed_total",
-        "Number of bytes that bypassed the HTTP compressor",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        54,
-        "haproxy_backend_http_responses_compressed_total",
-        "Number of HTTP responses that were compressed",
-        "counter"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        58,
-        "haproxy_backend_http_queue_time_average_seconds",
-        "Avg. HTTP queue time for last 1024 successful connections.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        59,
-        "haproxy_backend_http_connect_time_average_seconds",
-        "Avg. HTTP connect time for last 1024 successful connections.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        60,
-        "haproxy_backend_http_response_time_average_seconds",
-        "Avg. HTTP response time for last 1024 successful connections.",
-        "gauge"
-    );
-    try_push_metric!(
-        metrics,
-        row,
-        61,
-        "haproxy_backend_http_total_time_average_seconds",
-        "Avg. HTTP total time for last 1024 successful connections.",
-        "gauge"
-    );
-
-    let pxname = Cow::from(pxname.to_string());
-    metrics.iter_mut().for_each(|m| {
-        m.insert_tag(BACKEND_KEY, pxname.clone());
-    });
+        metrics.push(info.build(value, tags.clone()));
+    }
 
     metrics
 }
@@ -1098,7 +996,6 @@ fn parse_status_field(value: &str) -> f64 {
 #[cfg(test)]
 mod tests {
     use std::io;
-    use std::io::BufReader;
 
     use super::*;
 
@@ -1122,7 +1019,7 @@ mod tests {
     #[test]
     fn test_parse_csv_resp() {
         let content = include_str!("../../tests/haproxy/stats.csv");
-        let reader = BufReader::new(io::Cursor::new(content));
+        let reader = io::Cursor::new(content);
         let metrics = parse_csv(reader).unwrap();
 
         assert!(!metrics.is_empty());
