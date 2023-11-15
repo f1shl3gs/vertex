@@ -33,7 +33,7 @@ bash ci/install_protoc.sh
 # and all of that.
 MOLD_VERSION=2.3.3
 CARGO_DIR="${HOME}/.cargo"
-if [[ "$(${CARGO_DIR}/bin/mold -v | awk '{print $2}')" != "$MOLD_VERSION" ]]; then
+if [[ "$("${CARGO_DIR}"/bin/mold -v | awk '{print $2}')" != "$MOLD_VERSION" ]]; then
   # We explicitly put `mold-wrapper.so` right beside `mold` itself because it's hard-coded to look in the same directory
   # first when trying to load the shared object, so we can dodge having to care about the "right" lib folder to put it in.
   TEMP=$(mktemp -d)
