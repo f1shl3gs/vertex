@@ -34,6 +34,7 @@ cp "${TEMP}/${MOLD_TARGET}/lib/mold/mold-wrapper.so" /usr/bin/mold-wrapper.so
 rm -rf "$TEMP"
 
 # Now configure Cargo to use our rustc wrapper script.
+mkdir "${HOME}/.cargo"
 cat <<EOF >>"${HOME}/.cargo/config.toml"
 [target.x86_64-unknown-linux-gnu]
 linker="clang"
