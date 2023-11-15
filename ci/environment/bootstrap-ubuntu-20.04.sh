@@ -48,6 +48,14 @@ else
     echo "export PATH=\"$HOME/.cargo/bin:\$PATH\"" >> "${HOME}/.bash_profile"
 fi
 
+# Set up the default "deny all warnings" build flags
+CARGO_OVERRIDE_DIR="${HOME}/.cargo"
+CARGO_OVERRIDE_CONF="${CARGO_OVERRIDE_DIR}/config.toml"
+cat <<EOF >>"$CARGO_OVERRIDE_CONF"
+[target.'cfg(linux)']
+rustflags = [ "-D", "warnings" ]
+EOF
+
 # Install mold, because the system linker wastes a bunch of time.
 #
 # Notably, we don't install/configure it when we're going to do anything with `cross`, as `cross` takes the Cargo
