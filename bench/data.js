@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700048598716,
+  "lastUpdate": 1700049149598,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "54a0ae0345ad9bb2f0890a5f65e24828b589db0f",
-          "message": "optimize imports (#1313)",
-          "timestamp": "2023-10-01T14:15:28+08:00",
-          "tree_id": "f197deebbaf540a5e2f863a5134f369d883a3d44",
-          "url": "https://github.com/f1shl3gs/vertex/commit/54a0ae0345ad9bb2f0890a5f65e24828b589db0f"
-        },
-        "date": 1696142206446,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1136,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42389.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52757.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "59842021af6458fa9ecf390d0d6c2aeba1823633",
+          "message": "sources/haproxy: simplify parse (#1419)",
+          "timestamp": "2023-11-15T19:32:21+08:00",
+          "tree_id": "ddb04b488f600ff7afbd2712480bc832df14501d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/59842021af6458fa9ecf390d0d6c2aeba1823633"
+        },
+        "date": 1700049129766,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1046,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52614.2,
             "unit": "KiB"
           }
         ]
