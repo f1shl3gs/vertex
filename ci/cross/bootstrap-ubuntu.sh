@@ -3,7 +3,7 @@
 set -e -o verbose
 
 apt-get update
-apt-get install -y apt-transport-https wget unzip
+apt-get install -y apt-transport-https wget unzip clang
 apt clean
 
 # Setup protoc
