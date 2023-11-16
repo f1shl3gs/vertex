@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700152792666,
+  "lastUpdate": 1700152793909,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8c005816c6f40bbcfed596cff9b226e93e4d35de",
-          "message": "chore(deps): bump proptest from 1.3.0 to 1.3.1 (#1314)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.3.0 to 1.3.1.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.3.0...v1.3.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-02T08:35:59+08:00",
-          "tree_id": "63135b57f7a76bdac56ba4217a5f0a74f9e8d1d4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c005816c6f40bbcfed596cff9b226e93e4d35de"
-        },
-        "date": 1696208036294,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 944,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42389.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e876921f1811df51d4e5add83b606df20487be12",
           "message": "chore(deps): bump memchr from 2.6.3 to 2.6.4 (#1315)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.3 to 2.6.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.3...2.6.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-10-02T08:38:36+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52614.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "08caba33f557e45cc1b39192d1dad8bafd932103",
+          "message": "bump rust to 1.74.0 (#1422)",
+          "timestamp": "2023-11-17T00:27:46+08:00",
+          "tree_id": "fc9ca58387d9030d0f1e3f0d8d992b0d7215c69b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/08caba33f557e45cc1b39192d1dad8bafd932103"
+        },
+        "date": 1700152779623,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 617,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52487.2,
             "unit": "KiB"
           }
         ]
