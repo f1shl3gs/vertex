@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700049149598,
+  "lastUpdate": 1700152711655,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "806cb97713d37b1871f90cc60520f8dc27232718",
-          "message": "remove `clippy::missing_const_for_fn` (#1309)",
-          "timestamp": "2023-09-30T16:33:38+08:00",
-          "tree_id": "49076dd88eaa11a445dab6f9a6ea727c42c4af32",
-          "url": "https://github.com/f1shl3gs/vertex/commit/806cb97713d37b1871f90cc60520f8dc27232718"
-        },
-        "date": 1696063009587,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 870040,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 530970,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9f101de2d161c77cbe530bf5206942789717b886",
+          "message": "chore(deps): bump the prost group with 3 updates (#1423)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.1 to 0.12.2\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.1...v0.12.2)\r\n\r\nUpdates `prost-types` from 0.12.1 to 0.12.2\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.1...v0.12.2)\r\n\r\nUpdates `prost-build` from 0.12.1 to 0.12.2\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.1...v0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-17T00:36:03+08:00",
+          "tree_id": "cf40d58cd9be6e453d31884fa9a070abfd0dfc04",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9f101de2d161c77cbe530bf5206942789717b886"
+        },
+        "date": 1700152698551,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 543850,
             "unit": "ns/op"
           }
         ]
