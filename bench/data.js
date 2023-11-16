@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700153265848,
+  "lastUpdate": 1700153336211,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e876921f1811df51d4e5add83b606df20487be12",
-          "message": "chore(deps): bump memchr from 2.6.3 to 2.6.4 (#1315)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.3 to 2.6.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.3...2.6.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-02T08:38:36+08:00",
-          "tree_id": "f0fd15d1432987505897c67024859a35a8dc98bf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e876921f1811df51d4e5add83b606df20487be12"
-        },
-        "date": 1696208483495,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1211,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42401,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c64127eb6ae9ab3cf665ea1ca0153b1918d58a6f",
           "message": "chore(deps): bump memmap2 from 0.8.0 to 0.9.0 (#1316)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.8.0 to 0.9.0.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.8.0...v0.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-10-04T01:16:26+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52487.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9f101de2d161c77cbe530bf5206942789717b886",
+          "message": "chore(deps): bump the prost group with 3 updates (#1423)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.1 to 0.12.2\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.1...v0.12.2)\r\n\r\nUpdates `prost-types` from 0.12.1 to 0.12.2\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.1...v0.12.2)\r\n\r\nUpdates `prost-build` from 0.12.1 to 0.12.2\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.1...v0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-17T00:36:03+08:00",
+          "tree_id": "cf40d58cd9be6e453d31884fa9a070abfd0dfc04",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9f101de2d161c77cbe530bf5206942789717b886"
+        },
+        "date": 1700153321032,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 653,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52492.4,
             "unit": "KiB"
           }
         ]
