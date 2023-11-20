@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::hash_map::Entry;
 use std::collections::{BTreeMap, HashMap};
 use std::pin::Pin;
@@ -7,7 +8,6 @@ use async_stream::stream;
 use async_trait::async_trait;
 use chrono::Utc;
 use configurable::{configurable_component, Configurable};
-use event::log::path::parse_target_path;
 use event::log::OwnedTargetPath;
 use event::tags::Tags;
 use event::{
@@ -65,7 +65,7 @@ struct MetricConfig {
     ///
     /// The key is the tag key for metrics, the value is the path to the log field.
     #[serde(default)]
-    tags: BTreeMap<String, String>,
+    tags: BTreeMap<Cow<'static, str>, OwnedTargetPath>,
 
     #[serde(flatten)]
     typ: MetricType,
@@ -73,9 +73,7 @@ struct MetricConfig {
 
 impl MetricConfig {
     fn build_series_and_value(&self, log: &LogRecord) -> Option<(MetricSeries, f64)> {
-        let MetricConfig {
-            name, field, tags, ..
-        } = self;
+        let MetricConfig { name, field, .. } = self;
 
         let parse_value = match self.typ {
             MetricType::Counter { increment_by_value } => increment_by_value,
@@ -95,19 +93,17 @@ impl MetricConfig {
             _ => return None,
         };
 
-        let mut attrs = Tags::new();
-        for (k, v) in tags {
-            if let Ok(path) = parse_target_path(v) {
-                if let Some(value) = log.get(&path) {
-                    attrs.insert(k.to_string(), value.to_string_lossy().into_owned());
-                }
+        let mut tags = Tags::with_capacity(self.tags.len());
+        for (key, path) in &self.tags {
+            if let Some(value) = log.get(path) {
+                tags.insert(key.clone(), value.to_string_lossy().to_string());
             }
         }
 
         Some((
             MetricSeries {
                 name: name.to_string(),
-                tags: attrs,
+                tags,
             },
             value,
         ))
@@ -294,7 +290,8 @@ impl Metricalize {
 
 #[cfg(test)]
 mod tests {
-    use event::{btreemap, fields, tags, Bucket, LogRecord};
+    use event::log::path::parse_target_path;
+    use event::{fields, tags, Bucket, LogRecord};
 
     use super::*;
 
@@ -348,11 +345,15 @@ mod tests {
                 MetricConfig {
                     name: "test".to_string(),
                     field: parse_target_path("foo.bar").unwrap(),
-                    tags: btreemap!(
-                        "tag1" => "tag1",
-                        "tag2" => "tags.k1",
-                        "tag3" => "tags.k2"
-                    ),
+                    tags: {
+                        let mut map = BTreeMap::new();
+
+                        map.insert("tag1".into(), parse_target_path("tag1").unwrap());
+                        map.insert("tag2".into(), parse_target_path("tags.k1").unwrap());
+                        map.insert("tag3".into(), parse_target_path("tags.k2").unwrap());
+
+                        map
+                    },
                     typ: MetricType::Counter {
                         increment_by_value: false,
                     },

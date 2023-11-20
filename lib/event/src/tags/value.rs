@@ -234,10 +234,10 @@ impl From<i32> for Value {
     }
 }
 
-impl From<&'static str> for Value {
+impl From<&str> for Value {
     /// Convenience method for creating a `Value` from a `&'static str`.
-    fn from(s: &'static str) -> Self {
-        Value::String(s.into())
+    fn from(s: &str) -> Self {
+        Value::String(Cow::Owned(s.to_string()))
     }
 }
 
@@ -282,5 +282,57 @@ impl fmt::Display for Value {
             Value::String(v) => fmt.write_fmt(format_args!("{}", v)),
             Value::Array(v) => fmt.write_fmt(format_args!("{}", v)),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use std::collections::BTreeMap;
+
+    #[test]
+    fn serialize_value() {
+        let mut map = BTreeMap::new();
+        map.insert("bool", Value::Bool(true));
+        map.insert("int64", Value::I64(1));
+        map.insert("float64", Value::F64(2.0));
+        map.insert("string", Value::String("str".into()));
+        map.insert("bool_array", Value::Array(Array::Bool(vec![true, false])));
+        map.insert("int_array", Value::Array(Array::I64(vec![1, 2])));
+        map.insert("float_array", Value::Array(Array::F64(vec![1.0, 2.0])));
+        map.insert(
+            "string_array",
+            Value::Array(Array::String(vec!["foo".into(), "bar".into()])),
+        );
+
+        serde_json::to_string(&map).unwrap();
+    }
+
+    #[test]
+    fn deserialize_value() {
+        let raw = r#"{"bool":true,"bool_array":[true,false],"float64":2.0,"float_array":[1.0,2.0],"int64":1,"int_array":[1,2],"string":"str","string_array":["foo","bar"]}"#;
+        let map: BTreeMap<String, Value> = serde_json::from_str(raw).unwrap();
+
+        assert_eq!(map.get("bool").unwrap(), &Value::Bool(true));
+        assert_eq!(map.get("int64").unwrap(), &Value::I64(1));
+        assert_eq!(map.get("float64").unwrap(), &Value::F64(2.0));
+        assert_eq!(map.get("string").unwrap(), &Value::String("str".into()));
+        assert_eq!(
+            map.get("bool_array").unwrap(),
+            &Value::Array(Array::Bool(vec![true, false]))
+        );
+        assert_eq!(
+            map.get("int_array").unwrap(),
+            &Value::Array(Array::I64(vec![1, 2]))
+        );
+        assert_eq!(
+            map.get("float_array").unwrap(),
+            &Value::Array(Array::F64(vec![1.0, 2.0]))
+        );
+        assert_eq!(
+            map.get("string_array").unwrap(),
+            &Value::Array(Array::String(vec!["foo".into(), "bar".into()]))
+        );
     }
 }

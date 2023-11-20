@@ -477,7 +477,7 @@ impl Elasticsearch {
                     metrics.extend(os_metrics(tags.clone(), node.os));
 
                     // Jvm stats
-                    metrics.extend(jvm_metrics(tags.clone(), node.jvm));
+                    metrics.extend(jvm_metrics(&tags, node.jvm));
 
                     // Process stats
                     metrics.extend(process_metrics(tags.clone(), node.process));
@@ -490,15 +490,18 @@ impl Elasticsearch {
 
                     // Breaker stats
                     for (breaker, stats) in node.breakers {
-                        metrics.extend(breaker_metrics(
-                            tags.with("breaker", breaker.clone()),
-                            stats,
-                        ));
+                        let mut tags = tags.clone();
+                        tags.insert("breaker", breaker);
+
+                        metrics.extend(breaker_metrics(tags, stats));
                     }
 
                     // Thread pool stats
                     for (name, pool) in node.thread_pool {
-                        metrics.extend(thread_pool_metrics(tags.with("pool", name.clone()), pool));
+                        let mut tags = tags.clone();
+                        tags.insert("pool", name);
+
+                        metrics.extend(thread_pool_metrics(tags, pool));
                     }
 
                     // Filesystem data stats
@@ -998,7 +1001,13 @@ fn indices_metrics(tags: Tags, indices: Indices) -> Vec<Metric> {
     ]
 }
 
-fn jvm_metrics(tags: Tags, mut jvm: Jvm) -> Vec<Metric> {
+fn tags_with(tags: &Tags, key: &'static str, value: &'static str) -> Tags {
+    let mut tags = tags.clone();
+    tags.insert(key, value);
+    tags
+}
+
+fn jvm_metrics(tags: &Tags, mut jvm: Jvm) -> Vec<Metric> {
     let young = jvm.mem.pools.remove("young").unwrap_or_default();
     let old = jvm.mem.pools.remove("old").unwrap_or_default();
     let survivor = jvm.mem.pools.remove("survivor").unwrap_or_default();
@@ -1008,115 +1017,115 @@ fn jvm_metrics(tags: Tags, mut jvm: Jvm) -> Vec<Metric> {
             "elasticsearch_jvm_memory_used_bytes",
             "JVM memory currently used by area",
             jvm.mem.heap_used_in_bytes,
-            tags.with("area", "heap"),
+            tags_with(tags, "area", "heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_used_bytes",
             "JVM memory currently used by area",
             jvm.mem.non_heap_used_in_bytes,
-            tags.with("area", "non-heap"),
+            tags_with(tags, "area", "non-heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_max_bytes",
             "JVM memory max",
             jvm.mem.heap_max_in_bytes,
-            tags.with("area", "heap"),
+            tags_with(tags, "area", "heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_committed_bytes",
             "JVM memory currently committed by area",
             jvm.mem.heap_committed_in_bytes,
-            tags.with("area", "heap"),
+            tags_with(tags, "area", "heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_committed_bytes",
             "JVM memory currently committed by area",
             jvm.mem.non_heap_committed_in_bytes,
-            tags.with("area", "non-heap"),
+            tags_with(tags, "area", "non-heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_pool_used_bytes",
             "JVM memory currently used by pool",
             young.used_in_bytes,
-            tags.with("pool", "young"),
+            tags_with(tags, "pool", "young"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_max_bytes",
             "JVM memory max by pool",
             young.max_in_bytes,
-            tags.with("pool", "young"),
+            tags_with(tags, "pool", "young"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_used_bytes",
             "JVM memory peak used by pool",
             young.peak_used_in_bytes,
-            tags.with("pool", "young"),
+            tags_with(tags, "pool", "young"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_max_bytes",
             "JVM memory peak max by pool",
             young.peak_max_in_bytes,
-            tags.with("pool", "young"),
+            tags_with(tags, "pool", "young"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_pool_used_bytes",
             "JVM memory currently used by pool",
             survivor.used_in_bytes,
-            tags.with("pool", "survivor"),
+            tags_with(tags, "pool", "survivor"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_max_bytes",
             "JVM memory max by pool",
             survivor.max_in_bytes,
-            tags.with("pool", "survivor"),
+            tags_with(tags, "pool", "survivor"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_used_bytes",
             "JVM memory peak used by pool",
             survivor.peak_used_in_bytes,
-            tags.with("pool", "survivor"),
+            tags_with(tags, "pool", "survivor"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_max_bytes",
             "JVM memory peak max by pool",
             survivor.peak_max_in_bytes,
-            tags.with("pool", "survivor"),
+            tags_with(tags, "pool", "survivor"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_pool_used_bytes",
             "JVM memory currently used by pool",
             old.used_in_bytes,
-            tags.with("pool", "old"),
+            tags_with(tags, "pool", "old"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_max_bytes",
             "JVM memory max by pool",
             old.max_in_bytes,
-            tags.with("pool", "old"),
+            tags_with(tags, "pool", "old"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_used_bytes",
             "JVM memory peak used by pool",
             old.peak_used_in_bytes,
-            tags.with("pool", "old"),
+            tags_with(tags, "pool", "old"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_max_bytes",
             "JVM memory peak max by pool",
             old.peak_max_in_bytes,
-            tags.with("pool", "old"),
+            tags_with(tags, "pool", "old"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_buffer_pool_used_bytes",
             "JVM buffer currently used",
             old.used_in_bytes,
-            tags.with("type", "direct"),
+            tags_with(tags, "type", "direct"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_buffer_pool_used_bytes",
             "JVM buffer currently used",
             old.used_in_bytes,
-            tags.with("type", "mapped"),
+            tags_with(tags, "type", "mapped"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_uptime_seconds",
@@ -1128,7 +1137,10 @@ fn jvm_metrics(tags: Tags, mut jvm: Jvm) -> Vec<Metric> {
 
     // GC stats
     for (name, collector) in jvm.gc.collectors {
-        metrics.extend(gc_metrics(tags.with("gc", name), collector));
+        let mut tags = tags.clone();
+        tags.insert("gc", name);
+
+        metrics.extend(gc_metrics(tags, collector));
     }
 
     metrics

@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+use event::tags::Tags;
 use event::Metric;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
@@ -105,9 +106,9 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
             None => continue,
         };
 
-        let mut tags = BTreeMap::new();
+        let mut tags = Tags::with_capacity(conf.labels.len());
         for (i, key) in conf.labels.iter().enumerate() {
-            tags.insert(key.to_string(), kv[i].clone());
+            tags.insert(key, kv[i].clone());
         }
 
         metrics.extend_from_slice(&[

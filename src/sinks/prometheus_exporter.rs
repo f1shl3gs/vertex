@@ -112,7 +112,24 @@ impl Ord for ExpiringEntry {
         let a = self.tags();
         let b = other.tags();
 
-        a.partial_cmp(b).unwrap_or(Ordering::Greater)
+        match a.len().cmp(&b.len()) {
+            Ordering::Equal => {}
+            ordering => return ordering,
+        }
+
+        for (ak, av) in a {
+            match b.get(ak) {
+                Some(bv) => {
+                    let ordering = av.partial_cmp(bv);
+                    if ordering != Some(Ordering::Equal) {
+                        return ordering.unwrap_or(Ordering::Greater);
+                    }
+                }
+                None => return Ordering::Greater,
+            }
+        }
+
+        Ordering::Equal
     }
 }
 
@@ -126,6 +143,8 @@ struct PrometheusExporter {
     ttl: Duration,
     tls: Option<TlsConfig>,
     endpoint: SocketAddr,
+    // The key is metric name, Sets is a container of tags sets and its
+    // value, timestamp
     metrics: Arc<Mutex<BTreeMap<String, Sets>>>,
 }
 

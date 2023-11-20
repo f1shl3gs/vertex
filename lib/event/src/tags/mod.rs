@@ -1,140 +1,143 @@
 mod key;
 mod value;
 
-use std::collections::btree_map::{Entry, Keys};
-use std::collections::BTreeMap;
-use std::hash::Hash;
-
+// re-export
 pub use key::Key;
-use measurable::ByteSizeOf;
-use serde::Serialize;
 pub use value::{Array, Value};
 
-#[derive(Clone, Debug, Default, Serialize, Hash, PartialEq, PartialOrd, Eq)]
-pub struct Tags(BTreeMap<Key, Value>);
+use std::alloc::{alloc, dealloc, Layout};
+use std::cmp::Ordering::{Greater, Less};
+use std::collections::BTreeMap;
+use std::fmt::{Debug, Formatter};
+use std::hash::{Hash, Hasher};
+use std::marker::PhantomData;
+use std::ptr::NonNull;
 
-impl Tags {
-    pub fn new() -> Self {
-        Self(BTreeMap::new())
+use measurable::ByteSizeOf;
+use serde::de::{MapAccess, Visitor};
+use serde::ser::SerializeMap;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+const GROWTH_ALIGNMENT: usize = 4;
+
+#[inline]
+fn aligned(amount: usize) -> usize {
+    ((amount + GROWTH_ALIGNMENT - 1) / GROWTH_ALIGNMENT) * GROWTH_ALIGNMENT
+}
+
+#[derive(Debug, Hash, PartialEq)]
+pub struct Entry {
+    key: Key,
+    value: Value,
+}
+
+/// Tags is a vec ordered by key.
+pub struct Tags {
+    len: usize,
+    cap: usize,
+    // Since we never allocate on heap unless our capacity is bigger than
+    // capacity, and heap capacity cannot be less than 1.
+    // Therefore, pointer cannot be null too.
+    data: NonNull<Entry>,
+}
+
+unsafe impl Send for Tags {}
+unsafe impl Sync for Tags {}
+
+impl ByteSizeOf for Tags {
+    fn allocated_bytes(&self) -> usize {
+        self.cap * std::mem::size_of::<Entry>()
     }
+}
 
-    /// Returns a front-to-back iterator.
-    pub fn iter(&self) -> Iter<'_> {
-        Iter(self.0.iter())
+impl Clone for Tags {
+    fn clone(&self) -> Self {
+        let layout = Layout::array::<Entry>(self.cap).unwrap();
+        let data = unsafe {
+            let ptr = NonNull::new_unchecked(alloc(layout)).cast();
+            std::ptr::copy_nonoverlapping(self.data.as_ptr(), ptr.as_ptr(), self.len);
+            ptr
+        };
+
+        Self {
+            data,
+            len: self.len,
+            cap: self.cap,
+        }
     }
+}
 
-    pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        self.0.insert(key.into(), value.into());
-    }
-
+impl Default for Tags {
     #[inline]
-    pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
+    fn default() -> Self {
+        Self::with_capacity(4)
     }
+}
 
-    #[inline]
-    pub fn remove(&mut self, key: &Key) -> Option<Value> {
-        self.0.remove(key)
+impl Debug for Tags {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let mut first = true;
+
+        self.into_iter().try_for_each(|(key, value)| {
+            if first {
+                first = false;
+                f.write_fmt(format_args!("{}={}", key, value))
+            } else {
+                f.write_fmt(format_args!(",{}={}", key, value))
+            }
+        })
     }
+}
 
-    #[inline]
-    pub fn len(&self) -> usize {
-        self.0.len()
+impl Drop for Tags {
+    fn drop(&mut self) {
+        unsafe {
+            let layout = Layout::array::<Entry>(self.cap).expect("build layout");
+            dealloc(self.data.as_ptr().cast(), layout);
+        }
     }
+}
 
-    #[inline]
-    pub fn get(&self, key: &Key) -> Option<&Value> {
-        self.0.get(key)
-    }
+impl Eq for Tags {}
 
-    #[inline]
-    pub fn entry(&mut self, key: impl Into<Key>) -> Entry<Key, Value> {
-        self.0.entry(key.into())
-    }
-
-    #[inline]
-    pub fn contains(&self, key: &Key) -> bool {
-        self.0.contains_key(key)
-    }
-
-    pub fn keys(&self) -> Keys<'_, Key, Value> {
-        self.0.keys()
-    }
-
-    #[must_use]
-    pub fn with(&self, key: impl Into<Key>, value: impl Into<Value>) -> Self {
-        let mut new = self.clone();
-        new.0.insert(key.into(), value.into());
-        new
+impl Hash for Tags {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.len.hash(state);
+        for elt in self {
+            elt.hash(state);
+        }
     }
 }
 
 impl FromIterator<(Key, Value)> for Tags {
     fn from_iter<T: IntoIterator<Item = (Key, Value)>>(iter: T) -> Self {
-        let mut attrs = Tags::default();
-        iter.into_iter().for_each(|(k, v)| attrs.insert(k, v));
+        let mut tags = Self::default();
+        iter.into_iter().for_each(|(k, v)| tags.insert(k, v));
 
-        attrs
+        tags
     }
 }
 
-impl From<BTreeMap<String, String>> for Tags {
-    fn from(map: BTreeMap<String, String>) -> Self {
-        let map = map
-            .into_iter()
-            .map(|(k, v)| (Key::from(k), Value::from(v)))
-            .collect();
-
-        Self(map)
-    }
+pub struct Iter<'a> {
+    pos: usize,
+    len: usize,
+    data: NonNull<Entry>,
+    _marker: PhantomData<&'a usize>,
 }
 
-impl ByteSizeOf for Tags {
-    fn allocated_bytes(&self) -> usize {
-        self.0
-            .iter()
-            .map(|(k, v)| {
-                let vl = match v {
-                    Value::String(s) => s.len(),
-                    _ => 0,
-                };
-
-                k.allocated_bytes() + vl
-            })
-            .sum()
-    }
-}
-
-impl<T> std::ops::Index<T> for Tags
-where
-    T: AsRef<str>,
-{
-    type Output = Value;
-
-    fn index(&self, index: T) -> &Self::Output {
-        let key = Key::new(index.as_ref().to_owned());
-        self.0.get(&key).unwrap()
-    }
-}
-
-/// An owned iterator over the entries of a `Attributes`.
-#[derive(Debug)]
-pub struct IntoIter(std::collections::btree_map::IntoIter<Key, Value>);
-
-impl Iterator for IntoIter {
-    type Item = (Key, Value);
+impl<'a> Iterator for Iter<'a> {
+    type Item = (&'a Key, &'a Value);
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.0.next()
-    }
-}
+        if self.pos == self.len {
+            return None;
+        }
 
-impl IntoIterator for Tags {
-    type Item = (Key, Value);
-    type IntoIter = IntoIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        IntoIter(self.0.into_iter())
+        unsafe {
+            let entry = &(*self.data.as_ptr().add(self.pos));
+            self.pos += 1;
+            Some((&entry.key, &entry.value))
+        }
     }
 }
 
@@ -142,28 +145,288 @@ impl<'a> IntoIterator for &'a Tags {
     type Item = (&'a Key, &'a Value);
     type IntoIter = Iter<'a>;
 
+    #[inline]
     fn into_iter(self) -> Self::IntoIter {
-        Iter(self.0.iter())
+        self.iter()
     }
 }
 
-/// An iterator over the entries of an `Attributes`.
-#[derive(Debug)]
-pub struct Iter<'a>(std::collections::btree_map::Iter<'a, Key, Value>);
+impl PartialEq for Tags {
+    fn eq(&self, other: &Self) -> bool {
+        if !self.len.eq(&other.len) {
+            return false;
+        }
 
-impl<'a> Iterator for Iter<'a> {
-    type Item = (&'a Key, &'a Value);
+        unsafe {
+            for i in 0..self.len {
+                let a = self.data.as_ptr().add(i);
+                let b = other.data.as_ptr().add(i);
+                if !(*a).eq(&(*b)) {
+                    return false;
+                }
+            }
 
-    fn next(&mut self) -> Option<Self::Item> {
-        self.0.next()
+            true
+        }
+    }
+}
+
+impl Serialize for Tags {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(Some(self.len))?;
+        for (key, value) in self {
+            map.serialize_entry(key, value)?;
+        }
+
+        map.end()
+    }
+}
+
+impl<'de> Deserialize<'de> for Tags {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct TagsVisitor;
+
+        impl<'de> Visitor<'de> for TagsVisitor {
+            type Value = Tags;
+
+            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                formatter.write_str("object")
+            }
+
+            fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+            where
+                A: MapAccess<'de>,
+            {
+                let mut tags = Tags::default();
+                while let Some((key, value)) = map.next_entry::<String, Value>()? {
+                    tags.insert(key, value);
+                }
+
+                Ok(tags)
+            }
+        }
+
+        deserializer.deserialize_map(TagsVisitor)
+    }
+}
+
+impl From<BTreeMap<String, String>> for Tags {
+    fn from(value: BTreeMap<String, String>) -> Self {
+        let mut tags = Tags::with_capacity(value.len());
+        for (k, v) in value {
+            tags.insert(k, v);
+        }
+
+        tags
+    }
+}
+
+impl Tags {
+    const MAX_SIZE: usize = 128;
+
+    /// Creates an empty `Tags` with at least the specified capacity.
+    ///
+    /// # Panics
+    ///
+    /// Allocate failed
+    pub fn with_capacity(cap: usize) -> Self {
+        let layout = Layout::array::<Entry>(cap).expect("build layout");
+        let ptr = unsafe { NonNull::new_unchecked(alloc(layout)).cast() };
+
+        Self {
+            len: 0,
+            cap,
+            data: ptr,
+        }
+    }
+
+    /// Returns the length of the Tags.
+    #[inline]
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
+    /// Returns the number of elements the Tags can hold without reallocating.
+    #[inline]
+    pub fn capacity(&self) -> usize {
+        self.cap
+    }
+
+    /// Returns whether or not the `MiniVec` has a length greater than 0.
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.len == 0
+    }
+
+    #[inline]
+    pub fn iter(&self) -> Iter {
+        Iter {
+            pos: 0,
+            len: self.len,
+            data: self.data,
+            #[allow(clippy::default_constructed_unit_structs)]
+            _marker: PhantomData::default(),
+        }
+    }
+
+    /// Inserts a key-value pair into the tags
+    pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
+        let key = key.into();
+        match self.binary_search(key.as_ref()) {
+            Ok(pos) => unsafe {
+                let elt = self.data.as_ptr().add(pos);
+                (*elt).value = value.into();
+            },
+            Err(pos) => {
+                if self.len == self.cap {
+                    self.grow(aligned(self.cap + 1));
+                }
+
+                unsafe {
+                    let ptr = self.data.as_ptr().add(pos);
+                    if pos < self.len {
+                        std::ptr::copy(ptr, ptr.add(1), self.len - pos);
+                    }
+
+                    ptr.write(Entry {
+                        key,
+                        value: value.into(),
+                    });
+                    self.len += 1;
+                }
+            }
+        }
+    }
+
+    /// Removes and returns the element by key, shifting all elements after
+    /// it to the left.
+    pub fn remove(&mut self, key: impl AsRef<str>) -> Option<Value> {
+        match self.binary_search(key.as_ref()) {
+            Ok(pos) => unsafe {
+                let entry = self.data.as_ptr().add(pos);
+                let value = (*entry).value.clone();
+                if pos < self.len - 1 {
+                    std::ptr::copy(entry.add(1), entry, self.len - pos - 1);
+                }
+
+                self.len -= 1;
+                Some(value)
+            },
+            // not found
+            Err(_pos) => None,
+        }
+    }
+
+    /// Returns true if the map contains a value for the specified key.
+    #[inline]
+    pub fn contains(&self, key: &str) -> bool {
+        self.binary_search(key).is_ok()
+    }
+
+    /// Returns a reference to the value corresponding to the key.
+    pub fn get(&self, key: impl AsRef<str>) -> Option<&Value> {
+        if let Ok(pos) = self.binary_search(key.as_ref()) {
+            unsafe {
+                let ptr = self.data.as_ptr().add(pos);
+                Some(&(*ptr).value)
+            }
+        } else {
+            None
+        }
+    }
+
+    /// Returns a mutable reference to the value corresponding to the key.
+    pub fn get_mut(&mut self, key: impl AsRef<str>) -> Option<&mut Value> {
+        if let Ok(pos) = self.binary_search(key.as_ref()) {
+            unsafe {
+                let entry = self.data.as_ptr().add(pos);
+                Some(&mut (*entry).value)
+            }
+        } else {
+            None
+        }
+    }
+
+    /// Binary searches this slice.
+    ///
+    /// If the slice is not sorted or if the compare does not implement
+    /// an order consistent with the sort order of the underlying slice,
+    /// the returned result is unspecified and meaningless.
+    ///
+    /// If the value is found then [`Result::Ok`] is returned, containing
+    /// the index of the matching element. If there are multiple matches,
+    /// then any one of the matches could be returned. The index is chosen
+    /// deterministically, but is subject to change in future versions of
+    /// Rust. If the value is not found then [`Result::Err`] is returned,
+    /// containing the index where a matching element could be inserted
+    /// while maintaining sorted order.
+    fn binary_search(&self, key: &str) -> Result<usize, usize> {
+        let mut size = self.len;
+        let mut left = 0;
+        let mut right = size;
+        while left < right {
+            let mid = left + size / 2;
+
+            let sk = unsafe {
+                let ptr = self.data.as_ptr().add(mid);
+                &(*ptr).key
+            };
+
+            let cmp = key.cmp(sk.as_str());
+
+            // The reason why we use if/else control flow rather than match
+            // is because match reorders comparison operations, which is perf
+            // sensitive.
+            // This is x86 asm for u8: https://rust.godbolt.org/z/8Y8Pra.
+            if cmp == Greater {
+                left = mid + 1;
+            } else if cmp == Less {
+                right = mid;
+            } else {
+                // unsafe { core::intrinsics::assume(mid < self.len()) };
+                return Ok(mid);
+            }
+
+            size = right - left;
+        }
+
+        // unsafe { core::intrinsics::assume(left <= self.len()) };
+        Err(left)
+    }
+
+    /// Re-allocate to set the capacity to `new_cap`.
+    ///
+    /// Panics if `new_cap` is less than the vector's length.
+    fn grow(&mut self, new_cap: usize) {
+        assert!(new_cap <= Tags::MAX_SIZE, "overflow");
+
+        unsafe {
+            let new_layout = Layout::array::<Entry>(new_cap).unwrap();
+            let old_layout = Layout::array::<Entry>(self.cap).unwrap();
+            let new_ptr =
+                std::alloc::realloc(self.data.as_ptr().cast(), old_layout, new_layout.size());
+
+            self.data = NonNull::new_unchecked(new_ptr.cast());
+            self.cap = new_cap;
+        }
     }
 }
 
 #[macro_export]
 macro_rules! tags {
+    // count helper: transform any expression into 1
+    (@one $x:expr) => (1usize);
+
     // Done without trailing comma
     ( $($x:expr => $y:expr),* ) => ({
-        let mut _tags = $crate::tags::Tags::new();
+        let count = 0usize $(+ tags!(@one $x))*;
+        let mut _tags = $crate::tags::Tags::with_capacity(count);
         $(
             _tags.insert($x, $y);
         )*
@@ -175,68 +438,159 @@ macro_rules! tags {
     );
 }
 
-#[macro_export]
-macro_rules! btreemap {
-    // Done without trailing comma
-    ( $($x:expr => $y:expr),* ) => ({
-        let mut _map: std::collections::BTreeMap<String, String> = std::collections::BTreeMap::new();
-        $(
-            _map.insert($x.into(), $y.into());
-        )*
-        _map
-    });
-    // Done with trailing comma
-    ( $($x:expr => $y:expr,)* ) => (
-        btreemap!{$($x => $y),*}
-    );
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn serialize_value() {
-        let mut map = BTreeMap::new();
-        map.insert("bool", Value::Bool(true));
-        map.insert("int64", Value::I64(1));
-        map.insert("float64", Value::F64(2.0));
-        map.insert("string", Value::String("str".into()));
-        map.insert("bool_array", Value::Array(Array::Bool(vec![true, false])));
-        map.insert("int_array", Value::Array(Array::I64(vec![1, 2])));
-        map.insert("float_array", Value::Array(Array::F64(vec![1.0, 2.0])));
-        map.insert(
-            "string_array",
-            Value::Array(Array::String(vec!["foo".into(), "bar".into()])),
-        );
+    use chrono::Utc;
+    use rand::rngs::StdRng;
+    use rand::seq::SliceRandom;
+    use rand::SeedableRng;
 
-        serde_json::to_string(&map).unwrap();
+    #[test]
+    fn align() {
+        for (input, want) in [(1, 4), (2, 4), (3, 4), (4, 4), (5, 8)] {
+            assert_eq!(aligned(input), want);
+        }
     }
 
     #[test]
-    fn deserialize_value() {
-        let raw = r#"{"bool":true,"bool_array":[true,false],"float64":2.0,"float_array":[1.0,2.0],"int64":1,"int_array":[1,2],"string":"str","string_array":["foo","bar"]}"#;
-        let map: BTreeMap<String, Value> = serde_json::from_str(raw).unwrap();
+    fn fuzz() {
+        #[allow(clippy::cast_sign_loss)]
+        let mut rng = {
+            let now = Utc::now().timestamp_nanos_opt().unwrap();
+            StdRng::seed_from_u64(now as u64)
+        };
 
-        assert_eq!(map.get("bool").unwrap(), &Value::Bool(true));
-        assert_eq!(map.get("int64").unwrap(), &Value::I64(1));
-        assert_eq!(map.get("float64").unwrap(), &Value::F64(2.0));
-        assert_eq!(map.get("string").unwrap(), &Value::String("str".into()));
-        assert_eq!(
-            map.get("bool_array").unwrap(),
-            &Value::Array(Array::Bool(vec![true, false]))
+        for _i in 0..1000 {
+            let mut keys = vec!["a", "b", "c"];
+            keys.shuffle(&mut rng);
+
+            let mut tags = Tags::with_capacity(4);
+            for key in keys {
+                tags.insert(key, 1);
+            }
+
+            assert_eq!(tags.len, 3);
+            assert_eq!(tags.cap, 4);
+
+            let sorted = tags
+                .iter()
+                .map(|(key, _value)| key.as_str().to_string())
+                .collect::<Vec<_>>();
+            assert_eq!(sorted, ["a", "b", "c"]);
+
+            let mut keys = vec!["a", "b", "c"];
+            keys.shuffle(&mut rng);
+            for key in keys {
+                tags.remove(key);
+            }
+
+            assert_eq!(tags.len, 0);
+            assert_eq!(tags.cap, 4);
+        }
+    }
+
+    #[test]
+    fn clone() {
+        let t1 = tags!(
+            "foo" => "bar"
         );
-        assert_eq!(
-            map.get("int_array").unwrap(),
-            &Value::Array(Array::I64(vec![1, 2]))
+
+        let mut t2 = t1.clone();
+        assert_eq!(t1, t2);
+
+        t2.remove("foo");
+        assert_eq!(t1.len(), 1);
+        assert_eq!(t2.len(), 0);
+    }
+
+    #[test]
+    fn get() {
+        let mut t1 = Tags::with_capacity(1);
+        assert_eq!(t1.len, 0);
+        assert_eq!(t1.cap, 1);
+
+        t1.insert("foo", "bar");
+        assert_eq!(t1.len, 1);
+        assert_eq!(t1.cap, 1);
+
+        let value = t1.get("foo").unwrap();
+        assert_eq!(t1.len, 1);
+        assert_eq!(t1.cap, 1);
+        assert_eq!(value, &Value::from("bar"));
+    }
+
+    #[test]
+    fn get_mut() {
+        let mut tags = tags!(
+            "foo" => "bar"
         );
-        assert_eq!(
-            map.get("float_array").unwrap(),
-            &Value::Array(Array::F64(vec![1.0, 2.0]))
+
+        let value = tags.get_mut("foo").unwrap();
+        *value = Value::I64(1);
+
+        assert_eq!(tags, tags!("foo" => 1));
+    }
+
+    #[test]
+    fn grow() {
+        let mut t1 = Tags::with_capacity(1);
+        t1.insert("foo", "bar");
+        assert_eq!(t1.len, 1);
+        assert_eq!(t1.cap, 1);
+
+        t1.insert("bar", "foo");
+        assert_eq!(t1.len, 2);
+        assert_eq!(t1.cap, 4);
+    }
+
+    #[test]
+    fn remove() {
+        let keys = ["a", "b", "c"];
+        for key in keys {
+            let mut tags = Tags::with_capacity(4);
+            for key in keys {
+                tags.insert(key, 1);
+            }
+
+            assert_eq!(tags.len, 3);
+            assert_eq!(tags.cap, 4);
+
+            let value = tags.remove(key).unwrap();
+            assert_eq!(tags.len, 2);
+            assert_eq!(tags.cap, 4);
+            assert_eq!(value, Value::from(1));
+        }
+    }
+
+    #[test]
+    fn remove_to_empty() {
+        let mut tags = tags!(
+            "foo" => "bar"
         );
-        assert_eq!(
-            map.get("string_array").unwrap(),
-            &Value::Array(Array::String(vec!["foo".into(), "bar".into()]))
+
+        assert_eq!(tags.len(), 1);
+        assert_eq!(tags.capacity(), 1);
+        assert_eq!(tags.remove("foo"), Some(Value::String("bar".into())));
+        assert!(tags.is_empty());
+        assert_eq!(tags.len(), 0);
+        assert_eq!(tags.capacity(), 1);
+    }
+
+    #[test]
+    fn iter() {
+        let tags = tags!(
+            "a" => 1,
+            "ab" => 3,
+            "aa" => 2,
         );
+
+        let keys = tags
+            .into_iter()
+            .map(|(key, _value)| key.to_string())
+            .collect::<Vec<_>>();
+
+        assert_eq!(keys, ["a", "aa", "ab"]);
     }
 }

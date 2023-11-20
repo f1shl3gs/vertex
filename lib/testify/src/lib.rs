@@ -1,6 +1,7 @@
 pub mod event;
 pub mod http;
 pub mod instant;
+mod map;
 mod portpicker;
 pub mod random;
 mod send_lines;

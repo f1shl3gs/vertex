@@ -20,7 +20,14 @@ impl Key {
     }
 
     /// Returns a reference to the underlying key name
+    #[inline]
     pub fn as_str(&self) -> &str {
+        self.0.as_ref()
+    }
+}
+
+impl AsRef<str> for Key {
+    fn as_ref(&self) -> &str {
         self.0.as_ref()
     }
 }
@@ -34,10 +41,10 @@ impl ByteSizeOf for Key {
     }
 }
 
-impl From<&'static str> for Key {
+impl From<&str> for Key {
     /// Convert a `&str` to a `Key`.
-    fn from(key_str: &'static str) -> Self {
-        Key(Cow::from(key_str))
+    fn from(s: &str) -> Self {
+        Key(Cow::Owned(s.to_string()))
     }
 }
 
@@ -50,7 +57,7 @@ impl From<Cow<'static, str>> for Key {
 impl From<String> for Key {
     /// Convert a `String` to a `Key`.
     fn from(string: String) -> Self {
-        Key(Cow::from(string))
+        Key(Cow::Owned(string))
     }
 }
 

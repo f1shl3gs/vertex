@@ -21,7 +21,7 @@ impl Operation {
         match self {
             Operation::Set { key, value } => tags.insert(key.clone(), value.clone()),
             Operation::Add { key, value } => {
-                if !tags.contains(key) {
+                if !tags.contains(key.as_str()) {
                     tags.insert(key.clone(), value.clone());
                 }
             }
