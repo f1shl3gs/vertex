@@ -104,6 +104,8 @@ impl Configurable for Cow<'static, str> {
     }
 }
 
+impl ConfigurableString for Cow<'static, str> {}
+
 impl Configurable for bool {
     fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         Ok(generate_bool_schema())

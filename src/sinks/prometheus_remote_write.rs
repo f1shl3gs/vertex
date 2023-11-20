@@ -212,13 +212,14 @@ impl MetricNormalize for PrometheusMetricNormalize {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     use chrono::Utc;
-    use event::{btreemap, Metric};
+    use event::tags::Tags;
+    use event::{tags, Metric};
     use framework::sink::util::testing::build_test_server;
     use futures_util::StreamExt;
     use http::HeaderMap;
     use prometheus::proto;
-    use std::collections::BTreeMap;
     use testify::next_addr;
 
     #[test]
@@ -235,7 +236,7 @@ mod tests {
         };
     }
 
-    fn test_gauge(name: impl Into<String>, value: f64, tags: BTreeMap<String, String>) -> Event {
+    fn test_gauge(name: impl Into<String>, value: f64, tags: Tags) -> Event {
         Metric::gauge_with_tags(name, "", value, tags)
             .with_timestamp(Some(Utc::now()))
             .into()
@@ -290,7 +291,7 @@ mod tests {
             vec![test_gauge(
                 "gauge_2",
                 32.0,
-                btreemap!("foo" => "bar", "bar" => "foo"),
+                tags!("foo" => "bar", "bar" => "foo"),
             )],
         )
         .await;
@@ -315,7 +316,7 @@ mod tests {
     async fn sends_with_authenticated() {
         let outputs = send_request(
             "auth:\n  strategy: basic\n  user: user\n  password: password",
-            vec![test_gauge("gauge_2", 32.0, btreemap!("foo" => "bar"))],
+            vec![test_gauge("gauge_2", 32.0, tags!("foo" => "bar"))],
         )
         .await;
 
@@ -338,7 +339,7 @@ mod tests {
     async fn send_x_scope_orgid_header() {
         let outputs = send_request(
             "tenant_id: tenant",
-            vec![test_gauge("gauge_3", 12.1, btreemap!())],
+            vec![test_gauge("gauge_3", 12.1, tags!())],
         )
         .await;
 
@@ -351,7 +352,7 @@ mod tests {
     async fn sends_templated_x_scope_orgid_header() {
         let outputs = send_request(
             "tenant_id: tenant_%Y",
-            vec![test_gauge("gauge_3", 12.3, btreemap!())],
+            vec![test_gauge("gauge_3", 12.3, tags!())],
         )
         .await;
 

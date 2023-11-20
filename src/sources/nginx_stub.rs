@@ -1,4 +1,3 @@
-use std::collections::BTreeMap;
 use std::convert::TryFrom;
 use std::ops::Sub;
 use std::time::Duration;
@@ -6,7 +5,8 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::Utc;
 use configurable::configurable_component;
-use event::Metric;
+use event::tags::Tags;
+use event::{tags, Metric};
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
@@ -123,14 +123,15 @@ struct NginxStub {
     client: HttpClient,
     endpoint: String,
     auth: Option<Auth>,
-    tags: BTreeMap<String, String>,
+    tags: Tags,
 }
 
 impl NginxStub {
     fn new(client: HttpClient, endpoint: String, auth: Option<Auth>) -> Result<Self, crate::Error> {
-        let mut tags = BTreeMap::new();
-        tags.insert("endpoint".into(), endpoint.clone());
-        tags.insert("host".into(), Self::get_endpoint_host(&endpoint)?);
+        let tags = tags!(
+            "endpoint" => endpoint.clone(),
+            "host" => Self::get_endpoint_host(&endpoint)?
+        );
 
         Ok(Self {
             client,

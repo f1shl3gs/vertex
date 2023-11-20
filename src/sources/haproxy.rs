@@ -1017,7 +1017,7 @@ mod tests {
     // }
 
     #[test]
-    fn test_parse_csv_resp() {
+    fn parse() {
         let content = include_str!("../../tests/haproxy/stats.csv");
         let reader = io::Cursor::new(content);
         let metrics = parse_csv(reader).unwrap();
@@ -1026,7 +1026,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_status_field() {
+    fn status_field() {
         let tests = [
             ("UP", 1),
             ("UP 1/3", 1),

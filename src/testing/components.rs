@@ -97,8 +97,8 @@ impl ComponentTester {
                     .map(|m| {
                         let tags = m
                             .tags()
-                            .keys()
-                            .map(|key| key.as_str())
+                            .iter()
+                            .map(|(key, _value)| key.as_str())
                             .collect::<Vec<_>>()
                             .join(",");
                         format!("\n    -> Found similar metric `{}{}`", m.name(), tags)
@@ -126,8 +126,7 @@ impl ComponentTester {
 /// Tests if the given metric contains all the given tag names
 fn has_tags(metric: &Metric, names: &[&str]) -> bool {
     for name in names {
-        let key = name.to_string().into();
-        if metric.tags().contains(&key) {
+        if metric.tags().contains(name) {
             return true;
         }
     }

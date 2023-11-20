@@ -1,6 +1,6 @@
+use event::tags::{Key, Tags};
 use event::{Bucket, Metric};
 use metrics::{global_registry, Attributes, Observation};
-use std::collections::BTreeMap;
 
 pub fn capture_metrics() -> Vec<Metric> {
     let registry = global_registry();
@@ -29,8 +29,8 @@ impl metrics::Reporter for Reporter {
 
         let tags = attrs
             .iter()
-            .map(|(k, v)| (k.to_string(), v.to_string()))
-            .collect::<BTreeMap<_, _>>();
+            .map(|(k, v)| (Key::from(*k), v.clone().into()))
+            .collect::<Tags>();
 
         let metric = match observation {
             Observation::Counter(c) => Metric::sum_with_tags(name, description, c, tags),

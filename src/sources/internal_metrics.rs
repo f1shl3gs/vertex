@@ -1,8 +1,8 @@
-use std::collections::BTreeMap;
 use std::time::Duration;
 
 use chrono::Utc;
 use configurable::configurable_component;
+use event::tags::{Key, Tags};
 use event::Bucket;
 use framework::config::Output;
 use framework::pipeline::Pipeline;
@@ -93,8 +93,8 @@ impl metrics::Reporter for Reporter {
 
         let tags = attrs
             .iter()
-            .map(|(k, v)| (k.to_string(), v.to_string()))
-            .collect::<BTreeMap<_, _>>();
+            .map(|(k, v)| (Key::from(*k), v.clone().into()))
+            .collect::<Tags>();
 
         let metric = match observation {
             Observation::Counter(c) => event::Metric::sum_with_tags(name, description, c, tags),

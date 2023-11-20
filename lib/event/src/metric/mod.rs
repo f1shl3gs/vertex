@@ -92,7 +92,7 @@ impl MetricValue {
     }
 }
 
-#[derive(Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize)]
 pub struct MetricSeries {
     pub name: String,
     pub tags: Tags,
@@ -106,7 +106,7 @@ impl ByteSizeOf for MetricSeries {
 
 impl MetricSeries {
     pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        self.tags.insert(key, value);
+        self.tags.insert(key.into(), value);
     }
 }
 
@@ -226,7 +226,7 @@ impl Display for Metric {
                 }
 
                 // write sum and total
-                tags.remove(&"le".into());
+                tags.remove("le");
 
                 write!(fmt, "{}_sum", self.name())?;
                 write_tags(fmt, &tags)?;
@@ -249,7 +249,7 @@ impl Display for Metric {
                     writeln!(fmt, "{}", q.value)?;
                 }
 
-                tags.remove(&"quantile".into());
+                tags.remove("quantile");
                 write!(fmt, "{}_sum", self.name())?;
                 write_tags(fmt, &tags)?;
                 writeln!(fmt, "{}", sum)?;
@@ -599,7 +599,7 @@ impl Metric {
 
     #[inline]
     pub fn tag_value(&self, name: &str) -> Option<&Value> {
-        self.series.tags.get(&Key::from(name.to_string()))
+        self.series.tags.get(name)
     }
 
     #[inline]

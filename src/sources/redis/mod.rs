@@ -8,6 +8,7 @@ use std::time::Duration;
 use bytes::{Buf, Bytes};
 use client::{Client, RespErr};
 use configurable::configurable_component;
+use event::tags::Tags;
 use event::{tags, Metric};
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
@@ -557,7 +558,7 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
     let mut kvs = BTreeMap::new();
     let mut handled_dbs = BTreeSet::new();
     let mut instance_infos = BTreeMap::new();
-    let mut slave_infos: BTreeMap<String, String> = BTreeMap::new();
+    let mut slave_infos = Tags::default();
     let mut master_host = String::new();
     let mut master_port = String::new();
     let mut field_class = String::new();
