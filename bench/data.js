@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700575510954,
+  "lastUpdate": 1700575583872,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3e9146bb6bea446824f12398ddef9a1fee07a7b7",
-          "message": "add influxdb sink (#1319)\n\n* add influxdb sink\r\n\r\n* remove demo health test",
-          "timestamp": "2023-10-04T17:53:15+08:00",
-          "tree_id": "8f6a790afffbbb2dcc17e6ef9e59450cf47b18e6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3e9146bb6bea446824f12398ddef9a1fee07a7b7"
-        },
-        "date": 1696414749756,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1355,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42726.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "94d2b352b540a161953cdd2d319ae9a8459cdadf",
           "message": "fix histogram le value (#1321)",
           "timestamp": "2023-10-04T19:24:03+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52356.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e19e92cdf66171fd592dc35969a17104432e40b",
+          "message": "fix memory leak when tags clone (#1428)",
+          "timestamp": "2023-11-21T21:54:05+08:00",
+          "tree_id": "a4b3ab7cd03d0b5784f38a5730204c176c836430",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e19e92cdf66171fd592dc35969a17104432e40b"
+        },
+        "date": 1700575570529,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 632,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52361.9,
             "unit": "KiB"
           }
         ]
