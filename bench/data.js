@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700543646026,
+  "lastUpdate": 1700543670038,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cb3b00c02676ebb59cef230f73bcbc4b24fb69be",
-          "message": "deps: bump proptest to 1.3.0 (#1311)\n\n* bump proptest to 1.3.0\r\n\r\n* bump proptest to 1.3.0",
-          "timestamp": "2023-10-01T06:49:52+08:00",
-          "tree_id": "30c401fc2707f0ae99c3c6313b8bcd35541c3399",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cb3b00c02676ebb59cef230f73bcbc4b24fb69be"
-        },
-        "date": 1696114455268,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 499.02,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 49856,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 249150,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 498460,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 197.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 19703,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 98437,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 196850,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "19dd8da321b9634329c680273dcd09978471d24d",
           "message": "disable default-features of quickcheck (#1312)",
           "timestamp": "2023-10-01T07:37:25+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 160840,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7f0a54c2ac90b184b2e7f7d47d6aa0758b2d79a6",
+          "message": "deps: bump uuid to 1.6.1 (#1427)",
+          "timestamp": "2023-11-21T13:10:45+08:00",
+          "tree_id": "3d6a8a422d47b35e69998b1ece126dc9e0f98bc0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7f0a54c2ac90b184b2e7f7d47d6aa0758b2d79a6"
+        },
+        "date": 1700543657074,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 419.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 42033,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 210060,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 421290,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 159.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 16014,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 79660,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 159200,
             "unit": "ns/op"
           }
         ]
