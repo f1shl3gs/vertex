@@ -234,10 +234,10 @@ impl From<i32> for Value {
     }
 }
 
-impl From<&str> for Value {
+impl From<&'static str> for Value {
     /// Convenience method for creating a `Value` from a `&'static str`.
-    fn from(s: &str) -> Self {
-        Value::String(Cow::Owned(s.to_string()))
+    fn from(s: &'static str) -> Self {
+        Value::String(Cow::Borrowed(s))
     }
 }
 

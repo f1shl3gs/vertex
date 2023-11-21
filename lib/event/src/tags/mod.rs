@@ -11,7 +11,7 @@ use std::collections::BTreeMap;
 use std::fmt::{Debug, Formatter};
 use std::hash::{Hash, Hasher};
 use std::marker::PhantomData;
-use std::ptr::NonNull;
+use std::ptr::{drop_in_place, slice_from_raw_parts_mut, NonNull};
 
 use measurable::ByteSizeOf;
 use serde::de::{MapAccess, Visitor};
@@ -25,7 +25,7 @@ fn aligned(amount: usize) -> usize {
     ((amount + GROWTH_ALIGNMENT - 1) / GROWTH_ALIGNMENT) * GROWTH_ALIGNMENT
 }
 
-#[derive(Debug, Hash, PartialEq)]
+#[derive(Clone, Debug, Hash, PartialEq)]
 pub struct Entry {
     key: Key,
     value: Value,
@@ -53,10 +53,14 @@ impl ByteSizeOf for Tags {
 impl Clone for Tags {
     fn clone(&self) -> Self {
         let layout = Layout::array::<Entry>(self.cap).unwrap();
-        let data = unsafe {
-            let ptr = NonNull::new_unchecked(alloc(layout)).cast();
-            std::ptr::copy_nonoverlapping(self.data.as_ptr(), ptr.as_ptr(), self.len);
-            ptr
+        let data: NonNull<Entry> = unsafe {
+            let data: NonNull<Entry> = NonNull::new_unchecked(alloc(layout)).cast();
+            for i in 0..self.len {
+                let from = (*self.data.as_ptr().add(i)).clone();
+                data.as_ptr().add(i).write(from);
+            }
+
+            data
         };
 
         Self {
@@ -92,6 +96,8 @@ impl Debug for Tags {
 impl Drop for Tags {
     fn drop(&mut self) {
         unsafe {
+            drop_in_place(slice_from_raw_parts_mut(self.data.as_ptr(), self.len));
+
             let layout = Layout::array::<Entry>(self.cap).expect("build layout");
             dealloc(self.data.as_ptr().cast(), layout);
         }
@@ -138,6 +144,20 @@ impl<'a> Iterator for Iter<'a> {
             self.pos += 1;
             Some((&entry.key, &entry.value))
         }
+    }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let len = self.len - self.pos;
+        (len, Some(len))
+    }
+
+    #[inline]
+    fn count(self) -> usize
+    where
+        Self: Sized,
+    {
+        self.len
     }
 }
 
@@ -276,8 +296,7 @@ impl Tags {
     }
 
     /// Inserts a key-value pair into the tags
-    pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        let key = key.into();
+    pub fn insert(&mut self, key: impl Into<Key> + AsRef<str>, value: impl Into<Value>) {
         match self.binary_search(key.as_ref()) {
             Ok(pos) => unsafe {
                 let elt = self.data.as_ptr().add(pos);
@@ -295,7 +314,7 @@ impl Tags {
                     }
 
                     ptr.write(Entry {
-                        key,
+                        key: key.into(),
                         value: value.into(),
                     });
                     self.len += 1;
@@ -309,14 +328,14 @@ impl Tags {
     pub fn remove(&mut self, key: impl AsRef<str>) -> Option<Value> {
         match self.binary_search(key.as_ref()) {
             Ok(pos) => unsafe {
-                let entry = self.data.as_ptr().add(pos);
-                let value = (*entry).value.clone();
+                let ptr = self.data.as_ptr().add(pos);
+                let entry = std::ptr::read(ptr);
                 if pos < self.len - 1 {
-                    std::ptr::copy(entry.add(1), entry, self.len - pos - 1);
+                    std::ptr::copy(ptr.add(1), ptr, self.len - pos - 1);
                 }
 
                 self.len -= 1;
-                Some(value)
+                Some(entry.value)
             },
             // not found
             Err(_pos) => None,
