@@ -41,10 +41,10 @@ impl ByteSizeOf for Key {
     }
 }
 
-impl From<&str> for Key {
+impl From<&'static str> for Key {
     /// Convert a `&str` to a `Key`.
-    fn from(s: &str) -> Self {
-        Key(Cow::Owned(s.to_string()))
+    fn from(s: &'static str) -> Self {
+        Key(Cow::Borrowed(s))
     }
 }
 
