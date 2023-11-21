@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700544182647,
+  "lastUpdate": 1700574991195,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8c005816c6f40bbcfed596cff9b226e93e4d35de",
-          "message": "chore(deps): bump proptest from 1.3.0 to 1.3.1 (#1314)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.3.0 to 1.3.1.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.3.0...v1.3.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-02T08:35:59+08:00",
-          "tree_id": "63135b57f7a76bdac56ba4217a5f0a74f9e8d1d4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c005816c6f40bbcfed596cff9b226e93e4d35de"
-        },
-        "date": 1696207148929,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 837930,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 542230,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e19e92cdf66171fd592dc35969a17104432e40b",
+          "message": "fix memory leak when tags clone (#1428)",
+          "timestamp": "2023-11-21T21:54:05+08:00",
+          "tree_id": "a4b3ab7cd03d0b5784f38a5730204c176c836430",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e19e92cdf66171fd592dc35969a17104432e40b"
+        },
+        "date": 1700574976864,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546820,
             "unit": "ns/op"
           }
         ]
