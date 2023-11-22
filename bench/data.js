@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700646148499,
+  "lastUpdate": 1700646547013,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e876921f1811df51d4e5add83b606df20487be12",
-          "message": "chore(deps): bump memchr from 2.6.3 to 2.6.4 (#1315)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.3 to 2.6.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.3...2.6.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-02T08:38:36+08:00",
-          "tree_id": "f0fd15d1432987505897c67024859a35a8dc98bf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e876921f1811df51d4e5add83b606df20487be12"
-        },
-        "date": 1696208754834,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 42394000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1649400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 24.051,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c64127eb6ae9ab3cf665ea1ca0153b1918d58a6f",
           "message": "chore(deps): bump memmap2 from 0.8.0 to 0.9.0 (#1316)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.8.0 to 0.9.0.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.8.0...v0.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-10-04T01:16:26+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.985,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f7077e36e2c0273ae200bda9781b66954bb6abad",
+          "message": "deps: bump lru to 0.12.1 (#1430)",
+          "timestamp": "2023-11-22T17:38:42+08:00",
+          "tree_id": "4bf25e0b09f4f8618b86b7096b1fe20c14983e31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f7077e36e2c0273ae200bda9781b66954bb6abad"
+        },
+        "date": 1700646533397,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17429000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 633140,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.658,
             "unit": "ns/op"
           }
         ]
