@@ -57,7 +57,7 @@ members = [
 
 [features]
 default = [
-    "jemalloc",
+    # "jemalloc",
 
     "extensions",
     "sources",
@@ -138,7 +138,7 @@ extensions-zpages = []
 extensions = [
     "extensions-healthcheck",
     "extensions-heartbeat",
-    "extensions-jemalloc",
+    # "extensions-jemalloc",
     # Musl does not provide "pthread_getname_np" in current release.
     # https://github.com/tikv/pprof-rs/issues/41
     "extensions-pprof",

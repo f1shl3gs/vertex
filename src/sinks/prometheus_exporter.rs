@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::convert::Infallible;
 use std::fmt::Write;
-use std::hash::Hasher;
+use std::hash::{Hash, Hasher};
 use std::io::Write as IoWrite;
 use std::net::SocketAddr;
 use std::ops::{Deref, DerefMut};
@@ -17,7 +17,7 @@ use event::{EventStatus, Events, Finalizable, Metric, MetricValue};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
 use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, Sink, StreamSink};
-use futures::prelude::stream::BoxStream;
+use futures::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
@@ -87,7 +87,7 @@ impl DerefMut for ExpiringEntry {
     }
 }
 
-impl std::hash::Hash for ExpiringEntry {
+impl Hash for ExpiringEntry {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.series.hash(state)
     }

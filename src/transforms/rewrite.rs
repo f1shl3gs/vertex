@@ -20,11 +20,7 @@ impl Operation {
     fn apply(&self, tags: &mut Tags) {
         match self {
             Operation::Set { key, value } => tags.insert(key.clone(), value.clone()),
-            Operation::Add { key, value } => {
-                if !tags.contains(key.as_str()) {
-                    tags.insert(key.clone(), value.clone());
-                }
-            }
+            Operation::Add { key, value } => tags.try_insert(key.clone(), value.clone()),
             Operation::Delete { key } => {
                 tags.remove(key);
             }

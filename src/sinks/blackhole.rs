@@ -5,7 +5,7 @@ use framework::{
     config::{DataType, SinkConfig, SinkContext},
     Healthcheck, Sink, StreamSink,
 };
-use futures::prelude::stream::BoxStream;
+use futures::stream::BoxStream;
 use futures::FutureExt;
 use futures_util::StreamExt;
 
