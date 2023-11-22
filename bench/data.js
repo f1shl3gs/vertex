@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700646656028,
+  "lastUpdate": 1700656375037,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "129afc30cfa2c0a611c063a8335d36f3b7088a02",
-          "message": "chore(ci): bump styfle/cancel-workflow-action from 0.11.0 to 0.12.0 (#1317)\n\nBumps [styfle/cancel-workflow-action](https://github.com/styfle/cancel-workflow-action) from 0.11.0 to 0.12.0.\r\n- [Release notes](https://github.com/styfle/cancel-workflow-action/releases)\r\n- [Commits](https://github.com/styfle/cancel-workflow-action/compare/0.11.0...0.12.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: styfle/cancel-workflow-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-04T10:32:49+08:00",
-          "tree_id": "6ce1851ea37c835d3076ec5bd5575c6284bc6f2d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/129afc30cfa2c0a611c063a8335d36f3b7088a02"
-        },
-        "date": 1696386964991,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 865930,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 557420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3ece3d81311bc7ee72a9aad41eb4257c8a6acb52",
+          "message": "lib/event: impl `Tags` with cow (#1431)\n\n* shuffle bench keys\r\n* impl Tags with cow",
+          "timestamp": "2023-11-22T20:30:32+08:00",
+          "tree_id": "0e42ac0c861febb7eebd95e923740a184c27265c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3ece3d81311bc7ee72a9aad41eb4257c8a6acb52"
+        },
+        "date": 1700656361783,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 548240,
             "unit": "ns/op"
           }
         ]
