@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700627591907,
+  "lastUpdate": 1700627634092,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "94d2b352b540a161953cdd2d319ae9a8459cdadf",
-          "message": "fix histogram le value (#1321)",
-          "timestamp": "2023-10-04T19:24:03+08:00",
-          "tree_id": "10ecef8eed913d75200037bab31e54e55645c5c5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/94d2b352b540a161953cdd2d319ae9a8459cdadf"
-        },
-        "date": 1696419821177,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1020,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42726.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4d1c3edd92b7a56f3f4676930ae074f45d842f30",
           "message": "remove ieee754 (#1322)",
           "timestamp": "2023-10-04T20:20:26+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52361.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8395581661059f21b1933cf081017a424a1179b",
+          "message": "chore(deps): bump the prost group with 3 updates (#1429)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.2...v0.12.3)\r\n\r\nUpdates `prost-types` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.2...v0.12.3)\r\n\r\nUpdates `prost-build` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.2...v0.12.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-22T12:21:42+08:00",
+          "tree_id": "8be1a6748094b92937bc686b7776826ebea0fc0e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e8395581661059f21b1933cf081017a424a1179b"
+        },
+        "date": 1700627620992,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 626,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52362.2,
             "unit": "KiB"
           }
         ]
