@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700646547013,
+  "lastUpdate": 1700646656028,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4d1c3edd92b7a56f3f4676930ae074f45d842f30",
-          "message": "remove ieee754 (#1322)",
-          "timestamp": "2023-10-04T20:20:26+08:00",
-          "tree_id": "e5bdfe26ebfd07106e813952d0f2042a94e4f31a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4d1c3edd92b7a56f3f4676930ae074f45d842f30"
-        },
-        "date": 1696423288274,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1110,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42717.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "af09841d762c8f4fa07812973efe5d98947fef38",
           "message": "Sinks/influxdb: org should not be a template value (#1323)\n\n* org should not be a `Template`",
           "timestamp": "2023-10-04T21:57:46+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 52362.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f7077e36e2c0273ae200bda9781b66954bb6abad",
+          "message": "deps: bump lru to 0.12.1 (#1430)",
+          "timestamp": "2023-11-22T17:38:42+08:00",
+          "tree_id": "4bf25e0b09f4f8618b86b7096b1fe20c14983e31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f7077e36e2c0273ae200bda9781b66954bb6abad"
+        },
+        "date": 1700646642902,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 627,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 52362.3,
             "unit": "KiB"
           }
         ]
