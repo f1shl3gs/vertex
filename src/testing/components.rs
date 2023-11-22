@@ -1,3 +1,5 @@
+#![allow(clippy::redundant_pattern_matching)]
+
 use std::env;
 use std::future::Future;
 
@@ -126,7 +128,8 @@ impl ComponentTester {
 /// Tests if the given metric contains all the given tag names
 fn has_tags(metric: &Metric, names: &[&str]) -> bool {
     for name in names {
-        if metric.tags().contains(name) {
+        // Avoid `Option::is_some` because it bloats LLVM IR.
+        if let Some(_) = metric.tags().get(name) {
             return true;
         }
     }

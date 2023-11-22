@@ -18,7 +18,7 @@ macro_rules! state_metric {
             $value,
             tags! (
                 "mode" => $mode,
-                "cpu" => $cpu
+                "cpu" => $cpu as i64
             )
         )
     };
@@ -67,17 +67,17 @@ impl CPUConfig {
         let stats = get_cpu_stat(proc_path).await?;
         let mut metrics = Vec::with_capacity(stats.len() * 10);
 
-        for (i, stat) in stats.iter().enumerate() {
-            let cpu = &i.to_string();
-
-            metrics.push(state_metric!(cpu, "user", stat.user));
-            metrics.push(state_metric!(cpu, "nice", stat.nice));
-            metrics.push(state_metric!(cpu, "system", stat.system));
-            metrics.push(state_metric!(cpu, "idle", stat.idle));
-            metrics.push(state_metric!(cpu, "iowait", stat.iowait));
-            metrics.push(state_metric!(cpu, "irq", stat.irq));
-            metrics.push(state_metric!(cpu, "softirq", stat.softirq));
-            metrics.push(state_metric!(cpu, "steal", stat.steal));
+        for (cpu, stat) in stats.iter().enumerate() {
+            metrics.extend_from_slice(&[
+                state_metric!(cpu, "user", stat.user),
+                state_metric!(cpu, "nice", stat.nice),
+                state_metric!(cpu, "system", stat.system),
+                state_metric!(cpu, "idle", stat.idle),
+                state_metric!(cpu, "iowait", stat.iowait),
+                state_metric!(cpu, "irq", stat.irq),
+                state_metric!(cpu, "softirq", stat.softirq),
+                state_metric!(cpu, "steal", stat.steal),
+            ]);
 
             // Guest CPU is also accounted for in cpuStat.User and cpuStat.Nice,
             // expose these as separate metrics.
@@ -87,7 +87,7 @@ impl CPUConfig {
                     "Seconds the CPUs spent in guests (VMs) for each mode.",
                     stat.guest,
                     tags!(
-                        "cpu" => cpu,
+                        "cpu" => cpu as i64,
                         "mode" => "user",
                     ),
                 ));
@@ -97,7 +97,7 @@ impl CPUConfig {
                     "Seconds the CPUs spent in guests (VMs) for each mode.",
                     stat.guest_nice,
                     tags!(
-                        "cpu" => cpu,
+                        "cpu" => cpu as i64,
                         "mode" => "nice"
                     ),
                 ));

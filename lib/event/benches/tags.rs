@@ -1,44 +1,32 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use event::tags::{Key, Tags};
+use event::tags::Tags;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 fn bench_insert(c: &mut Criterion) {
     let mut group = c.benchmark_group("tags");
+    let mut rng = thread_rng();
+    let mut keys = [
+        "key1", "key2", "key3", "key4", "key5", "key6", "key7", "key8", "key9", "key10", "key11",
+        "key12", "key13", "key14", "key15", "key16", "key17", "key18", "key19", "key20",
+    ];
+    keys.shuffle(&mut rng);
 
-    group.bench_function("insert/1", |b| b.iter(|| insert_keys(Tags::default(), 1)));
+    group.bench_function("insert/1", |b| b.iter(|| insert_keys(&keys, 1)));
 
-    group.bench_function("insert/5", |b| b.iter(|| insert_keys(Tags::default(), 5)));
+    group.bench_function("insert/5", |b| b.iter(|| insert_keys(&keys, 5)));
 
-    group.bench_function("insert/10", |b| b.iter(|| insert_keys(Tags::default(), 10)));
+    group.bench_function("insert/10", |b| b.iter(|| insert_keys(&keys, 10)));
 
-    group.bench_function("insert/20", |b| b.iter(|| insert_keys(Tags::default(), 20)));
+    group.bench_function("insert/20", |b| b.iter(|| insert_keys(&keys, 20)));
 }
 
-const MAP_KEYS: [Key; 20] = [
-    Key::from_static("key1"),
-    Key::from_static("key2"),
-    Key::from_static("key3"),
-    Key::from_static("key4"),
-    Key::from_static("key5"),
-    Key::from_static("key6"),
-    Key::from_static("key7"),
-    Key::from_static("key8"),
-    Key::from_static("key9"),
-    Key::from_static("key10"),
-    Key::from_static("key11"),
-    Key::from_static("key12"),
-    Key::from_static("key13"),
-    Key::from_static("key14"),
-    Key::from_static("key15"),
-    Key::from_static("key16"),
-    Key::from_static("key17"),
-    Key::from_static("key18"),
-    Key::from_static("key19"),
-    Key::from_static("key20"),
-];
-
-fn insert_keys(mut attrs: Tags, n: usize) {
-    for (i, key) in MAP_KEYS.into_iter().enumerate().take(n) {
-        attrs.insert(key, i as i64)
+#[allow(clippy::needless_range_loop)]
+#[inline]
+fn insert_keys(keys: &[&'static str], n: usize) {
+    let mut tags = Tags::default();
+    for i in 0..n {
+        tags.insert(keys[i], i as i64);
     }
 }
 
