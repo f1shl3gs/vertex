@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700575583872,
+  "lastUpdate": 1700627042666,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e876921f1811df51d4e5add83b606df20487be12",
-          "message": "chore(deps): bump memchr from 2.6.3 to 2.6.4 (#1315)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.3 to 2.6.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.3...2.6.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-02T08:38:36+08:00",
-          "tree_id": "f0fd15d1432987505897c67024859a35a8dc98bf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e876921f1811df51d4e5add83b606df20487be12"
-        },
-        "date": 1696207294843,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 719710,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546820,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8395581661059f21b1933cf081017a424a1179b",
+          "message": "chore(deps): bump the prost group with 3 updates (#1429)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.2...v0.12.3)\r\n\r\nUpdates `prost-types` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.2...v0.12.3)\r\n\r\nUpdates `prost-build` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.2...v0.12.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-22T12:21:42+08:00",
+          "tree_id": "8be1a6748094b92937bc686b7776826ebea0fc0e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e8395581661059f21b1933cf081017a424a1179b"
+        },
+        "date": 1700627029162,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 550360,
             "unit": "ns/op"
           }
         ]
