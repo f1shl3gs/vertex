@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700757143542,
+  "lastUpdate": 1700757157992,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33793c10648b5dfeb5c029247288b7214d67ce0b",
-          "message": "bump to rust 1.73.0 (#1326)",
-          "timestamp": "2023-10-06T01:08:18+08:00",
-          "tree_id": "6eb32ce1a6e5084d8b6298321c160f24de44dd52",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33793c10648b5dfeb5c029247288b7214d67ce0b"
-        },
-        "date": 1696526815856,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 978,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42549.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41086,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4441bd19d56c0a4a126a3322fc6996abaac3eb3d",
+          "message": "chore(deps): bump sqlx from 0.7.2 to 0.7.3 (#1434)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.2 to 0.7.3.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/commits/v0.7.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-24T00:21:11+08:00",
+          "tree_id": "f7bbce32cf224e5a318d9ea8a0c6aa33709be7c0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4441bd19d56c0a4a126a3322fc6996abaac3eb3d"
+        },
+        "date": 1700757143956,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41076.4,
             "unit": "KiB"
           }
         ]
