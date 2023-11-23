@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700656918201,
+  "lastUpdate": 1700729632263,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "59c6fa5e068a1fdaa01cb6df5273335ee23086d0",
-          "message": "chore(deps): bump lru from 0.11.1 to 0.12.0 (#1318)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.11.1 to 0.12.0.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.11.1...0.12.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-04T11:26:23+08:00",
-          "tree_id": "15a0eaf85a19643276e9019f427938fadc2fab0f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/59c6fa5e068a1fdaa01cb6df5273335ee23086d0"
-        },
-        "date": 1696390158016,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 722020,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 548240,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c2a6e97b789d9ecdcb7c81adeb0f6ae18c0b165e",
+          "message": "chore(deps): bump percent-encoding from 2.3.0 to 2.3.1 (#1433)\n\nBumps [percent-encoding](https://github.com/servo/rust-url) from 2.3.0 to 2.3.1.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.3.0...v2.3.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: percent-encoding\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-23T16:51:32+08:00",
+          "tree_id": "92cf6991071cc620fca452b511f5c92d445a015e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c2a6e97b789d9ecdcb7c81adeb0f6ae18c0b165e"
+        },
+        "date": 1700729618941,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 545340,
             "unit": "ns/op"
           }
         ]
