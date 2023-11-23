@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700731088464,
+  "lastUpdate": 1700731095413,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fdc07a5c4616f8535ccc9b234d8c8a8749c6714b",
-          "message": "sinks/prometheus: fix infinite bucket value (#1320)",
-          "timestamp": "2023-10-04T17:35:52+08:00",
-          "tree_id": "94eb725b3980cf8964fd0a8cede38cecdbc03975",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fdc07a5c4616f8535ccc9b234d8c8a8749c6714b"
-        },
-        "date": 1696412342143,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 85.05,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 196.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 329.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.45,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2e99e39144a9a89defa566c0a0721562321abe3f",
+          "message": "chore(deps): bump url from 2.4.1 to 2.5.0 (#1432)\n\nBumps [url](https://github.com/servo/rust-url) from 2.4.1 to 2.5.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.4.1...v2.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-23T17:15:46+08:00",
+          "tree_id": "174548d6eca9b01a34d98c9881289cd5259a3b07",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2e99e39144a9a89defa566c0a0721562321abe3f"
+        },
+        "date": 1700731082205,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.611,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.89,
             "unit": "ns/op"
           }
         ]
