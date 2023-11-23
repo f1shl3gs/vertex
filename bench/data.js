@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700756630216,
+  "lastUpdate": 1700756663198,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fdc07a5c4616f8535ccc9b234d8c8a8749c6714b",
-          "message": "sinks/prometheus: fix infinite bucket value (#1320)",
-          "timestamp": "2023-10-04T17:35:52+08:00",
-          "tree_id": "94eb725b3980cf8964fd0a8cede38cecdbc03975",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fdc07a5c4616f8535ccc9b234d8c8a8749c6714b"
-        },
-        "date": 1696412370744,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 53.225,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 163.75,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 403.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1147,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3e9146bb6bea446824f12398ddef9a1fee07a7b7",
           "message": "add influxdb sink (#1319)\n\n* add influxdb sink\r\n\r\n* remove demo health test",
           "timestamp": "2023-10-04T17:53:15+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 547.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4441bd19d56c0a4a126a3322fc6996abaac3eb3d",
+          "message": "chore(deps): bump sqlx from 0.7.2 to 0.7.3 (#1434)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.2 to 0.7.3.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/commits/v0.7.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-11-24T00:21:11+08:00",
+          "tree_id": "f7bbce32cf224e5a318d9ea8a0c6aa33709be7c0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4441bd19d56c0a4a126a3322fc6996abaac3eb3d"
+        },
+        "date": 1700756649895,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.171,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 117.62,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 256.08,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 550.07,
             "unit": "ns/op"
           }
         ]
