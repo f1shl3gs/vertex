@@ -13,7 +13,7 @@ macro_rules! parse_subsystem_metrics {
             let k = k.replace("-", "_");
             $metrics.push(Metric::gauge(
                 format!("node_{}_{}", $subsystem, k),
-                k.clone(),
+                k,
                 v as f64,
             ))
         }
@@ -46,8 +46,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         let kvs = parse_pool_procfs_file(path).await?;
         for (k, v) in kvs {
             metrics.push(Metric::gauge_with_tags(
-                "node_zfs_zpool_".to_owned() + &k,
-                k.clone(),
+                format!("node_zfs_zpool_{}", k),
+                k,
                 v as f64,
                 tags! {
                     "zpool" => pool_name.clone()
@@ -63,17 +63,17 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         let kvs = parse_pool_objset_file(path).await?;
         for (k, v) in kvs {
             let fields = k.split('.').collect::<Vec<_>>();
-            let k = fields[0];
-            let pool_name = fields[1];
-            let dataset = fields[2];
+            let desc = fields[0].to_string();
+            let pool_name = fields[1].to_string();
+            let dataset = fields[2].to_string();
 
             metrics.push(Metric::gauge_with_tags(
                 format!("node_zfs_zpool_dataset_{}", k),
-                k.to_string(),
+                desc,
                 v as f64,
                 tags!(
-                    "zpool" => pool_name.to_string(),
-                    "dataset" => dataset.to_string()
+                    "zpool" => pool_name,
+                    "dataset" => dataset
                 ),
             ));
         }
@@ -96,7 +96,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "kstat.zfs.misc.state",
                 v,
                 tags!(
-                    "zpool" => &pool_name,
+                    "zpool" => pool_name.clone(),
                     "state" => k
                 ),
             ))

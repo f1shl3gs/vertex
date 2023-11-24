@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_to_string, Error};
+use super::Error;
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(root);
@@ -12,17 +12,17 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut readdir = tokio::fs::read_dir(path).await?;
 
     while let Some(dir) = readdir.next_entry().await? {
-        let infos = read_nvme_device(dir.path()).await?;
+        let [serial, model, state, firmware_rev] = read_nvme_device(dir.path())?;
 
         metrics.push(Metric::gauge_with_tags(
             "node_nvme_info",
             "node_nvme_info Non-numeric data from /sys/class/nvme/<device>, value is always 1",
             1f64,
             tags!(
-                "serial" => &infos[0],
-                "model" => &infos[1],
-                "state" => &infos[2],
-                "firmware_rev" => &infos[3]
+                "firmware_rev" => firmware_rev,
+                "model" => model,
+                "serial" => serial,
+                "state" => state,
             ),
         ));
     }
@@ -30,24 +30,13 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn read_nvme_device(root: PathBuf) -> Result<Vec<String>, std::io::Error> {
-    let mut path = root.clone();
-    path.push("serial");
-    let serial = read_to_string(path).await?.trim_end().to_string();
+fn read_nvme_device(root: PathBuf) -> Result<[String; 4], std::io::Error> {
+    let serial = std::fs::read_to_string(root.join("serial"))?;
+    let model = std::fs::read_to_string(root.join("model"))?;
+    let state = std::fs::read_to_string(root.join("state"))?;
+    let firmware = std::fs::read_to_string(root.join("firmware_rev"))?;
 
-    let mut path = root.clone();
-    path.push("model");
-    let model = read_to_string(path).await?.trim_end().to_string();
-
-    let mut path = root.clone();
-    path.push("state");
-    let state = read_to_string(path).await?.trim_end().to_string();
-
-    let mut path = root.clone();
-    path.push("firmware_rev");
-    let firmware = read_to_string(path).await?.trim_end().to_string();
-
-    Ok(vec![serial, model, state, firmware])
+    Ok([serial, model, state, firmware])
 }
 
 #[cfg(test)]
@@ -67,10 +56,10 @@ mod tests {
         assert_eq!(count, 4);
     }
 
-    #[tokio::test]
-    async fn test_read_nvme_device() {
+    #[test]
+    fn test_read_nvme_device() {
         let root = PathBuf::from("tests/fixtures/sys/class/nvme/nvme0");
-        let infos = read_nvme_device(root).await.unwrap();
+        let infos = read_nvme_device(root).unwrap();
 
         assert_eq!(infos[0], "S680HF8N190894I");
         assert_eq!(infos[1], "Samsung SSD 970 PRO 512GB");

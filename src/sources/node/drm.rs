@@ -14,11 +14,12 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::with_capacity(8 * stats.len());
     for stat in stats {
-        let card = &stat.name.clone();
-        let memory_vendor = &stat.memory_vram_vendor.clone();
-        let power_performance_level = &stat.power_dpm_force_performance_level.clone();
-        let unique_id = &stat.unique_id.clone();
-        let vendor = "amd";
+        let card = stat.name;
+        let memory_vendor = stat.memory_vram_vendor;
+        let power_performance_level = stat.power_dpm_force_performance_level;
+        let unique_id = stat.unique_id;
+        let vendor = "amd".to_string();
+        let tags = tags!("card" => card.clone());
 
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
@@ -37,57 +38,43 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "node_drm_gpu_busy_percent",
                 "How busy the GPU is as a percentage.",
                 stat.gpu_busy_percent,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_gtt_size_bytes",
                 "The size of the graphics translation table (GTT) block in bytes",
                 stat.memory_gtt_size,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_gtt_used_bytes",
                 "The used amount of the graphics translation table (GTT) block in bytes",
                 stat.memory_gtt_used,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_vis_vram_size_bytes",
                 "The size of visible VRAM in bytes",
                 stat.memory_visible_vram_size,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_vis_vram_used_bytes",
                 "The used amount of visible VRAM in bytes",
                 stat.memory_visible_vram_used,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_vram_size_bytes",
                 "The size of VRAM in bytes",
                 stat.memory_vram_size,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_vram_used_bytes",
                 "The used amount of VRAM in bytes",
                 stat.memory_vram_used,
-                tags!(
-                    "card" => card,
-                ),
+                tags,
             ),
         ])
     }

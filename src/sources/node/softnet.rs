@@ -39,35 +39,29 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut n = 0;
     while let Some(line) = lines.next_line().await? {
         if let Ok(stat) = parse_softnet(&line) {
-            let cpu = &n.to_string();
+            let tags = tags!("cpu" => n);
             n += 1;
 
-            metrics.push(Metric::sum_with_tags(
-                "node_softnet_processed_total",
-                "Number of processed packets",
-                stat.processed,
-                tags!(
-                    "cpu" => cpu
+            metrics.extend([
+                Metric::sum_with_tags(
+                    "node_softnet_processed_total",
+                    "Number of processed packets",
+                    stat.processed,
+                    tags.clone(),
                 ),
-            ));
-
-            metrics.push(Metric::sum_with_tags(
-                "node_softnet_dropped_total",
-                "Number of dropped packets",
-                stat.dropped,
-                tags!(
-                    "cpu" => cpu,
+                Metric::sum_with_tags(
+                    "node_softnet_dropped_total",
+                    "Number of dropped packets",
+                    stat.dropped,
+                    tags.clone(),
                 ),
-            ));
-
-            metrics.push(Metric::sum_with_tags(
-                "node_softnet_times_squeezed_total",
-                "Number of times processing packets ran out of quota",
-                stat.time_squeezed,
-                tags!(
-                    "cpu" => cpu,
+                Metric::sum_with_tags(
+                    "node_softnet_times_squeezed_total",
+                    "Number of times processing packets ran out of quota",
+                    stat.time_squeezed,
+                    tags,
                 ),
-            ));
+            ]);
         }
     }
 

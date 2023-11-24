@@ -35,7 +35,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Number of processes in each state",
             v,
             tags!(
-                "state" => &k,
+                "state" => k,
             ),
         ));
     }
@@ -51,7 +51,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Number of threads in each state",
             v,
             tags!(
-                "state" => &k
+                "state" => k
             ),
         ));
     }

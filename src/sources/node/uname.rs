@@ -33,12 +33,12 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
         "Labeled system information as provided by the uname system call.",
         1f64,
         tags!(
+            "domainname" => domainname,
+            "machine" => machine,
+            "nodename" => nodename,
             "sysname" => sysname,
             "release" => release,
             "version" => version,
-            "machine" => machine,
-            "nodename" => nodename,
-            "domainname" => domainname,
         ),
     )])
 }

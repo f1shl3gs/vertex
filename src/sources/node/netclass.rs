@@ -29,53 +29,45 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
 
     let mut metrics = Vec::new();
     for device in devices {
-        let device = &device;
-        if conf.ignores.is_match(device) {
+        if conf.ignores.is_match(&device) {
             continue;
         }
 
         let path = format!("{}/class/net/{}", sys_path, device);
-        let nci = match NetClassInterface::from(&path).await {
+        let nci = match NetClassInterface::parse(&path).await {
             Ok(nci) => nci,
             _ => continue,
         };
 
-        let mut up = 0.0;
-        if nci.operstate == "up" {
-            up = 1.0;
-        }
-
-        metrics.push(Metric::gauge_with_tags(
-            "node_network_up",
-            "Value is 1 if operstat is 'up', o otherwise",
-            up,
-            tags!(
-                "device" => device,
+        let tags = tags!("device" => device.clone());
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "node_network_up",
+                "Value is 1 if operstat is 'up', o otherwise",
+                if nci.operstate == "up" { 1.0 } else { 0.0 },
+                tags.clone(),
             ),
-        ));
-
-        metrics.push(Metric::gauge_with_tags(
-            "node_network_info",
-            "Non-numeric data from /sys/class/net/<iface>, value is always 1",
-            1f64,
-            tags!(
-                "device" => device,
-                "address" => nci.address,
-                "broadcast" => nci.broadcast,
-                "duplex" => nci.duplex,
-                "operstate" => nci.operstate,
-                "ifalias" => nci.ifalias,
+            Metric::gauge_with_tags(
+                "node_network_info",
+                "Non-numeric data from /sys/class/net/<iface>, value is always 1",
+                1f64,
+                tags!(
+                    "device" => device,
+                    "address" => nci.address,
+                    "broadcast" => nci.broadcast,
+                    "duplex" => nci.duplex,
+                    "operstate" => nci.operstate,
+                    "ifalias" => nci.ifalias,
+                ),
             ),
-        ));
+        ]);
 
         if let Some(v) = nci.addr_assign_type {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_address_assign_type",
                 "address_assign_type value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -83,10 +75,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_carrier",
                 "carrier value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -94,10 +84,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_changes_total",
                 "carrier_changes value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -105,10 +93,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_up_changes_total",
                 "carrier_up_count value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -116,10 +102,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_down_changes_total",
                 "carrier_down_count value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -127,10 +111,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_device_id",
                 "dev_id value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -138,10 +120,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_dormant",
                 "dormant value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -149,10 +129,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_flags",
                 "flags value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -160,10 +138,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_id",
                 "ifindex value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -171,10 +147,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_link",
                 "iflink value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -182,10 +156,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_link_mode",
                 "link_mode value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -193,10 +165,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_mtu_bytes",
                 "mtu value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -204,10 +174,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_name_assign_type",
                 "name_assign_type value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -215,10 +183,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_net_dev_group",
                 "netdev_group value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ));
         }
 
@@ -229,9 +195,7 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
                 "node_network_speed_bytes",
                 "speed value of /sys/class/net/<iface>",
                 speed_bytes,
-                tags!(
-                        "device" => device,
-                ),
+                tags.clone(),
             ));
         }
 
@@ -239,10 +203,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_transmit_queue_length",
                 "tx_queue_len value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags.clone(),
             ))
         }
 
@@ -250,10 +212,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge_with_tags(
                 "node_network_protocol_type",
                 "type value of /sys/class/net/<iface>",
-                v as f64,
-                tags!(
-                    "device" => device,
-                ),
+                v,
+                tags,
             ));
         }
     }
@@ -357,8 +317,8 @@ struct NetClassInterface {
 }
 
 impl NetClassInterface {
-    pub async fn from(device_path: &str) -> Result<NetClassInterface, Error> {
-        let mut dirs = std::fs::read_dir(device_path)?;
+    pub async fn parse(path: &str) -> Result<NetClassInterface, Error> {
+        let mut dirs = std::fs::read_dir(path)?;
         let mut nci = NetClassInterface::default();
 
         while let Some(Ok(entry)) = dirs.next() {
@@ -442,7 +402,7 @@ mod tests {
     #[tokio::test]
     async fn test_netcalss_interface() {
         let path = "tests/fixtures/sys/class/net/eth0";
-        let nci = NetClassInterface::from(path).await.unwrap();
+        let nci = NetClassInterface::parse(path).await.unwrap();
 
         assert_eq!(nci.addr_assign_type, Some(3));
         assert_eq!(nci.address, "01:01:01:01:01:01");

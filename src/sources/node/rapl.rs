@@ -101,7 +101,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             format!("Current RAPL {} value in joules", zone.name),
             zone.microjoules as f64 / 1000000.0,
             tags!(
-                "index" => zone.index.to_string()
+                "index" => zone.index
             ),
         ))
     }

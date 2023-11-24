@@ -15,8 +15,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of allocated memory in the kernel for UDP datagrams in bytes.",
                 v4.tx_queue_length as f64,
                 tags! {
+                    "ip" => "v4",
                     "queue" => "tx",
-                    "ip" => "v4"
                 },
             ),
             Metric::gauge_with_tags(
@@ -24,8 +24,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of allocated memory in the kernel for UDP datagrams in bytes.",
                 v4.rx_queue_length as f64,
                 tags! {
+                    "ip" => "v4",
                     "queue" => "rx",
-                    "ip" => "v4"
                 },
             ),
         ]);
@@ -38,8 +38,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of allocated memory in the kernel for UDP datagrams in bytes.",
                 v6.tx_queue_length as f64,
                 tags! {
+                    "ip" => "v6",
                     "queue" => "tx",
-                    "ip" => "v6"
                 },
             ),
             Metric::gauge_with_tags(
@@ -47,8 +47,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of allocated memory in the kernel for UDP datagrams in bytes.",
                 v6.rx_queue_length as f64,
                 tags! {
+                    "ip" => "v6",
                     "queue" => "rx",
-                    "ip" => "v6"
                 },
             ),
         ]);

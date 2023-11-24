@@ -284,10 +284,9 @@ impl Default for PowerSupplyConfig {
 macro_rules! power_supply_metric {
     ($vec: expr, $power_supply: expr, $name: expr, $value: expr) => {
         if let Some(v) = $value {
-            // let prefix = "node_power_supply_".to_string()
             $vec.push(Metric::gauge_with_tags(
-                "node_power_supply_".to_string() + $name,
-                "value of /sys/class/power_supply/<power_supply>/".to_string() + $name,
+                concat!("node_power_supply_", $name),
+                concat!("value of /sys/class/power_supply/<power_supply>/", $name),
                 v as f64,
                 tags! {
                     "power_supply" => $power_supply
@@ -298,11 +297,11 @@ macro_rules! power_supply_metric {
 }
 
 macro_rules! power_supply_metric_divide_e6 {
-    ($vec: expr, $power_supply: expr, $name: expr, $value: expr) => {
+    ($vec: expr, $power_supply: expr, $name: tt, $value: expr) => {
         if let Some(v) = $value {
             $vec.push(Metric::gauge_with_tags(
-                "node_power_supply_".to_string() + $name,
-                "value of /sys/class/power_supply/<power_supply>/".to_string() + $name,
+                concat!("node_power_supply_", $name),
+                concat!("value of /sys/class/power_supply/<power_supply>/", $name),
                 v as f64 / 1e6,
                 tags! {
                     "power_supply" => $power_supply
@@ -313,11 +312,11 @@ macro_rules! power_supply_metric_divide_e6 {
 }
 
 macro_rules! power_supply_metric_divide_10 {
-    ($vec: expr, $power_supply: expr, $name: expr, $value: expr) => {
+    ($vec: expr, $power_supply: expr, $name: tt, $value: expr) => {
         if let Some(v) = $value {
             $vec.push(Metric::gauge_with_tags(
-                "node_power_supply_".to_string() + $name,
-                "value of /sys/class/power_supply/<power_supply>/".to_string() + $name,
+                concat!("node_power_supply_", $name),
+                concat!("value of /sys/class/power_supply/<power_supply>/", $name),
                 v as f64 / 10.0,
                 tags! {
                     "power_supply" => $power_supply
@@ -501,58 +500,58 @@ pub async fn gather(sys_path: &str, conf: &PowerSupplyConfig) -> Result<Vec<Metr
         power_supply_metric_divide_10!(metrics, &ps.name, "temp_max_celsius", ps.temp_max);
         power_supply_metric_divide_10!(metrics, &ps.name, "temp_min_celsius", ps.temp_min);
 
-        let mut m = tags!(
-            "power_supply" => &ps.name
+        let mut tags = tags!(
+            "power_supply" => ps.name
         );
         if !ps.capacity_level.is_empty() {
-            m.insert("capacity_level", ps.capacity_level);
+            tags.insert("capacity_level", ps.capacity_level);
         }
 
         if !ps.charge_type.is_empty() {
-            m.insert("charge_type", ps.charge_type);
+            tags.insert("charge_type", ps.charge_type);
         }
 
         if !ps.health.is_empty() {
-            m.insert("health", ps.health);
+            tags.insert("health", ps.health);
         }
 
         if !ps.manufacturer.is_empty() {
-            m.insert("manufacturer", ps.manufacturer);
+            tags.insert("manufacturer", ps.manufacturer);
         }
 
         if !ps.model_name.is_empty() {
-            m.insert("model_name", ps.model_name);
+            tags.insert("model_name", ps.model_name);
         }
 
         if !ps.serial_number.is_empty() {
-            m.insert("serial_number", ps.serial_number);
+            tags.insert("serial_number", ps.serial_number);
         }
 
         if !ps.status.is_empty() {
-            m.insert("status", ps.status);
+            tags.insert("status", ps.status);
         }
 
         if !ps.technology.is_empty() {
-            m.insert("technology", ps.technology);
+            tags.insert("technology", ps.technology);
         }
 
         if !ps.typ.is_empty() {
-            m.insert("type", ps.typ);
+            tags.insert("type", ps.typ);
         }
 
         if !ps.usb_type.is_empty() {
-            m.insert("usb_type", ps.usb_type);
+            tags.insert("usb_type", ps.usb_type);
         }
 
         if !ps.scope.is_empty() {
-            m.insert("scope", ps.scope);
+            tags.insert("scope", ps.scope);
         }
 
         metrics.push(Metric::gauge_with_tags(
             "node_power_supply_info",
             "info of /sys/class/power_supply/<power_supply>.",
             1,
-            m,
+            tags,
         ))
     }
 

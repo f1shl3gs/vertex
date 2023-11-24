@@ -4,7 +4,7 @@ use std::{collections::HashMap, path::PathBuf};
 
 use event::Metric;
 
-use super::{read_to_string, Error};
+use super::Error;
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(root);
@@ -31,13 +31,9 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
 }
 
 async fn get_mem_info(root: PathBuf) -> Result<HashMap<String, f64>, std::io::Error> {
-    // TODO: Clone might happened here?
-    let mut path = root;
-    path.push("meminfo");
-
     let mut infos = HashMap::new();
 
-    let content = read_to_string(path).await?;
+    let content = std::fs::read_to_string(root.join("meminfo"))?;
     let lines = content.lines();
 
     for line in lines {

@@ -157,22 +157,22 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             "Zone temperature in Celsius",
             stat.temp as f64,
             tags!(
-                "zone" => &stat.name,
-                "type" => &stat.typ,
+                "zone" => stat.name,
+                "type" => stat.typ,
             ),
         ));
     }
 
     let stats = cooling_device_stats(sys_path).await?;
     for stat in stats {
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "node_cooling_device_cur_state",
                 "Current throttle state of the cooling device",
                 stat.cur_state as f64,
                 tags!(
-                    "name" => &stat.name,
-                    "type" => &stat.typ
+                    "name" => stat.name.clone(),
+                    "type" => stat.typ.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -180,8 +180,8 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Maximum throttle state of the cooling device",
                 stat.max_state as f64,
                 tags!(
-                    "name" => &stat.name,
-                    "type" => &stat.typ
+                    "name" => stat.name,
+                    "type" => stat.typ
                 ),
             ),
         ])

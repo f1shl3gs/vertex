@@ -19,34 +19,28 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::with_capacity(3 * stats.len());
     for stat in stats {
-        let cpu = &stat.cpu;
+        let tags = tags!("cpu" => stat.cpu);
 
-        metrics.push(Metric::sum_with_tags(
-            "node_schedstat_running_seconds_total",
-            "Number of seconds CPU spent running a process.",
-            stat.running_nanoseconds,
-            tags!(
-                "cpu" => cpu
+        metrics.extend([
+            Metric::sum_with_tags(
+                "node_schedstat_running_seconds_total",
+                "Number of seconds CPU spent running a process.",
+                stat.running_nanoseconds,
+                tags.clone(),
             ),
-        ));
-
-        metrics.push(Metric::sum_with_tags(
-            "node_schedstat_waiting_seconds_total",
-            "Number of seconds spent by processing waiting for this CPU.",
-            stat.waiting_nanoseconds,
-            tags!(
-                "cpu" => cpu,
+            Metric::sum_with_tags(
+                "node_schedstat_waiting_seconds_total",
+                "Number of seconds spent by processing waiting for this CPU.",
+                stat.waiting_nanoseconds,
+                tags.clone(),
             ),
-        ));
-
-        metrics.push(Metric::sum_with_tags(
-            "node_schedstat_timeslices_total",
-            "Number of timeslices executed by CPU.",
-            stat.run_time_slices,
-            tags!(
-                "cpu" => cpu
+            Metric::sum_with_tags(
+                "node_schedstat_timeslices_total",
+                "Number of timeslices executed by CPU.",
+                stat.run_time_slices,
+                tags,
             ),
-        ))
+        ]);
     }
 
     Ok(metrics)

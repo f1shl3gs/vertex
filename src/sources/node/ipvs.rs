@@ -5,7 +5,7 @@ use event::Metric;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
-use super::{read_to_string, Error};
+use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct IPVSConfig {
@@ -155,8 +155,7 @@ struct IPVSStats {
 }
 
 async fn parse_ipvs_stats(root: &str) -> Result<IPVSStats, Error> {
-    let path = &format!("{}/net/ip_vs_stat", root);
-    let content = read_to_string(path).await?;
+    let content = std::fs::read_to_string(format!("{}/net/ip_vs_stat", root))?;
     let lines = content.lines().collect::<Vec<_>>();
     if lines.len() < 4 {
         return Err("ip_vs_stats corrupt: too short".into());
@@ -214,8 +213,7 @@ struct IPVSBackendStatus {
 }
 
 async fn parse_ipvs_backend_status(root: &str) -> Result<Vec<IPVSBackendStatus>, Error> {
-    let path = &format!("{}/net/ip_vs", root);
-    let f = tokio::fs::File::open(path).await?;
+    let f = tokio::fs::File::open(format!("{}/net/ip_vs", root)).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
 

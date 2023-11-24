@@ -53,39 +53,50 @@ impl NetSockstat {
         }
 
         for nsp in &self.protocols {
-            let name = &format!("node_sockstat_{}_inuse", nsp.protocol);
-            let desc = &format!("Number of {} sockets in stat inuse", nsp.protocol);
-            metrics.push(Metric::gauge(name, desc, nsp.inuse));
+            metrics.push(Metric::gauge(
+                format!("node_sockstat_{}_inuse", nsp.protocol),
+                format!("Number of {} sockets in stat inuse", nsp.protocol),
+                nsp.inuse,
+            ));
 
             if let Some(v) = nsp.orphan {
-                let name = &format!("node_sockstat_{}_orphan", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat orphan", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_orphan", nsp.protocol),
+                    format!("Number of {} sockets in stat orphan", nsp.protocol),
+                    v,
+                ));
             }
 
             if let Some(v) = nsp.tw {
-                let name = &format!("node_sockstat_{}_tw", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat tw", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_tw", nsp.protocol),
+                    format!("Number of {} sockets in stat tw", nsp.protocol),
+                    v,
+                ));
             }
 
             if let Some(v) = nsp.alloc {
-                let name = &format!("node_sockstat_{}_alloc", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat alloc", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_alloc", nsp.protocol),
+                    format!("Number of {} sockets in stat alloc", nsp.protocol),
+                    v,
+                ));
             }
 
             if let Some(v) = nsp.mem {
-                let v = v as f64 * PAGESIZE;
-                let name = &format!("node_sockstat_{}_mem_bytes", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat mem", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_mem_bytes", nsp.protocol),
+                    format!("Number of {} sockets in stat mem", nsp.protocol),
+                    v as f64 * PAGESIZE,
+                ));
             }
 
             if let Some(v) = nsp.memory {
-                let name = &format!("node_sockstat_{}_memory", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat memory", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v as f64))
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_memory", nsp.protocol),
+                    format!("Number of {} sockets in stat memory", nsp.protocol),
+                    v as f64,
+                ))
             }
         }
 

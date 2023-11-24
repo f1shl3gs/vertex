@@ -390,11 +390,10 @@ macro_rules! procedure_metric {
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/rpc/nfs", proc_path);
     let stats = client_rpc_stats(path).await?;
-
     let mut metrics = Vec::new();
 
     // collect statistics for network packets/connections
-    metrics.extend_from_slice(&[
+    metrics.extend([
         Metric::sum_with_tags(
             "node_nfs_packets_total",
             "Total NFSd network packets (sent+received) by protocol type.",
@@ -419,7 +418,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     ]);
 
     // collect statistics for kernel server RPCs
-    metrics.extend_from_slice(&[
+    metrics.extend([
         Metric::sum(
             "node_nfs_rpcs_total",
             "Total number of RPCs performed.",
@@ -438,7 +437,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     ]);
 
     // collects statistics for NFSv2 requests
-    metrics.extend_from_slice(&[
+    metrics.extend([
         procedure_metric!("2", "Null", stats.v2_stats.null),
         procedure_metric!("2", "GetAttr", stats.v2_stats.get_attr),
         procedure_metric!("2", "SetAttr", stats.v2_stats.set_attr),

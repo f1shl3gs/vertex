@@ -1,7 +1,5 @@
 //! Exposes error detection and correction statistics
 
-use std::borrow::Cow;
-
 use event::tags::Key;
 use event::{tags, Metric};
 
@@ -25,42 +23,42 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 
         let path = path.to_string_lossy();
         let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(&path).await?;
-
-        let controller = Cow::from(controller.to_string());
-        metrics.push(Metric::sum_with_tags(
-            "node_edac_correctable_errors_total",
-            "Total correctable memory errors.",
-            ce_count as f64,
-            tags!(
-                CONTROLLER_KEY => controller.clone()
+        metrics.extend([
+            Metric::sum_with_tags(
+                "node_edac_correctable_errors_total",
+                "Total correctable memory errors.",
+                ce_count as f64,
+                tags!(
+                    CONTROLLER_KEY => controller.to_string()
+                ),
             ),
-        ));
-        metrics.push(Metric::sum_with_tags(
-            "node_edac_uncorrectable_errors_total",
-            "Total uncorrectable memory errors.",
-            ue_count as f64,
-            tags!(
-                CONTROLLER_KEY => controller.clone()
+            Metric::sum_with_tags(
+                "node_edac_uncorrectable_errors_total",
+                "Total uncorrectable memory errors.",
+                ue_count as f64,
+                tags!(
+                    CONTROLLER_KEY => controller.to_string()
+                ),
             ),
-        ));
-        metrics.push(Metric::sum_with_tags(
-            "node_edac_csrow_correctable_errors_total",
-            "Total correctable memory errors for this csrow.",
-            ce_noinfo_count as f64,
-            tags!(
-                CONTROLLER_KEY => controller.clone(),
-                "csrow" => "unknown",
+            Metric::sum_with_tags(
+                "node_edac_csrow_correctable_errors_total",
+                "Total correctable memory errors for this csrow.",
+                ce_noinfo_count as f64,
+                tags!(
+                    CONTROLLER_KEY => controller.to_string(),
+                    "csrow" => "unknown",
+                ),
             ),
-        ));
-        metrics.push(Metric::sum_with_tags(
-            "node_edac_csrow_uncorrectable_errors_total",
-            "Total uncorrectable memory errors for this csrow.",
-            ue_noinfo_count as f64,
-            tags!(
-                CONTROLLER_KEY => controller.clone(),
-                "csrow" => "unknown",
+            Metric::sum_with_tags(
+                "node_edac_csrow_uncorrectable_errors_total",
+                "Total uncorrectable memory errors for this csrow.",
+                ue_noinfo_count as f64,
+                tags!(
+                    CONTROLLER_KEY => controller.to_string(),
+                    "csrow" => "unknown",
+                ),
             ),
-        ));
+        ]);
 
         // for each controller, walk the csrow directories
         let csrows = glob::glob(&format!("{}/csrow[0-9]*", path))?;
@@ -76,27 +74,26 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             let path = path.to_str().unwrap();
 
             if let Ok((ce_count, ue_count)) = read_edac_csrow_stats(path).await {
-                let num = Cow::from(num.to_string());
-
-                metrics.push(Metric::sum_with_tags(
-                    "node_edac_csrow_correctable_errors_total",
-                    "Total correctable memory errors for this csrow.",
-                    ce_count as f64,
-                    tags!(
-                        CONTROLLER_KEY => controller.clone(),
-                        "csrow" => num.clone(),
+                metrics.extend([
+                    Metric::sum_with_tags(
+                        "node_edac_csrow_correctable_errors_total",
+                        "Total correctable memory errors for this csrow.",
+                        ce_count as f64,
+                        tags!(
+                            CONTROLLER_KEY => controller.to_string(),
+                            "csrow" => num.to_string(),
+                        ),
                     ),
-                ));
-
-                metrics.push(Metric::sum_with_tags(
-                    "node_edac_csrow_uncorrectable_errors_total",
-                    "Total uncorrectable memory errors for this csrow.",
-                    ue_count as f64,
-                    tags!(
-                        CONTROLLER_KEY => controller.clone(),
-                        "csrow" => num.clone(),
+                    Metric::sum_with_tags(
+                        "node_edac_csrow_uncorrectable_errors_total",
+                        "Total uncorrectable memory errors for this csrow.",
+                        ue_count as f64,
+                        tags!(
+                            CONTROLLER_KEY => controller.to_string(),
+                            "csrow" => num.to_string(),
+                        ),
                     ),
-                ))
+                ]);
             }
         }
     }

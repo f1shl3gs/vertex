@@ -264,16 +264,16 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = vec![];
     for stat in stats {
-        let device = &stat.name;
-        let state = &stat.activity_state;
+        let device = stat.name;
+        let state = stat.activity_state;
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "node_md_disks_required",
                 "Total number of disks of device.",
                 stat.disks_total as f64,
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                 ),
             ),
             Metric::gauge_with_tags(
@@ -281,7 +281,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of active/failed/spare disks of device.",
                 stat.disks_active as f64,
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "active"
                 ),
             ),
@@ -290,7 +290,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of active/failed/spare disks of device.",
                 stat.disks_failed as f64,
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "failed"
                 ),
             ),
@@ -299,52 +299,52 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of active/failed/spare disks of device.",
                 stat.disks_spare as f64,
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "spare"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("active", state),
+                state_metric_value("active", &state),
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "active"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("inactive", state),
+                state_metric_value("inactive", &state),
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "inactive"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("recovering", state),
+                state_metric_value("recovering", &state),
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "recovering"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("resyncing", state),
+                state_metric_value("resyncing", &state),
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "resyncing"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("checking", state),
+                state_metric_value("checking", &state),
                 tags!(
-                    "device" => device,
+                    "device" => device.clone(),
                     "state" => "checking"
                 ),
             ),
@@ -353,7 +353,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Total number of blocks on device.",
                 stat.blocks_total as f64,
                 tags!(
-                    "device" => device
+                    "device" => device.clone()
                 ),
             ),
             Metric::gauge_with_tags(

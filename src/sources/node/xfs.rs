@@ -14,320 +14,242 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::with_capacity(stats.len() * 39);
     for stat in stats {
-        let name = &stat.name.clone();
+        let tags = tags!("device" => stat.name);
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_extents_allocated_total",
                 "Number of extents allocated for a filesystem.",
                 stat.extent_allocation.extents_allocated as f64,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_blocks_allocated_total",
                 "Number of blocks allocated for a filesystem.",
                 stat.extent_allocation.blocks_allocated,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_extents_freed_total",
                 "Number of extents freed for a filesystem.",
                 stat.extent_allocation.extents_freed,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_blocks_freed_total",
                 "Number of blocks freed for a filesystem.",
                 stat.extent_allocation.blocks_freed,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_lookups_total",
                 "Number of allocation B-tree lookups for a filesystem.",
                 stat.allocation_btree.lookups,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_compares_total",
                 "Number of allocation B-tree compares for a filesystem.",
                 stat.allocation_btree.compares,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_records_inserted_total",
                 "Number of allocation B-tree records inserted for a filesystem.",
                 stat.allocation_btree.records_inserted,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_records_deleted_total",
                 "Number of allocation B-tree records deleted for a filesystem.",
                 stat.allocation_btree.records_deleted,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_reads_total",
                 "Number of block map for read operations for a filesystem.",
                 stat.block_mapping.reads,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_writes_total",
                 "Number of block map for write operations for a filesystem.",
                 stat.block_mapping.writes,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_unmaps_total",
                 "Number of block unmaps (deletes) for a filesystem.",
                 stat.block_mapping.unmaps,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_insertions_total",
                 "Number of extent list insertions for a filesystem.",
                 stat.block_mapping.extent_list_insertions,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_deletions_total",
                 "Number of extent list deletions for a filesystem.",
                 stat.block_mapping.extent_list_deletions,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_lookups_total",
                 "Number of extent list lookups for a filesystem.",
                 stat.block_mapping.extent_list_lookups,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_compares_total",
                 "Number of extent list compares for a filesystem.",
                 stat.block_mapping.extent_list_compares,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_lookups_total",
                 "Number of block map B-tree lookups for a filesystem.",
                 stat.block_map_btree.lookups,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_compares_total",
                 "Number of block map B-tree compares for a filesystem.",
                 stat.block_map_btree.compares,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_records_inserted_total",
                 "Number of block map B-tree records inserted for a filesystem.",
                 stat.block_map_btree.records_inserted,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_records_deleted_total",
                 "Number of block map B-tree records deleted for a filesystem.",
                 stat.block_map_btree.records_deleted,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_lookup_total",
                 "Number of file name directory lookups which miss the operating systems directory name lookup cache.",
                 stat.directory_operation.lookups,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_create_total",
                 "Number of times a new directory entry was created for a filesystem.",
                 stat.directory_operation.creates,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_remove_total",
                 "Number of times an existing directory entry was created for a filesystem.",
                 stat.directory_operation.removes,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_getdents_total",
                 "Number of times the directory getdents operation was performed for a filesystem.",
                 stat.directory_operation.get_dents,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_attempts_total",
                 "Number of times the OS looked for an XFS inode in the inode cache.",
                 stat.inode_operation.attempts,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_found_total",
                 "Number of times the OS looked for and found an XFS inode in the inode cache.",
                 stat.inode_operation.found,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_recycled_total",
                 "Number of times the OS found an XFS inode in the cache, but could not use it as it was being recycled.",
                 stat.inode_operation.recycle,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_missed_total",
                 "Number of times the OS looked for an XFS inode in the cache, but did not find it.",
                 stat.inode_operation.missed,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_duplicates_total",
                 "Number of times the OS tried to add a missing XFS inode to the inode cache, but found it had already been added by another process.",
                 stat.inode_operation.duplicate,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_reclaims_total",
                 "Number of times the OS reclaimed an XFS inode from the inode cache to free memory for another purpose.",
                 stat.inode_operation.reclaims,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_attribute_changes_total",
                 "Number of times the OS explicitly changed the attributes of an XFS inode.",
                 stat.inode_operation.attribute_change,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_read_calls_total",
                 "Number of read(2) system calls made to files in a filesystem.",
                 stat.read_write.read,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_write_calls_total",
                 "Number of write(2) system calls made to files in a filesystem.",
                 stat.read_write.write,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_active_total",
                 "Number of vnodes not on free lists for a filesystem.",
                 stat.vnode.active,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_allocate_total",
                 "Number of times vn_alloc called for a filesystem.",
                 stat.vnode.allocate,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_get_total",
                 "Number of times vn_get called for a filesystem.",
                 stat.vnode.get,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_hold_total",
                 "Number of times vn_hold called for a filesystem.",
                 stat.vnode.hold,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_release_total",
                 "Number of times vn_rele called for a filesystem.",
                 stat.vnode.release,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_reclaim_total",
                 "Number of times vn_reclaim called for a filesystem.",
                 stat.vnode.reclaim,
-                tags!(
-                    "device" => name
-                ),
+                tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_remove_total",
                 "Number of times vn_remove called for a filesystem.",
                 stat.vnode.remove,
-                tags!(
-                    "device" => name
-                ),
+                tags,
             )
         ]);
     }

@@ -32,7 +32,7 @@ macro_rules! state_metric {
     ($name: expr, $value: expr) => {
         Metric::gauge_with_tags(
             "node_tcp_connection_states",
-            "",
+            "Number of connection states.",
             $value,
             tags!(
                 "state" => $name
@@ -42,34 +42,20 @@ macro_rules! state_metric {
 }
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
-    let (v4, v6) = tokio::join!(fetch_tcp_stats(AF_INET), fetch_tcp_stats(AF_INET6),);
-
-    let stats = Statistics {
-        established: v4.established + v6.established,
-        syn_sent: v4.syn_sent + v6.syn_sent,
-        syn_recv: v4.syn_recv + v6.syn_recv,
-        fin_wait1: v4.fin_wait1 + v6.fin_wait1,
-        fin_wait2: v4.fin_wait2 + v6.fin_wait2,
-        time_wait: v4.time_wait + v6.time_wait,
-        close: v4.close + v6.close,
-        close_wait: v4.close_wait + v6.close_wait,
-        last_ack: v4.last_ack + v6.last_ack,
-        listen: v4.listen + v6.listen,
-        closing: v4.closing + v6.closing,
-    };
+    let (v4, v6) = tokio::join!(fetch_tcp_stats(AF_INET), fetch_tcp_stats(AF_INET6));
 
     Ok(vec![
-        state_metric!("established", stats.established),
-        state_metric!("syn_sent", stats.syn_sent),
-        state_metric!("syn_recv", stats.syn_recv),
-        state_metric!("fin_wait1", stats.fin_wait1),
-        state_metric!("fin_wait2", stats.fin_wait2),
-        state_metric!("time_wait", stats.time_wait),
-        state_metric!("close", stats.close),
-        state_metric!("close_wait", stats.close_wait),
-        state_metric!("last_ack", stats.last_ack),
-        state_metric!("listen", stats.listen),
-        state_metric!("closing", stats.closing),
+        state_metric!("established", v4.established + v6.established),
+        state_metric!("syn_sent", v4.syn_sent + v6.syn_sent),
+        state_metric!("syn_recv", v4.syn_recv + v6.syn_recv),
+        state_metric!("fin_wait1", v4.fin_wait1 + v6.fin_wait1),
+        state_metric!("fin_wait2", v4.fin_wait2 + v6.fin_wait2),
+        state_metric!("time_wait", v4.time_wait + v6.time_wait),
+        state_metric!("close", v4.close + v6.close),
+        state_metric!("close_wait", v4.close_wait + v6.close_wait),
+        state_metric!("last_ack", v4.last_ack + v6.last_ack),
+        state_metric!("listen", v4.listen + v6.listen),
+        state_metric!("closing", v4.closing + v6.closing),
     ])
 }
 

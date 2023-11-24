@@ -7,14 +7,13 @@ use tokio::io::AsyncBufReadExt;
 use super::Error;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/net/arp", proc_path);
-    let f = tokio::fs::File::open(&path)
+    let file = tokio::fs::File::open(format!("{}/net/arp", proc_path))
         .await
         .map_err(|err| Error::Io {
             err,
             msg: "open arp file failed".into(),
         })?;
-    let reader = tokio::io::BufReader::new(f);
+    let reader = tokio::io::BufReader::new(file);
     let mut lines = reader.lines();
     let mut devices = HashMap::<String, i64>::new();
 

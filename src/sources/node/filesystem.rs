@@ -47,81 +47,54 @@ impl FileSystemConfig {
 
         let mut metrics = Vec::new();
 
-        for stat in &stats {
-            let Stat {
-                device,
-                mount_point,
-                fs_type,
-                ..
-            } = stat;
+        for stat in stats {
+            let tags = tags!(
+                "device" => stat.device,
+                "fstype" => stat.fs_type,
+                "mount_point" => stat.mount_point,
+            );
             if stat.device_error == 1 {
                 metrics.push(Metric::gauge_with_tags(
                     "node_filesystem_device_error",
                     "Whether an error occurred while getting statistics for the given device.",
                     1.0,
-                    tags!(
-                        "device" => device,
-                        "mount_point" => mount_point,
-                        "fstype" => fs_type,
-                    ),
+                    tags,
                 ));
                 continue;
             }
 
-            metrics.push(Metric::gauge_with_tags(
-                "node_filesystem_size_bytes",
-                "Filesystem size in bytes.",
-                stat.size as f64,
-                tags!(
-                    "device" => device,
-                    "mount_point" => mount_point,
-                    "fstype" => fs_type,
+            metrics.extend([
+                Metric::gauge_with_tags(
+                    "node_filesystem_size_bytes",
+                    "Filesystem size in bytes.",
+                    stat.size as f64,
+                    tags.clone(),
                 ),
-            ));
-
-            metrics.push(Metric::gauge_with_tags(
-                "node_filesystem_free_bytes",
-                "Filesystem free space in bytes.",
-                stat.free as f64,
-                tags!(
-                    "device" => device,
-                    "mount_point" => mount_point,
-                    "fstype" => fs_type,
+                Metric::gauge_with_tags(
+                    "node_filesystem_free_bytes",
+                    "Filesystem free space in bytes.",
+                    stat.free as f64,
+                    tags.clone(),
                 ),
-            ));
-
-            metrics.push(Metric::gauge_with_tags(
-                "node_filesystem_avail_bytes",
-                "Filesystem space available to non-root users in bytes.",
-                stat.avail as f64,
-                tags!(
-                    "device" => device,
-                    "mount_point" => mount_point,
-                    "fstype" => fs_type,
+                Metric::gauge_with_tags(
+                    "node_filesystem_avail_bytes",
+                    "Filesystem space available to non-root users in bytes.",
+                    stat.avail as f64,
+                    tags.clone(),
                 ),
-            ));
-
-            metrics.push(Metric::gauge_with_tags(
-                "node_filesystem_files",
-                "Filesystem total file nodes.",
-                stat.files as f64,
-                tags!(
-                    "device" => device,
-                    "mount_point" => mount_point,
-                    "fstype" => fs_type,
+                Metric::gauge_with_tags(
+                    "node_filesystem_files",
+                    "Filesystem total file nodes.",
+                    stat.files as f64,
+                    tags.clone(),
                 ),
-            ));
-
-            metrics.push(Metric::gauge_with_tags(
-                "node_filesystem_readonly",
-                "Filesystem read-only status.",
-                stat.ro as f64,
-                tags!(
-                    "device" => device,
-                    "mount_point" => mount_point,
-                    "fstype" => fs_type,
+                Metric::gauge_with_tags(
+                    "node_filesystem_readonly",
+                    "Filesystem read-only status.",
+                    stat.ro as f64,
+                    tags,
                 ),
-            ));
+            ]);
         }
 
         Ok(metrics)
