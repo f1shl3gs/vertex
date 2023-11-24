@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::fmt;
+use std::ops::Deref;
 
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
@@ -15,6 +16,7 @@ impl Key {
     }
 
     /// Create a new const `Key`.
+    #[inline]
     pub const fn from_static(value: &'static str) -> Self {
         Key(Cow::Borrowed(value))
     }
@@ -27,8 +29,18 @@ impl Key {
 }
 
 impl AsRef<str> for Key {
+    #[inline]
     fn as_ref(&self) -> &str {
         self.0.as_ref()
+    }
+}
+
+impl Deref for Key {
+    type Target = str;
+
+    #[inline]
+    fn deref(&self) -> &Self::Target {
+        self.as_str()
     }
 }
 
