@@ -1,11 +1,9 @@
-use std::borrow::Cow;
 use std::collections::BTreeMap;
 
-use crate::sources::mysqld::MysqlError;
 use event::{tags, Metric};
 use sqlx::MySqlPool;
 
-use super::valid_name;
+use super::{valid_name, MysqlError};
 
 const GLOBAL_STATUS_QUERY: &str = r#"SHOW GLOBAL STATUS"#;
 
@@ -55,7 +53,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
         }
 
         let (split_key, name) = match key.split_once('_') {
-            Some((key, name)) => (key, Cow::from(name.to_string())),
+            Some((key, name)) => (key, name),
             None => {
                 // TODO: handle those metrics
                 //   GlobalStatus { name: "Connections", value: "20" }
@@ -92,7 +90,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
                 ),
             )),
             "innodb_buffer_pool_pages" => {
-                match name.as_ref() {
+                match name {
                     "data" | "free" | "misc" | "old" => {
                         metrics.push(Metric::gauge_with_tags(
                             "mysql_global_status_buffer_pool_pages",

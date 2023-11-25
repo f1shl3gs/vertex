@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
@@ -569,10 +568,10 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 .interfaces
                 .iter()
                 .find(|net| net.target.dev == iface.name)
-                .map_or((Cow::from(""), Cow::from("")), |net| {
+                .map_or(("", ""), |net| {
                     (
-                        Cow::from(net.source.bridge.clone()),
-                        Cow::from(net.virtual_port.parameters.interface_id.clone()),
+                        &net.source.bridge,
+                        &net.virtual_port.parameters.interface_id,
                     )
                 });
 
