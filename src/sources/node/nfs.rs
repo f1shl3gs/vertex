@@ -1,6 +1,6 @@
 use std::convert::TryFrom;
 use std::convert::TryInto;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
@@ -387,13 +387,11 @@ macro_rules! procedure_metric {
     };
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/net/rpc/nfs", proc_path);
-    let stats = client_rpc_stats(path).await?;
-    let mut metrics = Vec::new();
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = client_rpc_stats(proc_path.join("net/rpc/nfs")).await?;
 
     // collect statistics for network packets/connections
-    metrics.extend([
+    let mut metrics = vec![
         Metric::sum_with_tags(
             "node_nfs_packets_total",
             "Total NFSd network packets (sent+received) by protocol type.",
@@ -415,7 +413,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd TCP connections.",
             stats.network.net_count as f64,
         ),
-    ]);
+    ];
 
     // collect statistics for kernel server RPCs
     metrics.extend([

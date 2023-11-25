@@ -2,6 +2,8 @@
 //!
 //! Docs from https://www.kernel.org/doc/Documentation/iostats.txt
 
+use std::path::PathBuf;
+
 use event::{tags, tags::Key, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
@@ -32,139 +34,133 @@ pub fn default_ignored() -> regex::Regex {
     regex::Regex::new("^(ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\\d+n\\d+p)\\d+$").unwrap()
 }
 
-impl DiskStatsConfig {
-    pub async fn gather(&self, root: &str) -> Result<Vec<Metric>, Error> {
-        let mut metrics = Vec::new();
-        let file = tokio::fs::File::open(format!("{}/diskstats", root)).await?;
-        let reader = tokio::io::BufReader::new(file);
-        let mut lines = reader.lines();
+pub async fn gather(conf: DiskStatsConfig, root: PathBuf) -> Result<Vec<Metric>, Error> {
+    let mut metrics = Vec::new();
+    let file = tokio::fs::File::open(root.join("diskstats")).await?;
+    let reader = tokio::io::BufReader::new(file);
+    let mut lines = reader.lines();
 
-        while let Some(line) = lines.next_line().await? {
-            let mut parts = line.split_ascii_whitespace();
-            let tags = {
-                let device = parts.nth(2).unwrap();
-                if self.ignored.is_match(device) {
-                    continue;
-                }
-
-                tags!("device" => device.to_string())
-            };
-
-            // the content looks like this
-            // 259       0 nvme0n1 366 0 23480 41 3 0 0 0 0 41 41 0 0 0 0
-            for (index, part) in parts.enumerate() {
-                let v = part.parse::<f64>().unwrap_or(0f64);
-
-                match index {
-                    0 => metrics.push(Metric::gauge_with_tags(
-                        "node_disk_reads_completed_total",
-                        "The total number of reads completed successfully",
-                        v,
-                        tags.clone(),
-                    )),
-                    1 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_reads_merged_total",
-                        "The total number of reads merged",
-                        v,
-                        tags.clone(),
-                    )),
-                    2 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_read_bytes_total",
-                        "The total number of bytes read successfully",
-                        v * DISK_SECTOR_SIZE,
-                        tags.clone(),
-                    )),
-                    3 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_read_time_seconds_total",
-                        "The total number of seconds spent by all reads",
-                        v * 0.001,
-                        tags.clone(),
-                    )),
-                    4 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_writes_completed_total",
-                        "The total number of writes completed successfully",
-                        v,
-                        tags.clone(),
-                    )),
-                    5 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_writes_merged_total",
-                        "The number of writes merged.",
-                        v,
-                        tags.clone(),
-                    )),
-                    6 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_written_bytes_total",
-                        "The total number of bytes written successfully.",
-                        v * DISK_SECTOR_SIZE,
-                        tags.clone(),
-                    )),
-                    7 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_write_time_seconds_total",
-                        "This is the total number of seconds spent by all writes.",
-                        v * 0.001,
-                        tags.clone(),
-                    )),
-                    8 => metrics.push(Metric::gauge_with_tags(
-                        "node_disk_io_now",
-                        "The number of I/Os currently in progress",
-                        v,
-                        tags.clone(),
-                    )),
-                    9 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_io_time_seconds_total",
-                        "Total seconds spent doing I/Os.",
-                        v * 0.001,
-                        tags.clone(),
-                    )),
-                    10 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_io_time_weighted_seconds_total",
-                        "The weighted # of seconds spent doing I/Os.",
-                        v * 0.001,
-                        tags.clone(),
-                    )),
-                    11 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_discards_completed_total",
-                        "The total number of discards completed successfully.",
-                        v,
-                        tags.clone(),
-                    )),
-                    12 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_discards_merged_total",
-                        "The total number of discards merged.",
-                        v,
-                        tags.clone(),
-                    )),
-                    13 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_discarded_sectors_total",
-                        "The total number of sectors discarded successfully.",
-                        v,
-                        tags.clone(),
-                    )),
-                    14 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_discard_time_seconds_total",
-                        "This is the total number of seconds spent by all discards.",
-                        v * 0.001,
-                        tags.clone(),
-                    )),
-                    15 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_flush_requests_total",
-                        "The total number of flush requests completed successfully",
-                        v,
-                        tags.clone(),
-                    )),
-                    16 => metrics.push(Metric::sum_with_tags(
-                        "node_disk_flush_requests_time_seconds_total",
-                        "This is the total number of seconds spent by all flush requests.",
-                        v * 0.001,
-                        tags.clone(),
-                    )),
-                    _ => {}
-                }
-            }
+    while let Some(line) = lines.next_line().await? {
+        let mut parts = line.split_ascii_whitespace();
+        let device = parts.nth(2).unwrap();
+        if conf.ignored.is_match(device) {
+            continue;
         }
 
-        Ok(metrics)
+        // the content looks like this
+        // 259       0 nvme0n1 366 0 23480 41 3 0 0 0 0 41 41 0 0 0 0
+        for (index, part) in parts.enumerate() {
+            let v = part.parse::<f64>().unwrap_or(0f64);
+
+            match index {
+                0 => metrics.push(Metric::gauge_with_tags(
+                    "node_disk_reads_completed_total",
+                    "The total number of reads completed successfully",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                1 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_reads_merged_total",
+                    "The total number of reads merged",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                2 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_read_bytes_total",
+                    "The total number of bytes read successfully",
+                    v * DISK_SECTOR_SIZE,
+                    tags!("device" => device.to_string()),
+                )),
+                3 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_read_time_seconds_total",
+                    "The total number of seconds spent by all reads",
+                    v * 0.001,
+                    tags!("device" => device.to_string()),
+                )),
+                4 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_writes_completed_total",
+                    "The total number of writes completed successfully",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                5 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_writes_merged_total",
+                    "The number of writes merged.",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                6 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_written_bytes_total",
+                    "The total number of bytes written successfully.",
+                    v * DISK_SECTOR_SIZE,
+                    tags!("device" => device.to_string()),
+                )),
+                7 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_write_time_seconds_total",
+                    "This is the total number of seconds spent by all writes.",
+                    v * 0.001,
+                    tags!("device" => device.to_string()),
+                )),
+                8 => metrics.push(Metric::gauge_with_tags(
+                    "node_disk_io_now",
+                    "The number of I/Os currently in progress",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                9 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_io_time_seconds_total",
+                    "Total seconds spent doing I/Os.",
+                    v * 0.001,
+                    tags!("device" => device.to_string()),
+                )),
+                10 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_io_time_weighted_seconds_total",
+                    "The weighted # of seconds spent doing I/Os.",
+                    v * 0.001,
+                    tags!("device" => device.to_string()),
+                )),
+                11 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_discards_completed_total",
+                    "The total number of discards completed successfully.",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                12 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_discards_merged_total",
+                    "The total number of discards merged.",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                13 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_discarded_sectors_total",
+                    "The total number of sectors discarded successfully.",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                14 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_discard_time_seconds_total",
+                    "This is the total number of seconds spent by all discards.",
+                    v * 0.001,
+                    tags!("device" => device.to_string()),
+                )),
+                15 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_flush_requests_total",
+                    "The total number of flush requests completed successfully",
+                    v,
+                    tags!("device" => device.to_string()),
+                )),
+                16 => metrics.push(Metric::sum_with_tags(
+                    "node_disk_flush_requests_time_seconds_total",
+                    "This is the total number of seconds spent by all flush requests.",
+                    v * 0.001,
+                    tags!("device" => device.to_string()),
+                )),
+                _ => {}
+            }
+        }
     }
+
+    Ok(metrics)
 }
 
 #[cfg(test)]
@@ -174,11 +170,11 @@ mod tests {
     #[tokio::test]
     async fn test_gather() {
         let proc_path = "tests/fixtures/proc";
-        let collector = DiskStatsConfig {
+        let conf = DiskStatsConfig {
             ignored: default_ignored(),
         };
 
-        let result = collector.gather(proc_path).await.unwrap();
+        let result = gather(conf, proc_path.into()).await.unwrap();
         assert_ne!(result.len(), 0);
     }
 }

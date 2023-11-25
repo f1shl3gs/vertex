@@ -1,4 +1,5 @@
-/// Collect metrics from `/proc/stat`
+//! Collect metrics from `/proc/stat`
+
 use std::path::PathBuf;
 
 use event::{tags, Metric};
@@ -61,51 +62,48 @@ fn default_bugs_include() -> regex::Regex {
     regex::Regex::new(".*").unwrap()
 }
 
-impl CPUConfig {
-    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
-        let proc_path = PathBuf::from(proc_path);
-        let stats = get_cpu_stat(proc_path).await?;
-        let mut metrics = Vec::with_capacity(stats.len() * 10);
+pub async fn gather(conf: CPUConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = get_cpu_stat(proc_path).await?;
+    let mut metrics = Vec::with_capacity(stats.len() * 10);
 
-        for (cpu, stat) in stats.iter().enumerate() {
-            metrics.extend_from_slice(&[
-                state_metric!(cpu, "user", stat.user),
-                state_metric!(cpu, "nice", stat.nice),
-                state_metric!(cpu, "system", stat.system),
-                state_metric!(cpu, "idle", stat.idle),
-                state_metric!(cpu, "iowait", stat.iowait),
-                state_metric!(cpu, "irq", stat.irq),
-                state_metric!(cpu, "softirq", stat.softirq),
-                state_metric!(cpu, "steal", stat.steal),
-            ]);
+    for (cpu, stat) in stats.iter().enumerate() {
+        metrics.extend_from_slice(&[
+            state_metric!(cpu, "user", stat.user),
+            state_metric!(cpu, "nice", stat.nice),
+            state_metric!(cpu, "system", stat.system),
+            state_metric!(cpu, "idle", stat.idle),
+            state_metric!(cpu, "iowait", stat.iowait),
+            state_metric!(cpu, "irq", stat.irq),
+            state_metric!(cpu, "softirq", stat.softirq),
+            state_metric!(cpu, "steal", stat.steal),
+        ]);
 
-            // Guest CPU is also accounted for in cpuStat.User and cpuStat.Nice,
-            // expose these as separate metrics.
-            if self.guest {
-                metrics.push(Metric::sum_with_tags(
-                    "node_cpu_guest_seconds_total",
-                    "Seconds the CPUs spent in guests (VMs) for each mode.",
-                    stat.guest,
-                    tags!(
-                        "cpu" => cpu as i64,
-                        "mode" => "user",
-                    ),
-                ));
+        // Guest CPU is also accounted for in cpuStat.User and cpuStat.Nice,
+        // expose these as separate metrics.
+        if conf.guest {
+            metrics.push(Metric::sum_with_tags(
+                "node_cpu_guest_seconds_total",
+                "Seconds the CPUs spent in guests (VMs) for each mode.",
+                stat.guest,
+                tags!(
+                    "cpu" => cpu as i64,
+                    "mode" => "user",
+                ),
+            ));
 
-                metrics.push(Metric::sum_with_tags(
-                    "node_cpu_guest_seconds_total",
-                    "Seconds the CPUs spent in guests (VMs) for each mode.",
-                    stat.guest_nice,
-                    tags!(
-                        "cpu" => cpu as i64,
-                        "mode" => "nice"
-                    ),
-                ));
-            }
+            metrics.push(Metric::sum_with_tags(
+                "node_cpu_guest_seconds_total",
+                "Seconds the CPUs spent in guests (VMs) for each mode.",
+                stat.guest_nice,
+                tags!(
+                    "cpu" => cpu as i64,
+                    "mode" => "nice"
+                ),
+            ));
         }
-
-        Ok(metrics)
     }
+
+    Ok(metrics)
 }
 
 #[derive(Default)]
@@ -123,11 +121,8 @@ struct CPUStat {
 }
 
 async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
-    let mut path = proc_path.clone();
-    path.push("stat");
-
-    let f = tokio::fs::File::open(path).await?;
-    let reader = tokio::io::BufReader::new(f);
+    let file = tokio::fs::File::open(proc_path.join("stat")).await?;
+    let reader = tokio::io::BufReader::new(file);
     let mut lines = reader.lines();
     let mut stats = Vec::new();
 

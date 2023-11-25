@@ -1,11 +1,13 @@
 //! Exposes various statistics from /proc/net/sockstat and /proc/net/sockstat6
 
+use std::path::PathBuf;
+
 use event::Metric;
 
 use super::{read_to_string, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stat4 = sockstat4(proc_path).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stat4 = sockstat4(proc_path.clone()).await?;
     let stat6 = sockstat6(proc_path).await?;
 
     let mut metrics = stat4.metrics(false);
@@ -104,18 +106,16 @@ impl NetSockstat {
     }
 }
 
-async fn sockstat4(root: &str) -> Result<NetSockstat, Error> {
+async fn sockstat4(root: PathBuf) -> Result<NetSockstat, Error> {
     // This file is small and can be read with one syscall
-    let path = format!("{}/net/sockstat", root);
-    let content = read_to_string(path).await?;
+    let content = read_to_string(root.join("net/sockstat"))?;
 
     parse_sockstat(&content)
 }
 
-async fn sockstat6(root: &str) -> Result<NetSockstat, Error> {
+async fn sockstat6(root: PathBuf) -> Result<NetSockstat, Error> {
     // This file is small and can be read with one syscall
-    let path = format!("{}/net/sockstat6", root);
-    let content = read_to_string(path).await?;
+    let content = read_to_string(root.join("net/sockstat6"))?;
 
     parse_sockstat(&content)
 }

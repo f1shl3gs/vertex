@@ -92,10 +92,9 @@ pub struct FibreChannelHost {
 }
 
 /// fibre_channel_class parse everything in /sys/class/fc_host
-pub async fn fibre_channel_class(sys_path: &str) -> Result<Vec<FibreChannelHost>, Error> {
+pub async fn fibre_channel_class(sys_path: PathBuf) -> Result<Vec<FibreChannelHost>, Error> {
     let mut fcc = Vec::new();
-    let path = format!("{}/class/fc_host", sys_path);
-    for entry in std::fs::read_dir(path)?.flatten() {
+    for entry in std::fs::read_dir(sys_path.join("class/fc_host"))?.flatten() {
         let host = parse_fibre_channel_host(entry.path()).await?;
         fcc.push(host);
     }
@@ -123,7 +122,7 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
         "supported_speeds",
     ] {
         let name = root.join(sub);
-        let value = read_to_string(name).await?.trim_end().to_string();
+        let value = read_to_string(name)?.trim_end().to_string();
 
         match sub {
             "speed" => host.speed = value,
@@ -167,8 +166,7 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
 }
 
 async fn read_hex(path: PathBuf) -> Result<u64, Error> {
-    let content = read_to_string(path)
-        .await?
+    let content = read_to_string(path)?
         .trim_end()
         .strip_prefix("0x")
         .unwrap()
@@ -216,12 +214,12 @@ async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCou
     Ok(counters)
 }
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let hosts = fibre_channel_class(sys_path).await?;
 
     let mut metrics = vec![];
     for host in hosts {
-        let name = &host.name;
+        let name = host.name;
 
         metrics.extend_from_slice(&[
             // first the Host values
@@ -230,17 +228,17 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Non-numeric data from /sys/class/fc_host/<host>, value is always 1.",
                 1,
                 tags!(
-                    "fc_host" => name,
-                    "speed" => host.speed,
-                    "port_state" => host.port_state,
-                    "port_type" => host.port_type,
+                    "dev_loss_tmo" => host.dev_loss_tmo,
+                    "fabric_name" => host.fabric_name,
+                    "fc_host" => name.clone(),
                     "port_id" => host.port_id,
                     "port_name" => host.port_name,
-                    "fabric_name" => host.fabric_name,
-                    "symbolic_name" => host.symbolic_name,
+                    "port_state" => host.port_state,
+                    "port_type" => host.port_type,
+                    "speed" => host.speed,
                     "supported_classes" => host.supported_classes,
                     "supported_speeds" => host.supported_speeds,
-                    "dev_loss_tmo" => host.dev_loss_tmo
+                    "symbolic_name" => host.symbolic_name,
                 ),
             ),
             // the counters
@@ -249,7 +247,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of dumped frames",
                 host.counters.dumped_frames as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -257,7 +255,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of errors in frames",
                 host.counters.error_frames as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -265,7 +263,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Invalid Cyclic Redundancy Check count",
                 host.counters.invalid_crc_count as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -273,7 +271,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of frames received",
                 host.counters.rx_frames as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -281,7 +279,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of words received by host port",
                 host.counters.rx_words as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -289,7 +287,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of frames transmitted by host port",
                 host.counters.tx_frames as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -297,7 +295,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of words transmitted by host port",
                 host.counters.tx_frames as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -305,7 +303,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of seconds since last host port reset",
                 host.counters.seconds_since_last_reset as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -313,7 +311,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of invalid words transmitted by host port",
                 host.counters.invalid_tx_word_count as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -321,7 +319,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of times the host port link has failed",
                 host.counters.link_failure_count as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -329,7 +327,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of failures on either bit or transmission word boundaries",
                 host.counters.loss_of_sync_count as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -337,7 +335,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of times signal has been lost",
                 host.counters.loss_of_signal_count as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -345,7 +343,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number Not_Operational Primitive Sequence received by host port",
                 host.counters.nos_count as f64,
                 tags!(
-                    "fc_host" => name
+                    "fc_host" => name.clone()
                 ),
             ),
             Metric::sum_with_tags(
@@ -368,7 +366,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_fibre_channel_class() {
-        let fcc = fibre_channel_class("tests/fixtures/sys").await.unwrap();
+        let fcc = fibre_channel_class("tests/fixtures/sys".into())
+            .await
+            .unwrap();
         assert_eq!(fcc.len(), 1);
         let host = &fcc[0];
 

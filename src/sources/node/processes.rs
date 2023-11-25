@@ -1,23 +1,23 @@
 use std::collections::HashMap;
-use std::path::Path;
+use std::fs::read_dir;
+use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 
 use super::{read_into, read_to_string, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let root = Path::new(proc_path);
-    let (procs, threads) = get_procs_and_threads(root).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let (procs, threads) = get_procs_and_threads(proc_path.clone()).await?;
     let mut metrics = vec![];
 
-    let max_threads: usize = read_into(root.join("sys/kernel/threads-max").clone()).await?;
+    let max_threads: usize = read_into(proc_path.join("sys/kernel/threads-max"))?;
     metrics.push(Metric::gauge(
         "node_processes_max_threads",
         "Limit of threads in the system",
         max_threads,
     ));
 
-    let max_processes: usize = read_into(root.join("sys/kernel/pid_max")).await?;
+    let max_processes: usize = read_into(proc_path.join("sys/kernel/pid_max"))?;
     metrics.push(Metric::gauge(
         "node_processes_max_processes",
         "Number of max PIDs limit",
@@ -45,13 +45,13 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         "Allocated threads in system",
         threads.total(),
     ));
-    for (k, v) in threads.0 {
+    for (key, value) in threads.0 {
         metrics.push(Metric::gauge_with_tags(
             "node_processes_threads_state",
             "Number of threads in each state",
-            v,
+            value,
             tags!(
-                "state" => k
+                "state" => key
             ),
         ));
     }
@@ -89,13 +89,13 @@ impl Stats {
 }
 
 async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats), Error> {
-    let mut dirs = tokio::fs::read_dir(root).await?;
     let mut procs = Stats::new();
     let mut threads = Stats::new();
 
-    while let Some(entry) = dirs.next_entry().await? {
+    let mut dirs = read_dir(root)?;
+    while let Some(Ok(entry)) = dirs.next() {
         let path = entry.path().join("stat");
-        match read_to_string(path).await {
+        match read_to_string(path) {
             Ok(content) => match parse_state(&content) {
                 Some(state) => procs.append(state),
                 None => continue,
@@ -104,10 +104,10 @@ async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats),
             Err(_) => continue,
         }
 
-        match tokio::fs::read_dir(entry.path().join("task")).await {
-            Ok(mut entries) => {
-                while let Some(entry) = entries.next_entry().await? {
-                    match read_to_string(entry.path().join("stat")).await {
+        match read_dir(entry.path().join("task")) {
+            Ok(mut dirs) => {
+                while let Some(Ok(entry)) = dirs.next() {
+                    match read_to_string(entry.path().join("stat")) {
                         Ok(content) => match parse_state(&content) {
                             Some(state) => threads.append(state),
                             None => continue,

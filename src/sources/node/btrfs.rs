@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -70,25 +69,25 @@ pub struct Stats {
     sector_size: u64,
 }
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = stats(sys_path).await?;
 
     let mut metrics = vec![];
-    for s in &stats {
-        metrics.extend(stats_to_metrics(s));
+    for stat in stats {
+        metrics.extend(stats_to_metrics(stat));
     }
 
     Ok(metrics)
 }
 
-fn stats_to_metrics(stats: &Stats) -> Vec<Metric> {
+fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
     let mut metrics = vec![
         Metric::gauge_with_tags(
             "node_btrfs_info",
             "Filesystem information",
             1.0,
             tags!(
-                "label" => stats.label.clone()
+                "label" => stats.label
             ),
         ),
         Metric::gauge(
@@ -99,7 +98,7 @@ fn stats_to_metrics(stats: &Stats) -> Vec<Metric> {
     ];
 
     // Information about devices
-    for (name, device) in &stats.devices {
+    for (name, device) in stats.devices {
         metrics.push(Metric::gauge_with_tags(
             "node_btrfs_device_size_bytes",
             "Size of a device that is part of the filesystem.",
@@ -111,59 +110,56 @@ fn stats_to_metrics(stats: &Stats) -> Vec<Metric> {
     }
 
     // Information about data, metadata and system data.
-    if let Some(s) = &stats.allocation.data {
+    if let Some(s) = stats.allocation.data {
         metrics.extend(get_allocation_stats("data", s));
     }
-    if let Some(s) = &stats.allocation.metadata {
+    if let Some(s) = stats.allocation.metadata {
         metrics.extend(get_allocation_stats("metadata", s));
     }
-    if let Some(s) = &stats.allocation.system {
+    if let Some(s) = stats.allocation.system {
         metrics.extend(get_allocation_stats("system", s));
     }
 
     metrics
 }
 
-fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
-    let typ = Cow::from(typ.to_string());
+fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
     let mut metrics = vec![Metric::gauge_with_tags(
         "node_btrfs_reserved_bytes",
         "Amount of space reserved for a data type",
         stats.reserved_bytes as f64,
         tags!(
-            "block_group_type" => typ.clone()
+            "block_group_type" => typ.to_string()
         ),
     )];
 
     // Add all layout statistics
-    for (layout, s) in &stats.layouts {
-        let mode = Cow::from(layout.clone());
-
+    for (mode, usage) in stats.layouts {
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
                 "node_btrfs_used_bytes",
                 "Amount of used space by a layout/data type",
-                s.used_bytes as f64,
+                usage.used_bytes as f64,
                 tags!(
-                    "block_group_type" => typ.clone(),
+                    "block_group_type" => typ.to_string(),
                     "mode" => mode.clone()
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_btrfs_size_bytes",
                 "Amount of space allocated for a layout/data type",
-                s.total_bytes as f64,
+                usage.total_bytes as f64,
                 tags!(
-                    "block_group_type" => typ.clone(),
+                    "block_group_type" => typ.to_string(),
                     "mode" => mode.clone()
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_btrfs_allocation_ratio",
                 "Data allocation ratio for a layout/data type",
-                s.ratio,
+                usage.ratio,
                 tags!(
-                    "block_group_type" => typ.clone(),
+                    "block_group_type" => typ.to_string(),
                     "mode" => mode
                 ),
             ),
@@ -174,17 +170,14 @@ fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
 }
 
 fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
-    let typ = Cow::from(typ.to_string());
-    let mode = Cow::from(mode.to_string());
-
     vec![
         Metric::gauge_with_tags(
             "node_btrfs_used_bytes",
             "Amount of used space by a layout/data type",
             s.used_bytes as f64,
             tags!(
-                "block_group_type" => typ.clone(),
-                "mode" => mode.clone()
+                "block_group_type" => typ.to_string(),
+                "mode" => mode.to_string()
             ),
         ),
         Metric::gauge_with_tags(
@@ -192,8 +185,8 @@ fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
             "Amount of space allocated for a layout/data type",
             s.total_bytes as f64,
             tags!(
-                "block_group_type" => typ.clone(),
-                "mode" => mode.clone()
+                "block_group_type" => typ.to_string(),
+                "mode" => mode.to_string()
             ),
         ),
         Metric::gauge_with_tags(
@@ -201,15 +194,15 @@ fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
             "Data allocation ratio for a layout/data type",
             s.ratio,
             tags!(
-                "block_group_type" => typ,
-                "mode" => mode
+                "block_group_type" => typ.to_string(),
+                "mode" => mode.to_string()
             ),
         ),
     ]
 }
 
-async fn stats(root: &str) -> Result<Vec<Stats>, Error> {
-    let pattern = format!("{}/fs/btrfs/*-*", root,);
+async fn stats(root: PathBuf) -> Result<Vec<Stats>, Error> {
+    let pattern = format!("{}/fs/btrfs/*-*", root.to_string_lossy());
     let paths = glob::glob(&pattern)?;
 
     let mut stats = vec![];
@@ -225,31 +218,31 @@ async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
     let devices = read_device_info(&root).await?;
 
     let path = root.join("label");
-    let label = read_to_string(path).await?;
+    let label = read_to_string(path)?;
 
     let path = root.join("metadata_uuid");
-    let uuid = read_to_string(path).await?.trim_end().to_string();
+    let uuid = read_to_string(path)?;
 
     let path = root.join("features");
     let features = list_files(path).await?;
 
     let path = root.join("clone_alignment");
-    let clone_alignment = read_into(path).await?;
+    let clone_alignment = read_into(path)?;
 
     let path = root.join("nodesize");
-    let node_size = read_into(path).await?;
+    let node_size = read_into(path)?;
 
     let path = root.join("quota_override");
-    let quota_override = read_into(path).await?;
+    let quota_override = read_into(path)?;
 
     let path = root.join("sectorsize");
-    let sector_size = read_into(path).await?;
+    let sector_size = read_into(path)?;
 
     let path = root.join("allocation/global_rsv_reserved");
-    let global_rsv_reserved = read_into(path).await?;
+    let global_rsv_reserved = read_into(path)?;
 
     let path = root.join("allocation/global_rsv_size");
-    let global_rsv_size = read_into(path).await?;
+    let global_rsv_size = read_into(path)?;
 
     let path = root.join("allocation/data");
     let data = read_allocation_stats(path, devices.len()).await.ok();
@@ -280,10 +273,10 @@ async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
 }
 
 async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
-    let mut dirs = tokio::fs::read_dir(path).await?;
+    let mut dirs = std::fs::read_dir(path)?;
     let mut files = vec![];
 
-    while let Some(entry) = dirs.next_entry().await? {
+    while let Some(Ok(entry)) = dirs.next() {
         let name = entry.file_name().into_string().unwrap();
         files.push(name);
     }
@@ -293,15 +286,13 @@ async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
 
 async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
     let path = path.join("devices");
-    let mut dirs = tokio::fs::read_dir(path).await?;
+    let mut dirs = std::fs::read_dir(path)?;
 
     let mut devices = BTreeMap::new();
-    while let Some(ent) = dirs.next_entry().await? {
-        let name = ent.file_name().into_string().unwrap();
-        let mut path = ent.path();
-        path.push("size");
-
-        let size: u64 = read_into(path).await.unwrap_or(0);
+    while let Some(Ok(entry)) = dirs.next() {
+        let name = entry.file_name().to_string_lossy().to_string();
+        let path = entry.path().join("size");
+        let size: u64 = read_into(path).unwrap_or(0);
 
         devices.insert(
             name,
@@ -316,34 +307,34 @@ async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error
 
 async fn read_allocation_stats(root: PathBuf, devices: usize) -> Result<AllocationStats, Error> {
     let path = root.join("bytes_may_use");
-    let may_used_bytes = read_into(path).await?;
+    let may_used_bytes = read_into(path)?;
 
     let path = root.join("bytes_pinned");
-    let pinned_bytes = read_into(path).await?;
+    let pinned_bytes = read_into(path)?;
 
     let path = root.join("bytes_readonly");
-    let read_only_bytes = read_into(path).await?;
+    let read_only_bytes = read_into(path)?;
 
     let path = root.join("bytes_reserved");
-    let reserved_bytes = read_into(path).await?;
+    let reserved_bytes = read_into(path)?;
 
     let path = root.join("bytes_used");
-    let used_bytes = read_into(path).await?;
+    let used_bytes = read_into(path)?;
 
     let path = root.join("disk_used");
-    let disk_used_bytes = read_into(path).await?;
+    let disk_used_bytes = read_into(path)?;
 
     let path = root.join("disk_total");
-    let disk_total_bytes = read_into(path).await?;
+    let disk_total_bytes = read_into(path)?;
 
     let path = root.join("flags");
-    let flags = read_into(path).await?;
+    let flags = read_into(path)?;
 
     let path = root.join("total_bytes");
-    let total_bytes = read_into(path).await?;
+    let total_bytes = read_into(path)?;
 
     let path = root.join("total_bytes_pinned");
-    let total_pinned_bytes = read_into(path).await?;
+    let total_pinned_bytes = read_into(path)?;
 
     // TODO: check the path arg, it is just a placeholder
     let layouts = read_layouts(root, devices).await?;
@@ -367,17 +358,17 @@ async fn read_layouts(
     root: PathBuf,
     devices: usize,
 ) -> Result<BTreeMap<String, LayoutUsage>, Error> {
-    let mut dirs = tokio::fs::read_dir(root).await?;
+    let mut dirs = std::fs::read_dir(root)?;
 
     let mut layouts = BTreeMap::new();
-    while let Some(ent) = dirs.next_entry().await? {
-        let path = ent.path();
+    while let Some(Ok(entry)) = dirs.next() {
+        let path = entry.path();
         if !path.is_dir() {
             continue;
         }
 
-        let name = path.file_name().unwrap().to_str().unwrap().to_string();
-        let layout = read_layout(&path, devices).await?;
+        let name = path.file_name().unwrap().to_string_lossy().to_string();
+        let layout = read_layout(path, devices).await?;
 
         layouts.insert(name, layout);
     }
@@ -386,15 +377,12 @@ async fn read_layouts(
 }
 
 // read_layout reads the Btrfs layout statistics for an allocation layout.
-async fn read_layout(root: &Path, devices: usize) -> Result<LayoutUsage, Error> {
-    let path = root.join("total_bytes");
-    let total_bytes = read_into(path).await?;
+async fn read_layout(root: PathBuf, devices: usize) -> Result<LayoutUsage, Error> {
+    let total_bytes = read_into(root.join("total_bytes"))?;
+    let used_bytes = read_into(root.join("used_bytes"))?;
 
-    let path = root.join("used_bytes");
-    let used_bytes = read_into(path).await?;
-
-    let name = root.file_name().unwrap().to_str().unwrap_or("");
-    let ratio = calc_ratio(name, devices);
+    let name = root.file_name().unwrap().to_string_lossy();
+    let ratio = calc_ratio(&name, devices);
 
     Ok(LayoutUsage {
         used_bytes,
@@ -421,7 +409,7 @@ mod tests {
     #[tokio::test]
     async fn test_get_stats() {
         let path = "tests/fixtures/sys";
-        let stats = stats(path).await.unwrap();
+        let stats = stats(path.into()).await.unwrap();
 
         struct Alloc {
             layout: String,

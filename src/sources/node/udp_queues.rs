@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 
@@ -6,9 +8,9 @@ use super::Error;
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/net/udp6`
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
-    if let Ok(v4) = net_udp_summary(proc_path).await {
+    if let Ok(v4) = net_udp_summary(proc_path.clone()).await {
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
                 "node_udp_queues",
@@ -73,14 +75,12 @@ struct NetIPSocketSummary {
     used_sockets: u64,
 }
 
-async fn net_udp_summary(root: &str) -> Result<NetIPSocketSummary, Error> {
-    let path = format!("{}/net/udp", root);
-    net_ip_socket_summary(&path).await
+async fn net_udp_summary(root: PathBuf) -> Result<NetIPSocketSummary, Error> {
+    net_ip_socket_summary(root.join("net/udp")).await
 }
 
-async fn net_udp6_summary(root: &str) -> Result<NetIPSocketSummary, Error> {
-    let path = format!("{}/net/udp6", root);
-    net_ip_socket_summary(&path).await
+async fn net_udp6_summary(root: PathBuf) -> Result<NetIPSocketSummary, Error> {
+    net_ip_socket_summary(root.join("net/udp6")).await
 }
 
 /// NetIPSocketLine represents the fields parsed from a single line
@@ -100,7 +100,7 @@ struct NetIPSocketLine {
     inode: u64,
 }
 
-async fn net_ip_socket_summary(path: &str) -> Result<NetIPSocketSummary, Error> {
+async fn net_ip_socket_summary(path: PathBuf) -> Result<NetIPSocketSummary, Error> {
     let f = tokio::fs::File::open(path).await?;
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
@@ -153,7 +153,7 @@ mod tests {
     async fn test_net_ip_socket_summary() {
         struct TestCase {
             name: String,
-            file: String,
+            file: PathBuf,
             want: NetIPSocketSummary,
             want_err: bool,
         }
@@ -161,7 +161,7 @@ mod tests {
         let cases = vec![
             TestCase {
                 name: "udp file found, no error should come up".to_string(),
-                file: "tests/fixtures/proc/net/udp".to_string(),
+                file: "tests/fixtures/proc/net/udp".into(),
                 want: NetIPSocketSummary {
                     tx_queue_length: 2,
                     rx_queue_length: 2,
@@ -171,7 +171,7 @@ mod tests {
             },
             TestCase {
                 name: "udp6 file found, no error should come up".to_string(),
-                file: "tests/fixtures/proc/net/udp6".to_string(),
+                file: "tests/fixtures/proc/net/udp6".into(),
                 want: NetIPSocketSummary {
                     tx_queue_length: 0,
                     rx_queue_length: 0,
@@ -181,20 +181,20 @@ mod tests {
             },
             TestCase {
                 name: "error case - file not found".to_string(),
-                file: "somewhere over the rainbow".to_string(),
+                file: "somewhere over the rainbow".into(),
                 want: NetIPSocketSummary::default(),
                 want_err: true,
             },
             TestCase {
                 name: "error case - parse error".to_string(),
-                file: "tests/fixtures/proc/net/udp_broken".to_string(),
+                file: "tests/fixtures/proc/net/udp_broken".into(),
                 want: Default::default(),
                 want_err: true,
             },
         ];
 
         for case in cases {
-            let result = net_ip_socket_summary(&case.file).await;
+            let result = net_ip_socket_summary(case.file).await;
             if case.want_err {
                 if result.is_err() {
                     continue;

@@ -1,5 +1,6 @@
-/// Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
-use std::path::Path;
+//! Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
+
+use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 use nom::branch::alt;
@@ -57,7 +58,7 @@ struct MDStat {
 }
 
 async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
-    let content = read_to_string(path).await?;
+    let content = read_to_string(path)?;
     let lines = content.split('\n').collect::<Vec<_>>();
 
     let mut stats = vec![];
@@ -258,9 +259,8 @@ fn state_metric_value(key: &str, state: &str) -> f64 {
     }
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = Path::new(proc_path).join("mdstat");
-    let stats = parse_mdstat(path).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = parse_mdstat(proc_path.join("mdstat")).await?;
 
     let mut metrics = vec![];
     for stat in stats {

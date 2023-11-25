@@ -10,19 +10,16 @@
 //! > some avg10=0.06 avg60=0.21 avg300=0.99 total=8537362
 //! > full avg10=0.00 avg60=0.13 avg300=0.96 total=8183134
 
+use std::path::PathBuf;
+
 use event::Metric;
 
 use super::{read_to_string, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/pressure/cpu", proc_path);
-    let cpu = psi_stats(&path).await?;
-
-    let path = format!("{}/pressure/io", proc_path);
-    let io = psi_stats(&path).await?;
-
-    let path = format!("{}/pressure/memory", proc_path);
-    let memory = psi_stats(&path).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let cpu = psi_stats(proc_path.join("pressure/cpu")).await?;
+    let io = psi_stats(proc_path.join("pressure/io")).await?;
+    let memory = psi_stats(proc_path.join("pressure/memory")).await?;
 
     let mut metrics = Vec::new();
     if let Some(some) = cpu.some {
@@ -91,8 +88,8 @@ struct PSIStats {
     full: Option<PSIStat>,
 }
 
-async fn psi_stats(path: &str) -> Result<PSIStats, Error> {
-    let content = read_to_string(path).await?;
+async fn psi_stats(path: PathBuf) -> Result<PSIStats, Error> {
+    let content = read_to_string(path)?;
     let mut stats = PSIStats {
         some: None,
         full: None,

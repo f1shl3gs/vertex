@@ -1,18 +1,16 @@
+use std::fs::read_dir;
 use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::Error;
+use super::{read_to_string, Error};
 
-pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
-    let mut path = PathBuf::from(root);
-    path.push("class/nvme");
-
+pub async fn gather(root: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
-    let mut readdir = tokio::fs::read_dir(path).await?;
+    let mut readdir = read_dir(root.join("class/nvme"))?;
 
-    while let Some(dir) = readdir.next_entry().await? {
-        let [serial, model, state, firmware_rev] = read_nvme_device(dir.path())?;
+    while let Some(Ok(entry)) = readdir.next() {
+        let [serial, model, state, firmware_rev] = read_nvme_device(entry.path())?;
 
         metrics.push(Metric::gauge_with_tags(
             "node_nvme_info",
@@ -31,10 +29,10 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
 }
 
 fn read_nvme_device(root: PathBuf) -> Result<[String; 4], std::io::Error> {
-    let serial = std::fs::read_to_string(root.join("serial"))?;
-    let model = std::fs::read_to_string(root.join("model"))?;
-    let state = std::fs::read_to_string(root.join("state"))?;
-    let firmware = std::fs::read_to_string(root.join("firmware_rev"))?;
+    let serial = read_to_string(root.join("serial"))?;
+    let model = read_to_string(root.join("model"))?;
+    let state = read_to_string(root.join("state"))?;
+    let firmware = read_to_string(root.join("firmware_rev"))?;
 
     Ok([serial, model, state, firmware])
 }
@@ -46,10 +44,10 @@ mod tests {
     #[tokio::test]
     async fn test_read_dir() {
         let path = PathBuf::from("tests/fixtures/sys/class/nvme/nvme0");
-        let mut rd = tokio::fs::read_dir(path).await.unwrap();
+        let mut rd = read_dir(path).unwrap();
 
         let mut count = 0;
-        while let Some(_dir) = rd.next_entry().await.unwrap() {
+        while let Some(Ok(_dir)) = rd.next() {
             count += 1;
         }
 

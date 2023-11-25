@@ -6,11 +6,10 @@
 //! * Linux 4.17 https://elixir.bootlin.com/linux/v4.17/source/net/core/net-procfs.c#L162
 //! and https://elixir.bootlin.com/linux/v4.17/source/include/linux/netdevice.h#L2810.
 
+use std::path::PathBuf;
+
 use event::{tags, Metric};
-use tokio::{
-    fs,
-    io::{self, AsyncBufReadExt},
-};
+use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -26,13 +25,14 @@ struct SoftnetStat {
     time_squeezed: u32,
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/net/softnet_stat", proc_path);
-    let f = fs::File::open(path).await.map_err(|err| Error::Io {
-        msg: "open softnet_stat failed".into(),
-        err,
-    })?;
-    let r = io::BufReader::new(f);
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let file = tokio::fs::File::open(proc_path.join("net/softnet_stat"))
+        .await
+        .map_err(|err| Error::Io {
+            msg: "open softnet_stat failed".into(),
+            err,
+        })?;
+    let r = tokio::io::BufReader::new(file);
     let mut lines = r.lines();
 
     let mut metrics = Vec::new();

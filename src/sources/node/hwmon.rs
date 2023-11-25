@@ -1,24 +1,23 @@
 use std::collections::BTreeMap;
-use std::path::Path;
+use std::fs::{canonicalize, read_link};
+use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
+use futures::stream::{FuturesUnordered, StreamExt};
 use once_cell::sync::Lazy;
 use regex::Regex;
 
 use super::{read_to_string, Error};
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let entries = std::fs::read_dir(format!("{}/class/hwmon", sys_path))?
-        .collect::<Result<Vec<_>, std::io::Error>>()?;
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let mut tasks = FuturesUnordered::new();
+    let mut dirs = std::fs::read_dir(sys_path.join("class/hwmon"))?;
 
-    let tasks = entries.into_iter().map(|entry| {
-        tokio::spawn(async move {
+    while let Some(Ok(entry)) = dirs.next() {
+        tasks.push(tokio::spawn(async move {
             let meta = entry.metadata()?;
             let meta = match meta.file_type().is_symlink() {
-                true => match tokio::fs::canonicalize(entry.path()).await {
-                    Ok(p) => p.metadata()?,
-                    Err(err) => return Err(err),
-                },
+                true => canonicalize(entry.path())?.metadata()?,
                 false => meta,
             };
 
@@ -26,47 +25,35 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 return Ok(vec![]);
             }
 
-            let ep = entry.path();
-            let dir = ep.to_str().unwrap();
-            match hwmon_metrics(dir).await {
-                Ok(metrics) => Ok(metrics),
+            hwmon_metrics(entry.path()).await
+        }));
+    }
+
+    let mut metrics = vec![];
+    while let Some(result) = tasks.next().await {
+        match result {
+            Ok(result) => match result {
+                Ok(partial) => metrics.extend(partial),
                 Err(err) => {
-                    warn!(
-                        message = "hwmon_metrics error {}",
-                        %err,
-                    );
-
-                    Ok(vec![])
+                    warn!(message = "gather metrics failed", ?err);
                 }
+            },
+            Err(err) => {
+                warn!(message = "spawn task failed", ?err);
             }
-        })
-    });
-
-    let metrics = futures::future::join_all(tasks).await.iter().fold(
-        Vec::<Metric>::new(),
-        |mut metrics, result| {
-            if let Ok(Ok(ms)) = result {
-                metrics.extend_from_slice(ms.as_slice())
-            }
-
-            metrics
-        },
-    );
+        }
+    }
 
     Ok(metrics)
 }
 
-async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
-    let chip = &hwmon_name(dir).await?;
-
+async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
+    let chip = &hwmon_name(&dir).await?;
     let data = {
-        let result = collect_sensor_data(dir).await;
+        let result = collect_sensor_data(&dir).await;
         match result {
             Ok(r) => r,
-            Err(_err) => {
-                let path = format!("{}/device", dir);
-                collect_sensor_data(&path).await?
-            }
+            Err(_err) => collect_sensor_data(dir.join("device")).await?,
         }
     };
 
@@ -83,7 +70,6 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
         ));
     }
 
-    // let chip = &chip.clone();
     for (sensor, props) in &data {
         let sensor_type = match explode_sensor_filename(sensor) {
             Ok((st, _, _)) => st,
@@ -96,16 +82,16 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             }
         };
 
-        if let Some(v) = props.get("label") {
-            if !v.is_empty() {
+        if let Some(label) = props.get("label") {
+            if !label.is_empty() {
                 metrics.push(Metric::gauge_with_tags(
                     "node_hwmon_sensor_label",
                     "Label for given chip and sensor",
                     1f64,
                     tags!(
                         "chip" => chip,
-                       "label" => v,
-                       "sensor" => sensor,
+                        "label" => label,
+                        "sensor" => sensor.clone(),
                     ),
                 ));
             }
@@ -162,11 +148,10 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
         }
 
         if sensor_type == "update_interval" {
-            let pv = props.get("").unwrap_or(&"".to_string()).parse::<f64>();
-            if pv.is_err() {
-                continue;
-            }
-            let pv = pv.unwrap();
+            let pv = match props.get("").map(|v| v.parse::<f64>()) {
+                Some(Ok(v)) => v,
+                _ => continue,
+            };
 
             metrics.push(Metric::gauge_with_tags(
                 "node_hwmon_update_interval_seconds",
@@ -232,7 +217,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             // everything else should get a unit
             if sensor_type == "in" || sensor_type == "cpu" {
                 metrics.push(Metric::gauge_with_tags(
-                    format!("{}_volts", name),
+                    name + "_volts",
                     format!("Hardware monitor for voltage ({})", element),
                     pv * 0.001,
                     tags!(
@@ -381,8 +366,8 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 }
 
 // This function can be optimized by parallelling sensors
-async fn collect_sensor_data<P: AsRef<Path>>(
-    dir: P,
+async fn collect_sensor_data(
+    dir: impl AsRef<Path>,
 ) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let dirs = std::fs::read_dir(dir)?;
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
@@ -399,7 +384,7 @@ async fn collect_sensor_data<P: AsRef<Path>>(
                         continue;
                     }
 
-                    match read_to_string(entry.path()).await {
+                    match read_to_string(entry.path()) {
                         Ok(v) => {
                             let sensor = format!("{}{}", sensor, num);
                             if !stats.contains_key(&sensor) {
@@ -407,7 +392,7 @@ async fn collect_sensor_data<P: AsRef<Path>>(
                             }
 
                             let props = stats.get_mut(&sensor).unwrap();
-                            props.insert(property.to_string(), v);
+                            props.insert(property.to_string(), v.trim().to_string());
                         }
                         _ => continue,
                     }
@@ -472,7 +457,7 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
 // human_readable_name is similar to the methods in
 async fn human_readable_chip_name<P: AsRef<Path>>(dir: P) -> Result<String, Error> {
     let path = dir.as_ref().join("name");
-    let content = read_to_string(path).await?;
+    let content = read_to_string(path)?;
     Ok(content)
 }
 
@@ -493,8 +478,8 @@ async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
 
     let path = path.as_ref();
     let ap = path.join("device");
-    if tokio::fs::read_link(&ap).await.is_ok() {
-        let dev_path = tokio::fs::canonicalize(ap).await?;
+    if read_link(&ap).is_ok() {
+        let dev_path = canonicalize(ap)?;
         let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
         let dev_prefix = dev_path.parent().unwrap();
         let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();
@@ -513,7 +498,7 @@ async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
 
     // preference 2: is there a name file
     let name_path = path.join("name");
-    match read_to_string(name_path).await {
+    match read_to_string(name_path) {
         Ok(content) => return Ok(content),
         Err(err) => debug!(
             message = "read device name failed",
@@ -562,8 +547,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let path = "tests/fixtures/sys";
-
+        let path = "tests/fixtures/sys".into();
         let ms = gather(path).await.unwrap();
         assert_ne!(ms.len(), 0);
     }

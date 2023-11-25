@@ -54,21 +54,22 @@ mod wifi;
 mod xfs;
 mod zfs;
 
-use futures::stream::FuturesUnordered;
-use futures_util::StreamExt;
+use std::path::Path;
+use std::path::PathBuf;
 use std::str::FromStr;
 use std::time::Duration;
-use std::{path::Path, sync::Arc};
 
 use configurable::configurable_component;
 use error::Error;
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 use framework::config::{
     default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
 };
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
+use futures::stream::FuturesUnordered;
+use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 
 fn default_cpu_config() -> Option<cpu::CPUConfig> {
@@ -303,11 +304,11 @@ impl Default for Collectors {
     }
 }
 
-fn default_proc_path() -> String {
+fn default_proc_path() -> PathBuf {
     "/proc".into()
 }
 
-fn default_sys_path() -> String {
+fn default_sys_path() -> PathBuf {
     "/sys".into()
 }
 
@@ -319,11 +320,11 @@ fn default_sys_path() -> String {
 pub struct Config {
     /// procfs mountpoint.
     #[serde(default = "default_proc_path")]
-    proc_path: String,
+    proc_path: PathBuf,
 
     /// sysfs mountpoint.
     #[serde(default = "default_sys_path")]
-    sys_path: String,
+    sys_path: PathBuf,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -348,8 +349,8 @@ impl Default for Config {
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct NodeMetrics {
     interval: Duration,
-    proc_path: String,
-    sys_path: String,
+    proc_path: PathBuf,
+    sys_path: PathBuf,
 
     collectors: Collectors,
 }
@@ -362,7 +363,7 @@ pub struct NodeMetrics {
 /// The files this function will(should) be reading is under `/sys` and `/proc` which is
 /// relative small and the filesystem is kind of `tmpfs`, so the performance should never
 /// be a problem.
-pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
+pub fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
     let mut content = std::fs::read_to_string(path)?;
 
     while content.ends_with('\n') || content.ends_with('\t') || content.ends_with(' ') {
@@ -372,13 +373,13 @@ pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::
     Ok(content)
 }
 
-pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
+pub fn read_into<P, T, E>(path: P) -> Result<T, Error>
 where
     P: AsRef<Path>,
     T: FromStr<Err = E>,
     Error: From<E>,
 {
-    let content = read_to_string(path).await?;
+    let content = read_to_string(path)?;
     Ok(<T as FromStr>::from_str(content.as_str())?)
 }
 
@@ -394,27 +395,28 @@ macro_rules! record_gather {
             Ok(ms) => (ms, 1.0),
             Err(err) => {
                 debug!("gather metrics failed, {}: {}", $name, err);
-
                 (vec![], 0.0)
             },
         };
 
-        metrics.push(Metric::gauge_with_tags(
-            "node_scrape_collector_duration_seconds",
-            "Duration of a collector scrape.",
-            duration as f64,
-            tags! (
-                "collector" => $name
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "node_scrape_collector_duration_seconds",
+                "Duration of a collector scrape.",
+                duration,
+                tags! (
+                    Key::from_static("collector") => $name
+                )
+            ),
+            Metric::gauge_with_tags(
+                "node_scrape_collector_success",
+                "Whether a collector succeeded.",
+                success,
+                tags! (
+                    Key::from_static("collector") => $name
+                )
             )
-        ));
-        metrics.push(Metric::gauge_with_tags(
-            "node_scrape_collector_success",
-            "Whether a collector succeeded.",
-            success,
-            tags! (
-                "collector" => $name
-            )
-        ));
+        ]);
 
         metrics
     })
@@ -423,18 +425,6 @@ macro_rules! record_gather {
 impl NodeMetrics {
     async fn run(self, mut shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
         let mut ticker = tokio::time::interval(self.interval);
-
-        let proc_path = Arc::new(self.proc_path);
-        let sys_path = Arc::new(self.sys_path);
-        let cpu_conf = self.collectors.cpu.map(Arc::new);
-        let diskstats = self.collectors.diskstats.map(Arc::new);
-        let filesystem = self.collectors.filesystem.map(Arc::new);
-        let ipvs = self.collectors.ipvs.map(Arc::new);
-        let netclass = self.collectors.netclass.map(Arc::new);
-        let netdev = self.collectors.netdev.map(Arc::new);
-        let netstat = self.collectors.netstat.map(Arc::new);
-        let power_supply = self.collectors.power_supply.map(Arc::new);
-        let vmstat = self.collectors.vmstat.map(Arc::new);
 
         loop {
             tokio::select! {
@@ -447,206 +437,184 @@ impl NodeMetrics {
             let mut tasks = FuturesUnordered::new();
 
             if self.collectors.arp {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("arp", arp::gather(proc_path.as_ref()))
+                    record_gather!("arp", arp::gather(proc_path))
                 }));
             }
 
             if self.collectors.bonding {
-                let sys_path = Arc::clone(&sys_path);
-
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("bonding", bonding::gather(sys_path.as_ref()))
+                    record_gather!("bonding", bonding::gather(sys_path))
                 }));
             }
 
             if self.collectors.btrfs {
-                let sys_path = Arc::clone(&proc_path);
+                let sys_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("btrfs", btrfs::gather(sys_path.as_ref()))
+                    record_gather!("btrfs", btrfs::gather(sys_path))
                 }))
             }
 
             if self.collectors.conntrack {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("conntrack", conntrack::gather(proc_path.as_ref()))
+                    record_gather!("conntrack", conntrack::gather(proc_path))
                 }))
             }
 
-            if let Some(ref conf) = cpu_conf {
-                let proc_path = Arc::clone(&proc_path);
-                let conf = Arc::clone(conf);
-
+            if let Some(conf) = &self.collectors.cpu {
+                let proc_path = self.proc_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("cpu", conf.gather(proc_path.as_ref()))
+                    record_gather!("cpu", cpu::gather(conf, proc_path))
                 }));
             }
 
             if self.collectors.cpufreq {
-                let sys_path = Arc::clone(&sys_path);
-
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("cpufreq", cpufreq::gather(sys_path.as_ref()))
+                    record_gather!("cpufreq", cpufreq::gather(sys_path))
                 }))
             }
 
-            if let Some(ref conf) = diskstats {
-                let conf = Arc::clone(conf);
-                let proc_path = Arc::clone(&proc_path);
-
+            if let Some(conf) = &self.collectors.diskstats {
+                let proc_path = self.proc_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("diskstats", conf.gather(proc_path.as_ref()))
+                    record_gather!("diskstats", diskstats::gather(conf, proc_path))
                 }))
             }
 
             if self.collectors.drm {
-                let sys_path = Arc::clone(&sys_path);
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("drm", drm::gather(sys_path.as_ref()))
+                    record_gather!("drm", drm::gather(sys_path))
                 }))
             }
 
             if self.collectors.edac {
-                let sys_path = Arc::clone(&sys_path);
-
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("edac", edac::gather(sys_path.as_ref()))
+                    record_gather!("edac", edac::gather(sys_path))
                 }))
             }
 
             if self.collectors.entropy {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("entropy", entropy::gather(proc_path.as_ref()))
+                    record_gather!("entropy", entropy::gather(proc_path))
                 }))
             }
 
             if self.collectors.fibrechannel {
-                let sys_path = Arc::clone(&sys_path);
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("fibrechannel", fibrechannel::gather(sys_path.as_ref()))
+                    record_gather!("fibrechannel", fibrechannel::gather(sys_path))
                 }))
             }
 
             if self.collectors.filefd {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("filefd", filefd::gather(proc_path.as_ref()))
+                    record_gather!("filefd", filefd::gather(proc_path))
                 }))
             }
 
-            if let Some(ref conf) = filesystem {
-                let proc_path = Arc::clone(&proc_path);
-                let conf = Arc::clone(conf);
-
+            if let Some(conf) = &self.collectors.filesystem {
+                let proc_path = self.proc_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("filesystem", conf.gather(proc_path.as_ref()))
+                    record_gather!("filesystem", filesystem::gather(conf, proc_path))
                 }))
             }
 
             if self.collectors.hwmon {
-                let sys_path = Arc::clone(&sys_path);
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("hwmon", hwmon::gather(sys_path.as_ref()))
+                    record_gather!("hwmon", hwmon::gather(sys_path))
                 }))
             }
 
             if self.collectors.infiniband {
-                let sys_path = Arc::clone(&sys_path);
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("infiniband", infiniband::gather(sys_path.as_ref()))
+                    record_gather!("infiniband", infiniband::gather(sys_path))
                 }))
             }
 
-            if let Some(ref conf) = ipvs {
-                let conf = Arc::clone(conf);
-                let proc_path = Arc::clone(&proc_path);
+            if let Some(conf) = &self.collectors.ipvs {
+                let proc_path = self.proc_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("ipvs", ipvs::gather(conf.as_ref(), proc_path.as_ref()))
+                    record_gather!("ipvs", ipvs::gather(conf, proc_path))
                 }))
             }
 
             if self.collectors.loadavg {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("loadavg", loadavg::gather(proc_path.as_ref()))
+                    record_gather!("loadavg", loadavg::gather(proc_path))
                 }))
             }
 
             if self.collectors.mdadm {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("mdadm", mdadm::gather(proc_path.as_ref()))
+                    record_gather!("mdadm", mdadm::gather(proc_path))
                 }))
             }
 
             if self.collectors.memory {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("meminfo", meminfo::gather(proc_path.as_ref()))
+                    record_gather!("meminfo", meminfo::gather(proc_path))
                 }))
             }
 
-            if let Some(ref conf) = netclass {
-                let conf = Arc::clone(conf);
-                let sys_path = Arc::clone(&sys_path);
-
+            if let Some(conf) = &self.collectors.netclass {
+                let sys_path = self.sys_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!(
-                        "netclass",
-                        netclass::gather(conf.as_ref(), sys_path.as_ref())
-                    )
+                    record_gather!("netclass", netclass::gather(conf, sys_path))
                 }))
             }
 
-            if let Some(ref conf) = netdev {
-                let conf = Arc::clone(conf);
-                let proc_path = Arc::clone(&proc_path);
-
+            if let Some(conf) = &self.collectors.netdev {
+                let proc_path = self.proc_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("netdev", conf.gather(proc_path.as_ref()))
+                    record_gather!("netdev", netdev::gather(conf, proc_path))
                 }))
             }
 
-            if let Some(ref conf) = netstat {
-                let conf = Arc::clone(conf);
-                let proc_path = Arc::clone(&proc_path);
-
+            if let Some(conf) = &self.collectors.netstat {
+                let proc_path = self.proc_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!(
-                        "netstat",
-                        netstat::gather(conf.as_ref(), proc_path.as_ref())
-                    )
+                    record_gather!("netstat", netstat::gather(conf, proc_path))
                 }))
             }
 
             if self.collectors.nfs {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("nfs", nfs::gather(proc_path.as_ref()))
+                    record_gather!("nfs", nfs::gather(proc_path))
                 }))
             }
 
             if self.collectors.nfsd {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("nfsd", nfsd::gather(proc_path.as_ref()))
+                    record_gather!("nfsd", nfsd::gather(proc_path))
                 }))
             }
 
             if self.collectors.nvme {
-                let sys_path = Arc::clone(&sys_path);
-
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("nvme", nvme::gather(sys_path.as_ref()))
+                    record_gather!("nvme", nvme::gather(sys_path))
                 }))
             }
 
@@ -656,65 +624,60 @@ impl NodeMetrics {
                 }))
             }
 
-            if let Some(ref conf) = power_supply {
-                let sys_path = Arc::clone(&sys_path);
-                let conf = Arc::clone(conf);
-
+            if let Some(conf) = &self.collectors.power_supply {
+                let conf = conf.clone();
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!(
-                        "powersupplyclass",
-                        powersupplyclass::gather(sys_path.as_ref(), conf.as_ref())
-                    )
+                    record_gather!("powersupplyclass", powersupplyclass::gather(conf, sys_path))
                 }))
             }
 
             if self.collectors.pressure {
-                let proc_path = Arc::clone(&sys_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("pressure", pressure::gather(proc_path.as_ref()))
+                    record_gather!("pressure", pressure::gather(proc_path))
                 }))
             }
 
             if self.collectors.processes {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("processes", processes::gather(proc_path.as_ref()))
+                    record_gather!("processes", processes::gather(proc_path))
                 }))
             }
 
             if self.collectors.rapl {
-                let sys_path = Arc::clone(&sys_path);
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("rapl", rapl::gather(sys_path.as_ref()))
+                    record_gather!("rapl", rapl::gather(sys_path))
                 }))
             }
 
             if self.collectors.schedstat {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("schedstat", schedstat::gather(proc_path.as_ref()))
+                    record_gather!("schedstat", schedstat::gather(proc_path))
                 }))
             }
 
             if self.collectors.sockstat {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("sockstat", sockstat::gather(proc_path.as_ref()))
+                    record_gather!("sockstat", sockstat::gather(proc_path))
                 }))
             }
 
             if self.collectors.softnet {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("softnet", softnet::gather(proc_path.as_ref()))
+                    record_gather!("softnet", softnet::gather(proc_path))
                 }))
             }
 
             if self.collectors.stat {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("stat", stat::gather(proc_path.as_ref()))
+                    record_gather!("stat", stat::gather(proc_path))
                 }))
             }
 
@@ -725,10 +688,9 @@ impl NodeMetrics {
             }
 
             if self.collectors.thermal_zone {
-                let sys_path = Arc::clone(&sys_path);
-
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("thermal_zone", thermal_zone::gather(sys_path.as_ref()))
+                    record_gather!("thermal_zone", thermal_zone::gather(sys_path))
                 }))
             }
 
@@ -745,10 +707,9 @@ impl NodeMetrics {
             }
 
             if self.collectors.udp_queues {
-                let proc_path = Arc::clone(&proc_path);
-
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("udp_queues", udp_queues::gather(proc_path.as_ref()))
+                    record_gather!("udp_queues", udp_queues::gather(proc_path))
                 }))
             }
 
@@ -758,27 +719,26 @@ impl NodeMetrics {
                 }))
             }
 
-            if let Some(ref conf) = vmstat {
-                let conf = Arc::clone(conf);
-                let proc_path = Arc::clone(&proc_path);
-
+            if let Some(conf) = &self.collectors.vmstat {
+                let proc_path = self.proc_path.clone();
+                let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("vmstat", conf.gather(proc_path.as_ref()))
+                    record_gather!("vmstat", vmstat::gather(conf, proc_path))
                 }))
             }
 
             #[cfg(target_os = "linux")]
             if self.collectors.xfs {
-                let sys_path = Arc::clone(&sys_path);
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("xfs", xfs::gather(sys_path.as_ref()))
+                    record_gather!("xfs", xfs::gather(sys_path))
                 }))
             }
 
             if self.collectors.zfs {
-                let proc_path = Arc::clone(&proc_path);
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("zfs", zfs::gather(proc_path.as_ref()))
+                    record_gather!("zfs", zfs::gather(proc_path))
                 }))
             }
 

@@ -1,13 +1,15 @@
 //! Exposes ARP statistics from `/proc/net/arp`.
+
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let file = tokio::fs::File::open(format!("{}/net/arp", proc_path))
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let file = tokio::fs::File::open(proc_path.join("net/arp"))
         .await
         .map_err(|err| Error::Io {
             err,
@@ -35,10 +37,10 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     for (device, count) in devices {
         metrics.push(Metric::gauge_with_tags(
             "node_arp_entries",
-            "",
-            count as f64,
+            "ARP entries by device",
+            count,
             tags!(
-                "device" => &device,
+                "device" => device,
             ),
         ));
     }
@@ -53,6 +55,6 @@ mod tests {
     #[tokio::test]
     async fn test_gather() {
         let proc_path = "tests/fixtures/proc";
-        gather(proc_path).await.unwrap();
+        gather(proc_path.into()).await.unwrap();
     }
 }

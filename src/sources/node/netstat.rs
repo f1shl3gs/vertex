@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 
 use event::Metric;
 use framework::config::serde_regex;
@@ -27,15 +28,10 @@ fn default_fields() -> Regex {
     Regex::new("^(.*_(InErrors|InErrs)|Ip_Forwarding|Ip(6|Ext)_(InOctets|OutOctets)|Icmp6?_(InMsgs|OutMsgs)|TcpExt_(Listen.*|Syncookies.*|TCPSynRetrans)|Tcp_(ActiveOpens|InSegs|OutSegs|OutRsts|PassiveOpens|RetransSegs|CurrEstab)|Udp6?_(InDatagrams|OutDatagrams|NoPorts|RcvbufErrors|SndbufErrors))$").unwrap()
 }
 
-pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/net/netstat", proc_path);
-    let mut net_stats = get_net_stats(&path).await?;
-
-    let path = format!("{}/net/snmp", proc_path);
-    let snmp_stats = get_net_stats(&path).await?;
-
-    let path = format!("{}/net/snmp6", proc_path);
-    let snmp6_stats = get_snmp6_stats(&path).await?;
+pub async fn gather(conf: NetstatConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let mut net_stats = get_net_stats(proc_path.join("net/netstat")).await?;
+    let snmp_stats = get_net_stats(proc_path.join("net/snmp")).await?;
+    let snmp6_stats = get_snmp6_stats(proc_path.join("net/snmp6")).await?;
 
     // Merge the results of snmpStats into netStats (collisions are possible,
     // but we know that the keys are always unique for the give use case.
@@ -70,7 +66,7 @@ pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>
     Ok(metrics)
 }
 
-async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
+async fn get_net_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let f = tokio::fs::File::open(path).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
@@ -102,7 +98,9 @@ async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, S
     Ok(stats)
 }
 
-async fn get_snmp6_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
+async fn get_snmp6_stats(
+    path: PathBuf,
+) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let f = tokio::fs::File::open(path).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
@@ -144,7 +142,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_net_stats() {
-        let path = "tests/fixtures/proc/net/netstat";
+        let path = "tests/fixtures/proc/net/netstat".into();
 
         let stats = get_net_stats(path).await.unwrap();
 
@@ -157,7 +155,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_snmp_stats() {
-        let path = "tests/fixtures/proc/net/snmp";
+        let path = "tests/fixtures/proc/net/snmp".into();
         let stats = get_net_stats(path).await.unwrap();
 
         let props = stats.get("Udp").unwrap();
@@ -169,7 +167,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_snmp6_stats() {
-        let path = "tests/fixtures/proc/net/snmp6";
+        let path = "tests/fixtures/proc/net/snmp6".into();
         let stats = get_snmp6_stats(path).await.unwrap();
 
         let props = stats.get("Ip6").unwrap();

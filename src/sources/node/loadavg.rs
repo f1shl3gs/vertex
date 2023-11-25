@@ -4,10 +4,8 @@ use event::Metric;
 
 use super::{read_to_string, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let root = PathBuf::from(proc_path);
-
-    match get_load(root).await {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    match get_load(proc_path).await {
         Ok(loads) => Ok(vec![
             Metric::gauge("node_load1", "1m load average", loads[0]),
             Metric::gauge("node_load5", "5m load average", loads[1]),
@@ -18,10 +16,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     }
 }
 
-async fn get_load(mut path: PathBuf) -> Result<Vec<f64>, std::io::Error> {
-    path.push("loadavg");
-
-    let content = read_to_string(path).await?;
+async fn get_load(path: PathBuf) -> Result<Vec<f64>, std::io::Error> {
+    let content = read_to_string(path.join("loadavg"))?;
     let loads = content
         .split_ascii_whitespace()
         .map(|part| part.parse::<f64>().unwrap_or(0.0))

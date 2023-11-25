@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use event::{tags, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
@@ -24,8 +26,8 @@ fn default_ignores() -> regex::Regex {
     regex::Regex::new("^$").unwrap()
 }
 
-pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let devices = net_class_devices(sys_path).await?;
+pub async fn gather(conf: NetClassConfig, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let devices = net_class_devices(sys_path.clone()).await?;
 
     let mut metrics = Vec::new();
     for device in devices {
@@ -33,7 +35,7 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             continue;
         }
 
-        let path = format!("{}/class/net/{}", sys_path, device);
+        let path = format!("{}/class/net/{}", sys_path.to_string_lossy(), device);
         let nci = match NetClassInterface::parse(&path).await {
             Ok(nci) => nci,
             _ => continue,
@@ -221,9 +223,8 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
     Ok(metrics)
 }
 
-async fn net_class_devices(sys_path: &str) -> Result<Vec<String>, Error> {
-    let path = format!("{}/class/net", sys_path);
-    let mut dirs = std::fs::read_dir(path)?;
+async fn net_class_devices(sys_path: PathBuf) -> Result<Vec<String>, Error> {
+    let mut dirs = std::fs::read_dir(sys_path.join("class/net"))?;
     let mut devices = Vec::new();
 
     while let Some(Ok(ent)) = dirs.next() {
@@ -325,7 +326,7 @@ impl NetClassInterface {
             let file = entry.file_name();
             let file = file.to_str().unwrap();
 
-            let value = match read_to_string(entry.path()).await {
+            let value = match read_to_string(entry.path()) {
                 Ok(v) => v,
                 _ => continue,
             };

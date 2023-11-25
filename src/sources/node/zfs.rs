@@ -1,5 +1,7 @@
 //! Exposes ZFS performance statistics
+
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
@@ -20,7 +22,8 @@ macro_rules! parse_subsystem_metrics {
     };
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let proc_path = proc_path.to_string_lossy();
     let mut metrics = Vec::new();
 
     parse_subsystem_metrics!(metrics, proc_path, "zfs_abd", "abdstats");
@@ -230,7 +233,7 @@ async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, bool>, Err
     let stats = [
         "online", "degraded", "faulted", "offline", "removed", "unavail",
     ];
-    let actual_state = read_to_string(path).await?.trim().to_lowercase();
+    let actual_state = read_to_string(path)?.trim().to_lowercase();
 
     let mut kvs = BTreeMap::new();
 

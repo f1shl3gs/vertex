@@ -1,14 +1,15 @@
+//! Expose various statistics from /sys/class/powercap
+//!
+//! http://web.eece.maine.edu/~vweaver/projects/rapl/
+//! ## RAPL(Running Average Power Limit) on Linux
+//!
+//! There are currently *three* ways to read RAPL results using the Linux kernel:
+//! - Reading the files under /sys/class/powercap/intel-rapl/intel-rapl:0 using the powercap interface. This requires no special permissions, and was introduced in Linux 3.13
+//! - Using the perf_event interface with Linux 3.14 or newer. This requires root or a paranoid less than 1 (as do all system wide measurements with -a) sudo perf stat -a -e "power/energy-cores/" /bin/ls Available events can be found via perf list or under /sys/bus/event_source/devices/power/events/
+//! - Using raw-access to the underlying MSRs under /dev/msr. This requires root.
+//! Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
+
 use std::collections::BTreeMap;
-/// Expose various statistics from /sys/class/powercap
-///
-/// http://web.eece.maine.edu/~vweaver/projects/rapl/
-/// ## RAPL(Running Average Power Limit) on Linux
-///
-/// There are currently *three* ways to read RAPL results using the Linux kernel:
-/// - Reading the files under /sys/class/powercap/intel-rapl/intel-rapl:0 using the powercap interface. This requires no special permissions, and was introduced in Linux 3.13
-/// - Using the perf_event interface with Linux 3.14 or newer. This requires root or a paranoid less than 1 (as do all system wide measurements with -a) sudo perf stat -a -e "power/energy-cores/" /bin/ls Available events can be found via perf list or under /sys/bus/event_source/devices/power/events/
-/// - Using raw-access to the underlying MSRs under /dev/msr. This requires root.
-/// Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
 use std::path::PathBuf;
 
 use event::{tags, Metric};
@@ -32,18 +33,18 @@ struct RaplZone {
 /// `get_rapl_zones` returns a slice of RaplZones
 /// When RAPL files are not present, returns nil with error
 /// https://www.kernel.org/doc/Documentation/power/powercap/powercap.txt
-async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, Error> {
-    let root = PathBuf::from(sys_path).join("class/powercap");
+async fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
+    let root = sys_path.join("class/powercap");
     let mut zones = vec![];
 
     // count name usages to avoid duplicates (label them with an index)
     let mut names: BTreeMap<String, i32> = BTreeMap::new();
 
     // loop through directory files searching for file "name" from subdirs
-    let mut dirs = tokio::fs::read_dir(root).await?;
-    while let Some(entry) = dirs.next_entry().await? {
+    let mut dirs = std::fs::read_dir(root)?;
+    while let Some(Ok(entry)) = dirs.next() {
         let path = entry.path().join("name");
-        let name = match read_to_string(path).await {
+        let name = match read_to_string(path) {
             Ok(c) => c,
             _ => continue,
         };
@@ -58,9 +59,9 @@ async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, Error> {
         };
 
         let path = entry.path().join("max_energy_range_uj");
-        let max_microjoules = read_into(path).await?;
+        let max_microjoules = read_into(path)?;
         let path = entry.path().join("energy_uj");
-        let microjoules = read_into(path).await?;
+        let microjoules = read_into(path)?;
 
         zones.push(RaplZone {
             name: name.to_string(),
@@ -91,7 +92,7 @@ fn get_name_and_index(s: &str) -> Option<(&str, i32)> {
     Some((name, index))
 }
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let zones = get_rapl_zones(sys_path).await?;
     let mut metrics = vec![];
 
@@ -122,7 +123,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_rapl_zones() {
-        let root = "tests/fixtures/sys";
+        let root = "tests/fixtures/sys".into();
         let mut zones = get_rapl_zones(root).await.unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.

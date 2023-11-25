@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use std::{ffi::CString, path::Path};
 
 use event::{tags, Metric};
@@ -40,66 +41,65 @@ fn default_fs_type_exclude() -> regex::Regex {
     ).unwrap()
 }
 
-impl FileSystemConfig {
-    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
-        let path = format!("{}/mounts", proc_path);
-        let stats = self.get_stats(path).await?;
+pub async fn gather(conf: FileSystemConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = conf.get_stats(proc_path.join("mounts")).await?;
 
-        let mut metrics = Vec::new();
+    let mut metrics = Vec::new();
+    for stat in stats {
+        let tags = tags!(
+            "device" => stat.device,
+            "fstype" => stat.fs_type,
+            "mount_point" => stat.mount_point,
+        );
 
-        for stat in stats {
-            let tags = tags!(
-                "device" => stat.device,
-                "fstype" => stat.fs_type,
-                "mount_point" => stat.mount_point,
-            );
-            if stat.device_error == 1 {
-                metrics.push(Metric::gauge_with_tags(
-                    "node_filesystem_device_error",
-                    "Whether an error occurred while getting statistics for the given device.",
-                    1.0,
-                    tags,
-                ));
-                continue;
-            }
-
-            metrics.extend([
-                Metric::gauge_with_tags(
-                    "node_filesystem_size_bytes",
-                    "Filesystem size in bytes.",
-                    stat.size as f64,
-                    tags.clone(),
-                ),
-                Metric::gauge_with_tags(
-                    "node_filesystem_free_bytes",
-                    "Filesystem free space in bytes.",
-                    stat.free as f64,
-                    tags.clone(),
-                ),
-                Metric::gauge_with_tags(
-                    "node_filesystem_avail_bytes",
-                    "Filesystem space available to non-root users in bytes.",
-                    stat.avail as f64,
-                    tags.clone(),
-                ),
-                Metric::gauge_with_tags(
-                    "node_filesystem_files",
-                    "Filesystem total file nodes.",
-                    stat.files as f64,
-                    tags.clone(),
-                ),
-                Metric::gauge_with_tags(
-                    "node_filesystem_readonly",
-                    "Filesystem read-only status.",
-                    stat.ro as f64,
-                    tags,
-                ),
-            ]);
+        if stat.device_error == 1 {
+            metrics.push(Metric::gauge_with_tags(
+                "node_filesystem_device_error",
+                "Whether an error occurred while getting statistics for the given device.",
+                1.0,
+                tags,
+            ));
+            continue;
         }
 
-        Ok(metrics)
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "node_filesystem_size_bytes",
+                "Filesystem size in bytes.",
+                stat.size as f64,
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_free_bytes",
+                "Filesystem free space in bytes.",
+                stat.free as f64,
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_avail_bytes",
+                "Filesystem space available to non-root users in bytes.",
+                stat.avail as f64,
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_files",
+                "Filesystem total file nodes.",
+                stat.files as f64,
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_readonly",
+                "Filesystem read-only status.",
+                stat.ro as f64,
+                tags,
+            ),
+        ]);
     }
 
+    Ok(metrics)
+}
+
+impl FileSystemConfig {
     async fn get_stats<P: AsRef<Path>>(&self, path: P) -> Result<Vec<Stat>, Error> {
         let mut stats = Vec::new();
         let f = tokio::fs::File::open(path).await?;

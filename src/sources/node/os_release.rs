@@ -81,7 +81,7 @@ async fn release_infos() -> Result<BTreeMap<String, String>, Error> {
 }
 
 async fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error> {
-    let content = read_to_string(path).await?;
+    let content = read_to_string(path)?;
     let mut envs = BTreeMap::new();
 
     for line in content.lines() {

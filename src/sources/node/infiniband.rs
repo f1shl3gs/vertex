@@ -144,9 +144,8 @@ struct InfiniBandDevice {
     ports: Vec<InfiniBandPort>,
 }
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let root = format!("{}/class/infiniband", sys_path);
-    let devices = infiniband_class(root).await?;
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let devices = infiniband_class(sys_path.join("class/infiniband")).await?;
 
     let mut metrics = vec![];
     for device in devices {
@@ -580,7 +579,7 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
 
     for sub in ["board_id", "fw_ver", "hca_type"] {
         let sp = path.clone().join(sub);
-        let content = match read_to_string(sp).await {
+        let content = match read_to_string(sp) {
             Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
@@ -624,19 +623,19 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
     };
 
     let sp = root.clone().join("state");
-    let content = read_to_string(sp).await?;
+    let content = read_to_string(sp)?;
     let (id, name) = parse_state(&content)?;
     ibp.state = name;
     ibp.state_id = id;
 
     let pp = root.clone().join("phys_state");
-    let content = read_to_string(pp).await?;
+    let content = read_to_string(pp)?;
     let (id, name) = parse_state(&content)?;
     ibp.phys_state = name;
     ibp.phys_state_id = id;
 
     let pp = root.clone().join("rate");
-    let content = read_to_string(pp).await?;
+    let content = read_to_string(pp)?;
     let rate = parse_rate(&content)?;
     ibp.rate = rate;
 
@@ -683,7 +682,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
         let name = entry.file_name();
         let name = name.to_str().unwrap();
 
-        let content = match read_to_string(path).await {
+        let content = match read_to_string(path) {
             Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
@@ -738,21 +737,24 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
 
     // Parse legacy counters
     let path = root.clone().join("counters_ext");
-    match tokio::fs::read_dir(path).await {
+    match std::fs::read_dir(path) {
         Ok(mut readdir) => {
-            while let Some(entry) = readdir.next_entry().await? {
-                let path = entry.path();
+            while let Some(Ok(entry)) = readdir.next() {
                 let name = entry.file_name();
-                let name = name.to_str().unwrap();
 
-                let content = match read_to_string(path).await {
+                let content = match read_to_string(entry.path()) {
                     Ok(c) => c,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
                             continue;
                         }
 
-                        return Err(format!("failed to read file {}, err: {}", name, err).into());
+                        return Err(format!(
+                            "failed to read file {}, err: {}",
+                            name.to_string_lossy(),
+                            err
+                        )
+                        .into());
                     }
                 };
 
@@ -766,7 +768,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                 }
 
                 let value = content.parse::<u64>().ok();
-                match name {
+                match name.to_string_lossy().as_ref() {
                     "port_multicast_rcv_packets" => counters.port_multicast_rcv_packets = value,
                     "port_multicast_xmit_packets" => counters.port_multicast_xmit_packets = value,
                     "port_rcv_data_64" => counters.port_rcv_data_64 = value.map(|v| v * 4),

@@ -1,4 +1,5 @@
 use std::num::ParseIntError;
+use std::path::PathBuf;
 
 use event::{tags, Metric};
 use framework::config::serde_regex;
@@ -25,134 +26,132 @@ impl Default for NetdevConfig {
     }
 }
 
-impl NetdevConfig {
-    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
-        let stats = self.get_net_dev_stats(proc_path).await?;
+pub async fn gather(conf: NetdevConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = conf.get_net_dev_stats(proc_path).await?;
 
-        let mut metrics = Vec::new();
-        for stat in stats {
-            match self {
-                NetdevConfig::Include(re) => {
-                    if !re.is_match(&stat.name) {
-                        continue;
-                    }
+    let mut metrics = Vec::new();
+    for stat in stats {
+        match &conf {
+            NetdevConfig::Include(re) => {
+                if !re.is_match(&stat.name) {
+                    continue;
                 }
-                NetdevConfig::Exclude(re) => {
-                    if re.is_match(&stat.name) {
-                        continue;
-                    }
-                }
-                NetdevConfig::All => {}
             }
-
-            let tags = tags!("device" => stat.name);
-            metrics.extend([
-                Metric::sum_with_tags(
-                    "node_network_receive_bytes_total",
-                    "Network device statistic receive_bytes",
-                    stat.recv_bytes as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_receive_packets_total",
-                    "Network device statistic receive_packets",
-                    stat.recv_packets as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_receive_errs_total",
-                    "Network device statistic receive_errs",
-                    stat.recv_errs as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_receive_drop_total",
-                    "Network device statistic receive_drop",
-                    stat.recv_drop as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_receive_fifo_total",
-                    "Network device statistic receive_fifo",
-                    stat.recv_fifo as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_receive_frame_total",
-                    "Network device statistic receive_frame",
-                    stat.recv_frame as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_receive_compressed_total",
-                    "Network device statistic receive_compressed",
-                    stat.recv_compressed as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_receive_multicast_total",
-                    "Network device statistic receive_multicast",
-                    stat.recv_multicast as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_bytes_total",
-                    "Network device statistic transmit_bytes",
-                    stat.transmit_bytes as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_packets_total",
-                    "Network device statistic transmit_packets",
-                    stat.transmit_packets as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_errs_total",
-                    "Network device statistic transmit_errs",
-                    stat.transmit_errs as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_drop_total",
-                    "Network device statistic transmit_drop",
-                    stat.transmit_drop as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_fifo_total",
-                    "Network device statistic transmit_fifo",
-                    stat.transmit_fifo as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_colls_total",
-                    "Network device statistic transmit_colls",
-                    stat.transmit_colls as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_carrier_total",
-                    "Network device statistic transmit_carrier",
-                    stat.transmit_carrier as f64,
-                    tags.clone(),
-                ),
-                Metric::sum_with_tags(
-                    "node_network_transmit_compressed_total",
-                    "Network device statistic transmit_compressed",
-                    stat.transmit_compressed as f64,
-                    tags,
-                ),
-            ])
+            NetdevConfig::Exclude(re) => {
+                if re.is_match(&stat.name) {
+                    continue;
+                }
+            }
+            NetdevConfig::All => {}
         }
 
-        Ok(metrics)
+        let tags = tags!("device" => stat.name);
+        metrics.extend([
+            Metric::sum_with_tags(
+                "node_network_receive_bytes_total",
+                "Network device statistic receive_bytes",
+                stat.recv_bytes as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_receive_packets_total",
+                "Network device statistic receive_packets",
+                stat.recv_packets as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_receive_errs_total",
+                "Network device statistic receive_errs",
+                stat.recv_errs as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_receive_drop_total",
+                "Network device statistic receive_drop",
+                stat.recv_drop as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_receive_fifo_total",
+                "Network device statistic receive_fifo",
+                stat.recv_fifo as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_receive_frame_total",
+                "Network device statistic receive_frame",
+                stat.recv_frame as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_receive_compressed_total",
+                "Network device statistic receive_compressed",
+                stat.recv_compressed as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_receive_multicast_total",
+                "Network device statistic receive_multicast",
+                stat.recv_multicast as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_bytes_total",
+                "Network device statistic transmit_bytes",
+                stat.transmit_bytes as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_packets_total",
+                "Network device statistic transmit_packets",
+                stat.transmit_packets as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_errs_total",
+                "Network device statistic transmit_errs",
+                stat.transmit_errs as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_drop_total",
+                "Network device statistic transmit_drop",
+                stat.transmit_drop as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_fifo_total",
+                "Network device statistic transmit_fifo",
+                stat.transmit_fifo as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_colls_total",
+                "Network device statistic transmit_colls",
+                stat.transmit_colls as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_carrier_total",
+                "Network device statistic transmit_carrier",
+                stat.transmit_carrier as f64,
+                tags.clone(),
+            ),
+            Metric::sum_with_tags(
+                "node_network_transmit_compressed_total",
+                "Network device statistic transmit_compressed",
+                stat.transmit_compressed as f64,
+                tags,
+            ),
+        ])
     }
 
-    async fn get_net_dev_stats(&self, proc_path: &str) -> Result<Vec<DeviceStatus>, Error> {
-        let path = format!("{}/net/dev", proc_path);
+    Ok(metrics)
+}
 
-        let content = read_to_string(path).await?;
+impl NetdevConfig {
+    async fn get_net_dev_stats(&self, proc_path: PathBuf) -> Result<Vec<DeviceStatus>, Error> {
+        let content = read_to_string(proc_path.join("net/dev"))?;
         let lines = content.lines();
         let mut stats = Vec::new();
         for line in lines.skip(2) {
@@ -276,8 +275,8 @@ config:
 
     #[tokio::test]
     async fn test_get_net_dev_stats() {
-        let conf = NetdevConfig::Include(regex::Regex::new(".*").unwrap());
-        let path = "tests/fixtures/proc";
+        let conf = NetdevConfig::Include(Regex::new(".*").unwrap());
+        let path = "tests/fixtures/proc".into();
         let stats = conf.get_net_dev_stats(path).await.unwrap();
 
         assert_eq!(

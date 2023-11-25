@@ -1,8 +1,10 @@
+use std::path::PathBuf;
+
 use event::Metric;
 
 use super::{read_to_string, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(proc_path).await?;
 
     Ok(vec![
@@ -19,9 +21,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-async fn read_file_nr(proc_path: &str) -> Result<(u64, u64), Error> {
-    let path = format!("{}/sys/fs/file-nr", proc_path);
-    let content = read_to_string(path).await?;
+async fn read_file_nr(proc_path: PathBuf) -> Result<(u64, u64), Error> {
+    let content = read_to_string(proc_path.join("sys/fs/file-nr"))?;
 
     // the file-nr proc is only 1 line with 3 values
     let parts = content.split_ascii_whitespace().collect::<Vec<_>>();
@@ -38,7 +39,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_file_nr() {
-        let path = "tests/fixtures/proc";
+        let path = "tests/fixtures/proc".into();
         let (allocated, maximum) = read_file_nr(path).await.unwrap();
 
         assert_eq!(allocated, 1024);

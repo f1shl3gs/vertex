@@ -5,57 +5,50 @@ use event::{tags, Metric};
 
 use super::{read_to_string, Error};
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = PathBuf::from(sys_path);
-    let stats = read_bonding_stats(path).await?;
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = read_bonding_stats(sys_path).await?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 2);
-
     for (master, status) in stats {
-        metrics.push(Metric::gauge_with_tags(
-            "node_bonding_slaves",
-            "Number of configured slaves per bonding interface.",
-            status[0],
-            tags!(
-                "master" => &master,
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "node_bonding_slaves",
+                "Number of configured slaves per bonding interface.",
+                status[0],
+                tags!(
+                    "master" => master.clone(),
+                ),
             ),
-        ));
-        metrics.push(Metric::gauge_with_tags(
-            "node_bonding_active",
-            "Number of active slaves per bonding interface.",
-            status[1],
-            tags!(
-                "master" => &master
+            Metric::gauge_with_tags(
+                "node_bonding_active",
+                "Number of active slaves per bonding interface.",
+                status[1],
+                tags!(
+                    "master" => master
+                ),
             ),
-        ));
+        ]);
     }
 
     Ok(metrics)
 }
 
 async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64>>, Error> {
-    let mut path = sys_path.clone();
-    path.push("class/net/bonding_masters");
-
     let mut status = HashMap::new();
-
-    let masters = read_to_string(path).await?;
+    let masters = read_to_string(sys_path.join("class/net/bonding_masters"))?;
 
     let parts = masters.split_ascii_whitespace();
     for master in parts {
-        let mut path = sys_path.clone();
-        path.push(format!("class/net/{}/bonding/slaves", master));
+        let path = sys_path.join(format!("class/net/{}/bonding/slaves", master));
 
-        if let Ok(slaves) = read_to_string(path).await {
+        if let Ok(slaves) = read_to_string(path) {
             let mut sstat = vec![0f64, 0f64];
             for slave in slaves.split_ascii_whitespace() {
-                let mut path = sys_path.clone();
-                path.push(format!(
+                let path = sys_path.join(format!(
                     "class/net/{}/lower_{}/bonding_slave/mii_status",
                     master, slave
                 ));
-
-                if let Ok(state) = read_to_string(path).await {
+                if let Ok(state) = read_to_string(path) {
                     sstat[0] += 1f64;
                     if state.trim() == "up" {
                         sstat[1] += 1f64;
@@ -63,13 +56,11 @@ async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64
                 }
 
                 // some older? kernels use slave_ prefix
-                let mut path = sys_path.clone();
-                path.push(format!(
+                let path = sys_path.join(format!(
                     "class/net/{}/slave_{}/bonding_slave/mii_status",
                     master, slave
                 ));
-
-                if let Ok(state) = read_to_string(path).await {
+                if let Ok(state) = read_to_string(path) {
                     sstat[0] += 1f64;
                     if state.trim() == "up" {
                         sstat[1] += 1f64;

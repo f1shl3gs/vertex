@@ -21,12 +21,12 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
         });
     }
 
-    let sysname = &to_string(u.sysname);
-    let release = &to_string(u.release);
-    let version = &to_string(u.version);
-    let machine = &to_string(u.machine);
-    let nodename = &to_string(u.nodename);
-    let domainname = &to_string(u.domainname);
+    let sysname = to_string(u.sysname);
+    let release = to_string(u.release);
+    let version = to_string(u.version);
+    let machine = to_string(u.machine);
+    let nodename = to_string(u.nodename);
+    let domainname = to_string(u.domainname);
 
     Ok(vec![Metric::gauge_with_tags(
         "node_uname_info",

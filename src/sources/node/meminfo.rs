@@ -6,10 +6,8 @@ use event::Metric;
 
 use super::Error;
 
-pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
-    let root = PathBuf::from(root);
+pub async fn gather(root: PathBuf) -> Result<Vec<Metric>, Error> {
     let infos = get_mem_info(root).await?;
-
     let mut metrics = Vec::new();
     for (k, v) in infos {
         if k.ends_with("_total") {
