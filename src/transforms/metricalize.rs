@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::collections::hash_map::Entry;
 use std::collections::{BTreeMap, HashMap};
 use std::pin::Pin;
@@ -9,7 +8,7 @@ use async_trait::async_trait;
 use chrono::Utc;
 use configurable::{configurable_component, Configurable};
 use event::log::OwnedTargetPath;
-use event::tags::Tags;
+use event::tags::{Key, Tags};
 use event::{
     log::Value, Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue,
 };
@@ -65,7 +64,7 @@ struct MetricConfig {
     ///
     /// The key is the tag key for metrics, the value is the path to the log field.
     #[serde(default)]
-    tags: BTreeMap<Cow<'static, str>, OwnedTargetPath>,
+    tags: BTreeMap<Key, OwnedTargetPath>,
 
     #[serde(flatten)]
     typ: MetricType,
