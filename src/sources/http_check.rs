@@ -181,7 +181,6 @@ async fn scrape(
 mod tests {
     use std::convert::Infallible;
 
-    use event::tags::Key;
     use event::MetricValue;
     use http::Response;
     use hyper::service::{make_service_fn, service_fn};
@@ -258,7 +257,7 @@ mod tests {
                 "code: {code}"
             );
             assert_eq!(
-                metric.tags().get(&Key::new("status_class")).unwrap(),
+                metric.tags().get("status_class").unwrap(),
                 &tags::Value::from(class)
             );
         }
