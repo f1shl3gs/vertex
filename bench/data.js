@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1701030294472,
+  "lastUpdate": 1701030300943,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a9a8b144ce60159ca1b2e1d9d3199f5f070143d7",
-          "message": "implement healthcheck (#1330)",
-          "timestamp": "2023-10-06T19:11:08+08:00",
-          "tree_id": "599505184170d8956116fca823787f4a73ab0d96",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a9a8b144ce60159ca1b2e1d9d3199f5f070143d7"
-        },
-        "date": 1696591866634,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1047,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42580.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "92760bd611859b03b1e7c40500fa605aef415b28",
           "message": "bump libc to 0.2.149 (#1331)",
           "timestamp": "2023-10-07T14:14:13+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40951.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "967382afecc999c09e34d5ada72ae91c159a3566",
+          "message": "add dmi and softirqs (#1439)",
+          "timestamp": "2023-11-27T04:13:48+08:00",
+          "tree_id": "bb0b0161c22fa612012a01f5a546e4ae90095da9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/967382afecc999c09e34d5ada72ae91c159a3566"
+        },
+        "date": 1701030286452,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40660,
             "unit": "KiB"
           }
         ]
