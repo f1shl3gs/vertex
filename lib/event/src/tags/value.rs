@@ -15,7 +15,7 @@ pub enum Array {
     /// Array of floats
     F64(Vec<f64>),
     /// Array of strings
-    String(Vec<Cow<'static, str>>),
+    String(Vec<String>),
 }
 
 impl PartialEq<Array> for Array {
@@ -105,16 +105,8 @@ into_array!(
     (Vec<bool>, Array::Bool),
     (Vec<i64>, Array::I64),
     (Vec<f64>, Array::F64),
-    (Vec<Cow<'static, str>>, Array::String),
+    (Vec<String>, Array::String),
 );
-
-impl From<Vec<String>> for Array {
-    fn from(ss: Vec<String>) -> Self {
-        let ss = ss.into_iter().map(Into::into).collect::<Vec<_>>();
-
-        Self::String(ss)
-    }
-}
 
 /// Value types for use in `KeyValue` pairs.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
@@ -127,7 +119,7 @@ pub enum Value {
     /// f64 values
     F64(f64),
     /// String values
-    String(Cow<'static, str>),
+    String(String),
     /// Array of homogeneous values
     Array(Array),
 }
@@ -224,7 +216,7 @@ from_values!(
     (bool, Value::Bool);
     (i64, Value::I64);
     (f64, Value::F64);
-    (Cow<'static, str>, Value::String);
+    (String, Value::String);
     (Array, Value::Array);
 );
 
@@ -234,23 +226,16 @@ impl From<i32> for Value {
     }
 }
 
-impl From<&'static str> for Value {
+impl From<&str> for Value {
     /// Convenience method for creating a `Value` from a `&'static str`.
-    fn from(s: &'static str) -> Self {
-        Value::String(Cow::Borrowed(s))
-    }
-}
-
-impl From<String> for Value {
-    /// Convenience method for creating a `Value` from a `String`.
-    fn from(s: String) -> Self {
-        Value::String(s.into())
+    fn from(s: &str) -> Self {
+        Value::String(s.to_string())
     }
 }
 
 impl From<&String> for Value {
     fn from(s: &String) -> Self {
-        s.to_string().into()
+        Value::String(s.to_string())
     }
 }
 
@@ -270,6 +255,12 @@ impl From<Vec<&str>> for Value {
             .into();
 
         Self::Array(array)
+    }
+}
+
+impl From<Cow<'static, str>> for Value {
+    fn from(value: Cow<'static, str>) -> Self {
+        Self::String(value.to_string())
     }
 }
 

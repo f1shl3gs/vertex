@@ -1,5 +1,5 @@
 use std::convert::{TryFrom, TryInto};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
@@ -359,9 +359,8 @@ macro_rules! rpc_metric {
     };
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/net/rpc/nfsd", proc_path);
-    let stats = server_rpc_stats(path).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = server_rpc_stats(proc_path.join("net/rpc/nfsd")).await?;
     let metrics = vec![
         // collects statistics for the reply cache
         Metric::sum(

@@ -1,11 +1,13 @@
 //! Exposes various statistics from /proc/net/sockstat and /proc/net/sockstat6
 
+use std::path::PathBuf;
+
 use event::Metric;
 
 use super::{read_to_string, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stat4 = sockstat4(proc_path).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stat4 = sockstat4(proc_path.clone()).await?;
     let stat6 = sockstat6(proc_path).await?;
 
     let mut metrics = stat4.metrics(false);
@@ -53,39 +55,50 @@ impl NetSockstat {
         }
 
         for nsp in &self.protocols {
-            let name = &format!("node_sockstat_{}_inuse", nsp.protocol);
-            let desc = &format!("Number of {} sockets in stat inuse", nsp.protocol);
-            metrics.push(Metric::gauge(name, desc, nsp.inuse));
+            metrics.push(Metric::gauge(
+                format!("node_sockstat_{}_inuse", nsp.protocol),
+                format!("Number of {} sockets in stat inuse", nsp.protocol),
+                nsp.inuse,
+            ));
 
             if let Some(v) = nsp.orphan {
-                let name = &format!("node_sockstat_{}_orphan", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat orphan", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_orphan", nsp.protocol),
+                    format!("Number of {} sockets in stat orphan", nsp.protocol),
+                    v,
+                ));
             }
 
             if let Some(v) = nsp.tw {
-                let name = &format!("node_sockstat_{}_tw", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat tw", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_tw", nsp.protocol),
+                    format!("Number of {} sockets in stat tw", nsp.protocol),
+                    v,
+                ));
             }
 
             if let Some(v) = nsp.alloc {
-                let name = &format!("node_sockstat_{}_alloc", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat alloc", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_alloc", nsp.protocol),
+                    format!("Number of {} sockets in stat alloc", nsp.protocol),
+                    v,
+                ));
             }
 
             if let Some(v) = nsp.mem {
-                let v = v as f64 * PAGESIZE;
-                let name = &format!("node_sockstat_{}_mem_bytes", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat mem", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v));
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_mem_bytes", nsp.protocol),
+                    format!("Number of {} sockets in stat mem", nsp.protocol),
+                    v as f64 * PAGESIZE,
+                ));
             }
 
             if let Some(v) = nsp.memory {
-                let name = &format!("node_sockstat_{}_memory", nsp.protocol);
-                let desc = &format!("Number of {} sockets in stat memory", nsp.protocol);
-                metrics.push(Metric::gauge(name, desc, v as f64))
+                metrics.push(Metric::gauge(
+                    format!("node_sockstat_{}_memory", nsp.protocol),
+                    format!("Number of {} sockets in stat memory", nsp.protocol),
+                    v as f64,
+                ))
             }
         }
 
@@ -93,18 +106,16 @@ impl NetSockstat {
     }
 }
 
-async fn sockstat4(root: &str) -> Result<NetSockstat, Error> {
+async fn sockstat4(root: PathBuf) -> Result<NetSockstat, Error> {
     // This file is small and can be read with one syscall
-    let path = format!("{}/net/sockstat", root);
-    let content = read_to_string(path).await?;
+    let content = read_to_string(root.join("net/sockstat"))?;
 
     parse_sockstat(&content)
 }
 
-async fn sockstat6(root: &str) -> Result<NetSockstat, Error> {
+async fn sockstat6(root: PathBuf) -> Result<NetSockstat, Error> {
     // This file is small and can be read with one syscall
-    let path = format!("{}/net/sockstat6", root);
-    let content = read_to_string(path).await?;
+    let content = read_to_string(root.join("net/sockstat6"))?;
 
     parse_sockstat(&content)
 }

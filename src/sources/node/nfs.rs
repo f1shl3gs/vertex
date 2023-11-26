@@ -1,6 +1,6 @@
 use std::convert::TryFrom;
 use std::convert::TryInto;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
@@ -387,14 +387,11 @@ macro_rules! procedure_metric {
     };
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/net/rpc/nfs", proc_path);
-    let stats = client_rpc_stats(path).await?;
-
-    let mut metrics = Vec::new();
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = client_rpc_stats(proc_path.join("net/rpc/nfs")).await?;
 
     // collect statistics for network packets/connections
-    metrics.extend_from_slice(&[
+    let mut metrics = vec![
         Metric::sum_with_tags(
             "node_nfs_packets_total",
             "Total NFSd network packets (sent+received) by protocol type.",
@@ -416,10 +413,10 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd TCP connections.",
             stats.network.net_count as f64,
         ),
-    ]);
+    ];
 
     // collect statistics for kernel server RPCs
-    metrics.extend_from_slice(&[
+    metrics.extend([
         Metric::sum(
             "node_nfs_rpcs_total",
             "Total number of RPCs performed.",
@@ -438,7 +435,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     ]);
 
     // collects statistics for NFSv2 requests
-    metrics.extend_from_slice(&[
+    metrics.extend([
         procedure_metric!("2", "Null", stats.v2_stats.null),
         procedure_metric!("2", "GetAttr", stats.v2_stats.get_attr),
         procedure_metric!("2", "SetAttr", stats.v2_stats.set_attr),

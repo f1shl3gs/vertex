@@ -10,14 +10,12 @@ use super::{read_into, Error};
 /// Maybe we can fetch conntrack statistics from netlink api
 /// https://github.com/torvalds/linux/blob/master/net/netfilter/nf_conntrack_netlink.c
 /// https://github.com/ti-mo/conntrack/blob/5b022d74eb6f79d2ddbddd0100e93b3aeeadfff8/conn.go#L465
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let mut path = PathBuf::from(proc_path);
-    path.push("sys/net/netfilter/nf_conntrack_count");
-    let count = read_into::<_, u64, _>(path).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let path = proc_path.join("sys/net/netfilter/nf_conntrack_count");
+    let count = read_into::<_, u64, _>(path)?;
 
-    let mut path = PathBuf::from(proc_path);
-    path.push("sys/net/netfilter/nf_conntrack_max");
-    let max = read_into::<_, u64, _>(path).await?;
+    let path = proc_path.join("sys/net/netfilter/nf_conntrack_max");
+    let max = read_into::<_, u64, _>(path)?;
 
     let stats = get_conntrack_statistics(proc_path).await?;
 
@@ -152,15 +150,12 @@ impl ConntrackStatEntry {
     }
 }
 
-async fn get_conntrack_statistics(proc_path: &str) -> Result<Vec<ConntrackStatEntry>, Error> {
-    let path = format!("{}/net/stat/nf_conntrack", proc_path);
-    let f = tokio::fs::File::open(path).await?;
-    let r = tokio::io::BufReader::new(f);
-    let mut lines = r.lines();
-
-    let mut first = true;
+async fn get_conntrack_statistics(proc_path: PathBuf) -> Result<Vec<ConntrackStatEntry>, Error> {
+    let file = tokio::fs::File::open(proc_path.join("net/stat/nf_conntrack")).await?;
+    let mut lines = tokio::io::BufReader::new(file).lines();
     let mut stats = Vec::new();
 
+    let mut first = true;
     while let Some(line) = lines.next_line().await? {
         if first {
             first = false;

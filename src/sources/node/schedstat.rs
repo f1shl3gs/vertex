@@ -1,5 +1,7 @@
 //! Exposes task scheduler statistics from /proc/schedstat
 
+use std::path::PathBuf;
+
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 
@@ -14,47 +16,40 @@ struct Schedstat {
     run_time_slices: u64,
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = schedstat(proc_path).await?;
 
     let mut metrics = Vec::with_capacity(3 * stats.len());
     for stat in stats {
-        let cpu = &stat.cpu;
+        let tags = tags!("cpu" => stat.cpu);
 
-        metrics.push(Metric::sum_with_tags(
-            "node_schedstat_running_seconds_total",
-            "Number of seconds CPU spent running a process.",
-            stat.running_nanoseconds,
-            tags!(
-                "cpu" => cpu
+        metrics.extend([
+            Metric::sum_with_tags(
+                "node_schedstat_running_seconds_total",
+                "Number of seconds CPU spent running a process.",
+                stat.running_nanoseconds,
+                tags.clone(),
             ),
-        ));
-
-        metrics.push(Metric::sum_with_tags(
-            "node_schedstat_waiting_seconds_total",
-            "Number of seconds spent by processing waiting for this CPU.",
-            stat.waiting_nanoseconds,
-            tags!(
-                "cpu" => cpu,
+            Metric::sum_with_tags(
+                "node_schedstat_waiting_seconds_total",
+                "Number of seconds spent by processing waiting for this CPU.",
+                stat.waiting_nanoseconds,
+                tags.clone(),
             ),
-        ));
-
-        metrics.push(Metric::sum_with_tags(
-            "node_schedstat_timeslices_total",
-            "Number of timeslices executed by CPU.",
-            stat.run_time_slices,
-            tags!(
-                "cpu" => cpu
+            Metric::sum_with_tags(
+                "node_schedstat_timeslices_total",
+                "Number of timeslices executed by CPU.",
+                stat.run_time_slices,
+                tags,
             ),
-        ))
+        ]);
     }
 
     Ok(metrics)
 }
 
-async fn schedstat(proc_path: &str) -> Result<Vec<Schedstat>, Error> {
-    let path = format!("{}/schedstat", proc_path);
-    let f = tokio::fs::File::open(path).await?;
+async fn schedstat(proc_path: PathBuf) -> Result<Vec<Schedstat>, Error> {
+    let f = tokio::fs::File::open(proc_path.join("schedstat")).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
 
@@ -103,7 +98,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_schedstat() {
-        let path = "tests/fixtures/proc";
+        let path = "tests/fixtures/proc".into();
         let stats = schedstat(path).await.unwrap();
 
         assert_ne!(stats.len(), 0);

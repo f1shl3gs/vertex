@@ -5,20 +5,23 @@
 //!
 //! https://github.com/prometheus/node_exporter/pull/1998
 
+use std::path::PathBuf;
+
 use event::{tags, Metric};
 
 use super::{read_into, read_to_string, Error};
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path).await?;
 
     let mut metrics = Vec::with_capacity(8 * stats.len());
     for stat in stats {
-        let card = &stat.name.clone();
-        let memory_vendor = &stat.memory_vram_vendor.clone();
-        let power_performance_level = &stat.power_dpm_force_performance_level.clone();
-        let unique_id = &stat.unique_id.clone();
-        let vendor = "amd";
+        let card = stat.name;
+        let memory_vendor = stat.memory_vram_vendor;
+        let power_performance_level = stat.power_dpm_force_performance_level;
+        let unique_id = stat.unique_id;
+        let vendor = "amd".to_string();
+        let tags = tags!("card" => card.clone());
 
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
@@ -37,57 +40,43 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "node_drm_gpu_busy_percent",
                 "How busy the GPU is as a percentage.",
                 stat.gpu_busy_percent,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_gtt_size_bytes",
                 "The size of the graphics translation table (GTT) block in bytes",
                 stat.memory_gtt_size,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_gtt_used_bytes",
                 "The used amount of the graphics translation table (GTT) block in bytes",
                 stat.memory_gtt_used,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_vis_vram_size_bytes",
                 "The size of visible VRAM in bytes",
                 stat.memory_visible_vram_size,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_vis_vram_used_bytes",
                 "The used amount of visible VRAM in bytes",
                 stat.memory_visible_vram_used,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_vram_size_bytes",
                 "The size of VRAM in bytes",
                 stat.memory_vram_size,
-                tags!(
-                    "card" => card,
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_drm_memory_vram_used_bytes",
                 "The used amount of VRAM in bytes",
                 stat.memory_vram_used,
-                tags!(
-                    "card" => card,
-                ),
+                tags,
             ),
         ])
     }
@@ -96,9 +85,9 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 }
 
 async fn class_drm_card_amdgpu_stats(
-    sys_path: &str,
+    sys_path: PathBuf,
 ) -> Result<Vec<ClassDRMCardAMDGPUStats>, Error> {
-    let pattern = format!("{}/class/drm/card[0-9]", sys_path);
+    let pattern = format!("{}/class/drm/card[0-9]", sys_path.to_string_lossy());
     let paths = glob::glob(&pattern)?;
 
     let mut stats = Vec::new();
@@ -114,7 +103,7 @@ async fn class_drm_card_amdgpu_stats(
 
 async fn read_drm_card_field(card: &str, field: &str) -> Result<u64, Error> {
     let path = format!("{}/device/{}", card, field);
-    read_into(path).await
+    read_into(path)
 }
 
 /// ClassDRMCardAMDGPUStats contains info from files in
@@ -159,7 +148,7 @@ struct ClassDRMCardAMDGPUStats {
 
 async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUStats, Error> {
     let path = format!("{}/device/uevent", card);
-    let uevent = read_to_string(path).await?;
+    let uevent = read_to_string(path)?;
 
     if !uevent.contains("DRIVER=amdgpu") {
         return Err(Error::from("the device is not an amdgpu"));
@@ -189,23 +178,12 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
         .unwrap_or(0);
 
     let path = format!("{}/device/mem_info_vram_vendor", card);
-    let memory_vram_vendor = read_to_string(path)
-        .await
-        .unwrap_or_default()
-        .trim()
-        .to_string();
+    let memory_vram_vendor = read_to_string(path).unwrap_or_default().trim().to_string();
     let path = format!("{}/device/power_dpm_force_performance_level", card);
-    let power_dpm_force_performance_level = read_to_string(path)
-        .await
-        .unwrap_or_default()
-        .trim()
-        .to_string();
+    let power_dpm_force_performance_level =
+        read_to_string(path).unwrap_or_default().trim().to_string();
     let path = format!("{}/device/unique_id", card);
-    let unique_id = read_to_string(path)
-        .await
-        .unwrap_or_default()
-        .trim()
-        .to_string();
+    let unique_id = read_to_string(path).unwrap_or_default().trim().to_string();
 
     Ok(ClassDRMCardAMDGPUStats {
         name: name.to_string(),
@@ -228,8 +206,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_class_dram_card_amdgpu_stats() {
-        let path = "tests/fixtures/sys";
-
+        let path = "tests/fixtures/sys".into();
         let stats = class_drm_card_amdgpu_stats(path).await.unwrap();
 
         assert_eq!(stats.len(), 1);

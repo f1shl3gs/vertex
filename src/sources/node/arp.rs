@@ -1,20 +1,21 @@
 //! Exposes ARP statistics from `/proc/net/arp`.
-use std::collections::HashMap;
 
-use event::{tags, Metric};
+use std::collections::HashMap;
+use std::path::PathBuf;
+
+use event::{tags, tags::Key, Metric};
 use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/net/arp", proc_path);
-    let f = tokio::fs::File::open(&path)
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let file = tokio::fs::File::open(proc_path.join("net/arp"))
         .await
         .map_err(|err| Error::Io {
             err,
             msg: "open arp file failed".into(),
         })?;
-    let reader = tokio::io::BufReader::new(f);
+    let reader = tokio::io::BufReader::new(file);
     let mut lines = reader.lines();
     let mut devices = HashMap::<String, i64>::new();
 
@@ -36,10 +37,10 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     for (device, count) in devices {
         metrics.push(Metric::gauge_with_tags(
             "node_arp_entries",
-            "",
-            count as f64,
+            "ARP entries by device",
+            count,
             tags!(
-                "device" => &device,
+                Key::from_static("device") => device,
             ),
         ));
     }
@@ -54,6 +55,6 @@ mod tests {
     #[tokio::test]
     async fn test_gather() {
         let proc_path = "tests/fixtures/proc";
-        gather(proc_path).await.unwrap();
+        gather(proc_path.into()).await.unwrap();
     }
 }

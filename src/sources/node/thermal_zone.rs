@@ -1,6 +1,6 @@
 //! Exposes thermal zone & cooling device statistics from /sys/class/thermal
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 
@@ -31,8 +31,11 @@ struct ThermalZoneStats {
     passive: Option<u64>,
 }
 
-async fn thermal_zone_stats(root: &str) -> Result<Vec<ThermalZoneStats>, Error> {
-    let pattern = format!("{}/class/thermal/thermal_zone[0-9]*", root);
+async fn thermal_zone_stats(root: PathBuf) -> Result<Vec<ThermalZoneStats>, Error> {
+    let pattern = format!(
+        "{}/class/thermal/thermal_zone[0-9]*",
+        root.to_string_lossy()
+    );
     let paths = glob::glob(&pattern)?;
     let mut stats = vec![];
     for path in paths.filter_map(Result::ok) {
@@ -54,15 +57,15 @@ async fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
 
     // required attributes
     let path = root.join("type");
-    let typ = read_to_string(path).await?;
+    let typ = read_to_string(path)?;
     let path = root.join("policy");
-    let policy = read_to_string(path).await?;
+    let policy = read_to_string(path)?;
     let path = root.join("temp");
-    let temp = read_into(path).await?;
+    let temp = read_into(path)?;
 
     // optional attributes
     let path = root.join("mode");
-    let mode = match read_to_string(path).await {
+    let mode = match read_to_string(path) {
         Ok(content) => match content.as_str() {
             "enabled" => Some(true),
             "disabled" => Some(false),
@@ -72,7 +75,7 @@ async fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
     };
 
     let path = root.join("passive");
-    let passive = match read_into(path).await {
+    let passive = match read_into(path) {
         Ok(v) => Some(v),
         Err(err) => {
             if err.is_not_found() {
@@ -107,19 +110,22 @@ struct CoolingDeviceStats {
     cur_state: i64,
 }
 
-async fn cooling_device_stats(root: &str) -> Result<Vec<CoolingDeviceStats>, Error> {
-    let pattern = format!("{}/class/thermal/cooling_device[0-9]*", root);
+async fn cooling_device_stats(root: PathBuf) -> Result<Vec<CoolingDeviceStats>, Error> {
+    let pattern = format!(
+        "{}/class/thermal/cooling_device[0-9]*",
+        root.to_string_lossy()
+    );
     let paths = glob::glob(&pattern)?;
     let mut stats = vec![];
     for path in paths.filter_map(Result::ok) {
-        let stat = parse_cooling_device_stats(&path).await?;
+        let stat = parse_cooling_device_stats(path).await?;
         stats.push(stat);
     }
 
     Ok(stats)
 }
 
-async fn parse_cooling_device_stats(root: &Path) -> Result<CoolingDeviceStats, Error> {
+async fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats, Error> {
     let name = root.file_name().unwrap();
     let name = name
         .to_str()
@@ -128,16 +134,11 @@ async fn parse_cooling_device_stats(root: &Path) -> Result<CoolingDeviceStats, E
         .unwrap()
         .to_string();
 
-    let path = root.join("type");
-    let typ = read_to_string(path).await?;
-
-    let path = root.join("max_state");
-    let max_state = read_into(path).await?;
-
+    let typ = read_to_string(root.join("type"))?;
+    let max_state = read_into(root.join("max_state"))?;
     // cur_state can be -1, eg intel powerclamp
     // https://www.kernel.org/doc/Documentation/thermal/intel_powerclamp.txt
-    let path = root.join("cur_state");
-    let cur_state = read_into(path).await?;
+    let cur_state = read_into(root.join("cur_state"))?;
 
     Ok(CoolingDeviceStats {
         name,
@@ -147,8 +148,8 @@ async fn parse_cooling_device_stats(root: &Path) -> Result<CoolingDeviceStats, E
     })
 }
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = thermal_zone_stats(sys_path).await?;
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = thermal_zone_stats(sys_path.clone()).await?;
 
     let mut metrics = vec![];
     for stat in stats {
@@ -157,22 +158,22 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             "Zone temperature in Celsius",
             stat.temp as f64,
             tags!(
-                "zone" => &stat.name,
-                "type" => &stat.typ,
+                "zone" => stat.name,
+                "type" => stat.typ,
             ),
         ));
     }
 
     let stats = cooling_device_stats(sys_path).await?;
     for stat in stats {
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "node_cooling_device_cur_state",
                 "Current throttle state of the cooling device",
                 stat.cur_state as f64,
                 tags!(
-                    "name" => &stat.name,
-                    "type" => &stat.typ
+                    "name" => stat.name.clone(),
+                    "type" => stat.typ.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -180,8 +181,8 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 "Maximum throttle state of the cooling device",
                 stat.max_state as f64,
                 tags!(
-                    "name" => &stat.name,
-                    "type" => &stat.typ
+                    "name" => stat.name,
+                    "type" => stat.typ
                 ),
             ),
         ])
@@ -196,7 +197,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_thermal_zone_stats() {
-        let root = "tests/fixtures/sys";
+        let root = "tests/fixtures/sys".into();
         let stats = thermal_zone_stats(root).await.unwrap();
         assert_eq!(
             stats,
@@ -223,7 +224,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_cooling_device_stats() {
-        let root = "tests/fixtures/sys";
+        let root = "tests/fixtures/sys".into();
         let stats = cooling_device_stats(root).await.unwrap();
         assert_eq!(
             stats,

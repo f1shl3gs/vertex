@@ -1,11 +1,12 @@
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 
 use event::tags::Tags;
 use event::Metric;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
-use super::{read_to_string, Error};
+use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct IPVSConfig {
@@ -33,8 +34,8 @@ fn default_labels() -> Vec<String> {
 }
 
 // TODO: this implement is dummy, too many to_string() and clone()
-pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = parse_ipvs_stats(proc_path).await?;
+pub async fn gather(conf: IPVSConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = parse_ipvs_stats(proc_path.clone()).await?;
 
     let mut metrics = vec![
         Metric::sum(
@@ -65,10 +66,9 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
     ];
 
     let backends = parse_ipvs_backend_status(proc_path).await?;
-
     let mut sums = BTreeMap::new();
     let mut label_values = BTreeMap::new();
-    for backend in &backends {
+    for backend in backends {
         let mut local_address = "";
         if !backend.local_address.is_empty() {
             local_address = &backend.local_address;
@@ -128,7 +128,7 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
                 "node_ipvs_backend_weight",
                 "The current backend weight by local and remote address.",
                 status.weight as f64,
-                tags.clone(),
+                tags,
             ),
         ])
     }
@@ -154,9 +154,8 @@ struct IPVSStats {
     outgoing_bytes: u64,
 }
 
-async fn parse_ipvs_stats(root: &str) -> Result<IPVSStats, Error> {
-    let path = &format!("{}/net/ip_vs_stat", root);
-    let content = read_to_string(path).await?;
+async fn parse_ipvs_stats(root: PathBuf) -> Result<IPVSStats, Error> {
+    let content = std::fs::read_to_string(root.join("net/ip_vs_stat"))?;
     let lines = content.lines().collect::<Vec<_>>();
     if lines.len() < 4 {
         return Err("ip_vs_stats corrupt: too short".into());
@@ -213,9 +212,8 @@ struct IPVSBackendStatus {
     weight: u64,
 }
 
-async fn parse_ipvs_backend_status(root: &str) -> Result<Vec<IPVSBackendStatus>, Error> {
-    let path = &format!("{}/net/ip_vs", root);
-    let f = tokio::fs::File::open(path).await?;
+async fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatus>, Error> {
+    let f = tokio::fs::File::open(root.join("net/ip_vs")).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
 

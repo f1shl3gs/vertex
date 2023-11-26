@@ -17,7 +17,7 @@ impl From<PTagValueArray> for Array {
             0 => Array::Bool(array.bool),
             1 => Array::I64(array.i64),
             2 => Array::F64(array.f64),
-            3 => Array::String(array.string.into_iter().map(Cow::from).collect()),
+            3 => Array::String(array.string.into_iter().collect()),
             _ => unreachable!(), // TryFrom is what we need
         }
     }
@@ -56,7 +56,7 @@ impl From<PTagValue> for TagValue {
             PValue::Bool(b) => TagValue::Bool(b),
             PValue::I64(i) => TagValue::I64(i),
             PValue::F64(f) => TagValue::F64(f),
-            PValue::String(s) => TagValue::String(Cow::from(s)),
+            PValue::String(s) => TagValue::String(s),
             PValue::Array(a) => TagValue::Array(a.into()),
         }
     }
@@ -68,7 +68,7 @@ impl From<TagValue> for PTagValue {
             TagValue::Bool(b) => PValue::Bool(b),
             TagValue::I64(i) => PValue::I64(i),
             TagValue::F64(f) => PValue::F64(f),
-            TagValue::String(s) => PValue::String(s.to_string()),
+            TagValue::String(s) => PValue::String(s),
             TagValue::Array(a) => PValue::Array(a.into()),
         };
 

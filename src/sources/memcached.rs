@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
@@ -313,7 +312,6 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
             ]);
 
             for (slab, stats) in slabs {
-                let slab = Cow::from(slab);
                 for op in ["get", "delete", "incr", "decr", "cas", "touch"] {
                     metrics.push(Metric::sum_with_tags(
                         "memcached_slab_commands_total",
@@ -420,8 +418,6 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
             }
 
             for (slab, stats) in items {
-                let slab = Cow::from(slab);
-
                 metrics.extend_from_slice(&[
                     Metric::gauge_with_tags(
                         "memcached_slab_current_items",

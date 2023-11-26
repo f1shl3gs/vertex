@@ -1,10 +1,12 @@
 //! Exposes various statistics from /proc/stat. This includes boot time, forks and interrupts.
 
+use std::path::PathBuf;
+
 use event::Metric;
 
 use super::{read_to_string, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stat = read_stat(proc_path).await?;
 
     Ok(vec![
@@ -51,9 +53,8 @@ struct Stat {
     procs_blocked: u64,
 }
 
-async fn read_stat(proc_path: &str) -> Result<Stat, Error> {
-    let path = format!("{}/stat", proc_path);
-    let content = read_to_string(path).await?;
+async fn read_stat(proc_path: PathBuf) -> Result<Stat, Error> {
+    let content = read_to_string(proc_path.join("stat"))?;
 
     let mut stat = Stat::default();
     for line in content.lines() {
@@ -104,7 +105,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_stat() {
-        let proc = "tests/fixtures/proc";
+        let proc = "tests/fixtures/proc".into();
         let stat = read_stat(proc).await.unwrap();
 
         assert_eq!(stat.ctxt, 38014093);

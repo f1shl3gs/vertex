@@ -1,6 +1,6 @@
 use std::ffi::CStr;
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 
 use super::Error;
 
@@ -25,7 +25,7 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
             "System time zone offset in seconds",
             offset,
             tags!(
-                "time_zone" => tz,
+                Key::from_static("time_zone") => tz,
             ),
         ),
     ])

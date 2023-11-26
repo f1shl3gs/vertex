@@ -1,10 +1,12 @@
 //! Exposes available entropy
 
+use std::path::PathBuf;
+
 use event::Metric;
 
 use super::{read_into, Error};
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let (avail, pool_size) = read_random(proc_path).await?;
 
     Ok(vec![
@@ -21,12 +23,9 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-async fn read_random(proc_path: &str) -> Result<(u64, u64), Error> {
-    let path = format!("{}/sys/kernel/random/entropy_avail", proc_path);
-    let avail = read_into(path).await?;
-
-    let path = format!("{}/sys/kernel/random/poolsize", proc_path);
-    let pool_size = read_into(path).await?;
+async fn read_random(proc_path: PathBuf) -> Result<(u64, u64), Error> {
+    let avail = read_into(proc_path.join("sys/kernel/random/entropy_avail"))?;
+    let pool_size = read_into(proc_path.join("sys/kernel/random/poolsize"))?;
 
     Ok((avail, pool_size))
 }
@@ -37,7 +36,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_random() {
-        let path = "tests/fixtures/proc";
+        let path = "tests/fixtures/proc".into();
         let (avail, pool_size) = read_random(path).await.unwrap();
 
         assert_eq!(avail, 3943);

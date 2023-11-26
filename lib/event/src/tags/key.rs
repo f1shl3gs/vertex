@@ -1,81 +1,397 @@
-use std::borrow::Cow;
+#![allow(clippy::cast_possible_truncation)]
+
+use std::alloc::{alloc, Layout};
+use std::cmp::Ordering;
 use std::fmt;
+use std::hash::{Hash, Hasher};
+use std::mem::transmute;
+use std::ops::Deref;
+use std::ptr::{copy_nonoverlapping, NonNull};
+use std::slice::from_raw_parts;
 
-use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
+const TYPE_MASK: u8 = 0b1000_0000;
+const KEY_SIZE: usize = 24; // 24 is the size_of::<String>()
+const MAX_LENGTH: usize = 128;
+const INLINE_CAP: usize = 23;
 
-/// Key used for `Metric`s and trace `Span` attributes.
-#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Deserialize, Serialize)]
-pub struct Key(Cow<'static, str>);
+/// 1. String memory layout
+///   pointer(8b) + capacity(8b) + len(8b)
+///
+/// 2. Static string
+///   pointer(8b) + len(8b)
+#[repr(C)]
+pub struct Key {
+    data: NonNull<u8>,
+    cap: usize,
+    len: u32,
+    padding1: u16,
+    padding2: u8,
+
+    // Heap: the last u8 is always 0, cause the key's length is
+    // limited to 128.
+    //
+    // Static str: last | TYPE_MASK == true
+    //
+    // Inline: length of inline
+    last: u8,
+}
 
 impl Key {
-    /// Create a new `Key`.
-    pub fn new<S: Into<Cow<'static, str>>>(value: S) -> Self {
-        Key(value.into())
+    /// Create a `Key` from &'static str.
+    #[inline]
+    pub const fn from_static(s: &'static str) -> Key {
+        Key {
+            data: unsafe { NonNull::new_unchecked(s.as_ptr().cast_mut()) },
+            cap: 0,
+            len: s.len() as u32,
+            padding1: 0,
+            padding2: 0,
+            last: TYPE_MASK,
+        }
     }
 
-    /// Create a new const `Key`.
-    pub const fn from_static(value: &'static str) -> Self {
-        Key(Cow::Borrowed(value))
+    #[inline]
+    pub fn from_string(s: String) -> Key {
+        if s.len() <= INLINE_CAP {
+            Key::inline(&s)
+        } else {
+            unsafe { transmute(s) }
+        }
     }
 
-    /// Returns a reference to the underlying key name
+    fn inline(text: &str) -> Key {
+        let len = text.len();
+        let mut data = [0u8; KEY_SIZE];
+
+        unsafe {
+            copy_nonoverlapping(text.as_bytes().as_ptr(), data.as_mut_ptr(), len);
+            data[KEY_SIZE - 1] = len as u8;
+            transmute(data)
+        }
+    }
+
     #[inline]
     pub fn as_str(&self) -> &str {
-        self.0.as_ref()
-    }
-}
+        let (ptr, len) = if self.last == 0 || self.last & TYPE_MASK == TYPE_MASK {
+            // String or &'static str
+            (self.data.as_ptr().cast_const(), self.len as usize)
+        } else {
+            // inline
+            ((self as *const Self).cast::<u8>(), self.last as usize)
+        };
 
-impl AsRef<str> for Key {
-    fn as_ref(&self) -> &str {
-        self.0.as_ref()
-    }
-}
-
-impl ByteSizeOf for Key {
-    fn allocated_bytes(&self) -> usize {
-        match &self.0 {
-            Cow::Borrowed(_) => 0,
-            Cow::Owned(s) => s.len(),
+        unsafe {
+            let slice = from_raw_parts(ptr, len);
+            std::str::from_utf8_unchecked(slice)
         }
     }
 }
 
-impl From<&'static str> for Key {
-    /// Convert a `&str` to a `Key`.
-    fn from(s: &'static str) -> Self {
-        Key(Cow::Borrowed(s))
+impl Clone for Key {
+    fn clone(&self) -> Self {
+        unsafe {
+            // There are only two cases we need to care about: If the string is
+            // allocated on the heap or not. If it is, then the data must be cloned
+            // properly, otherwise we can simply copy the `Key`.
+            if self.last == 0 {
+                let layout = Layout::array::<u8>(self.len as usize).expect("valid layout");
+                let data = alloc(layout);
+                copy_nonoverlapping(self.data.as_ptr(), data, self.len as usize);
+
+                Key {
+                    data: NonNull::new_unchecked(data),
+                    cap: self.cap,
+                    len: self.len,
+                    padding1: 0,
+                    padding2: 0,
+                    last: 0,
+                }
+            } else {
+                // SAFETY: We just checked that `self` can be copied because it is an
+                // inline string or a reference to a `&'static str`.
+                std::ptr::read(self)
+            }
+        }
     }
 }
 
-impl From<Cow<'static, str>> for Key {
-    fn from(value: Cow<'static, str>) -> Self {
-        Self(value)
+impl Drop for Key {
+    fn drop(&mut self) {
+        if self.last == 0 {
+            unsafe {
+                let layout = Layout::array::<u8>(self.cap).expect("valid capacity");
+                std::alloc::dealloc(self.data.as_ptr(), layout);
+            }
+        }
     }
 }
 
-impl From<String> for Key {
-    /// Convert a `String` to a `Key`.
-    fn from(string: String) -> Self {
-        Key(Cow::Owned(string))
-    }
-}
-
-impl From<Key> for String {
-    /// Converts `Key` instances into `String`.
-    fn from(key: Key) -> Self {
-        key.0.into_owned()
-    }
-}
-
-impl From<&String> for Key {
-    fn from(s: &String) -> Self {
-        Key(Cow::from(s.to_string()))
+impl fmt::Debug for Key {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Debug::fmt(self.as_str(), f)
     }
 }
 
 impl fmt::Display for Key {
-    fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(fmt)
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.as_str().fmt(f)
+    }
+}
+
+impl AsRef<str> for Key {
+    #[inline]
+    fn as_ref(&self) -> &str {
+        self.as_str()
+    }
+}
+
+impl Deref for Key {
+    type Target = str;
+
+    fn deref(&self) -> &Self::Target {
+        self.as_str()
+    }
+}
+
+impl Eq for Key {}
+
+impl From<&str> for Key {
+    fn from(v: &str) -> Self {
+        let len = v.len();
+        if len < INLINE_CAP {
+            let mut data = [0u8; KEY_SIZE];
+
+            unsafe {
+                copy_nonoverlapping(v.as_ptr(), data.as_mut_ptr(), len);
+                data[KEY_SIZE - 1] = len as u8;
+                return transmute(data);
+            }
+        }
+
+        unsafe { transmute(v.to_string()) }
+    }
+}
+
+impl From<&String> for Key {
+    #[inline]
+    fn from(v: &String) -> Self {
+        if v.len() < INLINE_CAP {
+            Key::inline(v)
+        } else {
+            unsafe { transmute(v.to_string()) }
+        }
+    }
+}
+
+impl From<String> for Key {
+    fn from(value: String) -> Self {
+        Key::from_string(value)
+    }
+}
+
+impl From<Key> for String {
+    fn from(key: Key) -> Self {
+        if key.last == 0 {
+            return unsafe { transmute(key) };
+        }
+
+        key.as_str().to_string()
+    }
+}
+
+impl Hash for Key {
+    #[inline]
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.deref().hash(state);
+    }
+}
+
+impl Ord for Key {
+    #[inline]
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.as_str().cmp(other.as_str())
+    }
+}
+
+impl PartialEq for Key {
+    #[inline]
+    fn eq(&self, other: &Self) -> bool {
+        self.as_str().eq(other.as_str())
+    }
+}
+
+impl PartialOrd for Key {
+    #[inline]
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+unsafe impl Send for Key {}
+unsafe impl Sync for Key {}
+
+mod serde {
+    use std::fmt::Formatter;
+    use std::mem::transmute;
+    use std::ptr::copy_nonoverlapping;
+
+    use serde::de::{Error, Visitor};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+    use super::{Key, INLINE_CAP, KEY_SIZE, MAX_LENGTH};
+
+    impl<'de> Deserialize<'de> for Key {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
+            struct KeyVisitor;
+
+            impl<'de> Visitor<'de> for KeyVisitor {
+                type Value = Key;
+
+                fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                    formatter.write_str("a string")
+                }
+
+                fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+                where
+                    E: Error,
+                {
+                    let len = v.len();
+                    if len == 0 || len > MAX_LENGTH {
+                        return Err(Error::custom(
+                            "key length should be large than 0 and less than 128",
+                        ));
+                    }
+
+                    if len <= INLINE_CAP {
+                        return Ok(Key::inline(v));
+                    }
+
+                    Ok(unsafe { transmute(v.to_string()) })
+                }
+
+                fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+                where
+                    E: Error,
+                {
+                    let len = v.len();
+                    if len == 0 || len > MAX_LENGTH {
+                        return Err(Error::custom(
+                            "key length should be large than 0 and less than 128",
+                        ));
+                    }
+
+                    if len <= INLINE_CAP {
+                        return Ok(Key::inline(&v));
+                    }
+
+                    Ok(unsafe { transmute(v) })
+                }
+
+                fn visit_bytes<E>(self, v: &[u8]) -> Result<Self::Value, E>
+                where
+                    E: Error,
+                {
+                    let len = v.len();
+                    if len == 0 || len > MAX_LENGTH {
+                        return Err(Error::custom(
+                            "key length should be large than 0 and less than 128",
+                        ));
+                    }
+
+                    if len <= INLINE_CAP {
+                        let mut data = [0u8; KEY_SIZE];
+
+                        return unsafe {
+                            copy_nonoverlapping(v.as_ptr(), data.as_mut_ptr(), len);
+                            data[KEY_SIZE - 1] = len as u8;
+                            Ok(transmute(data))
+                        };
+                    }
+
+                    match String::from_utf8(v.to_vec()) {
+                        Ok(s) => Ok(unsafe { transmute(s) }),
+                        Err(err) => Err(Error::custom(err)),
+                    }
+                }
+
+                fn visit_byte_buf<E>(self, v: Vec<u8>) -> Result<Self::Value, E>
+                where
+                    E: Error,
+                {
+                    let len = v.len();
+                    if len == 0 || len > MAX_LENGTH {
+                        return Err(Error::custom(
+                            "key length should be large than 0 and less than 128",
+                        ));
+                    }
+
+                    if len <= INLINE_CAP {
+                        let mut data = [0u8; KEY_SIZE];
+
+                        return unsafe {
+                            copy_nonoverlapping(v.as_ptr(), data.as_mut_ptr(), len);
+                            data[KEY_SIZE - 1] = len as u8;
+                            Ok(transmute(data))
+                        };
+                    }
+
+                    match String::from_utf8(v) {
+                        Ok(s) => Ok(unsafe { transmute(s) }),
+                        Err(err) => Err(Error::custom(err)),
+                    }
+                }
+            }
+
+            deserializer.deserialize_any(KeyVisitor)
+        }
+    }
+
+    impl Serialize for Key {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            serializer.serialize_str(self)
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use super::*;
+
+    #[test]
+    fn size() {
+        assert_eq!(size_of::<Key>(), size_of::<String>());
+    }
+
+    #[test]
+    fn static_string() {
+        let k1 = Key::from_static("abc");
+        let k2 = k1.clone();
+        assert_eq!(k1, k2);
+        assert_eq!(k1.as_str(), k2.as_str());
+    }
+
+    #[test]
+    fn heap_string() {
+        let k = "abcdefghijklmnopqrstuvwxyz";
+        let k1 = Key::from_string(k.to_string());
+        let k2 = k1.clone();
+        drop(k1);
+        assert_eq!(k2.as_str(), k);
+    }
+
+    #[test]
+    fn inline_string() {
+        let k1 = Key::inline("foo");
+        let k2 = k1.clone();
+        assert_eq!(k1.as_str(), "foo");
+        assert_eq!(k2.as_str(), "foo");
     }
 }

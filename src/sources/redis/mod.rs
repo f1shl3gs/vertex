@@ -493,7 +493,7 @@ async fn latency_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
     let values: Vec<Vec<String>> = cli.query(&["latency", "latest"]).await?;
 
     for parts in values {
-        let event = Cow::from(parts[0].clone());
+        let event = parts[0].clone();
         let spike_last = parts[1].parse::<f64>()?;
         let spike_duration = parts[2].parse::<f64>()?;
 

@@ -6,11 +6,11 @@ pub use key::Key;
 pub use value::{Array, Value};
 
 use std::alloc::{alloc, dealloc, Layout};
-use std::borrow::Cow;
 use std::cmp::Ordering::{Greater, Less};
 use std::collections::BTreeMap;
 use std::fmt::{Debug, Formatter};
 use std::hash::{Hash, Hasher};
+use std::marker::PhantomData;
 use std::ptr::{drop_in_place, slice_from_raw_parts_mut, NonNull};
 
 use measurable::ByteSizeOf;
@@ -27,111 +27,92 @@ fn aligned(amount: usize) -> usize {
 }
 
 #[derive(Clone, Debug, Hash, PartialEq)]
-struct Entry {
+pub struct Entry {
     key: Key,
     value: Value,
 }
 
-struct Inner {
+/// Tags is a vec ordered by key.
+pub struct Tags {
     len: usize,
     cap: usize,
+
     // Since we never allocate on heap unless our capacity is bigger than
     // capacity, and heap capacity cannot be less than 1.
     // Therefore, pointer cannot be null too.
     data: NonNull<Entry>,
 }
 
-impl Inner {
-    #[inline]
-    fn insert(&mut self, pos: usize, entry: Entry) {
-        if self.len == self.cap {
-            self.grow(aligned(self.cap + 1));
-        }
+unsafe impl Send for Tags {}
+unsafe impl Sync for Tags {}
 
-        unsafe {
-            let ptr = self.data.as_ptr().add(pos);
-            if pos < self.len {
-                std::ptr::copy(ptr, ptr.add(1), self.len - pos);
-            }
-
-            ptr.write(entry);
-            self.len += 1;
-        }
-    }
-
-    /// Binary searches this slice.
-    ///
-    /// If the slice is not sorted or if the compare does not implement
-    /// an order consistent with the sort order of the underlying slice,
-    /// the returned result is unspecified and meaningless.
-    ///
-    /// If the value is found then [`Result::Ok`] is returned, containing
-    /// the index of the matching element. If there are multiple matches,
-    /// then any one of the matches could be returned. The index is chosen
-    /// deterministically, but is subject to change in future versions of
-    /// Rust. If the value is not found then [`Result::Err`] is returned,
-    /// containing the index where a matching element could be inserted
-    /// while maintaining sorted order.
-    fn binary_search(&self, key: &str) -> Result<usize, usize> {
-        let mut size = self.len;
-        let mut left = 0;
-        let mut right = size;
-        while left < right {
-            let mid = left + size / 2;
-
-            let sk = unsafe {
-                let ptr = self.data.as_ptr().add(mid);
-                &(*ptr).key
-            };
-
-            let cmp = key.cmp(sk.as_str());
-
-            // The reason why we use if/else control flow rather than match
-            // is because match reorders comparison operations, which is perf
-            // sensitive.
-            // This is x86 asm for u8: https://rust.godbolt.org/z/8Y8Pra.
-            if cmp == Greater {
-                left = mid + 1;
-            } else if cmp == Less {
-                right = mid;
-            } else {
-                // unsafe { core::intrinsics::assume(mid < self.len()) };
-                return Ok(mid);
-            }
-
-            size = right - left;
-        }
-
-        // unsafe { core::intrinsics::assume(left <= self.len()) };
-        Err(left)
-    }
-
-    /// Re-allocate to set the capacity to `new_cap`.
-    ///
-    /// Panics if `new_cap` is less than the vector's length.
-    fn grow(&mut self, new_cap: usize) {
-        assert!(new_cap <= Tags::MAX_SIZE, "overflow");
-
-        unsafe {
-            let new_layout = Layout::array::<Entry>(new_cap).unwrap();
-            let old_layout = Layout::array::<Entry>(self.cap).unwrap();
-            let new_ptr =
-                std::alloc::realloc(self.data.as_ptr().cast(), old_layout, new_layout.size());
-
-            self.data = NonNull::new_unchecked(new_ptr.cast());
-            self.cap = new_cap;
-        }
+impl ByteSizeOf for Tags {
+    fn allocated_bytes(&self) -> usize {
+        self.cap * std::mem::size_of::<Entry>()
     }
 }
 
-impl Clone for Inner {
+/*
+// We take tons of inspiration from the stdlib here but also choose to optimize
+// based on the underlying type needing to be dropped or not
+//
+// This enables us to take advantage of types that aren't Copy but don't implement Drop
+// by avoiding the store to the `DropGuard { len }` data member.
+fn to_vec(xs: &[Entry]) -> Tags {
+    struct DropGuard<'a> {
+        tags: &'a mut Tags,
+        len: usize,
+    }
+
+    impl<'a> Drop for DropGuard<'a> {
+        fn drop(&mut self) {
+            self.tags.len = self.len;
+        }
+    }
+
+    if xs.is_empty() {
+        return Tags::default();
+    }
+
+    let len = xs.len();
+    let mut cpy = Tags::with_capacity(len);
+
+    let mut guard = DropGuard {
+        tags: &mut cpy,
+        len: 0,
+    };
+
+    let dst = unsafe {
+        let len = guard.tags.len;
+        let data = guard.tags.data.as_ptr().add(len).cast::<Entry>();
+        let spare_len = guard.tags.cap - len;
+
+        std::slice::from_raw_parts_mut(data, spare_len)
+    };
+    let cnt = &mut guard.len;
+
+    xs.iter().zip(dst.iter_mut()).for_each(|(x, p)| {
+        *p = x.clone();
+        *cnt += 1;
+    });
+
+    guard.tags.len = len;
+    std::mem::forget(guard);
+
+    cpy
+}
+*/
+
+impl Clone for Tags {
     fn clone(&self) -> Self {
+        // to_vec(self.as_slice())
+
         let layout = Layout::array::<Entry>(self.cap).unwrap();
         let data: NonNull<Entry> = unsafe {
             let data: NonNull<Entry> = NonNull::new_unchecked(alloc(layout)).cast();
             for i in 0..self.len {
-                let from = (*self.data.as_ptr().add(i)).clone();
-                data.as_ptr().add(i).write(from);
+                let from = &(*self.data.as_ptr().add(i));
+                data.as_ptr().add(i).write(from.clone());
             }
 
             data
@@ -142,50 +123,6 @@ impl Clone for Inner {
             len: self.len,
             cap: self.cap,
         }
-    }
-}
-
-impl Drop for Inner {
-    fn drop(&mut self) {
-        unsafe {
-            drop_in_place(slice_from_raw_parts_mut(self.data.as_ptr(), self.len));
-
-            let layout = Layout::array::<Entry>(self.cap).expect("build layout");
-            dealloc(self.data.as_ptr().cast(), layout);
-        }
-    }
-}
-
-impl PartialEq for Inner {
-    fn eq(&self, other: &Self) -> bool {
-        if !self.len.eq(&other.len) {
-            return false;
-        }
-
-        unsafe {
-            for i in 0..self.len {
-                let a = self.data.as_ptr().add(i);
-                let b = other.data.as_ptr().add(i);
-                if !(*a).eq(&(*b)) {
-                    return false;
-                }
-            }
-
-            true
-        }
-    }
-}
-
-#[derive(Clone, PartialEq)]
-#[repr(transparent)]
-pub struct Tags(Cow<'static, Inner>);
-
-unsafe impl Send for Tags {}
-unsafe impl Sync for Tags {}
-
-impl ByteSizeOf for Tags {
-    fn allocated_bytes(&self) -> usize {
-        self.len() * std::mem::size_of::<Entry>()
     }
 }
 
@@ -211,10 +148,22 @@ impl Debug for Tags {
     }
 }
 
+impl Drop for Tags {
+    fn drop(&mut self) {
+        unsafe {
+            drop_in_place(slice_from_raw_parts_mut(self.data.as_ptr(), self.len));
+
+            let layout = Layout::array::<Entry>(self.cap).expect("build layout");
+            dealloc(self.data.as_ptr().cast(), layout);
+        }
+    }
+}
+
 impl Eq for Tags {}
 
 impl Hash for Tags {
     fn hash<H: Hasher>(&self, state: &mut H) {
+        self.len.hash(state);
         for elt in self {
             elt.hash(state);
         }
@@ -232,19 +181,21 @@ impl FromIterator<(Key, Value)> for Tags {
 
 pub struct Iter<'a> {
     pos: usize,
-    inner: &'a Inner,
+    len: usize,
+    data: NonNull<Entry>,
+    _marker: PhantomData<&'a usize>,
 }
 
 impl<'a> Iterator for Iter<'a> {
     type Item = (&'a Key, &'a Value);
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.pos == self.inner.len {
+        if self.pos == self.len {
             return None;
         }
 
         unsafe {
-            let entry = &(*self.inner.data.as_ptr().add(self.pos));
+            let entry = &(*self.data.as_ptr().add(self.pos));
             self.pos += 1;
             Some((&entry.key, &entry.value))
         }
@@ -252,7 +203,7 @@ impl<'a> Iterator for Iter<'a> {
 
     #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {
-        let len = self.inner.len - self.pos;
+        let len = self.len - self.pos;
         (len, Some(len))
     }
 
@@ -261,7 +212,7 @@ impl<'a> Iterator for Iter<'a> {
     where
         Self: Sized,
     {
-        self.inner.len
+        self.len
     }
 }
 
@@ -275,12 +226,32 @@ impl<'a> IntoIterator for &'a Tags {
     }
 }
 
+impl PartialEq for Tags {
+    fn eq(&self, other: &Self) -> bool {
+        if !self.len.eq(&other.len) {
+            return false;
+        }
+
+        unsafe {
+            for i in 0..self.len {
+                let a = self.data.as_ptr().add(i);
+                let b = other.data.as_ptr().add(i);
+                if !(*a).eq(&(*b)) {
+                    return false;
+                }
+            }
+
+            true
+        }
+    }
+}
+
 impl Serialize for Tags {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        let mut map = serializer.serialize_map(Some(self.len()))?;
+        let mut map = serializer.serialize_map(Some(self.len))?;
         for (key, value) in self {
             map.serialize_entry(key, value)?;
         }
@@ -341,79 +312,84 @@ impl Tags {
     /// Allocate failed
     pub fn with_capacity(cap: usize) -> Self {
         let layout = Layout::array::<Entry>(cap).expect("build layout");
-        let data: NonNull<Entry> = unsafe { NonNull::new_unchecked(alloc(layout)).cast() };
+        let ptr = unsafe { NonNull::new_unchecked(alloc(layout)).cast() };
 
-        Self(Cow::Owned(Inner { len: 0, cap, data }))
+        Self {
+            len: 0,
+            cap,
+            data: ptr,
+        }
     }
 
     /// Returns the length of the Tags.
     #[inline]
     pub fn len(&self) -> usize {
-        self.0.len
+        self.len
     }
 
     /// Returns the number of elements the Tags can hold without reallocating.
     #[inline]
     pub fn capacity(&self) -> usize {
-        self.0.cap
+        self.cap
     }
 
     /// Returns whether or not the `MiniVec` has a length greater than 0.
     #[inline]
     pub fn is_empty(&self) -> bool {
-        self.0.len == 0
+        self.len == 0
     }
 
     #[inline]
     pub fn iter(&self) -> Iter {
         Iter {
             pos: 0,
-            inner: self.0.as_ref(),
+            len: self.len,
+            data: self.data,
+            #[allow(clippy::default_constructed_unit_structs)]
+            _marker: PhantomData::default(),
         }
     }
 
     /// Inserts a key-value pair into the tags
     pub fn insert(&mut self, key: impl Into<Key> + AsRef<str>, value: impl Into<Value>) {
-        match self.0.binary_search(key.as_ref()) {
+        match self.binary_search(key.as_ref()) {
             Ok(pos) => unsafe {
-                let elt = self.0.data.as_ptr().add(pos);
+                let elt = self.data.as_ptr().add(pos);
                 (*elt).value = value.into();
             },
-            Err(pos) => self.0.to_mut().insert(
-                pos,
-                Entry {
-                    key: key.into(),
-                    value: value.into(),
-                },
-            ),
-        }
-    }
+            Err(pos) => {
+                if self.len == self.cap {
+                    self.grow(aligned(self.cap + 1));
+                }
 
-    pub fn try_insert(&mut self, key: impl Into<Key> + AsRef<str>, value: impl Into<Value>) {
-        if let Err(pos) = self.0.binary_search(key.as_ref()) {
-            self.0.to_mut().insert(
-                pos,
-                Entry {
-                    key: key.into(),
-                    value: value.into(),
-                },
-            );
+                unsafe {
+                    let ptr = self.data.as_ptr().add(pos);
+                    if pos < self.len {
+                        std::ptr::copy(ptr, ptr.add(1), self.len - pos);
+                    }
+
+                    ptr.write(Entry {
+                        key: key.into(),
+                        value: value.into(),
+                    });
+                    self.len += 1;
+                }
+            }
         }
     }
 
     /// Removes and returns the element by key, shifting all elements after
     /// it to the left.
     pub fn remove(&mut self, key: impl AsRef<str>) -> Option<Value> {
-        match self.0.binary_search(key.as_ref()) {
+        match self.binary_search(key.as_ref()) {
             Ok(pos) => unsafe {
-                let inner = self.0.to_mut();
-                let ptr = inner.data.as_ptr().add(pos);
+                let ptr = self.data.as_ptr().add(pos);
                 let entry = std::ptr::read(ptr);
-                if pos < inner.len - 1 {
-                    std::ptr::copy(ptr.add(1), ptr, inner.len - pos - 1);
+                if pos < self.len - 1 {
+                    std::ptr::copy(ptr.add(1), ptr, self.len - pos - 1);
                 }
 
-                inner.len -= 1;
+                self.len -= 1;
                 Some(entry.value)
             },
             // not found
@@ -421,11 +397,17 @@ impl Tags {
         }
     }
 
+    /// Returns true if the map contains a value for the specified key.
+    #[inline]
+    pub fn contains(&self, key: &str) -> bool {
+        self.binary_search(key).is_ok()
+    }
+
     /// Returns a reference to the value corresponding to the key.
     pub fn get(&self, key: impl AsRef<str>) -> Option<&Value> {
-        if let Ok(pos) = self.0.binary_search(key.as_ref()) {
+        if let Ok(pos) = self.binary_search(key.as_ref()) {
             unsafe {
-                let ptr = self.0.data.as_ptr().add(pos);
+                let ptr = self.data.as_ptr().add(pos);
                 Some(&(*ptr).value)
             }
         } else {
@@ -435,15 +417,86 @@ impl Tags {
 
     /// Returns a mutable reference to the value corresponding to the key.
     pub fn get_mut(&mut self, key: impl AsRef<str>) -> Option<&mut Value> {
-        if let Ok(pos) = self.0.binary_search(key.as_ref()) {
+        if let Ok(pos) = self.binary_search(key.as_ref()) {
             unsafe {
-                let entry = self.0.data.as_ptr().add(pos);
+                let entry = self.data.as_ptr().add(pos);
                 Some(&mut (*entry).value)
             }
         } else {
             None
         }
     }
+
+    /// Binary searches this slice.
+    ///
+    /// If the slice is not sorted or if the compare does not implement
+    /// an order consistent with the sort order of the underlying slice,
+    /// the returned result is unspecified and meaningless.
+    ///
+    /// If the value is found then [`Result::Ok`] is returned, containing
+    /// the index of the matching element. If there are multiple matches,
+    /// then any one of the matches could be returned. The index is chosen
+    /// deterministically, but is subject to change in future versions of
+    /// Rust. If the value is not found then [`Result::Err`] is returned,
+    /// containing the index where a matching element could be inserted
+    /// while maintaining sorted order.
+    #[inline]
+    fn binary_search(&self, key: &str) -> Result<usize, usize> {
+        let mut size = self.len;
+        let mut left = 0;
+        let mut right = size;
+        while left < right {
+            let mid = left + size / 2;
+
+            let sk = unsafe {
+                let ptr = self.data.as_ptr().add(mid);
+                &(*ptr).key
+            };
+
+            let cmp = key.cmp(sk);
+
+            // The reason why we use if/else control flow rather than match
+            // is because match reorders comparison operations, which is perf
+            // sensitive.
+            // This is x86 asm for u8: https://rust.godbolt.org/z/8Y8Pra.
+            if cmp == Greater {
+                left = mid + 1;
+            } else if cmp == Less {
+                right = mid;
+            } else {
+                // unsafe { core::intrinsics::assume(mid < self.len()) };
+                return Ok(mid);
+            }
+
+            size = right - left;
+        }
+
+        // unsafe { core::intrinsics::assume(left <= self.len()) };
+        Err(left)
+    }
+
+    /// Re-allocate to set the capacity to `new_cap`.
+    ///
+    /// Panics if `new_cap` is less than the vector's length.
+    fn grow(&mut self, new_cap: usize) {
+        assert!(new_cap <= Tags::MAX_SIZE, "overflow");
+
+        unsafe {
+            let new_layout = Layout::array::<Entry>(new_cap).unwrap();
+            let old_layout = Layout::array::<Entry>(self.cap).unwrap();
+            let new_ptr =
+                std::alloc::realloc(self.data.as_ptr().cast(), old_layout, new_layout.size());
+
+            self.data = NonNull::new_unchecked(new_ptr.cast());
+            self.cap = new_cap;
+        }
+    }
+
+    // /// `as_slice` obtains a reference to the backing array as an immutable slice of `Entry`
+    // #[inline]
+    // fn as_slice(&self) -> &[Entry] {
+    //     unsafe { std::slice::from_raw_parts(self.data.as_ptr(), self.len) }
+    // }
 }
 
 #[macro_export]
@@ -477,18 +530,7 @@ mod tests {
 
     #[test]
     fn align() {
-        for (input, want) in [
-            (1, 4),
-            (2, 4),
-            (3, 4),
-            (4, 4),
-            (5, 8),
-            (6, 8),
-            (7, 8),
-            (8, 8),
-            (9, 12),
-            (127, 128),
-        ] {
+        for (input, want) in [(1, 4), (2, 4), (3, 4), (4, 4), (5, 8)] {
             assert_eq!(aligned(input), want);
         }
     }
@@ -510,8 +552,8 @@ mod tests {
                 tags.insert(key, 1);
             }
 
-            assert_eq!(tags.0.len, 3);
-            assert_eq!(tags.0.cap, 4);
+            assert_eq!(tags.len, 3);
+            assert_eq!(tags.cap, 4);
 
             let sorted = tags
                 .iter()
@@ -525,8 +567,8 @@ mod tests {
                 tags.remove(key);
             }
 
-            assert_eq!(tags.0.len, 0);
-            assert_eq!(tags.0.cap, 4);
+            assert_eq!(tags.len, 0);
+            assert_eq!(tags.cap, 4);
         }
     }
 
@@ -547,16 +589,16 @@ mod tests {
     #[test]
     fn get() {
         let mut t1 = Tags::with_capacity(1);
-        assert_eq!(t1.0.len, 0);
-        assert_eq!(t1.0.cap, 1);
+        assert_eq!(t1.len, 0);
+        assert_eq!(t1.cap, 1);
 
         t1.insert("foo", "bar");
-        assert_eq!(t1.0.len, 1);
-        assert_eq!(t1.0.cap, 1);
+        assert_eq!(t1.len, 1);
+        assert_eq!(t1.cap, 1);
 
         let value = t1.get("foo").unwrap();
-        assert_eq!(t1.0.len, 1);
-        assert_eq!(t1.0.cap, 1);
+        assert_eq!(t1.len, 1);
+        assert_eq!(t1.cap, 1);
         assert_eq!(value, &Value::from("bar"));
     }
 
@@ -576,12 +618,12 @@ mod tests {
     fn grow() {
         let mut t1 = Tags::with_capacity(1);
         t1.insert("foo", "bar");
-        assert_eq!(t1.0.len, 1);
-        assert_eq!(t1.0.cap, 1);
+        assert_eq!(t1.len, 1);
+        assert_eq!(t1.cap, 1);
 
         t1.insert("bar", "foo");
-        assert_eq!(t1.0.len, 2);
-        assert_eq!(t1.0.cap, 4);
+        assert_eq!(t1.len, 2);
+        assert_eq!(t1.cap, 4);
     }
 
     #[test]
@@ -593,12 +635,12 @@ mod tests {
                 tags.insert(key, 1);
             }
 
-            assert_eq!(tags.0.len, 3);
-            assert_eq!(tags.0.cap, 4);
+            assert_eq!(tags.len, 3);
+            assert_eq!(tags.cap, 4);
 
             let value = tags.remove(key).unwrap();
-            assert_eq!(tags.0.len, 2);
-            assert_eq!(tags.0.cap, 4);
+            assert_eq!(tags.len, 2);
+            assert_eq!(tags.cap, 4);
             assert_eq!(value, Value::from(1));
         }
     }

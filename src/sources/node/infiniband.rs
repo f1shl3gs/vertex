@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 
 use super::{read_to_string, Error};
 
@@ -144,54 +144,47 @@ struct InfiniBandDevice {
     ports: Vec<InfiniBandPort>,
 }
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let root = format!("{}/class/infiniband", sys_path);
-    let devices = infiniband_class(root).await?;
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let devices = infiniband_class(sys_path.join("class/infiniband")).await?;
 
     let mut metrics = vec![];
     for device in devices {
-        let dev_name = &device.name;
         metrics.push(Metric::gauge_with_tags(
             "node_infiniband_info",
             "Non-numeric data from /sys/class/infiniband/<device>, value is always 1.",
             1,
             tags!(
-                "device" => dev_name,
-                "board_id" => device.board_id,
-                "firmware_version" => device.fw_ver,
-                "hca_type" => device.hca_type
+                Key::from_static("device") => device.name.clone(),
+                Key::from_static("board_id") => device.board_id,
+                Key::from_static("firmware_version") => device.fw_ver,
+                Key::from_static("hca_type") => device.hca_type
             ),
         ));
 
         for port in device.ports {
-            let port_name = &port.name;
+            let tags = tags!(
+                Key::from_static("device") => device.name.clone(),
+                Key::from_static("port") => port.name
+            );
+
             metrics.extend_from_slice(&[
                 Metric::gauge_with_tags(
                     "node_infiniband_state_id",
                     "State of the InfiniBand port (0: no change, 1: down, 2: init, 3: armed, 4: active, 5: act defer)",
                     port.state_id,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ),
                 Metric::gauge_with_tags(
                     "node_infiniband_physical_state_id",
                     "Physical state of the InfiniBand port (0: no change, 1: sleep, 2: polling, 3: disable, 4: shift, 5: link up, 6: link error recover, 7: phytest)",
                     port.phys_state_id,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ),
                 Metric::gauge_with_tags(
                     "node_infiniband_rate_bytes_per_second",
                     "Maximum signal transfer rate",
                     port.rate as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ),
             ]);
 
@@ -200,10 +193,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_multicast_packets_received_total",
                     "Number of multicast packets received",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -212,10 +202,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_multicast_packets_transmitted_total",
                     "Number of multicast packets transmitted",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -224,10 +211,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_data_received_bytes_total",
                     "Number of data octets received on all links",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -236,10 +220,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_packets_received_total",
                     "Number of data packets received on all links",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -248,10 +229,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_unicast_packets_received_total",
                     "Number of unicast packets received",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -260,10 +238,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_unicast_packets_transmitted_total",
                     "Number of unicast packets transmitted",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -272,10 +247,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_data_transmitted_bytes_total",
                     "Number of data octets transmitted on all links",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -284,10 +256,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_legacy_packets_transmitted_total",
                     "Number of data packets received on all links",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -296,10 +265,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_excessive_buffer_overrun_errors_total",
                     "Number of times that OverrunErrors consecutive flow control update periods occurred, each having at least one overrun error.",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -308,10 +274,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_link_downed_total",
                     "Number of times the link failed to recover from an error state and went down",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -320,10 +283,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_link_error_recovery_total",
                     "Number of times the link successfully recovered from an error state",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -332,10 +292,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_local_link_integrity_errors_total",
                     "Number of times that the count of local physical errors exceeded the threshold specified by LocalPhyErrors.",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -344,10 +301,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_multicast_packets_received_total",
                     "Number of multicast packets received (including errors)",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -356,10 +310,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_multicast_packets_transmitted_total",
                     "Number of multicast packets transmitted (including errors)",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -368,10 +319,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_constraint_errors_received_total",
                     "Number of packets received on the switch physical port that are discarded",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -380,10 +328,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_constraint_errors_transmitted_total",
                     "Number of packets not transmitted from the switch physical port",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -392,10 +337,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_data_received_bytes_total",
                     "Number of data octets received on all links",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -404,10 +346,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_data_transmitted_bytes_total",
                     "Number of data octets transmitted on all links",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -416,10 +355,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_discards_received_total",
                     "Number of inbound packets discarded by the port because the port is down or congested",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -428,10 +364,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_discards_transmitted_total",
                     "Number of outbound packets discarded by the port because the port is down or congested",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -440,10 +373,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_errors_received_total",
                     "Number of packets containing an error that were received on this port",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -452,10 +382,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_packets_received_total",
                     "Number of packets received on all VLs by this port (including errors)",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -464,10 +391,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_packets_transmitted_total",
                     "Number of packets transmitted on all VLs from this port (including errors)",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -476,10 +400,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_transmit_wait_total",
                     "Number of ticks during which the port had data to transmit but no data was sent during the entire tick",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -488,10 +409,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_unicast_packets_received_total",
                     "Number of unicast packets received (including errors)",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -500,10 +418,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_unicast_packets_transmitted_total",
                     "Number of unicast packets transmitted (including errors)",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -512,10 +427,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_receive_remote_physical_errors_total",
                     "Number of packets marked with the EBP (End of Bad Packet) delimiter received on the port.",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -524,10 +436,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_port_receive_switch_relay_errors_total",
                     "Number of packets that could not be forwarded by the switch.",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -536,10 +445,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_symbol_error_total",
                     "Number of minor link errors detected on one or more physical lanes.",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags.clone(),
                 ))
             }
 
@@ -548,10 +454,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "node_infiniband_vl15_dropped_total",
                     "Number of incoming VL15 packets dropped due to resource limitations.",
                     v as f64,
-                    tags!(
-                        "device" => dev_name,
-                        "port" => port_name
-                    ),
+                    tags,
                 ))
             }
         }
@@ -580,7 +483,7 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
 
     for sub in ["board_id", "fw_ver", "hca_type"] {
         let sp = path.clone().join(sub);
-        let content = match read_to_string(sp).await {
+        let content = match read_to_string(sp) {
             Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
@@ -624,19 +527,19 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
     };
 
     let sp = root.clone().join("state");
-    let content = read_to_string(sp).await?;
+    let content = read_to_string(sp)?;
     let (id, name) = parse_state(&content)?;
     ibp.state = name;
     ibp.state_id = id;
 
     let pp = root.clone().join("phys_state");
-    let content = read_to_string(pp).await?;
+    let content = read_to_string(pp)?;
     let (id, name) = parse_state(&content)?;
     ibp.phys_state = name;
     ibp.phys_state_id = id;
 
     let pp = root.clone().join("rate");
-    let content = read_to_string(pp).await?;
+    let content = read_to_string(pp)?;
     let rate = parse_rate(&content)?;
     ibp.rate = rate;
 
@@ -683,7 +586,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
         let name = entry.file_name();
         let name = name.to_str().unwrap();
 
-        let content = match read_to_string(path).await {
+        let content = match read_to_string(path) {
             Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
@@ -738,21 +641,24 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
 
     // Parse legacy counters
     let path = root.clone().join("counters_ext");
-    match tokio::fs::read_dir(path).await {
+    match std::fs::read_dir(path) {
         Ok(mut readdir) => {
-            while let Some(entry) = readdir.next_entry().await? {
-                let path = entry.path();
+            while let Some(Ok(entry)) = readdir.next() {
                 let name = entry.file_name();
-                let name = name.to_str().unwrap();
 
-                let content = match read_to_string(path).await {
+                let content = match read_to_string(entry.path()) {
                     Ok(c) => c,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
                             continue;
                         }
 
-                        return Err(format!("failed to read file {}, err: {}", name, err).into());
+                        return Err(format!(
+                            "failed to read file {}, err: {}",
+                            name.to_string_lossy(),
+                            err
+                        )
+                        .into());
                     }
                 };
 
@@ -766,7 +672,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                 }
 
                 let value = content.parse::<u64>().ok();
-                match name {
+                match name.to_string_lossy().as_ref() {
                     "port_multicast_rcv_packets" => counters.port_multicast_rcv_packets = value,
                     "port_multicast_xmit_packets" => counters.port_multicast_xmit_packets = value,
                     "port_rcv_data_64" => counters.port_rcv_data_64 = value.map(|v| v * 4),

@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use chrono::Utc;
 use configurable::configurable_component;
-use event::tags::{Key, Tags};
+use event::tags::Tags;
 use event::Bucket;
 use framework::config::Output;
 use framework::pipeline::Pipeline;
@@ -93,7 +93,7 @@ impl metrics::Reporter for Reporter {
 
         let tags = attrs
             .iter()
-            .map(|(k, v)| (Key::from(*k), v.clone().into()))
+            .map(|(k, v)| (k.to_string().into(), v.to_string().into()))
             .collect::<Tags>();
 
         let metric = match observation {

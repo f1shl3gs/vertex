@@ -1,7 +1,8 @@
-/// Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
-use std::path::Path;
+//! Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
 
-use event::{tags, Metric};
+use std::path::{Path, PathBuf};
+
+use event::{tags, tags::Key, Metric};
 use nom::branch::alt;
 use nom::bytes::complete::{tag, take_while};
 use nom::character::complete::{digit1, multispace0};
@@ -57,7 +58,7 @@ struct MDStat {
 }
 
 async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
-    let content = read_to_string(path).await?;
+    let content = read_to_string(path)?;
     let lines = content.split('\n').collect::<Vec<_>>();
 
     let mut stats = vec![];
@@ -258,94 +259,21 @@ fn state_metric_value(key: &str, state: &str) -> f64 {
     }
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = Path::new(proc_path).join("mdstat");
-    let stats = parse_mdstat(path).await?;
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let stats = parse_mdstat(proc_path.join("mdstat")).await?;
 
     let mut metrics = vec![];
     for stat in stats {
-        let device = &stat.name;
-        let state = &stat.activity_state;
+        let device = stat.name;
+        let state = stat.activity_state;
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "node_md_disks_required",
                 "Total number of disks of device.",
                 stat.disks_total as f64,
                 tags!(
-                    "device" => device,
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_disks",
-                "Number of active/failed/spare disks of device.",
-                stat.disks_active as f64,
-                tags!(
-                    "device" => device,
-                    "state" => "active"
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_disks",
-                "Number of active/failed/spare disks of device.",
-                stat.disks_failed as f64,
-                tags!(
-                    "device" => device,
-                    "state" => "failed"
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_disks",
-                "Number of active/failed/spare disks of device.",
-                stat.disks_spare as f64,
-                tags!(
-                    "device" => device,
-                    "state" => "spare"
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_state",
-                "Indicates the state of md-device.",
-                state_metric_value("active", state),
-                tags!(
-                    "device" => device,
-                    "state" => "active"
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_state",
-                "Indicates the state of md-device.",
-                state_metric_value("inactive", state),
-                tags!(
-                    "device" => device,
-                    "state" => "inactive"
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_state",
-                "Indicates the state of md-device.",
-                state_metric_value("recovering", state),
-                tags!(
-                    "device" => device,
-                    "state" => "recovering"
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_state",
-                "Indicates the state of md-device.",
-                state_metric_value("resyncing", state),
-                tags!(
-                    "device" => device,
-                    "state" => "resyncing"
-                ),
-            ),
-            Metric::gauge_with_tags(
-                "node_md_state",
-                "Indicates the state of md-device.",
-                state_metric_value("checking", state),
-                tags!(
-                    "device" => device,
-                    "state" => "checking"
+                    Key::from_static("device") => device.clone(),
                 ),
             ),
             Metric::gauge_with_tags(
@@ -353,7 +281,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Total number of blocks on device.",
                 stat.blocks_total as f64,
                 tags!(
-                    "device" => device
+                    Key::from_static("device") => device.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -361,7 +289,79 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of blocks synced on device.",
                 stat.blocks_synced as f64,
                 tags!(
-                    "device" => device
+                    Key::from_static("device") => device.clone()
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_disks",
+                "Number of active/failed/spare disks of device.",
+                stat.disks_active as f64,
+                tags!(
+                    Key::from_static("device") => device.clone(),
+                    Key::from_static("state") => "active"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_disks",
+                "Number of active/failed/spare disks of device.",
+                stat.disks_failed as f64,
+                tags!(
+                    Key::from_static("device") => device.clone(),
+                    Key::from_static("state") => "failed"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_disks",
+                "Number of active/failed/spare disks of device.",
+                stat.disks_spare as f64,
+                tags!(
+                    Key::from_static("device") => device.clone(),
+                    Key::from_static("state") => "spare"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("active", &state),
+                tags!(
+                    Key::from_static("device") => device.clone(),
+                    Key::from_static("state") => "active"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("inactive", &state),
+                tags!(
+                    Key::from_static("device") => device.clone(),
+                    Key::from_static("state") => "inactive"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("recovering", &state),
+                tags!(
+                    Key::from_static("device") => device.clone(),
+                    Key::from_static("state") => "recovering"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("resyncing", &state),
+                tags!(
+                    Key::from_static("device") => device.clone(),
+                    Key::from_static("state") => "resyncing"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("checking", &state),
+                tags!(
+                    Key::from_static("device") => device,
+                    Key::from_static("state") => "checking"
                 ),
             ),
         ]);
