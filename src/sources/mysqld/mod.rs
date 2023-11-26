@@ -7,7 +7,6 @@ mod info_schema_query_response_time;
 mod integration_tests;
 mod slave_status;
 
-use std::borrow::Cow;
 use std::time::{Duration, Instant};
 
 use configurable::{configurable_component, Configurable};
@@ -161,7 +160,6 @@ impl SourceConfig for Config {
 
         Ok(Box::pin(async move {
             let pool = MySqlPool::connect_lazy_with(options);
-            let instance = Cow::from(instance);
 
             loop {
                 tokio::select! {

@@ -1,12 +1,10 @@
-use crate::thrift::jaeger;
-use crate::Batch;
 use event::trace::{
-    AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanKind, StatusCode,
+    AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanKind, StatusCode, Trace,
 };
-use event::Trace;
 
 use crate::thrift::jaeger::{Log, Span, SpanRef, SpanRefType, Tag, TagType};
 use crate::translate::id::internal_trace_id_to_jaeger_trace_id;
+use crate::{Batch, Process};
 
 impl From<KeyValue> for Tag {
     fn from(kv: KeyValue) -> Self {
@@ -18,15 +16,9 @@ impl From<KeyValue> for Tag {
 impl From<(Key, AnyValue)> for Tag {
     fn from((key, value): (Key, AnyValue)) -> Self {
         match value {
-            AnyValue::String(s) => Tag::new(
-                key.into(),
-                TagType::String,
-                Some(s.into()),
-                None,
-                None,
-                None,
-                None,
-            ),
+            AnyValue::String(s) => {
+                Tag::new(key.into(), TagType::String, Some(s), None, None, None, None)
+            }
             AnyValue::Float(f) => Tag::new(
                 key.into(),
                 TagType::Double,
@@ -81,7 +73,7 @@ impl From<event::trace::Span> for Span {
             tags: Some(build_span_tags(
                 span.tags,
                 span.status.status_code,
-                span.status.message.into_owned(),
+                span.status.message,
                 span.kind,
             )),
             logs: events_to_logs(span.events),
@@ -210,9 +202,9 @@ impl From<Trace> for Batch {
             .tags
             .into_iter()
             .map(|(k, v)| {
-                jaeger::Tag::new(
+                Tag::new(
                     k.to_string(),
-                    jaeger::TagType::String,
+                    TagType::String,
                     Some(v.to_string()),
                     None,
                     None,
@@ -221,9 +213,9 @@ impl From<Trace> for Batch {
                 )
             })
             .collect();
-        let process = jaeger::Process::new(trace.service.to_string(), Some(tags));
+        let process = Process::new(trace.service.to_string(), Some(tags));
         let spans = trace.spans.into_iter().map(Into::into).collect();
 
-        jaeger::Batch::new(process, spans)
+        Batch::new(process, spans)
     }
 }

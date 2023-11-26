@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
@@ -181,21 +180,6 @@ impl Hash for Value {
     }
 }
 
-impl Value {
-    /// String representation of the `Value`
-    ///
-    /// This will allocate iff the underlying value is not a `String`.
-    pub fn as_str(&self) -> Cow<'_, str> {
-        match self {
-            Value::Bool(v) => format!("{}", v).into(),
-            Value::I64(v) => format!("{}", v).into(),
-            Value::F64(v) => format!("{}", v).into(),
-            Value::String(v) => Cow::Borrowed(v.as_ref()),
-            Value::Array(v) => format!("{}", v).into(),
-        }
-    }
-}
-
 macro_rules! from_values {
    (
         $(
@@ -255,12 +239,6 @@ impl From<Vec<&str>> for Value {
             .into();
 
         Self::Array(array)
-    }
-}
-
-impl From<Cow<'static, str>> for Value {
-    fn from(value: Cow<'static, str>) -> Self {
-        Self::String(value.to_string())
     }
 }
 
