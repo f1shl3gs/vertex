@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1700996394758,
+  "lastUpdate": 1700996831586,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3e9146bb6bea446824f12398ddef9a1fee07a7b7",
-          "message": "add influxdb sink (#1319)\n\n* add influxdb sink\r\n\r\n* remove demo health test",
-          "timestamp": "2023-10-04T17:53:15+08:00",
-          "tree_id": "8f6a790afffbbb2dcc17e6ef9e59450cf47b18e6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3e9146bb6bea446824f12398ddef9a1fee07a7b7"
-        },
-        "date": 1696414549812,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27352000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1304400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 18.247,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "94d2b352b540a161953cdd2d319ae9a8459cdadf",
           "message": "fix histogram le value (#1321)",
           "timestamp": "2023-10-04T19:24:03+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.664,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d41c1407c18927279e9190738e44ab9d941f406c",
+          "message": "bump proc-macro2 to 1.0.70 (#1437)",
+          "timestamp": "2023-11-26T18:56:16+08:00",
+          "tree_id": "32ca600b1e7409b2e7cf3a846824172210fe5f78",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d41c1407c18927279e9190738e44ab9d941f406c"
+        },
+        "date": 1700996818151,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17458000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 664300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.399,
             "unit": "ns/op"
           }
         ]
