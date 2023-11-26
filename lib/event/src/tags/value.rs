@@ -108,6 +108,10 @@ into_array!(
 );
 
 /// Value types for use in `KeyValue` pairs.
+///
+/// Optimize in the future: The `size_of::<String>()` is 24,
+/// the `size_of::<Array>()` is 24 too, but the `size_of::<Value>()` is 32,
+/// so it is kind of waste.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
 #[serde(untagged)]
 pub enum Value {
