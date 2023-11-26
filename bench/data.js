@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1701029800791,
+  "lastUpdate": 1701029814637,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "af09841d762c8f4fa07812973efe5d98947fef38",
-          "message": "Sinks/influxdb: org should not be a template value (#1323)\n\n* org should not be a `Template`",
-          "timestamp": "2023-10-04T21:57:46+08:00",
-          "tree_id": "02eb48393ed2669598c7f8046d709d4ccd0fc109",
-          "url": "https://github.com/f1shl3gs/vertex/commit/af09841d762c8f4fa07812973efe5d98947fef38"
-        },
-        "date": 1696428105935,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.089,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.924,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 27.014,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 155.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 58.067,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "585ffb19ae940e5acdbfd898034565c2d417a7bb",
           "message": "fix statfs (#1324)",
           "timestamp": "2023-10-05T15:02:13+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 39.248,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "967382afecc999c09e34d5ada72ae91c159a3566",
+          "message": "add dmi and softirqs (#1439)",
+          "timestamp": "2023-11-27T04:13:48+08:00",
+          "tree_id": "bb0b0161c22fa612012a01f5a546e4ae90095da9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/967382afecc999c09e34d5ada72ae91c159a3566"
+        },
+        "date": 1701029800085,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 17.694,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 17.316,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.428,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 115.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 39.18,
             "unit": "ns/op"
           }
         ]
