@@ -15,7 +15,7 @@ pub use evicted_queue::EvictedQueue;
 pub use generator::RngGenerator;
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-pub use span::*;
+pub use span::{Event, Link, Span, SpanContext, SpanKind, Status, StatusCode};
 
 pub use super::tags::Key;
 use super::tags::Tags;
@@ -25,7 +25,7 @@ use super::{
 
 #[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub enum AnyValue {
-    String(Cow<'static, str>),
+    String(String),
     Float(f64),
     Boolean(bool),
     Int64(i64),
@@ -57,13 +57,13 @@ impl From<bool> for AnyValue {
 
 impl From<&str> for AnyValue {
     fn from(s: &str) -> Self {
-        Self::String(s.to_string().into())
+        Self::String(s.to_string())
     }
 }
 
 impl From<String> for AnyValue {
     fn from(s: String) -> Self {
-        Self::String(s.into())
+        Self::String(s)
     }
 }
 

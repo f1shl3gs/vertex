@@ -1,5 +1,4 @@
 use std::any::{Any, TypeId};
-use std::borrow::Cow;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::error::Error;
@@ -216,7 +215,7 @@ impl SpanRef<'_> {
     /// An API to record events in the context of a given `Span`.
     pub fn add_event<T>(&self, name: T, attributes: Vec<KeyValue>)
     where
-        T: Into<Cow<'static, str>>,
+        T: Into<String>,
     {
         self.with_inner_mut(|inner| inner.add_event(name, attributes))
     }

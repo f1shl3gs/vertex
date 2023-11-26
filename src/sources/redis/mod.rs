@@ -1,6 +1,5 @@
 mod client;
 
-use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::BufRead;
 use std::time::Duration;
@@ -632,16 +631,13 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
 
             "Keyspace" => {
                 if let Ok((keys, expired, avg_ttl)) = parse_db_keyspace(key, value) {
-                    let dbname = key.to_string();
-                    let key = Cow::from(key.to_string());
-
                     metrics.extend_from_slice(&[
                         Metric::gauge_with_tags(
                             "db_keys",
                             "Total number of keys by DB",
                             keys,
                             tags!(
-                                "db" => key.clone()
+                                "db" => key
                             ),
                         ),
                         Metric::gauge_with_tags(
@@ -649,7 +645,7 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
                             "Total number of expiring keys by DB",
                             expired,
                             tags!(
-                                "db" => key.clone()
+                                "db" => key
                             ),
                         ),
                     ]);
@@ -665,7 +661,7 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
                         ));
                     }
 
-                    handled_dbs.insert(dbname.clone());
+                    handled_dbs.insert(key.to_string());
                     continue;
                 }
             }
@@ -685,8 +681,6 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
     for i in 0..dbcount {
         let name = format!("db{}", i);
         if handled_dbs.get(name.as_str()).is_none() {
-            let name = Cow::from(name);
-
             metrics.extend_from_slice(&[
                 Metric::gauge_with_tags(
                     "db_keys",
@@ -955,7 +949,7 @@ fn handle_command_stats(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
         .ok_or(Error::InvalidCommandStats)?
         .parse::<f64>()?;
 
-    let cmd = Cow::from(key.strip_prefix("cmdstat_").unwrap().to_string());
+    let cmd = key.strip_prefix("cmdstat_").unwrap_or(key);
 
     Ok(vec![
         Metric::sum_with_tags(
@@ -963,7 +957,7 @@ fn handle_command_stats(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
             "Total number of calls per command",
             calls,
             tags!(
-                "cmd" => cmd.clone()
+                "cmd" => cmd
             ),
         ),
         Metric::sum_with_tags(

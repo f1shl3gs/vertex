@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
@@ -11,7 +10,7 @@ use super::{EvictedHashMap, EvictedQueue, KeyValue, SpanId, TraceFlags, TraceId,
 #[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub struct Event {
     /// name of the event.
-    pub name: Cow<'static, str>,
+    pub name: String,
 
     /// `timestamp` is the time the event occurred.
     pub timestamp: i64,
@@ -166,7 +165,7 @@ impl StatusCode {
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Status {
     /// A developer-facing human readable error message.
-    pub message: Cow<'static, str>,
+    pub message: String,
     /// The status code
     pub status_code: StatusCode,
 }
@@ -174,7 +173,7 @@ pub struct Status {
 impl Default for Status {
     fn default() -> Self {
         Self {
-            message: Cow::from(""),
+            message: String::new(),
             status_code: StatusCode::Unset,
         }
     }
@@ -372,7 +371,7 @@ impl Span {
     /// # Panics
     ///
     /// Get timestamp nanos failed
-    pub fn add_event(&mut self, name: impl Into<Cow<'static, str>>, attributes: Vec<KeyValue>) {
+    pub fn add_event(&mut self, name: impl Into<String>, attributes: Vec<KeyValue>) {
         let timestamp = Utc::now()
             .timestamp_nanos_opt()
             .expect("timestamp can not be represented in a timestamp with nanosecond precision.");

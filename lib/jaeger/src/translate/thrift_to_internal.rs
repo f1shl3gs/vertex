@@ -1,7 +1,7 @@
-use base64::Engine;
 use std::collections::HashMap;
 
 use base64::engine::general_purpose::STANDARD as BASE64_STANDARD;
+use base64::Engine;
 use event::trace::{
     AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanKind,
     Status, StatusCode,
@@ -98,7 +98,7 @@ impl From<Log> for Event {
         let timestamp = log.timestamp * 1000;
         let mut attributes = tags_to_attributes(Some(log.fields));
         let name = if let Some(value) = attributes.remove("message") {
-            value.to_string().into()
+            value.to_string()
         } else {
             "".into()
         };
@@ -152,7 +152,7 @@ fn status_from_attributes(attributes: &mut EvictedHashMap) -> Status {
         };
 
         Status {
-            message: msg.into(),
+            message: msg,
             status_code: StatusCode::Error,
         }
     } else {

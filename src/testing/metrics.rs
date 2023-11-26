@@ -29,7 +29,7 @@ impl metrics::Reporter for Reporter {
 
         let tags = attrs
             .iter()
-            .map(|(k, v)| (Key::from(*k), v.clone().into()))
+            .map(|(k, v)| (Key::from(*k), v.to_string().into()))
             .collect::<Tags>();
 
         let metric = match observation {

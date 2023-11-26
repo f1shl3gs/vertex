@@ -10,7 +10,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::with_capacity(stats.len() * 6);
 
     for stat in stats {
-        let cpu = &stat.name;
+        let cpu = stat.name;
 
         if let Some(v) = stat.current_frequency {
             metrics.push(Metric::gauge_with_tags(
@@ -18,7 +18,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => cpu,
+                    Key::from_static("cpu") => cpu.clone(),
                 ),
             ));
         }
@@ -29,7 +29,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => cpu,
+                    Key::from_static("cpu") => cpu.clone(),
                 ),
             ));
         }
@@ -40,7 +40,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Maximum cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => cpu,
+                    Key::from_static("cpu") => cpu.clone(),
                 ),
             ))
         }
@@ -51,7 +51,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => cpu,
+                    Key::from_static("cpu") => cpu.clone(),
                 ),
             ))
         }
@@ -62,7 +62,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => cpu,
+                    Key::from_static("cpu") => cpu.clone(),
                 ),
             ));
         }

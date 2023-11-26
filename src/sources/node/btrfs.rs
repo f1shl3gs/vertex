@@ -129,7 +129,7 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
         "Amount of space reserved for a data type",
         stats.reserved_bytes as f64,
         tags!(
-            Key::from_static("block_group_type") => typ.to_string()
+            Key::from_static("block_group_type") => typ
         ),
     )];
 
@@ -141,7 +141,7 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
                 "Amount of used space by a layout/data type",
                 usage.used_bytes as f64,
                 tags!(
-                    Key::from_static("block_group_type") => typ.to_string(),
+                    Key::from_static("block_group_type") => typ,
                     Key::from_static("mode") => mode.clone()
                 ),
             ),
@@ -150,7 +150,7 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
                 "Amount of space allocated for a layout/data type",
                 usage.total_bytes as f64,
                 tags!(
-                    Key::from_static("block_group_type") => typ.to_string(),
+                    Key::from_static("block_group_type") => typ,
                     Key::from_static("mode") => mode.clone()
                 ),
             ),
@@ -159,7 +159,7 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
                 "Data allocation ratio for a layout/data type",
                 usage.ratio,
                 tags!(
-                    Key::from_static("block_group_type") => typ.to_string(),
+                    Key::from_static("block_group_type") => typ,
                     Key::from_static("mode") => mode
                 ),
             ),

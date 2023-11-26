@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::hash::{Hash, Hasher};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -122,7 +121,7 @@ fn scrape(
                     interval,
                 );
                 let auth = Arc::clone(&auth);
-                let instance = Cow::from(format!(
+                let instance = format!(
                     "{}:{}",
                     url.host().unwrap_or_default(),
                     url.port_u16().unwrap_or_else(|| match url.scheme() {
@@ -130,7 +129,7 @@ fn scrape(
                         Some(scheme) if scheme == &http::uri::Scheme::HTTPS => 443,
                         _ => 0,
                     })
-                ));
+                );
 
                 tokio::spawn(async move {
                     loop {

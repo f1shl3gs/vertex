@@ -118,7 +118,7 @@ impl From<proto::Log> for event::trace::Event {
         };
 
         Self {
-            name: name.into(),
+            name,
             timestamp: timestamp.seconds * 1000 * 1000 * 1000 + timestamp.nanos as i64,
             attributes,
         }
