@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 
 use super::{read_into, read_to_string, Error};
 
@@ -104,7 +104,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Size of a device that is part of the filesystem.",
             device.size as f64,
             tags!(
-                "device" => name
+                Key::from_static("device") => name
             ),
         ));
     }
@@ -129,7 +129,7 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
         "Amount of space reserved for a data type",
         stats.reserved_bytes as f64,
         tags!(
-            "block_group_type" => typ.to_string()
+            Key::from_static("block_group_type") => typ.to_string()
         ),
     )];
 
@@ -141,8 +141,8 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
                 "Amount of used space by a layout/data type",
                 usage.used_bytes as f64,
                 tags!(
-                    "block_group_type" => typ.to_string(),
-                    "mode" => mode.clone()
+                    Key::from_static("block_group_type") => typ.to_string(),
+                    Key::from_static("mode") => mode.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -150,8 +150,8 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
                 "Amount of space allocated for a layout/data type",
                 usage.total_bytes as f64,
                 tags!(
-                    "block_group_type" => typ.to_string(),
-                    "mode" => mode.clone()
+                    Key::from_static("block_group_type") => typ.to_string(),
+                    Key::from_static("mode") => mode.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -159,8 +159,8 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
                 "Data allocation ratio for a layout/data type",
                 usage.ratio,
                 tags!(
-                    "block_group_type" => typ.to_string(),
-                    "mode" => mode
+                    Key::from_static("block_group_type") => typ.to_string(),
+                    Key::from_static("mode") => mode
                 ),
             ),
         ])

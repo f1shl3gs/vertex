@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use event::tags::Key;
 use event::{tags, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
@@ -41,7 +42,7 @@ pub async fn gather(conf: NetClassConfig, sys_path: PathBuf) -> Result<Vec<Metri
             _ => continue,
         };
 
-        let tags = tags!("device" => device.clone());
+        let tags = tags!(Key::from_static("device") => device.clone());
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_network_up",
@@ -54,12 +55,12 @@ pub async fn gather(conf: NetClassConfig, sys_path: PathBuf) -> Result<Vec<Metri
                 "Non-numeric data from /sys/class/net/<iface>, value is always 1",
                 1f64,
                 tags!(
-                    "device" => device,
-                    "address" => nci.address,
-                    "broadcast" => nci.broadcast,
-                    "duplex" => nci.duplex,
-                    "operstate" => nci.operstate,
-                    "ifalias" => nci.ifalias,
+                    Key::from_static("address") => nci.address,
+                    Key::from_static("broadcast") => nci.broadcast,
+                    Key::from_static("device") => device,
+                    Key::from_static("duplex") => nci.duplex,
+                    Key::from_static("ifalias") => nci.ifalias,
+                    Key::from_static("operstate") => nci.operstate,
                 ),
             ),
         ]);

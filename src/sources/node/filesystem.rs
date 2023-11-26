@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::{ffi::CString, path::Path};
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
@@ -12,11 +12,11 @@ use super::Error;
 pub struct FileSystemConfig {
     #[serde(default = "default_mount_points_exclude")]
     #[serde(with = "serde_regex")]
-    pub mount_points_exclude: regex::Regex,
+    mount_points_exclude: regex::Regex,
 
     #[serde(default = "default_fs_type_exclude")]
     #[serde(with = "serde_regex")]
-    pub fs_type_exclude: regex::Regex,
+    fs_type_exclude: regex::Regex,
 }
 
 impl Default for FileSystemConfig {
@@ -47,9 +47,9 @@ pub async fn gather(conf: FileSystemConfig, proc_path: PathBuf) -> Result<Vec<Me
     let mut metrics = Vec::new();
     for stat in stats {
         let tags = tags!(
-            "device" => stat.device,
-            "fstype" => stat.fs_type,
-            "mount_point" => stat.mount_point,
+            Key::from_static("device") => stat.device,
+            Key::from_static("fstype") => stat.fs_type,
+            Key::from_static("mount_point") => stat.mount_point,
         );
 
         if stat.device_error == 1 {

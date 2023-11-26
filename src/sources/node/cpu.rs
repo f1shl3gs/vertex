@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
@@ -18,8 +18,8 @@ macro_rules! state_metric {
             "Seconds the CPUs spent in each mode",
             $value,
             tags! (
-                "mode" => $mode,
-                "cpu" => $cpu as i64
+                Key::from_static("mode") => $mode,
+                Key::from_static("cpu") => $cpu as i64
             )
         )
     };
@@ -29,18 +29,18 @@ macro_rules! state_metric {
 #[serde(deny_unknown_fields)]
 pub struct CPUConfig {
     #[serde(default = "default_true")]
-    pub guest: bool,
+    guest: bool,
 
     #[serde(default)]
-    pub info: bool,
+    info: bool,
 
     #[serde(default = "default_flags_include")]
     #[serde(with = "serde_regex")]
-    pub flags_include: regex::Regex,
+    flags_include: regex::Regex,
 
     #[serde(default = "default_bugs_include")]
     #[serde(with = "serde_regex")]
-    pub bugs_include: regex::Regex,
+    bugs_include: regex::Regex,
 }
 
 impl Default for CPUConfig {
@@ -86,8 +86,8 @@ pub async fn gather(conf: CPUConfig, proc_path: PathBuf) -> Result<Vec<Metric>, 
                 "Seconds the CPUs spent in guests (VMs) for each mode.",
                 stat.guest,
                 tags!(
-                    "cpu" => cpu as i64,
-                    "mode" => "user",
+                    Key::from_static("cpu") => cpu as i64,
+                    Key::from_static("mode") => "user",
                 ),
             ));
 
@@ -96,8 +96,8 @@ pub async fn gather(conf: CPUConfig, proc_path: PathBuf) -> Result<Vec<Metric>, 
                 "Seconds the CPUs spent in guests (VMs) for each mode.",
                 stat.guest_nice,
                 tags!(
-                    "cpu" => cpu as i64,
-                    "mode" => "nice"
+                    Key::from_static("cpu") => cpu as i64,
+                    Key::from_static("mode") => "nice"
                 ),
             ));
         }

@@ -128,7 +128,7 @@ pub async fn gather(conf: IPVSConfig, proc_path: PathBuf) -> Result<Vec<Metric>,
                 "node_ipvs_backend_weight",
                 "The current backend weight by local and remote address.",
                 status.weight as f64,
-                tags.clone(),
+                tags,
             ),
         ])
     }

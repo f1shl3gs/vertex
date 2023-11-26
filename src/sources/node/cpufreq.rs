@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use event::trace::Key;
 use event::{tags, Metric};
 
 use super::{read_into, Error};
@@ -17,7 +18,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    "cpu" => cpu,
+                    Key::from_static("cpu") => cpu,
                 ),
             ));
         }
@@ -28,7 +29,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    "cpu" => cpu,
+                    Key::from_static("cpu") => cpu,
                 ),
             ));
         }
@@ -39,7 +40,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Maximum cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    "cpu" => cpu,
+                    Key::from_static("cpu") => cpu,
                 ),
             ))
         }
@@ -50,7 +51,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    "cpu" => cpu,
+                    Key::from_static("cpu") => cpu,
                 ),
             ))
         }
@@ -61,7 +62,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    "cpu" => cpu,
+                    Key::from_static("cpu") => cpu,
                 ),
             ));
         }
@@ -72,7 +73,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Maximum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    "cpu" => cpu,
+                    Key::from_static("cpu") => cpu,
                 ),
             ));
         }

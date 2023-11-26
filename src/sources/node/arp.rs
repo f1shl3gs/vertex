@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 use tokio::io::AsyncBufReadExt;
 
 use super::Error;
@@ -40,7 +40,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             "ARP entries by device",
             count,
             tags!(
-                "device" => device,
+                Key::from_static("device") => device,
             ),
         ));
     }

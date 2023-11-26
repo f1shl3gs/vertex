@@ -5,7 +5,7 @@
 use std::num::ParseIntError;
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 
 use super::{read_to_string, Error};
 
@@ -14,7 +14,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::with_capacity(stats.len() * 39);
     for stat in stats {
-        let tags = tags!("device" => stat.name);
+        let tags = tags!(Key::from_static("device") => stat.name);
 
         metrics.extend([
             Metric::sum_with_tags(

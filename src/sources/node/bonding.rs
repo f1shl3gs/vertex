@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 
 use super::{read_to_string, Error};
 
@@ -10,22 +10,20 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::with_capacity(stats.len() * 2);
     for (master, status) in stats {
+        let tags = tags!(Key::from_static("master") => master);
+
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_bonding_slaves",
                 "Number of configured slaves per bonding interface.",
                 status[0],
-                tags!(
-                    "master" => master.clone(),
-                ),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_bonding_active",
                 "Number of active slaves per bonding interface.",
                 status[1],
-                tags!(
-                    "master" => master
-                ),
+                tags,
             ),
         ]);
     }

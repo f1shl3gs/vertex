@@ -1,6 +1,7 @@
 use std::num::ParseIntError;
 use std::path::PathBuf;
 
+use event::trace::Key;
 use event::{tags, Metric};
 use framework::config::serde_regex;
 use regex::Regex;
@@ -45,7 +46,7 @@ pub async fn gather(conf: NetdevConfig, proc_path: PathBuf) -> Result<Vec<Metric
             NetdevConfig::All => {}
         }
 
-        let tags = tags!("device" => stat.name);
+        let tags = tags!(Key::from_static("device") => stat.name);
         metrics.extend([
             Metric::sum_with_tags(
                 "node_network_receive_bytes_total",
