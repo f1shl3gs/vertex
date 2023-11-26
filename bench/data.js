@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1701004982626,
+  "lastUpdate": 1701005019001,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "91c312e499d36302c05d4c2cff6e57a4269d566f",
-          "message": "bump proc-macro2 to 1.0.68 (#1329)",
-          "timestamp": "2023-10-06T13:38:44+08:00",
-          "tree_id": "c0766425bab514014ead996ddcfe453867c45bf1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/91c312e499d36302c05d4c2cff6e57a4269d566f"
-        },
-        "date": 1696572173540,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1278,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42576.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a9a8b144ce60159ca1b2e1d9d3199f5f070143d7",
           "message": "implement healthcheck (#1330)",
           "timestamp": "2023-10-06T19:11:08+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40956.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f22a1d3f34dfda31af21e2efad150aadc4eabff1",
+          "message": "lib/event: reimplement Value::String with String (#1438)",
+          "timestamp": "2023-11-26T21:12:15+08:00",
+          "tree_id": "f385436572ec8930dea3c7bac6ff3362f922dc55",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f22a1d3f34dfda31af21e2efad150aadc4eabff1"
+        },
+        "date": 1701005005584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40951.9,
             "unit": "KiB"
           }
         ]
