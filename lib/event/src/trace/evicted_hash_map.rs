@@ -257,7 +257,7 @@ mod tests {
         let mut map = EvictedHashMap::new(max_len, max_len as usize);
 
         for i in 0..=max_len {
-            map.insert_key_value(Key::new(i.to_string()), AnyValue::Boolean(true));
+            map.insert_key_value(i.to_string().into(), AnyValue::Boolean(true));
         }
 
         assert_eq!(map.dropped_count, 1);
@@ -265,7 +265,7 @@ mod tests {
         assert_eq!(
             map.map.keys().cloned().collect::<HashSet<_>>(),
             (1..=max_len)
-                .map(|i| Key::new(i.to_string()))
+                .map(|i| Key::from(i.to_string()))
                 .collect::<HashSet<_>>()
         );
     }

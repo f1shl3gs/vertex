@@ -453,7 +453,7 @@ impl Tags {
                 &(*ptr).key
             };
 
-            let cmp = key.cmp(sk.as_str());
+            let cmp = key.cmp(sk);
 
             // The reason why we use if/else control flow rather than match
             // is because match reorders comparison operations, which is perf

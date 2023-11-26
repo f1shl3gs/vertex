@@ -17,7 +17,7 @@ impl From<PTagValueArray> for Array {
             0 => Array::Bool(array.bool),
             1 => Array::I64(array.i64),
             2 => Array::F64(array.f64),
-            3 => Array::String(array.string.into_iter().map(Cow::from).collect()),
+            3 => Array::String(array.string.into_iter().collect()),
             _ => unreachable!(), // TryFrom is what we need
         }
     }

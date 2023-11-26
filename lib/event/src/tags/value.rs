@@ -15,7 +15,7 @@ pub enum Array {
     /// Array of floats
     F64(Vec<f64>),
     /// Array of strings
-    String(Vec<Cow<'static, str>>),
+    String(Vec<String>),
 }
 
 impl PartialEq<Array> for Array {
@@ -105,16 +105,8 @@ into_array!(
     (Vec<bool>, Array::Bool),
     (Vec<i64>, Array::I64),
     (Vec<f64>, Array::F64),
-    (Vec<Cow<'static, str>>, Array::String),
+    (Vec<String>, Array::String),
 );
-
-impl From<Vec<String>> for Array {
-    fn from(ss: Vec<String>) -> Self {
-        let ss = ss.into_iter().map(Into::into).collect::<Vec<_>>();
-
-        Self::String(ss)
-    }
-}
 
 /// Value types for use in `KeyValue` pairs.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]

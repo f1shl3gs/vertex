@@ -73,7 +73,7 @@ impl From<Batch> for Trace {
                             Value::from(BASE64_STANDARD.encode(kv.v_binary))
                         };
 
-                        (Key::new(kv.key), value)
+                        (Key::from_string(kv.key), value)
                     })
                     .collect();
 
