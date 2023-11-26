@@ -10,6 +10,7 @@ mod conntrack;
 mod cpu;
 mod cpufreq;
 mod diskstats;
+mod dmi;
 mod drm;
 mod edac;
 mod entropy;
@@ -39,6 +40,7 @@ mod protocols;
 mod rapl;
 mod schedstat;
 mod sockstat;
+mod softirqs;
 mod softnet;
 mod stat;
 mod tapestats;
@@ -112,142 +114,148 @@ fn default_vmstat_config() -> Option<vmstat::VMStatConfig> {
 #[serde(deny_unknown_fields)]
 struct Collectors {
     #[serde(default = "default_true")]
-    pub arp: bool,
+    arp: bool,
 
     #[serde(default = "default_true")]
-    pub btrfs: bool,
+    btrfs: bool,
 
     #[serde(default = "default_true")]
-    pub bonding: bool,
+    bonding: bool,
 
     #[serde(default = "default_true")]
-    pub conntrack: bool,
+    conntrack: bool,
 
     #[serde(default = "default_cpu_config")]
-    pub cpu: Option<cpu::CPUConfig>,
+    cpu: Option<cpu::CPUConfig>,
 
     #[serde(default = "default_true")]
-    pub cpufreq: bool,
+    cpufreq: bool,
 
     #[serde(default = "default_diskstats_config")]
-    pub diskstats: Option<diskstats::DiskStatsConfig>,
+    diskstats: Option<diskstats::DiskStatsConfig>,
+
+    #[serde(default = "default_true")]
+    dmi: bool,
 
     #[serde(default)]
-    pub drm: bool,
+    drm: bool,
 
     #[serde(default = "default_true")]
-    pub edac: bool,
+    edac: bool,
 
     #[serde(default = "default_true")]
-    pub entropy: bool,
+    entropy: bool,
 
     #[serde(default = "default_true")]
-    pub fibrechannel: bool,
+    fibrechannel: bool,
 
     #[serde(default = "default_true")]
-    pub filefd: bool,
+    filefd: bool,
 
     #[serde(default = "default_filesystem_config")]
-    pub filesystem: Option<filesystem::FileSystemConfig>,
+    filesystem: Option<filesystem::FileSystemConfig>,
 
     #[serde(default = "default_true")]
-    pub hwmon: bool,
+    hwmon: bool,
 
     #[serde(default = "default_true")]
-    pub infiniband: bool,
+    infiniband: bool,
 
     #[serde(default = "default_ipvs_config")]
-    pub ipvs: Option<ipvs::IPVSConfig>,
+    ipvs: Option<ipvs::IPVSConfig>,
 
     #[serde(default = "default_true")]
-    pub loadavg: bool,
+    loadavg: bool,
 
     #[serde(default = "default_true")]
-    pub mdadm: bool,
+    mdadm: bool,
 
     #[serde(default = "default_true")]
-    pub memory: bool,
+    memory: bool,
 
     #[serde(default = "default_netclass_config")]
-    pub netclass: Option<netclass::NetClassConfig>,
+    netclass: Option<netclass::NetClassConfig>,
 
     #[serde(
         default = "default_netdev_config",
         with = "serde_yaml::with::singleton_map"
     )]
-    pub netdev: Option<netdev::NetdevConfig>,
+    netdev: Option<netdev::NetdevConfig>,
 
     #[serde(default = "default_netstat_config")]
-    pub netstat: Option<netstat::NetstatConfig>,
+    netstat: Option<netstat::NetstatConfig>,
 
     #[serde(default = "default_true")]
-    pub nfs: bool,
+    nfs: bool,
 
     #[serde(default = "default_true")]
-    pub nfsd: bool,
+    nfsd: bool,
 
     #[serde(default = "default_true")]
-    pub nvme: bool,
+    nvme: bool,
 
     #[serde(default = "default_true")]
-    pub os_release: bool,
+    os_release: bool,
 
     #[serde(default = "default_powersupply_config")]
-    pub power_supply: Option<powersupplyclass::PowerSupplyConfig>,
+    power_supply: Option<powersupplyclass::PowerSupplyConfig>,
 
     #[serde(default = "default_true")]
-    pub pressure: bool,
+    pressure: bool,
 
     #[serde(default)]
-    pub processes: bool,
+    processes: bool,
 
     #[serde(default = "default_true")]
-    pub rapl: bool,
+    rapl: bool,
 
     #[serde(default = "default_true")]
-    pub schedstat: bool,
+    schedstat: bool,
 
     #[serde(default = "default_true")]
-    pub sockstat: bool,
+    sockstat: bool,
 
     #[serde(default = "default_true")]
-    pub softnet: bool,
+    softnet: bool,
+
+    #[serde(default)]
+    softirqs: bool,
 
     #[serde(default = "default_true")]
-    pub stat: bool,
+    stat: bool,
 
     #[serde(default = "default_true")]
-    pub tcpstat: bool,
+    tcpstat: bool,
 
     #[serde(default = "default_true")]
-    pub thermal_zone: bool,
+    thermal_zone: bool,
 
     #[serde(default = "default_true")]
-    pub time: bool,
+    time: bool,
 
     #[serde(default = "default_true")]
-    pub timex: bool,
+    timex: bool,
 
     #[serde(default = "default_true")]
-    pub udp_queues: bool,
+    udp_queues: bool,
 
     #[serde(default = "default_true")]
-    pub uname: bool,
+    uname: bool,
 
     #[serde(default = "default_vmstat_config")]
-    pub vmstat: Option<vmstat::VMStatConfig>,
+    vmstat: Option<vmstat::VMStatConfig>,
 
     #[cfg(target_os = "linux")]
     #[serde(default = "default_true")]
-    pub xfs: bool,
+    xfs: bool,
 
     #[serde(default = "default_true")]
-    pub zfs: bool,
+    zfs: bool,
 
     // MacOS
     #[cfg(target_os = "macos")]
     #[serde(default = "default_true")]
-    pub boot_time: bool,
+    boot_time: bool,
 }
 
 impl Default for Collectors {
@@ -260,6 +268,7 @@ impl Default for Collectors {
             cpu: default_cpu_config(),
             cpufreq: true,
             diskstats: default_diskstats_config(),
+            dmi: default_true(),
             drm: default_true(),
             edac: default_true(),
             entropy: default_true(),
@@ -286,6 +295,7 @@ impl Default for Collectors {
             schedstat: default_true(),
             sockstat: default_true(),
             softnet: default_true(),
+            softirqs: false,
             stat: default_true(),
             time: default_true(),
             timex: default_true(),
@@ -317,7 +327,7 @@ fn default_sys_path() -> PathBuf {
 /// deployed as an agent, and replace `node_exporter`.
 #[configurable_component(source, name = "node")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// procfs mountpoint.
     #[serde(default = "default_proc_path")]
     proc_path: PathBuf,
@@ -330,7 +340,7 @@ pub struct Config {
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 
-    #[serde(default)]
+    #[serde(default, flatten)]
     #[configurable(skip)]
     collectors: Collectors,
 }
@@ -347,7 +357,7 @@ impl Default for Config {
 }
 
 #[derive(Debug, Default, Deserialize, Serialize)]
-pub struct NodeMetrics {
+struct NodeMetrics {
     interval: Duration,
     proc_path: PathBuf,
     sys_path: PathBuf,
@@ -484,6 +494,13 @@ impl NodeMetrics {
                 let conf = conf.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("diskstats", diskstats::gather(conf, proc_path))
+                }))
+            }
+
+            if self.collectors.dmi {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("dmi", dmi::gather(sys_path))
                 }))
             }
 
@@ -671,6 +688,13 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("softnet", softnet::gather(proc_path))
+                }))
+            }
+
+            if self.collectors.softirqs {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("softirqs", softirqs::gather(proc_path))
                 }))
             }
 
