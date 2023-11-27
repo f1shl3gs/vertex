@@ -367,7 +367,7 @@ async fn read_layouts(
             continue;
         }
 
-        let name = path.file_name().unwrap().to_string_lossy().to_string();
+        let name = entry.file_name().to_string_lossy().to_string();
         let layout = read_layout(path, devices).await?;
 
         layouts.insert(name, layout);

@@ -671,16 +671,31 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                     continue;
                 }
 
-                let value = content.parse::<u64>().ok();
                 match name.to_string_lossy().as_ref() {
-                    "port_multicast_rcv_packets" => counters.port_multicast_rcv_packets = value,
-                    "port_multicast_xmit_packets" => counters.port_multicast_xmit_packets = value,
-                    "port_rcv_data_64" => counters.port_rcv_data_64 = value.map(|v| v * 4),
-                    "port_rcv_packets_64" => counters.port_rcv_packets_64 = value,
-                    "port_unicast_rcv_packets" => counters.port_unicast_rcv_packets = value,
-                    "port_unicast_xmit_packets" => counters.port_unicast_xmit_packets = value,
-                    "port_xmit_data_64" => counters.port_xmit_data_64 = value.map(|v| v * 4),
-                    "port_xmit_packets_64" => counters.port_xmit_packets_64 = value,
+                    "port_multicast_rcv_packets" => {
+                        counters.port_multicast_rcv_packets = content.parse::<u64>().ok()
+                    }
+                    "port_multicast_xmit_packets" => {
+                        counters.port_multicast_xmit_packets = content.parse::<u64>().ok()
+                    }
+                    "port_rcv_data_64" => {
+                        counters.port_rcv_data_64 = content.parse::<u64>().ok().map(|v| v * 4)
+                    }
+                    "port_rcv_packets_64" => {
+                        counters.port_rcv_packets_64 = content.parse::<u64>().ok()
+                    }
+                    "port_unicast_rcv_packets" => {
+                        counters.port_unicast_rcv_packets = content.parse::<u64>().ok()
+                    }
+                    "port_unicast_xmit_packets" => {
+                        counters.port_unicast_xmit_packets = content.parse::<u64>().ok()
+                    }
+                    "port_xmit_data_64" => {
+                        counters.port_xmit_data_64 = content.parse::<u64>().ok().map(|v| v * 4)
+                    }
+                    "port_xmit_packets_64" => {
+                        counters.port_xmit_packets_64 = content.parse::<u64>().ok()
+                    }
                     _ => {}
                 }
             }

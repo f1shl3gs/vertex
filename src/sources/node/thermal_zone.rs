@@ -47,10 +47,10 @@ async fn thermal_zone_stats(root: PathBuf) -> Result<Vec<ThermalZoneStats>, Erro
 }
 
 async fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
-    let name = root.file_name().unwrap();
-    let name = name
-        .to_str()
+    let name = root
+        .file_name()
         .unwrap()
+        .to_string_lossy()
         .strip_prefix("thermal_zone")
         .unwrap()
         .to_string();
@@ -126,10 +126,10 @@ async fn cooling_device_stats(root: PathBuf) -> Result<Vec<CoolingDeviceStats>, 
 }
 
 async fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats, Error> {
-    let name = root.file_name().unwrap();
-    let name = name
-        .to_str()
+    let name = root
+        .file_name()
         .unwrap()
+        .to_string_lossy()
         .strip_prefix("cooling_device")
         .unwrap()
         .to_string();
