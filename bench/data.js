@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1701078828817,
+  "lastUpdate": 1701109651692,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "37275d17301dadc05d80fd27b84c5bd743655732",
-          "message": "remove tracing-log (#1332)",
-          "timestamp": "2023-10-07T17:08:52+08:00",
-          "tree_id": "3e21bfacc58b48f591398b449c0bd1ef78492ed9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/37275d17301dadc05d80fd27b84c5bd743655732"
-        },
-        "date": 1696670837354,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 960,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42580.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f382398c38d08323d28415387952d5d38ea93c17",
           "message": "update (#1333)",
           "timestamp": "2023-10-07T19:40:04+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 568,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40660,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "132a80622876b536cfd512d09c917cb069c29dc3",
+          "message": "remove unused comments (#1441)",
+          "timestamp": "2023-11-28T02:15:48+08:00",
+          "tree_id": "50774e19cd76b1676013d43ba44c3b4d56f7065e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/132a80622876b536cfd512d09c917cb069c29dc3"
+        },
+        "date": 1701109637300,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 598,
             "unit": "s"
           },
           {
