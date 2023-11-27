@@ -52,61 +52,8 @@ impl ByteSizeOf for Tags {
     }
 }
 
-/*
-// We take tons of inspiration from the stdlib here but also choose to optimize
-// based on the underlying type needing to be dropped or not
-//
-// This enables us to take advantage of types that aren't Copy but don't implement Drop
-// by avoiding the store to the `DropGuard { len }` data member.
-fn to_vec(xs: &[Entry]) -> Tags {
-    struct DropGuard<'a> {
-        tags: &'a mut Tags,
-        len: usize,
-    }
-
-    impl<'a> Drop for DropGuard<'a> {
-        fn drop(&mut self) {
-            self.tags.len = self.len;
-        }
-    }
-
-    if xs.is_empty() {
-        return Tags::default();
-    }
-
-    let len = xs.len();
-    let mut cpy = Tags::with_capacity(len);
-
-    let mut guard = DropGuard {
-        tags: &mut cpy,
-        len: 0,
-    };
-
-    let dst = unsafe {
-        let len = guard.tags.len;
-        let data = guard.tags.data.as_ptr().add(len).cast::<Entry>();
-        let spare_len = guard.tags.cap - len;
-
-        std::slice::from_raw_parts_mut(data, spare_len)
-    };
-    let cnt = &mut guard.len;
-
-    xs.iter().zip(dst.iter_mut()).for_each(|(x, p)| {
-        *p = x.clone();
-        *cnt += 1;
-    });
-
-    guard.tags.len = len;
-    std::mem::forget(guard);
-
-    cpy
-}
-*/
-
 impl Clone for Tags {
     fn clone(&self) -> Self {
-        // to_vec(self.as_slice())
-
         let layout = Layout::array::<Entry>(self.cap).unwrap();
         let data: NonNull<Entry> = unsafe {
             let data: NonNull<Entry> = NonNull::new_unchecked(alloc(layout)).cast();
@@ -491,12 +438,6 @@ impl Tags {
             self.cap = new_cap;
         }
     }
-
-    // /// `as_slice` obtains a reference to the backing array as an immutable slice of `Entry`
-    // #[inline]
-    // fn as_slice(&self) -> &[Entry] {
-    //     unsafe { std::slice::from_raw_parts(self.data.as_ptr(), self.len) }
-    // }
 }
 
 #[macro_export]
