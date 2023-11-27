@@ -325,70 +325,42 @@ impl NetClassInterface {
 
         while let Some(Ok(entry)) = dirs.next() {
             let file = entry.file_name();
-            let file = file.to_str().unwrap();
-
             let value = match read_to_string(entry.path()) {
                 Ok(v) => v,
                 _ => continue,
             };
 
-            match file {
+            match file.to_string_lossy().as_ref() {
                 "addr_assign_type" => nci.addr_assign_type = value.parse().ok(),
-
                 "addr_len" => nci.addr_len = value.parse().ok(),
-
                 "address" => nci.address = value,
-
                 "broadcast" => nci.broadcast = value,
-
                 "carrier" => nci.carrier = value.parse().ok(),
-
                 "carrier_changes" => nci.carrier_changes = value.parse().ok(),
-
                 "carrier_up_count" => nci.carrier_up_count = value.parse().ok(),
-
                 "carrier_down_count" => nci.carrier_down_count = value.parse().ok(),
-
                 "dev_id" => {
                     nci.dev_id = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok()
                 }
-
                 "dormant" => nci.dormant = value.parse().ok(),
-
                 "duplex" => nci.duplex = value,
-
                 "flags" => {
                     nci.flags = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok()
                 }
-
                 "ifalias" => nci.ifalias = value,
-
                 "ifindex" => nci.ifindex = value.parse().ok(),
-
                 "iflink" => nci.iflink = value.parse().ok(),
-
                 "link_mode" => nci.link_mode = value.parse().ok(),
-
                 "mtu" => nci.mtu = value.parse().ok(),
-
                 "name_assign_type" => nci.name_assign_type = value.parse().ok(),
-
                 "netdev_group" => nci.netdev_group = value.parse().ok(),
-
                 "operstate" => nci.operstate = value,
-
                 "phys_port_id" => nci.phys_port_id = value,
-
                 "phys_port_name" => nci.phys_port_name = value,
-
                 "phys_switch_id" => nci.phys_switch_id = value,
-
                 "speed" => nci.speed = value.parse().ok(),
-
                 "tx_queue_len" => nci.tx_queue_len = value.parse().ok(),
-
                 "type" => nci.typ = value.parse().ok(),
-
                 _ => {}
             }
         }

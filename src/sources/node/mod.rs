@@ -39,6 +39,7 @@ mod processes;
 mod protocols;
 mod rapl;
 mod schedstat;
+mod selinux;
 mod sockstat;
 mod softirqs;
 mod softnet;
@@ -213,6 +214,9 @@ struct Collectors {
     schedstat: bool,
 
     #[serde(default = "default_true")]
+    selinux: bool,
+
+    #[serde(default = "default_true")]
     sockstat: bool,
 
     #[serde(default = "default_true")]
@@ -293,6 +297,7 @@ impl Default for Collectors {
             processes: false,
             rapl: default_true(),
             schedstat: default_true(),
+            selinux: default_true(),
             sockstat: default_true(),
             softnet: default_true(),
             softirqs: false,
@@ -674,6 +679,14 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("schedstat", schedstat::gather(proc_path))
+                }))
+            }
+
+            if self.collectors.selinux {
+                let proc_path = self.proc_path.clone();
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("selinux", selinux::gather(proc_path, sys_path))
                 }))
             }
 

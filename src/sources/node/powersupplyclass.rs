@@ -193,9 +193,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
             }
         };
 
-        let name = entry.file_name();
-        let name = name.to_str().unwrap();
-        match name {
+        match entry.file_name().to_string_lossy().as_ref() {
             "authentic" => ps.authentic = content.parse().ok(),
             "calibrate" => ps.calibrate = content.parse().ok(),
             "capacity" => ps.capacity = content.parse().ok(),
