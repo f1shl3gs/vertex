@@ -38,10 +38,8 @@ fn get_enabled(proc_path: PathBuf) -> Result<bool, Error> {
         // Linux >= 3.17 provides this
         thread_self
     } else {
-        proc_path.join(format!(
-            "self/task/{}/attr/current",
-            unsafe { libc::gettid() } as i32
-        ))
+        let thread_id = unsafe { libc::syscall(libc::SYS_gettid) as i64 };
+        proc_path.join(format!("self/task/{}/attr/current", thread_id))
     };
 
     // The content is end with '0x0000'
