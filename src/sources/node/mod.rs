@@ -466,7 +466,7 @@ impl NodeMetrics {
             }
 
             if self.collectors.btrfs {
-                let sys_path = self.proc_path.clone();
+                let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("btrfs", btrfs::gather(sys_path))
                 }))
