@@ -306,37 +306,17 @@ async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error
 }
 
 async fn read_allocation_stats(root: PathBuf, devices: usize) -> Result<AllocationStats, Error> {
-    let path = root.join("bytes_may_use");
-    let may_used_bytes = read_into(path)?;
-
-    let path = root.join("bytes_pinned");
-    let pinned_bytes = read_into(path)?;
-
-    let path = root.join("bytes_readonly");
-    let read_only_bytes = read_into(path)?;
-
-    let path = root.join("bytes_reserved");
-    let reserved_bytes = read_into(path)?;
-
-    let path = root.join("bytes_used");
-    let used_bytes = read_into(path)?;
-
-    let path = root.join("disk_used");
-    let disk_used_bytes = read_into(path)?;
-
-    let path = root.join("disk_total");
-    let disk_total_bytes = read_into(path)?;
-
-    let path = root.join("flags");
-    let flags = read_into(path)?;
-
-    let path = root.join("total_bytes");
-    let total_bytes = read_into(path)?;
-
-    let path = root.join("total_bytes_pinned");
-    let total_pinned_bytes = read_into(path)?;
-
-    // TODO: check the path arg, it is just a placeholder
+    let may_used_bytes = read_into(root.join("bytes_may_use"))?;
+    let pinned_bytes = read_into(root.join("bytes_pinned"))?;
+    let read_only_bytes = read_into(root.join("bytes_readonly"))?;
+    let reserved_bytes = read_into(root.join("bytes_reserved"))?;
+    let used_bytes = read_into(root.join("bytes_used"))?;
+    let disk_used_bytes = read_into(root.join("disk_used"))?;
+    let disk_total_bytes = read_into(root.join("disk_total"))?;
+    let flags = read_into(root.join("flags"))?;
+    let total_bytes = read_into(root.join("total_bytes"))?;
+    // this file may not exists
+    let total_pinned_bytes = read_into(root.join("total_bytes_pinned")).unwrap_or_default();
     let layouts = read_layouts(root, devices).await?;
 
     Ok(AllocationStats {
