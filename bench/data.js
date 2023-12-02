@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1701509963443,
+  "lastUpdate": 1701509975178,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "567813041cfe4ad68a2601ff5746edf44dc4d143",
-          "message": "new stabilized methods of LocalKey (#1328)",
-          "timestamp": "2023-10-06T11:06:15+08:00",
-          "tree_id": "201b2c4ef7ed2fdecc5fc18f5b38300b09cbbac9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/567813041cfe4ad68a2601ff5746edf44dc4d143"
-        },
-        "date": 1696561785145,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 104.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 234.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 403.8,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.35,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "456adfdf0644ae7052eb028f8a13511158aabb30",
+          "message": "sources/node: add metric `node_cpu_scaling_governor` (#1445)\n\n* add metric `node_cpu_scaling_governor`",
+          "timestamp": "2023-12-02T17:37:16+08:00",
+          "tree_id": "642a9fbfb6c59f41390a304c68398cf911011e12",
+          "url": "https://github.com/f1shl3gs/vertex/commit/456adfdf0644ae7052eb028f8a13511158aabb30"
+        },
+        "date": 1701509961637,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.736,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.105,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 181.71,
             "unit": "ns/op"
           }
         ]
