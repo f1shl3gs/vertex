@@ -79,6 +79,10 @@ fn default_cpu_config() -> Option<cpu::CPUConfig> {
     Some(cpu::CPUConfig::default())
 }
 
+fn default_bcache_config() -> Option<bcache::Config> {
+    Some(bcache::Config::default())
+}
+
 fn default_diskstats_config() -> Option<diskstats::DiskStatsConfig> {
     Some(diskstats::DiskStatsConfig::default())
 }
@@ -117,11 +121,14 @@ struct Collectors {
     #[serde(default = "default_true")]
     arp: bool,
 
-    #[serde(default = "default_true")]
-    btrfs: bool,
+    #[serde(default = "default_bcache_config")]
+    bcache: Option<bcache::Config>,
 
     #[serde(default = "default_true")]
     bonding: bool,
+
+    #[serde(default = "default_true")]
+    btrfs: bool,
 
     #[serde(default = "default_true")]
     conntrack: bool,
@@ -266,6 +273,7 @@ impl Default for Collectors {
     fn default() -> Self {
         Self {
             arp: default_true(),
+            bcache: default_bcache_config(),
             btrfs: default_true(),
             bonding: default_true(),
             conntrack: default_true(),
@@ -456,6 +464,14 @@ impl NodeMetrics {
                 tasks.push(tokio::spawn(async move {
                     record_gather!("arp", arp::gather(proc_path))
                 }));
+            }
+
+            if let Some(conf) = &self.collectors.bcache {
+                let sys_path = self.sys_path.clone();
+                let conf = conf.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("bcache", bcache::gather(conf, sys_path))
+                }))
             }
 
             if self.collectors.bonding {
