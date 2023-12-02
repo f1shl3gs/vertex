@@ -10,7 +10,7 @@ use super::{read_to_string, Error};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
-pub enum NetdevConfig {
+pub enum Config {
     #[serde(with = "serde_regex")]
     Include(Regex),
 
@@ -20,29 +20,29 @@ pub enum NetdevConfig {
     All,
 }
 
-impl Default for NetdevConfig {
+impl Default for Config {
     fn default() -> Self {
         Self::All
     }
 }
 
-pub async fn gather(conf: NetdevConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = conf.get_net_dev_stats(proc_path).await?;
 
     let mut metrics = Vec::new();
     for stat in stats {
         match &conf {
-            NetdevConfig::Include(re) => {
+            Config::Include(re) => {
                 if !re.is_match(&stat.name) {
                     continue;
                 }
             }
-            NetdevConfig::Exclude(re) => {
+            Config::Exclude(re) => {
                 if re.is_match(&stat.name) {
                     continue;
                 }
             }
-            NetdevConfig::All => {}
+            Config::All => {}
         }
 
         let tags = tags!(Key::from_static("device") => stat.name);
@@ -149,7 +149,7 @@ pub async fn gather(conf: NetdevConfig, proc_path: PathBuf) -> Result<Vec<Metric
     Ok(metrics)
 }
 
-impl NetdevConfig {
+impl Config {
     async fn get_net_dev_stats(&self, proc_path: PathBuf) -> Result<Vec<DeviceStatus>, Error> {
         let content = read_to_string(proc_path.join("net/dev"))?;
         let lines = content.lines();
@@ -244,7 +244,7 @@ mod tests {
         #[derive(Deserialize)]
         struct Dummy {
             #[serde(with = "serde_yaml::with::singleton_map")]
-            config: NetdevConfig,
+            config: Config,
         }
 
         let got = serde_yaml::from_str::<Dummy>(
@@ -256,7 +256,7 @@ config:
         .unwrap();
 
         match got.config {
-            NetdevConfig::Include(re) => assert_eq!(re.as_str(), ".*"),
+            Config::Include(re) => assert_eq!(re.as_str(), ".*"),
             _ => panic!("unexpected config"),
         }
     }
@@ -275,7 +275,7 @@ config:
 
     #[tokio::test]
     async fn test_get_net_dev_stats() {
-        let conf = NetdevConfig::Include(Regex::new(".*").unwrap());
+        let conf = Config::Include(Regex::new(".*").unwrap());
         let path = "tests/fixtures/proc".into();
         let stats = conf.get_net_dev_stats(path).await.unwrap();
 

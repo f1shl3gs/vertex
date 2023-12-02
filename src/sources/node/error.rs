@@ -8,6 +8,8 @@ pub enum ParseError {
     Integer(ParseIntError),
     #[error(transparent)]
     Float(ParseFloatError),
+    #[error("{0}")]
+    Other(String),
 }
 
 #[derive(Debug, Error)]

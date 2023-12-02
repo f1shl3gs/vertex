@@ -10,13 +10,13 @@ use tokio::io::AsyncBufReadExt;
 use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct NetstatConfig {
+pub struct Config {
     #[serde(default = "default_fields")]
     #[serde(with = "serde_regex")]
     fields: Regex,
 }
 
-impl Default for NetstatConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             fields: default_fields(),
@@ -28,7 +28,7 @@ fn default_fields() -> Regex {
     Regex::new("^(.*_(InErrors|InErrs)|Ip_Forwarding|Ip(6|Ext)_(InOctets|OutOctets)|Icmp6?_(InMsgs|OutMsgs)|TcpExt_(Listen.*|Syncookies.*|TCPSynRetrans)|Tcp_(ActiveOpens|InSegs|OutSegs|OutRsts|PassiveOpens|RetransSegs|CurrEstab)|Udp6?_(InDatagrams|OutDatagrams|NoPorts|RcvbufErrors|SndbufErrors))$").unwrap()
 }
 
-pub async fn gather(conf: NetstatConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut net_stats = get_net_stats(proc_path.join("net/netstat")).await?;
     let snmp_stats = get_net_stats(proc_path.join("net/snmp")).await?;
     let snmp6_stats = get_snmp6_stats(proc_path.join("net/snmp6")).await?;

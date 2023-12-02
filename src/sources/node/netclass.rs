@@ -8,14 +8,14 @@ use serde::{Deserialize, Serialize};
 use super::{read_to_string, Error};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct NetClassConfig {
+pub struct Config {
     // Regexp of net devices to ignore for netclass collector
     #[serde(default = "default_ignores")]
     #[serde(with = "serde_regex")]
     pub ignores: regex::Regex,
 }
 
-impl Default for NetClassConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             ignores: default_ignores(),
@@ -27,7 +27,7 @@ fn default_ignores() -> regex::Regex {
     regex::Regex::new("^$").unwrap()
 }
 
-pub async fn gather(conf: NetClassConfig, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let devices = net_class_devices(sys_path.clone()).await?;
 
     let mut metrics = Vec::new();

@@ -9,12 +9,12 @@ use tokio::io::AsyncBufReadExt;
 use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct IPVSConfig {
+pub struct Config {
     #[serde(default = "default_labels")]
     labels: Vec<String>,
 }
 
-impl Default for IPVSConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             labels: default_labels(),
@@ -34,7 +34,7 @@ fn default_labels() -> Vec<String> {
 }
 
 // TODO: this implement is dummy, too many to_string() and clone()
-pub async fn gather(conf: IPVSConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = parse_ipvs_stats(proc_path.clone()).await?;
 
     let mut metrics = vec![

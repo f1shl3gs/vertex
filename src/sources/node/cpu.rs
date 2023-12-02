@@ -11,23 +11,9 @@ use super::Error;
 
 const USER_HZ: f64 = 100.0;
 
-macro_rules! state_metric {
-    ($cpu: expr, $mode: expr, $value: expr) => {
-        Metric::gauge_with_tags(
-            "node_cpu_seconds_total",
-            "Seconds the CPUs spent in each mode",
-            $value,
-            tags! (
-                Key::from_static("mode") => $mode,
-                Key::from_static("cpu") => $cpu as i64
-            )
-        )
-    };
-}
-
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-pub struct CPUConfig {
+pub struct Config {
     #[serde(default = "default_true")]
     guest: bool,
 
@@ -43,7 +29,7 @@ pub struct CPUConfig {
     bugs_include: regex::Regex,
 }
 
-impl Default for CPUConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             guest: true,
@@ -62,7 +48,21 @@ fn default_bugs_include() -> regex::Regex {
     regex::Regex::new(".*").unwrap()
 }
 
-pub async fn gather(conf: CPUConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+macro_rules! state_metric {
+    ($cpu: expr, $mode: expr, $value: expr) => {
+        Metric::gauge_with_tags(
+            "node_cpu_seconds_total",
+            "Seconds the CPUs spent in each mode",
+            $value,
+            tags! (
+                Key::from_static("mode") => $mode,
+                Key::from_static("cpu") => $cpu as i64
+            )
+        )
+    };
+}
+
+pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_stat(proc_path).await?;
     let mut metrics = Vec::with_capacity(stats.len() * 10);
 

@@ -269,12 +269,12 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct PowerSupplyConfig {
+pub struct Config {
     #[serde(with = "serde_regex")]
     pub ignored: regex::Regex,
 }
 
-impl Default for PowerSupplyConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             ignored: regex::Regex::new("^$").unwrap(),
@@ -327,7 +327,7 @@ macro_rules! power_supply_metric_divide_10 {
     };
 }
 
-pub async fn gather(conf: PowerSupplyConfig, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let psc = power_supply_class(sys_path).await?;
     let mut metrics = vec![];
     for ps in psc {
