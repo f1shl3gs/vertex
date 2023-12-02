@@ -1,8 +1,7 @@
 use std::num::ParseIntError;
 use std::path::PathBuf;
 
-use event::trace::Key;
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
