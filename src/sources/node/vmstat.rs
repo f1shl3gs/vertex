@@ -16,13 +16,13 @@ fn default_fields() -> Regex {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct VMStatConfig {
+pub struct Config {
     #[serde(default = "default_fields")]
     #[serde(with = "serde_regex")]
     pub fields: Regex,
 }
 
-impl Default for VMStatConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             fields: default_fields(),
@@ -30,7 +30,7 @@ impl Default for VMStatConfig {
     }
 }
 
-pub async fn gather(conf: VMStatConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let file = tokio::fs::File::open(proc_path.join("vmstat")).await?;
     let mut lines = tokio::io::BufReader::new(file).lines();
     let mut metrics = Vec::new();
@@ -64,7 +64,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let conf = VMStatConfig::default();
+        let conf = Config::default();
         let proc = "tests/fixtures/proc".into();
         let ms = gather(conf, proc).await.unwrap();
         assert_ne!(ms.len(), 0);

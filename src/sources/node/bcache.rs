@@ -1,7 +1,7 @@
 use std::io::ErrorKind;
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{tags, tags::Key, Metric};
 use humanize::bytes::parse_bytes;
 use serde::{Deserialize, Serialize};
 
@@ -74,7 +74,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         ]);
 
         for bdev in stat.bdevs {
-            let tags = tags!("backing_device" => bdev.name);
+            let tags = tags!(Key::from_static("backing_device") => bdev.name);
 
             // metrics in /sys/fs/bcache/<uuid>/<bdev>/
             metrics.extend([
@@ -167,7 +167,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         }
 
         for cache in stat.caches {
-            let tags = tags!("cache_device" => cache.name);
+            let tags = tags!(Key::from_static("cache_device") => cache.name);
 
             // metrics under /sys/fs/bcache/<uuid>/<cache>
             metrics.extend([

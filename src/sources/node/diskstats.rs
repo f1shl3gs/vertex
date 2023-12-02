@@ -16,13 +16,13 @@ const DISK_SECTOR_SIZE: f64 = 512.0;
 const DEVICE_KEY: Key = Key::from_static("device");
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct DiskStatsConfig {
+pub struct Config {
     #[serde(with = "serde_regex")]
     #[serde(default = "default_ignored")]
     pub ignored: regex::Regex,
 }
 
-impl Default for DiskStatsConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             ignored: default_ignored(),
@@ -34,7 +34,7 @@ pub fn default_ignored() -> regex::Regex {
     regex::Regex::new("^(ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\\d+n\\d+p)\\d+$").unwrap()
 }
 
-pub async fn gather(conf: DiskStatsConfig, root: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, root: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
     let file = tokio::fs::File::open(root.join("diskstats")).await?;
     let reader = tokio::io::BufReader::new(file);
@@ -170,7 +170,7 @@ mod tests {
     #[tokio::test]
     async fn test_gather() {
         let proc_path = "tests/fixtures/proc";
-        let conf = DiskStatsConfig {
+        let conf = Config {
             ignored: default_ignored(),
         };
 

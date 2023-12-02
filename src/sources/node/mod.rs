@@ -75,44 +75,44 @@ use futures::stream::FuturesUnordered;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 
-fn default_cpu_config() -> Option<cpu::CPUConfig> {
-    Some(cpu::CPUConfig::default())
+fn default_cpu_config() -> Option<cpu::Config> {
+    Some(cpu::Config::default())
 }
 
 fn default_bcache_config() -> Option<bcache::Config> {
     Some(bcache::Config::default())
 }
 
-fn default_diskstats_config() -> Option<diskstats::DiskStatsConfig> {
-    Some(diskstats::DiskStatsConfig::default())
+fn default_diskstats_config() -> Option<diskstats::Config> {
+    Some(diskstats::Config::default())
 }
 
-fn default_filesystem_config() -> Option<filesystem::FileSystemConfig> {
-    Some(filesystem::FileSystemConfig::default())
+fn default_filesystem_config() -> Option<filesystem::Config> {
+    Some(filesystem::Config::default())
 }
 
-fn default_ipvs_config() -> Option<ipvs::IPVSConfig> {
-    Some(ipvs::IPVSConfig::default())
+fn default_ipvs_config() -> Option<ipvs::Config> {
+    Some(ipvs::Config::default())
 }
 
-fn default_netclass_config() -> Option<netclass::NetClassConfig> {
-    Some(netclass::NetClassConfig::default())
+fn default_netclass_config() -> Option<netclass::Config> {
+    Some(netclass::Config::default())
 }
 
-fn default_netdev_config() -> Option<netdev::NetdevConfig> {
-    Some(netdev::NetdevConfig::default())
+fn default_netdev_config() -> Option<netdev::Config> {
+    Some(netdev::Config::default())
 }
 
-fn default_netstat_config() -> Option<netstat::NetstatConfig> {
-    Some(netstat::NetstatConfig::default())
+fn default_netstat_config() -> Option<netstat::Config> {
+    Some(netstat::Config::default())
 }
 
-fn default_powersupply_config() -> Option<powersupplyclass::PowerSupplyConfig> {
-    Some(powersupplyclass::PowerSupplyConfig::default())
+fn default_powersupply_config() -> Option<powersupplyclass::Config> {
+    Some(powersupplyclass::Config::default())
 }
 
-fn default_vmstat_config() -> Option<vmstat::VMStatConfig> {
-    Some(vmstat::VMStatConfig::default())
+fn default_vmstat_config() -> Option<vmstat::Config> {
+    Some(vmstat::Config::default())
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -134,13 +134,13 @@ struct Collectors {
     conntrack: bool,
 
     #[serde(default = "default_cpu_config")]
-    cpu: Option<cpu::CPUConfig>,
+    cpu: Option<cpu::Config>,
 
     #[serde(default = "default_true")]
     cpufreq: bool,
 
     #[serde(default = "default_diskstats_config")]
-    diskstats: Option<diskstats::DiskStatsConfig>,
+    diskstats: Option<diskstats::Config>,
 
     #[serde(default = "default_true")]
     dmi: bool,
@@ -161,7 +161,7 @@ struct Collectors {
     filefd: bool,
 
     #[serde(default = "default_filesystem_config")]
-    filesystem: Option<filesystem::FileSystemConfig>,
+    filesystem: Option<filesystem::Config>,
 
     #[serde(default = "default_true")]
     hwmon: bool,
@@ -170,7 +170,7 @@ struct Collectors {
     infiniband: bool,
 
     #[serde(default = "default_ipvs_config")]
-    ipvs: Option<ipvs::IPVSConfig>,
+    ipvs: Option<ipvs::Config>,
 
     #[serde(default = "default_true")]
     loadavg: bool,
@@ -182,16 +182,16 @@ struct Collectors {
     memory: bool,
 
     #[serde(default = "default_netclass_config")]
-    netclass: Option<netclass::NetClassConfig>,
+    netclass: Option<netclass::Config>,
 
     #[serde(
         default = "default_netdev_config",
         with = "serde_yaml::with::singleton_map"
     )]
-    netdev: Option<netdev::NetdevConfig>,
+    netdev: Option<netdev::Config>,
 
     #[serde(default = "default_netstat_config")]
-    netstat: Option<netstat::NetstatConfig>,
+    netstat: Option<netstat::Config>,
 
     #[serde(default = "default_true")]
     nfs: bool,
@@ -206,7 +206,7 @@ struct Collectors {
     os_release: bool,
 
     #[serde(default = "default_powersupply_config")]
-    power_supply: Option<powersupplyclass::PowerSupplyConfig>,
+    power_supply: Option<powersupplyclass::Config>,
 
     #[serde(default = "default_true")]
     pressure: bool,
@@ -254,7 +254,7 @@ struct Collectors {
     uname: bool,
 
     #[serde(default = "default_vmstat_config")]
-    vmstat: Option<vmstat::VMStatConfig>,
+    vmstat: Option<vmstat::Config>,
 
     #[cfg(target_os = "linux")]
     #[serde(default = "default_true")]

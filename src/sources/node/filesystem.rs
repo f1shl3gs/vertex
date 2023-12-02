@@ -9,7 +9,7 @@ use tokio::io::AsyncBufReadExt;
 use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct FileSystemConfig {
+pub struct Config {
     #[serde(default = "default_mount_points_exclude")]
     #[serde(with = "serde_regex")]
     mount_points_exclude: regex::Regex,
@@ -19,7 +19,7 @@ pub struct FileSystemConfig {
     fs_type_exclude: regex::Regex,
 }
 
-impl Default for FileSystemConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             mount_points_exclude: default_mount_points_exclude(),
@@ -41,7 +41,7 @@ fn default_fs_type_exclude() -> regex::Regex {
     ).unwrap()
 }
 
-pub async fn gather(conf: FileSystemConfig, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = conf.get_stats(proc_path.join("mounts")).await?;
 
     let mut metrics = Vec::new();
@@ -99,7 +99,7 @@ pub async fn gather(conf: FileSystemConfig, proc_path: PathBuf) -> Result<Vec<Me
     Ok(metrics)
 }
 
-impl FileSystemConfig {
+impl Config {
     async fn get_stats<P: AsRef<Path>>(&self, path: P) -> Result<Vec<Stat>, Error> {
         let mut stats = Vec::new();
         let f = tokio::fs::File::open(path).await?;
@@ -248,7 +248,7 @@ mod tests {
     #[tokio::test]
     async fn test_get_stats() {
         let path = PathBuf::from("tests/fixtures/proc/mounts");
-        let conf = FileSystemConfig::default();
+        let conf = Config::default();
         let stats = conf.get_stats(path).await.unwrap();
         assert_ne!(stats.len(), 0);
     }
