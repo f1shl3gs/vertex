@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1701513081591,
+  "lastUpdate": 1701772491309,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a752b17b6563aa8f4f2299437d136e93e8b914ad",
-          "message": "bump tokio to 1.33.0 (#1337)",
-          "timestamp": "2023-10-09T20:36:14+08:00",
-          "tree_id": "973289315449347b09c2d6248ad34d09a43e6645",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a752b17b6563aa8f4f2299437d136e93e8b914ad"
-        },
-        "date": 1696856079146,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 964,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42579,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "37e202f638aa65347589da4f7363a80587c72dcf",
           "message": "bump regex to 1.10.0 (#1338)",
           "timestamp": "2023-10-10T14:16:02+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40755.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6ba259ee11a0617fdacdcec47e53c9f8e968eecd",
+          "message": "chore(ci): bump actions/labeler from 4 to 5 (#1448)\n\nBumps [actions/labeler](https://github.com/actions/labeler) from 4 to 5.\r\n- [Release notes](https://github.com/actions/labeler/releases)\r\n- [Commits](https://github.com/actions/labeler/compare/v4...v5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: actions/labeler\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-05T18:23:15+08:00",
+          "tree_id": "1a61fd35c4be04ddc8ae8ddef777d8f7b5034fd3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6ba259ee11a0617fdacdcec47e53c9f8e968eecd"
+        },
+        "date": 1701772476500,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 592,
             "unit": "s"
           },
           {
