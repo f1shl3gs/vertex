@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1701838415386,
+  "lastUpdate": 1701840374405,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "391e5c8bafc58c89fefc551d42e026dad8facc4e",
-          "message": "remove thrift server support (#1339)",
-          "timestamp": "2023-10-12T21:09:59+08:00",
-          "tree_id": "1c3c1c07dba737696535c93f1abe9743fb70df72",
-          "url": "https://github.com/f1shl3gs/vertex/commit/391e5c8bafc58c89fefc551d42e026dad8facc4e"
-        },
-        "date": 1697117266347,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 929,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42593.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cd7fe27b3e89117217e92a232267117f5ed19e8b",
           "message": "update rskafka (#1340)",
           "timestamp": "2023-10-12T23:01:29+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40754.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c0d661660274fffd48ebf908c7ff42066df5c731",
+          "message": "Update labeler.yml\n\nupdate to v5",
+          "timestamp": "2023-12-06T13:14:00+08:00",
+          "tree_id": "d41201928dd04e7b5d481a27592977733f716968",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c0d661660274fffd48ebf908c7ff42066df5c731"
+        },
+        "date": 1701840360066,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 629,
             "unit": "s"
           },
           {
