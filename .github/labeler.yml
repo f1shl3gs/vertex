@@ -1,30 +1,39 @@
 # Generic component-level labels and high-level groupings
 
 CI:
-  - ci/**/*
-  - .github/**/*
+  - changed-files:
+    - any-glob-to-any-file: ci/**/*
+    - any-glob-to-any-file: .github/**/*
 
 sources:
-  - src/sources/**/*
+  - changed-files:
+    - any-glob-to-any-file: src/sources/**/*
 
 transforms:
-  - src/transforms/**/*
+  - changed-files:
+    - any-glob-to-any-file: src/transforms/**/*
 
 sinks:
-  - src/sinks/**/*
+  - changed-files:
+    - any-glob-to-any-file: src/sinks/**/*
 
 extensions:
-  - src/extensions/**/*
+  - changed-files:
+    - any-glob-to-any-file: src/extensions/**/*
 
 topology:
-  - src/topology/**/*
+  - changed-files:
+    - any-glob-to-any-file: src/topology/**/*
 
 docs:
-  - docs/**/*
+  - changed-files:
+    - any-glob-to-any-file: docs/**/*
 
 benches:
-  - benches/**/*
-  - ci/bench/**/*
+  - changed-files:
+    - any-glob-to-any-file: benches/**/*
+    - any-glob-to-any-file: ci/bench/**/*
 
 tests:
-  - tests/**/*
+  - changed-files:
+    - any-glob-to-any-file: tests/**/*
