@@ -58,7 +58,7 @@ memchr = { version = "2.6.4", default-features = false }
 metrics = { path = "../metrics" }
 # wired feature requirement, see: https://docs.rs/notify/latest/notify/#crossbeam-channel--tokio
 notify = { version = "6.1.1", default-features = false, features = ["macos_kqueue"] }
-once_cell = { version = "1.18", default-features = false }
+once_cell = { version = "1.19", default-features = false }
 pem = { version = "3.0.2", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.1", default-features = false }
 pin-project-lite = { version = "0.2.13", default-features = false }
