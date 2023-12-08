@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702003795804,
+  "lastUpdate": 1702003819454,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "92760bd611859b03b1e7c40500fa605aef415b28",
-          "message": "bump libc to 0.2.149 (#1331)",
-          "timestamp": "2023-10-07T14:14:13+08:00",
-          "tree_id": "7f55f214b0405c9aa1d25f6756616ebd05e51eb7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/92760bd611859b03b1e7c40500fa605aef415b28"
-        },
-        "date": 1696659454853,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 87.837,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 199.86,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 334.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.07,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce9fcbf7ed29b8923ba001dda6019b13107a3f2e",
+          "message": "chore(deps): bump once_cell from 1.18.0 to 1.19.0 (#1452)\n\n* chore(deps): bump once_cell from 1.18.0 to 1.19.0\r\n\r\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.18.0 to 1.19.0.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.18.0...v1.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* add `default-features = false` to `once_cell`\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-12-08T10:47:26+08:00",
+          "tree_id": "12d23b9dc7e75283822095215278360d66ad0dbe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ce9fcbf7ed29b8923ba001dda6019b13107a3f2e"
+        },
+        "date": 1702003804605,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.688,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.172,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 195.76,
             "unit": "ns/op"
           }
         ]
