@@ -87,7 +87,7 @@ tracing-limit = { path = "../tracing-limit" }
 tracing-subscriber = { version = "0.3.18", default-features = false, features = ["env-filter", "json", "fmt"] }
 tripwire = { path = "../tripwire" }
 twox-hash = { version = "1.6.3", default-features = false }
-typetag = { version = "0.2.13" }
+typetag = { version = "0.2.14" }
 url = { version = "2.5.0", features = ["serde"] }
 
 [target.'cfg(unix)'.dependencies]
