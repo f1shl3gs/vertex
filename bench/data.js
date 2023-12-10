@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702188134079,
+  "lastUpdate": 1702188147564,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f8ae71d341a4bef2bd9bd0ac6b243f8cfcd6f1e7",
-          "message": "remove duplicate get_hostname (#1342)",
-          "timestamp": "2023-10-13T22:03:03+08:00",
-          "tree_id": "f8c6661c186b820785b61a1abfd80f45e6297a84",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f8ae71d341a4bef2bd9bd0ac6b243f8cfcd6f1e7"
-        },
-        "date": 1697206912334,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 960,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42356.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "04635cca44a03fd0f9be3f1b9dda067ffbaefe0f",
           "message": "bump flate2 to 1.0.28 (#1343)",
           "timestamp": "2023-10-13T22:03:22+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40753.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8c0d27171475f898035078761852d8a50bd2ff4",
+          "message": "chore(deps): bump typetag from 0.2.13 to 0.2.14 (#1454)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.13 to 0.2.14.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.13...0.2.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-10T13:51:30+08:00",
+          "tree_id": "9aa6e429d5e64000748d856d65a80016730c5a74",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e8c0d27171475f898035078761852d8a50bd2ff4"
+        },
+        "date": 1702188134244,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 557,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40359.5,
             "unit": "KiB"
           }
         ]
