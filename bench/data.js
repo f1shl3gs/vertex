@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702332763727,
+  "lastUpdate": 1702332786785,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18119,40 +18119,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "d27eb465fd446faec7acfb822027decdf3eab846",
-          "message": "bump regex to 1.10.2",
-          "timestamp": "2023-10-16T23:39:53+08:00",
-          "tree_id": "31f8875a33b79546fdfa8c4719916e1b8929ca4d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d27eb465fd446faec7acfb822027decdf3eab846"
-        },
-        "date": 1697472117286,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1157,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42369.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "noreply@github.com",
             "name": "GitHub",
             "username": "web-flow"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40394.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8458eb6313ff9c207a65adcfa119e76176f60c55",
+          "message": "transforms: rename transform `rewrite` to `relabel` (#1462)",
+          "timestamp": "2023-12-12T06:01:42+08:00",
+          "tree_id": "7c48ab61484f7ab706e66e6ddf24b4ef9c512de3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8458eb6313ff9c207a65adcfa119e76176f60c55"
+        },
+        "date": 1702332772665,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 572,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40372.9,
             "unit": "KiB"
           }
         ]
