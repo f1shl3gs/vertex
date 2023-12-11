@@ -53,6 +53,7 @@ members = [
     "lib/tripwire",
     "lib/value",
     "lib/virt",
+    "lib/vtl"
 ]
 
 [features]
@@ -307,6 +308,9 @@ path = "benches/haproxy.rs"
 
 [build-dependencies]
 prost-build = { version = "0.12.3", default-features = false }
+
+[patch.crates-io]
+hostname = { git = "https://github.com/svartalf/hostname.git", rev = "ecf28ebbf4511d5d35f90727f66e0ca4b30d5059" }
 
 [dev-dependencies]
 base64 = { version = "0.21.5", default-features = false }
