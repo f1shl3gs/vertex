@@ -1,24 +1,43 @@
+use std::error::Error;
 use std::fmt::{Display, Formatter, Write};
 
 use crate::compiler::Span;
+use crate::diagnostic::{DiagnosticMessage, Label};
 
 #[derive(Debug, PartialEq)]
 pub enum LexError {
-    // End of File
-    Eof,
     // Unexpected character
-    UnexpectedChar { ch: char, pos: usize },
+    UnexpectedChar { ch: char, span: Span },
     // Unable to parse the integer or float
     NumericLiteral { err: String, span: Span },
+    StringLiteral(Span),
 }
 
 impl Display for LexError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            LexError::Eof => f.write_str("unexpected eof"),
             LexError::UnexpectedChar { .. } => f.write_str("unexpected char"),
             LexError::NumericLiteral { err, .. } => {
                 write!(f, "parse numeric token \"{}\" failed", err)
+            }
+            LexError::StringLiteral { .. } => f.write_str("invalid string literal"),
+        }
+    }
+}
+
+impl Error for LexError {}
+
+impl DiagnosticMessage for LexError {
+    fn labels(&self) -> Vec<Label> {
+        match self {
+            LexError::UnexpectedChar { ch, span } => {
+                vec![Label::new(format!("unexpected char {}", ch), span)]
+            }
+            LexError::NumericLiteral { err, span } => {
+                vec![Label::new(err, span)]
+            }
+            LexError::StringLiteral(span) => {
+                vec![Label::new("parse string literal failed", span)]
             }
         }
     }
@@ -370,7 +389,10 @@ impl<'input> Lexer<'input> {
 
                 return Some(Err(LexError::UnexpectedChar {
                     ch: '&',
-                    pos: start,
+                    span: Span {
+                        start,
+                        end: self.pos,
+                    },
                 }));
             }
 
@@ -393,7 +415,10 @@ impl<'input> Lexer<'input> {
 
                 return Some(Err(LexError::UnexpectedChar {
                     ch: '|',
-                    pos: start,
+                    span: Span {
+                        start,
+                        end: self.pos,
+                    },
                 }));
             }
 
@@ -531,7 +556,10 @@ impl<'input> Lexer<'input> {
             // Unknown char
             ch => Some(Err(LexError::UnexpectedChar {
                 ch: ch as char,
-                pos: self.pos,
+                span: Span {
+                    start: self.pos,
+                    end: self.pos + 1,
+                },
             })),
         };
     }
@@ -616,7 +644,10 @@ impl<'input> Lexer<'input> {
             self.pos += 1;
         }
 
-        Err(LexError::Eof)
+        Err(LexError::StringLiteral(Span {
+            start,
+            end: self.pos,
+        }))
     }
 
     fn numeric_literal(&mut self) -> Result<(Token<&'input str>, Span), LexError> {
@@ -914,6 +945,18 @@ mod tests {
                 (Token::Colon, 6..7),
                 (Token::Integer(1), 8..9),
                 (Token::RightBrace, 9..10),
+            ],
+        )])
+    }
+
+    #[test]
+    fn brace() {
+        assert_lex([(
+            r#"if {}"#,
+            vec![
+                (Token::If, 0..2),
+                (Token::LeftBrace, 3..4),
+                (Token::RightBrace, 4..5),
             ],
         )])
     }

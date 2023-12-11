@@ -29,6 +29,8 @@ impl Expression for Query {
                 .get(path)
                 .ok_or(ExpressionError::NotFound {
                     path: format!("{}{}", name, path),
+                    // TODO: fix
+                    span: Span { start: 0, end: 0 },
                 })?
                 .clone(),
         };

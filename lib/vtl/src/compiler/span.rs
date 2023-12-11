@@ -19,6 +19,12 @@ impl Span {
     }
 }
 
+impl From<&Span> for Span {
+    fn from(span: &Span) -> Self {
+        *span
+    }
+}
+
 pub struct Spanned<T> {
     pub node: T,
     pub span: Span,

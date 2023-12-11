@@ -1,5 +1,7 @@
+#![allow(clippy::print_stdout)]
+
 use value::{value, Value};
-use vtl::{compile, Context, TargetValue};
+use vtl::{compile, Context, Diagnostic, TargetValue};
 
 fn main() {
     let script = r#"
@@ -64,6 +66,10 @@ fn main() {
     .msg = parse_json(.msg)?
     log("msg:", .msg)
 
+    if true {
+
+    }
+
     for index, item in [1, 2, 3] {
         if index == 1 {
             continue
@@ -78,7 +84,17 @@ fn main() {
 
     "#;
 
-    let program = compile(script).unwrap();
+    let diagnostic = Diagnostic::new(script.to_string());
+
+    let program = match compile(script) {
+        Ok(program) => program,
+        Err(err) => {
+            let output = diagnostic.snippets(err);
+            println!("{}", output);
+            return;
+        }
+    };
+
     let mut variables = program.variables.clone();
 
     // build your own context
@@ -96,6 +112,7 @@ fn main() {
     };
 
     if let Err(err) = program.resolve(&mut cx) {
-        panic!("{}", err);
+        let output = diagnostic.snippets(err);
+        println!("{}", output);
     }
 }
