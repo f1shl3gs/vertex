@@ -29,6 +29,12 @@ impl From<u8> for Value {
     }
 }
 
+impl From<u16> for Value {
+    fn from(value: u16) -> Self {
+        Self::Integer(value as i64)
+    }
+}
+
 impl From<u32> for Value {
     fn from(value: u32) -> Self {
         Self::Integer(value as i64)
