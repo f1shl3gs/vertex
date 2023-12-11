@@ -79,36 +79,78 @@ impl Value {
 }
 
 #[macro_export]
-macro_rules! map_value {
-    ( $($x:expr => $y:expr),* ) => ({
-        let mut _map = std::collections::BTreeMap::<String, $crate::Value>::new();
-        $(
-            _map.insert($x.into(), $y.into());
-        )*
-        Value::Object(_map)
+macro_rules! value {
+    // arrays
+    ([]) => ({
+        $crate::Value::Array(vec![])
     });
-    // Done with trailing comma
-    ( $($x:expr => $y:expr,)* ) => (
-        map_value!{$($x => $y),*}
-    );
-    () => ({
-        Value::Object(std::collections::BTreeMap::<String, $crate::Value>::new());
-    })
+    ([$($v:tt),+ $(,)?]) => ({
+        let vec: Vec<$crate::Value> = vec![$($crate::value!($v)),+];
+        $crate::Value::Array(vec)
+    });
+
+    // maps
+    ({}) => ({
+        $crate::Value::Object(::std::collections::BTreeMap::default())
+    });
+    ({$($($k1:literal)? $($k2:ident)?: $v:tt),+ $(,)?}) => ({
+        let mut map = ::std::collections::BTreeMap::new();
+        $(
+             map.insert(String::from($($k1)? $(stringify!($k2))?), $crate::value!($v));
+        )+
+
+        $crate::Value::Object(map)
+    });
+
+    (null) => ({
+        $crate::Value::Null
+    });
+    ($k:expr) => ({
+        $crate::Value::from($k)
+    });
 }
 
-#[macro_export]
-macro_rules! array_value {
-    ( $($item: expr),*) => ({
-        let mut array = vec![];
-        $(
-            array.push($item.into());
-        )*
-        Value::Array(array)
-    });
-    ( $($item:expr,),* ) => (
-        array_value!($($item),*)
-    );
-    () => ({
-        Value::Array(vec![])
-    });
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn value_macro() {
+        assert_eq!(value!(1), Value::Integer(1));
+        assert_eq!(value!(1.2), Value::Float(1.2));
+        assert_eq!(value!("foo"), "foo".into());
+        assert_eq!(value!(true), Value::Boolean(true));
+        let ts = Utc::now();
+        assert_eq!(value!(ts), Value::Timestamp(ts));
+        assert_eq!(value!(null), Value::Null);
+
+        let arr = value!([1, 2]);
+        assert_eq!(arr, Value::Array(vec![value!(1), value!(2)]));
+
+        let map = value!({"foo": "bar"});
+        assert_eq!(map, {
+            let mut map = BTreeMap::new();
+            map.insert("foo".to_string(), Value::from("bar"));
+            Value::Object(map)
+        });
+
+        let nested = value!({
+            "foo": "bar",
+            "arr": [1, 2],
+            "map": {
+                "key": "value"
+            }
+        });
+        assert_eq!(nested, {
+            let mut map = BTreeMap::new();
+            map.insert("foo".to_string(), value!("bar"));
+            map.insert("arr".to_string(), value!([1, 2]));
+
+            let mut sub_map = BTreeMap::new();
+            sub_map.insert("key".into(), "value".into());
+            map.insert("map".into(), sub_map.into());
+
+            Value::Object(map)
+        })
+    }
 }

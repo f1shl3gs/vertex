@@ -64,9 +64,10 @@ impl Expression for ParseJsonFunc {
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use value::map_value;
 
     #[test]
     fn parse_json() {
@@ -74,7 +75,7 @@ mod tests {
             vec![r#"{"key": "value"}"#.into()],
             ParseJson,
             TypeDef::object().fallible(),
-            Ok(map_value!("key" => "value")),
+            Ok(value!({"key": "value"})),
         )
     }
 }

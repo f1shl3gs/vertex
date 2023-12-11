@@ -91,9 +91,10 @@ impl Expression for ParseQueryFunc {
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use value::{array_value, map_value};
 
     #[test]
     fn complete() {
@@ -101,12 +102,12 @@ mod tests {
             vec!["foo=%2B1&bar=2&xyz=&abc".into()],
             ParseQuery,
             TypeDef::object().fallible(),
-            Ok(map_value!(
-                "foo" => "+1",
-                "bar" => "2",
-                "xyz" => "",
-                "abc" => ""
-            )),
+            Ok(value!({
+                "foo": "+1",
+                "bar": "2",
+                "xyz": "",
+                "abc": ""
+            })),
         )
     }
 
@@ -116,9 +117,9 @@ mod tests {
             vec!["foo=bar&foo=abc".into()],
             ParseQuery,
             TypeDef::object().fallible(),
-            Ok(map_value!(
-                "foo" => array_value!(Value::from("bar"), Value::from("abc"))
-            )),
+            Ok(value!({
+                "foo": ["bar", "abc"]
+            })),
         )
     }
 
@@ -128,12 +129,9 @@ mod tests {
             vec!["?foo%5b%5d=bar&foo%5b%5d=xyz".into()],
             ParseQuery,
             TypeDef::object().fallible(),
-            Ok(map_value!(
-                "foo[]" => array_value!(
-                    "bar",
-                    "xyz"
-                )
-            )),
+            Ok(value!({
+                "foo[]": ["bar","xyz"]
+            })),
         )
     }
 }
