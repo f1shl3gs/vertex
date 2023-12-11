@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702329361814,
+  "lastUpdate": 1702329377359,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "391e5c8bafc58c89fefc551d42e026dad8facc4e",
-          "message": "remove thrift server support (#1339)",
-          "timestamp": "2023-10-12T21:09:59+08:00",
-          "tree_id": "1c3c1c07dba737696535c93f1abe9743fb70df72",
-          "url": "https://github.com/f1shl3gs/vertex/commit/391e5c8bafc58c89fefc551d42e026dad8facc4e"
-        },
-        "date": 1697116451065,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.047,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.085,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.115,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 145.09,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.594,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cd7fe27b3e89117217e92a232267117f5ed19e8b",
           "message": "update rskafka (#1340)",
           "timestamp": "2023-10-12T23:01:29+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 39.863,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3",
+          "message": "VTL: implement diagnostic (#1461)\n\n* implement diagnostic",
+          "timestamp": "2023-12-12T05:13:07+08:00",
+          "tree_id": "4bb13945d5b2af0d35b28b67829e4b4e3bc7d41d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3"
+        },
+        "date": 1702329359778,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 18.007,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 17.623,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 17.642,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 109.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 39.932,
             "unit": "ns/op"
           }
         ]
