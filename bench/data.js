@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702310689686,
+  "lastUpdate": 1702310703674,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "391e5c8bafc58c89fefc551d42e026dad8facc4e",
-          "message": "remove thrift server support (#1339)",
-          "timestamp": "2023-10-12T21:09:59+08:00",
-          "tree_id": "1c3c1c07dba737696535c93f1abe9743fb70df72",
-          "url": "https://github.com/f1shl3gs/vertex/commit/391e5c8bafc58c89fefc551d42e026dad8facc4e"
-        },
-        "date": 1697116394341,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 87.52,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 193.61,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 325.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 188.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "711444ce2af390e7ff7563a07b15f7fa0883041f",
+          "message": "simplify value macro (#1460)\n\n* simplify value macro",
+          "timestamp": "2023-12-12T00:02:22+08:00",
+          "tree_id": "8d75006fb9aa1db851027cc7cd6378dd129dcff1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/711444ce2af390e7ff7563a07b15f7fa0883041f"
+        },
+        "date": 1702310688463,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.757,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.032,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 189.46,
             "unit": "ns/op"
           }
         ]
