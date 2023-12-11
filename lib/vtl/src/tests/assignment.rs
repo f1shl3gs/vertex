@@ -15,14 +15,7 @@ fn success() {
 
         "#,
             value!({
-                "x": [
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    "foo"
-                ],
+                "x": [null, null, null, null, null, "foo"],
             }),
         ),
         (
@@ -30,9 +23,7 @@ fn success() {
             .res = { foo: 2 }
             "#,
             value!({
-                "res": {
-                    "foo": 2
-                }
+                "res": {"foo": 2}
             }),
         ),
     ] {

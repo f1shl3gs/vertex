@@ -154,9 +154,7 @@ mod tests {
             vec![parse_target_path(".map").unwrap().into()],
             Del,
             TypeDef::any().fallible(),
-            Ok(value!({
-                "k1": "v1"
-            })),
+            Ok(value!({"k1": "v1"})),
         )
     }
 

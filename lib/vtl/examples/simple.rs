@@ -88,17 +88,8 @@ fn main() {
             value: value!({
                 "msg": "foobar",
                 "index": 5,
-                "array": [
-                    1,
-                    2,
-                    3,
-                    {
-                        "ak": "av"
-                    }
-                ],
-                "map": {
-                    "k1": "k2"
-                },
+                "array": [1, 2, 3, {"ak": "av"}],
+                "map": {"k1": "k2"},
             }),
         },
         variables: &mut variables,
