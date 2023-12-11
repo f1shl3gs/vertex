@@ -100,7 +100,7 @@ impl Expression for DelFunc {
 mod tests {
     use super::*;
 
-    use value::{array_value, map_value, parse_target_path};
+    use value::{parse_target_path, value};
 
     use crate::compiler::function::compile_and_run;
     use crate::compiler::Span;
@@ -134,7 +134,7 @@ mod tests {
             vec![parse_target_path(".array").unwrap().into()],
             Del,
             TypeDef::any().fallible(),
-            Ok(array_value!(1, 2, 3)),
+            Ok(value!([1, 2, 3])),
         )
     }
 
@@ -154,9 +154,7 @@ mod tests {
             vec![parse_target_path(".map").unwrap().into()],
             Del,
             TypeDef::any().fallible(),
-            Ok(map_value!(
-                "k1" => "v1"
-            )),
+            Ok(value!({"k1": "v1"})),
         )
     }
 

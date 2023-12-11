@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 
-use crate::context::TargetValue;
-use value::{map_value, Value};
+use value::{value, Value};
 
+use crate::context::TargetValue;
 use crate::tests::run;
 
 #[test]
@@ -14,26 +14,17 @@ fn success() {
         .x[5] = "foo"
 
         "#,
-            map_value!(
-                "x" => Value::Array(vec![
-                    Value::Null,
-                    Value::Null,
-                    Value::Null,
-                    Value::Null,
-                    Value::Null,
-                    Value::Bytes("foo".into())
-                ])
-            ),
+            value!({
+                "x": [null, null, null, null, null, "foo"],
+            }),
         ),
         (
             r#"
             .res = { foo: 2 }
             "#,
-            map_value!(
-                "res" => map_value!(
-                    "foo" => 2
-                )
-            ),
+            value!({
+                "res": {"foo": 2}
+            }),
         ),
     ] {
         let mut target = TargetValue {

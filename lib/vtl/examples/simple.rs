@@ -1,4 +1,4 @@
-use value::{array_value, map_value, Value};
+use value::{value, Value};
 use vtl::{compile, Context, TargetValue};
 
 fn main() {
@@ -85,21 +85,12 @@ fn main() {
     let mut cx = Context {
         target: &mut TargetValue {
             metadata: Value::Object(Default::default()),
-            value: map_value!(
-                "msg" => "foobar",
-                "index" => 5,
-                "array" => array_value!(
-                    1,
-                    2,
-                    3,
-                    map_value!(
-                        "ak" => "av"
-                    )
-                ),
-                "map" => map_value!(
-                    "k1" => "k2"
-                )
-            ),
+            value: value!({
+                "msg": "foobar",
+                "index": 5,
+                "array": [1, 2, 3, {"ak": "av"}],
+                "map": {"k1": "k2"},
+            }),
         },
         variables: &mut variables,
     };

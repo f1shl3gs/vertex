@@ -137,9 +137,10 @@ fn url_to_value(url: Url, default_known_ports: bool) -> Value {
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use value::map_value;
 
     #[test]
     fn https() {
@@ -147,16 +148,16 @@ mod tests {
             vec!["https://example.io".into()],
             ParseUrl,
             TypeDef::object().fallible(),
-            Ok(map_value!(
-                "fragment" => Value::Null,
-                "host" => "example.io",
-                "password" => "",
-                "path" => "/",
-                "port" => Value::Null,
-                "query" => map_value!(),
-                "scheme" => "https",
-                "username" => "",
-            )),
+            Ok(value!({
+                "fragment": null,
+                "host": "example.io",
+                "password": "",
+                "path": "/",
+                "port": null,
+                "query": {},
+                "scheme": "https",
+                "username": "",
+            })),
         )
     }
 
@@ -166,18 +167,18 @@ mod tests {
             vec!["https://example.io?foo=bar".into()],
             ParseUrl,
             TypeDef::object().fallible(),
-            Ok(map_value!(
-                "fragment" => Value::Null,
-                "host" => "example.io",
-                "password" => "",
-                "path" => "/",
-                "port" => Value::Null,
-                "query" => map_value!(
-                    "foo" => "bar"
-                ),
-                "scheme" => "https",
-                "username" => "",
-            )),
+            Ok(value!({
+                "fragment": null,
+                "host": "example.io",
+                "password": "",
+                "path": "/",
+                "port": null,
+                "query": {
+                    "foo": "bar"
+                },
+                "scheme": "https",
+                "username": "",
+            })),
         )
     }
 
@@ -187,16 +188,16 @@ mod tests {
             vec!["https://example.io:443".into()],
             ParseUrl,
             TypeDef::object().fallible(),
-            Ok(map_value!(
-                "fragment" => Value::Null,
-                "host" => "example.io",
-                "password" => "",
-                "path" => "/",
-                "port" => Value::Null,
-                "query" => map_value!(),
-                "scheme" => "https",
-                "username" => "",
-            )),
+            Ok(value!({
+                "fragment": null,
+                "host": "example.io",
+                "password": "",
+                "path": "/",
+                "port": null,
+                "query": {},
+                "scheme": "https",
+                "username": "",
+            })),
         )
     }
 
@@ -206,16 +207,16 @@ mod tests {
             vec!["https://example.io:443".into(), true.into()],
             ParseUrl,
             TypeDef::object().fallible(),
-            Ok(map_value!(
-                "fragment" => Value::Null,
-                "host" => "example.io",
-                "password" => "",
-                "path" => "/",
-                "port" => Value::Integer(443),
-                "query" => map_value!(),
-                "scheme" => "https",
-                "username" => "",
-            )),
+            Ok(value!({
+                "fragment": null,
+                "host": "example.io",
+                "password": "",
+                "path": "/",
+                "port": 443,
+                "query": {},
+                "scheme": "https",
+                "username": "",
+            })),
         )
     }
 }

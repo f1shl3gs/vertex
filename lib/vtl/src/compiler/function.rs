@@ -232,7 +232,7 @@ pub fn compile_and_run<F: Function>(
 ) {
     use chrono::TimeZone;
     use chrono::Utc;
-    use value::{array_value, map_value, Value};
+    use value::{value, Value};
 
     use crate::{Context, TargetValue};
 
@@ -259,17 +259,17 @@ pub fn compile_and_run<F: Function>(
     let mut cx = Context {
         target: &mut TargetValue {
             metadata: Value::Object(Default::default()),
-            value: map_value!(
-                "key" => "value",
-                "int" => Value::Integer(1),
-                "float" => Value::Float(1.2),
-                "array" => array_value!(1, 2, 3),
-                "null" => Value::Null,
-                "timestamp" => Value::Timestamp(ts),
-                "map" => map_value!(
-                    "k1" => "v1"
-                )
-            ),
+            value: value!({
+                "key": "value",
+                "int": 1,
+                "float": 1.2,
+                "array": [1, 2, 3],
+                "null": null,
+                "timestamp": ts,
+                "map": {
+                    "k1": "v1"
+                }
+            }),
         },
         variables: &mut Default::default(),
     };
