@@ -227,7 +227,7 @@ transforms-filter = ["dep:condition"]
 transforms-geoip = ["dep:maxminddb"]
 transforms-metricalize = ["dep:async-stream"]
 transforms-modify = []
-transforms-rewrite = []
+transforms-relabel = []
 transforms-route = ["dep:condition"]
 transforms-sample = []
 transforms-throttle = ["dep:gcra"]
@@ -240,7 +240,7 @@ transforms = [
     "transforms-geoip",
     "transforms-metricalize",
     "transforms-modify",
-    "transforms-rewrite",
+    "transforms-relabel",
     "transforms-route",
     "transforms-sample",
     "transforms-throttle"

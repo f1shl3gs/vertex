@@ -26,7 +26,7 @@ transforms:
       warn: .message contains warn
 
   info:
-    type: rewrite
+    type: relabel
     inputs:
       - route.info
     operations:
@@ -35,7 +35,7 @@ transforms:
         value: info
 
   warn:
-    type: rewrite
+    type: relabel
     inputs:
       - route.warn
     operations:

@@ -10,8 +10,8 @@ mod geoip;
 mod metricalize;
 #[cfg(feature = "transforms-modify")]
 mod modify;
-#[cfg(feature = "transforms-rewrite")]
-mod rewrite;
+#[cfg(feature = "transforms-relabel")]
+mod relabel;
 #[cfg(feature = "transforms-route")]
 mod route;
 #[cfg(feature = "transforms-sample")]

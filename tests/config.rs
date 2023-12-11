@@ -77,7 +77,7 @@ sources:
 
 transforms:
     add1:
-        type: rewrite
+        type: relabel
         inputs:
             - in1
         operations:
@@ -85,7 +85,7 @@ transforms:
               key: foo
               value: bar
     add2:
-        type: rewrite
+        type: relabel
         inputs:
             - in1
         operations:
