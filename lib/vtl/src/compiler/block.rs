@@ -9,8 +9,14 @@ use crate::context::Context;
 pub struct Block(Vec<Statement>);
 
 impl Block {
+    #[inline]
     pub fn new(statements: Vec<Statement>) -> Self {
         Self(statements)
+    }
+
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 

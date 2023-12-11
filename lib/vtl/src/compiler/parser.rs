@@ -1,6 +1,5 @@
-#![allow(unused_variables)]
-
 use std::collections::BTreeMap;
+use std::error::Error;
 use std::fmt::{Display, Formatter};
 
 use value::{parse_target_path, parse_value_path, PathParseError, Value};
@@ -23,13 +22,11 @@ use crate::compiler::function::ArgumentList;
 use crate::compiler::query::Query;
 use crate::compiler::{Expression, TypeDef};
 use crate::context::Context;
+use crate::diagnostic::{DiagnosticMessage, Label};
 
 #[derive(Debug)]
 pub enum SyntaxError {
-    Lex {
-        err: LexError,
-        pos: usize,
-    },
+    Lex(LexError),
 
     EmptyBlock {
         span: Span,
@@ -50,6 +47,7 @@ pub enum SyntaxError {
     // Variables
     VariableNeverUsed {
         name: String,
+        span: Span,
     },
     VariableAlreadyDefined {
         name: String,
@@ -103,17 +101,21 @@ pub enum SyntaxError {
     },
 }
 
+impl From<LexError> for SyntaxError {
+    fn from(err: LexError) -> Self {
+        SyntaxError::Lex(err)
+    }
+}
+
 impl Display for SyntaxError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            SyntaxError::Lex { err, .. } => {
-                write!(f, "lex error: {}", err)
-            }
+            SyntaxError::Lex(err) => err.fmt(f),
             SyntaxError::EmptyBlock { .. } => f.write_str("empty block is not allowed"),
             SyntaxError::UnexpectedEof => f.write_str("unexpected end of file"),
             SyntaxError::UnexpectedToken { got, want, .. } => match want {
                 Some(want) => write!(f, "unexpected token: {}, want: {}", got, want),
-                None => write!(f, "unexpected token: {}", got),
+                None => write!(f, "unexpected token: \"{}\"", got),
             },
             SyntaxError::UndefinedVariable { name, .. } => {
                 write!(f, "undefined variable {}", name)
@@ -124,7 +126,7 @@ impl Display for SyntaxError {
             SyntaxError::InvalidPath { err, .. } => {
                 write!(f, "invalid target path {}", err)
             }
-            SyntaxError::VariableNeverUsed { name } => {
+            SyntaxError::VariableNeverUsed { name, .. } => {
                 write!(f, "variable \"{}\" is never used", name)
             }
             SyntaxError::VariableAlreadyDefined { name, .. } => {
@@ -162,17 +164,102 @@ impl Display for SyntaxError {
                 write!(f, "invalid value \"{}\", want: \"{}\"", got, want)
             }
             SyntaxError::InfallibleAssignment { .. } => f.write_str("infallible assignment"),
-
-            _ => {
-                todo!()
+            SyntaxError::UnnecessaryErrorAssignment { .. } => {
+                f.write_str("unnecessary error assignment")
+            }
+            SyntaxError::UnhandledFallibleAssignment { .. } => {
+                f.write_str("unhandled fallible assignment")
             }
         }
     }
 }
 
-impl From<LexError> for SyntaxError {
-    fn from(err: LexError) -> Self {
-        Self::Lex { err, pos: 0 }
+impl Error for SyntaxError {}
+
+impl DiagnosticMessage for SyntaxError {
+    fn labels(&self) -> Vec<Label> {
+        match self {
+            SyntaxError::Lex(err) => err.labels(),
+            SyntaxError::EmptyBlock { span } => {
+                vec![
+                    Label::new(
+                        "block start",
+                        Span {
+                            start: span.start,
+                            end: span.start + 1,
+                        },
+                    ),
+                    Label::new(
+                        "block end",
+                        Span {
+                            start: span.end - 1,
+                            end: span.end,
+                        },
+                    ),
+                ]
+            }
+            SyntaxError::UnexpectedEof => vec![],
+            SyntaxError::UnexpectedToken { got, want, span } => {
+                let msg = match want {
+                    Some(want) => format!("got {}, want {}", got, want),
+                    None => format!("got \"{}\"", got),
+                };
+
+                vec![Label::new(msg, span)]
+            }
+            SyntaxError::InvalidPath { err, span } => {
+                vec![Label::new(err.to_string(), span)]
+            }
+            SyntaxError::VariableNeverUsed { span, .. } => {
+                vec![Label::new("variable defined here", span)]
+            }
+            SyntaxError::VariableAlreadyDefined { span, .. } => {
+                // todo:
+                vec![Label::new("variable already defined", span)]
+            }
+            SyntaxError::UndefinedVariable { span, .. } => {
+                vec![Label::new("variable must be defined before use", span)]
+            }
+            SyntaxError::UnnecessaryErrorAssignment { span } => {
+                vec![Label::new("this assignment is not necessary", span)]
+            }
+            SyntaxError::UnhandledFallibleAssignment { span } => {
+                vec![Label::new("this expression is fallible", span)]
+            }
+            SyntaxError::UndefinedFunction { span, .. } => {
+                vec![Label::new("undefined function used", span)]
+            }
+            SyntaxError::FunctionArgumentsArityMismatch {
+                function,
+                takes,
+                got,
+                span,
+            } => {
+                vec![Label::new(
+                    format!("{} takes {}, got {}", function, takes, got),
+                    span,
+                )]
+            }
+            SyntaxError::FunctionNotFallible { function, span } => {
+                vec![Label::new(format!("{} is not fallible", function), span)]
+            }
+            SyntaxError::InvalidFunctionArgumentType {
+                want, got, span, ..
+            } => {
+                vec![Label::new(
+                    format!("argument want: {}, got {}", want, got),
+                    span,
+                )]
+            }
+            SyntaxError::InvalidValue {
+                want, got, span, ..
+            } => {
+                vec![Label::new(format!("want: {}, got: {}", want, got), span)]
+            }
+            SyntaxError::InfallibleAssignment { span } => {
+                vec![Label::new("this error assignment is unnecessary", span)]
+            }
+        }
     }
 }
 
@@ -227,7 +314,22 @@ pub enum Expr {
 
 impl Display for Expr {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+        let text = match self {
+            Expr::Null => "null",
+            Expr::Boolean(_) => "bool",
+            Expr::Integer(_) => "integer",
+            Expr::Float(_) => "float",
+            Expr::String(_) => "string",
+            Expr::Identifier(_) => "identifier",
+            Expr::Query(_) => "query",
+            Expr::Unary(_) => "unary",
+            Expr::Binary(_) => "binary",
+            Expr::Call(_) => "function call",
+            Expr::Array(_) => "array",
+            Expr::Object(_) => "object",
+        };
+
+        f.write_str(text)
     }
 }
 
@@ -413,24 +515,13 @@ impl Compiler<'_> {
                 .into_iter()
                 .map(|var| (var.name, var.value))
                 .collect(),
-            target_queries: vec![],
-            target_assignments: vec![],
         })
     }
 
     fn parse_block(&mut self) -> Result<Block, SyntaxError> {
         let mut statements = vec![];
-        let start = self.lexer.pos();
 
-        while let Some((token, span)) =
-            self.lexer
-                .peek()
-                .transpose()
-                .map_err(|err| SyntaxError::Lex {
-                    err,
-                    pos: self.lexer.pos(),
-                })?
-        {
+        while let Some((token, span)) = self.lexer.peek().transpose()? {
             match token {
                 Token::If => statements.push(self.parse_if()?),
                 Token::For => statements.push(self.parse_for()?),
@@ -442,7 +533,7 @@ impl Compiler<'_> {
                 // assign to a variable
                 Token::Identifier(_) | Token::PathField(_) => statements.push(self.parse_assign()?),
 
-                Token::FunctionCall(name) => {
+                Token::FunctionCall(_name) => {
                     if let Expr::Call(call) = self.parse_function_call()? {
                         statements.push(Statement::Call(call));
                     }
@@ -490,15 +581,6 @@ impl Compiler<'_> {
                     statements.push(Statement::Expression(expr))
                 }
             }
-        }
-
-        if statements.is_empty() {
-            return Err(SyntaxError::EmptyBlock {
-                span: Span {
-                    start,
-                    end: self.lexer.pos(),
-                },
-            });
         }
 
         Ok(Block::new(statements))
@@ -659,7 +741,7 @@ impl Compiler<'_> {
     fn parse_expr_comparison(&mut self) -> Result<Expr, SyntaxError> {
         let mut expr = self.parse_expr_term()?;
 
-        while let Some((token, span)) = self.lexer.peek().transpose()? {
+        while let Some((token, _span)) = self.lexer.peek().transpose()? {
             let op = match token {
                 Token::Equal => BinaryOp::Equal,
                 Token::NotEqual => BinaryOp::NotEqual,
@@ -684,14 +766,14 @@ impl Compiler<'_> {
     fn parse_expr_term(&mut self) -> Result<Expr, SyntaxError> {
         let mut expr = self.parse_expr_factor()?;
 
-        while let Some((token, span)) = self.lexer.peek().transpose()? {
+        while let Some((token, _span)) = self.lexer.peek().transpose()? {
             let op = match token {
                 Token::Add => BinaryOp::Add,
                 Token::Subtract => BinaryOp::Subtract,
                 _ => break,
             };
 
-            let _ = self.lexer.next().expect("must exist")?;
+            let _ = self.lexer.next();
             expr = Expr::Binary(Binary {
                 lhs: Box::new(expr),
                 rhs: Box::new(self.parse_expr_factor()?),
@@ -705,14 +787,14 @@ impl Compiler<'_> {
     fn parse_expr_factor(&mut self) -> Result<Expr, SyntaxError> {
         let mut expr = self.parse_expr_unary()?;
 
-        while let Some((token, span)) = self.lexer.peek().transpose()? {
+        while let Some((token, _span)) = self.lexer.peek().transpose()? {
             let op = match token {
                 Token::Multiply => BinaryOp::Multiply,
                 Token::Divide => BinaryOp::Divide,
                 _ => break,
             };
 
-            let _ = self.lexer.next().expect("must exist")?;
+            let _ = self.lexer.next();
             expr = Expr::Binary(Binary {
                 lhs: Box::new(expr),
                 rhs: Box::new(self.parse_expr_unary()?),
@@ -725,7 +807,7 @@ impl Compiler<'_> {
 
     fn parse_expr_unary(&mut self) -> Result<Expr, SyntaxError> {
         match self.lexer.peek().transpose()? {
-            Some((token, span)) => {
+            Some((token, _span)) => {
                 let op = match token {
                     Token::Not => UnaryOp::Not,
                     Token::Subtract => UnaryOp::Negate,
@@ -753,8 +835,8 @@ impl Compiler<'_> {
     fn parse_expr_exponent(&mut self) -> Result<Expr, SyntaxError> {
         let mut expr = self.parse_expr_primary()?;
 
-        while let Some((Token::Exponent, span)) = self.lexer.peek().transpose()? {
-            self.lexer.next();
+        while let Some((Token::Exponent, _span)) = self.lexer.peek().transpose()? {
+            let _ = self.lexer.next();
 
             expr = Expr::Binary(Binary {
                 lhs: Box::new(expr),
@@ -776,7 +858,7 @@ impl Compiler<'_> {
 
                     self.parse_expr_inner(actor)
                 }
-                Token::FunctionCall(name) => self.parse_function_call(),
+                Token::FunctionCall(_name) => self.parse_function_call(),
                 Token::PathField(path) => {
                     // ".", ".foo", "%" or "%foo"
                     let query = if path.starts_with(|c| c == '.' || c == '%') {
@@ -977,7 +1059,7 @@ impl Compiler<'_> {
 
     fn parse_expr_inner(&mut self, actor: Expr) -> Result<Expr, SyntaxError> {
         match self.lexer.peek().transpose()? {
-            Some((token, span)) => {
+            Some((token, _span)) => {
                 match token {
                     // actor()
                     Token::LeftParen => {
@@ -985,7 +1067,7 @@ impl Compiler<'_> {
                         self.parse_expr_inner(call)
                     }
                     // actor "string"
-                    Token::String(s) => {
+                    Token::String(_s) => {
                         // let arguments = vec![Expression::String(s.to_string())];
                         // let function = Box::new(actor);
                         // self.parse_expr_inner(Expression::Call {
@@ -1015,9 +1097,15 @@ impl Compiler<'_> {
         self.expect(Token::If)?;
 
         let condition = self.parse_expr()?;
-        self.expect(Token::LeftBrace)?;
+        let start_span = self.expect(Token::LeftBrace)?;
         let then_block = self.parse_block()?;
-        self.expect(Token::RightBrace)?;
+        let end_span = self.expect(Token::RightBrace)?;
+
+        if then_block.is_empty() {
+            return Err(SyntaxError::EmptyBlock {
+                span: start_span.merge(end_span),
+            });
+        }
 
         match self.lexer.peek().transpose()? {
             Some((token, _span)) => {
@@ -1056,18 +1144,7 @@ impl Compiler<'_> {
         let key = match self.lexer.next().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
-                    // if self
-                    //     .variables
-                    //     .iter()
-                    //     .find(|variable| variable.name == s)
-                    //     .is_some()
-                    // {
-                    //     return Err(SyntaxError::VariableAlreadyDefined {
-                    //         name: s.to_string(),
-                    //         span
-                    //     });
-                    // }
-
+                    // Override variable might happened
                     s.to_string()
                 }
                 _ => {
@@ -1086,18 +1163,7 @@ impl Compiler<'_> {
         let value = match self.lexer.next().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
-                    // if self
-                    //     .variables
-                    //     .iter()
-                    //     .find(|variable| variable.name == s)
-                    //     .is_some()
-                    // {
-                    //     return Err(SyntaxError::VariableAlreadyDefined {
-                    //         name: s.to_string(),
-                    //         span
-                    //     });
-                    // }
-
+                    // Override variable might happened
                     s.to_string()
                 }
                 _ => {
@@ -1115,7 +1181,7 @@ impl Compiler<'_> {
 
         let iterator = self.parse_expr()?;
 
-        self.expect(Token::LeftBrace)?;
+        let start_span = self.expect(Token::LeftBrace)?;
 
         self.register_variable(key.clone());
         self.register_variable(value.clone());
@@ -1124,7 +1190,14 @@ impl Compiler<'_> {
         self.iterating -= 1;
 
         // parse block does not consume '}'
-        self.expect(Token::RightBrace)?;
+        let end_span = self.expect(Token::RightBrace)?;
+
+        // check block
+        if block.is_empty() {
+            return Err(SyntaxError::EmptyBlock {
+                span: start_span.merge(end_span),
+            });
+        }
 
         Ok(Statement::For(ForStatement {
             key,
@@ -1140,7 +1213,7 @@ impl Compiler<'_> {
         let mut array = vec![];
         loop {
             match self.lexer.peek().transpose()? {
-                Some((token, span)) => match token {
+                Some((token, _span)) => match token {
                     Token::RightBracket => {
                         let _ = self.lexer.next();
                         break;
@@ -1215,12 +1288,12 @@ impl Compiler<'_> {
         Ok(Expr::Object(object))
     }
 
-    fn expect(&mut self, want: Token<&str>) -> Result<(), SyntaxError> {
+    fn expect(&mut self, want: Token<&str>) -> Result<Span, SyntaxError> {
         match self.lexer.next() {
             Some(result) => {
                 let (got, span) = result?;
                 if got == want {
-                    Ok(())
+                    Ok(span)
                 } else {
                     Err(SyntaxError::UnexpectedToken {
                         got: got.to_string(),
@@ -1249,12 +1322,7 @@ impl Compiler<'_> {
             None => None,
         };
 
-        next.map(|result| {
-            result.map_err(|err| SyntaxError::Lex {
-                err,
-                pos: self.lexer.pos(),
-            })
-        })
+        next.map(|result| result.map_err(SyntaxError::Lex))
     }
 
     #[inline]
@@ -1348,7 +1416,7 @@ mod tests {
     #[allow(clippy::print_stdout)]
     fn assert_compile(input: &str) {
         match Compiler::compile(input) {
-            Ok(program) => {
+            Ok(_program) => {
                 // todo
             }
             Err(err) => {
@@ -1407,6 +1475,8 @@ mod tests {
             .ts = now()
         }
         "#;
+
+        assert_compile(text);
     }
 
     #[test]
