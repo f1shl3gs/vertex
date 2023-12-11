@@ -385,14 +385,14 @@ async fn collect_sensor_data(
                     }
 
                     match read_to_string(entry.path()) {
-                        Ok(v) => {
+                        Ok(value) => {
                             let sensor = format!("{}{}", sensor, num);
-                            if !stats.contains_key(&sensor) {
-                                stats.insert(sensor.clone(), BTreeMap::new());
-                            }
-
-                            let props = stats.get_mut(&sensor).unwrap();
-                            props.insert(property.to_string(), v.trim().to_string());
+                            stats
+                                .entry(sensor)
+                                .and_modify(|properties| {
+                                    properties.insert(property.to_string(), value);
+                                })
+                                .or_default();
                         }
                         _ => continue,
                     }
