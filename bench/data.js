@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702329414510,
+  "lastUpdate": 1702329846249,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "391e5c8bafc58c89fefc551d42e026dad8facc4e",
-          "message": "remove thrift server support (#1339)",
-          "timestamp": "2023-10-12T21:09:59+08:00",
-          "tree_id": "1c3c1c07dba737696535c93f1abe9743fb70df72",
-          "url": "https://github.com/f1shl3gs/vertex/commit/391e5c8bafc58c89fefc551d42e026dad8facc4e"
-        },
-        "date": 1697117485826,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 45190000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1069500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 24.484,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cd7fe27b3e89117217e92a232267117f5ed19e8b",
           "message": "update rskafka (#1340)",
           "timestamp": "2023-10-12T23:01:29+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.88,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3",
+          "message": "VTL: implement diagnostic (#1461)\n\n* implement diagnostic",
+          "timestamp": "2023-12-12T05:13:07+08:00",
+          "tree_id": "4bb13945d5b2af0d35b28b67829e4b4e3bc7d41d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3"
+        },
+        "date": 1702329831518,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 18199000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 483910,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.517,
             "unit": "ns/op"
           }
         ]
