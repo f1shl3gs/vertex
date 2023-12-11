@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{btree_map::Entry, BTreeMap};
 
 use event::{tags, Metric};
 use sqlx::MySqlPool;
@@ -31,14 +31,15 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     text_items.insert("wsrep_provider_version".to_string(), "".to_string());
     text_items.insert("wsrep_evs_repl_latency".to_string(), "".to_string());
 
-    for stat in stats.iter() {
+    for stat in stats {
         let key = valid_name(&stat.name);
         let fv = match stat.value.parse::<f64>() {
-            Ok(v) => v,
-            _ => {
-                if text_items.contains_key(&key) {
-                    text_items.insert(key.clone(), stat.value.clone());
+            Ok(value) => value,
+            Err(_err) => {
+                if let Entry::Occupied(mut entry) = text_items.entry(key) {
+                    entry.insert(stat.value);
                 }
+
                 continue;
             }
         };
