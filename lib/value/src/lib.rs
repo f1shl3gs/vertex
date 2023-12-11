@@ -10,7 +10,9 @@ use bytes::Bytes;
 use chrono::{DateTime, Utc};
 use path::ValuePath;
 
-pub use path::{parse_value_path, OwnedTargetPath, OwnedValuePath};
+pub use path::{
+    parse_target_path, parse_value_path, OwnedTargetPath, OwnedValuePath, PathParseError,
+};
 
 /// The main value type used in Vertex events.
 #[derive(Clone, Debug, PartialEq)]
@@ -83,13 +85,30 @@ macro_rules! map_value {
         $(
             _map.insert($x.into(), $y.into());
         )*
-        _map
+        Value::Object(_map)
     });
     // Done with trailing comma
     ( $($x:expr => $y:expr,)* ) => (
-        fields!{$($x => $y),*}
+        map_value!{$($x => $y),*}
     );
     () => ({
-        std::collections::BTreeMap::<String, $crate::Value>::new();
+        Value::Object(std::collections::BTreeMap::<String, $crate::Value>::new());
     })
+}
+
+#[macro_export]
+macro_rules! array_value {
+    ( $($item: expr),*) => ({
+        let mut array = vec![];
+        $(
+            array.push($item.into());
+        )*
+        Value::Array(array)
+    });
+    ( $($item:expr,),* ) => (
+        array_value!($($item),*)
+    );
+    () => ({
+        Value::Array(vec![])
+    });
 }
