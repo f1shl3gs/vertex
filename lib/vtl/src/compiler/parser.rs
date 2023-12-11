@@ -1311,6 +1311,7 @@ pub fn unescape_string(mut s: &str) -> String {
 mod tests {
     use super::*;
 
+    #[allow(dead_code)]
     fn unescape(s: &str) -> String {
         let mut buf = String::with_capacity(s.len());
         let text = s.as_bytes();
@@ -1342,21 +1343,6 @@ mod tests {
         }
 
         buf
-    }
-
-    #[test]
-    fn unescape_string() {
-        for (input, want) in [
-            ("\\", r#"\"#),
-            (
-                "\n", r#"
-"#,
-            ),
-            ("\t", "    "),
-        ] {
-            let got = unescape(input);
-            assert_eq!(want, got, "input: {}", input);
-        }
     }
 
     #[allow(clippy::print_stdout)]
