@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702329846249,
+  "lastUpdate": 1702329854333,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18119,40 +18119,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8baac66a013f73e214b606b701f7a6b3891dd34f",
-          "message": "impl Configurable for OwnedPath (#1351)",
-          "timestamp": "2023-10-16T15:52:23+08:00",
-          "tree_id": "b3eef9ef885486e9b04df7ca9c1dc570475fd37e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8baac66a013f73e214b606b701f7a6b3891dd34f"
-        },
-        "date": 1697443849240,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 963,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42380.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 577,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40394.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3",
+          "message": "VTL: implement diagnostic (#1461)\n\n* implement diagnostic",
+          "timestamp": "2023-12-12T05:13:07+08:00",
+          "tree_id": "4bb13945d5b2af0d35b28b67829e4b4e3bc7d41d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3"
+        },
+        "date": 1702329840978,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 563,
             "unit": "s"
           },
           {
