@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702329326093,
+  "lastUpdate": 1702329338285,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cd7fe27b3e89117217e92a232267117f5ed19e8b",
-          "message": "update rskafka (#1340)",
-          "timestamp": "2023-10-12T23:01:29+08:00",
-          "tree_id": "8c1be63107ee57c1f1081117cbe4008dae792cf5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cd7fe27b3e89117217e92a232267117f5ed19e8b"
-        },
-        "date": 1697123114808,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 106.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 237.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 380.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 189.46,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3",
+          "message": "VTL: implement diagnostic (#1461)\n\n* implement diagnostic",
+          "timestamp": "2023-12-12T05:13:07+08:00",
+          "tree_id": "4bb13945d5b2af0d35b28b67829e4b4e3bc7d41d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3"
+        },
+        "date": 1702329323836,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.225,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 191,
             "unit": "ns/op"
           }
         ]
