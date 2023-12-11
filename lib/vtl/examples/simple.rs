@@ -66,10 +66,6 @@ fn main() {
     .msg = parse_json(.msg)?
     log("msg:", .msg)
 
-    if true {
-
-    }
-
     for index, item in [1, 2, 3] {
         if index == 1 {
             continue
