@@ -233,6 +233,21 @@ interval: "15s"
 There are more example configurations under `examples/config` to help you know what's Vertex capable of.
 
 ## Turning
+
+### Memory
+By default, vertex will spawn `X` worker threads(the cpu core number), and spawn `Y` blocking threads, used 
+for blocking operation like fs operations. `X + Y + 1` is the total number of threads vertex will spawn, 
+this value might be a little bigger than we want or needed. 
+
+For the node_exporter alternative situation, the memory usage can be under `17M` by
+```shell
+./vertex -c dev.yaml  --threads 2 --max-blocking-threads 2
+```
+you can do it too by setting environment
+```shell
+VERTEX_WORKER_THREADS=2 VERTEX_MAX_BLOCKING_THREADS=2 ./vertex -c dev.yaml
+```
+
 ### PGO
 Profile-Guided Optimization is a tech to collect data about the typical execution of a program 
 and use this data to inform optimizations such as inlining, machine-code layout, register allocation, etc.
