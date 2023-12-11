@@ -18,9 +18,29 @@ use vertex::extensions::heartbeat;
 use crate::{top, validate};
 
 fn default_worker_threads() -> usize {
-    std::thread::available_parallelism()
-        .expect("get available working threads")
-        .get()
+    match std::env::var("VERTEX_WORKER_THREADS") {
+        Ok(value) => value
+            .parse::<usize>()
+            .expect("invalid env value for VERTEX_WORKER_THREADS"),
+        Err(_) => {
+            // not found
+            std::thread::available_parallelism()
+                .expect("get available working threads")
+                .get()
+        }
+    }
+}
+
+fn default_max_blocking_threads() -> usize {
+    match std::env::var("VERTEX_MAX_BLOCKING_THREADS") {
+        Ok(value) => value
+            .parse::<usize>()
+            .expect("invalid env value for VERTEX_MAX_BLOCKING_THREADS"),
+        Err(_) => {
+            // not found, use default value
+            256usize
+        }
+    }
 }
 
 #[derive(FromArgs)]
@@ -71,7 +91,7 @@ pub struct RootCommand {
 
     #[argh(
         option,
-        default = "512",
+        default = "default_max_blocking_threads()",
         description = "specifies the limit for additional blocking threads spawned by the Runtime"
     )]
     max_blocking_threads: usize,
