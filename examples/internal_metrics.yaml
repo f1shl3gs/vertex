@@ -6,7 +6,7 @@ sources:
 
 transforms:
   add_tags:
-    type: rewrite
+    type: relabel
     inputs:
       - metrics
       - selfstat

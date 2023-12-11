@@ -322,7 +322,7 @@ sources:
 
 transforms:
   add_extra_tags:
-    type: rewrite
+    type: relabel
     inputs:
       - generator
       - ntp

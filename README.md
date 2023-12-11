@@ -131,7 +131,7 @@ sources:
 
 transforms:
   add_hosts:
-    type: rewrite
+    type: relabel
     operations:
       - type: set
         key: foo

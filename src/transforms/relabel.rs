@@ -37,20 +37,20 @@ impl Operation {
     }
 }
 
-#[configurable_component(transform, name = "rewrite")]
+#[configurable_component(transform, name = "relabel")]
 struct Config {
     operations: Vec<Operation>,
 }
 
 #[async_trait]
-#[typetag::serde(name = "rewrite")]
+#[typetag::serde(name = "relabel")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         if self.operations.is_empty() {
             return Err("At least one operation required".into());
         }
 
-        Ok(Transform::function(Rewrite {
+        Ok(Transform::function(Relabel {
             operations: self.operations.clone(),
         }))
     }
@@ -68,11 +68,11 @@ impl TransformConfig for Config {
 }
 
 #[derive(Clone)]
-struct Rewrite {
+struct Relabel {
     operations: Vec<Operation>,
 }
 
-impl FunctionTransform for Rewrite {
+impl FunctionTransform for Relabel {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_event(|event| {
             let tags = match event {
@@ -113,11 +113,11 @@ mod tests {
         )
         .into();
 
-        let mut rewrite = Rewrite {
+        let mut relabel = Relabel {
             operations: vec![op],
         };
 
-        let event = transform_one(&mut rewrite, event).expect("transform should success");
+        let event = transform_one(&mut relabel, event).expect("transform should success");
 
         assert_eq!(event.into_metric().tags(), &tags);
     }
