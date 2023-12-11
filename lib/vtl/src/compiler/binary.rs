@@ -199,11 +199,7 @@ impl Expression for Binary {
                 }),
             },
             BinaryOp::Exponent => match &(lhs, rhs) {
-                (Value::Integer(a), Value::Integer(b)) => {
-                    println!("{} {} {}", *a, *b, (*a) ^ (*b));
-
-                    Ok(Value::Integer(*a ^ *b))
-                }
+                (Value::Integer(a), Value::Integer(b)) => Ok(Value::Integer(*a ^ *b)),
                 (Value::Float(a), Value::Integer(b)) => {
                     let n = *b as i32; // todo: safe cast
                     let a = *a;

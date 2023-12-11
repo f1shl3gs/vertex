@@ -13,7 +13,7 @@ mod parser;
 mod query;
 mod span;
 mod statement;
-mod template;
+// mod template;
 mod type_def;
 mod unary;
 

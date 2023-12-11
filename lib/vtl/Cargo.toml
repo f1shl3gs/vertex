@@ -12,6 +12,3 @@ serde_json = { version = "1.0.108", default-features = false }
 twox-hash = { version = "1.6.3", default-features = false }
 url = { version = "2.5.0", default-features = false }
 value = { path = "../value" }
-
-
-annotate-snippets = { version = "0.9.2" }

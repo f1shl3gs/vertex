@@ -1326,7 +1326,7 @@ mod tests {
 
             if pos + 1 == text.len() {
                 buf.push(c);
-                break
+                break;
             }
 
             pos += 1;
@@ -1337,7 +1337,7 @@ mod tests {
                 b'n' => buf.push('\n'),
                 b'r' => buf.push('\r'),
                 b't' => buf.push('\t'),
-                c => buf.push(c as char)
+                c => buf.push(c as char),
             }
         }
 
@@ -1348,9 +1348,11 @@ mod tests {
     fn unescape_string() {
         for (input, want) in [
             ("\\", r#"\"#),
-            ("\n", r#"
-"#),
-            ("\t", "    ")
+            (
+                "\n", r#"
+"#,
+            ),
+            ("\t", "    "),
         ] {
             let got = unescape(input);
             assert_eq!(want, got, "input: {}", input);

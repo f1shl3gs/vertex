@@ -619,12 +619,6 @@ impl<'input> Lexer<'input> {
         Err(LexError::Eof)
     }
 
-    fn raw_string(&mut self) -> Result<(Token<&'input str>, Span), LexError> {
-        let start = self.pos;
-        self.pos += 2; // skip r"
-        todo!()
-    }
-
     fn numeric_literal(&mut self) -> Result<(Token<&'input str>, Span), LexError> {
         let start = self.pos;
         let mut float = false;
