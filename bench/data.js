@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702298462244,
+  "lastUpdate": 1702298477878,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a4b98904b3f306db3d3eb38e183a83a14df3ec5f",
-          "message": "bump num-traits to 0.2.17 (#1335)",
-          "timestamp": "2023-10-08T13:09:23+08:00",
-          "tree_id": "3fef6e09c507d8738c3deb4ff8bd95e6da44ed58",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a4b98904b3f306db3d3eb38e183a83a14df3ec5f"
-        },
-        "date": 1696741997189,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.156,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.322,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 22.899,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 135.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 50.635,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "732acf597c88b584b31a4107ad1e5768c1619d84",
           "message": "bump proc-macro2 to 1.0.69 (#1336)",
           "timestamp": "2023-10-09T12:26:00+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 39.326,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "50658fb9d6e5888dddb9e8c785f781fa4dd62b88",
+          "message": "deps: bump libc to 0.2.151 (#1456)",
+          "timestamp": "2023-12-11T20:37:59+08:00",
+          "tree_id": "35a97389b730f1f7d9cfcdddf17bc98849ae6487",
+          "url": "https://github.com/f1shl3gs/vertex/commit/50658fb9d6e5888dddb9e8c785f781fa4dd62b88"
+        },
+        "date": 1702298460506,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 18.039,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 17.616,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 17.646,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 110.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 40.12,
             "unit": "ns/op"
           }
         ]
