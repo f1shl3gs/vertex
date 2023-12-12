@@ -6,12 +6,18 @@ use value::{OwnedTargetPath, Value};
 
 pub enum Error {
     NotFound,
+
+    InvalidPath { expected: &'static str },
 }
 
 impl Display for Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Error::NotFound => f.write_str("not found"),
+            Error::InvalidPath { expected } => {
+                f.write_str("expected one of ")?;
+                f.write_str(expected)
+            }
         }
     }
 }
@@ -22,11 +28,11 @@ pub trait Target: Debug {
     fn insert(&mut self, path: &OwnedTargetPath, value: Value) -> Result<(), Error>;
 
     /// Get a value for a given path, or Error::NotFound if no value is found.
-    fn get(&mut self, path: &OwnedTargetPath) -> Result<&Value, Error>;
+    fn get(&mut self, path: &OwnedTargetPath) -> Result<Option<&Value>, Error>;
 
     /// Get a mutable reference to the value for a given path, or Error::NotFound if no
     /// value is found.
-    fn get_mut(&mut self, path: &OwnedTargetPath) -> Result<&mut Value, Error>;
+    fn get_mut(&mut self, path: &OwnedTargetPath) -> Result<Option<&mut Value>, Error>;
 
     /// Remove the given path from the target.
     ///
@@ -53,28 +59,22 @@ impl Target for TargetValue {
         Ok(())
     }
 
-    fn get(&mut self, target_path: &OwnedTargetPath) -> Result<&Value, Error> {
+    fn get(&mut self, target_path: &OwnedTargetPath) -> Result<Option<&Value>, Error> {
         let target = match target_path.prefix {
             PathPrefix::Event => &self.value,
             PathPrefix::Metadata => &self.metadata,
         };
 
-        match target.get(&target_path.path) {
-            Some(value) => Ok(value),
-            None => Err(Error::NotFound),
-        }
+        Ok(target.get(&target_path.path))
     }
 
-    fn get_mut(&mut self, target_path: &OwnedTargetPath) -> Result<&mut Value, Error> {
+    fn get_mut(&mut self, target_path: &OwnedTargetPath) -> Result<Option<&mut Value>, Error> {
         let target = match target_path.prefix {
             PathPrefix::Event => &mut self.value,
             PathPrefix::Metadata => &mut self.metadata,
         };
 
-        match target.get_mut(&target_path.path) {
-            Some(value) => Ok(value),
-            None => Err(Error::NotFound),
-        }
+        Ok(target.get_mut(&target_path.path))
     }
 
     fn remove(&mut self, target_path: &OwnedTargetPath, compact: bool) -> Result<Value, Error> {
