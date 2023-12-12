@@ -24,39 +24,41 @@ impl BitAnd for Kind {
 
 impl Display for Kind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let mut kinds = vec![];
+
         if self.contains(Kind::BYTES) {
-            f.write_str("Bytes")?;
+            kinds.push("bytes");
         }
 
         if self.contains(Kind::INTEGER) {
-            f.write_str(" | Integer")?;
+            kinds.push("integer")
         }
 
         if self.contains(Kind::FLOAT) {
-            f.write_str(" | Float")?;
+            kinds.push("float");
         }
 
         if self.contains(Kind::BOOLEAN) {
-            f.write_str(" | Boolean")?;
+            kinds.push("boolean");
         }
 
         if self.contains(Kind::OBJECT) {
-            f.write_str(" | Object")?;
+            kinds.push("object");
         }
 
         if self.contains(Kind::ARRAY) {
-            f.write_str(" | Array")?;
+            kinds.push("array");
         }
 
         if self.contains(Kind::TIMESTAMP) {
-            f.write_str(" | Timestamp")?;
+            kinds.push("timestamp");
         }
 
         if self.contains(Kind::NULL) {
-            f.write_str(" | Null")?;
+            kinds.push("null")
         }
 
-        Ok(())
+        f.write_str(&kinds.join(", "))
     }
 }
 
@@ -72,6 +74,7 @@ impl Kind {
     pub const UNDEFINED: Kind = Kind(1 << 9);
 
     pub const NUMERIC: Kind = Kind(1 << 2 | 1 << 3);
+    pub const ARRAY_OR_OBJECT: Kind = Kind(1 << 5 | 1 << 6);
     pub const ARRAY_BYTES_OBJECT: Kind = Kind(1 << 1 | 1 << 5 | 1 << 6);
     pub const ARRAY_OR_BYTES: Kind = Kind(1 << 1 | 1 << 6);
     pub const BYTES_OR_INTEGER: Kind = Kind(1 << 1 | 1 << 2);

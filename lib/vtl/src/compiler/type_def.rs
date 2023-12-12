@@ -25,7 +25,37 @@ impl From<Kind> for TypeDef {
 impl TypeDef {
     #[inline]
     pub fn is_null(&self) -> bool {
-        self.kind.contains(Kind::NULL)
+        self.kind == Kind::NULL
+    }
+
+    #[inline]
+    pub fn is_bytes(&self) -> bool {
+        self.kind == Kind::BYTES
+    }
+
+    #[inline]
+    pub fn is_numeric(&self) -> bool {
+        self.kind == Kind::NUMERIC
+    }
+
+    #[inline]
+    pub fn is_float(&self) -> bool {
+        self.kind == Kind::FLOAT
+    }
+
+    #[inline]
+    pub fn is_integer(&self) -> bool {
+        self.kind == Kind::INTEGER
+    }
+
+    #[inline]
+    pub fn is_array(&self) -> bool {
+        self.kind == Kind::ARRAY
+    }
+
+    #[inline]
+    pub fn is_object(&self) -> bool {
+        self.kind == Kind::OBJECT
     }
 
     #[inline]

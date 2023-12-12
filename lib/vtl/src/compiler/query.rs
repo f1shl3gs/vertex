@@ -1,6 +1,6 @@
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
-use crate::compiler::{Expression, ExpressionError, Kind, Span, TypeDef};
+use crate::compiler::{Expression, ExpressionError, Kind, TypeDef};
 use crate::Context;
 
 pub enum Query {
@@ -17,22 +17,16 @@ impl Expression for Query {
             Query::External(path) => cx
                 .target
                 .get(path)
-                .map_err(|err| ExpressionError::Error {
-                    message: err.to_string(),
-                    span: Span { start: 0, end: 0 },
-                })?
-                .clone(),
+                .unwrap_or_default()
+                .cloned()
+                .unwrap_or(Value::Null),
             Query::Internal(name, path) => cx
                 .variables
                 .get(name)
-                .expect("variable checked already")
+                .expect("variable checked already at compile-time")
                 .get(path)
-                .ok_or(ExpressionError::NotFound {
-                    path: format!("{}{}", name, path),
-                    // TODO: fix
-                    span: Span { start: 0, end: 0 },
-                })?
-                .clone(),
+                .cloned()
+                .unwrap_or(Value::Null),
         };
 
         Ok(value)

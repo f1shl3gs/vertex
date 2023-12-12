@@ -102,7 +102,7 @@ mod tests {
             Err(ExpressionError::UnexpectedType {
                 want: Kind::BYTES,
                 got: Kind::INTEGER,
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             }),
         )
     }

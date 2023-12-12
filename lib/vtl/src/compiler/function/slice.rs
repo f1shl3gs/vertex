@@ -334,7 +334,7 @@ mod tests {
             TypeDef::bytes(),
             Err(ExpressionError::UnexpectedValue {
                 msg: "start \"4\" must be between \"-3\" and \"3\"".to_string(),
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             }),
         )
     }
@@ -347,7 +347,7 @@ mod tests {
             TypeDef::bytes(),
             Err(ExpressionError::UnexpectedValue {
                 msg: "start \"-4\" must be between \"-3\" and \"3\"".to_string(),
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             }),
         )
     }
@@ -360,7 +360,7 @@ mod tests {
             TypeDef::bytes(),
             Err(ExpressionError::UnexpectedValue {
                 msg: "start \"4\" must be between \"-3\" and \"3\"".to_string(),
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             }),
         )
     }
@@ -373,7 +373,7 @@ mod tests {
             TypeDef::bytes(),
             Err(ExpressionError::UnexpectedValue {
                 msg: "end 1 must be greater or equal to start 2".to_string(),
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             }),
         )
     }

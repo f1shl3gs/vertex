@@ -1,10 +1,10 @@
-use crate::compiler::Span;
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use super::expression::Expression;
 use super::parser::Expr;
 use super::{ExpressionError, Kind};
 use crate::compiler::type_def::TypeDef;
+use crate::compiler::{Span, Spanned};
 use crate::Context;
 
 #[derive(Clone)]
@@ -46,15 +46,12 @@ impl AssignmentTarget {
 pub enum Assignment {
     Single {
         target: AssignmentTarget,
-        expr: Expr,
+        expr: Spanned<Expr>,
     },
     Infallible {
         ok: AssignmentTarget,
         err: AssignmentTarget,
-        expr: Expr,
-
-        /// The default ok value used when the expression results in an error.
-        default: Value,
+        expr: Spanned<Expr>,
     },
 }
 
@@ -66,19 +63,14 @@ impl Expression for Assignment {
                 target.assign(cx, value)?;
                 Ok(Value::Null)
             }
-            Assignment::Infallible {
-                ok,
-                err,
-                expr,
-                default,
-            } => {
+            Assignment::Infallible { ok, err, expr } => {
                 match expr.resolve(cx) {
                     Ok(value) => {
                         ok.assign(cx, value)?;
                         err.assign(cx, Value::Null)?;
                     }
                     Err(expr_err) => {
-                        ok.assign(cx, default.clone())?;
+                        ok.assign(cx, Value::Null)?;
                         err.assign(cx, expr_err.to_string().into())?;
                     }
                 }

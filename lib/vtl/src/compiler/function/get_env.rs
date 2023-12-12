@@ -95,7 +95,7 @@ mod tests {
             TypeDef::bytes().fallible(),
             Err(ExpressionError::Error {
                 message: want_err.to_string(),
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             }),
         )
     }

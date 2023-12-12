@@ -39,6 +39,7 @@ mod to_integer;
 mod to_string;
 mod to_unix_timestamp;
 mod trim;
+mod unique;
 mod uppercase;
 mod xxhash;
 
@@ -218,6 +219,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(to_string::ToString),
         Box::new(to_unix_timestamp::ToUnixTimestamp),
         Box::new(trim::Trim),
+        Box::new(unique::Unique),
         Box::new(uppercase::Uppercase),
         Box::new(xxhash::XXHash),
     ]
@@ -240,14 +242,14 @@ pub fn compile_and_run<F: Function>(
     let mut arguments_list = ArgumentList::new(func.identifier(), func.parameters());
     for argument in arguments {
         arguments_list
-            .push(Spanned::new(argument, Span { start: 0, end: 0 }))
+            .push(Spanned::new(argument, Span::empty()))
             .expect("invalid argument");
     }
 
     let call = func
         .compile(
             FunctionCompileContext {
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             },
             arguments_list,
         )

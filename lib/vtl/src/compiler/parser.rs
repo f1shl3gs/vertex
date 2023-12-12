@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 use std::error::Error;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
 use value::{parse_target_path, parse_value_path, PathParseError, Value};
 
@@ -20,7 +20,8 @@ use super::{ExpressionError, Kind};
 use super::{Span, Spanned};
 use crate::compiler::function::ArgumentList;
 use crate::compiler::query::Query;
-use crate::compiler::{Expression, TypeDef};
+use crate::compiler::unary::UnaryError;
+use crate::compiler::{BinaryError, Expression, TypeDef};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 
@@ -37,6 +38,29 @@ pub enum SyntaxError {
         want: Option<String>,
         span: Span,
     },
+
+    //
+    InvalidType {
+        want: String,
+        got: String,
+        span: Span,
+    },
+
+    // Fallible things
+    FalliblePrediction {
+        span: Span,
+    },
+    FallibleArgument {
+        span: Span,
+    },
+    FallibleIterator {
+        span: Span,
+    },
+
+    // Unary
+    Unary(UnaryError),
+
+    Binary(BinaryError),
 
     // Path
     InvalidPath {
@@ -79,10 +103,6 @@ pub enum SyntaxError {
         got: usize,
         span: Span,
     },
-    FunctionNotFallible {
-        function: &'static str,
-        span: Span,
-    },
     InvalidFunctionArgumentType {
         function: &'static str,
         argument: &'static str,
@@ -96,9 +116,6 @@ pub enum SyntaxError {
         got: String,
         span: Span,
     },
-    InfallibleAssignment {
-        span: Span,
-    },
 }
 
 impl From<LexError> for SyntaxError {
@@ -110,7 +127,7 @@ impl From<LexError> for SyntaxError {
 impl Display for SyntaxError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            SyntaxError::Lex(err) => err.fmt(f),
+            SyntaxError::Lex(err) => Display::fmt(err, f),
             SyntaxError::EmptyBlock { .. } => f.write_str("empty block is not allowed"),
             SyntaxError::UnexpectedEof => f.write_str("unexpected end of file"),
             SyntaxError::UnexpectedToken { got, want, .. } => match want {
@@ -123,6 +140,14 @@ impl Display for SyntaxError {
             SyntaxError::UndefinedFunction { name, .. } => {
                 write!(f, "unknown function {}", name)
             }
+
+            SyntaxError::Unary(err) => Display::fmt(err, f),
+            SyntaxError::Binary(err) => Display::fmt(err, f),
+
+            // Fallible
+            SyntaxError::FalliblePrediction { .. } => f.write_str("fallible prediction"),
+            SyntaxError::FallibleArgument { .. } => f.write_str("fallible argument"),
+
             SyntaxError::InvalidPath { err, .. } => {
                 write!(f, "invalid target path {}", err)
             }
@@ -144,9 +169,7 @@ impl Display for SyntaxError {
                     function, takes, got
                 )
             }
-            SyntaxError::FunctionNotFallible { function, .. } => {
-                write!(f, "function \"{}\" is not fallible", function)
-            }
+
             SyntaxError::InvalidFunctionArgumentType {
                 function,
                 argument,
@@ -163,13 +186,15 @@ impl Display for SyntaxError {
             SyntaxError::InvalidValue { got, want, .. } => {
                 write!(f, "invalid value \"{}\", want: \"{}\"", got, want)
             }
-            SyntaxError::InfallibleAssignment { .. } => f.write_str("infallible assignment"),
             SyntaxError::UnnecessaryErrorAssignment { .. } => {
                 f.write_str("unnecessary error assignment")
             }
             SyntaxError::UnhandledFallibleAssignment { .. } => {
                 f.write_str("unhandled fallible assignment")
             }
+
+            SyntaxError::InvalidType { .. } => f.write_str("invalid type"),
+            SyntaxError::FallibleIterator { .. } => f.write_str("fallible iterator"),
         }
     }
 }
@@ -240,9 +265,6 @@ impl DiagnosticMessage for SyntaxError {
                     span,
                 )]
             }
-            SyntaxError::FunctionNotFallible { function, span } => {
-                vec![Label::new(format!("{} is not fallible", function), span)]
-            }
             SyntaxError::InvalidFunctionArgumentType {
                 want, got, span, ..
             } => {
@@ -256,8 +278,22 @@ impl DiagnosticMessage for SyntaxError {
             } => {
                 vec![Label::new(format!("want: {}, got: {}", want, got), span)]
             }
-            SyntaxError::InfallibleAssignment { span } => {
-                vec![Label::new("this error assignment is unnecessary", span)]
+
+            SyntaxError::FalliblePrediction { span } => {
+                vec![Label::new("fallible prediction", span)]
+            }
+            SyntaxError::FallibleArgument { span } => {
+                vec![Label::new("fallible argument is not allowed", span)]
+            }
+
+            SyntaxError::Unary(err) => err.labels(),
+            SyntaxError::Binary(err) => err.labels(),
+
+            SyntaxError::InvalidType { want, got, span } => {
+                vec![Label::new(format!("want: {}, got: {}", want, got), span)]
+            }
+            SyntaxError::FallibleIterator { span } => {
+                vec![Label::new("fallible iterator is not allowed", span)]
             }
         }
     }
@@ -301,7 +337,7 @@ pub enum Expr {
     /// ```text
     /// arr = [1, false, "foo", -1]
     /// ```
-    Array(Vec<Expr>),
+    Array(Vec<Spanned<Expr>>),
     /// A literal Object.
     ///
     /// ```text
@@ -309,7 +345,7 @@ pub enum Expr {
     ///     foo: "bar"
     /// }
     /// ```
-    Object(BTreeMap<String, Expr>),
+    Object(BTreeMap<String, Spanned<Expr>>),
 }
 
 impl Display for Expr {
@@ -333,14 +369,31 @@ impl Display for Expr {
     }
 }
 
+impl Expr {
+    fn with(self, span: Span) -> Spanned<Expr> {
+        Spanned { node: self, span }
+    }
+
+    #[inline]
+    pub fn is_bool(&self, b: bool) -> bool {
+        match self {
+            Expr::Boolean(value) => *value == b,
+            _ => false,
+        }
+    }
+}
+
 // this mod is used for tests only
 #[cfg(test)]
 mod expr_convert {
+    use std::collections::BTreeMap;
+
+    use value::OwnedTargetPath;
+
     use super::Expr;
     use crate::compiler::parser::unescape_string;
     use crate::compiler::query::Query;
-    use std::collections::BTreeMap;
-    use value::OwnedTargetPath;
+    use crate::compiler::{Span, Spanned};
 
     impl From<&str> for Expr {
         fn from(value: &str) -> Self {
@@ -360,9 +413,21 @@ mod expr_convert {
         }
     }
 
+    impl From<i64> for Spanned<Expr> {
+        fn from(value: i64) -> Self {
+            Expr::Integer(value).with(Span::empty())
+        }
+    }
+
     impl From<f64> for Expr {
         fn from(value: f64) -> Self {
             Expr::Float(value)
+        }
+    }
+
+    impl From<&str> for Spanned<Expr> {
+        fn from(value: &str) -> Self {
+            Expr::String(value.into()).with(Span::empty())
         }
     }
 
@@ -374,7 +439,12 @@ mod expr_convert {
 
     impl From<Vec<Expr>> for Expr {
         fn from(array: Vec<Expr>) -> Self {
-            Expr::Array(array)
+            Expr::Array(
+                array
+                    .into_iter()
+                    .map(|expr| expr.with(Span::empty()))
+                    .collect::<Vec<_>>(),
+            )
         }
     }
 
@@ -386,7 +456,12 @@ mod expr_convert {
 
     impl From<BTreeMap<String, Expr>> for Expr {
         fn from(value: BTreeMap<String, Expr>) -> Self {
-            Expr::Object(value)
+            Expr::Object(
+                value
+                    .into_iter()
+                    .map(|(k, v)| (k, v.with(Span::empty())))
+                    .collect::<BTreeMap<String, Spanned<Expr>>>(),
+            )
         }
     }
 }
@@ -534,7 +609,7 @@ impl Compiler<'_> {
                 Token::Identifier(_) | Token::PathField(_) => statements.push(self.parse_assign()?),
 
                 Token::FunctionCall(_name) => {
-                    if let Expr::Call(call) = self.parse_function_call()? {
+                    if let Expr::Call(call) = self.parse_function_call()?.node {
                         statements.push(Statement::Call(call));
                     }
                 }
@@ -578,7 +653,7 @@ impl Compiler<'_> {
                     //
                     // foo is 3
                     let expr = self.parse_expr()?;
-                    statements.push(Statement::Expression(expr))
+                    statements.push(Statement::Expression(expr.node))
                 }
             }
         }
@@ -653,25 +728,20 @@ impl Compiler<'_> {
                         self.expect(Token::Assign)?;
 
                         // it must be a fallible function
-                        let expr = self.parse_function_call()?;
-                        if let Expr::Call(call) = &expr {
-                            if !call.function.type_def().fallible {
-                                // something like "ok, err = get_hostname()" is not allowed
-                                return Err(SyntaxError::FunctionNotFallible {
-                                    function: "todo",
-                                    span,
-                                });
-                            }
-                        } else {
-                            // not function call, maybe "ok, err = 123"
-                            return Err(SyntaxError::InfallibleAssignment { span });
+                        let expr = self.parse_expr()?;
+                        if !expr.type_def().fallible {
+                            return Err(SyntaxError::UnnecessaryErrorAssignment {
+                                span: Span {
+                                    start: span.start,
+                                    end: self.lexer.pos(),
+                                },
+                            });
                         }
 
                         Assignment::Infallible {
                             ok: target,
                             err,
                             expr,
-                            default: Value::Null,
                         }
                     }
 
@@ -679,10 +749,16 @@ impl Compiler<'_> {
                     // a = fallible()?
                     Token::Assign => {
                         let expr = self.parse_expr()?;
-                        if let Expr::Call(call) = &expr {
-                            let fallible = call.function.type_def().fallible;
-                            if fallible {
+                        if expr.type_def().fallible {
+                            if let Expr::Call(_call) = &expr.node {
                                 self.expect(Token::Question)?;
+                            } else {
+                                return Err(SyntaxError::UnhandledFallibleAssignment {
+                                    span: Span {
+                                        start: span.start,
+                                        end: self.lexer.pos(), // todo: fix this
+                                    },
+                                });
                             }
                         }
 
@@ -703,42 +779,41 @@ impl Compiler<'_> {
         }
     }
 
-    fn parse_expr(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         // maybe array or object
         self.parse_expr_or()
     }
 
-    fn parse_expr_or(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_or(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_and()?;
 
         while let Some(result) = self.next_if(|token| Token::Or == token) {
             let _ = result?;
-            expr = Expr::Binary(Binary {
-                lhs: Box::new(expr),
-                rhs: Box::new(self.parse_expr_and()?),
-                op: BinaryOp::Or,
-            })
+
+            let rhs = self.parse_expr_and()?;
+            let span = expr.span.merge(rhs.span);
+            let inner = Binary::new(expr, BinaryOp::Or, rhs).map_err(SyntaxError::Binary)?;
+            expr = Expr::Binary(inner).with(span);
         }
 
         Ok(expr)
     }
 
-    fn parse_expr_and(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_and(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_comparison()?;
 
         while let Some(result) = self.next_if(|token| Token::And == token) {
             let _ = result?;
-            expr = Expr::Binary(Binary {
-                lhs: Box::new(expr),
-                rhs: Box::new(self.parse_expr_comparison()?),
-                op: BinaryOp::And,
-            })
+            let rhs = self.parse_expr_comparison()?;
+            let span = expr.span.merge(rhs.span);
+            let binary = Binary::new(expr, BinaryOp::And, rhs).map_err(SyntaxError::Binary)?;
+            expr = Expr::Binary(binary).with(span);
         }
 
         Ok(expr)
     }
 
-    fn parse_expr_comparison(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_comparison(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_term()?;
 
         while let Some((token, _span)) = self.lexer.peek().transpose()? {
@@ -753,17 +828,16 @@ impl Compiler<'_> {
             };
 
             let _ = self.lexer.next().expect("must valid")?;
-            expr = Expr::Binary(Binary {
-                lhs: Box::new(expr),
-                rhs: Box::new(self.parse_expr_term()?),
-                op,
-            })
+            let rhs = self.parse_expr_term()?;
+            let span = expr.span.merge(rhs.span);
+            let inner = Binary::new(expr, op, rhs).map_err(SyntaxError::Binary)?;
+            expr = Expr::Binary(inner).with(span);
         }
 
         Ok(expr)
     }
 
-    fn parse_expr_term(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_term(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_factor()?;
 
         while let Some((token, _span)) = self.lexer.peek().transpose()? {
@@ -774,17 +848,16 @@ impl Compiler<'_> {
             };
 
             let _ = self.lexer.next();
-            expr = Expr::Binary(Binary {
-                lhs: Box::new(expr),
-                rhs: Box::new(self.parse_expr_factor()?),
-                op,
-            })
+            let rhs = self.parse_expr_factor()?;
+            let span = expr.span.merge(rhs.span);
+            let inner = Binary::new(expr, op, rhs).map_err(SyntaxError::Binary)?;
+            expr = Expr::Binary(inner).with(span);
         }
 
         Ok(expr)
     }
 
-    fn parse_expr_factor(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_factor(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_unary()?;
 
         while let Some((token, _span)) = self.lexer.peek().transpose()? {
@@ -795,19 +868,18 @@ impl Compiler<'_> {
             };
 
             let _ = self.lexer.next();
-            expr = Expr::Binary(Binary {
-                lhs: Box::new(expr),
-                rhs: Box::new(self.parse_expr_unary()?),
-                op,
-            });
+            let rhs = self.parse_expr_unary()?;
+            let span = expr.span.merge(rhs.span);
+            let inner = Binary::new(expr, op, rhs).map_err(SyntaxError::Binary)?;
+            expr = Expr::Binary(inner).with(span);
         }
 
         Ok(expr)
     }
 
-    fn parse_expr_unary(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_unary(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         match self.lexer.peek().transpose()? {
-            Some((token, _span)) => {
+            Some((token, span)) => {
                 let op = match token {
                     Token::Not => UnaryOp::Not,
                     Token::Subtract => UnaryOp::Negate,
@@ -816,43 +888,34 @@ impl Compiler<'_> {
 
                 self.lexer.next();
                 let operand = self.parse_expr_unary()?;
-
-                Ok(match (op, operand) {
-                    // A little optimize
-                    (UnaryOp::Negate, Expr::Float(f)) => Expr::Float(-f),
-                    (UnaryOp::Negate, Expr::Integer(i)) => Expr::Integer(-i),
-                    (UnaryOp::Not, Expr::Boolean(b)) => Expr::Boolean(!b),
-                    (op, operand) => Expr::Unary(Unary {
-                        op,
-                        operand: Box::new(operand),
-                    }),
-                })
+                let span = span.merge(operand.span);
+                let inner = Unary::new(op, operand).map_err(SyntaxError::Unary)?;
+                Ok(Expr::Unary(inner).with(span))
             }
             None => self.parse_expr_exponent(),
         }
     }
 
-    fn parse_expr_exponent(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_exponent(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_primary()?;
 
         while let Some((Token::Exponent, _span)) = self.lexer.peek().transpose()? {
             let _ = self.lexer.next();
 
-            expr = Expr::Binary(Binary {
-                lhs: Box::new(expr),
-                rhs: Box::new(self.parse_expr_exponent()?),
-                op: BinaryOp::Exponent,
-            })
+            let rhs = self.parse_expr_exponent()?;
+            let span = expr.span.merge(rhs.span);
+            let inner = Binary::new(expr, BinaryOp::Exponent, rhs).map_err(SyntaxError::Binary)?;
+            expr = Expr::Binary(inner).with(span);
         }
 
         Ok(expr)
     }
 
-    fn parse_expr_primary(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_expr_primary(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         match self.lexer.peek().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
-                    let actor = Expr::Identifier(s.to_string());
+                    let actor = Expr::Identifier(s.to_string()).with(span);
 
                     self.lexer.next();
 
@@ -899,32 +962,32 @@ impl Compiler<'_> {
 
                     let _ = self.lexer.next();
 
-                    Ok(Expr::Query(query))
+                    Ok(Expr::Query(query).with(span))
                 }
                 // Simple literals
                 Token::Integer(i) => {
                     let _ = self.lexer.next();
-                    Ok(Expr::Integer(i))
+                    Ok(Expr::Integer(i).with(span))
                 }
                 Token::Float(f) => {
                     let _ = self.lexer.next();
-                    Ok(Expr::Float(f))
+                    Ok(Expr::Float(f).with(span))
                 }
                 Token::String(s) => {
                     let _ = self.lexer.next();
-                    Ok(Expr::String(unescape_string(s)))
+                    Ok(Expr::String(unescape_string(s)).with(span))
                 }
                 Token::Null => {
                     let _ = self.lexer.next();
-                    Ok(Expr::Null)
+                    Ok(Expr::Null.with(span))
                 }
                 Token::True => {
                     let _ = self.lexer.next();
-                    Ok(Expr::Boolean(true))
+                    Ok(Expr::Boolean(true).with(span))
                 }
                 Token::False => {
                     let _ = self.lexer.next();
-                    Ok(Expr::Boolean(false))
+                    Ok(Expr::Boolean(false).with(span))
                 }
                 // array
                 Token::LeftBracket => self.parse_array(),
@@ -947,7 +1010,7 @@ impl Compiler<'_> {
         }
     }
 
-    fn parse_function_call(&mut self) -> Result<Expr, SyntaxError> {
+    fn parse_function_call(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let (token, mut span) = self.lexer.next().transpose()?.expect("must exist");
         let name = if let Token::FunctionCall(name) = token {
             name
@@ -980,7 +1043,14 @@ impl Compiler<'_> {
                         let start = self.lexer.pos();
                         let argument = self.parse_expr()?;
                         let end = self.lexer.pos();
-                        if let Expr::Identifier(s) = &argument {
+
+                        if argument.type_def().fallible {
+                            return Err(SyntaxError::FallibleArgument {
+                                span: Span { start, end },
+                            });
+                        }
+
+                        if let Expr::Identifier(s) = &argument.node {
                             self.variables.iter().find(|var| &var.name == s).ok_or(
                                 SyntaxError::UndefinedVariable {
                                     name: s.to_string(),
@@ -991,7 +1061,7 @@ impl Compiler<'_> {
                             self.register_variable(s.to_string());
                         }
 
-                        arguments.push(Spanned::new(argument, Span { start, end }))?;
+                        arguments.push(argument)?;
                     }
                 },
                 None => return Err(SyntaxError::UnexpectedEof),
@@ -1054,10 +1124,10 @@ impl Compiler<'_> {
 
         let compiled = func.compile(FunctionCompileContext { span }, arguments)?;
 
-        Ok(Expr::Call(compiled))
+        Ok(Expr::Call(compiled).with(span))
     }
 
-    fn parse_expr_inner(&mut self, actor: Expr) -> Result<Expr, SyntaxError> {
+    fn parse_expr_inner(&mut self, actor: Spanned<Expr>) -> Result<Spanned<Expr>, SyntaxError> {
         match self.lexer.peek().transpose()? {
             Some((token, _span)) => {
                 match token {
@@ -1094,9 +1164,18 @@ impl Compiler<'_> {
 
     fn parse_if(&mut self) -> Result<Statement, SyntaxError> {
         // in case
-        self.expect(Token::If)?;
+        let if_span = self.expect(Token::If)?;
 
         let condition = self.parse_expr()?;
+        if condition.type_def().fallible {
+            return Err(SyntaxError::FalliblePrediction {
+                span: Span {
+                    start: if_span.end,
+                    end: self.lexer.pos(),
+                },
+            });
+        }
+
         let start_span = self.expect(Token::LeftBrace)?;
         let then_block = self.parse_block()?;
         let end_span = self.expect(Token::RightBrace)?;
@@ -1180,6 +1259,19 @@ impl Compiler<'_> {
         self.expect(Token::In)?;
 
         let iterator = self.parse_expr()?;
+        let td = iterator.type_def();
+        if td.fallible {
+            return Err(SyntaxError::FallibleIterator {
+                span: iterator.span,
+            });
+        }
+        if !td.kind.contains(Kind::ARRAY) && !td.kind.contains(Kind::OBJECT) {
+            return Err(SyntaxError::InvalidType {
+                want: "array or object".to_string(),
+                got: td.kind.to_string(),
+                span: iterator.span,
+            });
+        }
 
         let start_span = self.expect(Token::LeftBrace)?;
 
@@ -1207,15 +1299,16 @@ impl Compiler<'_> {
         }))
     }
 
-    fn parse_array(&mut self) -> Result<Expr, SyntaxError> {
-        self.expect(Token::LeftBracket)?;
+    fn parse_array(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
+        let mut arr_span = self.expect(Token::LeftBracket)?;
 
         let mut array = vec![];
         loop {
             match self.lexer.peek().transpose()? {
-                Some((token, _span)) => match token {
+                Some((token, span)) => match token {
                     Token::RightBracket => {
                         let _ = self.lexer.next();
+                        arr_span = arr_span.merge(span);
                         break;
                     }
                     Token::Comma => {
@@ -1230,11 +1323,11 @@ impl Compiler<'_> {
             }
         }
 
-        Ok(Expr::Array(array))
+        Ok(Expr::Array(array).with(arr_span))
     }
 
-    fn parse_object(&mut self) -> Result<Expr, SyntaxError> {
-        self.expect(Token::LeftBrace)?;
+    fn parse_object(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
+        let mut obj_span = self.expect(Token::LeftBrace)?;
 
         let mut object = BTreeMap::new();
         loop {
@@ -1271,6 +1364,7 @@ impl Compiler<'_> {
                     }
                     Token::RightBrace => {
                         let _ = self.lexer.next();
+                        obj_span = obj_span.merge(span);
                         break;
                     }
                     _ => {
@@ -1285,7 +1379,7 @@ impl Compiler<'_> {
             }
         }
 
-        Ok(Expr::Object(object))
+        Ok(Expr::Object(object).with(obj_span))
     }
 
     fn expect(&mut self, want: Token<&str>) -> Result<Span, SyntaxError> {

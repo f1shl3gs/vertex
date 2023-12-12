@@ -3,12 +3,12 @@ use value::Value;
 use super::block::Block;
 use super::parser::Expr;
 use super::ExpressionError;
-use crate::compiler::{Expression, Kind, Span, TypeDef, ValueKind};
+use crate::compiler::{Expression, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 
 pub struct IfStatement {
     /// The condition for the if statement.
-    pub condition: Expr,
+    pub condition: Spanned<Expr>,
 
     /// The block of statements to be ran if the condition is met.
     pub then_block: Block,
@@ -25,7 +25,7 @@ impl Expression for IfStatement {
                 return Err(ExpressionError::UnexpectedType {
                     want: Kind::BOOLEAN,
                     got: value.kind(),
-                    span: Span { start: 0, end: 0 },
+                    span: self.condition.span,
                 })
             }
         };

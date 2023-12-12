@@ -4,7 +4,7 @@ use super::block::Block;
 use super::expression::Expression;
 use super::parser::Expr;
 use super::{ExpressionError, Kind, ValueKind};
-use crate::compiler::{Span, TypeDef};
+use crate::compiler::{Span, Spanned, TypeDef};
 use crate::Context;
 
 /// The `key/value` is temporary defined(insert when start, and remove when end),
@@ -15,7 +15,7 @@ pub struct ForStatement {
     /// The value to set to the value of each item being iterated.
     pub value: String,
     /// The expression to evaluate to get the iterator.
-    pub iterator: Expr,
+    pub iterator: Spanned<Expr>,
     /// The block of statements to be ran every item.
     pub block: Block,
 }

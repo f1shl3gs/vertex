@@ -1,9 +1,53 @@
+use std::error::Error;
+use std::fmt::{Display, Formatter};
+
 use value::Value;
 
 use super::parser::Expr;
 use super::{Expression, ExpressionError, Kind, TypeDef, ValueKind};
-use crate::compiler::Span;
+use crate::compiler::{Span, Spanned};
+use crate::diagnostic::{DiagnosticMessage, Label};
 use crate::Context;
+
+#[derive(Debug)]
+enum Variant {
+    NonNumericNegate,
+    NonBoolean,
+    // maybe implement this?
+    // FallibleOperand,
+}
+
+#[derive(Debug)]
+pub struct UnaryError {
+    variant: Variant,
+    span: Span,
+}
+
+impl Display for UnaryError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        use Variant::*;
+
+        match self.variant {
+            NonNumericNegate => f.write_str("non numeric negate"),
+            NonBoolean => f.write_str("non boolean negate"),
+        }
+    }
+}
+
+impl Error for UnaryError {}
+
+impl DiagnosticMessage for UnaryError {
+    fn labels(&self) -> Vec<Label> {
+        match self.variant {
+            Variant::NonNumericNegate => {
+                vec![Label::new("only integer or float can be negate", self.span)]
+            }
+            Variant::NonBoolean => {
+                vec![Label::new("only boolean allowed", self.span)]
+            }
+        }
+    }
+}
 
 pub enum UnaryOp {
     // Arithmetic
@@ -14,7 +58,36 @@ pub enum UnaryOp {
 
 pub struct Unary {
     pub op: UnaryOp,
-    pub operand: Box<Expr>,
+    pub operand: Box<Spanned<Expr>>,
+}
+
+impl Unary {
+    pub fn new(op: UnaryOp, operand: Spanned<Expr>) -> Result<Unary, UnaryError> {
+        let kind = operand.type_def().kind;
+        match op {
+            UnaryOp::Negate => {
+                if !kind.intersects(Kind::NUMERIC) {
+                    return Err(UnaryError {
+                        variant: Variant::NonNumericNegate,
+                        span: operand.span,
+                    });
+                }
+            }
+            UnaryOp::Not => {
+                if !kind.intersects(Kind::BOOLEAN) {
+                    return Err(UnaryError {
+                        variant: Variant::NonBoolean,
+                        span: operand.span,
+                    });
+                }
+            }
+        }
+
+        Ok(Unary {
+            op,
+            operand: Box::new(operand),
+        })
+    }
 }
 
 impl Expression for Unary {
@@ -29,7 +102,7 @@ impl Expression for Unary {
                     Err(ExpressionError::UnexpectedType {
                         want: Kind::BOOLEAN,
                         got: value.kind(),
-                        span: Span { start: 0, end: 0 },
+                        span: self.operand.span,
                     })
                 }
             }
@@ -39,7 +112,7 @@ impl Expression for Unary {
                 _ => Err(ExpressionError::UnexpectedType {
                     want: Kind::FLOAT | Kind::INTEGER,
                     got: value.kind(),
-                    span: Span { start: 0, end: 0 },
+                    span: self.operand.span,
                 }),
             },
         }

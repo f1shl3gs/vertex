@@ -511,6 +511,7 @@ impl<'input> Lexer<'input> {
             b'=' => {
                 let start = self.pos;
                 self.pos += 1;
+
                 if self.pos < self.text.len() && self.text[self.pos] == b'=' {
                     self.pos += 1;
                     return Some(Ok((
@@ -533,6 +534,8 @@ impl<'input> Lexer<'input> {
 
             b'!' => {
                 let start = self.pos;
+                self.pos += 1;
+
                 if self.pos < self.text.len() && self.text[self.pos] == b'=' {
                     self.pos += 1;
                     return Some(Ok((
@@ -959,5 +962,13 @@ mod tests {
                 (Token::RightBrace, 4..5),
             ],
         )])
+    }
+
+    #[test]
+    fn not() {
+        assert_lex([(
+            r#"!!!"#,
+            vec![(Token::Not, 0..1), (Token::Not, 1..2), (Token::Not, 2..3)],
+        )]);
     }
 }
