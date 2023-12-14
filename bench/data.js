@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702525412350,
+  "lastUpdate": 1702525413172,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "12e6f224cd844ba0492e404451a7380e1861b76d",
-          "message": "deps: bump regex to 1.10.1 (#1347)\n\n* bump regex to 1.10.1",
-          "timestamp": "2023-10-15T01:39:13+08:00",
-          "tree_id": "b4c0a25059ae2ec2d1017999a5b194448ce0e32b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/12e6f224cd844ba0492e404451a7380e1861b76d"
-        },
-        "date": 1697305417451,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 68.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 222.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 558.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1544.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bac0ee6255a3d7aaa13aeba3549c581adffb8b5c",
           "message": "unify tag keys (#1346)",
           "timestamp": "2023-10-15T01:54:47+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 695.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5647b41eab9fdccd6f05f62753c4c099c2da2329",
+          "message": "bump crossbeam-utils to 0.8.17 (#1471)",
+          "timestamp": "2023-12-14T11:40:39+08:00",
+          "tree_id": "ffb0b27553b224a8f69b7f596c96867e68102df1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5647b41eab9fdccd6f05f62753c4c099c2da2329"
+        },
+        "date": 1702525398976,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 32.615,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 152.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 674.56,
             "unit": "ns/op"
           }
         ]
