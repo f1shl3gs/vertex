@@ -74,7 +74,7 @@ impl Kind {
     pub const UNDEFINED: Kind = Kind(1 << 9);
 
     pub const NUMERIC: Kind = Kind(1 << 2 | 1 << 3);
-    pub const ARRAY_OR_OBJECT: Kind = Kind(1 << 5 | 1 << 6);
+    pub const CONTAINER: Kind = Kind(1 << 5 | 1 << 6);
     pub const ARRAY_BYTES_OBJECT: Kind = Kind(1 << 1 | 1 << 5 | 1 << 6);
     pub const ARRAY_OR_BYTES: Kind = Kind(1 << 1 | 1 << 6);
     pub const BYTES_OR_INTEGER: Kind = Kind(1 << 1 | 1 << 2);

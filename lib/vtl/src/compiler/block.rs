@@ -18,6 +18,11 @@ impl Block {
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
+
+    #[cfg(test)]
+    pub fn inner(&self) -> &[Statement] {
+        &self.0
+    }
 }
 
 impl Expression for Block {

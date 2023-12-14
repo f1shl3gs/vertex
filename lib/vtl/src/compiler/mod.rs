@@ -13,7 +13,9 @@ mod parser;
 mod query;
 mod span;
 mod statement;
-// mod template;
+// mod literal;
+mod levenshtein;
+mod template;
 mod type_def;
 mod unary;
 
@@ -26,6 +28,7 @@ pub use expression::{Expression, ExpressionError};
 pub use kind::{Kind, ValueKind};
 pub use parser::{Compiler, SyntaxError, Variable};
 pub use span::{Span, Spanned};
+pub use template::Template;
 pub use type_def::TypeDef;
 
 use crate::context::Context;

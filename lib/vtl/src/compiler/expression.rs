@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 use value::Value;
 
 use super::{BinaryError, Kind, Span};
-use crate::compiler::TypeDef;
+use crate::compiler::{TypeDef, Variable};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 
@@ -93,4 +93,8 @@ pub trait Expression {
     /// Consider calling `type_info` instead if you want to capture changes in the type
     /// state from side-effects.
     fn type_def(&self) -> TypeDef;
+
+    fn type_def_v2(&self, _variables: &[Variable]) -> TypeDef {
+        self.type_def()
+    }
 }

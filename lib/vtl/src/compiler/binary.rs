@@ -70,7 +70,7 @@ impl From<BinaryError> for ExpressionError {
 
 impl DiagnosticMessage for BinaryError {
     fn labels(&self) -> Vec<Label> {
-        todo!()
+        vec![]
     }
 }
 
@@ -122,22 +122,80 @@ pub struct Binary {
 }
 
 impl Binary {
-    pub fn new(
+    pub fn compile(
         lhs: Spanned<Expr>,
         op: BinaryOp,
         rhs: Spanned<Expr>,
-    ) -> Result<Binary, BinaryError> {
-        Ok(Binary {
-            lhs: Box::new(lhs),
-            rhs: Box::new(rhs),
-            op,
-        })
+    ) -> Result<Expr, BinaryError> {
+        // optimize
+        let lhs_span = lhs.span;
+        let rhs_span = rhs.span;
+        let expr = match (lhs.node, op, rhs.node) {
+            // float op float
+            (Expr::Float(a), BinaryOp::Add, Expr::Float(b)) => Expr::Float(a + b),
+            (Expr::Float(a), BinaryOp::Subtract, Expr::Float(b)) => Expr::Float(a - b),
+            (Expr::Float(a), BinaryOp::Multiply, Expr::Float(b)) => Expr::Float(a * b),
+            (Expr::Float(a), BinaryOp::Divide, Expr::Float(b)) => {
+                if b == 0.0 {
+                    return Err(BinaryError::DivideZero);
+                }
+
+                Expr::Float(a / b)
+            }
+
+            // integer op integer
+            (Expr::Integer(a), BinaryOp::Add, Expr::Integer(b)) => Expr::Integer(a + b),
+            (Expr::Integer(a), BinaryOp::Subtract, Expr::Integer(b)) => Expr::Integer(a - b),
+            (Expr::Integer(a), BinaryOp::Multiply, Expr::Integer(b)) => Expr::Integer(a * b),
+            (Expr::Integer(a), BinaryOp::Divide, Expr::Integer(b)) => {
+                if b == 0 {
+                    return Err(BinaryError::DivideZero);
+                }
+
+                Expr::Float(a as f64 / b as f64)
+            }
+
+            // integer op float
+            (Expr::Integer(a), BinaryOp::Add, Expr::Float(b)) => Expr::Float(a as f64 + b),
+            (Expr::Integer(a), BinaryOp::Subtract, Expr::Float(b)) => Expr::Float(a as f64 - b),
+            (Expr::Integer(a), BinaryOp::Multiply, Expr::Float(b)) => Expr::Float(a as f64 * b),
+            (Expr::Integer(a), BinaryOp::Divide, Expr::Float(b)) => {
+                if b == 0.0 {
+                    return Err(BinaryError::DivideZero);
+                }
+
+                Expr::Float(a as f64 / b)
+            }
+
+            // float op integer
+            (Expr::Float(a), BinaryOp::Add, Expr::Integer(b)) => Expr::Float(a + b as f64),
+            (Expr::Float(a), BinaryOp::Subtract, Expr::Integer(b)) => Expr::Float(a - b as f64),
+            (Expr::Float(a), BinaryOp::Multiply, Expr::Integer(b)) => Expr::Float(a * b as f64),
+            (Expr::Float(a), BinaryOp::Divide, Expr::Integer(b)) => {
+                if b == 0 {
+                    return Err(BinaryError::DivideZero);
+                }
+
+                Expr::Float(a / b as f64)
+            }
+
+            // string + string
+            (Expr::String(a), BinaryOp::Add, Expr::String(b)) => Expr::String(a + &b),
+
+            (lhs, op, rhs) => Expr::Binary(Binary {
+                lhs: Box::new(lhs.with(lhs_span)),
+                rhs: Box::new(rhs.with(rhs_span)),
+                op,
+            }),
+        };
+
+        Ok(expr)
     }
 }
 
 impl Expression for Binary {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        // optimize
+        // optimize for `&&` or `||`
         match self.op {
             BinaryOp::And => {
                 let lhs = self.lhs.resolve(cx)?;
@@ -446,9 +504,14 @@ impl Expression for Binary {
                 // division is infallible if the rhs is a literal normal
                 // float or integer.
 
-                // todo
+                let fallible = match &self.rhs.node {
+                    Expr::Float(f) => *f != 0.0,
+                    Expr::Integer(i) => *i != 0,
+                    _ => true,
+                };
+
                 TypeDef {
-                    fallible: true,
+                    fallible,
                     kind: Kind::NUMERIC,
                 }
             }
@@ -460,5 +523,32 @@ impl Expression for Binary {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::compiler::statement::Statement;
+    use crate::compiler::Compiler;
+
+    fn assert_optimize(input: &str, want: impl Into<Expr>) {
+        let program = Compiler::compile(input).unwrap();
+        let statements = program.statements.inner();
+
+        match &statements[0] {
+            Statement::Expression(got) => {
+                assert_eq!(got.to_string(), want.into().to_string());
+            }
+            _ => panic!(""),
+        }
+    }
+
+    #[test]
+    fn optimize() {
+        assert_optimize("1 + 1", 2);
+        assert_optimize("1 + 2 + 3", 6);
+        assert_optimize("(1 + 2) / 3", 1.0);
+        assert_optimize("1 / 2", 0.5)
     }
 }

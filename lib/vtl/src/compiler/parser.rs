@@ -4,24 +4,22 @@ use std::fmt::{Debug, Display, Formatter};
 
 use value::{parse_target_path, parse_value_path, PathParseError, Value};
 
-use super::assignment::Assignment;
-use super::assignment::AssignmentTarget;
+use super::assignment::{Assignment, AssignmentTarget};
 use super::binary::{Binary, BinaryOp};
 use super::block::Block;
 use super::for_statement::ForStatement;
-use super::function::{builtin_functions, Function, FunctionCompileContext};
+use super::function::{builtin_functions, ArgumentList, Function, FunctionCompileContext};
 use super::function_call::FunctionCall;
 use super::if_statement::IfStatement;
+use super::levenshtein::distance;
 use super::lex::{LexError, Lexer, Token};
+use super::query::Query;
 use super::statement::Statement;
-use super::unary::{Unary, UnaryOp};
+use super::unary::{Unary, UnaryError, UnaryOp};
 use super::Program;
+use super::{BinaryError, Expression, TypeDef};
 use super::{ExpressionError, Kind};
 use super::{Span, Spanned};
-use crate::compiler::function::ArgumentList;
-use crate::compiler::query::Query;
-use crate::compiler::unary::UnaryError;
-use crate::compiler::{BinaryError, Expression, TypeDef};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 
@@ -39,6 +37,10 @@ pub enum SyntaxError {
         span: Span,
     },
 
+    InvalidTemplate {
+        span: Span,
+    },
+
     //
     InvalidType {
         want: String,
@@ -46,10 +48,16 @@ pub enum SyntaxError {
         span: Span,
     },
 
-    // Fallible things
+    // If
+    NonBooleanPrediction {
+        got: Kind,
+        span: Span,
+    },
     FalliblePrediction {
         span: Span,
     },
+
+    // Fallible things
     FallibleArgument {
         span: Span,
     },
@@ -60,7 +68,10 @@ pub enum SyntaxError {
     // Unary
     Unary(UnaryError),
 
-    Binary(BinaryError),
+    Binary {
+        err: BinaryError,
+        span: Span,
+    },
 
     // Path
     InvalidPath {
@@ -79,6 +90,7 @@ pub enum SyntaxError {
     },
     UndefinedVariable {
         name: String,
+        maybe: Option<String>,
         span: Span,
     },
 
@@ -95,6 +107,7 @@ pub enum SyntaxError {
     // Functions
     UndefinedFunction {
         name: String,
+        maybe: Option<String>,
         span: Span,
     },
     FunctionArgumentsArityMismatch {
@@ -134,15 +147,20 @@ impl Display for SyntaxError {
                 Some(want) => write!(f, "unexpected token: {}, want: {}", got, want),
                 None => write!(f, "unexpected token: \"{}\"", got),
             },
-            SyntaxError::UndefinedVariable { name, .. } => {
-                write!(f, "undefined variable {}", name)
-            }
+            SyntaxError::UndefinedVariable { name, maybe, .. } => match maybe {
+                Some(maybe) => write!(
+                    f,
+                    "undefined variable \"{}\", do you mean \"{}\"?",
+                    name, maybe
+                ),
+                None => write!(f, "undefined variable {}", name),
+            },
             SyntaxError::UndefinedFunction { name, .. } => {
                 write!(f, "unknown function {}", name)
             }
 
             SyntaxError::Unary(err) => Display::fmt(err, f),
-            SyntaxError::Binary(err) => Display::fmt(err, f),
+            SyntaxError::Binary { err, .. } => Display::fmt(err, f),
 
             // Fallible
             SyntaxError::FalliblePrediction { .. } => f.write_str("fallible prediction"),
@@ -195,6 +213,9 @@ impl Display for SyntaxError {
 
             SyntaxError::InvalidType { .. } => f.write_str("invalid type"),
             SyntaxError::FallibleIterator { .. } => f.write_str("fallible iterator"),
+            SyntaxError::NonBooleanPrediction { .. } => f.write_str("non-boolean prediction"),
+
+            SyntaxError::InvalidTemplate { .. } => f.write_str("invalid template"),
         }
     }
 }
@@ -242,8 +263,15 @@ impl DiagnosticMessage for SyntaxError {
                 // todo:
                 vec![Label::new("variable already defined", span)]
             }
-            SyntaxError::UndefinedVariable { span, .. } => {
-                vec![Label::new("variable must be defined before use", span)]
+            SyntaxError::UndefinedVariable { span, maybe, .. } => {
+                let msg = match maybe {
+                    Some(maybe) => {
+                        format!("undefined variable, do you mean \"{}\"?", maybe)
+                    }
+                    None => "undefined variable".to_string(),
+                };
+
+                vec![Label::new(msg, span)]
             }
             SyntaxError::UnnecessaryErrorAssignment { span } => {
                 vec![Label::new("this assignment is not necessary", span)]
@@ -251,8 +279,14 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::UnhandledFallibleAssignment { span } => {
                 vec![Label::new("this expression is fallible", span)]
             }
-            SyntaxError::UndefinedFunction { span, .. } => {
-                vec![Label::new("undefined function used", span)]
+            SyntaxError::UndefinedFunction { maybe, span, .. } => {
+                let msg = match maybe {
+                    Some(maybe) => {
+                        format!("undefined function, do you mean \"{}\"?", maybe)
+                    }
+                    None => "undefined function".to_string(),
+                };
+                vec![Label::new(msg, span)]
             }
             SyntaxError::FunctionArgumentsArityMismatch {
                 function,
@@ -287,13 +321,23 @@ impl DiagnosticMessage for SyntaxError {
             }
 
             SyntaxError::Unary(err) => err.labels(),
-            SyntaxError::Binary(err) => err.labels(),
+            SyntaxError::Binary { err, .. } => err.labels(),
 
             SyntaxError::InvalidType { want, got, span } => {
                 vec![Label::new(format!("want: {}, got: {}", want, got), span)]
             }
             SyntaxError::FallibleIterator { span } => {
                 vec![Label::new("fallible iterator is not allowed", span)]
+            }
+
+            SyntaxError::NonBooleanPrediction { got, span } => {
+                vec![Label::new(
+                    format!("prediction must be resolved to boolean, instead of {}", got),
+                    span,
+                )]
+            }
+            SyntaxError::InvalidTemplate { span } => {
+                vec![Label::new("unescape template failed", span)]
             }
         }
     }
@@ -302,7 +346,8 @@ impl DiagnosticMessage for SyntaxError {
 pub struct Variable {
     name: String,
     value: Value,
-    // writes: usize,
+    // maybe we should track usage
+    // reads: usize,
 }
 
 pub enum Expr {
@@ -317,9 +362,8 @@ pub enum Expr {
     /// A literal string.
     String(String),
 
-    // TODO: Add timestamp!?
     /// A reference to a stored value, an identifier.
-    Identifier(String),
+    Ident(String),
     /// A query
     ///
     /// ".", "%", ".foo", "%foo" or "foo.bar"
@@ -356,7 +400,7 @@ impl Display for Expr {
             Expr::Integer(_) => "integer",
             Expr::Float(_) => "float",
             Expr::String(_) => "string",
-            Expr::Identifier(_) => "identifier",
+            Expr::Ident(_) => "identifier",
             Expr::Query(_) => "query",
             Expr::Unary(_) => "unary",
             Expr::Binary(_) => "binary",
@@ -370,7 +414,7 @@ impl Display for Expr {
 }
 
 impl Expr {
-    fn with(self, span: Span) -> Spanned<Expr> {
+    pub fn with(self, span: Span) -> Spanned<Expr> {
         Spanned { node: self, span }
     }
 
@@ -474,7 +518,7 @@ impl Expression for Expr {
             Expr::Integer(i) => Ok(Value::Integer(*i)),
             Expr::Float(f) => Ok(Value::Float(*f)),
             Expr::String(s) => Ok(Value::from(s.as_str())),
-            Expr::Identifier(s) => {
+            Expr::Ident(s) => {
                 let value = cx
                     .variables
                     .get(s)
@@ -509,7 +553,7 @@ impl Expression for Expr {
 
     fn type_def(&self) -> TypeDef {
         match self {
-            Expr::Identifier(_) => {
+            Expr::Ident(_) => {
                 // TODO: fix this
                 Kind::ANY.into()
             }
@@ -685,8 +729,16 @@ impl Compiler<'_> {
                             let exists =
                                 self.variables.iter().any(|variable| variable.name == name);
                             if !exists {
+                                let maybe = self
+                                    .variables
+                                    .iter()
+                                    .map(|var| (&var.name, distance(&var.name, name)))
+                                    .min_by_key(|(_var, score)| *score)
+                                    .map(|(var, _score)| var.to_string());
+
                                 return Err(SyntaxError::UndefinedVariable {
                                     name: name.to_string(),
+                                    maybe,
                                     span,
                                 });
                             }
@@ -727,14 +779,10 @@ impl Compiler<'_> {
 
                         self.expect(Token::Assign)?;
 
-                        // it must be a fallible function
                         let expr = self.parse_expr()?;
                         if !expr.type_def().fallible {
                             return Err(SyntaxError::UnnecessaryErrorAssignment {
-                                span: Span {
-                                    start: span.start,
-                                    end: self.lexer.pos(),
-                                },
+                                span: expr.span,
                             });
                         }
 
@@ -754,10 +802,7 @@ impl Compiler<'_> {
                                 self.expect(Token::Question)?;
                             } else {
                                 return Err(SyntaxError::UnhandledFallibleAssignment {
-                                    span: Span {
-                                        start: span.start,
-                                        end: self.lexer.pos(), // todo: fix this
-                                    },
+                                    span: expr.span,
                                 });
                             }
                         }
@@ -787,13 +832,18 @@ impl Compiler<'_> {
     fn parse_expr_or(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_and()?;
 
-        while let Some(result) = self.next_if(|token| Token::Or == token) {
-            let _ = result?;
+        while let Some((token, _span)) = self.lexer.peek().transpose()? {
+            if let Token::Or = token {
+                let _ = self.lexer.next();
 
-            let rhs = self.parse_expr_and()?;
-            let span = expr.span.merge(rhs.span);
-            let inner = Binary::new(expr, BinaryOp::Or, rhs).map_err(SyntaxError::Binary)?;
-            expr = Expr::Binary(inner).with(span);
+                let rhs = self.parse_expr_and()?;
+                let span = expr.span.merge(rhs.span);
+                expr = Binary::compile(expr, BinaryOp::Or, rhs)
+                    .map_err(|err| SyntaxError::Binary { err, span })?
+                    .with(span);
+            } else {
+                break;
+            }
         }
 
         Ok(expr)
@@ -802,12 +852,18 @@ impl Compiler<'_> {
     fn parse_expr_and(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_comparison()?;
 
-        while let Some(result) = self.next_if(|token| Token::And == token) {
-            let _ = result?;
-            let rhs = self.parse_expr_comparison()?;
-            let span = expr.span.merge(rhs.span);
-            let binary = Binary::new(expr, BinaryOp::And, rhs).map_err(SyntaxError::Binary)?;
-            expr = Expr::Binary(binary).with(span);
+        while let Some((token, _span)) = self.lexer.peek().transpose()? {
+            if let Token::And = token {
+                let _ = self.lexer.next();
+
+                let rhs = self.parse_expr_comparison()?;
+                let span = expr.span.merge(rhs.span);
+                expr = Binary::compile(expr, BinaryOp::And, rhs)
+                    .map_err(|err| SyntaxError::Binary { err, span })?
+                    .with(span);
+            } else {
+                break;
+            }
         }
 
         Ok(expr)
@@ -830,8 +886,9 @@ impl Compiler<'_> {
             let _ = self.lexer.next().expect("must valid")?;
             let rhs = self.parse_expr_term()?;
             let span = expr.span.merge(rhs.span);
-            let inner = Binary::new(expr, op, rhs).map_err(SyntaxError::Binary)?;
-            expr = Expr::Binary(inner).with(span);
+            expr = Binary::compile(expr, op, rhs)
+                .map_err(|err| SyntaxError::Binary { err, span })?
+                .with(span);
         }
 
         Ok(expr)
@@ -850,8 +907,9 @@ impl Compiler<'_> {
             let _ = self.lexer.next();
             let rhs = self.parse_expr_factor()?;
             let span = expr.span.merge(rhs.span);
-            let inner = Binary::new(expr, op, rhs).map_err(SyntaxError::Binary)?;
-            expr = Expr::Binary(inner).with(span);
+            expr = Binary::compile(expr, op, rhs)
+                .map_err(|err| SyntaxError::Binary { err, span })?
+                .with(span);
         }
 
         Ok(expr)
@@ -870,8 +928,9 @@ impl Compiler<'_> {
             let _ = self.lexer.next();
             let rhs = self.parse_expr_unary()?;
             let span = expr.span.merge(rhs.span);
-            let inner = Binary::new(expr, op, rhs).map_err(SyntaxError::Binary)?;
-            expr = Expr::Binary(inner).with(span);
+            expr = Binary::compile(expr, op, rhs)
+                .map_err(|err| SyntaxError::Binary { err, span })?
+                .with(span);
         }
 
         Ok(expr)
@@ -889,8 +948,10 @@ impl Compiler<'_> {
                 self.lexer.next();
                 let operand = self.parse_expr_unary()?;
                 let span = span.merge(operand.span);
-                let inner = Unary::new(op, operand).map_err(SyntaxError::Unary)?;
-                Ok(Expr::Unary(inner).with(span))
+                let expr = Unary::compile(op, operand)
+                    .map_err(SyntaxError::Unary)?
+                    .with(span);
+                Ok(expr)
             }
             None => self.parse_expr_exponent(),
         }
@@ -904,8 +965,9 @@ impl Compiler<'_> {
 
             let rhs = self.parse_expr_exponent()?;
             let span = expr.span.merge(rhs.span);
-            let inner = Binary::new(expr, BinaryOp::Exponent, rhs).map_err(SyntaxError::Binary)?;
-            expr = Expr::Binary(inner).with(span);
+            expr = Binary::compile(expr, BinaryOp::Exponent, rhs)
+                .map_err(|err| SyntaxError::Binary { err, span })?
+                .with(span);
         }
 
         Ok(expr)
@@ -915,7 +977,7 @@ impl Compiler<'_> {
         match self.lexer.peek().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
-                    let actor = Expr::Identifier(s.to_string()).with(span);
+                    let actor = Expr::Ident(s.to_string()).with(span);
 
                     self.lexer.next();
 
@@ -938,8 +1000,16 @@ impl Compiler<'_> {
                                 let exists =
                                     self.variables.iter().any(|variable| variable.name == name);
                                 if !exists {
+                                    let maybe = self
+                                        .variables
+                                        .iter()
+                                        .map(|var| (&var.name, distance(&var.name, name)))
+                                        .min_by_key(|(_var, score)| *score)
+                                        .map(|(var, _score)| var.to_string());
+
                                     return Err(SyntaxError::UndefinedVariable {
                                         name: name.to_string(),
+                                        maybe,
                                         span,
                                     });
                                 }
@@ -1025,9 +1095,19 @@ impl Compiler<'_> {
             .iter()
             .find(|func| func.identifier() == name)
             .map(|func| (func.identifier(), func.parameters()))
-            .ok_or(SyntaxError::UndefinedFunction {
-                name: name.to_string(),
-                span,
+            .ok_or_else(|| {
+                let maybe = self
+                    .functions
+                    .iter()
+                    .map(|func| (func.identifier(), distance(func.identifier(), name)))
+                    .min_by_key(|(_var, score)| *score)
+                    .map(|(var, _score)| var.to_string());
+
+                SyntaxError::UndefinedFunction {
+                    name: name.to_string(),
+                    maybe,
+                    span,
+                }
             })?;
         let mut arguments = ArgumentList::new(name, parameters);
 
@@ -1050,13 +1130,22 @@ impl Compiler<'_> {
                             });
                         }
 
-                        if let Expr::Identifier(s) = &argument.node {
-                            self.variables.iter().find(|var| &var.name == s).ok_or(
-                                SyntaxError::UndefinedVariable {
+                        if let Expr::Ident(s) = &argument.node {
+                            let exists = self.variables.iter().any(|var| &var.name == s);
+                            if !exists {
+                                let maybe = self
+                                    .variables
+                                    .iter()
+                                    .map(|var| (&var.name, distance(&var.name, name)))
+                                    .min_by_key(|(_var, score)| *score)
+                                    .map(|(var, _score)| var.to_string());
+
+                                return Err(SyntaxError::UndefinedVariable {
                                     name: s.to_string(),
+                                    maybe,
                                     span,
-                                },
-                            )?;
+                                });
+                            }
 
                             self.register_variable(s.to_string());
                         }
@@ -1096,9 +1185,19 @@ impl Compiler<'_> {
             .functions
             .iter()
             .find(|func| func.identifier() == name)
-            .ok_or(SyntaxError::UndefinedFunction {
-                name: name.to_string(),
-                span,
+            .ok_or_else(|| {
+                let maybe = self
+                    .functions
+                    .iter()
+                    .map(|func| (func.identifier(), distance(func.identifier(), name)))
+                    .min_by_key(|(_var, score)| *score)
+                    .map(|(var, _score)| var.to_string());
+
+                SyntaxError::UndefinedFunction {
+                    name: name.to_string(),
+                    maybe,
+                    span,
+                }
             })?;
 
         // Check function arity
@@ -1163,16 +1262,19 @@ impl Compiler<'_> {
     }
 
     fn parse_if(&mut self) -> Result<Statement, SyntaxError> {
-        // in case
-        let if_span = self.expect(Token::If)?;
+        self.expect(Token::If)?;
 
         let condition = self.parse_expr()?;
         if condition.type_def().fallible {
             return Err(SyntaxError::FalliblePrediction {
-                span: Span {
-                    start: if_span.end,
-                    end: self.lexer.pos(),
-                },
+                span: condition.span,
+            });
+        }
+
+        if condition.type_def().kind != Kind::BOOLEAN {
+            return Err(SyntaxError::NonBooleanPrediction {
+                got: condition.type_def().kind,
+                span: condition.span,
             });
         }
 
@@ -1339,12 +1441,13 @@ impl Compiler<'_> {
 
             let key = match token {
                 Token::Colon => break,
-                Token::Identifier(s) => s.to_string(),
+                // Token::Identifier(s) => s.to_string(),
+                Token::String(s) => s.to_string(),
                 Token::RightBrace => break,
                 _ => {
                     return Err(SyntaxError::UnexpectedToken {
                         got: token.to_string(),
-                        want: Some("identifier".to_string()),
+                        want: Some("string, colon or right brace".to_string()),
                         span,
                     })
                 }
@@ -1398,25 +1501,6 @@ impl Compiler<'_> {
             }
             None => Err(SyntaxError::UnexpectedEof),
         }
-    }
-
-    fn next_if(
-        &mut self,
-        f: impl FnOnce(Token<&str>) -> bool,
-    ) -> Option<Result<(Token<&str>, Span), SyntaxError>> {
-        let next = match self.lexer.peek() {
-            Some(Ok((token, _span))) => {
-                if !f(token) {
-                    return None;
-                }
-
-                self.lexer.next()
-            }
-            Some(Err(_err)) => self.lexer.next(),
-            None => None,
-        };
-
-        next.map(|result| result.map_err(SyntaxError::Lex))
     }
 
     #[inline]
@@ -1552,7 +1636,7 @@ mod tests {
     #[test]
     fn if_statement() {
         let text = r#"
-        if foo {
+        if true {
             .timestamp = now()
         }
         "#;
@@ -1563,7 +1647,7 @@ mod tests {
     #[test]
     fn if_else_statement() {
         let text = r#"
-        if foo {
+        if false {
             .timestamp = now()
         } else {
             .ts = now()

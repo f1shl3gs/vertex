@@ -22,7 +22,7 @@ fn main() {
         log("get shell ok")
     }
 
-    # like rust, return error now
+    # like rust, return error and exit now
     shell = get_env("SHELL")?
     log("shell:", shell)
 
@@ -53,12 +53,12 @@ fn main() {
     log("array[2]", arr[2])
 
     map = {
-        str: "bar",
-        int: 1,
-        map: {
-            key: "value"
+        "str": "bar",
+        "int": 1,
+        "map": {
+            "key": "value"
         },
-        array: [1, 2, 3]
+        "array": [1, 2, 3]
     }
     log("map:", map)
 

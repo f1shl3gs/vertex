@@ -62,31 +62,44 @@ pub struct Unary {
 }
 
 impl Unary {
-    pub fn new(op: UnaryOp, operand: Spanned<Expr>) -> Result<Unary, UnaryError> {
-        let kind = operand.type_def().kind;
-        match op {
-            UnaryOp::Negate => {
-                if !kind.intersects(Kind::NUMERIC) {
-                    return Err(UnaryError {
-                        variant: Variant::NonNumericNegate,
-                        span: operand.span,
-                    });
-                }
-            }
-            UnaryOp::Not => {
+    pub fn compile(op: UnaryOp, operand: Spanned<Expr>) -> Result<Expr, UnaryError> {
+        let expr = match (&op, &operand.node) {
+            // Optimized
+            (UnaryOp::Not, Expr::Boolean(b)) => Expr::Boolean(!*b),
+            (UnaryOp::Negate, Expr::Float(f)) => Expr::Float(-*f),
+            (UnaryOp::Negate, Expr::Integer(i)) => Expr::Integer(-*i),
+
+            (UnaryOp::Not, _) => {
+                let kind = operand.type_def().kind;
                 if !kind.intersects(Kind::BOOLEAN) {
                     return Err(UnaryError {
                         variant: Variant::NonBoolean,
                         span: operand.span,
                     });
                 }
-            }
-        }
 
-        Ok(Unary {
-            op,
-            operand: Box::new(operand),
-        })
+                Expr::Unary(Unary {
+                    op,
+                    operand: Box::new(operand),
+                })
+            }
+            (UnaryOp::Negate, _) => {
+                let kind = operand.type_def().kind;
+                if !kind.intersects(Kind::NUMERIC) {
+                    return Err(UnaryError {
+                        variant: Variant::NonNumericNegate,
+                        span: operand.span,
+                    });
+                }
+
+                Expr::Unary(Unary {
+                    op,
+                    operand: Box::new(operand),
+                })
+            }
+        };
+
+        Ok(expr)
     }
 }
 
