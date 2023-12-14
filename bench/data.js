@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702525888669,
+  "lastUpdate": 1702525909455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "531ed19c548c95a9481f7af4b0f86263c25f7b76",
-          "message": "bump serde to 1.0.189 (#1362)",
-          "timestamp": "2023-10-20T22:26:35+08:00",
-          "tree_id": "b70a0101f3e53b4f935a5c9f10a548b765539d85",
-          "url": "https://github.com/f1shl3gs/vertex/commit/531ed19c548c95a9481f7af4b0f86263c25f7b76"
-        },
-        "date": 1697813118973,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 997,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53443.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40406.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5647b41eab9fdccd6f05f62753c4c099c2da2329",
+          "message": "bump crossbeam-utils to 0.8.17 (#1471)",
+          "timestamp": "2023-12-14T11:40:39+08:00",
+          "tree_id": "ffb0b27553b224a8f69b7f596c96867e68102df1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5647b41eab9fdccd6f05f62753c4c099c2da2329"
+        },
+        "date": 1702525896175,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
             "unit": "s"
           },
           {
