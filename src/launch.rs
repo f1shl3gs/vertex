@@ -15,7 +15,7 @@ use vertex::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
 use vertex::extensions::heartbeat;
 
-use crate::{top, validate};
+use crate::{top, validate, vtl};
 
 fn default_worker_threads() -> usize {
     match std::env::var("VERTEX_WORKER_THREADS") {
@@ -423,6 +423,7 @@ enum SubCommands {
     Providers(Providers),
     Validate(validate::Validate),
     Top(top::Top),
+    Vtl(vtl::Vtl),
 }
 
 impl SubCommands {
@@ -444,6 +445,7 @@ impl SubCommands {
                 other => Err(other),
             },
             SubCommands::Top(top) => top.run(),
+            SubCommands::Vtl(vtl) => vtl.run(),
         }
     }
 }

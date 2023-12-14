@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 
-use value::{parse_target_path, parse_value_path, PathParseError, Value};
+use value::{parse_target_path, parse_value_path, OwnedTargetPath, PathParseError, Value};
 
 use super::assignment::{Assignment, AssignmentTarget};
 use super::binary::{Binary, BinaryOp};
@@ -716,8 +716,14 @@ impl Compiler<'_> {
                 Token::PathField(path) => {
                     // ".", ".foo", "%" or "%foo"
                     if path.starts_with(|c| c == '.' || c == '%') {
-                        let path = parse_target_path(path)
-                            .map_err(|err| SyntaxError::InvalidPath { err, span })?;
+                        let path = if path == "." {
+                            OwnedTargetPath::event_root()
+                        } else if path == "%" {
+                            OwnedTargetPath::metadata_root()
+                        } else {
+                            parse_target_path(path)
+                                .map_err(|err| SyntaxError::InvalidPath { err, span })?
+                        };
 
                         return Ok(AssignmentTarget::External(path));
                     }
@@ -798,13 +804,11 @@ impl Compiler<'_> {
                     Token::Assign => {
                         let expr = self.parse_expr()?;
                         if expr.type_def().fallible {
-                            if let Expr::Call(_call) = &expr.node {
-                                self.expect(Token::Question)?;
-                            } else {
-                                return Err(SyntaxError::UnhandledFallibleAssignment {
-                                    span: expr.span,
-                                });
-                            }
+                            // if expr is a function call, we can make it infallible by
+                            // adding a question mark after it.
+                            return Err(SyntaxError::UnhandledFallibleAssignment {
+                                span: expr.span,
+                            });
                         }
 
                         Assignment::Single { target, expr }
@@ -1622,6 +1626,17 @@ mod tests {
     }
 
     #[test]
+    fn metadata() {
+        let input = r#"
+        % = {
+            "foo": 1
+        }
+        "#;
+
+        assert_compile(input);
+    }
+
+    #[test]
     fn function_call_with_arguments() {
         let input = r#"lowercase("FOO")"#;
         assert_compile(input);
@@ -1690,6 +1705,25 @@ mod tests {
         foo = "bar"
         }"#;
         assert_compile(input);
+    }
+
+    #[test]
+    fn fallible_function_call() {
+        let input = r#"
+        parsed = parse_url("https://example.io/some/path?foo=bar")
+        "#;
+
+        match Compiler::compile(input) {
+            Ok(_program) => panic!("should fail"),
+            Err(err) => match err {
+                SyntaxError::UnhandledFallibleAssignment {
+                    span: Span { start: 18, end: 67 },
+                } => {
+                    // ok
+                }
+                err => panic!("invalid error, {}", err),
+            },
+        }
     }
 
     #[test]

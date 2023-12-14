@@ -1,6 +1,8 @@
 mod abs;
 mod append;
+mod assert_eq;
 mod ceil;
+mod compact;
 mod contains;
 mod del;
 mod ends_with;
@@ -194,7 +196,9 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
     vec![
         Box::new(abs::Abs),
         Box::new(append::Append),
+        Box::new(assert_eq::AssertEq),
         Box::new(ceil::Ceil),
+        Box::new(compact::Compact),
         Box::new(contains::Contains),
         Box::new(del::Del),
         Box::new(ends_with::EndsWith),
