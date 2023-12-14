@@ -1,7 +1,7 @@
 use crate::compiler::parser::unescape_string;
 
 #[derive(Debug)]
-enum Segment {
+pub enum Segment {
     Placeholder, // represent for {}
     Literal(String),
 }
@@ -22,7 +22,6 @@ impl Template {
 
         let mut pos = 0;
         while pos < chars.len() {
-            // let ch = chars[pos] as char;
             match chars[pos] {
                 b'{' if !template => {
                     start_pos = pos;
@@ -65,6 +64,11 @@ impl Template {
         if template {
             Err(start_pos)
         } else {
+            if !current.is_empty() {
+                let seg = std::mem::take(&mut current);
+                segments.push(Segment::Literal(seg));
+            }
+
             Ok(Template { segments })
         }
     }
@@ -75,6 +79,11 @@ impl Template {
             Segment::Literal(_) => acc,
         })
     }
+
+    #[inline]
+    pub fn segments(&self) -> &[Segment] {
+        &self.segments
+    }
 }
 
 #[cfg(test)]
@@ -82,11 +91,40 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parse() {
-        let rs = r"";
-        let input = r#"\{\} hello, " }"#;
-        let result = Template::parse(input);
+    fn empty_with_escape() {
+        let input = r#"\{\} hello, " "#;
+        let template = Template::parse(input).unwrap();
+        assert_eq!(template.placeholders(), 0);
+    }
 
-        println!("{:?}", result);
+    #[test]
+    fn empty() {
+        let input = r#"foo"#;
+        let template = Template::parse(input).unwrap();
+        assert_eq!(template.segments.len(), 1);
+    }
+
+    #[test]
+    fn first() {
+        let input = r#"{}bar"#;
+        let template = Template::parse(input).unwrap();
+        assert_eq!(template.segments.len(), 2);
+        assert_eq!(template.placeholders(), 1);
+    }
+
+    #[test]
+    fn middle() {
+        let input = r#"foo{}bar"#;
+        let template = Template::parse(input).unwrap();
+        assert_eq!(template.segments.len(), 3);
+        assert_eq!(template.placeholders(), 1);
+    }
+
+    #[test]
+    fn end() {
+        let input = r#"foo{}"#;
+        let template = Template::parse(input).unwrap();
+        assert_eq!(template.segments.len(), 2);
+        assert_eq!(template.placeholders(), 1);
     }
 }

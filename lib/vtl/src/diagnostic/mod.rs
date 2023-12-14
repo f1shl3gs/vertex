@@ -24,7 +24,7 @@ impl Diagnostic {
     }
 
     pub fn snippets<T: DiagnosticMessage>(&self, msg: T) -> String {
-        let mut buf = msg.title();
+        let mut buf = format!("Error: {}", msg.title());
         let labels = msg.labels();
         let total = labels.len();
         for (index, label) in labels.into_iter().enumerate() {

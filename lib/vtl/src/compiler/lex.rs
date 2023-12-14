@@ -101,9 +101,9 @@ where
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Token::Identifier(s) => s.fmt(f),
-            Token::PathField(s) => s.fmt(f),
-            Token::FunctionCall(s) => s.fmt(f),
+            Token::Identifier(_s) => f.write_str("ident"),
+            Token::PathField(_s) => f.write_str("path"),
+            Token::FunctionCall(_s) => f.write_str("function"),
             Token::Assign => f.write_char('='),
             Token::Not => f.write_char('!'),
             Token::Add => f.write_char('+'),
@@ -511,6 +511,7 @@ impl<'input> Lexer<'input> {
             b'=' => {
                 let start = self.pos;
                 self.pos += 1;
+
                 if self.pos < self.text.len() && self.text[self.pos] == b'=' {
                     self.pos += 1;
                     return Some(Ok((
@@ -533,6 +534,8 @@ impl<'input> Lexer<'input> {
 
             b'!' => {
                 let start = self.pos;
+                self.pos += 1;
+
                 if self.pos < self.text.len() && self.text[self.pos] == b'=' {
                     self.pos += 1;
                     return Some(Ok((
@@ -959,5 +962,13 @@ mod tests {
                 (Token::RightBrace, 4..5),
             ],
         )])
+    }
+
+    #[test]
+    fn not() {
+        assert_lex([(
+            r#"!!!"#,
+            vec![(Token::Not, 0..1), (Token::Not, 1..2), (Token::Not, 2..3)],
+        )]);
     }
 }

@@ -5,6 +5,7 @@ pub mod path;
 mod serde;
 
 use std::collections::BTreeMap;
+use std::hash::{Hash, Hasher};
 
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
@@ -40,6 +41,42 @@ pub enum Value {
 
     /// Null
     Null,
+}
+
+impl Hash for Value {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        match self {
+            Value::Bytes(b) => {
+                state.write_u8(1);
+                b.hash(state)
+            }
+            Value::Float(f) => {
+                state.write_u8(2);
+                f.to_bits().hash(state)
+            }
+            Value::Integer(i) => {
+                state.write_u8(3);
+                i.hash(state)
+            }
+            Value::Boolean(b) => {
+                state.write_u8(4);
+                b.hash(state)
+            }
+            Value::Timestamp(ts) => {
+                state.write_u8(5);
+                ts.hash(state)
+            }
+            Value::Object(obj) => {
+                state.write_u8(6);
+                obj.hash(state)
+            }
+            Value::Array(arr) => {
+                state.write_u8(7);
+                arr.hash(state)
+            }
+            Value::Null => state.write_u8(8),
+        }
+    }
 }
 
 impl Value {

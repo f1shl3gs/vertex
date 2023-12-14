@@ -7,15 +7,22 @@ pub struct Span {
 }
 
 impl Span {
-    pub fn merge(mut self, other: Span) -> Self {
-        self.start = self.start.min(other.start);
-        self.end = self.end.max(other.end);
-        self
+    #[inline]
+    pub fn merge(&self, other: Span) -> Self {
+        Span {
+            start: self.start.min(other.start),
+            end: self.end.max(other.end),
+        }
     }
 
     #[inline]
     pub fn with<T>(self, node: T) -> Spanned<T> {
         Spanned::new(node, self)
+    }
+
+    #[cfg(test)]
+    pub fn empty() -> Span {
+        Span { start: 0, end: 0 }
     }
 }
 

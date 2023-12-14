@@ -20,7 +20,7 @@ fn success() {
         ),
         (
             r#"
-            .res = { foo: 2 }
+            .res = { "foo": 2 }
             "#,
             value!({
                 "res": {"foo": 2}

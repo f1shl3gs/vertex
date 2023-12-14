@@ -123,7 +123,7 @@ mod tests {
             TypeDef::any().fallible(),
             Err(ExpressionError::Error {
                 message: "not found".to_string(),
-                span: Span { start: 0, end: 0 },
+                span: Span::empty(),
             }),
         )
     }
