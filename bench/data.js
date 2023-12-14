@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702518362518,
+  "lastUpdate": 1702518388960,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "03b590db2ef1353d3e6e94a1ae8545c4485ca79c",
-          "message": "lib/value (#1359)\n\n* move value to lib/value",
-          "timestamp": "2023-10-20T21:29:06+08:00",
-          "tree_id": "897c8b18866b84a97fb43f58b745cb21c66c1534",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03b590db2ef1353d3e6e94a1ae8545c4485ca79c"
-        },
-        "date": 1697809625097,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 962,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53443.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "531ed19c548c95a9481f7af4b0f86263c25f7b76",
           "message": "bump serde to 1.0.189 (#1362)",
           "timestamp": "2023-10-20T22:26:35+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40407.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b48be7f1fec1efb319032abbc6fecbcef71d8ff4",
+          "message": "chore(deps): bump crossbeam-queue from 0.3.8 to 0.3.9 (#1470)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.8 to 0.3.9.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.8...crossbeam-queue-0.3.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-14T09:35:21+08:00",
+          "tree_id": "f7dd3e6ccc3e909cfedd4b766ec800a80e8cbc54",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b48be7f1fec1efb319032abbc6fecbcef71d8ff4"
+        },
+        "date": 1702518375601,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40406.3,
             "unit": "KiB"
           }
         ]
