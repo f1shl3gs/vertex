@@ -4252,7 +4252,9 @@ dependencies = [
  "typetag",
  "url",
  "uuid",
+ "value",
  "virt",
+ "vtl",
 ]
 
 [[package]]
@@ -4270,6 +4272,7 @@ dependencies = [
  "chrono",
  "hostname",
  "regex",
+ "serde",
  "serde_json",
  "twox-hash",
  "url",

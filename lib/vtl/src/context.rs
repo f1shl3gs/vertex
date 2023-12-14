@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 
+use serde::Serialize;
 use value::path::PathPrefix;
 use value::{OwnedTargetPath, Value};
 
@@ -42,7 +43,7 @@ pub trait Target: Debug {
     fn remove(&mut self, path: &OwnedTargetPath, compact: bool) -> Result<Value, Error>;
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct TargetValue {
     pub metadata: Value,
     pub value: Value,

@@ -1,6 +1,7 @@
 mod launch;
 mod top;
 mod validate;
+mod vtl;
 
 use launch::RootCommand;
 
