@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702527873132,
+  "lastUpdate": 1702527918527,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dfe110142c4e6f1a8939676d4bcd4bb1a062b178",
-          "message": "chore(deps): bump socket2 from 0.5.4 to 0.5.5 (#1363)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.4 to 0.5.5.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/compare/v0.5.4...v0.5.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-21T15:20:52+08:00",
-          "tree_id": "a0d24135cb3cca94c813ba36901319dfc6bb312f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dfe110142c4e6f1a8939676d4bcd4bb1a062b178"
-        },
-        "date": 1697874356319,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1339,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53441.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40406.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e4785c4937d25b4bf0b8295f9049e0936252e8e",
+          "message": "VTL: check more when compile (#1472)\n\n* add more details of error",
+          "timestamp": "2023-12-14T12:14:01+08:00",
+          "tree_id": "ec33ca86b229319eef9715ae3e0dcff49daa0b86",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e4785c4937d25b4bf0b8295f9049e0936252e8e"
+        },
+        "date": 1702527905166,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
             "unit": "s"
           },
           {
