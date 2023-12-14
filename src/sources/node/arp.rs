@@ -4,33 +4,21 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 
 use event::{tags, tags::Key, Metric};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let file = tokio::fs::File::open(proc_path.join("net/arp"))
-        .await
-        .map_err(|err| Error::Io {
-            err,
-            msg: "open arp file failed".into(),
-        })?;
-    let reader = tokio::io::BufReader::new(file);
-    let mut lines = reader.lines();
-    let mut devices = HashMap::<String, i64>::new();
+    let content = std::fs::read_to_string(proc_path.join("net/arp"))?;
+    let mut devices = HashMap::new();
 
-    // skip the first line
-    lines.next_line().await?;
+    // the first line is title, so we don't need it
+    for line in content.lines().skip(1) {
+        let dev = line.split_ascii_whitespace().nth(5).expect("must exists");
 
-    while let Some(line) = lines.next_line().await? {
-        let dev = line.split_ascii_whitespace().nth(5).unwrap();
-
-        match devices.get_mut(dev) {
-            Some(v) => *v += 1i64,
-            _ => {
-                devices.insert(dev.into(), 1i64);
-            }
-        }
+        devices
+            .entry(dev)
+            .and_modify(|count| *count += 1)
+            .or_insert(1);
     }
 
     let mut metrics = Vec::with_capacity(devices.len());
