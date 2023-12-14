@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702518388960,
+  "lastUpdate": 1702518399648,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f3dd8ea9f88e08dbe875b3d6410dc66ea2f0f30a",
-          "message": "bump regex to 1.10.1 (#1345)",
-          "timestamp": "2023-10-15T00:32:12+08:00",
-          "tree_id": "d757feaaa04c604158767fa14555663a09bcf870",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f3dd8ea9f88e08dbe875b3d6410dc66ea2f0f30a"
-        },
-        "date": 1697302294957,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 24540000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1071300,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.649,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "12e6f224cd844ba0492e404451a7380e1861b76d",
           "message": "deps: bump regex to 1.10.1 (#1347)\n\n* bump regex to 1.10.1",
           "timestamp": "2023-10-15T01:39:13+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.263,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b48be7f1fec1efb319032abbc6fecbcef71d8ff4",
+          "message": "chore(deps): bump crossbeam-queue from 0.3.8 to 0.3.9 (#1470)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.8 to 0.3.9.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.8...crossbeam-queue-0.3.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-14T09:35:21+08:00",
+          "tree_id": "f7dd3e6ccc3e909cfedd4b766ec800a80e8cbc54",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b48be7f1fec1efb319032abbc6fecbcef71d8ff4"
+        },
+        "date": 1702518385255,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 18246000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 499390,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.439,
             "unit": "ns/op"
           }
         ]
