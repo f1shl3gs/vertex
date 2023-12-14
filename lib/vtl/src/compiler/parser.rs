@@ -1696,9 +1696,13 @@ mod tests {
     fn assign_object() {
         let input = r#"
         foo = {
-            str: "value",
-            int: 1,
-            float: 1.1
+            "str": "value",
+            "int": 1,
+            "float": 1.1,
+            "array": [1, 2.3, true],
+            "map": {
+                "key": "value"
+            }
         }
         "#;
 
