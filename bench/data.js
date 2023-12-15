@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702608429277,
+  "lastUpdate": 1702608433637,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "d27eb465fd446faec7acfb822027decdf3eab846",
-          "message": "bump regex to 1.10.2",
-          "timestamp": "2023-10-16T23:39:53+08:00",
-          "tree_id": "31f8875a33b79546fdfa8c4719916e1b8929ca4d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d27eb465fd446faec7acfb822027decdf3eab846"
-        },
-        "date": 1697471035659,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 105.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 241.61,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 389.56,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 182.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1445cdad4f7dd1d79d0c087415bf97323ca265a0",
+          "message": "VTL: add merge keys and values (#1474)\n\n* add keys, merge and values",
+          "timestamp": "2023-12-15T10:44:58+08:00",
+          "tree_id": "2a139e01ecdf941ec78c432628ec5bdf683655fa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1445cdad4f7dd1d79d0c087415bf97323ca265a0"
+        },
+        "date": 1702608419657,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.476,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.557,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.09,
             "unit": "ns/op"
           }
         ]
