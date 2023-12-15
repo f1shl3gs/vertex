@@ -451,6 +451,12 @@ mod expr_convert {
         }
     }
 
+    impl From<bool> for Spanned<Expr> {
+        fn from(value: bool) -> Self {
+            Expr::Boolean(value).with(Span::empty())
+        }
+    }
+
     impl From<i64> for Expr {
         fn from(value: i64) -> Self {
             Expr::Integer(value)
