@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702680321636,
+  "lastUpdate": 1702680363838,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11717,70 +11717,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "d27eb465fd446faec7acfb822027decdf3eab846",
-          "message": "bump regex to 1.10.2",
-          "timestamp": "2023-10-16T23:39:53+08:00",
-          "tree_id": "31f8875a33b79546fdfa8c4719916e1b8929ca4d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d27eb465fd446faec7acfb822027decdf3eab846"
-        },
-        "date": 1697471124293,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 569.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 57156,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 286800,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 573900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 181.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 18034,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 90084,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 180080,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "noreply@github.com",
             "name": "GitHub",
             "username": "web-flow"
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 157200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f3ad078588d6af6543e4c2b0179633a523e591a",
+          "message": "chore(deps): bump zerocopy from 0.7.14 to 0.7.31 (#1475)\n\nBumps [zerocopy](https://github.com/google/zerocopy) from 0.7.14 to 0.7.31.\r\n- [Release notes](https://github.com/google/zerocopy/releases)\r\n- [Changelog](https://github.com/google/zerocopy/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/google/zerocopy/compare/v0.7.14...v0.7.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zerocopy\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-16T06:42:28+08:00",
+          "tree_id": "e5f36ab998e4e7f452513a883dbe929c05d8193d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f3ad078588d6af6543e4c2b0179633a523e591a"
+        },
+        "date": 1702680350541,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 430.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 43015,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 213290,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 433960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 157.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 15751,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 78705,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 157370,
             "unit": "ns/op"
           }
         ]
