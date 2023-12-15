@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702608509091,
+  "lastUpdate": 1702608947345,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21521,45 +21521,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8baac66a013f73e214b606b701f7a6b3891dd34f",
-          "message": "impl Configurable for OwnedPath (#1351)",
-          "timestamp": "2023-10-16T15:52:23+08:00",
-          "tree_id": "b3eef9ef885486e9b04df7ca9c1dc570475fd37e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8baac66a013f73e214b606b701f7a6b3891dd34f"
-        },
-        "date": 1697444289135,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 38328000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1213400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 23.876,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.201,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1445cdad4f7dd1d79d0c087415bf97323ca265a0",
+          "message": "VTL: add merge keys and values (#1474)\n\n* add keys, merge and values",
+          "timestamp": "2023-12-15T10:44:58+08:00",
+          "tree_id": "2a139e01ecdf941ec78c432628ec5bdf683655fa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1445cdad4f7dd1d79d0c087415bf97323ca265a0"
+        },
+        "date": 1702608931319,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17240000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 488810,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 43.242,
             "unit": "ns/op"
           }
         ]
