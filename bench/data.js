@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702608947345,
+  "lastUpdate": 1702608968468,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "65b83268c7ae1cd7fe020091a6a5091ede1c7311",
-          "message": "fix default worker threads (#1365)",
-          "timestamp": "2023-10-22T15:46:04+08:00",
-          "tree_id": "33726bb38ea413ae2f53747ba0efc005e7a0be0c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/65b83268c7ae1cd7fe020091a6a5091ede1c7311"
-        },
-        "date": 1697961947393,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1045,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53446.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4cc162dabfef0ae374f08a8565495148b1e0488a",
           "message": "bump humanize to 3ce391414e9417c36ca386b50ef82e6d2e1882dd (#1366)",
           "timestamp": "2023-10-23T01:18:49+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40821.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1445cdad4f7dd1d79d0c087415bf97323ca265a0",
+          "message": "VTL: add merge keys and values (#1474)\n\n* add keys, merge and values",
+          "timestamp": "2023-12-15T10:44:58+08:00",
+          "tree_id": "2a139e01ecdf941ec78c432628ec5bdf683655fa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1445cdad4f7dd1d79d0c087415bf97323ca265a0"
+        },
+        "date": 1702608954963,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40832.4,
             "unit": "KiB"
           }
         ]
