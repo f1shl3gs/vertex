@@ -1,7 +1,7 @@
 #![allow(clippy::print_stdout)]
 
 use value::{value, Value};
-use vtl::{compile, Context, Diagnostic, TargetValue};
+use vtl::{compile, Diagnostic, TargetValue};
 
 fn main() {
     let script = r#"
@@ -82,7 +82,7 @@ fn main() {
 
     let diagnostic = Diagnostic::new(script.to_string());
 
-    let program = match compile(script) {
+    let mut program = match compile(script) {
         Ok(program) => program,
         Err(err) => {
             let output = diagnostic.snippets(err);
@@ -91,23 +91,18 @@ fn main() {
         }
     };
 
-    let mut variables = program.variables.clone();
-
-    // build your own context
-    let mut cx = Context {
-        target: &mut TargetValue {
-            metadata: Value::Object(Default::default()),
-            value: value!({
-                "msg": "foobar",
-                "index": 5,
-                "array": [1, 2, 3, {"ak": "av"}],
-                "map": {"k1": "k2"},
-            }),
-        },
-        variables: &mut variables,
+    // build your own target
+    let mut target = TargetValue {
+        metadata: Value::Object(Default::default()),
+        value: value!({
+            "msg": "{\"foo\": \"bar\"}",
+            "index": 5,
+            "array": [1, 2, 3, {"ak": "av"}],
+            "map": {"k1": "k2"},
+        }),
     };
 
-    if let Err(err) = program.resolve(&mut cx) {
+    if let Err(err) = program.run(&mut target) {
         let output = diagnostic.snippets(err);
         println!("{}", output);
     }

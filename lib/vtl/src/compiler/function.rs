@@ -260,7 +260,8 @@ pub fn compile_and_run<F: Function>(
     use chrono::Utc;
     use value::{value, Value};
 
-    use crate::{Context, TargetValue};
+    use crate::context::Context;
+    use crate::TargetValue;
 
     let func = Box::new(func);
     let mut arguments_list = ArgumentList::new(func.identifier(), func.parameters());

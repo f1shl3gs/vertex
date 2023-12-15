@@ -814,11 +814,17 @@ impl Compiler<'_> {
                     Token::Assign => {
                         let expr = self.parse_expr()?;
                         if expr.type_def().fallible {
-                            // if expr is a function call, we can make it infallible by
-                            // adding a question mark after it.
-                            return Err(SyntaxError::UnhandledFallibleAssignment {
-                                span: expr.span,
-                            });
+                            match self.lexer.peek().transpose()? {
+                                Some((Token::Question, _span)) => {
+                                    // it's ok
+                                    self.lexer.next();
+                                }
+                                _ => {
+                                    return Err(SyntaxError::UnhandledFallibleAssignment {
+                                        span: expr.span,
+                                    });
+                                }
+                            }
                         }
 
                         Assignment::Single { target, expr }

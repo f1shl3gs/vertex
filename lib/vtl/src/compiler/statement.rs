@@ -7,7 +7,7 @@ use super::if_statement::IfStatement;
 use super::parser::Expr;
 use super::ExpressionError;
 use crate::compiler::{Expression, Kind, TypeDef};
-use crate::Context;
+use crate::context::Context;
 
 #[derive(Clone)]
 pub enum Statement {

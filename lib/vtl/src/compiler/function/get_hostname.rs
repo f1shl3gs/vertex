@@ -4,7 +4,7 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::{Expression, ExpressionError, Kind, Span, TypeDef};
-use crate::Context;
+use crate::context::Context;
 
 pub struct GetHostname;
 

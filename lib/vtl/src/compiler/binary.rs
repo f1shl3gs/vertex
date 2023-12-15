@@ -8,8 +8,8 @@ use super::expression::Expression;
 use super::parser::Expr;
 use super::{ExpressionError, Kind, ValueKind};
 use crate::compiler::{Span, Spanned, TypeDef};
+use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
-use crate::Context;
 
 #[derive(Debug, PartialEq)]
 pub enum BinaryError {

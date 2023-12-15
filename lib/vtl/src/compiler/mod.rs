@@ -32,19 +32,25 @@ pub use template::Template;
 pub use type_def::TypeDef;
 
 use crate::context::Context;
+use crate::Target;
 
 #[derive(Clone)]
 pub struct Program {
     // program content
     statements: block::Block,
 
-    pub variables: HashMap<String, Value>,
+    // variables are used, repeatedly
+    variables: HashMap<String, Value>,
 }
 
 impl Program {
-    #[inline]
-    pub fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        self.statements.resolve(cx)
+    pub fn run<T: Target>(&mut self, target: &mut T) -> Result<Value, ExpressionError> {
+        let mut cx = Context {
+            target,
+            variables: &mut self.variables,
+        };
+
+        self.statements.resolve(&mut cx)
     }
 
     #[inline]

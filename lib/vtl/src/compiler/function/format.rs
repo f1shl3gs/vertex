@@ -6,7 +6,7 @@ use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::{Expr, SyntaxError};
 use crate::compiler::template::Segment;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, Template, TypeDef};
-use crate::Context;
+use crate::context::Context;
 
 pub struct Format;
 

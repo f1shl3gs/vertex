@@ -1,10 +1,12 @@
+use value::Value;
+
 use crate::compiler::expression::Expression;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::Expr;
 use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef};
-use crate::{Context, SyntaxError};
-use value::Value;
+use crate::context::Context;
+use crate::SyntaxError;
 
 pub struct IsInteger;
 

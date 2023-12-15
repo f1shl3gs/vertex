@@ -1,10 +1,13 @@
+use std::collections::BTreeMap;
+
+use value::Value;
+
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::Expr;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
-use crate::{Context, SyntaxError};
-use std::collections::BTreeMap;
-use value::Value;
+use crate::context::Context;
+use crate::SyntaxError;
 
 pub struct Merge;
 

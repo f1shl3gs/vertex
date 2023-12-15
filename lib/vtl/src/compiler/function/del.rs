@@ -6,7 +6,7 @@ use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::{Expr, SyntaxError};
 use crate::compiler::query::Query;
 use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef};
-use crate::Context;
+use crate::context::Context;
 
 pub struct Del;
 
