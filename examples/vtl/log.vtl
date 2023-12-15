@@ -1,0 +1,17 @@
+# init event and metadata
+% = {
+    "source": "tail",
+    "file": "/var/log/error.log"
+}
+. = {
+    "message": "handle request",
+    "url": "https://example.io/some/path?foo=bar",
+}
+
+# process the event
+
+.url, .err = parse_url(.url)
+.timestamp = now()
+
+# compact will remove empty key/value pair
+. = compact(.)
