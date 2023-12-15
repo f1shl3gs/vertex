@@ -21,10 +21,12 @@ mod is_ipv6;
 mod is_object;
 mod is_string;
 mod is_timestamp;
+mod keys;
 mod length;
 mod log;
 mod lowercase;
 mod r#match;
+mod merge;
 mod now;
 mod parse_json;
 mod parse_query;
@@ -44,6 +46,7 @@ mod to_unix_timestamp;
 mod trim;
 mod unique;
 mod uppercase;
+mod values;
 mod xxhash;
 
 use super::expression::Expression;
@@ -217,10 +220,12 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(is_object::IsObject),
         Box::new(is_string::IsString),
         Box::new(is_timestamp::IsTimestamp),
+        Box::new(keys::Keys),
         Box::new(length::Length),
         Box::new(log::Log),
         Box::new(lowercase::Lowercase),
         Box::new(r#match::Match),
+        Box::new(merge::Merge),
         Box::new(now::Now),
         Box::new(parse_json::ParseJson),
         Box::new(parse_query::ParseQuery),
@@ -239,6 +244,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(trim::Trim),
         Box::new(unique::Unique),
         Box::new(uppercase::Uppercase),
+        Box::new(values::Values),
         Box::new(xxhash::XXHash),
     ]
 }
