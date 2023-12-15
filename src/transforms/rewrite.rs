@@ -1,0 +1,161 @@
+use std::path::PathBuf;
+
+use configurable::{configurable_component, Configurable};
+use event::{Events, LogRecord};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::{SyncTransform, Transform, TransformOutputsBuf};
+use serde::{Deserialize, Serialize};
+use value::{OwnedTargetPath, Value};
+use vtl::{Diagnostic, Program, Target};
+
+/// ErrorMode determines how this transformer reacts to errors.
+#[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize, PartialEq)]
+enum ErrorMode {
+    /// Drop the event, and write a log.
+    Drop,
+
+    /// Skip this error, and continue to transform the event.
+    #[default]
+    Continue,
+}
+
+#[derive(Debug, Deserialize, Serialize, Configurable)]
+#[serde(rename_all = "lowercase")]
+enum Source {
+    File(PathBuf),
+    Script(String),
+}
+
+impl Source {
+    fn load(&self) -> Result<String, std::io::Error> {
+        match self {
+            Source::File(path) => std::fs::read_to_string(path),
+            Source::Script(content) => Ok(content.to_string()),
+        }
+    }
+}
+
+#[configurable_component(transform, name = "rewrite")]
+struct Config {
+    #[serde(default)]
+    error_mode: ErrorMode,
+
+    #[serde(flatten)]
+    source: Source,
+}
+
+#[async_trait::async_trait]
+#[typetag::serde(name = "rewrite")]
+impl TransformConfig for Config {
+    async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
+        let script = self.source.load()?;
+
+        match vtl::compile(&script) {
+            Ok(program) => {
+                let rewrite = Rewrite {
+                    // error_mode: self.error_mode.clone(),
+                    program,
+                };
+
+                Ok(Transform::synchronous(rewrite))
+            }
+            Err(err) => {
+                let diagnostic = Diagnostic::new(script);
+                Err(diagnostic.snippets(err).into())
+            }
+        }
+    }
+
+    fn input_type(&self) -> DataType {
+        DataType::Log
+    }
+
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
+    }
+}
+
+#[derive(Clone)]
+struct Rewrite {
+    // error_mode: ErrorMode,
+    program: Program,
+}
+
+impl SyncTransform for Rewrite {
+    fn transform(&mut self, events: Events, output: &mut TransformOutputsBuf) {
+        match events {
+            Events::Logs(logs) => {
+                let mut primary = Vec::with_capacity(logs.len());
+                let mut dropped = Vec::new();
+
+                logs.into_iter().for_each(|log| {
+                    let mut target = LogTarget { log };
+                    match self.program.run(&mut target) {
+                        Ok(_value) => {
+                            primary.push(target.log);
+                        }
+                        Err(err) => {
+                            warn!(message = "", ?err, internal_log_rate_limit = true,);
+
+                            dropped.push(target.log);
+                        }
+                    }
+                });
+
+                output.push(primary.into());
+                if !dropped.is_empty() {
+                    output.push_named("DROPPED", dropped.into());
+                }
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct LogTarget {
+    log: LogRecord,
+}
+
+impl Target for LogTarget {
+    #[inline]
+    fn insert(&mut self, path: &OwnedTargetPath, value: Value) -> Result<(), vtl::ContextError> {
+        self.log.insert(path, value);
+        Ok(())
+    }
+
+    #[inline]
+    fn get(&mut self, path: &OwnedTargetPath) -> Result<Option<&Value>, vtl::ContextError> {
+        Ok(self.log.get(path))
+    }
+
+    #[inline]
+    fn get_mut(&mut self, path: &OwnedTargetPath) -> Result<Option<&mut Value>, vtl::ContextError> {
+        Ok(self.log.get_mut(path))
+    }
+
+    fn remove(
+        &mut self,
+        path: &OwnedTargetPath,
+        compact: bool,
+    ) -> Result<Option<Value>, vtl::ContextError> {
+        Ok(self.log.remove_prune(path, compact))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn deserialize() {
+        let src = Source::Script("foo".to_string());
+        let data = serde_json::to_string(&src).unwrap();
+        assert_eq!(data, r#"{"script":"foo"}"#);
+    }
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<Config>()
+    }
+}
