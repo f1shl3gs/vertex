@@ -35,6 +35,7 @@ impl Function for IsString {
     }
 }
 
+#[derive(Clone)]
 struct IsStringFunc {
     value: Spanned<Expr>,
 }

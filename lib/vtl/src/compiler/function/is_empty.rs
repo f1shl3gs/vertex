@@ -36,6 +36,7 @@ impl Function for IsEmpty {
     }
 }
 
+#[derive(Clone)]
 struct IsEmptyFunc {
     value: Spanned<Expr>,
 }

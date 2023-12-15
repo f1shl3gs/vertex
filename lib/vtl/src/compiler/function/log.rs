@@ -43,6 +43,7 @@ impl Function for Log {
     }
 }
 
+#[derive(Clone)]
 struct LogFunc {
     format: String,
     arguments: Vec<Spanned<Expr>>,

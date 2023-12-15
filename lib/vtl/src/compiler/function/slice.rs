@@ -49,6 +49,7 @@ impl Function for Slice {
     }
 }
 
+#[derive(Clone)]
 struct SliceFunc {
     value: Spanned<Expr>,
     start: Spanned<Expr>,

@@ -40,7 +40,7 @@ pub trait Target: Debug {
     /// Returns the removed value, if any. If compact is true, after deletion, if an empty
     /// object or array is left behind, it should be removed as well, cascading up to
     /// the root.
-    fn remove(&mut self, path: &OwnedTargetPath, compact: bool) -> Result<Value, Error>;
+    fn remove(&mut self, path: &OwnedTargetPath, compact: bool) -> Result<Option<Value>, Error>;
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -78,16 +78,17 @@ impl Target for TargetValue {
         Ok(target.get_mut(&target_path.path))
     }
 
-    fn remove(&mut self, target_path: &OwnedTargetPath, compact: bool) -> Result<Value, Error> {
+    fn remove(
+        &mut self,
+        target_path: &OwnedTargetPath,
+        compact: bool,
+    ) -> Result<Option<Value>, Error> {
         let target = match target_path.prefix {
             PathPrefix::Event => &mut self.value,
             PathPrefix::Metadata => &mut self.metadata,
         };
 
-        match target.remove(&target_path.path, compact) {
-            Some(value) => Ok(value),
-            None => Err(Error::NotFound),
-        }
+        Ok(target.remove(&target_path.path, compact))
     }
 }
 

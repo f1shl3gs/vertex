@@ -60,6 +60,7 @@ impl Function for Replace {
     }
 }
 
+#[derive(Clone)]
 struct ReplaceFunc {
     value: Spanned<Expr>,
     pattern: Spanned<Expr>,

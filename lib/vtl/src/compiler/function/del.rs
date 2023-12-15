@@ -59,6 +59,7 @@ impl Function for Del {
     }
 }
 
+#[derive(Clone)]
 struct DelFunc {
     query: Spanned<Query>,
     compact: bool,
@@ -77,14 +78,14 @@ impl Expression for DelFunc {
 
                 Ok(value)
             }
-            Query::External(path) => {
-                cx.target
-                    .remove(path, self.compact)
-                    .map_err(|err| ExpressionError::Error {
-                        message: err.to_string(),
-                        span: self.query.span,
-                    })
-            }
+            Query::External(path) => cx
+                .target
+                .remove(path, self.compact)
+                .map_err(|err| ExpressionError::Error {
+                    message: err.to_string(),
+                    span: self.query.span,
+                })
+                .map(|value| value.unwrap_or(Value::Null)),
         }
     }
 

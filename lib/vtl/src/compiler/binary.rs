@@ -74,6 +74,7 @@ impl DiagnosticMessage for BinaryError {
     }
 }
 
+#[derive(Clone)]
 pub enum BinaryOp {
     // Arithmetic
     Add,      // +
@@ -115,6 +116,7 @@ impl Display for BinaryOp {
     }
 }
 
+#[derive(Clone)]
 pub struct Binary {
     pub lhs: Box<Spanned<Expr>>,
     pub rhs: Box<Spanned<Expr>>,

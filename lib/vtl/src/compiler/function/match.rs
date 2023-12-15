@@ -61,6 +61,7 @@ impl Function for Match {
     }
 }
 
+#[derive(Clone)]
 struct MatchFunc {
     value: Spanned<Expr>,
     pattern: Regex,

@@ -180,6 +180,13 @@ impl TransformOutputsBuf {
         }
     }
 
+    pub fn push(&mut self, events: Events) {
+        self.primary_buffer
+            .as_mut()
+            .expect("must exists")
+            .push(events)
+    }
+
     pub fn push_named(&mut self, name: &str, events: Events) {
         self.named_buffers
             .get_mut(name)

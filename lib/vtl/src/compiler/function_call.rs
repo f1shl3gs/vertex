@@ -3,6 +3,7 @@ use value::Value;
 use super::{Expression, ExpressionError, Span, TypeDef};
 use crate::Context;
 
+#[derive(Clone)]
 pub struct FunctionCall {
     pub function: Box<dyn Expression>,
     pub span: Span,

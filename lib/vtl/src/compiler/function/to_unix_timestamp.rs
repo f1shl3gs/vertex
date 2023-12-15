@@ -59,6 +59,7 @@ impl Function for ToUnixTimestamp {
     }
 }
 
+#[derive(Clone)]
 pub enum Unit {
     Seconds,
     Milliseconds,
@@ -66,6 +67,7 @@ pub enum Unit {
     Nanoseconds,
 }
 
+#[derive(Clone)]
 struct ToUnixTimestampFunc {
     value: Spanned<Expr>,
     unit: Unit,

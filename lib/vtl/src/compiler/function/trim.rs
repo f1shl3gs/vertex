@@ -36,6 +36,7 @@ impl Function for Trim {
     }
 }
 
+#[derive(Clone)]
 struct TrimFunc {
     value: Spanned<Expr>,
 }

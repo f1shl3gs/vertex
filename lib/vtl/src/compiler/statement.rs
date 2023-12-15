@@ -9,6 +9,7 @@ use super::ExpressionError;
 use crate::compiler::{Expression, Kind, TypeDef};
 use crate::Context;
 
+#[derive(Clone)]
 pub enum Statement {
     /// An if else statement
     ///

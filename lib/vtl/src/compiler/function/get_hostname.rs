@@ -25,6 +25,7 @@ impl Function for GetHostname {
     }
 }
 
+#[derive(Clone)]
 struct GetHostnameFunc;
 
 impl Expression for GetHostnameFunc {

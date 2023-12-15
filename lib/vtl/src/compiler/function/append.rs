@@ -44,6 +44,7 @@ impl Function for Append {
     }
 }
 
+#[derive(Clone)]
 struct AppendFunc {
     value: Spanned<Expr>,
     others: Spanned<Expr>,

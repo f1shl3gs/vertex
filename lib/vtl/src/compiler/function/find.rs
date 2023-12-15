@@ -54,6 +54,7 @@ impl Function for Find {
     }
 }
 
+#[derive(Clone)]
 struct FindFunc {
     value: Spanned<Expr>,
     pattern: Spanned<Expr>,

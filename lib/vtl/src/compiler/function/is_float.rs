@@ -36,6 +36,7 @@ impl Function for IsFloat {
     }
 }
 
+#[derive(Clone)]
 struct IsFloatFunc {
     value: Spanned<Expr>,
 }

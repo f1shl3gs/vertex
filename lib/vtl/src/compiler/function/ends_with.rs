@@ -54,6 +54,7 @@ impl Function for EndsWith {
     }
 }
 
+#[derive(Clone)]
 struct EndsWithFunc {
     value: Spanned<Expr>,
     substring: Spanned<Expr>,

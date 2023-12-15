@@ -44,6 +44,7 @@ impl Function for Ceil {
     }
 }
 
+#[derive(Clone)]
 struct CeilFunc {
     value: Spanned<Expr>,
     precision: Option<Spanned<Expr>>,

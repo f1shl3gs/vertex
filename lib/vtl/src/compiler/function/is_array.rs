@@ -36,6 +36,7 @@ impl Function for IsArray {
     }
 }
 
+#[derive(Clone)]
 struct IsArrayFunc {
     value: Spanned<Expr>,
 }

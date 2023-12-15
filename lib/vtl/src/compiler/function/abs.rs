@@ -38,6 +38,7 @@ impl Function for Abs {
     }
 }
 
+#[derive(Clone)]
 struct AbsFunc {
     value: Spanned<Expr>,
 }

@@ -53,6 +53,7 @@ impl Function for StartsWith {
     }
 }
 
+#[derive(Clone)]
 struct StartsWithFunc {
     value: Spanned<Expr>,
     substring: Spanned<Expr>,

@@ -43,6 +43,7 @@ impl Function for Push {
     }
 }
 
+#[derive(Clone)]
 struct PushFunc {
     array: Spanned<Expr>,
     item: Spanned<Expr>,

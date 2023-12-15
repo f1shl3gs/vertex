@@ -44,6 +44,7 @@ impl Function for Floor {
     }
 }
 
+#[derive(Clone)]
 struct FloorFunc {
     value: Spanned<Expr>,
     precision: Option<Spanned<Expr>>,

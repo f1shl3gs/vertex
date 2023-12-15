@@ -36,6 +36,7 @@ impl Function for ToString {
     }
 }
 
+#[derive(Clone)]
 struct ToStringFunc {
     value: Spanned<Expr>,
 }

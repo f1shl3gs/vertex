@@ -56,6 +56,7 @@ impl Function for Contains {
     }
 }
 
+#[derive(Clone)]
 struct ContainsFunc {
     value: Spanned<Expr>,
     substring: Spanned<Expr>,

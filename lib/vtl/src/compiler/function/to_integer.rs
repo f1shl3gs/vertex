@@ -35,6 +35,7 @@ impl Function for ToInteger {
     }
 }
 
+#[derive(Clone)]
 struct ToIntegerFunc {
     value: Spanned<Expr>,
 }

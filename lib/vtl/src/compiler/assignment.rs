@@ -43,6 +43,7 @@ impl AssignmentTarget {
     }
 }
 
+#[derive(Clone)]
 pub enum Assignment {
     Single {
         target: AssignmentTarget,

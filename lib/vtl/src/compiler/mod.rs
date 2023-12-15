@@ -33,6 +33,7 @@ pub use type_def::TypeDef;
 
 use crate::context::Context;
 
+#[derive(Clone)]
 pub struct Program {
     // program content
     statements: block::Block,

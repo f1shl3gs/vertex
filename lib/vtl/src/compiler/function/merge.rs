@@ -49,6 +49,7 @@ impl Function for Merge {
     }
 }
 
+#[derive(Clone)]
 struct MergeFunc {
     from: Spanned<Expr>,
     to: Spanned<Expr>,

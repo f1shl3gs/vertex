@@ -35,6 +35,7 @@ impl Function for IsTimestamp {
     }
 }
 
+#[derive(Clone)]
 struct IsTimestampFunc {
     value: Spanned<Expr>,
 }

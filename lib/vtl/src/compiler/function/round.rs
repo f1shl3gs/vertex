@@ -43,6 +43,7 @@ impl Function for Round {
     }
 }
 
+#[derive(Clone)]
 struct RoundFunc {
     value: Spanned<Expr>,
     precision: Option<Spanned<Expr>>,

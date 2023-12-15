@@ -35,6 +35,7 @@ impl Function for IsObject {
     }
 }
 
+#[derive(Clone)]
 struct IsObjectFunc {
     value: Spanned<Expr>,
 }

@@ -27,6 +27,7 @@ impl Function for Now {
     }
 }
 
+#[derive(Clone)]
 struct NowFunc;
 
 impl Expression for NowFunc {

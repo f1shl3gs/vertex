@@ -350,6 +350,7 @@ pub struct Variable {
     // reads: usize,
 }
 
+#[derive(Clone)]
 pub enum Expr {
     /// The literal null value.
     Null,
@@ -371,8 +372,10 @@ pub enum Expr {
 
     /// An unary operation.
     Unary(Unary),
+
     /// A binary operation.
     Binary(Binary),
+
     /// A call expression of something.
     Call(FunctionCall),
 
@@ -382,6 +385,7 @@ pub enum Expr {
     /// arr = [1, false, "foo", -1]
     /// ```
     Array(Vec<Spanned<Expr>>),
+
     /// A literal Object.
     ///
     /// ```text

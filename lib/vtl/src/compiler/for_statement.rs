@@ -9,6 +9,7 @@ use crate::Context;
 
 /// The `key/value` is temporary defined(insert when start, and remove when end),
 /// and they are limited to be identifier, so we defined them with `String`.
+#[derive(Clone)]
 pub struct ForStatement {
     /// The key or index to set to the value of each item being iterated.
     pub key: String,

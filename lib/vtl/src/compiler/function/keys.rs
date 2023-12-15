@@ -35,6 +35,7 @@ impl Function for Keys {
     }
 }
 
+#[derive(Clone)]
 struct KeysFunc {
     value: Spanned<Expr>,
 }

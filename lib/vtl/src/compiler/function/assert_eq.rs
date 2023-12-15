@@ -53,6 +53,7 @@ impl Function for AssertEq {
     }
 }
 
+#[derive(Clone)]
 struct AssertEqFunc {
     left: Spanned<Expr>,
     right: Spanned<Expr>,

@@ -49,6 +49,7 @@ impl DiagnosticMessage for UnaryError {
     }
 }
 
+#[derive(Clone)]
 pub enum UnaryOp {
     // Arithmetic
     Negate, // -
@@ -56,6 +57,7 @@ pub enum UnaryOp {
     Not, // not
 }
 
+#[derive(Clone)]
 pub struct Unary {
     pub op: UnaryOp,
     pub operand: Box<Spanned<Expr>>,

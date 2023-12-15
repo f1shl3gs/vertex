@@ -36,6 +36,7 @@ impl Function for ToBool {
     }
 }
 
+#[derive(Clone)]
 struct ToBoolFunc {
     expr: Spanned<Expr>,
 }

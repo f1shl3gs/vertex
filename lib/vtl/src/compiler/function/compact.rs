@@ -45,6 +45,7 @@ impl Function for Compact {
     }
 }
 
+#[derive(Clone)]
 struct CompactFunc {
     value: Spanned<Expr>,
     recursive: bool,

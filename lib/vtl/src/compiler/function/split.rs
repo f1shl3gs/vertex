@@ -53,6 +53,7 @@ impl Function for Split {
     }
 }
 
+#[derive(Clone)]
 struct SplitFunc {
     value: Spanned<Expr>,
     pattern: Spanned<Expr>,

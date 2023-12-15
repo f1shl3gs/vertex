@@ -38,6 +38,7 @@ impl Function for IsIpv4 {
     }
 }
 
+#[derive(Clone)]
 struct IsIpv4Func {
     value: Spanned<Expr>,
 }

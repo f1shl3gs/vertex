@@ -35,6 +35,7 @@ impl Function for Length {
     }
 }
 
+#[derive(Clone)]
 struct LengthFunc {
     value: Spanned<Expr>,
 }

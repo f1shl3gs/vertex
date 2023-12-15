@@ -35,6 +35,7 @@ impl Function for ToFloat {
     }
 }
 
+#[derive(Clone)]
 struct ToFloatFunc {
     value: Spanned<Expr>,
 }

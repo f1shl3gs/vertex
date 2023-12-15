@@ -38,6 +38,7 @@ impl Function for ParseQuery {
     }
 }
 
+#[derive(Clone)]
 struct ParseQueryFunc {
     value: Spanned<Expr>,
 }

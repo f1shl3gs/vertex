@@ -36,6 +36,7 @@ impl Function for IsBool {
     }
 }
 
+#[derive(Clone)]
 struct IsBoolFunc {
     value: Spanned<Expr>,
 }

@@ -35,6 +35,7 @@ impl Function for IsInteger {
     }
 }
 
+#[derive(Clone)]
 struct IsIntegerFunc {
     value: Spanned<Expr>,
 }

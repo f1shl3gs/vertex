@@ -35,6 +35,7 @@ impl Function for Values {
     }
 }
 
+#[derive(Clone)]
 struct ValuesFunc {
     value: Spanned<Expr>,
 }

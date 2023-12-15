@@ -35,6 +35,7 @@ impl Function for XXHash {
     }
 }
 
+#[derive(Clone)]
 struct XXHashFunc {
     value: Spanned<Expr>,
 }

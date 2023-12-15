@@ -57,6 +57,7 @@ impl Function for Format {
     }
 }
 
+#[derive(Clone)]
 struct FormatFunc {
     template: Template,
     arguments: Vec<Spanned<Expr>>,

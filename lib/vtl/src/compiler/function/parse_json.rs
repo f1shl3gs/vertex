@@ -35,6 +35,7 @@ impl Function for ParseJson {
     }
 }
 
+#[derive(Clone)]
 struct ParseJsonFunc {
     value: Spanned<Expr>,
 }

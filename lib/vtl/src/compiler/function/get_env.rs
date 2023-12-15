@@ -36,6 +36,7 @@ impl Function for GetEnv {
     }
 }
 
+#[derive(Clone)]
 struct GetEnvFunc {
     expr: Spanned<Expr>,
 }

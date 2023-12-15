@@ -6,6 +6,7 @@ use super::ExpressionError;
 use crate::compiler::TypeDef;
 use crate::context::Context;
 
+#[derive(Clone)]
 pub struct Block(Vec<Statement>);
 
 impl Block {

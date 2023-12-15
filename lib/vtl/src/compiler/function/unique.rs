@@ -39,6 +39,7 @@ impl Function for Unique {
     }
 }
 
+#[derive(Clone)]
 struct UniqueFunc {
     value: Spanned<Expr>,
 }

@@ -49,6 +49,7 @@ impl Function for ParseUrl {
     }
 }
 
+#[derive(Clone)]
 struct ParseURLFunc {
     value: Spanned<Expr>,
     default_known_ports: Option<Spanned<Expr>>,

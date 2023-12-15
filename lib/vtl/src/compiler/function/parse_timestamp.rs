@@ -56,6 +56,7 @@ impl Function for ParseTimestamp {
     }
 }
 
+#[derive(Clone)]
 struct ParseTimestampFunc {
     value: Spanned<Expr>,
     format: String,
