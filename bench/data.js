@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702697439375,
+  "lastUpdate": 1702697534228,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4e20b2d549672494325c30a57811cd64f25ba599",
-          "message": "chore(deps): bump ipnet from 2.8.0 to 2.9.0 (#1367)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.8.0 to 2.9.0.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/compare/2.8.0...2.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-23T11:47:04+08:00",
-          "tree_id": "9ddfc2b7b2ee51fe85e7cb57aa94ebd5bd7e04b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e20b2d549672494325c30a57811cd64f25ba599"
-        },
-        "date": 1698033931826,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 981,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53450.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40830.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe38eb8972cb041241702c6de2a8d67e20677f38",
+          "message": "deps: bump thiserror to 1.0.51 (#1477)",
+          "timestamp": "2023-12-16T11:20:20+08:00",
+          "tree_id": "8472a77c3e8cd953e2b26dfbec964d603f017d50",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe38eb8972cb041241702c6de2a8d67e20677f38"
+        },
+        "date": 1702697511684,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40805.3,
             "unit": "KiB"
           }
         ]
