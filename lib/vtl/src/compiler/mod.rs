@@ -21,7 +21,7 @@ mod unary;
 
 use std::collections::HashMap;
 
-use value::Value;
+use value::{OwnedTargetPath, Value};
 
 pub use binary::BinaryError;
 pub use expression::{Expression, ExpressionError};
@@ -41,6 +41,10 @@ pub struct Program {
 
     // variables are used, repeatedly
     variables: HashMap<String, Value>,
+
+    /// A list of possible queries made to the
+    /// external Target at runtime.
+    target_queries: Vec<OwnedTargetPath>,
 }
 
 impl Program {
@@ -51,6 +55,11 @@ impl Program {
         };
 
         self.statements.resolve(&mut cx)
+    }
+
+    #[inline]
+    pub fn target_queries(&self) -> &[OwnedTargetPath] {
+        &self.target_queries
     }
 
     #[inline]

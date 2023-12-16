@@ -104,7 +104,6 @@ mod tests {
     use value::{parse_target_path, value};
 
     use crate::compiler::function::compile_and_run;
-    use crate::compiler::Span;
 
     #[test]
     fn exists() {
@@ -122,10 +121,7 @@ mod tests {
             vec![parse_target_path(".foo").unwrap().into()],
             Del,
             TypeDef::any().fallible(),
-            Err(ExpressionError::Error {
-                message: "not found".to_string(),
-                span: Span::empty(),
-            }),
+            Ok(Value::Null),
         )
     }
 

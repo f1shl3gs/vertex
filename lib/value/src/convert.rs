@@ -59,6 +59,12 @@ impl From<String> for Value {
     }
 }
 
+impl From<&String> for Value {
+    fn from(value: &String) -> Self {
+        Self::Bytes(Bytes::copy_from_slice(value.as_bytes()))
+    }
+}
+
 impl From<&str> for Value {
     fn from(value: &str) -> Self {
         Self::Bytes(Bytes::copy_from_slice(value.as_bytes()))

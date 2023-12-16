@@ -9,6 +9,8 @@ pub enum Error {
     NotFound,
 
     InvalidPath { expected: &'static str },
+
+    InvalidValue { expected: &'static str },
 }
 
 impl Display for Error {
@@ -16,6 +18,10 @@ impl Display for Error {
         match self {
             Error::NotFound => f.write_str("not found"),
             Error::InvalidPath { expected } => {
+                f.write_str("expected one of ")?;
+                f.write_str(expected)
+            }
+            Error::InvalidValue { expected } => {
                 f.write_str("expected one of ")?;
                 f.write_str(expected)
             }

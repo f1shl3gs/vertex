@@ -620,6 +620,8 @@ pub struct Compiler<'input> {
     iterating: usize,
 
     variables: Vec<Variable>,
+
+    target_queries: Vec<OwnedTargetPath>,
 }
 
 impl Compiler<'_> {
@@ -630,6 +632,7 @@ impl Compiler<'_> {
             functions: builtin_functions(),
             iterating: 0,
             variables: vec![],
+            target_queries: vec![],
         };
 
         let block = compiler.parse_block()?;
@@ -639,6 +642,7 @@ impl Compiler<'_> {
 
         Ok(Program {
             statements: block,
+            target_queries: compiler.target_queries,
             variables: compiler
                 .variables
                 .into_iter()
@@ -1009,6 +1013,8 @@ impl Compiler<'_> {
                     let query = if path.starts_with(|c| c == '.' || c == '%') {
                         let path = parse_target_path(path)
                             .map_err(|err| SyntaxError::InvalidPath { err, span })?;
+
+                        self.target_queries.push(path.clone());
 
                         Query::External(path)
                     } else {
