@@ -115,6 +115,8 @@ impl Value {
     }
 }
 
+pub type ObjectMap = BTreeMap<String, Value>;
+
 #[macro_export]
 macro_rules! value {
     // arrays
