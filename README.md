@@ -63,7 +63,7 @@ transforms in your pipeline, and how they are composed is up to you.
 | filter      | Filter out logs according field value               | &cross; | &check; | &cross; |
 | geoip       | Add GeoIP to log field                              | &cross; | &check; | &cross; |
 | metricalize | Consume logs and calculate value to produce metrics | &cross; | &check; | &cross; |
-| rewrite     | Run a VTL script and update the log event           | &cross; | &check; | &cross; |
+| rewrite     | Run a VTL script and update the log event           | &check; | &check; | &cross; |
 | route       | Route data to other transforms or sinks             | &cross; | &check; | &cross; |
 | sample      | Sample data according specific log fields           | &cross; | &check; | &cross; |
 | throttle    | Limit the rate of events                            | &cross; | &check; | &cross; |
