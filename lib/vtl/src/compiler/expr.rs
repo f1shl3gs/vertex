@@ -195,17 +195,6 @@ mod expr_convert {
             Expr::Query(Query::External(value))
         }
     }
-
-    impl From<BTreeMap<String, Expr>> for Expr {
-        fn from(value: BTreeMap<String, Expr>) -> Self {
-            Expr::Object(
-                value
-                    .into_iter()
-                    .map(|(k, v)| (k, v.with(Span::empty())))
-                    .collect::<BTreeMap<String, Spanned<Expr>>>(),
-            )
-        }
-    }
 }
 
 impl Expression for Expr {

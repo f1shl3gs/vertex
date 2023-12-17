@@ -67,17 +67,15 @@ impl Expression for ValuesFunc {
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use std::collections::BTreeMap;
-    use value::value;
 
     #[test]
     fn empty() {
-        let input = BTreeMap::new();
-
         compile_and_run(
-            vec![Expr::Object(input)],
+            vec![value!({}).into()],
             Values,
             TypeDef::array(),
             Ok(value!([])),
@@ -86,11 +84,11 @@ mod tests {
 
     #[test]
     fn not_empty() {
-        let mut input = BTreeMap::new();
-        input.insert("foo".to_string(), 1.into());
-
         compile_and_run(
-            vec![Expr::Object(input)],
+            vec![value!({
+                "foo": 1
+            })
+            .into()],
             Values,
             TypeDef::array(),
             Ok(value!([1])),

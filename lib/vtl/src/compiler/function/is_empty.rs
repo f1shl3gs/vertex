@@ -69,9 +69,10 @@ impl Expression for IsEmptyFunc {
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use std::collections::BTreeMap;
 
     #[test]
     fn array() {
@@ -95,11 +96,11 @@ mod tests {
 
     #[test]
     fn map() {
-        let mut argument = BTreeMap::new();
-        argument.insert("foo".into(), 1.into());
-
         compile_and_run(
-            vec![argument.into()],
+            vec![value!({
+                "foo": 1
+            })
+            .into()],
             IsEmpty,
             TypeDef::boolean(),
             Ok(false.into()),
@@ -108,10 +109,8 @@ mod tests {
 
     #[test]
     fn empty_map() {
-        let argument = BTreeMap::new();
-
         compile_and_run(
-            vec![argument.into()],
+            vec![value!({}).into()],
             IsEmpty,
             TypeDef::boolean(),
             Ok(true.into()),

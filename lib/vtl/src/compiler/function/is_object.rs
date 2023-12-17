@@ -62,14 +62,15 @@ impl Expression for IsObjectFunc {
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use std::collections::BTreeMap;
 
     #[test]
     fn object() {
         compile_and_run(
-            vec![BTreeMap::new().into()],
+            vec![value!({}).into()],
             IsObject,
             TypeDef::boolean(),
             Ok(true.into()),

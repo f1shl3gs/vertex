@@ -112,21 +112,24 @@ fn merge_maps(map1: &mut BTreeMap<String, Value>, map2: &BTreeMap<String, Value>
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use crate::compiler::Span;
-    use value::value;
 
     #[test]
     fn simple() {
-        let mut to = BTreeMap::new();
-        to.insert("key1".to_string(), "val1".into());
-
-        let mut from = BTreeMap::new();
-        from.insert("key2".to_string(), "val2".into());
-
         compile_and_run(
-            vec![Expr::Object(from), Expr::Object(to)],
+            vec![
+                value!({
+                    "key1": "val1",
+                })
+                .into(),
+                value!({
+                    "key2": "val2"
+                })
+                .into(),
+            ],
             Merge,
             TypeDef::object(),
             Ok(value!({
@@ -138,24 +141,23 @@ mod tests {
 
     #[test]
     fn shallow() {
-        let mut to = BTreeMap::new();
-        to.insert("key1".to_string(), "val1".into());
-        to.insert("child".to_string(), {
-            let mut map = BTreeMap::new();
-            map.insert("grandchild1".to_string(), "val1".into());
-            Expr::Object(map).with(Span::empty())
-        });
-
-        let mut from = BTreeMap::new();
-        from.insert("key2".to_string(), "val2".into());
-        from.insert("child".to_string(), {
-            let mut map = BTreeMap::new();
-            map.insert("grandchild2".to_string(), true.into());
-            Expr::Object(map).with(Span::empty())
-        });
-
         compile_and_run(
-            vec![Expr::Object(from), Expr::Object(to)],
+            vec![
+                value!({
+                    "key1": "val1",
+                    "child": {
+                        "grandchild1": "val1"
+                    }
+                })
+                .into(),
+                value!({
+                    "key2": "val2",
+                    "child": {
+                        "grandchild2": true
+                    }
+                })
+                .into(),
+            ],
             Merge,
             TypeDef::object(),
             Ok(value!({
@@ -170,24 +172,24 @@ mod tests {
 
     #[test]
     fn deep() {
-        let mut to = BTreeMap::new();
-        to.insert("key1".to_string(), "val1".into());
-        to.insert("child".to_string(), {
-            let mut map = BTreeMap::new();
-            map.insert("grandchild1".to_string(), "val1".into());
-            Expr::Object(map).with(Span::empty())
-        });
-
-        let mut from = BTreeMap::new();
-        from.insert("key2".to_string(), "val2".into());
-        from.insert("child".to_string(), {
-            let mut map = BTreeMap::new();
-            map.insert("grandchild2".to_string(), true.into());
-            Expr::Object(map).with(Span::empty())
-        });
-
         compile_and_run(
-            vec![Expr::Object(from), Expr::Object(to), true.into()],
+            vec![
+                value!({
+                    "key1": "val1",
+                    "child": {
+                        "grandchild1": "val1"
+                    }
+                })
+                .into(),
+                value!({
+                    "key2": "val2",
+                    "child": {
+                        "grandchild2": true
+                    }
+                })
+                .into(),
+                true.into(),
+            ],
             Merge,
             TypeDef::object(),
             Ok(value!({
