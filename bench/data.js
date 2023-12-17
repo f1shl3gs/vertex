@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702787757185,
+  "lastUpdate": 1702787771901,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7a9070cca80b1f642a7cd70fce0c66f8fd267a76",
-          "message": "chore(deps): bump rustix from 0.38.17 to 0.38.19 (#1358)\n\nBumps [rustix](https://github.com/bytecodealliance/rustix) from 0.38.17 to 0.38.19.\r\n- [Release notes](https://github.com/bytecodealliance/rustix/releases)\r\n- [Commits](https://github.com/bytecodealliance/rustix/compare/v0.38.17...v0.38.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustix\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-19T23:48:59+08:00",
-          "tree_id": "8820220c4d6caeb1bcda33c1422310a552caba8a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7a9070cca80b1f642a7cd70fce0c66f8fd267a76"
-        },
-        "date": 1697730732584,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 104.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 245.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 400.89,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 185.42,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2bafc29821e77da671ec10150b231b7eb1b5b9f1",
+          "message": "transforms: add rewrite & remove modify (#1476)\n\n* remove modify and add rewrite",
+          "timestamp": "2023-12-17T12:33:50+08:00",
+          "tree_id": "9d913a357d04a8e4122b19aa08e37d83e2cd5b84",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2bafc29821e77da671ec10150b231b7eb1b5b9f1"
+        },
+        "date": 1702787757312,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.471,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.25,
             "unit": "ns/op"
           }
         ]
