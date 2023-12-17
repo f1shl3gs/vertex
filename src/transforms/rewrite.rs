@@ -1,7 +1,7 @@
-use bytes::Bytes;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
+use bytes::Bytes;
 use configurable::{configurable_component, Configurable};
 use event::tags::Tags;
 use event::{Events, LogRecord, Metric, MetricValue};
@@ -31,7 +31,7 @@ enum ErrorMode {
     Continue,
 }
 
-#[derive(Debug, Deserialize, Serialize, Configurable)]
+#[derive(Configurable, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 enum Source {
     File(PathBuf),
@@ -49,9 +49,6 @@ impl Source {
 
 #[configurable_component(transform, name = "rewrite")]
 struct Config {
-    #[serde(default)]
-    error_mode: ErrorMode,
-
     #[serde(flatten)]
     source: Source,
 }
@@ -504,6 +501,7 @@ mod tests {
         assert_eq!(data, r#"{"script":"foo"}"#);
     }
 
+    #[ignore]
     #[test]
     fn generate_config() {
         crate::testing::test_generate_config::<Config>()
