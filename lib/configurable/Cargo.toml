@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+[dev-dependencies]
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
+serde_yaml = { version = "0.9.27", default-features = false }
+
 [dependencies]
 inventory = { version = "0.3.13", default-features = false }
 configurable-derive = { path = "../configurable-derive" }
@@ -19,7 +23,3 @@ event = { path = "../event" }
 regex = { version = "1.10.2", default-features = false }
 url = { version = "2.5.0", default-features = false }
 value = { path = "../value" }
-
-[dev-dependencies]
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
-serde_yaml = { version = "0.9.27", default-features = false }
