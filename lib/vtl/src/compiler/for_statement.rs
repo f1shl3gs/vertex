@@ -2,7 +2,7 @@ use value::Value;
 
 use super::block::Block;
 use super::expr::Expr;
-use super::{Expression, Span, Spanned, TypeDef};
+use super::{Expression, Spanned, TypeDef};
 use super::{ExpressionError, Kind, ValueKind};
 use crate::context::Context;
 
@@ -79,9 +79,9 @@ impl Expression for ForStatement {
             }
             _ => {
                 return Err(ExpressionError::UnexpectedType {
-                    want: Kind::ARRAY | Kind::OBJECT,
+                    want: Kind::CONTAINER,
                     got: iterator.kind(),
-                    span: Span { start: 0, end: 0 },
+                    span: self.iterator.span,
                 })
             }
         }
