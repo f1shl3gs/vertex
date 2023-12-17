@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702786935793,
+  "lastUpdate": 1702787002994,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4a8aa30c9506b54f7559c4ba83cc7c5a74574f50",
-          "message": "remove `serde` features from bytes crate (#1369)",
-          "timestamp": "2023-10-24T00:19:13+08:00",
-          "tree_id": "b17104b7f4067747c971b4fa83fecf66635a7ea9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a8aa30c9506b54f7559c4ba83cc7c5a74574f50"
-        },
-        "date": 1698079116638,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1043,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53450.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e5c5dd2c9d2b6bcc9edc44ba41c0836448e62920",
           "message": "remove unused function (#1370)",
           "timestamp": "2023-10-24T00:36:18+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40805.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ad49d0815b3066200db1642545d59a56d8404272",
+          "message": "deps: bump memmap2 to 0.9.1 (#1478)",
+          "timestamp": "2023-12-17T12:11:55+08:00",
+          "tree_id": "87a48f4d7a988b44e26de4da9516ca580b8dc56b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ad49d0815b3066200db1642545d59a56d8404272"
+        },
+        "date": 1702786989171,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 583,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40806.4,
             "unit": "KiB"
           }
         ]
