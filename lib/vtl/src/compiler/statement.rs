@@ -1,12 +1,11 @@
 use value::Value;
 
 use super::assignment::Assignment;
+use super::expr::Expr;
 use super::for_statement::ForStatement;
 use super::function_call::FunctionCall;
 use super::if_statement::IfStatement;
-use super::parser::Expr;
-use super::ExpressionError;
-use crate::compiler::{Expression, Kind, TypeDef};
+use super::{Expression, ExpressionError, Kind, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]

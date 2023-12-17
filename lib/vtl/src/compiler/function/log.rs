@@ -2,9 +2,10 @@ use std::fmt::Write;
 
 use value::Value;
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::{Expr, SyntaxError};
+use crate::compiler::parser::SyntaxError;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
 

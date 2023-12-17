@@ -1,4 +1,4 @@
-use crate::compiler::Kind;
+use super::Kind;
 
 /// Properties for a given expression that express the expected outcome of the
 /// expression.

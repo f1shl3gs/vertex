@@ -3,9 +3,9 @@ use std::fmt::{Display, Formatter};
 
 use value::Value;
 
-use super::parser::Expr;
+use super::expr::Expr;
 use super::{Expression, ExpressionError, Kind, TypeDef, ValueKind};
-use crate::compiler::{Span, Spanned};
+use super::{Span, Spanned};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 

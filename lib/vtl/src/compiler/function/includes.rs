@@ -7,11 +7,11 @@ use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, Value
 use crate::context::Context;
 use crate::SyntaxError;
 
-pub struct Push;
+pub struct Includes;
 
-impl Function for Push {
+impl Function for Includes {
     fn identifier(&self) -> &'static str {
-        "push"
+        "includes"
     }
 
     fn parameters(&self) -> &'static [Parameter] {
@@ -38,21 +38,21 @@ impl Function for Push {
         let item = arguments.get();
 
         Ok(FunctionCall {
-            function: Box::new(PushFunc { array, item }),
+            function: Box::new(IncludesFunc { array, item }),
             span: cx.span,
         })
     }
 }
 
 #[derive(Clone)]
-struct PushFunc {
+struct IncludesFunc {
     array: Spanned<Expr>,
     item: Spanned<Expr>,
 }
 
-impl Expression for PushFunc {
+impl Expression for IncludesFunc {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        let mut array = match self.array.resolve(cx)? {
+        let array = match self.array.resolve(cx)? {
             Value::Array(array) => array,
             value => {
                 return Err(ExpressionError::UnexpectedType {
@@ -63,15 +63,17 @@ impl Expression for PushFunc {
             }
         };
 
-        array.push(self.item.resolve(cx)?);
+        let item = self.item.resolve(cx)?;
 
-        Ok(array.into())
+        let found = array.iter().any(|value| value == &item);
+
+        Ok(found.into())
     }
 
     fn type_def(&self) -> TypeDef {
         TypeDef {
             fallible: false,
-            kind: Kind::ARRAY,
+            kind: Kind::BOOLEAN,
         }
     }
 }
@@ -82,14 +84,32 @@ mod tests {
     use crate::compiler::function::compile_and_run;
 
     #[test]
-    fn push() {
-        let array: Vec<Expr> = vec![1.into()];
-        let item = 2.into();
+    fn empty_not_included() {
         compile_and_run(
-            vec![array.into(), item],
-            Push,
-            TypeDef::array(),
-            Ok(vec![Value::from(1), Value::from(2)].into()),
+            vec![Expr::Array(vec![]), "foo".into()],
+            Includes,
+            TypeDef::boolean(),
+            Ok(false.into()),
+        )
+    }
+
+    #[test]
+    fn string_include() {
+        compile_and_run(
+            vec![Expr::Array(vec!["foo".into(), "bar".into()]), "foo".into()],
+            Includes,
+            TypeDef::boolean(),
+            Ok(true.into()),
+        )
+    }
+
+    #[test]
+    fn string_not_include() {
+        compile_and_run(
+            vec![Expr::Array(vec!["foo".into(), "bar".into()]), "xyz".into()],
+            Includes,
+            TypeDef::boolean(),
+            Ok(false.into()),
         )
     }
 }

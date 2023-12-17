@@ -1,8 +1,8 @@
 use value::Value;
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;
@@ -36,20 +36,7 @@ impl Function for ToUnixTimestamp {
     ) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
         let unit = match arguments.get_string_opt()? {
-            Some(s) => match s.as_str() {
-                "s" | "seconds" => Unit::Seconds,
-                "milliseconds" => Unit::Milliseconds,
-                "microseconds" => Unit::Microseconds,
-                "ns" | "nanoseconds" => Unit::Nanoseconds,
-                _ => {
-                    return Err(SyntaxError::InvalidValue {
-                        err: "".to_string(),
-                        want: "seconds, milliseconds, microseconds or nanoseconds".to_string(),
-                        got: s.node,
-                        span: s.span,
-                    })
-                }
-            },
+            Some(s) => s.try_into()?,
             None => Unit::Seconds,
         };
 
@@ -66,6 +53,29 @@ pub enum Unit {
     Milliseconds,
     Microseconds,
     Nanoseconds,
+}
+
+impl TryFrom<Spanned<String>> for Unit {
+    type Error = SyntaxError;
+
+    fn try_from(value: Spanned<String>) -> Result<Self, Self::Error> {
+        let unit = match value.as_str() {
+            "s" | "seconds" => Unit::Seconds,
+            "milliseconds" => Unit::Milliseconds,
+            "microseconds" => Unit::Microseconds,
+            "ns" | "nanoseconds" => Unit::Nanoseconds,
+            _ => {
+                return Err(SyntaxError::InvalidValue {
+                    err: "".to_string(),
+                    want: "seconds, milliseconds, microseconds or nanoseconds".to_string(),
+                    got: value.node,
+                    span: value.span,
+                })
+            }
+        };
+
+        Ok(unit)
+    }
 }
 
 #[derive(Clone)]

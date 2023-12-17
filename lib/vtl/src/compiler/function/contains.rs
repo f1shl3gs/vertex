@@ -2,11 +2,11 @@ use std::ops::Deref;
 
 use value::Value;
 
-use crate::compiler::expression::Expression;
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::{Expr, SyntaxError};
-use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef, ValueKind};
+use crate::compiler::parser::SyntaxError;
+use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 
 pub struct Contains;

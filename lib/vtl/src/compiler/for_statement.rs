@@ -1,10 +1,9 @@
 use value::Value;
 
 use super::block::Block;
-use super::expression::Expression;
-use super::parser::Expr;
+use super::expr::Expr;
+use super::{Expression, Span, Spanned, TypeDef};
 use super::{ExpressionError, Kind, ValueKind};
-use crate::compiler::{Span, Spanned, TypeDef};
 use crate::context::Context;
 
 /// The `key/value` is temporary defined(insert when start, and remove when end),

@@ -1,9 +1,8 @@
 use value::Value;
 
-use super::expression::Expression;
 use super::statement::Statement;
 use super::ExpressionError;
-use crate::compiler::TypeDef;
+use super::{Expression, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]

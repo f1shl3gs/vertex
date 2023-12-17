@@ -4,10 +4,10 @@ use std::fmt::{Display, Formatter, Write};
 use bytes::{BufMut, BytesMut};
 use value::Value;
 
-use super::expression::Expression;
-use super::parser::Expr;
+use super::expr::Expr;
+use super::span::{Span, Spanned};
+use super::{Expression, TypeDef};
 use super::{ExpressionError, Kind, ValueKind};
-use crate::compiler::{Span, Spanned, TypeDef};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 

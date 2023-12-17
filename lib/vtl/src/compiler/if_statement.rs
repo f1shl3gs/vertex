@@ -1,9 +1,9 @@
 use value::Value;
 
 use super::block::Block;
-use super::parser::Expr;
-use super::ExpressionError;
-use crate::compiler::{Expression, Kind, Spanned, TypeDef, ValueKind};
+use super::expr::Expr;
+use super::{Expression, ExpressionError};
+use super::{Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 
 #[derive(Clone)]

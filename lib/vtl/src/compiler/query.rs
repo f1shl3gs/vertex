@@ -1,6 +1,6 @@
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
-use crate::compiler::{Expression, ExpressionError, Kind, TypeDef};
+use super::{Expression, ExpressionError, Kind, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]

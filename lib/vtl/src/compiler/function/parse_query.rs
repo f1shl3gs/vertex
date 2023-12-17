@@ -3,9 +3,9 @@ use std::collections::BTreeMap;
 use url::form_urlencoded;
 use value::Value;
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;

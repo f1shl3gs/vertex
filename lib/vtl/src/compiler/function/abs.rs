@@ -1,12 +1,12 @@
 use value::Value;
 
-use crate::compiler::expression::Expression;
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::{Expr, SyntaxError};
+use crate::compiler::parser::SyntaxError;
 use crate::compiler::span::Spanned;
 use crate::compiler::type_def::TypeDef;
-use crate::compiler::{ExpressionError, Kind, ValueKind};
+use crate::compiler::{Expression, ExpressionError, Kind, ValueKind};
 use crate::context::Context;
 
 pub struct Abs;

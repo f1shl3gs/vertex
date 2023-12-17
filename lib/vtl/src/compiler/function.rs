@@ -7,10 +7,13 @@ mod contains;
 mod del;
 mod ends_with;
 mod find;
+mod flatten;
 mod floor;
 mod format;
+mod from_unix_timestamp;
 mod get_env;
 mod get_hostname;
+mod includes;
 mod is_array;
 mod is_bool;
 mod is_empty;
@@ -49,9 +52,10 @@ mod uppercase;
 mod values;
 mod xxhash;
 
-use super::expression::Expression;
+use super::expr::Expr;
 use super::function_call::FunctionCall;
-use super::parser::{Expr, SyntaxError};
+use super::parser::SyntaxError;
+use super::Expression;
 use super::{Kind, Span, Spanned};
 
 pub struct ArgumentList {
@@ -206,10 +210,13 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(del::Del),
         Box::new(ends_with::EndsWith),
         Box::new(find::Find),
+        Box::new(flatten::Flatten),
         Box::new(floor::Floor),
         Box::new(format::Format),
+        Box::new(from_unix_timestamp::FromUnixTimestamp),
         Box::new(get_env::GetEnv),
         Box::new(get_hostname::GetHostname),
+        Box::new(includes::Includes),
         Box::new(is_array::IsArray),
         Box::new(is_bool::IsBool),
         Box::new(is_empty::IsEmpty),

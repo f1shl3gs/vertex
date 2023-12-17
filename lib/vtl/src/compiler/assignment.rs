@@ -1,10 +1,9 @@
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
-use super::expression::Expression;
-use super::parser::Expr;
+use super::expr::Expr;
+use super::type_def::TypeDef;
+use super::{Expression, Span, Spanned};
 use super::{ExpressionError, Kind};
-use crate::compiler::type_def::TypeDef;
-use crate::compiler::{Span, Spanned};
 use crate::context::Context;
 
 #[derive(Clone)]
