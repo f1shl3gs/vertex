@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use argh::FromArgs;
 use exitcode::ExitCode;
 use value::Value;
-use vtl::{Context, Diagnostic, TargetValue};
+use vtl::{Diagnostic, TargetValue};
 
 #[derive(FromArgs, Debug)]
 #[argh(subcommand, name = "vtl", description = "Run a VTL script")]
@@ -20,7 +20,7 @@ impl Vtl {
             Err(_err) => return Err(exitcode::OSFILE),
         };
 
-        let program = match vtl::compile(&script) {
+        let mut program = match vtl::compile(&script) {
             Ok(program) => program,
             Err(err) => {
                 let snippets = Diagnostic::new(script).snippets(err);
@@ -33,12 +33,7 @@ impl Vtl {
             metadata: Value::Object(Default::default()),
             value: Value::Object(Default::default()),
         };
-        let mut cx = Context {
-            target: &mut target,
-            variables: &mut Default::default(),
-        };
-
-        match program.resolve(&mut cx) {
+        match program.run(&mut target) {
             Ok(_result) => {
                 let output = serde_json::to_string_pretty(&target).expect("must success");
                 println!("{}", output);

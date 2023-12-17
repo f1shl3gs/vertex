@@ -5,7 +5,8 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, 
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::Expr;
 use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef, ValueKind};
-use crate::{Context, SyntaxError};
+use crate::context::Context;
+use crate::SyntaxError;
 
 pub struct Append;
 
@@ -44,6 +45,7 @@ impl Function for Append {
     }
 }
 
+#[derive(Clone)]
 struct AppendFunc {
     value: Spanned<Expr>,
     others: Spanned<Expr>,

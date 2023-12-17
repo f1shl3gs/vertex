@@ -4,7 +4,8 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, 
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::Expr;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
-use crate::{Context, SyntaxError};
+use crate::context::Context;
+use crate::SyntaxError;
 
 pub struct AssertEq;
 
@@ -53,6 +54,7 @@ impl Function for AssertEq {
     }
 }
 
+#[derive(Clone)]
 struct AssertEqFunc {
     left: Spanned<Expr>,
     right: Spanned<Expr>,

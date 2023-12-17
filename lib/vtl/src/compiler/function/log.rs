@@ -6,7 +6,7 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::{Expr, SyntaxError};
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
-use crate::Context;
+use crate::context::Context;
 
 pub struct Log;
 
@@ -43,6 +43,7 @@ impl Function for Log {
     }
 }
 
+#[derive(Clone)]
 struct LogFunc {
     format: String,
     arguments: Vec<Spanned<Expr>>,

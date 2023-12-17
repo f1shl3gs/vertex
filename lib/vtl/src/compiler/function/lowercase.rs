@@ -37,6 +37,7 @@ impl Function for Lowercase {
     }
 }
 
+#[derive(Clone)]
 struct LowercaseFunc {
     expr: Spanned<Expr>,
 }

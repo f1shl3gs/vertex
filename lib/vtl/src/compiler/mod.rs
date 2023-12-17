@@ -21,7 +21,7 @@ mod unary;
 
 use std::collections::HashMap;
 
-use value::Value;
+use value::{OwnedTargetPath, Value};
 
 pub use binary::BinaryError;
 pub use expression::{Expression, ExpressionError};
@@ -32,18 +32,34 @@ pub use template::Template;
 pub use type_def::TypeDef;
 
 use crate::context::Context;
+use crate::Target;
 
+#[derive(Clone)]
 pub struct Program {
     // program content
     statements: block::Block,
 
-    pub variables: HashMap<String, Value>,
+    // variables are used, repeatedly
+    variables: HashMap<String, Value>,
+
+    /// A list of possible queries made to the
+    /// external Target at runtime.
+    target_queries: Vec<OwnedTargetPath>,
 }
 
 impl Program {
+    pub fn run<T: Target>(&mut self, target: &mut T) -> Result<Value, ExpressionError> {
+        let mut cx = Context {
+            target,
+            variables: &mut self.variables,
+        };
+
+        self.statements.resolve(&mut cx)
+    }
+
     #[inline]
-    pub fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        self.statements.resolve(cx)
+    pub fn target_queries(&self) -> &[OwnedTargetPath] {
+        &self.target_queries
     }
 
     #[inline]

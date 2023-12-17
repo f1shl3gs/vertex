@@ -5,7 +5,8 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, 
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::Expr;
 use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef, ValueKind};
-use crate::{Context, SyntaxError};
+use crate::context::Context;
+use crate::SyntaxError;
 
 pub struct IsEmpty;
 
@@ -36,6 +37,7 @@ impl Function for IsEmpty {
     }
 }
 
+#[derive(Clone)]
 struct IsEmptyFunc {
     value: Spanned<Expr>,
 }

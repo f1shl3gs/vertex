@@ -4,7 +4,8 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, 
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::Expr;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
-use crate::{Context, SyntaxError};
+use crate::context::Context;
+use crate::SyntaxError;
 
 pub struct XXHash;
 
@@ -35,6 +36,7 @@ impl Function for XXHash {
     }
 }
 
+#[derive(Clone)]
 struct XXHashFunc {
     value: Spanned<Expr>,
 }

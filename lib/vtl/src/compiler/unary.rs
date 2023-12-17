@@ -6,8 +6,8 @@ use value::Value;
 use super::parser::Expr;
 use super::{Expression, ExpressionError, Kind, TypeDef, ValueKind};
 use crate::compiler::{Span, Spanned};
+use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
-use crate::Context;
 
 #[derive(Debug)]
 enum Variant {
@@ -49,6 +49,7 @@ impl DiagnosticMessage for UnaryError {
     }
 }
 
+#[derive(Clone)]
 pub enum UnaryOp {
     // Arithmetic
     Negate, // -
@@ -56,6 +57,7 @@ pub enum UnaryOp {
     Not, // not
 }
 
+#[derive(Clone)]
 pub struct Unary {
     pub op: UnaryOp,
     pub operand: Box<Spanned<Expr>>,

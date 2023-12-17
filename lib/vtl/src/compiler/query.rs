@@ -1,8 +1,9 @@
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use crate::compiler::{Expression, ExpressionError, Kind, TypeDef};
-use crate::Context;
+use crate::context::Context;
 
+#[derive(Clone)]
 pub enum Query {
     // .foo or %foo
     External(OwnedTargetPath),

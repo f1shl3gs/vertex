@@ -6,7 +6,7 @@ mod diagnostic;
 mod tests;
 
 pub use compiler::{Program, SyntaxError};
-pub use context::{Context, TargetValue};
+pub use context::{Error as ContextError, Target, TargetValue};
 pub use diagnostic::Diagnostic;
 
 pub fn compile(input: &'_ str) -> Result<Program, SyntaxError> {

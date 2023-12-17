@@ -57,17 +57,16 @@ A transform is responsible for mutating events as they are transported by Vertex
 might involve parsing, filtering, sampling or aggregating. You can have any number of
 transforms in your pipeline, and how they are composed is up to you.
 
-| Name        | Description                                          | Metric  |   Log   |  Trace  |
-|-------------|------------------------------------------------------|:-------:|:-------:|:-------:|
-| dedup       | Dedup logs                                           | &cross; | &check; | &cross; |
-| filter      | Filter out logs according field value                | &cross; | &check; | &cross; |
-| geoip       | Add GeoIP to log field                               | &cross; | &check; | &cross; |
-| metricalize | Consume logs and calculate value to produce metrics  | &cross; | &check; | &cross; |
-| modify      | Modify log event, e.g. insert/delete by path         | &cross; | &check; | &cross; |
-| rewrite     | Add, Set, Delete or rename event tags                | &check; | &check; | &check; |
-| route       | Route data to other transforms or sinks              | &cross; | &check; | &cross; |
-| sample      | Sample data according specific log fields            | &cross; | &check; | &cross; |
-| throttle    | Limit the rate of events                             | &cross; | &check; | &cross; |
+| Name        | Description                                         | Metric  |   Log   |  Trace  |
+|-------------|-----------------------------------------------------|:-------:|:-------:|:-------:|
+| dedup       | Dedup logs                                          | &cross; | &check; | &cross; |
+| filter      | Filter out logs according field value               | &cross; | &check; | &cross; |
+| geoip       | Add GeoIP to log field                              | &cross; | &check; | &cross; |
+| metricalize | Consume logs and calculate value to produce metrics | &cross; | &check; | &cross; |
+| rewrite     | Run a VTL script and update the log event           | &check; | &check; | &cross; |
+| route       | Route data to other transforms or sinks             | &cross; | &check; | &cross; |
+| sample      | Sample data according specific log fields           | &cross; | &check; | &cross; |
+| throttle    | Limit the rate of events                            | &cross; | &check; | &cross; |
 
 #### Sinks
 A sink is a destination for events. Each sink's design and transmission method is dicated by

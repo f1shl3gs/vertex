@@ -350,6 +350,7 @@ pub struct Variable {
     // reads: usize,
 }
 
+#[derive(Clone)]
 pub enum Expr {
     /// The literal null value.
     Null,
@@ -371,8 +372,10 @@ pub enum Expr {
 
     /// An unary operation.
     Unary(Unary),
+
     /// A binary operation.
     Binary(Binary),
+
     /// A call expression of something.
     Call(FunctionCall),
 
@@ -382,6 +385,7 @@ pub enum Expr {
     /// arr = [1, false, "foo", -1]
     /// ```
     Array(Vec<Spanned<Expr>>),
+
     /// A literal Object.
     ///
     /// ```text
@@ -616,6 +620,8 @@ pub struct Compiler<'input> {
     iterating: usize,
 
     variables: Vec<Variable>,
+
+    target_queries: Vec<OwnedTargetPath>,
 }
 
 impl Compiler<'_> {
@@ -626,6 +632,7 @@ impl Compiler<'_> {
             functions: builtin_functions(),
             iterating: 0,
             variables: vec![],
+            target_queries: vec![],
         };
 
         let block = compiler.parse_block()?;
@@ -635,6 +642,7 @@ impl Compiler<'_> {
 
         Ok(Program {
             statements: block,
+            target_queries: compiler.target_queries,
             variables: compiler
                 .variables
                 .into_iter()
@@ -810,11 +818,17 @@ impl Compiler<'_> {
                     Token::Assign => {
                         let expr = self.parse_expr()?;
                         if expr.type_def().fallible {
-                            // if expr is a function call, we can make it infallible by
-                            // adding a question mark after it.
-                            return Err(SyntaxError::UnhandledFallibleAssignment {
-                                span: expr.span,
-                            });
+                            match self.lexer.peek().transpose()? {
+                                Some((Token::Question, _span)) => {
+                                    // it's ok
+                                    self.lexer.next();
+                                }
+                                _ => {
+                                    return Err(SyntaxError::UnhandledFallibleAssignment {
+                                        span: expr.span,
+                                    });
+                                }
+                            }
                         }
 
                         Assignment::Single { target, expr }
@@ -999,6 +1013,8 @@ impl Compiler<'_> {
                     let query = if path.starts_with(|c| c == '.' || c == '%') {
                         let path = parse_target_path(path)
                             .map_err(|err| SyntaxError::InvalidPath { err, span })?;
+
+                        self.target_queries.push(path.clone());
 
                         Query::External(path)
                     } else {

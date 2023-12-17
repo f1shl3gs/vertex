@@ -1,0 +1,23 @@
+sources:
+  logs:
+    type: demo_logs
+    rate: 1
+    log: "{\"foo\": \"bar\"}"
+
+transforms:
+  rewrite:
+    type: rewrite
+    inputs:
+      - logs
+    script: |
+      msg, err = parse_json(.message)
+      del(.message)
+      . = merge(msg, .)
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - rewrite
+    encoding:
+      codec: json

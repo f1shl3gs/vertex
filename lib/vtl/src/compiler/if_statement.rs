@@ -6,6 +6,7 @@ use super::ExpressionError;
 use crate::compiler::{Expression, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 
+#[derive(Clone)]
 pub struct IfStatement {
     /// The condition for the if statement.
     pub condition: Spanned<Expr>,

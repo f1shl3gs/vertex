@@ -226,8 +226,8 @@ transforms-dedup = ["dep:lru"]
 transforms-filter = ["dep:condition"]
 transforms-geoip = ["dep:maxminddb"]
 transforms-metricalize = ["dep:async-stream"]
-transforms-modify = []
 transforms-relabel = []
+transforms-rewrite = []
 transforms-route = ["dep:condition"]
 transforms-sample = []
 transforms-throttle = ["dep:gcra"]
@@ -239,8 +239,8 @@ transforms = [
     "transforms-filter",
     "transforms-geoip",
     "transforms-metricalize",
-    "transforms-modify",
     "transforms-relabel",
+    "transforms-rewrite",
     "transforms-route",
     "transforms-sample",
     "transforms-throttle"

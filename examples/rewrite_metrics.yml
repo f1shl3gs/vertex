@@ -1,0 +1,21 @@
+sources:
+  selfstat:
+    type: selfstat
+
+transforms:
+  rewrite:
+    type: rewrite
+    inputs:
+      - selfstat
+    script: |
+      # this example is doable, but not advised,
+      # if you want manipulate metrics, you should use "relabel" transform
+      .tags.hostname = get_hostname()?
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - rewrite
+    encoding:
+      codec: json

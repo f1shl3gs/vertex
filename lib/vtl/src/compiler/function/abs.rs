@@ -7,7 +7,7 @@ use crate::compiler::parser::{Expr, SyntaxError};
 use crate::compiler::span::Spanned;
 use crate::compiler::type_def::TypeDef;
 use crate::compiler::{ExpressionError, Kind, ValueKind};
-use crate::Context;
+use crate::context::Context;
 
 pub struct Abs;
 
@@ -38,6 +38,7 @@ impl Function for Abs {
     }
 }
 
+#[derive(Clone)]
 struct AbsFunc {
     value: Spanned<Expr>,
 }

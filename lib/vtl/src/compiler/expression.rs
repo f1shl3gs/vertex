@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
+use dyn_clone::{clone_trait_object, DynClone};
 use value::Value;
 
 use super::{BinaryError, Kind, Span};
@@ -69,7 +70,7 @@ impl DiagnosticMessage for ExpressionError {
     }
 }
 
-pub trait Expression {
+pub trait Expression: Send + Sync + DynClone {
     /// Result<Option<Value>, Error>
     /// ```text
     /// if .a {
@@ -98,3 +99,5 @@ pub trait Expression {
         self.type_def()
     }
 }
+
+clone_trait_object!(Expression);

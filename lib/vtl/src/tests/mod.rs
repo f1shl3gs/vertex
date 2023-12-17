@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use value::Value;
 
 use crate::compiler::{Compiler, ExpressionError};
-use crate::context::{Context, TargetValue};
+use crate::context::TargetValue;
 
 pub fn assert_ok(input: &str, want: Value) {
     let got = run(
@@ -24,10 +24,6 @@ pub fn assert_ok(input: &str, want: Value) {
 }
 
 pub fn run(input: &str, target: &mut TargetValue) -> Result<Value, ExpressionError> {
-    let program = Compiler::compile(input).unwrap();
-    let mut cx = Context {
-        target,
-        variables: &mut Default::default(),
-    };
-    program.resolve(&mut cx)
+    let mut program = Compiler::compile(input).unwrap();
+    program.run(target)
 }

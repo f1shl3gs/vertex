@@ -12,7 +12,8 @@ use chrono::{DateTime, Utc};
 use path::ValuePath;
 
 pub use path::{
-    parse_target_path, parse_value_path, OwnedTargetPath, OwnedValuePath, PathParseError,
+    parse_target_path, parse_value_path, OwnedSegment, OwnedTargetPath, OwnedValuePath,
+    PathParseError,
 };
 
 /// The main value type used in Vertex events.
@@ -114,6 +115,8 @@ impl Value {
         crud::remove(self, &(), path.segment_iter(), prune).map(|(prev, _is_empty)| prev)
     }
 }
+
+pub type ObjectMap = BTreeMap<String, Value>;
 
 #[macro_export]
 macro_rules! value {

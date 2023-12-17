@@ -5,7 +5,7 @@ use super::parser::Expr;
 use super::{ExpressionError, Kind};
 use crate::compiler::type_def::TypeDef;
 use crate::compiler::{Span, Spanned};
-use crate::Context;
+use crate::context::Context;
 
 #[derive(Clone)]
 pub enum AssignmentTarget {
@@ -43,6 +43,7 @@ impl AssignmentTarget {
     }
 }
 
+#[derive(Clone)]
 pub enum Assignment {
     Single {
         target: AssignmentTarget,

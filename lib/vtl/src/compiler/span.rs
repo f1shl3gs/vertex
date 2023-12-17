@@ -46,6 +46,15 @@ impl<T> Deref for Spanned<T> {
     }
 }
 
+impl<T: Clone> Clone for Spanned<T> {
+    fn clone(&self) -> Self {
+        Spanned {
+            node: self.node.clone(),
+            span: self.span,
+        }
+    }
+}
+
 impl<T> Spanned<T> {
     #[inline]
     pub fn new(node: T, span: Span) -> Spanned<T> {

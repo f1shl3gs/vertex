@@ -1,12 +1,12 @@
 use crate::compiler::parser::unescape_string;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Segment {
     Placeholder, // represent for {}
     Literal(String),
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Template {
     segments: Vec<Segment>,
 }

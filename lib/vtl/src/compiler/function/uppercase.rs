@@ -36,6 +36,7 @@ impl Function for Uppercase {
     }
 }
 
+#[derive(Clone)]
 struct UppercaseFunc {
     expr: Spanned<Expr>,
 }

@@ -6,7 +6,7 @@ use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::{Expr, SyntaxError};
 use crate::compiler::query::Query;
 use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef};
-use crate::Context;
+use crate::context::Context;
 
 pub struct Del;
 
@@ -59,6 +59,7 @@ impl Function for Del {
     }
 }
 
+#[derive(Clone)]
 struct DelFunc {
     query: Spanned<Query>,
     compact: bool,
@@ -77,14 +78,14 @@ impl Expression for DelFunc {
 
                 Ok(value)
             }
-            Query::External(path) => {
-                cx.target
-                    .remove(path, self.compact)
-                    .map_err(|err| ExpressionError::Error {
-                        message: err.to_string(),
-                        span: self.query.span,
-                    })
-            }
+            Query::External(path) => cx
+                .target
+                .remove(path, self.compact)
+                .map_err(|err| ExpressionError::Error {
+                    message: err.to_string(),
+                    span: self.query.span,
+                })
+                .map(|value| value.unwrap_or(Value::Null)),
         }
     }
 
@@ -103,7 +104,6 @@ mod tests {
     use value::{parse_target_path, value};
 
     use crate::compiler::function::compile_and_run;
-    use crate::compiler::Span;
 
     #[test]
     fn exists() {
@@ -121,10 +121,7 @@ mod tests {
             vec![parse_target_path(".foo").unwrap().into()],
             Del,
             TypeDef::any().fallible(),
-            Err(ExpressionError::Error {
-                message: "not found".to_string(),
-                span: Span::empty(),
-            }),
+            Ok(Value::Null),
         )
     }
 
