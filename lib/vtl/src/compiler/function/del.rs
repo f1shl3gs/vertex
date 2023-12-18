@@ -5,6 +5,7 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, 
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::query::Query;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
 
@@ -39,14 +40,14 @@ impl Function for Del {
         let span = expr.span;
         let query = match expr.node {
             Expr::Query(query) => span.with(query),
-            expr => {
+            _expr => {
                 return Err(SyntaxError::InvalidFunctionArgumentType {
                     function: self.identifier(),
                     argument: "path",
                     want: Kind::ANY,
-                    got: expr.type_def().kind,
+                    got: Kind::UNDEFINED, // todo: fix this
                     span,
-                })
+                });
             }
         };
 
@@ -89,11 +90,8 @@ impl Expression for DelFunc {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
-        TypeDef {
-            fallible: true,
-            kind: Kind::ANY,
-        }
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        self.query.type_def(state)
     }
 }
 

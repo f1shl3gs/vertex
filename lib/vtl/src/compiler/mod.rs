@@ -15,7 +15,7 @@ mod query;
 mod span;
 mod statement;
 // mod literal;
-// mod state;
+mod state;
 mod template;
 mod type_def;
 mod unary;
@@ -25,6 +25,7 @@ use std::error::Error;
 use std::fmt::{Display, Formatter};
 
 use dyn_clone::{clone_trait_object, DynClone};
+use state::TypeState;
 use value::{OwnedTargetPath, Value};
 
 pub use binary::BinaryError;
@@ -67,8 +68,8 @@ impl Program {
     }
 
     #[inline]
-    pub fn type_def(&self) -> TypeDef {
-        self.statements.type_def()
+    pub fn type_def(&self, state: &TypeState) -> TypeDef {
+        self.statements.type_def(state)
     }
 }
 
@@ -156,7 +157,7 @@ pub trait Expression: Send + Sync + DynClone {
     ///
     /// Consider calling `type_info` instead if you want to capture changes in the type
     /// state from side-effects.
-    fn type_def(&self) -> TypeDef;
+    fn type_def(&self, state: &TypeState) -> TypeDef;
 }
 
 clone_trait_object!(Expression);

@@ -1,6 +1,7 @@
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use super::expr::Expr;
+use super::state::TypeState;
 use super::type_def::TypeDef;
 use super::{Expression, Span, Spanned};
 use super::{ExpressionError, Kind};
@@ -80,7 +81,7 @@ impl Expression for Assignment {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         let fallible = match self {
             Assignment::Single { .. } => true,
             Assignment::Infallible { .. } => false,

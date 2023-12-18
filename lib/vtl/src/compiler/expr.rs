@@ -7,6 +7,7 @@ use value::Value;
 use super::binary::Binary;
 use super::function_call::FunctionCall;
 use super::query::Query;
+use super::state::TypeState;
 use super::unary::Unary;
 use super::{Expression, ExpressionError, Spanned, TypeDef};
 use super::{Kind, Span};
@@ -246,12 +247,9 @@ impl Expression for Expr {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, state: &TypeState) -> TypeDef {
         match self {
-            Expr::Ident(_) => {
-                // TODO: fix this
-                Kind::ANY.into()
-            }
+            Expr::Ident(ident) => state.get_variable_kind(ident).into(),
             Expr::Null => Kind::NULL.into(),
             Expr::Boolean(_) => Kind::BOOLEAN.into(),
             Expr::Integer(_) => Kind::INTEGER.into(),
@@ -259,9 +257,9 @@ impl Expression for Expr {
             Expr::String(_) => Kind::BYTES.into(),
             Expr::Array(_) => Kind::ARRAY.into(),
             Expr::Object(_) => Kind::OBJECT.into(),
-            Expr::Call(call) => call.type_def(),
-            Expr::Binary(b) => b.type_def(),
-            Expr::Unary(u) => u.type_def(),
+            Expr::Call(call) => call.type_def(state),
+            Expr::Binary(b) => b.type_def(state),
+            Expr::Unary(u) => u.type_def(state),
 
             _ => TypeDef {
                 fallible: false,

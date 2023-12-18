@@ -1,6 +1,7 @@
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
-use super::{Expression, ExpressionError, Kind, TypeDef};
+use super::state::TypeState;
+use super::{Expression, ExpressionError, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]
@@ -33,10 +34,11 @@ impl Expression for Query {
         Ok(value)
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let kind = state.get_query_kind(self);
         TypeDef {
             fallible: false,
-            kind: Kind::ANY,
+            kind,
         }
     }
 }

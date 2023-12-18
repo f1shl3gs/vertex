@@ -4,6 +4,7 @@ use value::Value;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, TypeDef};
 use crate::context::Context;
 
@@ -35,7 +36,7 @@ impl Expression for NowFunc {
         Ok(Value::Timestamp(Utc::now()))
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: false,
             kind: Kind::TIMESTAMP,

@@ -1,8 +1,8 @@
-use bytes::Bytes;
 use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 
+use bytes::Bytes;
 use value::{parse_target_path, parse_value_path, OwnedTargetPath, PathParseError, Value};
 
 use super::assignment::{Assignment, AssignmentTarget};
@@ -15,6 +15,7 @@ use super::if_statement::IfStatement;
 use super::levenshtein::distance;
 use super::lex::{LexError, Lexer, Token};
 use super::query::Query;
+use super::state::TypeState;
 use super::statement::Statement;
 use super::unary::{Unary, UnaryError, UnaryOp};
 use super::Kind;
@@ -302,10 +303,7 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::InvalidFunctionArgumentType {
                 want, got, span, ..
             } => {
-                vec![Label::new(
-                    format!("argument want: {}, got {}", want, got),
-                    span,
-                )]
+                vec![Label::new(format!("want: {}, got {}", want, got), span)]
             }
             SyntaxError::InvalidValue {
                 want, got, span, ..
@@ -384,6 +382,7 @@ pub struct Compiler<'input> {
     iterating: usize,
 
     variables: Vec<Variable>,
+    type_state: TypeState,
 
     target_queries: Vec<OwnedTargetPath>,
 }
@@ -396,6 +395,7 @@ impl Compiler<'_> {
             functions: builtin_functions(),
             iterating: 0,
             variables: vec![],
+            type_state: TypeState::default(),
             target_queries: vec![],
         };
 
@@ -566,11 +566,15 @@ impl Compiler<'_> {
                         self.expect(Token::Assign)?;
 
                         let expr = self.parse_expr()?;
-                        if !expr.type_def().fallible {
+                        let expr_type = expr.type_def(&self.type_state);
+                        if !expr_type.fallible {
                             return Err(SyntaxError::UnnecessaryErrorAssignment {
                                 span: expr.span,
                             });
                         }
+
+                        self.type_state.apply(&target, expr_type.kind);
+                        self.type_state.apply(&err, Kind::BYTES);
 
                         Assignment::Infallible {
                             ok: target,
@@ -583,7 +587,7 @@ impl Compiler<'_> {
                     // a = fallible()?
                     Token::Assign => {
                         let expr = self.parse_expr()?;
-                        if expr.type_def().fallible {
+                        if expr.type_def(&self.type_state).fallible {
                             match self.lexer.peek().transpose()? {
                                 Some((Token::Question, _span)) => {
                                     // it's ok
@@ -596,6 +600,9 @@ impl Compiler<'_> {
                                 }
                             }
                         }
+
+                        self.type_state
+                            .apply(&target, expr.type_def(&self.type_state).kind);
 
                         Assignment::Single { target, expr }
                     }
@@ -738,7 +745,7 @@ impl Compiler<'_> {
                 self.lexer.next();
                 let operand = self.parse_expr_unary()?;
                 let span = span.merge(operand.span);
-                let expr = Unary::compile(op, operand)
+                let expr = Unary::compile(op, operand, &self.type_state)
                     .map_err(SyntaxError::Unary)?
                     .with(span);
                 Ok(expr)
@@ -927,7 +934,7 @@ impl Compiler<'_> {
                         let argument = self.parse_expr()?;
                         let end = self.lexer.pos();
 
-                        if argument.type_def().fallible {
+                        if argument.type_def(&self.type_state).fallible {
                             return Err(SyntaxError::FallibleArgument {
                                 span: Span { start, end },
                             });
@@ -955,7 +962,7 @@ impl Compiler<'_> {
                             self.register_variable(s.to_string());
                         }
 
-                        arguments.push(argument)?;
+                        arguments.push(argument, &self.type_state)?;
                     }
                 },
                 None => return Err(SyntaxError::UnexpectedEof),
@@ -1075,15 +1082,15 @@ impl Compiler<'_> {
         self.expect(Token::If)?;
 
         let condition = self.parse_expr()?;
-        if condition.type_def().fallible {
+        if condition.type_def(&self.type_state).fallible {
             return Err(SyntaxError::FalliblePrediction {
                 span: condition.span,
             });
         }
 
-        if condition.type_def().kind != Kind::BOOLEAN {
+        if condition.type_def(&self.type_state).kind != Kind::BOOLEAN {
             return Err(SyntaxError::NonBooleanPrediction {
-                got: condition.type_def().kind,
+                got: condition.type_def(&self.type_state).kind,
                 span: condition.span,
             });
         }
@@ -1176,7 +1183,7 @@ impl Compiler<'_> {
         self.expect(Token::In)?;
 
         let iterator = self.parse_expr()?;
-        let td = iterator.type_def();
+        let td = iterator.type_def(&self.type_state);
         if td.fallible {
             return Err(SyntaxError::FallibleIterator {
                 span: iterator.span,
@@ -1194,6 +1201,14 @@ impl Compiler<'_> {
 
         self.register_variable(key.clone());
         self.register_variable(value.clone());
+
+        self.type_state.apply(
+            &AssignmentTarget::Internal(key.clone(), None),
+            Kind::INTEGER,
+        );
+        self.type_state
+            .apply(&AssignmentTarget::Internal(value.clone(), None), Kind::ANY);
+
         self.iterating += 1;
         let block = self.parse_block()?;
         self.iterating -= 1;
@@ -1318,7 +1333,6 @@ impl Compiler<'_> {
         }
     }
 
-    #[inline]
     fn register_variable(&mut self, name: String) {
         if !self.variables.iter().any(|var| var.name == name) {
             self.variables.push(Variable {

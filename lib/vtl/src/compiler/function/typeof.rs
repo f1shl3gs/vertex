@@ -1,3 +1,4 @@
+use bytes::Bytes;
 use value::Value;
 
 use crate::compiler::expr::Expr;
@@ -8,11 +9,11 @@ use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
 use crate::SyntaxError;
 
-pub struct IsInteger;
+pub struct TypeOf;
 
-impl Function for IsInteger {
+impl Function for TypeOf {
     fn identifier(&self) -> &'static str {
-        "is_integer"
+        "typeof"
     }
 
     fn parameters(&self) -> &'static [Parameter] {
@@ -31,58 +32,37 @@ impl Function for IsInteger {
         let value = arguments.get();
 
         Ok(FunctionCall {
-            function: Box::new(IsIntegerFunc { value }),
+            function: Box::new(TypeOfFunc { value }),
             span: cx.span,
         })
     }
 }
 
 #[derive(Clone)]
-struct IsIntegerFunc {
+struct TypeOfFunc {
     value: Spanned<Expr>,
 }
 
-impl Expression for IsIntegerFunc {
-    #[allow(clippy::match_like_matches_macro)]
+impl Expression for TypeOfFunc {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
         let value = match self.value.resolve(cx)? {
-            Value::Integer(_i) => true,
-            _ => false,
+            Value::Bytes(_) => "string",
+            Value::Float(_) => "float",
+            Value::Integer(_) => "integer",
+            Value::Boolean(_) => "boolean",
+            Value::Timestamp(_) => "timestamp",
+            Value::Object(_) => "object",
+            Value::Array(_) => "array",
+            Value::Null => "null",
         };
 
-        Ok(value.into())
+        Ok(Value::Bytes(Bytes::from_static(value.as_bytes())))
     }
 
     fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: false,
-            kind: Kind::BOOLEAN,
+            kind: Kind::BYTES,
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::compiler::function::compile_and_run;
-
-    #[test]
-    fn integer() {
-        compile_and_run(
-            vec![1.into()],
-            IsInteger,
-            TypeDef::boolean(),
-            Ok(true.into()),
-        )
-    }
-
-    #[test]
-    fn not_integer() {
-        compile_and_run(
-            vec!["1".into()],
-            IsInteger,
-            TypeDef::boolean(),
-            Ok(false.into()),
-        )
     }
 }

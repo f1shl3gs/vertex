@@ -1,5 +1,6 @@
 use value::Value;
 
+use super::state::TypeState;
 use super::{Expression, ExpressionError, Span, TypeDef};
 use crate::context::Context;
 
@@ -16,7 +17,7 @@ impl Expression for FunctionCall {
     }
 
     #[inline]
-    fn type_def(&self) -> TypeDef {
-        self.function.type_def()
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        self.function.type_def(state)
     }
 }

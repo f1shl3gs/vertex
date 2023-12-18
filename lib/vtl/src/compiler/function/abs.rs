@@ -5,6 +5,7 @@ use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, 
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::span::Spanned;
+use crate::compiler::state::TypeState;
 use crate::compiler::type_def::TypeDef;
 use crate::compiler::{Expression, ExpressionError, Kind, ValueKind};
 use crate::context::Context;
@@ -60,8 +61,8 @@ impl Expression for AbsFunc {
         Ok(value)
     }
 
-    fn type_def(&self) -> TypeDef {
-        let def = self.value.type_def();
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let def = self.value.type_def(state);
 
         TypeDef {
             fallible: false,

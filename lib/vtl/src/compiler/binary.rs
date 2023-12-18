@@ -6,6 +6,7 @@ use value::Value;
 
 use super::expr::Expr;
 use super::span::{Span, Spanned};
+use super::state::TypeState;
 use super::{Expression, TypeDef};
 use super::{ExpressionError, Kind, ValueKind};
 use crate::context::Context;
@@ -398,14 +399,14 @@ impl Expression for Binary {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
-        let lhs_def = self.lhs.type_def();
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let lhs_def = self.lhs.type_def(state);
 
         match self.op {
             BinaryOp::Or => {
                 if lhs_def.is_null() || self.lhs.is_bool(false) {
                     // lhs is always "false"
-                    self.rhs.type_def()
+                    self.rhs.type_def(state)
                 } else if !(lhs_def.kind.contains(Kind::NULL)
                     || lhs_def.kind.contains(Kind::BOOLEAN))
                     || self.lhs.is_bool(true)
@@ -427,7 +428,7 @@ impl Expression for Binary {
                 } else if self.lhs.is_bool(true) {
                     // lhs is always "true"
                     // keep the fallibility of RHS, but change it to a boolean
-                    self.rhs.type_def()
+                    self.rhs.type_def(state)
                 } else {
                     // unknown if lhs is true or false
                     // lhs_def.
@@ -436,7 +437,7 @@ impl Expression for Binary {
             }
 
             BinaryOp::Equal | BinaryOp::NotEqual => TypeDef {
-                fallible: lhs_def.fallible | self.rhs.type_def().fallible,
+                fallible: lhs_def.fallible | self.rhs.type_def(state).fallible,
                 kind: Kind::BOOLEAN,
             },
 
@@ -444,14 +445,14 @@ impl Expression for Binary {
             | BinaryOp::GreatEqual
             | BinaryOp::LessThan
             | BinaryOp::LessEqual => {
-                if lhs_def.is_bytes() && self.rhs.type_def().is_bytes() {
+                if lhs_def.is_bytes() && self.rhs.type_def(state).is_bytes() {
                     TypeDef {
-                        fallible: lhs_def.fallible | self.rhs.type_def().fallible,
+                        fallible: lhs_def.fallible | self.rhs.type_def(state).fallible,
                         kind: Kind::BOOLEAN,
                     }
                 } else {
                     TypeDef {
-                        fallible: !lhs_def.is_numeric() | !self.rhs.type_def().is_numeric(),
+                        fallible: !lhs_def.is_numeric() | !self.rhs.type_def(state).is_numeric(),
                         kind: Kind::BOOLEAN,
                     }
                 }
@@ -459,7 +460,7 @@ impl Expression for Binary {
 
             BinaryOp::Add | BinaryOp::Subtract | BinaryOp::Multiply => {
                 // none of these operations short-circuit, so the type of RHS can be applied.
-                let rhs_def = self.rhs.type_def();
+                let rhs_def = self.rhs.type_def(state);
 
                 match self.op {
                     // "foo" + xxxx

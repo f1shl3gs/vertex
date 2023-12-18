@@ -47,6 +47,7 @@ mod to_integer;
 mod to_string;
 mod to_unix_timestamp;
 mod trim;
+mod r#typeof;
 mod unique;
 mod uppercase;
 mod values;
@@ -55,6 +56,7 @@ mod xxhash;
 use super::expr::Expr;
 use super::function_call::FunctionCall;
 use super::parser::SyntaxError;
+use super::state::TypeState;
 use super::Expression;
 use super::{Kind, Span, Spanned};
 
@@ -78,16 +80,16 @@ impl ArgumentList {
         self.arguments
     }
 
-    pub fn push(&mut self, expr: Spanned<Expr>) -> Result<(), SyntaxError> {
+    pub fn push(&mut self, expr: Spanned<Expr>, state: &TypeState) -> Result<(), SyntaxError> {
         let index = self.arguments.len();
 
         if let Some(parameter) = self.parameters.get(index) {
-            if !parameter.kind.intersects(expr.node.type_def().kind) {
+            if !parameter.kind.intersects(expr.type_def(state).kind) {
                 return Err(SyntaxError::InvalidFunctionArgumentType {
                     function: self.name,
                     argument: parameter.name,
                     want: parameter.kind,
-                    got: expr.node.type_def().kind,
+                    got: expr.type_def(state).kind,
                     span: expr.span,
                 });
             }
@@ -255,6 +257,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(to_string::ToString),
         Box::new(to_unix_timestamp::ToUnixTimestamp),
         Box::new(trim::Trim),
+        Box::new(r#typeof::TypeOf),
         Box::new(unique::Unique),
         Box::new(uppercase::Uppercase),
         Box::new(values::Values),
@@ -276,11 +279,13 @@ pub fn compile_and_run<F: Function>(
     use crate::context::Context;
     use crate::TargetValue;
 
+    let state = TypeState::default();
     let func = Box::new(func);
+
     let mut arguments_list = ArgumentList::new(func.identifier(), func.parameters());
     for argument in arguments {
         arguments_list
-            .push(Spanned::new(argument, Span::empty()))
+            .push(Spanned::new(argument, Span::empty()), &state)
             .expect("invalid argument");
     }
 
@@ -293,7 +298,7 @@ pub fn compile_and_run<F: Function>(
         )
         .unwrap();
 
-    assert_eq!(call.type_def(), td);
+    assert_eq!(call.type_def(&state), td);
 
     let ts = Utc.with_ymd_and_hms(2021, 1, 1, 0, 0, 0).unwrap();
     let mut cx = Context {

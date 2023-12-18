@@ -3,6 +3,7 @@ use value::Value;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Span, TypeDef};
 use crate::context::Context;
 
@@ -42,7 +43,7 @@ impl Expression for GetHostnameFunc {
         Ok(hostname)
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: true,
             kind: Kind::BYTES,
