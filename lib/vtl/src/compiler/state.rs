@@ -114,6 +114,13 @@ impl TypeState {
         }
     }
 
+    pub fn apply_variable(&mut self, ident: &str, kind: Kind) {
+        let detail = self.local.entry(ident.to_string()).or_default();
+
+        detail.kind = kind;
+        detail.value = Value::Null;
+    }
+
     pub fn get_variable_kind(&self, ident: &str) -> Kind {
         self.local
             .get(ident)
@@ -150,10 +157,12 @@ mod tests {
     #[test]
     fn detail() {
         let mut detail = Details::default();
-        let value_target = parse_value_path("foo").unwrap();
+        let value_target = parse_value_path("foo.bar").unwrap();
 
         detail.set(&value_target, Kind::BYTES);
         assert_eq!(detail.get(&value_target), Kind::BYTES);
+        let value_target = parse_value_path("foo").unwrap();
+        assert_eq!(detail.get(&value_target), Kind::OBJECT);
     }
 
     #[test]

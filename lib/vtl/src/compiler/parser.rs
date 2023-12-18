@@ -1189,7 +1189,13 @@ impl Compiler<'_> {
                 span: iterator.span,
             });
         }
-        if !td.kind.contains(Kind::ARRAY) && !td.kind.contains(Kind::OBJECT) {
+        if td.kind.contains(Kind::ARRAY) {
+            self.type_state.apply_variable(key.as_str(), Kind::INTEGER);
+            self.type_state.apply_variable(value.as_str(), Kind::ANY);
+        } else if td.kind.contains(Kind::OBJECT) {
+            self.type_state.apply_variable(key.as_str(), Kind::BYTES);
+            self.type_state.apply_variable(value.as_str(), Kind::ANY);
+        } else {
             return Err(SyntaxError::InvalidType {
                 want: "array or object".to_string(),
                 got: td.kind.to_string(),
@@ -1201,13 +1207,6 @@ impl Compiler<'_> {
 
         self.register_variable(key.clone());
         self.register_variable(value.clone());
-
-        self.type_state.apply(
-            &AssignmentTarget::Internal(key.clone(), None),
-            Kind::INTEGER,
-        );
-        self.type_state
-            .apply(&AssignmentTarget::Internal(value.clone(), None), Kind::ANY);
 
         self.iterating += 1;
         let block = self.parse_block()?;
@@ -1500,6 +1499,7 @@ mod tests {
     #[test]
     fn for_statement() {
         let text = r#"
+        a = 1
         for k, v in .map {
             a = a + 1
             k = k + "string"

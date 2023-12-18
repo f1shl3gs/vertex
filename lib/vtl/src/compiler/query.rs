@@ -1,3 +1,4 @@
+use crate::compiler::Kind;
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use super::state::TypeState;
@@ -36,9 +37,18 @@ impl Expression for Query {
 
     fn type_def(&self, state: &TypeState) -> TypeDef {
         let kind = state.get_query_kind(self);
-        TypeDef {
-            fallible: false,
-            kind,
+
+        if kind == Kind::UNDEFINED {
+            // path is not valid
+            TypeDef {
+                fallible: true,
+                kind: Kind::ANY,
+            }
+        } else {
+            TypeDef {
+                fallible: false,
+                kind,
+            }
         }
     }
 }
