@@ -145,16 +145,16 @@ mod tests {
         compile_and_run(
             vec![
                 value!({
-                    "key1": "val1",
+                    "key2": "val2",
                     "child": {
-                        "grandchild1": "val1"
+                        "grandchild2": true
                     }
                 })
                 .into(),
                 value!({
-                    "key2": "val2",
+                    "key1": "val1",
                     "child": {
-                        "grandchild2": true
+                        "grandchild1": "val1"
                     }
                 })
                 .into(),
