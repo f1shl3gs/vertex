@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702875262551,
+  "lastUpdate": 1702875269807,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7c1139f0bb2d4821b837ad5926e3b9dde9243711",
-          "message": "chore(deps): bump thiserror from 1.0.49 to 1.0.50 (#1360)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.49 to 1.0.50.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.49...1.0.50)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-20T16:57:59+08:00",
-          "tree_id": "31dbbf5359b217c0c88ebcfab55aae79d808a4cc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c1139f0bb2d4821b837ad5926e3b9dde9243711"
-        },
-        "date": 1697792476651,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 104.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 232.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 380.83,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 185.25,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "91fb1f99ea7ab9dc4775001da745e0b6b2ffc3ef",
+          "message": "deps: bump memmap2 to 0.9.2 (#1479)",
+          "timestamp": "2023-12-18T12:52:09+08:00",
+          "tree_id": "c7a80d41ae00ab3b0d93c8367fdc161b0c83d5e0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/91fb1f99ea7ab9dc4775001da745e0b6b2ffc3ef"
+        },
+        "date": 1702875255441,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.518,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.218,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.31,
             "unit": "ns/op"
           }
         ]
