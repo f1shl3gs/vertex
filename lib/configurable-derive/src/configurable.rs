@@ -30,7 +30,6 @@ pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> Result<TokenS
             impl #impl_generics ::configurable::Configurable for #name #type_generics #where_clause {
                 fn reference() -> Option<&'static str> {
                     let self_type_name = ::std::any::type_name::<Self>();
-
                     if !self_type_name.starts_with(std::module_path!()) {
                         Some(std::concat!(std::module_path!(), "::", #ref_name))
                     } else {
@@ -73,13 +72,9 @@ fn impl_from_struct(
             ));
         }
     };
-    let maybe_description = type_attrs
-        .description
-        .as_ref()
-        .map(|desc| quote!(
-            let metadata = schema.metadata();
-            metadata.description = Some(#desc.to_string());
-        ));
+    let maybe_description = type_attrs.description.as_ref().map(|desc| {
+        quote!( schema.metadata().description = Some(#desc.to_string()); )
+    });
 
     let mut any_flatten = false;
     let mut mapped_fields = Vec::with_capacity(fields.named.len());
@@ -396,17 +391,13 @@ fn generate_enum_unamed_variant_schema(
         let field_attrs = FieldAttrs::parse(field)?;
         let maybe_description = match &field_attrs.description {
             Some(desc) => {
-                quote!(
-                    let metadata = subschema.metadata();
-                    metadata.description = Some(#desc);
-                )
+                quote!( subschema.metadata().description = Some(#desc); )
             }
             None => quote!(),
         };
 
         return Ok(quote! {
             let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
-            let metadata = subschema.metadata();
 
             #maybe_description
 
