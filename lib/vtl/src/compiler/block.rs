@@ -1,9 +1,8 @@
 use value::Value;
 
-use super::expression::Expression;
+use super::state::TypeState;
 use super::statement::Statement;
-use super::ExpressionError;
-use crate::compiler::TypeDef;
+use super::{Expression, ExpressionError, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]
@@ -38,7 +37,10 @@ impl Expression for Block {
         last.resolve(cx)
     }
 
-    fn type_def(&self) -> TypeDef {
-        self.0.last().expect("at least one expression").type_def()
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        self.0
+            .last()
+            .expect("at least one expression")
+            .type_def(state)
     }
 }

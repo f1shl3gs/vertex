@@ -1,10 +1,10 @@
 use value::Value;
 
-use crate::compiler::expression::Expression;
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
-use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef, ValueKind};
+use crate::compiler::state::TypeState;
+use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;
 
@@ -60,7 +60,7 @@ impl Expression for IsEmptyFunc {
         Ok(is_empty.into())
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: false,
             kind: Kind::BOOLEAN,
@@ -70,9 +70,10 @@ impl Expression for IsEmptyFunc {
 
 #[cfg(test)]
 mod tests {
+    use value::value;
+
     use super::*;
     use crate::compiler::function::compile_and_run;
-    use std::collections::BTreeMap;
 
     #[test]
     fn array() {
@@ -96,11 +97,11 @@ mod tests {
 
     #[test]
     fn map() {
-        let mut argument = BTreeMap::new();
-        argument.insert("foo".into(), 1.into());
-
         compile_and_run(
-            vec![argument.into()],
+            vec![value!({
+                "foo": 1
+            })
+            .into()],
             IsEmpty,
             TypeDef::boolean(),
             Ok(false.into()),
@@ -109,10 +110,8 @@ mod tests {
 
     #[test]
     fn empty_map() {
-        let argument = BTreeMap::new();
-
         compile_and_run(
-            vec![argument.into()],
+            vec![value!({}).into()],
             IsEmpty,
             TypeDef::boolean(),
             Ok(true.into()),

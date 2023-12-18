@@ -1,9 +1,10 @@
 use value::Value;
 
 use super::block::Block;
-use super::parser::Expr;
-use super::ExpressionError;
-use crate::compiler::{Expression, Kind, Spanned, TypeDef, ValueKind};
+use super::expr::Expr;
+use super::state::TypeState;
+use super::{Expression, ExpressionError};
+use super::{Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 
 #[derive(Clone)]
@@ -41,7 +42,7 @@ impl Expression for IfStatement {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: false,
             kind: Kind::UNDEFINED,

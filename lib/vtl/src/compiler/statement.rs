@@ -1,12 +1,12 @@
 use value::Value;
 
 use super::assignment::Assignment;
+use super::expr::Expr;
 use super::for_statement::ForStatement;
 use super::function_call::FunctionCall;
 use super::if_statement::IfStatement;
-use super::parser::Expr;
-use super::ExpressionError;
-use crate::compiler::{Expression, Kind, TypeDef};
+use super::state::TypeState;
+use super::{Expression, ExpressionError, Kind, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]
@@ -102,10 +102,10 @@ impl Expression for Statement {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, state: &TypeState) -> TypeDef {
         match self {
-            Statement::If(if_statement) => if_statement.type_def(),
-            Statement::For(for_statement) => for_statement.type_def(),
+            Statement::If(if_statement) => if_statement.type_def(state),
+            Statement::For(for_statement) => for_statement.type_def(state),
             Statement::Continue => TypeDef {
                 fallible: false,
                 kind: Kind::UNDEFINED,
@@ -114,16 +114,16 @@ impl Expression for Statement {
                 fallible: false,
                 kind: Kind::UNDEFINED,
             },
-            Statement::Assign(assignment) => assignment.type_def(),
-            Statement::Call(call) => call.type_def(),
+            Statement::Assign(assignment) => assignment.type_def(state),
+            Statement::Call(call) => call.type_def(state),
             Statement::Return(ret) => match ret {
-                Some(expr) => expr.type_def(),
+                Some(expr) => expr.type_def(state),
                 None => TypeDef {
                     fallible: false,
                     kind: Kind::UNDEFINED,
                 },
             },
-            Statement::Expression(expr) => expr.type_def(),
+            Statement::Expression(expr) => expr.type_def(state),
         }
     }
 }

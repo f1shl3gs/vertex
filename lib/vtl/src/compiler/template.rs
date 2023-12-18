@@ -1,4 +1,4 @@
-use crate::compiler::parser::unescape_string;
+use super::parser::unescape_string;
 
 #[derive(Clone, Debug)]
 pub enum Segment {

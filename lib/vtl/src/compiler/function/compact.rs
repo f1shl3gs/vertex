@@ -2,9 +2,10 @@ use std::collections::BTreeMap;
 
 use value::Value;
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;
@@ -69,8 +70,8 @@ impl Expression for CompactFunc {
         Ok(value)
     }
 
-    fn type_def(&self) -> TypeDef {
-        self.value.type_def()
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        self.value.type_def(state)
     }
 }
 
@@ -157,13 +158,13 @@ mod tests {
 
     #[test]
     fn object() {
-        let mut input = BTreeMap::new();
-        input.insert("foo".to_string(), 1.into());
-        input.insert("null".to_string(), Expr::Null);
-        input.insert("array".to_string(), Expr::Array(vec![]));
-
         compile_and_run(
-            vec![input.into()],
+            vec![value!({
+                "foo": 1,
+                "null": null,
+                "array": []
+            })
+            .into()],
             Compact,
             TypeDef::object(),
             Ok(value!({
@@ -174,13 +175,16 @@ mod tests {
 
     #[test]
     fn object_no_recursive() {
-        let mut input = BTreeMap::new();
-        input.insert("foo".to_string(), 1.into());
-        input.insert("null".to_string(), Expr::Null);
-        input.insert("array".to_string(), Expr::Array(vec![]));
-
         compile_and_run(
-            vec![input.into(), false.into()],
+            vec![
+                value!({
+                    "foo": 1,
+                    "null": null,
+                    "array": []
+                })
+                .into(),
+                false.into(),
+            ],
             Compact,
             TypeDef::object(),
             Ok(value!({

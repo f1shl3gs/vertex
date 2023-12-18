@@ -1,4 +1,3 @@
-use regex::Regex;
 use value::Value;
 
 use crate::compiler::expr::Expr;
@@ -9,23 +8,23 @@ use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, Value
 use crate::context::Context;
 use crate::SyntaxError;
 
-pub struct Match;
+pub struct Includes;
 
-impl Function for Match {
+impl Function for Includes {
     fn identifier(&self) -> &'static str {
-        "match"
+        "includes"
     }
 
     fn parameters(&self) -> &'static [Parameter] {
         &[
             Parameter {
-                name: "value",
-                kind: Kind::BYTES,
+                name: "array",
+                kind: Kind::ARRAY,
                 required: true,
             },
             Parameter {
-                name: "pattern",
-                kind: Kind::BYTES,
+                name: "item",
+                kind: Kind::ANY,
                 required: true,
             },
         ]
@@ -36,41 +35,40 @@ impl Function for Match {
         cx: FunctionCompileContext,
         mut arguments: ArgumentList,
     ) -> Result<FunctionCall, SyntaxError> {
-        let value = arguments.get();
-        let pattern = arguments.get_string()?;
-        let pattern = Regex::new(pattern.as_str()).map_err(|err| SyntaxError::InvalidValue {
-            err: err.to_string(),
-            want: "valid regex pattern".to_string(),
-            got: pattern.node,
-            span: pattern.span,
-        })?;
+        let array = arguments.get();
+        let item = arguments.get();
 
         Ok(FunctionCall {
-            function: Box::new(MatchFunc { value, pattern }),
+            function: Box::new(IncludesFunc { array, item }),
             span: cx.span,
         })
     }
 }
 
 #[derive(Clone)]
-struct MatchFunc {
-    value: Spanned<Expr>,
-    pattern: Regex,
+struct IncludesFunc {
+    array: Spanned<Expr>,
+    item: Spanned<Expr>,
 }
 
-impl Expression for MatchFunc {
+impl Expression for IncludesFunc {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        match self.value.resolve(cx)? {
-            Value::Bytes(b) => {
-                let text = String::from_utf8_lossy(&b);
-                Ok(self.pattern.is_match(text.as_ref()).into())
+        let array = match self.array.resolve(cx)? {
+            Value::Array(array) => array,
+            value => {
+                return Err(ExpressionError::UnexpectedType {
+                    want: Kind::ARRAY,
+                    got: value.kind(),
+                    span: self.array.span,
+                })
             }
-            value => Err(ExpressionError::UnexpectedType {
-                want: Kind::BYTES,
-                got: value.kind(),
-                span: self.value.span,
-            }),
-        }
+        };
+
+        let item = self.item.resolve(cx)?;
+
+        let found = array.iter().any(|value| value == &item);
+
+        Ok(found.into())
     }
 
     fn type_def(&self, _state: &TypeState) -> TypeDef {
@@ -87,22 +85,32 @@ mod tests {
     use crate::compiler::function::compile_and_run;
 
     #[test]
-    fn yes() {
+    fn empty_not_included() {
         compile_and_run(
-            vec!["foobar".into(), r#"foo.*"#.into()],
-            Match,
+            vec![Expr::Array(vec![]), "foo".into()],
+            Includes,
+            TypeDef::boolean(),
+            Ok(false.into()),
+        )
+    }
+
+    #[test]
+    fn string_include() {
+        compile_and_run(
+            vec![Expr::Array(vec!["foo".into(), "bar".into()]), "foo".into()],
+            Includes,
             TypeDef::boolean(),
             Ok(true.into()),
         )
     }
 
     #[test]
-    fn yes_with_escape() {
+    fn string_not_include() {
         compile_and_run(
-            vec!["foobar".into(), Expr::String(r"\w+".into())],
-            Match,
+            vec![Expr::Array(vec!["foo".into(), "bar".into()]), "xyz".into()],
+            Includes,
             TypeDef::boolean(),
-            Ok(true.into()),
+            Ok(false.into()),
         )
     }
 }

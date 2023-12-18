@@ -1,8 +1,9 @@
 use value::Value;
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;
@@ -72,8 +73,8 @@ impl Expression for ToFloatFunc {
         Ok(Value::Float(value))
     }
 
-    fn type_def(&self) -> TypeDef {
-        let kind = self.value.type_def().kind;
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let kind = self.value.type_def(state).kind;
         let fallible =
             kind.contains(Kind::BYTES) || kind.contains(Kind::ARRAY) || kind.contains(Kind::OBJECT);
 

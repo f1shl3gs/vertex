@@ -1,9 +1,11 @@
 use value::Value;
 
 use super::{Function, FunctionCompileContext};
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::{Expr, SyntaxError};
+use crate::compiler::parser::SyntaxError;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 
@@ -80,8 +82,8 @@ impl Expression for ToBoolFunc {
         Ok(value.into())
     }
 
-    fn type_def(&self) -> TypeDef {
-        let kind = self.expr.type_def().kind;
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let kind = self.expr.type_def(state).kind;
         let fallible = kind.contains(Kind::BYTES)
             || kind.contains(Kind::TIMESTAMP)
             || kind.contains(Kind::ARRAY)

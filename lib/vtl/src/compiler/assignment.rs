@@ -1,10 +1,10 @@
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
-use super::expression::Expression;
-use super::parser::Expr;
+use super::expr::Expr;
+use super::state::TypeState;
+use super::type_def::TypeDef;
+use super::{Expression, Span, Spanned};
 use super::{ExpressionError, Kind};
-use crate::compiler::type_def::TypeDef;
-use crate::compiler::{Span, Spanned};
 use crate::context::Context;
 
 #[derive(Clone)]
@@ -81,7 +81,7 @@ impl Expression for Assignment {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         let fallible = match self {
             Assignment::Single { .. } => true,
             Assignment::Infallible { .. } => false,

@@ -2,25 +2,26 @@ use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 
+use bytes::Bytes;
 use value::{parse_target_path, parse_value_path, OwnedTargetPath, PathParseError, Value};
 
 use super::assignment::{Assignment, AssignmentTarget};
 use super::binary::{Binary, BinaryOp};
 use super::block::Block;
+use super::expr::Expr;
 use super::for_statement::ForStatement;
 use super::function::{builtin_functions, ArgumentList, Function, FunctionCompileContext};
-use super::function_call::FunctionCall;
 use super::if_statement::IfStatement;
 use super::levenshtein::distance;
 use super::lex::{LexError, Lexer, Token};
 use super::query::Query;
+use super::state::TypeState;
 use super::statement::Statement;
 use super::unary::{Unary, UnaryError, UnaryOp};
+use super::Kind;
 use super::Program;
-use super::{BinaryError, Expression, TypeDef};
-use super::{ExpressionError, Kind};
+use super::{BinaryError, Expression};
 use super::{Span, Spanned};
-use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 
 #[derive(Debug)]
@@ -302,10 +303,7 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::InvalidFunctionArgumentType {
                 want, got, span, ..
             } => {
-                vec![Label::new(
-                    format!("argument want: {}, got {}", want, got),
-                    span,
-                )]
+                vec![Label::new(format!("want: {}, got {}", want, got), span)]
             }
             SyntaxError::InvalidValue {
                 want, got, span, ..
@@ -343,247 +341,11 @@ impl DiagnosticMessage for SyntaxError {
     }
 }
 
-pub struct Variable {
+struct Variable {
     name: String,
     value: Value,
     // maybe we should track usage
     // reads: usize,
-}
-
-#[derive(Clone)]
-pub enum Expr {
-    /// The literal null value.
-    Null,
-    /// The literal boolean value.
-    Boolean(bool),
-    /// The literal integer.
-    Integer(i64),
-    /// The literal float.
-    Float(f64),
-    /// A literal string.
-    String(String),
-
-    /// A reference to a stored value, an identifier.
-    Ident(String),
-    /// A query
-    ///
-    /// ".", "%", ".foo", "%foo" or "foo.bar"
-    Query(Query),
-
-    /// An unary operation.
-    Unary(Unary),
-
-    /// A binary operation.
-    Binary(Binary),
-
-    /// A call expression of something.
-    Call(FunctionCall),
-
-    /// A literal Array
-    ///
-    /// ```text
-    /// arr = [1, false, "foo", -1]
-    /// ```
-    Array(Vec<Spanned<Expr>>),
-
-    /// A literal Object.
-    ///
-    /// ```text
-    /// obj = {
-    ///     foo: "bar"
-    /// }
-    /// ```
-    Object(BTreeMap<String, Spanned<Expr>>),
-}
-
-impl Display for Expr {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let text = match self {
-            Expr::Null => "null",
-            Expr::Boolean(_) => "bool",
-            Expr::Integer(_) => "integer",
-            Expr::Float(_) => "float",
-            Expr::String(_) => "string",
-            Expr::Ident(_) => "identifier",
-            Expr::Query(_) => "query",
-            Expr::Unary(_) => "unary",
-            Expr::Binary(_) => "binary",
-            Expr::Call(_) => "function call",
-            Expr::Array(_) => "array",
-            Expr::Object(_) => "object",
-        };
-
-        f.write_str(text)
-    }
-}
-
-impl Expr {
-    pub fn with(self, span: Span) -> Spanned<Expr> {
-        Spanned { node: self, span }
-    }
-
-    #[inline]
-    pub fn is_bool(&self, b: bool) -> bool {
-        match self {
-            Expr::Boolean(value) => *value == b,
-            _ => false,
-        }
-    }
-}
-
-// this mod is used for tests only
-#[cfg(test)]
-mod expr_convert {
-    use std::collections::BTreeMap;
-
-    use value::OwnedTargetPath;
-
-    use super::Expr;
-    use crate::compiler::parser::unescape_string;
-    use crate::compiler::query::Query;
-    use crate::compiler::{Span, Spanned};
-
-    impl From<&str> for Expr {
-        fn from(value: &str) -> Self {
-            Expr::String(unescape_string(value))
-        }
-    }
-
-    impl From<bool> for Expr {
-        fn from(value: bool) -> Self {
-            Expr::Boolean(value)
-        }
-    }
-
-    impl From<bool> for Spanned<Expr> {
-        fn from(value: bool) -> Self {
-            Expr::Boolean(value).with(Span::empty())
-        }
-    }
-
-    impl From<i64> for Expr {
-        fn from(value: i64) -> Self {
-            Expr::Integer(value)
-        }
-    }
-
-    impl From<i64> for Spanned<Expr> {
-        fn from(value: i64) -> Self {
-            Expr::Integer(value).with(Span::empty())
-        }
-    }
-
-    impl From<f64> for Expr {
-        fn from(value: f64) -> Self {
-            Expr::Float(value)
-        }
-    }
-
-    impl From<&str> for Spanned<Expr> {
-        fn from(value: &str) -> Self {
-            Expr::String(value.into()).with(Span::empty())
-        }
-    }
-
-    impl From<String> for Expr {
-        fn from(value: String) -> Self {
-            Expr::String(value)
-        }
-    }
-
-    impl From<Vec<Expr>> for Expr {
-        fn from(array: Vec<Expr>) -> Self {
-            Expr::Array(
-                array
-                    .into_iter()
-                    .map(|expr| expr.with(Span::empty()))
-                    .collect::<Vec<_>>(),
-            )
-        }
-    }
-
-    impl From<OwnedTargetPath> for Expr {
-        fn from(value: OwnedTargetPath) -> Self {
-            Expr::Query(Query::External(value))
-        }
-    }
-
-    impl From<BTreeMap<String, Expr>> for Expr {
-        fn from(value: BTreeMap<String, Expr>) -> Self {
-            Expr::Object(
-                value
-                    .into_iter()
-                    .map(|(k, v)| (k, v.with(Span::empty())))
-                    .collect::<BTreeMap<String, Spanned<Expr>>>(),
-            )
-        }
-    }
-}
-
-impl Expression for Expr {
-    fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        match self {
-            Expr::Null => Ok(Value::Null),
-            Expr::Boolean(b) => Ok(Value::Boolean(*b)),
-            Expr::Integer(i) => Ok(Value::Integer(*i)),
-            Expr::Float(f) => Ok(Value::Float(*f)),
-            Expr::String(s) => Ok(Value::from(s.as_str())),
-            Expr::Ident(s) => {
-                let value = cx
-                    .variables
-                    .get(s)
-                    .expect("variable must be checked at compile time");
-                Ok(value.clone())
-            }
-            Expr::Query(query) => query.resolve(cx),
-            Expr::Array(array) => {
-                let array = array
-                    .iter()
-                    .map(|expr| expr.resolve(cx))
-                    .collect::<Result<Vec<_>, ExpressionError>>()?;
-                Ok(array.into())
-            }
-            Expr::Binary(b) => b.resolve(cx),
-            Expr::Unary(u) => u.resolve(cx),
-            Expr::Object(map) => {
-                let object = map
-                    .iter()
-                    .map(|(key, expr)| {
-                        let value = expr.resolve(cx)?;
-                        Ok((key.to_string(), value))
-                    })
-                    .collect::<Result<BTreeMap<String, Value>, ExpressionError>>()?;
-
-                Ok(Value::Object(object))
-            }
-
-            Expr::Call(call) => call.function.resolve(cx),
-        }
-    }
-
-    fn type_def(&self) -> TypeDef {
-        match self {
-            Expr::Ident(_) => {
-                // TODO: fix this
-                Kind::ANY.into()
-            }
-            Expr::Null => Kind::NULL.into(),
-            Expr::Boolean(_) => Kind::BOOLEAN.into(),
-            Expr::Integer(_) => Kind::INTEGER.into(),
-            Expr::Float(_) => Kind::FLOAT.into(),
-            Expr::String(_) => Kind::BYTES.into(),
-            Expr::Array(_) => Kind::ARRAY.into(),
-            Expr::Object(_) => Kind::OBJECT.into(),
-            Expr::Call(call) => call.type_def(),
-            Expr::Binary(b) => b.type_def(),
-            Expr::Unary(u) => u.type_def(),
-
-            _ => TypeDef {
-                fallible: false,
-                kind: Kind::ANY,
-            },
-        }
-    }
 }
 
 /// ```text
@@ -620,6 +382,7 @@ pub struct Compiler<'input> {
     iterating: usize,
 
     variables: Vec<Variable>,
+    type_state: TypeState,
 
     target_queries: Vec<OwnedTargetPath>,
 }
@@ -632,6 +395,7 @@ impl Compiler<'_> {
             functions: builtin_functions(),
             iterating: 0,
             variables: vec![],
+            type_state: TypeState::default(),
             target_queries: vec![],
         };
 
@@ -752,7 +516,9 @@ impl Compiler<'_> {
                                 let maybe = self
                                     .variables
                                     .iter()
-                                    .map(|var| (&var.name, distance(&var.name, name)))
+                                    .map(|var| {
+                                        (&var.name, distance(var.name.as_bytes(), name.as_bytes()))
+                                    })
                                     .min_by_key(|(_var, score)| *score)
                                     .map(|(var, _score)| var.to_string());
 
@@ -800,11 +566,15 @@ impl Compiler<'_> {
                         self.expect(Token::Assign)?;
 
                         let expr = self.parse_expr()?;
-                        if !expr.type_def().fallible {
+                        let expr_type = expr.type_def(&self.type_state);
+                        if !expr_type.fallible {
                             return Err(SyntaxError::UnnecessaryErrorAssignment {
                                 span: expr.span,
                             });
                         }
+
+                        self.type_state.apply(&target, expr_type.kind);
+                        self.type_state.apply(&err, Kind::BYTES);
 
                         Assignment::Infallible {
                             ok: target,
@@ -817,7 +587,7 @@ impl Compiler<'_> {
                     // a = fallible()?
                     Token::Assign => {
                         let expr = self.parse_expr()?;
-                        if expr.type_def().fallible {
+                        if expr.type_def(&self.type_state).fallible {
                             match self.lexer.peek().transpose()? {
                                 Some((Token::Question, _span)) => {
                                     // it's ok
@@ -830,6 +600,9 @@ impl Compiler<'_> {
                                 }
                             }
                         }
+
+                        self.type_state
+                            .apply(&target, expr.type_def(&self.type_state).kind);
 
                         Assignment::Single { target, expr }
                     }
@@ -907,7 +680,7 @@ impl Compiler<'_> {
                 _ => break,
             };
 
-            let _ = self.lexer.next().expect("must valid")?;
+            let _ = self.lexer.next();
             let rhs = self.parse_expr_term()?;
             let span = expr.span.merge(rhs.span);
             expr = Binary::compile(expr, op, rhs)
@@ -972,7 +745,7 @@ impl Compiler<'_> {
                 self.lexer.next();
                 let operand = self.parse_expr_unary()?;
                 let span = span.merge(operand.span);
-                let expr = Unary::compile(op, operand)
+                let expr = Unary::compile(op, operand, &self.type_state)
                     .map_err(SyntaxError::Unary)?
                     .with(span);
                 Ok(expr)
@@ -1029,7 +802,12 @@ impl Compiler<'_> {
                                     let maybe = self
                                         .variables
                                         .iter()
-                                        .map(|var| (&var.name, distance(&var.name, name)))
+                                        .map(|var| {
+                                            (
+                                                &var.name,
+                                                distance(var.name.as_bytes(), name.as_bytes()),
+                                            )
+                                        })
                                         .min_by_key(|(_var, score)| *score)
                                         .map(|(var, _score)| var.to_string());
 
@@ -1071,7 +849,8 @@ impl Compiler<'_> {
                 }
                 Token::String(s) => {
                     let _ = self.lexer.next();
-                    Ok(Expr::String(unescape_string(s)).with(span))
+                    let unescaped = unescape_string(s);
+                    Ok(Expr::String(Bytes::from(unescaped.into_bytes())).with(span))
                 }
                 Token::Null => {
                     let _ = self.lexer.next();
@@ -1125,7 +904,12 @@ impl Compiler<'_> {
                 let maybe = self
                     .functions
                     .iter()
-                    .map(|func| (func.identifier(), distance(func.identifier(), name)))
+                    .map(|func| {
+                        (
+                            func.identifier(),
+                            distance(func.identifier().as_bytes(), name.as_bytes()),
+                        )
+                    })
                     .min_by_key(|(_var, score)| *score)
                     .map(|(var, _score)| var.to_string());
 
@@ -1150,7 +934,7 @@ impl Compiler<'_> {
                         let argument = self.parse_expr()?;
                         let end = self.lexer.pos();
 
-                        if argument.type_def().fallible {
+                        if argument.type_def(&self.type_state).fallible {
                             return Err(SyntaxError::FallibleArgument {
                                 span: Span { start, end },
                             });
@@ -1162,7 +946,9 @@ impl Compiler<'_> {
                                 let maybe = self
                                     .variables
                                     .iter()
-                                    .map(|var| (&var.name, distance(&var.name, name)))
+                                    .map(|var| {
+                                        (&var.name, distance(var.name.as_bytes(), name.as_bytes()))
+                                    })
                                     .min_by_key(|(_var, score)| *score)
                                     .map(|(var, _score)| var.to_string());
 
@@ -1176,7 +962,7 @@ impl Compiler<'_> {
                             self.register_variable(s.to_string());
                         }
 
-                        arguments.push(argument)?;
+                        arguments.push(argument, &self.type_state)?;
                     }
                 },
                 None => return Err(SyntaxError::UnexpectedEof),
@@ -1215,7 +1001,12 @@ impl Compiler<'_> {
                 let maybe = self
                     .functions
                     .iter()
-                    .map(|func| (func.identifier(), distance(func.identifier(), name)))
+                    .map(|func| {
+                        (
+                            func.identifier(),
+                            distance(func.identifier().as_bytes(), name.as_bytes()),
+                        )
+                    })
                     .min_by_key(|(_var, score)| *score)
                     .map(|(var, _score)| var.to_string());
 
@@ -1291,15 +1082,15 @@ impl Compiler<'_> {
         self.expect(Token::If)?;
 
         let condition = self.parse_expr()?;
-        if condition.type_def().fallible {
+        if condition.type_def(&self.type_state).fallible {
             return Err(SyntaxError::FalliblePrediction {
                 span: condition.span,
             });
         }
 
-        if condition.type_def().kind != Kind::BOOLEAN {
+        if condition.type_def(&self.type_state).kind != Kind::BOOLEAN {
             return Err(SyntaxError::NonBooleanPrediction {
-                got: condition.type_def().kind,
+                got: condition.type_def(&self.type_state).kind,
                 span: condition.span,
             });
         }
@@ -1319,9 +1110,15 @@ impl Compiler<'_> {
                 if token == Token::Else {
                     self.lexer.next();
 
-                    self.expect(Token::LeftBrace)?;
+                    let start_span = self.expect(Token::LeftBrace)?;
                     let else_block = self.parse_block()?;
-                    self.expect(Token::RightBrace)?;
+                    let end_span = self.expect(Token::RightBrace)?;
+
+                    if else_block.is_empty() {
+                        return Err(SyntaxError::EmptyBlock {
+                            span: start_span.merge(end_span),
+                        });
+                    }
 
                     Ok(Statement::If(IfStatement {
                         condition,
@@ -1345,7 +1142,6 @@ impl Compiler<'_> {
     }
 
     fn parse_for(&mut self) -> Result<Statement, SyntaxError> {
-        // in case
         self.expect(Token::For)?;
 
         let key = match self.lexer.next().transpose()? {
@@ -1387,13 +1183,19 @@ impl Compiler<'_> {
         self.expect(Token::In)?;
 
         let iterator = self.parse_expr()?;
-        let td = iterator.type_def();
+        let td = iterator.type_def(&self.type_state);
         if td.fallible {
             return Err(SyntaxError::FallibleIterator {
                 span: iterator.span,
             });
         }
-        if !td.kind.contains(Kind::ARRAY) && !td.kind.contains(Kind::OBJECT) {
+        if td.kind.contains(Kind::ARRAY) {
+            self.type_state.apply_variable(key.as_str(), Kind::INTEGER);
+            self.type_state.apply_variable(value.as_str(), Kind::ANY);
+        } else if td.kind.contains(Kind::OBJECT) {
+            self.type_state.apply_variable(key.as_str(), Kind::BYTES);
+            self.type_state.apply_variable(value.as_str(), Kind::ANY);
+        } else {
             return Err(SyntaxError::InvalidType {
                 want: "array or object".to_string(),
                 got: td.kind.to_string(),
@@ -1405,6 +1207,7 @@ impl Compiler<'_> {
 
         self.register_variable(key.clone());
         self.register_variable(value.clone());
+
         self.iterating += 1;
         let block = self.parse_block()?;
         self.iterating -= 1;
@@ -1529,13 +1332,11 @@ impl Compiler<'_> {
         }
     }
 
-    #[inline]
     fn register_variable(&mut self, name: String) {
         if !self.variables.iter().any(|var| var.name == name) {
             self.variables.push(Variable {
                 name,
                 value: Value::Null,
-                // writes: 0,
             })
         }
     }
@@ -1566,6 +1367,7 @@ pub fn unescape_string(mut s: &str) -> String {
                 b't' => '\t',
                 b'0' => '\0',
                 b'{' => '{',
+                b'}' => '}',
                 _ => unimplemented!("invalid escape for {}", next as char),
             };
 
@@ -1697,6 +1499,7 @@ mod tests {
     #[test]
     fn for_statement() {
         let text = r#"
+        a = 1
         for k, v in .map {
             a = a + 1
             k = k + "string"

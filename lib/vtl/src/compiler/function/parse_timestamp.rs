@@ -1,9 +1,10 @@
 use chrono::{DateTime, Utc};
 use value::Value;
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;
@@ -36,19 +37,7 @@ impl Function for ParseTimestamp {
         mut arguments: ArgumentList,
     ) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
-        let format = arguments.get();
-        let format = match format.node {
-            Expr::String(s) => s,
-            _ => {
-                return Err(SyntaxError::InvalidFunctionArgumentType {
-                    function: self.identifier(),
-                    argument: "format",
-                    want: Kind::BYTES,
-                    got: Kind::BYTES,
-                    span: format.span,
-                })
-            }
-        };
+        let format = arguments.get_string()?.node;
 
         Ok(FunctionCall {
             function: Box::new(ParseTimestampFunc { value, format }),
@@ -87,7 +76,7 @@ impl Expression for ParseTimestampFunc {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: true,
             kind: Kind::TIMESTAMP,

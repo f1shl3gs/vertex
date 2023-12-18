@@ -1,6 +1,8 @@
+use crate::compiler::Kind;
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
-use crate::compiler::{Expression, ExpressionError, Kind, TypeDef};
+use super::state::TypeState;
+use super::{Expression, ExpressionError, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]
@@ -33,10 +35,20 @@ impl Expression for Query {
         Ok(value)
     }
 
-    fn type_def(&self) -> TypeDef {
-        TypeDef {
-            fallible: false,
-            kind: Kind::ANY,
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let kind = state.get_query_kind(self);
+
+        if kind == Kind::UNDEFINED {
+            // path is not valid
+            TypeDef {
+                fallible: true,
+                kind: Kind::ANY,
+            }
+        } else {
+            TypeDef {
+                fallible: false,
+                kind,
+            }
         }
     }
 }

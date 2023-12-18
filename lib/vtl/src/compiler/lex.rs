@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter, Write};
 
-use crate::compiler::Span;
+use super::span::Span;
 use crate::diagnostic::{DiagnosticMessage, Label};
 
 #[derive(Debug, PartialEq)]

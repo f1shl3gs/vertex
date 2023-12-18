@@ -3,9 +3,10 @@ use std::fmt::{Display, Formatter};
 
 use value::Value;
 
-use super::parser::Expr;
+use super::expr::Expr;
+use super::state::TypeState;
 use super::{Expression, ExpressionError, Kind, TypeDef, ValueKind};
-use crate::compiler::{Span, Spanned};
+use super::{Span, Spanned};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 
@@ -64,7 +65,11 @@ pub struct Unary {
 }
 
 impl Unary {
-    pub fn compile(op: UnaryOp, operand: Spanned<Expr>) -> Result<Expr, UnaryError> {
+    pub fn compile(
+        op: UnaryOp,
+        operand: Spanned<Expr>,
+        type_state: &TypeState,
+    ) -> Result<Expr, UnaryError> {
         let expr = match (&op, &operand.node) {
             // Optimized
             (UnaryOp::Not, Expr::Boolean(b)) => Expr::Boolean(!*b),
@@ -72,7 +77,7 @@ impl Unary {
             (UnaryOp::Negate, Expr::Integer(i)) => Expr::Integer(-*i),
 
             (UnaryOp::Not, _) => {
-                let kind = operand.type_def().kind;
+                let kind = operand.type_def(type_state).kind;
                 if !kind.intersects(Kind::BOOLEAN) {
                     return Err(UnaryError {
                         variant: Variant::NonBoolean,
@@ -86,7 +91,7 @@ impl Unary {
                 })
             }
             (UnaryOp::Negate, _) => {
-                let kind = operand.type_def().kind;
+                let kind = operand.type_def(type_state).kind;
                 if !kind.intersects(Kind::NUMERIC) {
                     return Err(UnaryError {
                         variant: Variant::NonNumericNegate,
@@ -133,10 +138,11 @@ impl Expression for Unary {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
+        // type checked at when compile
         let kind = match self.op {
             UnaryOp::Not => Kind::BOOLEAN,
-            UnaryOp::Negate => Kind::INTEGER | Kind::FLOAT,
+            UnaryOp::Negate => Kind::NUMERIC,
         };
 
         TypeDef {

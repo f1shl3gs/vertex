@@ -1,10 +1,7 @@
-pub fn distance<T1: AsRef<[u8]>, T2: AsRef<[u8]>>(s1: T1, s2: T2) -> usize {
-    let v1 = s1.as_ref();
-    let v2 = s2.as_ref();
-
+pub fn distance(s1: &[u8], s2: &[u8]) -> usize {
     // Early exit if one of the strings is empty
-    let v1len = v1.len();
-    let v2len = v2.len();
+    let v1len = s1.len();
+    let v2len = s2.len();
     if v1len == 0 {
         return v2len;
     }
@@ -36,7 +33,7 @@ pub fn distance<T1: AsRef<[u8]>, T2: AsRef<[u8]>>(s1: T1, s2: T2) -> usize {
             column[y] = min3(
                 column[y] + 1,
                 column[y - 1] + 1,
-                lastdiag + delta(v1[y - 1], v2[x - 1]),
+                lastdiag + delta(s1[y - 1], s2[x - 1]),
             );
             lastdiag = olddiag;
         }
@@ -51,13 +48,13 @@ mod tests {
 
     #[test]
     fn ld() {
-        assert_eq!(distance("cot", "cat"), 1);
-        assert_eq!(distance("ct", "cot"), 1);
-        assert_eq!(distance("cat", "ct"), 1);
-        assert_eq!(distance("cat", "ct"), 1);
-        assert_eq!(distance("cat", "cta"), 2);
-        assert_eq!(distance("cat", ""), 3);
-        assert_eq!(distance("", "cat"), 3);
-        assert_eq!(distance("", ""), 0);
+        assert_eq!(distance("cot".as_bytes(), "cat".as_bytes()), 1);
+        assert_eq!(distance("ct".as_bytes(), "cot".as_bytes()), 1);
+        assert_eq!(distance("cat".as_bytes(), "ct".as_bytes()), 1);
+        assert_eq!(distance("cat".as_bytes(), "ct".as_bytes()), 1);
+        assert_eq!(distance("cat".as_bytes(), "cta".as_bytes()), 2);
+        assert_eq!(distance("cat".as_bytes(), "".as_bytes()), 3);
+        assert_eq!(distance("".as_bytes(), "cat".as_bytes()), 3);
+        assert_eq!(distance("".as_bytes(), "".as_bytes()), 0);
     }
 }

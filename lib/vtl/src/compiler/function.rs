@@ -7,10 +7,13 @@ mod contains;
 mod del;
 mod ends_with;
 mod find;
+mod flatten;
 mod floor;
 mod format;
+mod from_unix_timestamp;
 mod get_env;
 mod get_hostname;
+mod includes;
 mod is_array;
 mod is_bool;
 mod is_empty;
@@ -44,14 +47,17 @@ mod to_integer;
 mod to_string;
 mod to_unix_timestamp;
 mod trim;
+mod r#typeof;
 mod unique;
 mod uppercase;
 mod values;
 mod xxhash;
 
-use super::expression::Expression;
+use super::expr::Expr;
 use super::function_call::FunctionCall;
-use super::parser::{Expr, SyntaxError};
+use super::parser::SyntaxError;
+use super::state::TypeState;
+use super::Expression;
 use super::{Kind, Span, Spanned};
 
 pub struct ArgumentList {
@@ -74,16 +80,16 @@ impl ArgumentList {
         self.arguments
     }
 
-    pub fn push(&mut self, expr: Spanned<Expr>) -> Result<(), SyntaxError> {
+    pub fn push(&mut self, expr: Spanned<Expr>, state: &TypeState) -> Result<(), SyntaxError> {
         let index = self.arguments.len();
 
         if let Some(parameter) = self.parameters.get(index) {
-            if !parameter.kind.intersects(expr.node.type_def().kind) {
+            if !parameter.kind.intersects(expr.type_def(state).kind) {
                 return Err(SyntaxError::InvalidFunctionArgumentType {
                     function: self.name,
                     argument: parameter.name,
                     want: parameter.kind,
-                    got: expr.node.type_def().kind,
+                    got: expr.type_def(state).kind,
                     span: expr.span,
                 });
             }
@@ -128,7 +134,10 @@ impl ArgumentList {
     pub fn get_string_opt(&mut self) -> Result<Option<Spanned<String>>, SyntaxError> {
         match self.get_opt() {
             Some(expr) => match expr.node {
-                Expr::String(s) => Ok(Some(expr.span.with(s))),
+                Expr::String(s) => {
+                    let s = String::from_utf8_lossy(&s);
+                    Ok(Some(Spanned::new(s.to_string(), expr.span)))
+                }
                 _ => Err(SyntaxError::UnexpectedToken {
                     got: expr.to_string(),
                     want: Some("string literal".to_string()),
@@ -142,7 +151,10 @@ impl ArgumentList {
     pub fn get_string(&mut self) -> Result<Spanned<String>, SyntaxError> {
         let expr = self.get();
         match expr.node {
-            Expr::String(s) => Ok(Spanned::new(s, expr.span)),
+            Expr::String(s) => {
+                let s = String::from_utf8_lossy(&s);
+                Ok(Spanned::new(s.to_string(), expr.span))
+            }
             got => Err(SyntaxError::UnexpectedToken {
                 got: got.to_string(),
                 want: Some("string literal".into()),
@@ -206,10 +218,13 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(del::Del),
         Box::new(ends_with::EndsWith),
         Box::new(find::Find),
+        Box::new(flatten::Flatten),
         Box::new(floor::Floor),
         Box::new(format::Format),
+        Box::new(from_unix_timestamp::FromUnixTimestamp),
         Box::new(get_env::GetEnv),
         Box::new(get_hostname::GetHostname),
+        Box::new(includes::Includes),
         Box::new(is_array::IsArray),
         Box::new(is_bool::IsBool),
         Box::new(is_empty::IsEmpty),
@@ -242,6 +257,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(to_string::ToString),
         Box::new(to_unix_timestamp::ToUnixTimestamp),
         Box::new(trim::Trim),
+        Box::new(r#typeof::TypeOf),
         Box::new(unique::Unique),
         Box::new(uppercase::Uppercase),
         Box::new(values::Values),
@@ -263,11 +279,13 @@ pub fn compile_and_run<F: Function>(
     use crate::context::Context;
     use crate::TargetValue;
 
+    let state = TypeState::default();
     let func = Box::new(func);
+
     let mut arguments_list = ArgumentList::new(func.identifier(), func.parameters());
     for argument in arguments {
         arguments_list
-            .push(Spanned::new(argument, Span::empty()))
+            .push(Spanned::new(argument, Span::empty()), &state)
             .expect("invalid argument");
     }
 
@@ -280,7 +298,7 @@ pub fn compile_and_run<F: Function>(
         )
         .unwrap();
 
-    assert_eq!(call.type_def(), td);
+    assert_eq!(call.type_def(&state), td);
 
     let ts = Utc.with_ymd_and_hms(2021, 1, 1, 0, 0, 0).unwrap();
     let mut cx = Context {

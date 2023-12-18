@@ -1,10 +1,10 @@
 use value::Value;
 
 use super::block::Block;
-use super::expression::Expression;
-use super::parser::Expr;
+use super::expr::Expr;
+use super::state::TypeState;
+use super::{Expression, Spanned, TypeDef};
 use super::{ExpressionError, Kind, ValueKind};
-use crate::compiler::{Span, Spanned, TypeDef};
 use crate::context::Context;
 
 /// The `key/value` is temporary defined(insert when start, and remove when end),
@@ -13,10 +13,13 @@ use crate::context::Context;
 pub struct ForStatement {
     /// The key or index to set to the value of each item being iterated.
     pub key: String,
+
     /// The value to set to the value of each item being iterated.
     pub value: String,
+
     /// The expression to evaluate to get the iterator.
     pub iterator: Spanned<Expr>,
+
     /// The block of statements to be ran every item.
     pub block: Block,
 }
@@ -24,17 +27,6 @@ pub struct ForStatement {
 impl Expression for ForStatement {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
         let iterator = self.iterator.resolve(cx)?;
-
-        // This looks viable, but it's not, "multiple mutable borrow" will fail this.
-        //
-        // let key_target = cx
-        //     .variables
-        //     .get_mut(&self.key)
-        //     .expect("variable should be registered already");
-        // let value_target = cx
-        //     .variables
-        //     .get_mut(&self.value)
-        //     .expect("variable should be registered already");
 
         // avoid overwrite variable
         let prev_key = cx.variables.remove(&self.key);
@@ -47,16 +39,12 @@ impl Expression for ForStatement {
                         .insert(self.key.clone(), Value::Integer(index as i64));
                     cx.variables.insert(self.value.clone(), item);
 
-                    // *key_target = Value::Integer(i as i64);
-                    // *value_target = v;
-
-                    match self.block.resolve(cx) {
-                        Ok(_) => {}
-                        Err(err) => match err {
+                    if let Err(err) = self.block.resolve(cx) {
+                        match err {
                             ExpressionError::Continue => continue,
                             ExpressionError::Break => break,
                             err => return Err(err),
-                        },
+                        }
                     }
                 }
             }
@@ -65,24 +53,20 @@ impl Expression for ForStatement {
                     cx.variables.insert(self.key.clone(), key.into());
                     cx.variables.insert(self.value.clone(), value);
 
-                    // *key_target = Value::Bytes(k.into());
-                    // *value_target = v;
-
-                    match self.block.resolve(cx) {
-                        Ok(_) => {}
-                        Err(err) => match err {
+                    if let Err(err) = self.block.resolve(cx) {
+                        match err {
                             ExpressionError::Continue => continue,
                             ExpressionError::Break => break,
                             err => return Err(err),
-                        },
+                        }
                     }
                 }
             }
             _ => {
                 return Err(ExpressionError::UnexpectedType {
-                    want: Kind::ARRAY | Kind::OBJECT,
+                    want: Kind::CONTAINER,
                     got: iterator.kind(),
-                    span: Span { start: 0, end: 0 },
+                    span: self.iterator.span,
                 })
             }
         }
@@ -98,7 +82,7 @@ impl Expression for ForStatement {
         Ok(Value::Null)
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: false,
             kind: Kind::UNDEFINED,

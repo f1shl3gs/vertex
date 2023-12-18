@@ -88,6 +88,11 @@ impl Kind {
     }
 
     #[inline]
+    pub fn inner(&self) -> u16 {
+        self.0
+    }
+
+    #[inline]
     pub const fn or(self, other: Kind) -> Kind {
         Kind(self.0 | other.0)
     }

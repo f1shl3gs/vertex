@@ -1,10 +1,10 @@
 use value::Value;
 
-use crate::compiler::expression::Expression;
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
-use crate::compiler::{ExpressionError, Kind, Spanned, TypeDef, ValueKind};
+use crate::compiler::state::TypeState;
+use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;
 
@@ -85,8 +85,8 @@ impl Expression for FloorFunc {
         Ok(value)
     }
 
-    fn type_def(&self) -> TypeDef {
-        let kind = self.value.type_def().kind;
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let kind = self.value.type_def(state).kind;
 
         TypeDef {
             fallible: false,

@@ -1,8 +1,9 @@
 use value::Value;
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::compiler::parser::Expr;
+use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef, ValueKind};
 use crate::context::Context;
 use crate::SyntaxError;
@@ -57,7 +58,7 @@ impl Expression for KeysFunc {
         }
     }
 
-    fn type_def(&self) -> TypeDef {
+    fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: false,
             kind: Kind::ARRAY,
@@ -67,8 +68,6 @@ impl Expression for KeysFunc {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeMap;
-
     use value::value;
 
     use super::*;
@@ -76,10 +75,8 @@ mod tests {
 
     #[test]
     fn empty() {
-        let input = BTreeMap::new();
-
         compile_and_run(
-            vec![Expr::Object(input)],
+            vec![value!({}).into()],
             Keys,
             TypeDef::array(),
             Ok(value!([])),
@@ -88,11 +85,11 @@ mod tests {
 
     #[test]
     fn not_empty() {
-        let mut input = BTreeMap::new();
-        input.insert("foo".into(), 0.into());
-
         compile_and_run(
-            vec![Expr::Object(input)],
+            vec![value!({
+                "foo": 0
+            })
+            .into()],
             Keys,
             TypeDef::array(),
             Ok(value!(["foo"])),
