@@ -30,7 +30,6 @@ pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> Result<TokenS
             impl #impl_generics ::configurable::Configurable for #name #type_generics #where_clause {
                 fn reference() -> Option<&'static str> {
                     let self_type_name = ::std::any::type_name::<Self>();
-
                     if !self_type_name.starts_with(std::module_path!()) {
                         Some(std::concat!(std::module_path!(), "::", #ref_name))
                     } else {
@@ -76,50 +75,78 @@ fn impl_from_struct(
     let maybe_description = type_attrs
         .description
         .as_ref()
-        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
+        .map(|desc| quote!( schema.metadata().description = Some(#desc.to_string()); ));
 
-    let mapped_fields = fields
-        .named
-        .iter()
-        .map(|field| generate_named_struct_field(type_attrs, field))
-        .collect::<Result<Vec<_>>>()?;
+    let mut any_flatten = false;
+    let mut mapped_fields = Vec::with_capacity(fields.named.len());
+    for field in &fields.named {
+        let field_attrs = FieldAttrs::parse(field)?;
+        if field_attrs.flatten {
+            any_flatten = true;
+        }
 
-    let generate_schema = quote!(
-        fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
-            -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
-        {
-            let mut properties = ::configurable::IndexMap::new();
-            let mut required = ::std::collections::BTreeSet::new();
-            let mut flattened_subschemas = ::std::vec::Vec::new();
+        let ts = generate_named_struct_field(type_attrs, field)?;
+        mapped_fields.push(ts);
+    }
 
-            #(#mapped_fields)*
+    let generated = if any_flatten {
+        quote!(
+            fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
+                -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
+            {
+                let mut properties = ::configurable::IndexMap::new();
+                let mut required = ::std::collections::BTreeSet::new();
+                let mut flattened_subschemas = ::std::vec::Vec::new();
 
-            let had_unflatted_properties = !properties.is_empty();
-            let mut schema = ::configurable::schema::generate_struct_schema(
-                properties,
-                required,
-                None,
-            );
+                #(#mapped_fields)*
 
-            if !flattened_subschemas.is_empty() {
-                if !had_unflatted_properties {
-                    schema = flattened_subschemas.remove(0)
+                let had_unflatted_properties = !properties.is_empty();
+                let mut schema = ::configurable::schema::generate_struct_schema(
+                    properties,
+                    required,
+                    None,
+                );
+
+                if !flattened_subschemas.is_empty() {
+                    if !had_unflatted_properties {
+                        schema = flattened_subschemas.remove(0)
+                    }
+
+                    ::configurable::schema::convert_to_flattened_schema(
+                        &mut schema,
+                        flattened_subschemas,
+                    )
                 }
 
-                ::configurable::schema::convert_to_flattened_schema(
-                    &mut schema,
-                    flattened_subschemas,
-                )
+                #maybe_description
+
+                Ok(schema)
             }
+        )
+    } else {
+        quote!(
+            fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
+                -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
+            {
+                let mut properties = ::configurable::IndexMap::new();
+                let mut required = ::std::collections::BTreeSet::new();
 
-            let metadata = schema.metadata();
-            #maybe_description
+                #(#mapped_fields)*
 
-            Ok(schema)
-        }
-    );
+                let mut schema = ::configurable::schema::generate_struct_schema(
+                    properties,
+                    required,
+                    None,
+                );
 
-    Ok(generate_schema)
+                #maybe_description
+
+                Ok(schema)
+            }
+        )
+    };
+
+    Ok(generated)
 }
 
 fn generate_named_struct_field(_type_attrs: &TypeAttrs, field: &syn::Field) -> Result<TokenStream> {
@@ -216,7 +243,7 @@ fn impl_from_enum(
     let maybe_description = type_attrs
         .description
         .as_ref()
-        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
+        .map(|desc| quote!( schema.metadata().description = Some(#desc.to_string()); ));
 
     Ok(quote! {
         fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
@@ -227,7 +254,6 @@ fn impl_from_enum(
             #(#mapped_variants)*
 
             let mut schema = ::configurable::schema::generate_one_of_schema(&subschemas);
-            let metadata = schema.metadata();
 
             #maybe_description
 
@@ -366,16 +392,13 @@ fn generate_enum_unamed_variant_schema(
         let field_attrs = FieldAttrs::parse(field)?;
         let maybe_description = match &field_attrs.description {
             Some(desc) => {
-                quote!(
-                    metadata.description = Some(#desc);
-                )
+                quote!( subschema.metadata().description = Some(#desc); )
             }
             None => quote!(),
         };
 
         return Ok(quote! {
             let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
-            let metadata = subschema.metadata();
 
             #maybe_description
 
@@ -491,7 +514,7 @@ fn generate_enum_variant_subschema(
 
     let maybe_description = match desc {
         Some(desc) => {
-            quote!( metadata.description = Some( #desc.to_string() ); )
+            quote!( subschema.metadata().description = Some( #desc.to_string() ); )
         }
         None => quote!(),
     };
@@ -499,7 +522,6 @@ fn generate_enum_variant_subschema(
     Ok(quote! {
         {
             let mut subschema = { #variant_schema };
-            let metadata = subschema.metadata();
 
             #maybe_description
 
