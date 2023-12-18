@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter};
 
+use bytes::Bytes;
 use value::Value;
 
 use super::binary::Binary;
@@ -22,7 +23,7 @@ pub enum Expr {
     /// The literal float.
     Float(f64),
     /// A literal string.
-    String(String),
+    String(Bytes),
 
     /// A reference to a stored value, an identifier.
     Ident(String),
@@ -97,6 +98,7 @@ impl Expr {
 mod expr_convert {
     use std::collections::BTreeMap;
 
+    use bytes::Bytes;
     use value::{OwnedTargetPath, Value};
 
     use super::Expr;
@@ -106,7 +108,9 @@ mod expr_convert {
 
     impl From<&str> for Expr {
         fn from(value: &str) -> Self {
-            Expr::String(unescape_string(value))
+            let unescaped = unescape_string(value);
+            let b = Bytes::from(unescaped.into_bytes());
+            Expr::String(b)
         }
     }
 
@@ -142,13 +146,14 @@ mod expr_convert {
 
     impl From<&str> for Spanned<Expr> {
         fn from(value: &str) -> Self {
-            Expr::String(value.into()).with(Span::empty())
+            let b = Bytes::copy_from_slice(value.as_bytes());
+            Expr::String(b).with(Span::empty())
         }
     }
 
     impl From<String> for Expr {
         fn from(value: String) -> Self {
-            Expr::String(value)
+            value.as_str().into()
         }
     }
 
@@ -166,11 +171,14 @@ mod expr_convert {
     impl From<Value> for Expr {
         fn from(value: Value) -> Self {
             match value {
-                Value::Bytes(s) => Expr::String(String::from_utf8_lossy(&s).to_string()),
+                Value::Bytes(s) => Expr::String(s),
                 Value::Float(f) => Expr::Float(f),
                 Value::Integer(i) => Expr::Integer(i),
                 Value::Boolean(b) => Expr::Boolean(b),
-                Value::Timestamp(ts) => Expr::String(ts.to_string()),
+                Value::Timestamp(ts) => {
+                    let b = Bytes::from(ts.to_string().into_bytes());
+                    Expr::String(b)
+                }
                 Value::Object(obj) => {
                     let map = obj
                         .into_iter()
@@ -204,7 +212,7 @@ impl Expression for Expr {
             Expr::Boolean(b) => Ok(Value::Boolean(*b)),
             Expr::Integer(i) => Ok(Value::Integer(*i)),
             Expr::Float(f) => Ok(Value::Float(*f)),
-            Expr::String(s) => Ok(Value::from(s.as_str())),
+            Expr::String(s) => Ok(Value::from(s.clone())),
             Expr::Ident(s) => {
                 let value = cx
                     .variables

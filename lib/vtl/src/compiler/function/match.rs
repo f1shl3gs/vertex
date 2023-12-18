@@ -36,24 +36,13 @@ impl Function for Match {
         mut arguments: ArgumentList,
     ) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
-        let pattern = arguments.get();
-        let pattern = match &pattern.node {
-            Expr::String(s) => Regex::new(s).map_err(|err| SyntaxError::InvalidValue {
-                err: err.to_string(),
-                want: "valid regex pattern".to_string(),
-                got: s.to_string(),
-                span: pattern.span,
-            })?,
-            expr => {
-                return Err(SyntaxError::InvalidFunctionArgumentType {
-                    function: self.identifier(),
-                    argument: "pattern",
-                    want: Kind::BYTES,
-                    got: expr.type_def().kind,
-                    span: pattern.span,
-                })
-            }
-        };
+        let pattern = arguments.get_string()?;
+        let pattern = Regex::new(pattern.as_str()).map_err(|err| SyntaxError::InvalidValue {
+            err: err.to_string(),
+            want: "valid regex pattern".to_string(),
+            got: pattern.node,
+            span: pattern.span,
+        })?;
 
         Ok(FunctionCall {
             function: Box::new(MatchFunc { value, pattern }),
@@ -109,7 +98,7 @@ mod tests {
     #[test]
     fn yes_with_escape() {
         compile_and_run(
-            vec!["foobar".into(), Expr::String(r"\w+".to_string())],
+            vec!["foobar".into(), Expr::String(r"\w+".into())],
             Match,
             TypeDef::boolean(),
             Ok(true.into()),

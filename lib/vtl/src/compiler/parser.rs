@@ -1,3 +1,4 @@
+use bytes::Bytes;
 use std::collections::BTreeMap;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
@@ -342,7 +343,7 @@ impl DiagnosticMessage for SyntaxError {
     }
 }
 
-pub struct Variable {
+struct Variable {
     name: String,
     value: Value,
     // maybe we should track usage
@@ -841,7 +842,8 @@ impl Compiler<'_> {
                 }
                 Token::String(s) => {
                     let _ = self.lexer.next();
-                    Ok(Expr::String(unescape_string(s)).with(span))
+                    let unescaped = unescape_string(s);
+                    Ok(Expr::String(Bytes::from(unescaped.into_bytes())).with(span))
                 }
                 Token::Null => {
                     let _ = self.lexer.next();
@@ -1101,9 +1103,15 @@ impl Compiler<'_> {
                 if token == Token::Else {
                     self.lexer.next();
 
-                    self.expect(Token::LeftBrace)?;
+                    let start_span = self.expect(Token::LeftBrace)?;
                     let else_block = self.parse_block()?;
-                    self.expect(Token::RightBrace)?;
+                    let end_span = self.expect(Token::RightBrace)?;
+
+                    if else_block.is_empty() {
+                        return Err(SyntaxError::EmptyBlock {
+                            span: start_span.merge(end_span),
+                        });
+                    }
 
                     Ok(Statement::If(IfStatement {
                         condition,
@@ -1127,7 +1135,6 @@ impl Compiler<'_> {
     }
 
     fn parse_for(&mut self) -> Result<Statement, SyntaxError> {
-        // in case
         self.expect(Token::For)?;
 
         let key = match self.lexer.next().transpose()? {
@@ -1317,7 +1324,6 @@ impl Compiler<'_> {
             self.variables.push(Variable {
                 name,
                 value: Value::Null,
-                // writes: 0,
             })
         }
     }
@@ -1348,6 +1354,7 @@ pub fn unescape_string(mut s: &str) -> String {
                 b't' => '\t',
                 b'0' => '\0',
                 b'{' => '{',
+                b'}' => '}',
                 _ => unimplemented!("invalid escape for {}", next as char),
             };
 

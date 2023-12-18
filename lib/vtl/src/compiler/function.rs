@@ -132,7 +132,10 @@ impl ArgumentList {
     pub fn get_string_opt(&mut self) -> Result<Option<Spanned<String>>, SyntaxError> {
         match self.get_opt() {
             Some(expr) => match expr.node {
-                Expr::String(s) => Ok(Some(expr.span.with(s))),
+                Expr::String(s) => {
+                    let s = String::from_utf8_lossy(&s);
+                    Ok(Some(Spanned::new(s.to_string(), expr.span)))
+                }
                 _ => Err(SyntaxError::UnexpectedToken {
                     got: expr.to_string(),
                     want: Some("string literal".to_string()),
@@ -146,7 +149,10 @@ impl ArgumentList {
     pub fn get_string(&mut self) -> Result<Spanned<String>, SyntaxError> {
         let expr = self.get();
         match expr.node {
-            Expr::String(s) => Ok(Spanned::new(s, expr.span)),
+            Expr::String(s) => {
+                let s = String::from_utf8_lossy(&s);
+                Ok(Spanned::new(s.to_string(), expr.span))
+            }
             got => Err(SyntaxError::UnexpectedToken {
                 got: got.to_string(),
                 want: Some("string literal".into()),

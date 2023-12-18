@@ -182,7 +182,12 @@ impl Binary {
             }
 
             // string + string
-            (Expr::String(a), BinaryOp::Add, Expr::String(b)) => Expr::String(a + &b),
+            (Expr::String(a), BinaryOp::Add, Expr::String(b)) => {
+                let mut buf = BytesMut::with_capacity(a.len() + b.len());
+                buf.extend_from_slice(&a);
+                buf.extend_from_slice(&b);
+                Expr::String(buf.freeze())
+            }
 
             (lhs, op, rhs) => Expr::Binary(Binary {
                 lhs: Box::new(lhs.with(lhs_span)),

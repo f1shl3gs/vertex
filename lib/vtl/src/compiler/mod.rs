@@ -9,12 +9,13 @@ mod if_statement;
 mod kind;
 mod lex;
 // mod literal;
+mod levenshtein;
 mod parser;
 mod query;
 mod span;
 mod statement;
 // mod literal;
-mod levenshtein;
+// mod state;
 mod template;
 mod type_def;
 mod unary;
@@ -28,7 +29,7 @@ use value::{OwnedTargetPath, Value};
 
 pub use binary::BinaryError;
 pub use kind::{Kind, ValueKind};
-pub use parser::{Compiler, SyntaxError, Variable};
+pub use parser::{Compiler, SyntaxError};
 pub use span::{Span, Spanned};
 pub use template::Template;
 pub use type_def::TypeDef;
@@ -156,10 +157,6 @@ pub trait Expression: Send + Sync + DynClone {
     /// Consider calling `type_info` instead if you want to capture changes in the type
     /// state from side-effects.
     fn type_def(&self) -> TypeDef;
-
-    fn type_def_v2(&self, _variables: &[Variable]) -> TypeDef {
-        self.type_def()
-    }
 }
 
 clone_trait_object!(Expression);

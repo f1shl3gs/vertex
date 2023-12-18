@@ -21,24 +21,11 @@ impl Function for Log {
         cx: FunctionCompileContext,
         mut arguments: ArgumentList,
     ) -> Result<FunctionCall, SyntaxError> {
-        let format = arguments.get();
-        let format = if let Expr::String(format) = format.node {
-            format
-        } else {
-            return Err(SyntaxError::InvalidFunctionArgumentType {
-                function: self.identifier(),
-                argument: "format",
-                want: Kind::BYTES,
-                got: format.type_def().kind,
-                span: format.span,
-            });
-        };
+        let format = arguments.get_string()?.node;
+        let arguments = arguments.inner();
 
         Ok(FunctionCall {
-            function: Box::new(LogFunc {
-                format,
-                arguments: arguments.inner(),
-            }),
+            function: Box::new(LogFunc { format, arguments }),
             span: cx.span,
         })
     }

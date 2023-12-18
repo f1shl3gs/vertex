@@ -36,19 +36,7 @@ impl Function for ParseTimestamp {
         mut arguments: ArgumentList,
     ) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
-        let format = arguments.get();
-        let format = match format.node {
-            Expr::String(s) => s,
-            _ => {
-                return Err(SyntaxError::InvalidFunctionArgumentType {
-                    function: self.identifier(),
-                    argument: "format",
-                    want: Kind::BYTES,
-                    got: Kind::BYTES,
-                    span: format.span,
-                })
-            }
-        };
+        let format = arguments.get_string()?.node;
 
         Ok(FunctionCall {
             function: Box::new(ParseTimestampFunc { value, format }),
