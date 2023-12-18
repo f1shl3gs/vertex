@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702875784738,
+  "lastUpdate": 1702875796342,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "282d49cffac243f04bd058203ce9992281baf4d4",
-          "message": "deps: bump base64 to 0.21.5 (#1371)",
-          "timestamp": "2023-10-24T00:49:28+08:00",
-          "tree_id": "bfffb3e125c6f30f0d70f1eb1003b57232026497",
-          "url": "https://github.com/f1shl3gs/vertex/commit/282d49cffac243f04bd058203ce9992281baf4d4"
-        },
-        "date": 1698080901875,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1001,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53451.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cdd14bf9f2cde7789239495f257e0aa27b06c896",
           "message": "rename healthcheck config (#1372)",
           "timestamp": "2023-10-24T02:46:39+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40785.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "91fb1f99ea7ab9dc4775001da745e0b6b2ffc3ef",
+          "message": "deps: bump memmap2 to 0.9.2 (#1479)",
+          "timestamp": "2023-12-18T12:52:09+08:00",
+          "tree_id": "c7a80d41ae00ab3b0d93c8367fdc161b0c83d5e0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/91fb1f99ea7ab9dc4775001da745e0b6b2ffc3ef"
+        },
+        "date": 1702875781903,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40785.5,
             "unit": "KiB"
           }
         ]
