@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702897180263,
+  "lastUpdate": 1702897214048,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cdd14bf9f2cde7789239495f257e0aa27b06c896",
-          "message": "rename healthcheck config (#1372)",
-          "timestamp": "2023-10-24T02:46:39+08:00",
-          "tree_id": "2df36cdcbc083c374ab740a25ae5d51740db9294",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cdd14bf9f2cde7789239495f257e0aa27b06c896"
-        },
-        "date": 1698087910703,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 979,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 53455.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40785.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "047ac234a3ee508a07b20a4d5de56424dcccdb8c",
+          "message": "VTL: add extra functions and some small refactor (#1480)\n\n* simplify object expr convertion\r\n* check types when compile",
+          "timestamp": "2023-12-18T18:48:40+08:00",
+          "tree_id": "bb3b8c2cb58b97fc686ed3f4dd8d823c3c2b17c1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/047ac234a3ee508a07b20a4d5de56424dcccdb8c"
+        },
+        "date": 1702897200542,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 594,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40811.7,
             "unit": "KiB"
           }
         ]
