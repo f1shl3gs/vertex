@@ -72,9 +72,10 @@ fn impl_from_struct(
             ));
         }
     };
-    let maybe_description = type_attrs.description.as_ref().map(|desc| {
-        quote!( schema.metadata().description = Some(#desc.to_string()); )
-    });
+    let maybe_description = type_attrs
+        .description
+        .as_ref()
+        .map(|desc| quote!( schema.metadata().description = Some(#desc.to_string()); ));
 
     let mut any_flatten = false;
     let mut mapped_fields = Vec::with_capacity(fields.named.len());
