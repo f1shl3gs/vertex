@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703045380349,
+  "lastUpdate": 1703045405331,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4bf743d8f0c6abae0131959b13be3b65aaf4a9c8",
-          "message": "remove tag from LogRecord (#1364)",
-          "timestamp": "2023-10-21T21:49:37+08:00",
-          "tree_id": "e0071ba049d168b60e2ac306cce84c7c7c2a9ec6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4bf743d8f0c6abae0131959b13be3b65aaf4a9c8"
-        },
-        "date": 1697896383601,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 49.922,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 155.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 386.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1118.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "65b83268c7ae1cd7fe020091a6a5091ede1c7311",
           "message": "fix default worker threads (#1365)",
           "timestamp": "2023-10-22T15:46:04+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 664.36,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef9c85e33d68f11b36e22a1b8114f98bb31cc07e",
+          "message": "chore(deps): bump memmap2 from 0.9.2 to 0.9.3 (#1482)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.9.2 to 0.9.3.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.9.2...v0.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-20T12:07:08+08:00",
+          "tree_id": "564e0c7edcacdadddac36ac50e089ad3c57d43b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef9c85e33d68f11b36e22a1b8114f98bb31cc07e"
+        },
+        "date": 1703045391666,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 34.656,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 153.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 323.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 650.24,
             "unit": "ns/op"
           }
         ]
