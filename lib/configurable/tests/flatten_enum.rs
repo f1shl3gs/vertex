@@ -1,18 +1,20 @@
-use configurable::example::Visitor;
+#![allow(warnings)]
+
 use configurable::schema::generate_root_schema;
-use configurable_derive::{configurable_component, Configurable};
+use configurable::Examplar;
+use configurable_derive::Configurable;
 use serde::{Deserialize, Serialize};
 
-#[allow(dead_code)]
 #[allow(clippy::print_stdout)]
 #[test]
 fn flatten_struct() {
-    #[derive(Configurable, Serialize, Deserialize)]
+    #[derive(Configurable, Deserialize)]
     struct UnixDetail {
+        /// path
         path: String,
     }
 
-    #[derive(Configurable, Serialize, Deserialize)]
+    #[derive(Configurable, Deserialize)]
     #[serde(rename_all = "lowercase", tag = "mode")]
     enum Protocol {
         /// unix variant
@@ -25,9 +27,10 @@ fn flatten_struct() {
         Udp { addr: String },
     }
 
-    #[derive(Configurable, Serialize, Deserialize)]
+    #[derive(Configurable, Deserialize)]
     struct Config {
         /// common desc
+        #[configurable(example = "cc")]
         common: String,
 
         #[serde(flatten)]
@@ -38,9 +41,8 @@ fn flatten_struct() {
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
-    let visitor = Visitor::new(root_schema);
-    let example = visitor.example();
-    println!("{}", example);
+    let example = Examplar::new(root_schema).generate();
+    println!("**{}**", example);
 
     let _n = serde_yaml::from_str::<Config>(&example).unwrap();
 }
@@ -49,7 +51,7 @@ fn flatten_struct() {
 #[test]
 fn flatten_enum() {
     /// Controls the approach token for tracking tag cardinality.
-    #[derive(Configurable, Copy, Clone, Debug, Deserialize, Serialize)]
+    #[derive(Configurable, Copy, Clone, Debug, Deserialize)]
     #[serde(tag = "mode", rename_all = "snake_case", deny_unknown_fields)]
     pub enum Mode {
         /// Tracks cardinality exactly.
@@ -81,8 +83,7 @@ fn flatten_enum() {
         DropTag,
     }
 
-    #[configurable_component(transform, name = "cardinality")]
-    #[derive(Copy, Clone)]
+    #[derive(Copy, Clone, Configurable, Deserialize)]
     #[serde(deny_unknown_fields)]
     struct Config {
         /// How many distict values for any given key.
@@ -100,7 +101,6 @@ fn flatten_enum() {
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
-    let visitor = Visitor::new(root_schema);
-    let example = visitor.example();
+    let example = Examplar::new(root_schema).generate();
     println!("{}", example);
 }

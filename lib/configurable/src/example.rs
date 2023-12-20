@@ -4,7 +4,6 @@ use serde_json::{Map, Number, Value};
 
 use crate::schema::{
     generate_root_schema, InstanceType, ObjectValidation, RootSchema, Schema, SchemaObject,
-    SingleOrVec,
 };
 use crate::Configurable;
 
@@ -35,12 +34,12 @@ impl Buf {
     }
 }
 
-pub struct Visitor {
+pub struct Examplar {
     root: RootSchema,
     buf: RefCell<Buf>,
 }
 
-impl Visitor {
+impl Examplar {
     pub fn new(root: RootSchema) -> Self {
         Self {
             root,
@@ -48,7 +47,7 @@ impl Visitor {
         }
     }
 
-    pub fn example(self) -> String {
+    pub fn generate(self) -> String {
         let root = if let Some(reference) = self.root.schema.reference.as_ref() {
             if let Some(Schema::Object(root)) = self.get_referenced(reference) {
                 root
@@ -221,21 +220,22 @@ impl Visitor {
             return;
         }
 
-        let arr = obj.array.as_ref().unwrap();
+        self.push_value(&Value::Array(vec![]));
 
-        let item = match arr.items.as_ref().unwrap() {
-            SingleOrVec::Single(s) => match (*s).as_ref() {
-                Schema::Object(ref sm) => sm,
-                _ => return,
-            },
-
-            SingleOrVec::Vec(v) => match v.get(0).unwrap() {
-                Schema::Object(so) => so,
-                _ => return,
-            },
-        };
-
-        self.visit_schema_object(item);
+        // let arr = obj.array.as_ref().unwrap();
+        // let item = match arr.items.as_ref().unwrap() {
+        //     SingleOrVec::Single(s) => match (*s).as_ref() {
+        //         Schema::Object(ref sm) => sm,
+        //         _ => return,
+        //     },
+        //
+        //     SingleOrVec::Vec(v) => match v.get(0).unwrap() {
+        //         Schema::Object(so) => so,
+        //         _ => return,
+        //     },
+        // };
+        //
+        // self.visit_schema_object(item);
     }
 
     fn visit_scalar(&self, obj: &SchemaObject) {
@@ -394,6 +394,6 @@ fn get_default_or_example(obj: &SchemaObject) -> Option<&Value> {
 /// Generate YAML example from a JSON Schema
 pub fn generate_config<T: Configurable>() -> String {
     let root_schema = generate_root_schema::<T>().expect("generate schema success");
-    let visitor = Visitor::new(root_schema);
-    visitor.example()
+    let visitor = Examplar::new(root_schema);
+    visitor.generate()
 }

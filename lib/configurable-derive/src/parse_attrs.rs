@@ -243,12 +243,12 @@ impl FieldAttrs {
             #default_value
             #json_value
 
-            metadata.default = Some(value);
+            subschema.metadata().default = Some(value);
         }
     }
 }
 
-/// Represents a `#[derive(FromArgs)]` type's top-level attributes.
+/// Represents a `#[derive(Configurable)]` type's top-level attributes.
 #[derive(Default)]
 pub struct TypeAttrs {
     pub name: Option<LitStr>,

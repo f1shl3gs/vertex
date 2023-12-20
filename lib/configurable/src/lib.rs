@@ -1,17 +1,14 @@
-#[deny(warnings)]
-// #![deny(clippy::pedantic)]
-// #![allow(clippy::uninlined_format_args)]
 pub mod component;
 mod configurable;
 mod errors;
-pub mod example;
+mod example;
 mod external;
 pub mod format;
 mod named;
 pub mod schema;
 
 pub use errors::GenerateError;
-pub use example::generate_config;
+pub use example::{generate_config, Examplar};
 pub use named::NamedComponent;
 
 pub use configurable::{Configurable, ConfigurableString};

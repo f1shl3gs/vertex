@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
-use configurable::example::Visitor;
 use configurable::schema::generate_root_schema;
+use configurable::Examplar;
 use configurable_derive::Configurable;
 use serde::{Deserialize, Serialize};
 
@@ -18,8 +18,9 @@ fn empty_map() {
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
-    let visitor = Visitor::new(root_schema);
-    let example = visitor.example();
+    let example = Examplar::new(root_schema).generate();
 
-    println!("{}", example)
+    println!("{}", example);
+
+    let _ = serde_yaml::from_str::<Outer>(&example).unwrap();
 }
