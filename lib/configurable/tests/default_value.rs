@@ -2,8 +2,8 @@
 
 use std::fmt::Formatter;
 
-use configurable::example::Visitor;
 use configurable::schema::generate_root_schema;
+use configurable::Examplar;
 use configurable_derive::Configurable;
 use serde::de::Unexpected;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -35,7 +35,7 @@ impl<'de> Deserialize<'de> for Concurrency {
             type Value = Concurrency;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-                formatter.write_str(r#"positive integer or "adaptive""#)
+                formatter.write_str(r#"none, positive integer or "adaptive""#)
             }
 
             fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
@@ -72,8 +72,10 @@ impl<'de> Deserialize<'de> for Concurrency {
             {
                 if v == "adaptive" {
                     Ok(Concurrency::Adaptive)
+                } else if v.to_lowercase() == "none" {
+                    Ok(Concurrency::None)
                 } else {
-                    Err(serde::de::Error::unknown_variant(v, &["adaptive"]))
+                    Err(serde::de::Error::unknown_variant(v, &["adaptive", "none"]))
                 }
             }
         }
@@ -111,10 +113,11 @@ fn default_value() {
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
-    let visitor = Visitor::new(root_schema);
-    let example = visitor.example();
+    let example = Examplar::new(root_schema).generate();
 
-    println!("{}", example)
+    println!("{}", example);
+
+    serde_yaml::from_str::<Outer>(&example).unwrap();
 }
 
 #[test]

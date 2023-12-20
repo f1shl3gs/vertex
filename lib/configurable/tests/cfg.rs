@@ -41,6 +41,3 @@ pub enum Mode {
         path: PathBuf,
     },
 }
-
-#[test]
-fn generate() {}

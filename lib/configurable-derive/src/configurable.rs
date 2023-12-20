@@ -1,7 +1,7 @@
 use proc_macro2::{Ident, TokenStream};
 use quote::{quote, quote_spanned};
 use syn::spanned::Spanned;
-use syn::{DeriveInput, Fields, Result};
+use syn::{DeriveInput, Fields, LitStr, Result};
 
 use crate::parse_attrs::{is_doc_attr, parse_attr_doc, Description, FieldAttrs, TypeAttrs};
 
@@ -15,7 +15,7 @@ pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> Result<TokenS
     let ref_name = name.to_string();
 
     let generate_schema = match &input.data {
-        syn::Data::Struct(ds) => impl_from_struct(&input.ident, type_attrs, &input.generics, ds),
+        syn::Data::Struct(ds) => impl_from_struct(type_attrs, &input.generics, ds),
         syn::Data::Enum(de) => impl_from_enum(&input.ident, type_attrs, &input.generics, de),
         syn::Data::Union(_) => Err(syn::Error::new(
             input.span(),
@@ -46,7 +46,6 @@ pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> Result<TokenS
 }
 
 fn impl_from_struct(
-    _name: &Ident,
     type_attrs: &TypeAttrs,
     _generic_args: &syn::Generics,
     ds: &syn::DataStruct,
@@ -81,81 +80,71 @@ fn impl_from_struct(
     let mut mapped_fields = Vec::with_capacity(fields.named.len());
     for field in &fields.named {
         let field_attrs = FieldAttrs::parse(field)?;
+        if field_attrs.skip {
+            continue;
+        }
+
         if field_attrs.flatten {
             any_flatten = true;
         }
 
-        let ts = generate_named_struct_field(type_attrs, field)?;
-        mapped_fields.push(ts);
+        mapped_fields.push(generate_named_struct_field(field, field_attrs));
     }
 
     let generated = if any_flatten {
         quote!(
-            fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
-                -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
-            {
-                let mut properties = ::configurable::IndexMap::new();
-                let mut required = ::std::collections::BTreeSet::new();
-                let mut flattened_subschemas = ::std::vec::Vec::new();
+            let mut flattened_subschemas = ::std::vec::Vec::new();
 
-                #(#mapped_fields)*
+            #(#mapped_fields)*
 
-                let had_unflatted_properties = !properties.is_empty();
-                let mut schema = ::configurable::schema::generate_struct_schema(
-                    properties,
-                    required,
-                    None,
-                );
+            let had_unflatted_properties = !properties.is_empty();
+            let mut schema = ::configurable::schema::generate_struct_schema(
+                properties,
+                required,
+                None,
+            );
 
-                if !flattened_subschemas.is_empty() {
-                    if !had_unflatted_properties {
-                        schema = flattened_subschemas.remove(0)
-                    }
-
-                    ::configurable::schema::convert_to_flattened_schema(
-                        &mut schema,
-                        flattened_subschemas,
-                    )
+            if !flattened_subschemas.is_empty() {
+                if !had_unflatted_properties {
+                    schema = flattened_subschemas.remove(0)
                 }
 
-                #maybe_description
-
-                Ok(schema)
+                ::configurable::schema::convert_to_flattened_schema(
+                    &mut schema,
+                    flattened_subschemas,
+                );
             }
         )
     } else {
         quote!(
-            fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
-                -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
-            {
-                let mut properties = ::configurable::IndexMap::new();
-                let mut required = ::std::collections::BTreeSet::new();
+            #(#mapped_fields)*
 
-                #(#mapped_fields)*
-
-                let mut schema = ::configurable::schema::generate_struct_schema(
-                    properties,
-                    required,
-                    None,
-                );
-
-                #maybe_description
-
-                Ok(schema)
-            }
+            let mut schema = ::configurable::schema::generate_struct_schema(
+                properties,
+                required,
+                None,
+            );
         )
     };
 
-    Ok(generated)
+    Ok(quote!(
+        fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
+            -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
+        {
+            let mut properties = ::configurable::IndexMap::new();
+            let mut required = ::std::collections::BTreeSet::new();
+
+            #generated
+
+            #maybe_description
+
+            Ok(schema)
+        }
+    ))
 }
 
-fn generate_named_struct_field(_type_attrs: &TypeAttrs, field: &syn::Field) -> Result<TokenStream> {
+fn generate_named_struct_field(field: &syn::Field, field_attrs: FieldAttrs) -> TokenStream {
     let field_typ = &field.ty;
-    let field_attrs = FieldAttrs::parse(field)?;
-    if field_attrs.skip {
-        return Ok(quote!());
-    }
-
     let maybe_default = field_attrs.maybe_default(field_typ);
 
     let field_key = if let Some(renamed) = field_attrs.rename {
@@ -172,60 +161,39 @@ fn generate_named_struct_field(_type_attrs: &TypeAttrs, field: &syn::Field) -> R
         quote!( properties.insert(#field_key.to_string(), subschema); )
     };
 
-    let maybe_field_required = if field_attrs.required {
-        Some(quote!(
-            required.insert(#field_key.to_string());
-        ))
-    } else {
-        None
-    };
+    let maybe_required = field_attrs
+        .required
+        .then(|| quote!( required.insert(#field_key.to_string()); ));
 
     let maybe_description = field_attrs
         .description
-        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
+        .map(|desc| quote!( subschema.metadata().description = Some(#desc.to_string()); ));
 
-    let maybe_deprecated = if field_attrs.deprecated {
-        quote!( metadata.deprecated = true; )
-    } else {
-        quote!()
-    };
+    let maybe_deprecated = field_attrs
+        .deprecated
+        .then(|| quote!( subschema.metadata().deprecated = true; ));
 
     let maybe_format = field_attrs
         .format
         .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
     let maybe_example = field_attrs.example.map(
-        |example| quote!( metadata.examples = vec![ ::serde_json::Value::from( #example ) ]; ),
+        |example| quote!( subschema.metadata().examples = vec![ ::serde_json::Value::from( #example ) ]; ),
     );
 
-    Ok(quote!(
-        {
-            let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_typ>(schema_gen)?;
+    quote!({
+        let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_typ>(schema_gen)?;
 
-            #maybe_format
+        #maybe_format
 
-            let metadata = subschema.metadata();
+        #maybe_description
+        #maybe_deprecated
+        #maybe_default
+        #maybe_example
 
-            #maybe_description
-            #maybe_deprecated
-            #maybe_default
-            #maybe_example
+        #maybe_required
 
-            #maybe_field_required
-
-            #insert_fields
-        }
-    ))
-}
-
-fn generate_struct_field(field: &syn::Field) -> TokenStream {
-    let field_type = &field.ty;
-    let spanned_generate_schema = quote_spanned! {field.span() =>
-        ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?
-    };
-
-    quote!(
-        let mut subschema = #spanned_generate_schema;
-    )
+        #insert_fields
+    })
 }
 
 fn impl_from_enum(
@@ -245,7 +213,7 @@ fn impl_from_enum(
         .as_ref()
         .map(|desc| quote!( schema.metadata().description = Some(#desc.to_string()); ));
 
-    Ok(quote! {
+    Ok(quote!(
         fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
             -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
         {
@@ -259,30 +227,36 @@ fn impl_from_enum(
 
             Ok(schema)
         }
-    })
+    ))
 }
 
-fn apply_rename(variant: &str, rule: &syn::LitStr) -> String {
-    let snake_case = || -> String {
-        let mut snake = String::new();
-        for (i, ch) in variant.char_indices() {
-            if i > 0 && ch.is_uppercase() {
-                snake.push('_');
-            }
-            snake.push(ch.to_ascii_lowercase());
-        }
-        snake
-    };
+fn generate_variant_name(variant: &syn::Variant, rule: &Option<LitStr>) -> String {
+    let original = variant.ident.to_string();
+    match rule {
+        None => original,
+        Some(rule) => {
+            let snake_case = || -> String {
+                let mut snake = String::new();
+                for (i, ch) in original.char_indices() {
+                    if i > 0 && ch.is_uppercase() {
+                        snake.push('_');
+                    }
+                    snake.push(ch.to_ascii_lowercase());
+                }
+                snake
+            };
 
-    match rule.value().as_str() {
-        "lowercase" => variant.to_ascii_lowercase(),
-        "UPPERCASE" => variant.to_ascii_uppercase(),
-        "camelCase" => variant[..1].to_ascii_lowercase() + &variant[1..],
-        "snake_case" => snake_case(),
-        "SCREAMING_SNAKE_CASE" => snake_case().to_ascii_uppercase(),
-        "kebab-case" => snake_case().replace('_', "-"),
-        "SCREAMING-KEBAB-CASE" => snake_case().to_ascii_uppercase().replace('_', "-"),
-        _ => variant.to_owned(),
+            match rule.value().as_str() {
+                "lowercase" => original.to_ascii_lowercase(),
+                "UPPERCASE" => original.to_ascii_uppercase(),
+                "camelCase" => original[..1].to_ascii_lowercase() + &original[1..],
+                "snake_case" => snake_case(),
+                "SCREAMING_SNAKE_CASE" => snake_case().to_ascii_uppercase(),
+                "kebab-case" => snake_case().replace('_', "-"),
+                "SCREAMING-KEBAB-CASE" => snake_case().to_ascii_uppercase().replace('_', "-"),
+                _ => original,
+            }
+        }
     }
 }
 
@@ -298,54 +272,42 @@ fn generate_enum_struct_named_variant_schema(
 
     let maybe_tag_schema = match &type_attrs.tag {
         Some(tag) => {
-            let ident = variant.ident.to_string();
-            let ident = match &type_attrs.rename_all {
-                Some(rule) => apply_rename(&ident, rule),
-                None => ident,
-            };
+            let ident = generate_variant_name(variant, &type_attrs.rename_all);
             let mut description: Option<Description> = None;
             for attr in &variant.attrs {
                 parse_attr_doc(attr, &mut description)?;
             }
 
-            let maybe_tag_description = match description {
-                Some(description) => {
-                    quote!(
-                        tag_metadata.description = Some( #description.to_string() );
-                    )
-                }
-                None => quote!(),
-            };
+            let maybe_tag_description = description.map(
+                |description| quote!(tag_metadata.description = Some( #description.to_string() );),
+            );
 
-            quote! {
-                {
-                    let mut tag_schema = ::configurable::schema::generate_const_string_schema( #ident.to_string() );
-                    let tag_metadata = tag_schema.metadata();
+            quote! ({
+                let mut tag_schema = ::configurable::schema::generate_const_string_schema( #ident.to_string() );
+                let tag_metadata = tag_schema.metadata();
 
-                    #maybe_tag_description
+                #maybe_tag_description
 
-                    properties.insert(#tag.to_string(), tag_schema);
-                    required.insert(#tag.to_string());
-                }
-            }
+                properties.insert(#tag.to_string(), tag_schema);
+                required.insert(#tag.to_string());
+            })
         }
         None => quote!(),
     };
 
     Ok(quote! {
-        {
-            let mut properties = ::configurable::IndexMap::new();
-            let mut required = ::std::collections::BTreeSet::new();
+        let mut properties = ::configurable::IndexMap::new();
+        let mut required = ::std::collections::BTreeSet::new();
 
-            #maybe_tag_schema
-            #(#mapped_fields)*
+        #maybe_tag_schema
 
-            ::configurable::schema::generate_struct_schema(
-                properties,
-                required,
-                None
-            )
-        }
+        #(#mapped_fields)*
+
+        ::configurable::schema::generate_struct_schema(
+            properties,
+            required,
+            None
+        )
     })
 }
 
@@ -364,10 +326,7 @@ fn generate_enum_variant_schema(
     //
     let variant_schema = match &variant.fields {
         Fields::Unit => {
-            let ident = match &type_attrs.rename_all {
-                Some(rule) => apply_rename(&variant.ident.to_string(), rule),
-                None => variant.ident.to_string(),
-            };
+            let ident = generate_variant_name(variant, &type_attrs.rename_all);
 
             quote! { ::configurable::schema::generate_const_string_schema( #ident.to_string() ) }
         }
@@ -385,17 +344,13 @@ fn generate_enum_unamed_variant_schema(
     variant: &syn::Variant,
 ) -> Result<TokenStream> {
     let field = variant.fields.iter().next().expect("must exist");
+    let field_type = &field.ty;
 
     if type_attrs.untagged {
-        let field_type = &field.ty;
-
         let field_attrs = FieldAttrs::parse(field)?;
-        let maybe_description = match &field_attrs.description {
-            Some(desc) => {
-                quote!( subschema.metadata().description = Some(#desc); )
-            }
-            None => quote!(),
-        };
+        let maybe_description = field_attrs
+            .description
+            .map(|desc| quote!( subschema.metadata().description = Some(#desc); ));
 
         return Ok(quote! {
             let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
@@ -406,14 +361,30 @@ fn generate_enum_unamed_variant_schema(
         });
     }
 
-    let field_schema = generate_struct_field(field);
+    let field_schema = if type_attrs.tag.is_none() {
+        let variant_name = generate_variant_name(variant, &type_attrs.rename_all);
+
+        quote!(
+            let mut properties = ::configurable::IndexMap::new();
+            let mut required = ::std::collections::BTreeSet::new();
+            let subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
+            properties.insert(#variant_name.to_string(), subschema);
+            required.insert(#variant_name.to_string());
+            ::configurable::schema::generate_struct_schema(
+                properties,
+                required,
+                None,
+            )
+        )
+    } else {
+        quote!(
+            ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?
+        )
+    };
 
     let maybe_tag_schema = match &type_attrs.tag {
         Some(tag_name) => {
-            let tag = match &type_attrs.rename_all {
-                Some(rule) => apply_rename(&variant.ident.to_string(), rule),
-                None => variant.ident.to_string(),
-            };
+            let tag = generate_variant_name(variant, &type_attrs.rename_all);
 
             quote! {
                 let tag_schema = ::configurable::schema::generate_internal_tagged_variant_schema(
@@ -432,16 +403,15 @@ fn generate_enum_unamed_variant_schema(
 
         let mut subschema = {
             #field_schema
-
-            subschema
         };
 
         #maybe_tag_schema
-
-        ::configurable::schema::convert_to_flattened_schema(
-            &mut subschema,
-            flattened_subschemas
-        );
+        if !flattened_subschemas.is_empty() {
+            ::configurable::schema::convert_to_flattened_schema(
+                &mut subschema,
+                flattened_subschemas
+            );
+        }
 
         subschema
     })
@@ -457,47 +427,44 @@ fn generate_named_enum_field(field: &syn::Field) -> Result<TokenStream> {
         return Ok(quote!());
     }
 
+    let field_schema = {
+        let field_type = &field.ty;
+        let spanned_generate_schema = quote_spanned! {field.span() =>
+            ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?
+        };
+
+        quote!(
+            let mut subschema = #spanned_generate_schema;
+        )
+    };
+
     let maybe_default = field_attrs.maybe_default(field_typ);
-
-    let field_schema = generate_struct_field(field);
-
-    let maybe_required = if field_attrs.required {
-        quote!( required.insert(#field_key.to_string()); )
-    } else {
-        quote!()
-    };
-
-    let maybe_description = if let Some(desc) = field_attrs.description {
-        quote!( metadata.description = Some( #desc.to_string() ); )
-    } else {
-        quote!()
-    };
-
+    let maybe_required = field_attrs
+        .required
+        .then(|| quote!( required.insert(#field_key.to_string()); ));
+    let maybe_description = field_attrs
+        .description
+        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
     let maybe_format = field_attrs
         .format
         .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
+    let maybe_deprecated = field_attrs
+        .deprecated
+        .then(|| quote!( metadata.deprecated = true; ));
 
-    let maybe_deprecated = if field_attrs.deprecated {
-        quote!( metadata.deprecated = true; )
-    } else {
-        quote!()
-    };
+    Ok(quote!({
+        #field_schema
 
-    Ok(quote!(
-        {
-            #field_schema
+        let metadata = subschema.metadata();
 
-            let metadata = subschema.metadata();
+        #maybe_description
+        #maybe_required
+        #maybe_default
+        #maybe_format
+        #maybe_deprecated
 
-            #maybe_description
-            #maybe_required
-            #maybe_default
-            #maybe_format
-            #maybe_deprecated
-
-            properties.insert(#field_key.to_string(), subschema);
-        }
-    ))
+        properties.insert(#field_key.to_string(), subschema);
+    }))
 }
 
 fn generate_enum_variant_subschema(
@@ -512,20 +479,14 @@ fn generate_enum_variant_subschema(
         }
     }
 
-    let maybe_description = match desc {
-        Some(desc) => {
-            quote!( subschema.metadata().description = Some( #desc.to_string() ); )
-        }
-        None => quote!(),
-    };
+    let maybe_description =
+        desc.map(|desc| quote!( subschema.metadata().description = Some( #desc.to_string() ); ));
 
-    Ok(quote! {
-        {
-            let mut subschema = { #variant_schema };
+    Ok(quote! ({
+        let mut subschema = { #variant_schema };
 
-            #maybe_description
+        #maybe_description
 
-            subschemas.push(subschema);
-        }
-    })
+        subschemas.push(subschema);
+    }))
 }
