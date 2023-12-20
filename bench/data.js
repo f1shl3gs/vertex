@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1702957121657,
+  "lastUpdate": 1703045332265,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4bf743d8f0c6abae0131959b13be3b65aaf4a9c8",
-          "message": "remove tag from LogRecord (#1364)",
-          "timestamp": "2023-10-21T21:49:37+08:00",
-          "tree_id": "e0071ba049d168b60e2ac306cce84c7c7c2a9ec6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4bf743d8f0c6abae0131959b13be3b65aaf4a9c8"
-        },
-        "date": 1697896362759,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 861890,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540140,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bef3dd97fe58ba6750a0dc0ce476a1a78e90044e",
+          "message": "chore(deps): bump tokio from 1.35.0 to 1.35.1 (#1483)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.35.0 to 1.35.1.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.35.0...tokio-1.35.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-20T12:06:35+08:00",
+          "tree_id": "16aa55864c526fbfda588690adb57b3c153a1825",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bef3dd97fe58ba6750a0dc0ce476a1a78e90044e"
+        },
+        "date": 1703045317698,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530390,
             "unit": "ns/op"
           }
         ]
