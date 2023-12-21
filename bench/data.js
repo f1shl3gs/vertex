@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703141293157,
+  "lastUpdate": 1703141301059,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e5c5dd2c9d2b6bcc9edc44ba41c0836448e62920",
-          "message": "remove unused function (#1370)",
-          "timestamp": "2023-10-24T00:36:18+08:00",
-          "tree_id": "9e6e1dc50eb8034bf9fb07cbd8bc60e6a67e4943",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e5c5dd2c9d2b6bcc9edc44ba41c0836448e62920"
-        },
-        "date": 1698079154316,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 87.105,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 197.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 318.14,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 185.95,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36a802613ff75b8d5512b81136a83ab1a81400db",
+          "message": "chore(deps): bump async-trait from 0.1.74 to 0.1.75 (#1488)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.74 to 0.1.75.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.74...0.1.75)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-21T14:46:03+08:00",
+          "tree_id": "30e7f25f265596e329f474f7f131ed1ecf1c3125",
+          "url": "https://github.com/f1shl3gs/vertex/commit/36a802613ff75b8d5512b81136a83ab1a81400db"
+        },
+        "date": 1703141286914,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.625,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.579,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.44,
             "unit": "ns/op"
           }
         ]
