@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703141375353,
+  "lastUpdate": 1703141467418,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29",
-          "message": "deps: bump ahash to 0.8.6 (#1379)",
-          "timestamp": "2023-10-25T13:40:16+08:00",
-          "tree_id": "8b2c77932a0630de556fcc9b7eded2f61ec697b3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29"
-        },
-        "date": 1698213635415,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1079,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55108.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f0b3c58feca7bf81021dcd657a18c8e7851db409",
           "message": "ci: remove protobuf setup step (#1380)",
           "timestamp": "2023-10-25T13:51:11+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40779.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a62b62f793e86dd503caf38ef436109edf4bdce9",
+          "message": "chore(deps): bump serde_yaml from 0.9.27 to 0.9.28 (#1485)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.27 to 0.9.28.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.27...0.9.28)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-21T14:39:39+08:00",
+          "tree_id": "f0007ba423fafd263d108fc0ddd855048aff4cbe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a62b62f793e86dd503caf38ef436109edf4bdce9"
+        },
+        "date": 1703141452754,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40769.3,
             "unit": "KiB"
           }
         ]
