@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703140400914,
+  "lastUpdate": 1703140414723,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4e20b2d549672494325c30a57811cd64f25ba599",
-          "message": "chore(deps): bump ipnet from 2.8.0 to 2.9.0 (#1367)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.8.0 to 2.9.0.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/compare/2.8.0...2.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-23T11:47:04+08:00",
-          "tree_id": "9ddfc2b7b2ee51fe85e7cb57aa94ebd5bd7e04b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e20b2d549672494325c30a57811cd64f25ba599"
-        },
-        "date": 1698033002844,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 96.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 219.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 329.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 185.64,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a8a7b644e1f2b97cf849ba39c7b40c1902059d64",
+          "message": "fix hwmon properties insertion (#1486)",
+          "timestamp": "2023-12-21T14:31:04+08:00",
+          "tree_id": "e079c3b194d588ad6d09c7b095cdf9b0aac0c47c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a8a7b644e1f2b97cf849ba39c7b40c1902059d64"
+        },
+        "date": 1703140401210,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.515,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.285,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.19,
             "unit": "ns/op"
           }
         ]
