@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703140914935,
+  "lastUpdate": 1703140920734,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4a8aa30c9506b54f7559c4ba83cc7c5a74574f50",
-          "message": "remove `serde` features from bytes crate (#1369)",
-          "timestamp": "2023-10-24T00:19:13+08:00",
-          "tree_id": "b17104b7f4067747c971b4fa83fecf66635a7ea9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a8aa30c9506b54f7559c4ba83cc7c5a74574f50"
-        },
-        "date": 1698078154619,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 105.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 240.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 400.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 185.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a62b62f793e86dd503caf38ef436109edf4bdce9",
+          "message": "chore(deps): bump serde_yaml from 0.9.27 to 0.9.28 (#1485)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.27 to 0.9.28.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.27...0.9.28)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-21T14:39:39+08:00",
+          "tree_id": "f0007ba423fafd263d108fc0ddd855048aff4cbe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a62b62f793e86dd503caf38ef436109edf4bdce9"
+        },
+        "date": 1703140906953,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.696,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.95,
             "unit": "ns/op"
           }
         ]
