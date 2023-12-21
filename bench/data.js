@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703140927477,
+  "lastUpdate": 1703140944464,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25418,50 +25418,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4e20b2d549672494325c30a57811cd64f25ba599",
-          "message": "chore(deps): bump ipnet from 2.8.0 to 2.9.0 (#1367)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.8.0 to 2.9.0.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/compare/2.8.0...2.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-23T11:47:04+08:00",
-          "tree_id": "9ddfc2b7b2ee51fe85e7cb57aa94ebd5bd7e04b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e20b2d549672494325c30a57811cd64f25ba599"
-        },
-        "date": 1698033039158,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 50.644,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 155.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 386.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1113.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 679.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a62b62f793e86dd503caf38ef436109edf4bdce9",
+          "message": "chore(deps): bump serde_yaml from 0.9.27 to 0.9.28 (#1485)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.27 to 0.9.28.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.27...0.9.28)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-21T14:39:39+08:00",
+          "tree_id": "f0007ba423fafd263d108fc0ddd855048aff4cbe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a62b62f793e86dd503caf38ef436109edf4bdce9"
+        },
+        "date": 1703140931154,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 32.515,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 155.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 318.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 645.05,
             "unit": "ns/op"
           }
         ]
