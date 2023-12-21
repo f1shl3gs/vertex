@@ -389,10 +389,8 @@ async fn collect_sensor_data(
                             let sensor = format!("{}{}", sensor, num);
                             stats
                                 .entry(sensor)
-                                .and_modify(|properties| {
-                                    properties.insert(property.to_string(), value);
-                                })
-                                .or_default();
+                                .or_default()
+                                .insert(property.to_string(), value);
                         }
                         _ => continue,
                     }
