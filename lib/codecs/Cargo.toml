@@ -11,7 +11,7 @@ syslog = ["syslog_loose"]
 [dev-dependencies]
 event = { path = "../event", features = ["string_path"] }
 futures-util = { version = "0.3.29", default-features = false, features = ["async-await"] }
-serde_yaml = { version = "0.9.27", default-features = false }
+serde_yaml = { version = "0.9.28", default-features = false }
 serde_path_to_error = { version = "0.1.14" }
 tokio = { version = "1.35.1", default-features = false, features = ["test-util", "macros"] }
 
