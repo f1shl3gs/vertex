@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703215865856,
+  "lastUpdate": 1703215911271,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "86154b685211af2553d9f87050c2ae29c602d407",
-          "message": "chore(deps): bump serde from 1.0.189 to 1.0.190 (#1383)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.189 to 1.0.190.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.189...v1.0.190)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-26T13:14:39+08:00",
-          "tree_id": "94906ab08ec11e953da870334ba6a0264e70bc54",
-          "url": "https://github.com/f1shl3gs/vertex/commit/86154b685211af2553d9f87050c2ae29c602d407"
-        },
-        "date": 1698298466588,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1062,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55111.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40805,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d157e47994b10dcaa3f893475e5401ced501dd2b",
+          "message": "chore(deps): bump inventory from 0.3.13 to 0.3.14 (#1489)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.13 to 0.3.14.\r\n- [Release notes](https://github.com/dtolnay/inventory/releases)\r\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.13...0.3.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inventory\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-22T11:20:26+08:00",
+          "tree_id": "2573dcf9ee9e801a4e999fd1d91ba8cf8fc9dd56",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d157e47994b10dcaa3f893475e5401ced501dd2b"
+        },
+        "date": 1703215896578,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 582,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40780.2,
             "unit": "KiB"
           }
         ]
