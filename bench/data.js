@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703215453791,
+  "lastUpdate": 1703215521237,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9c22a62d88d50875f1fd79ab49ff1483eb759a75",
-          "message": "deps: bump tokio-util to 0.7.10 (#1382)",
-          "timestamp": "2023-10-25T22:30:32+08:00",
-          "tree_id": "597821ffd6afebdcad927b6202dd0fc537845d53",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9c22a62d88d50875f1fd79ab49ff1483eb759a75"
-        },
-        "date": 1698245387548,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1019,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55108.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40779.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c16c82e9238e6d626109b558025ac44bbea4ab28",
+          "message": "chore(deps): bump proc-macro2 from 1.0.70 to 1.0.71 (#1490)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.70 to 1.0.71.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.70...1.0.71)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-22T11:14:02+08:00",
+          "tree_id": "1b353974441a87792176eb5a75a5b72fea1c3db5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c16c82e9238e6d626109b558025ac44bbea4ab28"
+        },
+        "date": 1703215506649,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 583,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40805,
             "unit": "KiB"
           }
         ]
