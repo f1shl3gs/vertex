@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703237580104,
+  "lastUpdate": 1703238018036,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9b8dcb3582fc05391f57ff172840d4a7b4b48e11",
-          "message": "chore(deps): bump serde_yaml from 0.9.26 to 0.9.27 (#1385)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.26 to 0.9.27.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.26...0.9.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-26T21:29:52+08:00",
-          "tree_id": "c435b33f3419b7e551066495c3227a34f7cc4880",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9b8dcb3582fc05391f57ff172840d4a7b4b48e11"
-        },
-        "date": 1698328129978,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 997,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55109.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40804.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dfb61f8ee152d8795a31e0e95eb75edb06efd7af",
+          "message": "deps: bump hyper to 0.14.28 (#1492)",
+          "timestamp": "2023-12-22T17:29:22+08:00",
+          "tree_id": "19a6ef65f8424579427af9f905095738e540d051",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dfb61f8ee152d8795a31e0e95eb75edb06efd7af"
+        },
+        "date": 1703238004513,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40810.5,
             "unit": "KiB"
           }
         ]
