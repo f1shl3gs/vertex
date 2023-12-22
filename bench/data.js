@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703214988956,
+  "lastUpdate": 1703215012457,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "282d49cffac243f04bd058203ce9992281baf4d4",
-          "message": "deps: bump base64 to 0.21.5 (#1371)",
-          "timestamp": "2023-10-24T00:49:28+08:00",
-          "tree_id": "bfffb3e125c6f30f0d70f1eb1003b57232026497",
-          "url": "https://github.com/f1shl3gs/vertex/commit/282d49cffac243f04bd058203ce9992281baf4d4"
-        },
-        "date": 1698079981106,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 45.127,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 136.67,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 962.36,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cdd14bf9f2cde7789239495f257e0aa27b06c896",
           "message": "rename healthcheck config (#1372)",
           "timestamp": "2023-10-24T02:46:39+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 637.65,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c16c82e9238e6d626109b558025ac44bbea4ab28",
+          "message": "chore(deps): bump proc-macro2 from 1.0.70 to 1.0.71 (#1490)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.70 to 1.0.71.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.70...1.0.71)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-22T11:14:02+08:00",
+          "tree_id": "1b353974441a87792176eb5a75a5b72fea1c3db5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c16c82e9238e6d626109b558025ac44bbea4ab28"
+        },
+        "date": 1703214998692,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 32.662,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 149.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 328.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 671.51,
             "unit": "ns/op"
           }
         ]
