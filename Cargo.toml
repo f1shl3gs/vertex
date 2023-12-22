@@ -369,7 +369,7 @@ tracing = { version = "0.1.40", default-features = false }
 tracing-subscriber = { version = "0.3.18", optional = true, default-features = false, features = ["std", "registry", "ansi"] }
 
 # HTTP
-hyper = { version = "0.14.27", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
+hyper = { version = "0.14.28", default-features = false, features = ["full"] }
 http = { version = "0.2.11", default-features = false }
 
 # Tower
