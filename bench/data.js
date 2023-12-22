@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703216056610,
+  "lastUpdate": 1703216080514,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d53d677744e1c4717cf0beb9f85ce528b0b4eedd",
-          "message": "chore(deps): bump ahash from 0.8.3 to 0.8.5 (#1374)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.3 to 0.8.5.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.3...v0.8.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-24T12:01:18+08:00",
-          "tree_id": "92e8778bdb15309f79332e20689e53f244956ce0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d53d677744e1c4717cf0beb9f85ce528b0b4eedd"
-        },
-        "date": 1698120290263,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 54.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 419.97,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1191.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6377b9a732f3336a1ba097ab05dce7997cdf6c17",
           "message": "chore(deps): bump quick-xml from 0.30.0 to 0.31.0 (#1373)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.30.0 to 0.31.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.30.0...v0.31.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-10-24T12:01:52+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 649.12,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0dbae563b76735b933236e888d488913b88c9bd",
+          "message": "chore(deps): bump serde_yaml from 0.9.28 to 0.9.29 (#1491)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.28 to 0.9.29.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.28...0.9.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-22T11:31:49+08:00",
+          "tree_id": "61aade6aa4369505aadb287e6f587461c6ffd3b2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0dbae563b76735b933236e888d488913b88c9bd"
+        },
+        "date": 1703216065875,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 34.796,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 152.08,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 311.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 657.68,
             "unit": "ns/op"
           }
         ]
