@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703215911271,
+  "lastUpdate": 1703216041168,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6377b9a732f3336a1ba097ab05dce7997cdf6c17",
-          "message": "chore(deps): bump quick-xml from 0.30.0 to 0.31.0 (#1373)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.30.0 to 0.31.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.30.0...v0.31.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-24T12:01:52+08:00",
-          "tree_id": "ff0a865653444ae9df4a7fdd365528e622c50ab5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6377b9a732f3336a1ba097ab05dce7997cdf6c17"
-        },
-        "date": 1698120293633,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 841070,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546780,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0dbae563b76735b933236e888d488913b88c9bd",
+          "message": "chore(deps): bump serde_yaml from 0.9.28 to 0.9.29 (#1491)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.28 to 0.9.29.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.28...0.9.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-22T11:31:49+08:00",
+          "tree_id": "61aade6aa4369505aadb287e6f587461c6ffd3b2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0dbae563b76735b933236e888d488913b88c9bd"
+        },
+        "date": 1703216026777,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 543020,
             "unit": "ns/op"
           }
         ]
