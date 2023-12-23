@@ -190,6 +190,11 @@ impl Binary {
                 Expr::String(buf.freeze())
             }
 
+            // true || something_else
+            (Expr::Boolean(true), BinaryOp::Or, _) => Expr::Boolean(true),
+            // false && something_else
+            (Expr::Boolean(false), BinaryOp::And, _) => Expr::Boolean(false),
+
             (lhs, op, rhs) => Expr::Binary(Binary {
                 lhs: Box::new(lhs.with(lhs_span)),
                 rhs: Box::new(rhs.with(rhs_span)),

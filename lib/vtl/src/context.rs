@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 
 use serde::Serialize;
-use value::path::PathPrefix;
+use value::path::{PathPrefix, TargetPath};
 use value::{OwnedTargetPath, Value};
 
 pub enum Error {
@@ -57,31 +57,31 @@ pub struct TargetValue {
 
 impl Target for TargetValue {
     fn insert(&mut self, target_path: &OwnedTargetPath, value: Value) -> Result<(), Error> {
-        let target = match target_path.prefix {
+        let target = match target_path.prefix() {
             PathPrefix::Event => &mut self.value,
             PathPrefix::Metadata => &mut self.metadata,
         };
 
-        target.insert(&target_path.path, value);
+        target.insert(target_path.value_path(), value);
         Ok(())
     }
 
     fn get(&mut self, target_path: &OwnedTargetPath) -> Result<Option<&Value>, Error> {
-        let target = match target_path.prefix {
+        let target = match target_path.prefix() {
             PathPrefix::Event => &self.value,
             PathPrefix::Metadata => &self.metadata,
         };
 
-        Ok(target.get(&target_path.path))
+        Ok(target.get(target_path.value_path()))
     }
 
     fn get_mut(&mut self, target_path: &OwnedTargetPath) -> Result<Option<&mut Value>, Error> {
-        let target = match target_path.prefix {
+        let target = match target_path.prefix() {
             PathPrefix::Event => &mut self.value,
             PathPrefix::Metadata => &mut self.metadata,
         };
 
-        Ok(target.get_mut(&target_path.path))
+        Ok(target.get_mut(target_path.value_path()))
     }
 
     fn remove(
@@ -89,12 +89,12 @@ impl Target for TargetValue {
         target_path: &OwnedTargetPath,
         compact: bool,
     ) -> Result<Option<Value>, Error> {
-        let target = match target_path.prefix {
+        let target = match target_path.prefix() {
             PathPrefix::Event => &mut self.value,
             PathPrefix::Metadata => &mut self.metadata,
         };
 
-        Ok(target.remove(&target_path.path, compact))
+        Ok(target.remove(target_path.value_path(), compact))
     }
 }
 

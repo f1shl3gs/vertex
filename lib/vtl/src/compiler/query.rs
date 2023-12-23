@@ -1,7 +1,8 @@
-use crate::compiler::Kind;
+use value::path::PathPrefix;
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use super::state::TypeState;
+use super::Kind;
 use super::{Expression, ExpressionError, TypeDef};
 use crate::context::Context;
 
@@ -36,7 +37,21 @@ impl Expression for Query {
     }
 
     fn type_def(&self, state: &TypeState) -> TypeDef {
-        let kind = state.get_query_kind(self);
+        let kind = match self {
+            Query::Internal(name, value_path) => {
+                let variable = state.variable(name).expect("must exists");
+                variable.kind(Some(value_path))
+            }
+
+            Query::External(target_path) => {
+                let value_path = &target_path.path;
+
+                match target_path.prefix {
+                    PathPrefix::Event => state.target.kind(Some(value_path)),
+                    PathPrefix::Metadata => state.metadata.kind(Some(value_path)),
+                }
+            }
+        };
 
         if kind == Kind::UNDEFINED {
             // path is not valid

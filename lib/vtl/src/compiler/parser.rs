@@ -487,7 +487,7 @@ impl Compiler<'_> {
         match self.lexer.next().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
-                    self.register_variable(s.to_string());
+                    self.register_variable(s);
 
                     Ok(AssignmentTarget::Internal(s.to_string(), None))
                 }
@@ -509,25 +509,8 @@ impl Compiler<'_> {
                     // "foo" or "foo.bar"
                     match path.split_once(|c| c == '.' || c == '[') {
                         Some((name, path)) => {
-                            // at this case, the variable must exists already
-                            let exists =
-                                self.variables.iter().any(|variable| variable.name == name);
-                            if !exists {
-                                let maybe = self
-                                    .variables
-                                    .iter()
-                                    .map(|var| {
-                                        (&var.name, distance(var.name.as_bytes(), name.as_bytes()))
-                                    })
-                                    .min_by_key(|(_var, score)| *score)
-                                    .map(|(var, _score)| var.to_string());
-
-                                return Err(SyntaxError::UndefinedVariable {
-                                    name: name.to_string(),
-                                    maybe,
-                                    span,
-                                });
-                            }
+                            // at this case, the variable must exists
+                            self.variable_exists(name, span)?;
 
                             let path = parse_value_path(path)
                                 .map_err(|err| SyntaxError::InvalidPath { err, span })?;
@@ -774,11 +757,8 @@ impl Compiler<'_> {
         match self.lexer.peek().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
-                    let actor = Expr::Ident(s.to_string()).with(span);
-
                     self.lexer.next();
-
-                    self.parse_expr_inner(actor)
+                    Ok(Expr::Ident(s.to_string()).with(span))
                 }
                 Token::FunctionCall(_name) => self.parse_function_call(),
                 Token::PathField(path) => {
@@ -873,7 +853,7 @@ impl Compiler<'_> {
                     self.lexer.next();
                     let expr = self.parse_expr()?;
                     self.expect(Token::RightParen)?;
-                    self.parse_expr_inner(expr)
+                    Ok(expr)
                 }
                 _ => Err(SyntaxError::UnexpectedToken {
                     got: token.to_string(),
@@ -924,42 +904,21 @@ impl Compiler<'_> {
         loop {
             // want argument or RightParen
             match self.lexer.peek().transpose()? {
-                Some((token, span)) => match token {
+                Some((token, _span)) => match token {
                     Token::RightParen => {
                         self.lexer.next();
                         break;
                     }
                     _ => {
-                        let start = self.lexer.pos();
                         let argument = self.parse_expr()?;
-                        let end = self.lexer.pos();
-
                         if argument.type_def(&self.type_state).fallible {
                             return Err(SyntaxError::FallibleArgument {
-                                span: Span { start, end },
+                                span: argument.span,
                             });
                         }
 
-                        if let Expr::Ident(s) = &argument.node {
-                            let exists = self.variables.iter().any(|var| &var.name == s);
-                            if !exists {
-                                let maybe = self
-                                    .variables
-                                    .iter()
-                                    .map(|var| {
-                                        (&var.name, distance(var.name.as_bytes(), name.as_bytes()))
-                                    })
-                                    .min_by_key(|(_var, score)| *score)
-                                    .map(|(var, _score)| var.to_string());
-
-                                return Err(SyntaxError::UndefinedVariable {
-                                    name: s.to_string(),
-                                    maybe,
-                                    span,
-                                });
-                            }
-
-                            self.register_variable(s.to_string());
+                        if let Expr::Ident(name) = &argument.node {
+                            self.variable_exists(name, argument.span)?;
                         }
 
                         arguments.push(argument, &self.type_state)?;
@@ -997,25 +956,7 @@ impl Compiler<'_> {
             .functions
             .iter()
             .find(|func| func.identifier() == name)
-            .ok_or_else(|| {
-                let maybe = self
-                    .functions
-                    .iter()
-                    .map(|func| {
-                        (
-                            func.identifier(),
-                            distance(func.identifier().as_bytes(), name.as_bytes()),
-                        )
-                    })
-                    .min_by_key(|(_var, score)| *score)
-                    .map(|(var, _score)| var.to_string());
-
-                SyntaxError::UndefinedFunction {
-                    name: name.to_string(),
-                    maybe,
-                    span,
-                }
-            })?;
+            .expect("must exists");
 
         // Check function arity
         let at_least =
@@ -1041,41 +982,6 @@ impl Compiler<'_> {
         let compiled = func.compile(FunctionCompileContext { span }, arguments)?;
 
         Ok(Expr::Call(compiled).with(span))
-    }
-
-    fn parse_expr_inner(&mut self, actor: Spanned<Expr>) -> Result<Spanned<Expr>, SyntaxError> {
-        match self.lexer.peek().transpose()? {
-            Some((token, _span)) => {
-                match token {
-                    // actor()
-                    Token::LeftParen => {
-                        let call = self.parse_function_call()?;
-                        self.parse_expr_inner(call)
-                    }
-                    // actor "string"
-                    Token::String(_s) => {
-                        // let arguments = vec![Expression::String(s.to_string())];
-                        // let function = Box::new(actor);
-                        // self.parse_expr_inner(Expression::Call {
-                        //     function,
-                        //     arguments,
-                        // })
-                        unimplemented!()
-                    }
-                    // actor array
-                    Token::LeftBracket => {
-                        unimplemented!()
-                    }
-                    // actor object
-                    Token::LeftBrace => {
-                        // start of for/if/else block
-                        Ok(actor)
-                    }
-                    _ => Ok(actor),
-                }
-            }
-            None => Ok(actor),
-        }
     }
 
     fn parse_if(&mut self) -> Result<Statement, SyntaxError> {
@@ -1148,7 +1054,7 @@ impl Compiler<'_> {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
                     // Override variable might happened
-                    s.to_string()
+                    s
                 }
                 _ => {
                     return Err(SyntaxError::UnexpectedToken {
@@ -1167,7 +1073,7 @@ impl Compiler<'_> {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
                     // Override variable might happened
-                    s.to_string()
+                    s
                 }
                 _ => {
                     return Err(SyntaxError::UnexpectedToken {
@@ -1190,11 +1096,11 @@ impl Compiler<'_> {
             });
         }
         if td.kind.contains(Kind::ARRAY) {
-            self.type_state.apply_variable(key.as_str(), Kind::INTEGER);
-            self.type_state.apply_variable(value.as_str(), Kind::ANY);
+            self.type_state.apply_variable(key, Kind::INTEGER);
+            self.type_state.apply_variable(value, Kind::ANY);
         } else if td.kind.contains(Kind::OBJECT) {
-            self.type_state.apply_variable(key.as_str(), Kind::BYTES);
-            self.type_state.apply_variable(value.as_str(), Kind::ANY);
+            self.type_state.apply_variable(key, Kind::BYTES);
+            self.type_state.apply_variable(value, Kind::ANY);
         } else {
             return Err(SyntaxError::InvalidType {
                 want: "array or object".to_string(),
@@ -1205,8 +1111,8 @@ impl Compiler<'_> {
 
         let start_span = self.expect(Token::LeftBrace)?;
 
-        self.register_variable(key.clone());
-        self.register_variable(value.clone());
+        self.register_variable(key);
+        self.register_variable(value);
 
         self.iterating += 1;
         let block = self.parse_block()?;
@@ -1223,8 +1129,8 @@ impl Compiler<'_> {
         }
 
         Ok(Statement::For(ForStatement {
-            key,
-            value,
+            key: key.to_string(),
+            value: value.to_string(),
             iterator,
             block,
         }))
@@ -1332,13 +1238,32 @@ impl Compiler<'_> {
         }
     }
 
-    fn register_variable(&mut self, name: String) {
+    fn register_variable(&mut self, name: &str) {
         if !self.variables.iter().any(|var| var.name == name) {
             self.variables.push(Variable {
-                name,
+                name: name.to_string(),
                 value: Value::Null,
             })
         }
+    }
+
+    fn variable_exists(&self, name: &str, span: Span) -> Result<(), SyntaxError> {
+        if !self.variables.iter().any(|variable| variable.name == name) {
+            let maybe = self
+                .variables
+                .iter()
+                .map(|var| (&var.name, distance(var.name.as_bytes(), name.as_bytes())))
+                .min_by_key(|(_var, score)| *score)
+                .map(|(var, _score)| var.to_string());
+
+            return Err(SyntaxError::UndefinedVariable {
+                name: name.to_string(),
+                maybe,
+                span,
+            });
+        }
+
+        Ok(())
     }
 }
 
