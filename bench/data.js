@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703302164042,
+  "lastUpdate": 1703302197421,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3c7a09fcf5bd510a5265eab863f26bc8788026bb",
-          "message": "remove inferno (#1375)",
-          "timestamp": "2023-10-24T13:04:23+08:00",
-          "tree_id": "f10527157053857b7ccd8af80b0286d3d09b315b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3c7a09fcf5bd510a5265eab863f26bc8788026bb"
-        },
-        "date": 1698124084186,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.141,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.869,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.777,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 149.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 49.948,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0c9c2b577a497b6a4b8e12a41ae373cee7d52c1b",
           "message": "fix vertex bench (#1377)",
           "timestamp": "2023-10-24T18:51:39+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 40.232,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18f7d0627e26b202418a0fb19e07595578d90981",
+          "message": "chore(deps): bump kube from 0.87.1 to 0.87.2 (#1494)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.87.1 to 0.87.2.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.87.1...0.87.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-23T11:27:00+08:00",
+          "tree_id": "570ead57b2a914093f7695a68b4915624efac050",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18f7d0627e26b202418a0fb19e07595578d90981"
+        },
+        "date": 1703302183142,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 17.997,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 17.614,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 17.646,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 122.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 40.168,
             "unit": "ns/op"
           }
         ]
