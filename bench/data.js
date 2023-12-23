@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703238039144,
+  "lastUpdate": 1703302155347,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "43553f28f62d519829df90aff69bb143e318f822",
-          "message": "remove unused tower's features (#1376)",
-          "timestamp": "2023-10-24T16:04:00+08:00",
-          "tree_id": "799a6c9bff03bf3880682d565897df350e8ca673",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43553f28f62d519829df90aff69bb143e318f822"
-        },
-        "date": 1698134809461,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 739060,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 544240,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18f7d0627e26b202418a0fb19e07595578d90981",
+          "message": "chore(deps): bump kube from 0.87.1 to 0.87.2 (#1494)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.87.1 to 0.87.2.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.87.1...0.87.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-23T11:27:00+08:00",
+          "tree_id": "570ead57b2a914093f7695a68b4915624efac050",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18f7d0627e26b202418a0fb19e07595578d90981"
+        },
+        "date": 1703302140344,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 549580,
             "unit": "ns/op"
           }
         ]
