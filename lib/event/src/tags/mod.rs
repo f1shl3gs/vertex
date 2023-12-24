@@ -438,6 +438,41 @@ impl Tags {
             self.cap = new_cap;
         }
     }
+
+    unsafe fn remove_by_index(&mut self, index: usize) -> Entry {
+        let ptr = self.data.as_ptr().add(index);
+        let entry = std::ptr::read(ptr);
+        if index < self.len - 1 {
+            std::ptr::copy(ptr.add(1), ptr, self.len - index - 1);
+        }
+
+        self.len -= 1;
+        entry
+    }
+
+    /// Retains only the elements specified by the predicate.
+    ///
+    /// In other words, remove all elements Key/Value pairs for which
+    /// `f(&Key, &Value)` returns `false`.
+    pub fn retain<F>(&mut self, mut f: F)
+    where
+        F: FnMut(&Key, &Value) -> bool,
+    {
+        let mut pos = 0;
+
+        unsafe {
+            while pos < self.len {
+                let ptr = self.data.as_ptr().add(pos);
+                let entry = &(*ptr);
+                if !f(&entry.key, &entry.value) {
+                    let _ = self.remove_by_index(pos);
+                    continue
+                }
+
+                pos += 1;
+            }
+        }
+    }
 }
 
 #[macro_export]
@@ -614,5 +649,59 @@ mod tests {
             .collect::<Vec<_>>();
 
         assert_eq!(keys, ["a", "aa", "ab"]);
+    }
+
+    #[test]
+    fn retain_first() {
+        let mut tags = tags!(
+            "a" => "a",
+            "b" => "b",
+            "c" => "c"
+        );
+
+        tags.retain(|key, _value| key.as_str() != "a");
+
+        assert_eq!(tags, tags!(
+            "b" => "b",
+            "c" => "c"
+        ));
+        assert_eq!(tags.len(), 2);
+        assert_eq!(tags.capacity(), 3);
+    }
+
+    #[test]
+    fn retain_middle() {
+        let mut tags = tags!(
+            "a" => "a",
+            "b" => "b",
+            "c" => "c"
+        );
+
+        tags.retain(|key, _value| key.as_str() != "b");
+
+        assert_eq!(tags, tags!(
+            "a" => "a",
+            "c" => "c"
+        ));
+        assert_eq!(tags.len(), 2);
+        assert_eq!(tags.capacity(), 3);
+    }
+
+    #[test]
+    fn retain_last() {
+        let mut tags = tags!(
+            "a" => "a",
+            "b" => "b",
+            "c" => "c"
+        );
+
+        tags.retain(|key, _value| key.as_str() != "c");
+
+        assert_eq!(tags, tags!(
+            "a" => "a",
+            "b" => "b"
+        ));
+        assert_eq!(tags.len(), 2);
+        assert_eq!(tags.capacity(), 3);
     }
 }
