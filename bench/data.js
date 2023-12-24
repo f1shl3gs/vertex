@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703431500733,
+  "lastUpdate": 1703431540564,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1be8cef10ebbcf038942cc795580e9f80d742752",
-          "message": "deps: remove unused features of tracing-futures (#1388)",
-          "timestamp": "2023-10-27T00:57:13+08:00",
-          "tree_id": "22ebe2de5f57559778b666de3a167aeaf4e68d80",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1be8cef10ebbcf038942cc795580e9f80d742752"
-        },
-        "date": 1698340805504,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1221,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55106.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41526,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f20072a6debdff906b1212026cfb871f00178bbe",
+          "message": "transforms/relabel: add more operations (#1496)\n\n* add retain\r\n\r\n* add to_string_lossy for Value\r\n\r\n* add md5 for transform/relabel\r\n\r\n* add more actions\r\n\r\n* fmt",
+          "timestamp": "2023-12-24T23:14:03+08:00",
+          "tree_id": "4bbd23eb3c098e9398ce0f788fe10ed4ec1a2772",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f20072a6debdff906b1212026cfb871f00178bbe"
+        },
+        "date": 1703431527121,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 595,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41591,
             "unit": "KiB"
           }
         ]
