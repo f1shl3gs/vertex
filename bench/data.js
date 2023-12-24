@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703402063612,
+  "lastUpdate": 1703402096326,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25418,50 +25418,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0c9c2b577a497b6a4b8e12a41ae373cee7d52c1b",
-          "message": "fix vertex bench (#1377)",
-          "timestamp": "2023-10-24T18:51:39+08:00",
-          "tree_id": "74bb3370980dabe9c6767e435e9f66d4fcbcfe66",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0c9c2b577a497b6a4b8e12a41ae373cee7d52c1b"
-        },
-        "date": 1698144941619,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 54.958,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.67,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 401.41,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1197.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 659.99,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18740e65a334241b5a87bb3be678888db1c67e7d",
+          "message": "lib/vtl: refine type def & address variables by index (#1495)\n\n* add variables to TypeState\r\n* address variables by index",
+          "timestamp": "2023-12-24T15:12:01+08:00",
+          "tree_id": "6c968023be086809a4b94f626349d5a083771842",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18740e65a334241b5a87bb3be678888db1c67e7d"
+        },
+        "date": 1703402072690,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 33.095,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 158.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 323.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 640.57,
             "unit": "ns/op"
           }
         ]
