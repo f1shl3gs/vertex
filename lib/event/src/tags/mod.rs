@@ -466,7 +466,7 @@ impl Tags {
                 let entry = &(*ptr);
                 if !f(&entry.key, &entry.value) {
                     let _ = self.remove_by_index(pos);
-                    continue
+                    continue;
                 }
 
                 pos += 1;
@@ -661,10 +661,13 @@ mod tests {
 
         tags.retain(|key, _value| key.as_str() != "a");
 
-        assert_eq!(tags, tags!(
-            "b" => "b",
-            "c" => "c"
-        ));
+        assert_eq!(
+            tags,
+            tags!(
+                "b" => "b",
+                "c" => "c"
+            )
+        );
         assert_eq!(tags.len(), 2);
         assert_eq!(tags.capacity(), 3);
     }
@@ -679,10 +682,13 @@ mod tests {
 
         tags.retain(|key, _value| key.as_str() != "b");
 
-        assert_eq!(tags, tags!(
-            "a" => "a",
-            "c" => "c"
-        ));
+        assert_eq!(
+            tags,
+            tags!(
+                "a" => "a",
+                "c" => "c"
+            )
+        );
         assert_eq!(tags.len(), 2);
         assert_eq!(tags.capacity(), 3);
     }
@@ -697,10 +703,13 @@ mod tests {
 
         tags.retain(|key, _value| key.as_str() != "c");
 
-        assert_eq!(tags, tags!(
-            "a" => "a",
-            "b" => "b"
-        ));
+        assert_eq!(
+            tags,
+            tags!(
+                "a" => "a",
+                "b" => "b"
+            )
+        );
         assert_eq!(tags.len(), 2);
         assert_eq!(tags.capacity(), 3);
     }
