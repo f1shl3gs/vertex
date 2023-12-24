@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
@@ -125,6 +126,21 @@ pub enum Value {
     String(String),
     /// Array of homogeneous values
     Array(Array),
+}
+
+impl Value {
+    #[allow(clippy::missing_panics_doc)]
+    pub fn to_string_lossy(&self) -> Cow<'_, str> {
+        match self {
+            Value::Bool(b) => if *b { "true" } else { "false" }.into(),
+            Value::I64(i) => i.to_string().into(),
+            Value::F64(f) => f.to_string().into(),
+            Value::String(s) => s.into(),
+            Value::Array(array) => serde_json::to_string(array)
+                .expect("cannot serialize array")
+                .into(),
+        }
+    }
 }
 
 impl Eq for Value {}
