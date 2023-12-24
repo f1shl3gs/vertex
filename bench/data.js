@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703402561090,
+  "lastUpdate": 1703402605670,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e26149cb2b85b84fd0ee1282a0c76917007a5710",
-          "message": "deps: bump futures and futures-util to 0.3.29 (#1386)",
-          "timestamp": "2023-10-27T00:14:00+08:00",
-          "tree_id": "05551c3d821210b06a357579a43e3913cd02446a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e26149cb2b85b84fd0ee1282a0c76917007a5710"
-        },
-        "date": 1698338530180,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1517,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55110.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1be8cef10ebbcf038942cc795580e9f80d742752",
           "message": "deps: remove unused features of tracing-futures (#1388)",
           "timestamp": "2023-10-27T00:57:13+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41561.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18740e65a334241b5a87bb3be678888db1c67e7d",
+          "message": "lib/vtl: refine type def & address variables by index (#1495)\n\n* add variables to TypeState\r\n* address variables by index",
+          "timestamp": "2023-12-24T15:12:01+08:00",
+          "tree_id": "6c968023be086809a4b94f626349d5a083771842",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18740e65a334241b5a87bb3be678888db1c67e7d"
+        },
+        "date": 1703402591874,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 592,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41526,
             "unit": "KiB"
           }
         ]
