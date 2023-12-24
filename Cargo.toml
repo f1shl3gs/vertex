@@ -227,7 +227,7 @@ transforms-filter = ["dep:condition"]
 transforms-geoip = ["dep:maxminddb"]
 transforms-metricalize = ["dep:async-stream"]
 transforms-relabel = []
-transforms-rewrite = []
+transforms-rewrite = ["dep:md5"]
 transforms-route = ["dep:condition"]
 transforms-sample = []
 transforms-throttle = ["dep:gcra"]
@@ -413,6 +413,7 @@ kube = { version = "0.87.2", default-features = false, optional = true, features
 libc = { version = "0.2.151", default-features = false, optional = true }
 lru = { version = "0.12.1", default-features = false, optional = true }
 maxminddb = { version = "0.23.0", default-features = false, optional = true }
+md5 = { version = "0.7.0", default-features = false, optional = true }
 memchr = { version = "2.6.4", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
 nom = { version = "7.1.3", default-features = false }
