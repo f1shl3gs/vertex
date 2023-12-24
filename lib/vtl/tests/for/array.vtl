@@ -1,0 +1,11 @@
+array = ["a", "b", "c"]
+
+indexes = []
+items = []
+for index, item in array {
+    indexes = push(indexes, index)
+    items = push(items, item)
+}
+
+assert_eq(indexes, [0, 1, 2])
+assert_eq(items, array)

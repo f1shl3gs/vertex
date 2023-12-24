@@ -341,13 +341,6 @@ impl DiagnosticMessage for SyntaxError {
     }
 }
 
-struct Variable {
-    name: String,
-    value: Value,
-    // maybe we should track usage
-    // reads: usize,
-}
-
 /// ```text
 /// .foo = .bar
 /// delete(.bar)
@@ -381,7 +374,6 @@ pub struct Compiler<'input> {
     // so if iterating is zero, `continue` and `break` is not allowed.
     iterating: usize,
 
-    variables: Vec<Variable>,
     type_state: TypeState,
 
     target_queries: Vec<OwnedTargetPath>,
@@ -394,7 +386,6 @@ impl Compiler<'_> {
             lexer,
             functions: builtin_functions(),
             iterating: 0,
-            variables: vec![],
             type_state: TypeState::default(),
             target_queries: vec![],
         };
@@ -406,12 +397,10 @@ impl Compiler<'_> {
 
         Ok(Program {
             statements: block,
-            target_queries: compiler.target_queries,
-            variables: compiler
-                .variables
-                .into_iter()
-                .map(|var| (var.name, var.value))
+            variables: std::iter::repeat(Value::Null)
+                .take(compiler.type_state.variables.len())
                 .collect(),
+            target_queries: compiler.target_queries,
         })
     }
 
@@ -428,7 +417,9 @@ impl Compiler<'_> {
                     break;
                 }
                 // assign to a variable
-                Token::Identifier(_) | Token::PathField(_) => statements.push(self.parse_assign()?),
+                Token::Identifier(_) | Token::PathField(_) => {
+                    statements.push(self.parse_assignment()?)
+                }
 
                 Token::FunctionCall(_name) => {
                     if let Expr::Call(call) = self.parse_function_call()?.node {
@@ -486,10 +477,9 @@ impl Compiler<'_> {
     fn parse_assign_target(&mut self) -> Result<AssignmentTarget, SyntaxError> {
         match self.lexer.next().transpose()? {
             Some((token, span)) => match token {
-                Token::Identifier(s) => {
-                    self.register_variable(s);
-
-                    Ok(AssignmentTarget::Internal(s.to_string(), None))
+                Token::Identifier(name) => {
+                    let index = self.type_state.push(name);
+                    Ok(AssignmentTarget::Internal(index, None))
                 }
                 Token::PathField(path) => {
                     // ".", ".foo", "%" or "%foo"
@@ -509,13 +499,11 @@ impl Compiler<'_> {
                     // "foo" or "foo.bar"
                     match path.split_once(|c| c == '.' || c == '[') {
                         Some((name, path)) => {
-                            // at this case, the variable must exists
-                            self.variable_exists(name, span)?;
-
+                            let index = self.type_state.push(name);
                             let path = parse_value_path(path)
                                 .map_err(|err| SyntaxError::InvalidPath { err, span })?;
 
-                            Ok(AssignmentTarget::Internal(name.to_string(), Some(path)))
+                            Ok(AssignmentTarget::Internal(index, Some(path)))
                         }
                         None => Err(SyntaxError::InvalidPath {
                             err: PathParseError::InvalidPathSyntax {
@@ -535,7 +523,7 @@ impl Compiler<'_> {
         }
     }
 
-    fn parse_assign(&mut self) -> Result<Statement, SyntaxError> {
+    fn parse_assignment(&mut self) -> Result<Statement, SyntaxError> {
         let target = self.parse_assign_target()?;
 
         match self.lexer.next().transpose()? {
@@ -758,7 +746,8 @@ impl Compiler<'_> {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
                     self.lexer.next();
-                    Ok(Expr::Ident(s.to_string()).with(span))
+                    let index = self.variable_exists(s, span)?;
+                    Ok(Expr::Ident(index).with(span))
                 }
                 Token::FunctionCall(_name) => self.parse_function_call(),
                 Token::PathField(path) => {
@@ -774,34 +763,15 @@ impl Compiler<'_> {
                         // "foo", "foo.bar" or "foo[1]"
                         match path.find(|c| c == '.' || c == '[') {
                             Some(index) => {
-                                // at this case, the variable must exists already
                                 let (name, path) = path.split_at(index);
-                                let exists =
-                                    self.variables.iter().any(|variable| variable.name == name);
-                                if !exists {
-                                    let maybe = self
-                                        .variables
-                                        .iter()
-                                        .map(|var| {
-                                            (
-                                                &var.name,
-                                                distance(var.name.as_bytes(), name.as_bytes()),
-                                            )
-                                        })
-                                        .min_by_key(|(_var, score)| *score)
-                                        .map(|(var, _score)| var.to_string());
 
-                                    return Err(SyntaxError::UndefinedVariable {
-                                        name: name.to_string(),
-                                        maybe,
-                                        span,
-                                    });
-                                }
+                                // at this case, the variable must exists already
+                                let index = self.variable_exists(name, span)?;
 
                                 let path = parse_value_path(path)
                                     .map_err(|err| SyntaxError::InvalidPath { err, span })?;
 
-                                Query::Internal(name.to_string(), path)
+                                Query::Internal(index, path)
                             }
                             None => {
                                 return Err(SyntaxError::InvalidPath {
@@ -917,10 +887,6 @@ impl Compiler<'_> {
                             });
                         }
 
-                        if let Expr::Ident(name) = &argument.node {
-                            self.variable_exists(name, argument.span)?;
-                        }
-
                         arguments.push(argument, &self.type_state)?;
                     }
                 },
@@ -1001,9 +967,14 @@ impl Compiler<'_> {
             });
         }
 
+        let start_index = self.type_state.variables.len();
         let start_span = self.expect(Token::LeftBrace)?;
         let then_block = self.parse_block()?;
         let end_span = self.expect(Token::RightBrace)?;
+
+        for index in start_index..self.type_state.variables.len() {
+            self.type_state.variable_mut(index).visible = false
+        }
 
         if then_block.is_empty() {
             return Err(SyntaxError::EmptyBlock {
@@ -1050,11 +1021,11 @@ impl Compiler<'_> {
     fn parse_for(&mut self) -> Result<Statement, SyntaxError> {
         self.expect(Token::For)?;
 
-        let key = match self.lexer.next().transpose()? {
+        let key_index = match self.lexer.next().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
                     // Override variable might happened
-                    s
+                    self.type_state.push(s)
                 }
                 _ => {
                     return Err(SyntaxError::UnexpectedToken {
@@ -1069,11 +1040,11 @@ impl Compiler<'_> {
 
         self.expect(Token::Comma)?;
 
-        let value = match self.lexer.next().transpose()? {
+        let value_index = match self.lexer.next().transpose()? {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
                     // Override variable might happened
-                    s
+                    self.type_state.push(s)
                 }
                 _ => {
                     return Err(SyntaxError::UnexpectedToken {
@@ -1096,11 +1067,9 @@ impl Compiler<'_> {
             });
         }
         if td.kind.contains(Kind::ARRAY) {
-            self.type_state.apply_variable(key, Kind::INTEGER);
-            self.type_state.apply_variable(value, Kind::ANY);
+            self.type_state.variable_mut(key_index).apply(Kind::INTEGER);
         } else if td.kind.contains(Kind::OBJECT) {
-            self.type_state.apply_variable(key, Kind::BYTES);
-            self.type_state.apply_variable(value, Kind::ANY);
+            self.type_state.variable_mut(value_index).apply(Kind::BYTES)
         } else {
             return Err(SyntaxError::InvalidType {
                 want: "array or object".to_string(),
@@ -1108,12 +1077,9 @@ impl Compiler<'_> {
                 span: iterator.span,
             });
         }
+        self.type_state.variable_mut(value_index).apply(Kind::ANY);
 
         let start_span = self.expect(Token::LeftBrace)?;
-
-        self.register_variable(key);
-        self.register_variable(value);
-
         self.iterating += 1;
         let block = self.parse_block()?;
         self.iterating -= 1;
@@ -1128,9 +1094,14 @@ impl Compiler<'_> {
             });
         }
 
+        // mark "key", "value" and any variables defined in this block invisible
+        for index in key_index..self.type_state.variables.len() {
+            self.type_state.variable_mut(index).visible = false;
+        }
+
         Ok(Statement::For(ForStatement {
-            key: key.to_string(),
-            value: value.to_string(),
+            key: key_index,
+            value: value_index,
             iterator,
             block,
         }))
@@ -1238,32 +1209,37 @@ impl Compiler<'_> {
         }
     }
 
-    fn register_variable(&mut self, name: &str) {
-        if !self.variables.iter().any(|var| var.name == name) {
-            self.variables.push(Variable {
-                name: name.to_string(),
-                value: Value::Null,
-            })
+    fn variable_exists(&self, name: &str, span: Span) -> Result<usize, SyntaxError> {
+        match self
+            .type_state
+            .variables
+            .iter()
+            .enumerate()
+            .rfind(|(_index, var)| var.visible && var.name == name)
+        {
+            Some((index, _var)) => Ok(index),
+            None => {
+                let maybe = self
+                    .type_state
+                    .variables
+                    .iter()
+                    .filter_map(|var| {
+                        if var.visible {
+                            Some((&var.name, distance(var.name.as_bytes(), name.as_bytes())))
+                        } else {
+                            None
+                        }
+                    })
+                    .min_by_key(|(_name, score)| *score)
+                    .map(|(name, _score)| name.to_string());
+
+                Err(SyntaxError::UndefinedVariable {
+                    name: name.to_string(),
+                    maybe,
+                    span,
+                })
+            }
         }
-    }
-
-    fn variable_exists(&self, name: &str, span: Span) -> Result<(), SyntaxError> {
-        if !self.variables.iter().any(|variable| variable.name == name) {
-            let maybe = self
-                .variables
-                .iter()
-                .map(|var| (&var.name, distance(var.name.as_bytes(), name.as_bytes())))
-                .min_by_key(|(_var, score)| *score)
-                .map(|(var, _score)| var.to_string());
-
-            return Err(SyntaxError::UndefinedVariable {
-                name: name.to_string(),
-                maybe,
-                span,
-            });
-        }
-
-        Ok(())
     }
 }
 

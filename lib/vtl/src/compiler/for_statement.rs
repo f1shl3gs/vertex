@@ -7,15 +7,13 @@ use super::{Expression, Spanned, TypeDef};
 use super::{ExpressionError, Kind, ValueKind};
 use crate::context::Context;
 
-/// The `key/value` is temporary defined(insert when start, and remove when end),
-/// and they are limited to be identifier, so we defined them with `String`.
 #[derive(Clone)]
 pub struct ForStatement {
-    /// The key or index to set to the value of each item being iterated.
-    pub key: String,
+    /// The index of variable for "key" or "index".
+    pub key: usize,
 
-    /// The value to set to the value of each item being iterated.
-    pub value: String,
+    /// The index of variable for "value" or "item".
+    pub value: usize,
 
     /// The expression to evaluate to get the iterator.
     pub iterator: Spanned<Expr>,
@@ -28,16 +26,11 @@ impl Expression for ForStatement {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
         let iterator = self.iterator.resolve(cx)?;
 
-        // avoid overwrite variable
-        let prev_key = cx.variables.remove(&self.key);
-        let prev_value = cx.variables.remove(&self.value);
-
         match iterator {
             Value::Array(array) => {
                 for (index, item) in array.into_iter().enumerate() {
-                    cx.variables
-                        .insert(self.key.clone(), Value::Integer(index as i64));
-                    cx.variables.insert(self.value.clone(), item);
+                    cx.set(self.key, Value::Integer(index as i64));
+                    cx.set(self.value, item);
 
                     if let Err(err) = self.block.resolve(cx) {
                         match err {
@@ -50,8 +43,8 @@ impl Expression for ForStatement {
             }
             Value::Object(map) => {
                 for (key, value) in map {
-                    cx.variables.insert(self.key.clone(), key.into());
-                    cx.variables.insert(self.value.clone(), value);
+                    cx.set(self.key, Value::Bytes(key.into()));
+                    cx.set(self.value, value);
 
                     if let Err(err) = self.block.resolve(cx) {
                         match err {
@@ -69,14 +62,6 @@ impl Expression for ForStatement {
                     span: self.iterator.span,
                 })
             }
-        }
-
-        // avoid overwrite variable
-        if let Some(key) = prev_key {
-            cx.variables.insert(self.key.clone(), key);
-        }
-        if let Some(value) = prev_value {
-            cx.variables.insert(self.value.clone(), value);
         }
 
         Ok(Value::Null)

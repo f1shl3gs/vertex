@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter};
 
 use bytes::Bytes;
-use value::Value;
+use value::{OwnedValuePath, Value};
 
 use super::binary::Binary;
 use super::function_call::FunctionCall;
@@ -27,7 +27,9 @@ pub enum Expr {
     String(Bytes),
 
     /// A reference to a stored value, an identifier.
-    Ident(String),
+    ///
+    /// The second part is the index of variable stack
+    Ident(usize),
     /// A query
     ///
     /// ".", "%", ".foo", "%foo" or "foo.bar"
@@ -214,13 +216,7 @@ impl Expression for Expr {
             Expr::Integer(i) => Ok(Value::Integer(*i)),
             Expr::Float(f) => Ok(Value::Float(*f)),
             Expr::String(s) => Ok(Value::from(s.clone())),
-            Expr::Ident(s) => {
-                let value = cx
-                    .variables
-                    .get(s)
-                    .expect("variable must be checked at compile time");
-                Ok(value.clone())
-            }
+            Expr::Ident(index) => Ok(cx.get(*index).clone()),
             Expr::Query(query) => query.resolve(cx),
             Expr::Array(array) => {
                 let array = array
@@ -249,7 +245,7 @@ impl Expression for Expr {
 
     fn type_def(&self, state: &TypeState) -> TypeDef {
         match self {
-            Expr::Ident(ident) => state.get_variable_kind(ident).into(),
+            Expr::Ident(index) => state.variable(*index).kind(&OwnedValuePath::root()).into(),
             Expr::Null => Kind::NULL.into(),
             Expr::Boolean(_) => Kind::BOOLEAN.into(),
             Expr::Integer(_) => Kind::INTEGER.into(),

@@ -1,7 +1,3 @@
-#![allow(dead_code)]
-
-use std::slice::Iter;
-
 use value::path::{PathPrefix, TargetPath};
 use value::{OwnedValuePath, Value};
 
@@ -9,45 +5,9 @@ use super::assignment::AssignmentTarget;
 use super::Kind;
 use super::ValueKind;
 
-/// The state used at runtime to track changes as they happen.
-pub struct RuntimeState {
-    /// The Value stored in each variable.
-    variables: Vec<Value>,
-    // TODO: add TimeZone support
-    // timezone: Tz
-}
-
-impl RuntimeState {
-    #[inline]
-    pub fn new() -> Self {
-        Self { variables: vec![] }
-    }
-
-    #[inline(always)]
-    pub fn get(&self, index: usize) -> &Value {
-        unsafe {
-            // SAFETY: index checked at compile-time
-            self.variables.get_unchecked(index)
-        }
-    }
-
-    #[inline]
-    pub fn get_mut(&mut self, index: usize) -> &Value {
-        unsafe {
-            // SAFETY: index checked at compile-time
-            self.variables.get_unchecked_mut(index)
-        }
-    }
-
-    pub fn push(&mut self, v: Value) -> usize {
-        self.variables.push(v);
-        self.variables.len() - 1
-    }
-}
-
 pub struct Variable {
     /// The name of this variable
-    name: String,
+    pub name: String,
 
     /// Once the variable leaves the block, it is not accessible anymore.
     ///
@@ -58,7 +18,7 @@ pub struct Variable {
     ///
     /// log("key", key) # undefined variable error
     /// ```
-    visible: bool,
+    pub visible: bool,
 
     /// This field is not really the "VALUE", it is used to store the
     /// variable kind and the structure of an object.
@@ -82,17 +42,18 @@ impl Default for Variable {
 }
 
 impl Variable {
-    pub fn kind(&self, path: Option<&OwnedValuePath>) -> Kind {
-        match path {
-            Some(path) => match self.value.get(path) {
-                Some(Value::Integer(i)) => Kind::new(*i as u16),
-                Some(value) => value.kind(),
-                None => Kind::NULL,
-            },
-            None => match &self.value {
+    pub fn kind(&self, path: &OwnedValuePath) -> Kind {
+        if path.is_root() {
+            return match &self.value {
                 Value::Integer(i) => Kind::new(*i as u16),
                 value => value.kind(),
-            },
+            };
+        }
+
+        match self.value.get(path) {
+            Some(Value::Integer(i)) => Kind::new(*i as u16),
+            Some(value) => value.kind(),
+            None => Kind::NULL,
         }
     }
 
@@ -102,7 +63,7 @@ impl Variable {
     }
 
     #[inline]
-    fn apply(&mut self, kind: Kind) {
+    pub fn apply(&mut self, kind: Kind) {
         self.value = Value::Integer(kind.inner() as i64)
     }
 }
@@ -110,7 +71,7 @@ impl Variable {
 #[derive(Default)]
 pub struct TypeState {
     /// The key is variable name
-    variables: Vec<Variable>,
+    pub variables: Vec<Variable>,
 
     /// external environments
     pub target: Variable,
@@ -118,38 +79,38 @@ pub struct TypeState {
 }
 
 impl TypeState {
-    #[inline]
-    pub fn variables(&self) -> Iter<'_, Variable> {
-        self.variables.iter()
+    /// Create a new variable if it is not exists.
+    pub fn push(&mut self, name: &str) -> usize {
+        match self
+            .variables
+            .iter()
+            .rposition(|var| var.visible && var.name == name)
+        {
+            Some(index) => index,
+            None => {
+                self.variables.push(Variable {
+                    name: name.to_string(),
+                    visible: true,
+                    value: Value::Null,
+                });
+
+                self.variables.len() - 1
+            }
+        }
     }
 
-    pub fn variable(&self, ident: &str) -> Option<&Variable> {
-        self.variables
-            .iter()
-            .rfind(|var| var.visible && var.name == ident)
+    pub fn variable(&self, index: usize) -> &Variable {
+        unsafe { self.variables.get_unchecked(index) }
+    }
+
+    pub fn variable_mut(&mut self, index: usize) -> &mut Variable {
+        unsafe { self.variables.get_unchecked_mut(index) }
     }
 
     pub fn apply(&mut self, target: &AssignmentTarget, kind: Kind) {
         match target {
-            AssignmentTarget::Internal(name, path) => {
-                let index = match self
-                    .variables
-                    .iter()
-                    .rposition(|var| var.visible && &var.name == name)
-                {
-                    Some(index) => index,
-                    None => {
-                        self.variables.push(Variable {
-                            name: name.to_string(),
-                            visible: true,
-                            value: Value::Null,
-                        });
-
-                        self.variables.len() - 1
-                    }
-                };
-
-                let variable = unsafe { self.variables.get_unchecked_mut(index) };
+            AssignmentTarget::Internal(index, path) => {
+                let variable = unsafe { self.variables.get_unchecked_mut(*index) };
                 match path {
                     Some(path) => variable.apply_with_path(kind, path),
                     None => variable.apply(kind),
@@ -165,24 +126,6 @@ impl TypeState {
             }
         }
     }
-
-    pub fn apply_variable(&mut self, ident: &str, kind: Kind) {
-        let variable = self
-            .variables
-            .iter_mut()
-            .rfind(|var| var.visible && var.name == ident)
-            .expect("must exists");
-
-        variable.apply(kind);
-    }
-
-    pub fn get_variable_kind(&self, ident: &str) -> Kind {
-        self.variables
-            .iter()
-            .rfind(|var| var.visible && var.name == ident)
-            .expect("must exists")
-            .kind(None)
-    }
 }
 
 #[cfg(test)]
@@ -196,13 +139,13 @@ mod tests {
         let value_target = parse_value_path("foo.bar").unwrap();
 
         variable.apply_with_path(Kind::BYTES, &value_target);
-        assert_eq!(variable.kind(Some(&value_target)), Kind::BYTES);
+        assert_eq!(variable.kind(&value_target), Kind::BYTES);
 
         let value_target = parse_value_path("foo").unwrap();
-        assert_eq!(variable.kind(Some(&value_target)), Kind::OBJECT);
+        assert_eq!(variable.kind(&value_target), Kind::OBJECT);
 
         let value_target = parse_value_path("foo.foo").unwrap();
-        assert_eq!(variable.kind(Some(&value_target)), Kind::NULL);
+        assert_eq!(variable.kind(&value_target), Kind::NULL);
     }
 
     #[test]
@@ -211,16 +154,17 @@ mod tests {
         let value_target = parse_value_path("[1]").unwrap();
 
         variable.apply_with_path(Kind::BYTES, &value_target);
-        assert_eq!(variable.kind(Some(&value_target)), Kind::BYTES);
+        assert_eq!(variable.kind(&value_target), Kind::BYTES);
 
         let value_target = parse_value_path("[0]").unwrap();
-        assert_eq!(variable.kind(Some(&value_target)), Kind::NULL);
+        assert_eq!(variable.kind(&value_target), Kind::NULL);
     }
 
     #[test]
     fn local() {
         let mut state = TypeState::default();
-        let target = AssignmentTarget::Internal("foo".to_string(), None);
+        state.push("foo"); // a dummy variable, to make suer index 0 did exists
+        let target = AssignmentTarget::Internal(0, None);
         let kind = Kind::BYTES;
 
         state.apply(&target, kind);

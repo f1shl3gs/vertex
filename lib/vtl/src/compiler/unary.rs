@@ -139,7 +139,7 @@ impl Expression for Unary {
     }
 
     fn type_def(&self, _state: &TypeState) -> TypeDef {
-        // type checked at when compile
+        // type checked at compile time
         let kind = match self.op {
             UnaryOp::Not => Kind::BOOLEAN,
             UnaryOp::Negate => Kind::NUMERIC,

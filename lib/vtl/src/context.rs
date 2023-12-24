@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 
 use serde::Serialize;
@@ -94,11 +93,37 @@ impl Target for TargetValue {
             PathPrefix::Metadata => &mut self.metadata,
         };
 
-        Ok(target.remove(target_path.value_path(), compact))
+        Ok(target.remove(&target_path.path, compact))
     }
 }
 
 pub struct Context<'a> {
     pub target: &'a mut dyn Target,
-    pub variables: &'a mut HashMap<String, Value>,
+    pub variables: &'a mut [Value],
+    // TODO: add timezone
+}
+
+impl<'a> Context<'a> {
+    #[inline(always)]
+    pub fn get(&self, index: usize) -> &Value {
+        unsafe {
+            // SAFETY: index checked at compile-time
+            self.variables.get_unchecked(index)
+        }
+    }
+
+    #[inline]
+    pub fn get_mut(&mut self, index: usize) -> &mut Value {
+        unsafe {
+            // SAFETY: index checked at compile-time
+            self.variables.get_unchecked_mut(index)
+        }
+    }
+
+    pub fn set(&mut self, index: usize, value: Value) {
+        unsafe {
+            // SAFETY: index checked at compile-time
+            *self.variables.get_unchecked_mut(index) = value
+        }
+    }
 }
