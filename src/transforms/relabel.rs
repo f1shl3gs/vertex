@@ -3,17 +3,51 @@ use configurable::{configurable_component, Configurable};
 use event::array::EventMutRef;
 use event::tags::{Key, Tags, Value};
 use event::Events;
+use framework::config::serde_regex;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 #[serde(tag = "action", rename_all = "lowercase")]
 enum Operation {
-    Set { key: Key, value: Value },
-    Add { key: Key, value: Value },
-    Delete { key: Key },
-    Rename { key: Key, new: Key },
+    Set {
+        key: Key,
+        value: Value,
+    },
+    Add {
+        key: Key,
+        value: Value,
+    },
+    Delete {
+        key: Key,
+    },
+    Rename {
+        key: Key,
+        new: Key,
+    },
+    /// Maps the concatenated source_labels to their lower case.
+    Lowercase {
+        target: Key,
+    },
+    /// Maps the concatenated source_labels to their upper case.
+    Uppercase {
+        target: Key,
+    },
+    HashMod {
+        source: Key,
+        target: Option<Key>,
+        modules: u64,
+    },
+    LabelDrop {
+        #[serde(with = "serde_regex")]
+        regex: Regex,
+    },
+    LabelKeep {
+        #[serde(with = "serde_regex")]
+        regex: Regex,
+    },
 }
 
 impl Operation {
@@ -32,6 +66,40 @@ impl Operation {
                 if let Some(value) = tags.remove(key) {
                     tags.insert(new.clone(), value);
                 }
+            }
+
+            Operation::Lowercase { target } => {
+                if let Some(Value::String(s)) = tags.get_mut(target) {
+                    *s = s.to_lowercase();
+                }
+            }
+            Operation::Uppercase { target } => {
+                if let Some(Value::String(s)) = tags.get_mut(target) {
+                    *s = s.to_uppercase();
+                }
+            }
+            Operation::HashMod {
+                source,
+                target,
+                modules,
+            } => {
+                if let Some(value) = tags.get(source) {
+                    let s = value.to_string_lossy();
+                    let digest = md5::compute(s.as_bytes()).0[8..]
+                        .try_into()
+                        .expect("must success");
+                    let m = (<u64>::from_be_bytes(digest) % modules) as i64;
+                    match target {
+                        Some(target) => tags.insert(target.clone(), m),
+                        None => tags.insert(source.clone(), m),
+                    }
+                }
+            }
+            Operation::LabelDrop { regex } => {
+                tags.retain(|key, _value| !regex.is_match(key.as_str()))
+            }
+            Operation::LabelKeep { regex } => {
+                tags.retain(|key, _value| regex.is_match(key.as_str()))
             }
         }
     }
@@ -102,16 +170,8 @@ mod tests {
         crate::testing::test_generate_config::<Config>();
     }
 
-    fn assert_transform(op: Operation, tags: Tags) {
-        let event: Event = Metric::sum_with_tags(
-            "foo",
-            "",
-            1,
-            tags!(
-                "k1" => "v1"
-            ),
-        )
-        .into();
+    fn assert_transform(input: Tags, op: Operation, want: Tags) {
+        let event: Event = Metric::sum_with_tags("foo", "", 1, input).into();
 
         let mut relabel = Relabel {
             operations: vec![op],
@@ -119,7 +179,7 @@ mod tests {
 
         let event = transform_one(&mut relabel, event).expect("transform should success");
 
-        assert_eq!(event.into_metric().tags(), &tags);
+        assert_eq!(event.into_metric().tags(), &want);
     }
 
     #[test]
@@ -129,7 +189,12 @@ mod tests {
             value: "v2".into(),
         };
 
+        let input = tags!(
+            "k1" => "v1"
+        );
+
         assert_transform(
+            input,
             op,
             tags!(
                 "k1" => "v1",
@@ -145,7 +210,12 @@ mod tests {
             value: "v1".into(),
         };
 
+        let input = tags!(
+            "k1" => "v1"
+        );
+
         assert_transform(
+            input,
             op,
             tags!(
                 "k1" => "v1",
@@ -160,7 +230,12 @@ mod tests {
             value: "v2".into(),
         };
 
+        let input = tags!(
+            "k1" => "v1"
+        );
+
         assert_transform(
+            input,
             op,
             tags!(
                 "k1" => "v2"
@@ -172,7 +247,11 @@ mod tests {
     fn delete() {
         let op = Operation::Delete { key: "k1".into() };
 
-        assert_transform(op, tags!());
+        let input = tags!(
+            "k1" => "v1"
+        );
+
+        assert_transform(input, op, tags!());
     }
 
     #[test]
@@ -182,10 +261,94 @@ mod tests {
             new: "k2".into(),
         };
 
+        let input = tags!(
+            "k1" => "v1"
+        );
+
         assert_transform(
+            input,
             op,
             tags!(
                 "k2" => "v1"
+            ),
+        )
+    }
+
+    #[test]
+    fn lowercase() {
+        let op = Operation::Lowercase {
+            target: "k1".into(),
+        };
+
+        let input = tags!(
+            "k1" => "VVV"
+        );
+
+        assert_transform(
+            input,
+            op,
+            tags!(
+                "k1" => "vvv"
+            ),
+        )
+    }
+
+    #[test]
+    fn uppercase() {
+        let op = Operation::Uppercase {
+            target: "k1".into(),
+        };
+
+        let input = tags!(
+            "k1" => "v1v"
+        );
+
+        assert_transform(
+            input,
+            op,
+            tags!(
+                "k1" => "V1V"
+            ),
+        )
+    }
+
+    #[test]
+    fn hashmod() {
+        let op = Operation::HashMod {
+            source: "c".into(),
+            target: None,
+            modules: 1000,
+        };
+
+        let input = tags!(
+            "c" => "baz"
+        );
+
+        assert_transform(
+            input,
+            op,
+            tags!(
+                "c" => 976
+            ),
+        )
+    }
+
+    #[test]
+    fn labeldrop() {
+        let op = Operation::LabelDrop {
+            regex: Regex::new(r#"(b.*)"#).unwrap(),
+        };
+        let input = tags!(
+            "a" =>  "foo",
+            "b1" => "bar",
+            "b2" => "baz",
+        );
+
+        assert_transform(
+            input,
+            op,
+            tags!(
+                "a" => "foo"
             ),
         )
     }
