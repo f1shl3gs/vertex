@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703402605670,
+  "lastUpdate": 1703430977125,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "936c04ec48c0511fb741df1171b72a763bf0c006",
-          "message": "chore(deps): bump rustls from 0.21.7 to 0.21.8 (#1378)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.7 to 0.21.8.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.7...v/0.21.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-25T13:21:46+08:00",
-          "tree_id": "28d1b7c1d33be204c51ed5f600e34775e78e9749",
-          "url": "https://github.com/f1shl3gs/vertex/commit/936c04ec48c0511fb741df1171b72a763bf0c006"
-        },
-        "date": 1698211474422,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 741320,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 545480,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f20072a6debdff906b1212026cfb871f00178bbe",
+          "message": "transforms/relabel: add more operations (#1496)\n\n* add retain\r\n\r\n* add to_string_lossy for Value\r\n\r\n* add md5 for transform/relabel\r\n\r\n* add more actions\r\n\r\n* fmt",
+          "timestamp": "2023-12-24T23:14:03+08:00",
+          "tree_id": "4bbd23eb3c098e9398ce0f788fe10ed4ec1a2772",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f20072a6debdff906b1212026cfb871f00178bbe"
+        },
+        "date": 1703430962724,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546810,
             "unit": "ns/op"
           }
         ]
