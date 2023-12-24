@@ -15,11 +15,16 @@ fn main() {
         log("foo is not bar")
     }
 
+    for key, value in url {
+        log("kv:", key, value)
+    }
+
     # some function might return error
     shell, err = get_env("SHELL")
-    log("shell:", shell, err)
     if err == null {
-        log("get shell ok")
+        log("get shell ok", shell)
+    } else {
+        log("get shell failed", err)
     }
 
     # like rust, return error and exit now

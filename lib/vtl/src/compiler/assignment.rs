@@ -9,25 +9,24 @@ use crate::context::Context;
 
 #[derive(Clone)]
 pub enum AssignmentTarget {
-    Internal(String, Option<OwnedValuePath>),
+    Internal(usize, Option<OwnedValuePath>),
     External(OwnedTargetPath),
 }
 
 impl AssignmentTarget {
     fn assign(&self, cx: &mut Context, value: Value) -> Result<(), ExpressionError> {
         match self {
-            AssignmentTarget::Internal(name, path) => {
-                if let Some(target) = cx.variables.get_mut(name) {
-                    match path {
-                        // foo.bar = "abc"
-                        Some(path) => {
-                            target.insert(path, value);
-                        }
-                        // foo = "abc"
-                        None => *target = value,
+            AssignmentTarget::Internal(index, path) => {
+                match path {
+                    // foo.bar = "abc"
+                    Some(path) => {
+                        cx.get_mut(*index).insert(path, value);
                     }
+                    // foo = "abc"
+                    None => cx.set(*index, value),
                 }
             }
+
             // .bar = "foo"
             AssignmentTarget::External(path) => {
                 cx.target

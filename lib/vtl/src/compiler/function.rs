@@ -298,9 +298,18 @@ pub fn compile_and_run<F: Function>(
         )
         .unwrap();
 
-    assert_eq!(call.type_def(&state), td);
+    assert_eq!(
+        call.type_def(&state),
+        td,
+        "want: {}, got: {}",
+        td.kind,
+        call.type_def(&state).kind
+    );
 
     let ts = Utc.with_ymd_and_hms(2021, 1, 1, 0, 0, 0).unwrap();
+    let mut variables = Vec::with_capacity(8);
+    variables.reserve(8);
+
     let mut cx = Context {
         target: &mut TargetValue {
             metadata: Value::Object(Default::default()),
@@ -316,7 +325,7 @@ pub fn compile_and_run<F: Function>(
                 }
             }),
         },
-        variables: &mut Default::default(),
+        variables: &mut variables,
     };
 
     let got = call.resolve(&mut cx);

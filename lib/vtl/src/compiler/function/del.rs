@@ -69,11 +69,9 @@ struct DelFunc {
 impl Expression for DelFunc {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
         match &self.query.node {
-            Query::Internal(name, path) => {
+            Query::Internal(index, path) => {
                 let value = cx
-                    .variables
-                    .get_mut(name)
-                    .expect("variable should exist already")
+                    .get_mut(*index)
                     .remove(path, self.compact)
                     .unwrap_or(Value::Null);
 
@@ -108,7 +106,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".key").unwrap().into()],
             Del,
-            TypeDef::any().fallible(),
+            TypeDef::null(),
             Ok("value".into()),
         )
     }
@@ -118,7 +116,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".foo").unwrap().into()],
             Del,
-            TypeDef::any().fallible(),
+            TypeDef::null(),
             Ok(Value::Null),
         )
     }
@@ -128,7 +126,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".array").unwrap().into()],
             Del,
-            TypeDef::any().fallible(),
+            TypeDef::null(),
             Ok(value!([1, 2, 3])),
         )
     }
@@ -138,7 +136,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".null").unwrap().into()],
             Del,
-            TypeDef::any().fallible(),
+            TypeDef::null(),
             Ok(Value::Null),
         )
     }
@@ -148,7 +146,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".map").unwrap().into()],
             Del,
-            TypeDef::any().fallible(),
+            TypeDef::null(),
             Ok(value!({"k1": "v1"})),
         )
     }
@@ -158,7 +156,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".array[1]").unwrap().into()],
             Del,
-            TypeDef::any().fallible(),
+            TypeDef::null(),
             Ok(Value::Integer(2)),
         )
     }

@@ -1,4 +1,4 @@
-use crate::compiler::Kind;
+use value::path::PathPrefix;
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use super::state::TypeState;
@@ -11,7 +11,7 @@ pub enum Query {
     External(OwnedTargetPath),
 
     // url.host
-    Internal(String, OwnedValuePath),
+    Internal(usize, OwnedValuePath),
 }
 
 impl Expression for Query {
@@ -23,32 +23,35 @@ impl Expression for Query {
                 .unwrap_or_default()
                 .cloned()
                 .unwrap_or(Value::Null),
-            Query::Internal(name, path) => cx
-                .variables
-                .get(name)
-                .expect("variable checked already at compile-time")
-                .get(path)
-                .cloned()
-                .unwrap_or(Value::Null),
+
+            Query::Internal(index, path) => {
+                cx.get(*index).get(path).cloned().unwrap_or(Value::Null)
+            }
         };
 
         Ok(value)
     }
 
     fn type_def(&self, state: &TypeState) -> TypeDef {
-        let kind = state.get_query_kind(self);
+        let kind = match self {
+            Query::Internal(index, value_path) => {
+                let variable = state.variable(*index);
+                variable.kind(value_path)
+            }
 
-        if kind == Kind::UNDEFINED {
-            // path is not valid
-            TypeDef {
-                fallible: true,
-                kind: Kind::ANY,
+            Query::External(target_path) => {
+                let value_path = &target_path.path;
+
+                match target_path.prefix {
+                    PathPrefix::Event => state.target.kind(value_path),
+                    PathPrefix::Metadata => state.metadata.kind(value_path),
+                }
             }
-        } else {
-            TypeDef {
-                fallible: false,
-                kind,
-            }
+        };
+
+        TypeDef {
+            fallible: false,
+            kind,
         }
     }
 }

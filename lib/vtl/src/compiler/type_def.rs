@@ -67,6 +67,14 @@ impl TypeDef {
     }
 
     #[inline]
+    pub fn null() -> TypeDef {
+        TypeDef {
+            fallible: false,
+            kind: Kind::NULL,
+        }
+    }
+
+    #[inline]
     pub fn boolean() -> TypeDef {
         TypeDef {
             fallible: false,

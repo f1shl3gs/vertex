@@ -20,7 +20,6 @@ mod template;
 mod type_def;
 mod unary;
 
-use std::collections::HashMap;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
@@ -44,8 +43,8 @@ pub struct Program {
     // program content
     statements: block::Block,
 
-    // variables are used, repeatedly
-    variables: HashMap<String, Value>,
+    // variables are used repeatedly
+    variables: Vec<Value>,
 
     /// A list of possible queries made to the
     /// external Target at runtime.

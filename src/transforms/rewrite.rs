@@ -96,35 +96,49 @@ impl SyncTransform for Rewrite {
     fn transform(&mut self, events: Events, output: &mut TransformOutputsBuf) {
         match events {
             Events::Logs(logs) => {
+                let mut success = Vec::with_capacity(logs.len());
+                let mut dropped = Vec::new();
+
                 for log in logs {
                     let mut target = LogTarget { log };
                     match self.program.run(&mut target) {
                         Ok(_value) => {
-                            output.push(target.log.into());
+                            success.push(target.log);
                         }
                         Err(err) => {
                             warn!(message = "", ?err, internal_log_rate_limit = true,);
-
-                            output.push_named(DROPPED, target.log.into())
+                            dropped.push(target.log);
                         }
                     }
                 }
+
+                output.push(success.into());
+                if !dropped.is_empty() {
+                    output.push_named(DROPPED, dropped.into());
+                }
             }
             Events::Metrics(metrics) => {
+                let mut success = Vec::with_capacity(metrics.len());
+                let mut dropped = Vec::new();
+
                 for metric in metrics {
                     let value = precompute_metric_value(&metric, self.program.target_queries());
                     let mut target = MetricTarget { metric, value };
 
                     match self.program.run(&mut target) {
                         Ok(_value) => {
-                            output.push(target.metric.into());
+                            success.push(target.metric);
                         }
                         Err(err) => {
                             warn!(message = "", ?err, internal_log_rate_limit = true);
-
-                            output.push_named(DROPPED, target.metric.into());
+                            dropped.push(target.metric);
                         }
                     }
+                }
+
+                output.push(success.into());
+                if !dropped.is_empty() {
+                    output.push_named(DROPPED, dropped.into());
                 }
             }
             _ => unreachable!(),

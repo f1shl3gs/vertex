@@ -1,0 +1,15 @@
+map = {
+    "k1": "v1",
+    "k2": "v2"
+}
+keys = []
+values = []
+for key, value in map {
+    keys = push(keys, key)
+    values = push(values, value)
+}
+
+assert_eq(keys, ["k1", "k2"])
+assert_eq(values, ["v1", "v2"])
+assert_eq(keys, keys(map))
+assert_eq(values, values(map))

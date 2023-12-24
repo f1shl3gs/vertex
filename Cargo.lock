@@ -4313,6 +4313,7 @@ dependencies = [
  "bytes",
  "chrono",
  "dyn-clone",
+ "glob",
  "hostname",
  "regex",
  "serde",
