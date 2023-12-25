@@ -432,7 +432,7 @@ impl Compiler<'_> {
                                     Statement::Expression(expr.node)
                                 }
                             }
-                        },
+                        }
                         None => {
                             // End of file
                             let expr = self.parse_expr()?;

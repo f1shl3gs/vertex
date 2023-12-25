@@ -252,37 +252,37 @@ impl Target for MetricTarget {
                             }
                             self.value.insert(path, value);
                         }
-                        ["kind"] => {
-                            match value.to_string_lossy().as_ref() {
-                                "gauge" => match self.metric.value {
-                                    MetricValue::Sum(f) => {
-                                        self.metric.value = MetricValue::Gauge(f);
-                                        self.value.insert(path, value);
-                                    },
-                                    MetricValue::Gauge(_) => {},
-                                    _ => {
-                                        return Err(ContextError::InvalidValue {
-                                            expected: "gauge, count or sum",
-                                        })
-                                    }
-                                },
-                                "sum" | "count" => match self.metric.value {
-                                    MetricValue::Sum(_) => {},
-                                    MetricValue::Gauge(f) => {
-                                        self.metric.value = MetricValue::Sum(f);
-                                        self.value.insert(path, value);
-                                    },
-                                    _ => {
-                                        return Err(ContextError::InvalidValue {
-                                            expected: "gauge, count or sum",
-                                        })
-                                    }
-                                },
-                                _ => return Err(ContextError::InvalidValue {
-                                    expected: "gauge, count or sum"
+                        ["kind"] => match value.to_string_lossy().as_ref() {
+                            "gauge" => match self.metric.value {
+                                MetricValue::Sum(f) => {
+                                    self.metric.value = MetricValue::Gauge(f);
+                                    self.value.insert(path, value);
+                                }
+                                MetricValue::Gauge(_) => {}
+                                _ => {
+                                    return Err(ContextError::InvalidValue {
+                                        expected: "gauge, count or sum",
+                                    })
+                                }
+                            },
+                            "sum" | "count" => match self.metric.value {
+                                MetricValue::Sum(_) => {}
+                                MetricValue::Gauge(f) => {
+                                    self.metric.value = MetricValue::Sum(f);
+                                    self.value.insert(path, value);
+                                }
+                                _ => {
+                                    return Err(ContextError::InvalidValue {
+                                        expected: "gauge, count or sum",
+                                    })
+                                }
+                            },
+                            _ => {
+                                return Err(ContextError::InvalidValue {
+                                    expected: "gauge, count or sum",
                                 })
                             }
-                        }
+                        },
                         _ => {
                             return Err(ContextError::InvalidPath {
                                 expected: VALID_METRIC_PATHS_SET,
