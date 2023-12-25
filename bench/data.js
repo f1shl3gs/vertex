@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703477740453,
+  "lastUpdate": 1703477746682,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3156267e5d028abcbdcf51cf70aee4a62664c90b",
-          "message": "flatten global options (#1381)",
-          "timestamp": "2023-10-25T20:53:26+08:00",
-          "tree_id": "18d614c19941bb79976a3431f9ea163faec7ecf1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3156267e5d028abcbdcf51cf70aee4a62664c90b"
-        },
-        "date": 1698238655080,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.868,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 28.303,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 185.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 63.778,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9c22a62d88d50875f1fd79ab49ff1483eb759a75",
           "message": "deps: bump tokio-util to 0.7.10 (#1382)",
           "timestamp": "2023-10-25T22:30:32+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 41.057,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a4d20e226347e2999a0b123ec15f8da5964ec39",
+          "message": "chore(deps): bump futures from 0.3.29 to 0.3.30 (#1500)\n\nBumps [futures](https://github.com/rust-lang/futures-rs) from 0.3.29 to 0.3.30.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.29...0.3.30)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-25T12:12:38+08:00",
+          "tree_id": "1a7ce58562d163913dc326b911df76f1e420551d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a4d20e226347e2999a0b123ec15f8da5964ec39"
+        },
+        "date": 1703477731929,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 18.296,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 18.289,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 17.967,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 108.08,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 40.185,
             "unit": "ns/op"
           }
         ]
