@@ -1,3 +1,4 @@
+use value::path::{PathPrefix, TargetPath};
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use super::expr::Expr;
@@ -39,6 +40,25 @@ impl AssignmentTarget {
         }
 
         Ok(())
+    }
+
+    pub fn apply_state(&self, state: &mut TypeState, kind: Kind) {
+        match self {
+            AssignmentTarget::Internal(index, path) => {
+                let variable = state.variable_mut(*index);
+                match path {
+                    Some(path) => variable.apply_with_path(kind, path),
+                    None => variable.apply(kind),
+                }
+            }
+            AssignmentTarget::External(path) => {
+                let value_path = path.value_path();
+                match path.prefix() {
+                    PathPrefix::Event => state.target.apply_with_path(kind, value_path),
+                    PathPrefix::Metadata => state.metadata.apply_with_path(kind, value_path),
+                }
+            }
+        }
     }
 }
 
@@ -90,5 +110,20 @@ impl Expression for Assignment {
             fallible,
             kind: Kind::UNDEFINED,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn apply_state() {
+        let mut state = TypeState::default();
+        state.push("foo"); // a dummy variable, to make suer index 0 did exists
+        let target = AssignmentTarget::Internal(0, None);
+        target.apply_state(&mut state, Kind::BYTES);
+
+        assert_eq!(state.variable(0).kind(&OwnedValuePath::root()), Kind::BYTES);
     }
 }
