@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703477665802,
+  "lastUpdate": 1703477692686,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29",
-          "message": "deps: bump ahash to 0.8.6 (#1379)",
-          "timestamp": "2023-10-25T13:40:16+08:00",
-          "tree_id": "8b2c77932a0630de556fcc9b7eded2f61ec697b3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8e1a0a3b5fd28e2a826f70bb872bcd08c47d6e29"
-        },
-        "date": 1698212671960,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 63.631,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 187.61,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 474.78,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1353.5,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3156267e5d028abcbdcf51cf70aee4a62664c90b",
           "message": "flatten global options (#1381)",
           "timestamp": "2023-10-25T20:53:26+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 722.58,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2c55ce4fe4f2dfd32e6f7f80a150932d0c4eec45",
+          "message": "chore(deps): bump crossbeam-queue from 0.3.9 to 0.3.10 (#1499)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.9 to 0.3.10.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.9...crossbeam-queue-0.3.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-25T12:12:01+08:00",
+          "tree_id": "f0321aba2bcba3d537e83fde53003c034e061fd6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2c55ce4fe4f2dfd32e6f7f80a150932d0c4eec45"
+        },
+        "date": 1703477678034,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 34.661,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 158.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 324.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 645.22,
             "unit": "ns/op"
           }
         ]
