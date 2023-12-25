@@ -543,22 +543,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "condition"
-version = "0.1.0"
-dependencies = [
- "criterion",
- "event",
- "regex",
- "serde",
- "value",
-]
-
-[[package]]
 name = "configurable"
 version = "0.1.0"
 dependencies = [
  "chrono-tz",
- "condition",
  "configurable-derive",
  "encoding_rs",
  "event",
@@ -4225,7 +4213,6 @@ dependencies = [
  "chrono",
  "chrono-tz",
  "codecs",
- "condition",
  "configurable",
  "criterion",
  "encoding_rs",

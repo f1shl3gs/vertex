@@ -1,4 +1,3 @@
-mod condition;
 mod encoding;
 mod event;
 mod indexmap;

@@ -29,6 +29,11 @@ impl TypeDef {
     }
 
     #[inline]
+    pub fn is_boolean(&self) -> bool {
+        self.kind == Kind::BOOLEAN
+    }
+
+    #[inline]
     pub fn is_bytes(&self) -> bool {
         self.kind == Kind::BYTES
     }

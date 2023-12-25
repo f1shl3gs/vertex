@@ -391,12 +391,14 @@ impl Compiler<'_> {
         };
 
         let block = compiler.parse_block()?;
+        let type_def = block.type_def(&compiler.type_state);
 
         // todo: check variables
         //   if the variables are never changed, return error
 
         Ok(Program {
             statements: block,
+            type_def,
             variables: std::iter::repeat(Value::Null)
                 .take(compiler.type_state.variables.len())
                 .collect(),
@@ -418,7 +420,27 @@ impl Compiler<'_> {
                 }
                 // assign to a variable
                 Token::Identifier(_) | Token::PathField(_) => {
-                    statements.push(self.parse_assignment()?)
+                    let pos = self.lexer.pos();
+                    let _ = self.lexer.next(); // Identifier or PathField
+                    let statement = match self.lexer.peek().transpose()? {
+                        Some((token, _span)) => {
+                            self.lexer.set_pos(pos);
+                            match token {
+                                Token::Comma | Token::Assign => self.parse_assignment()?,
+                                _ => {
+                                    let expr = self.parse_expr()?;
+                                    Statement::Expression(expr.node)
+                                }
+                            }
+                        }
+                        None => {
+                            // End of file
+                            let expr = self.parse_expr()?;
+                            Statement::Expression(expr.node)
+                        }
+                    };
+
+                    statements.push(statement);
                 }
 
                 Token::FunctionCall(_name) => {

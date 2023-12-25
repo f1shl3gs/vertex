@@ -42,6 +42,7 @@ use crate::Target;
 pub struct Program {
     // program content
     statements: block::Block,
+    type_def: TypeDef,
 
     // variables are used repeatedly
     variables: Vec<Value>,
@@ -67,8 +68,8 @@ impl Program {
     }
 
     #[inline]
-    pub fn type_def(&self, state: &TypeState) -> TypeDef {
-        self.statements.type_def(state)
+    pub fn type_def(&self) -> &TypeDef {
+        &self.type_def
     }
 }
 

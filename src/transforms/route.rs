@@ -1,10 +1,13 @@
 use async_trait::async_trait;
-use condition::Expression;
 use configurable::configurable_component;
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{SyncTransform, Transform, TransformOutputsBuf};
 use indexmap::IndexMap;
+use value::Value;
+use vtl::{Diagnostic, Program, ValueKind};
+
+use crate::common::vtl::LogTarget;
 
 const UNMATCHED_ROUTE: &str = "_unmatched";
 
@@ -17,15 +20,32 @@ struct Config {
     /// the <transform_name>._unmatched output. Note, _unmatched is a reserved output name and
     /// cannot be used as a route name. _default is also reserved for future use.
     #[configurable(required)]
-    route: IndexMap<String, Expression>,
+    route: IndexMap<String, String>,
 }
 
 #[async_trait]
 #[typetag::serde(name = "route")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let route = Route::new(self.route.clone())?;
-        Ok(Transform::synchronous(route))
+        let mut routes = Vec::with_capacity(self.route.len());
+
+        for (route, script) in &self.route {
+            match vtl::compile(script) {
+                Ok(program) => {
+                    if !program.type_def().is_boolean() {
+                        return Err(format!("vtl condition for {route} must return a bool").into());
+                    }
+
+                    routes.push((route.to_string(), program));
+                }
+                Err(err) => {
+                    let diagnostic = Diagnostic::new(script.to_string());
+                    return Err(diagnostic.snippets(err).into());
+                }
+            }
+        }
+
+        Ok(Transform::synchronous(Route { routes }))
     }
 
     fn input_type(&self) -> DataType {
@@ -50,13 +70,7 @@ impl TransformConfig for Config {
 
 #[derive(Clone)]
 struct Route {
-    routes: IndexMap<String, Expression>,
-}
-
-impl Route {
-    fn new(routes: IndexMap<String, Expression>) -> Result<Self, condition::Error> {
-        Ok(Self { routes })
-    }
+    routes: Vec<(String, Program)>,
 }
 
 impl SyncTransform for Route {
@@ -64,16 +78,39 @@ impl SyncTransform for Route {
         if let Events::Logs(logs) = events {
             logs.into_iter().for_each(|log| {
                 let mut failed = 0;
+                let mut target = LogTarget { log };
 
-                for (name, expr) in &self.routes {
-                    match expr.eval(&log) {
-                        Ok(b) if b => output.push_named(name, log.clone().into()),
-                        _ => failed += 1,
+                for (route, program) in self.routes.iter_mut() {
+                    match program.run(&mut target) {
+                        Ok(value) => match value {
+                            Value::Boolean(b) if b => {
+                                output.push_named(route, target.log.clone().into())
+                            }
+                            value => {
+                                failed += 1;
+
+                                warn!(
+                                    message = "unexpected value type resolved",
+                                    r#type = value.kind().to_string(),
+                                    internal_log_rate_limit = true
+                                )
+                            }
+                        },
+                        Err(err) => {
+                            warn!(
+                                message = "run vtl script failed",
+                                ?err,
+                                route,
+                                internal_log_rate_limit = true
+                            );
+
+                            failed += 1;
+                        }
                     }
                 }
 
                 if failed == self.routes.len() {
-                    output.push_named(UNMATCHED_ROUTE, log.into())
+                    output.push_named(UNMATCHED_ROUTE, target.log.into())
                 }
             })
         }
@@ -105,9 +142,9 @@ mod tests {
                 "match all",
                 r##"
 route:
-    first: .message contains world
-    second: .second contains sec
-    third: .third contains rd
+    first: contains(.message, "world")
+    second: contains(.second, "sec")
+    third: contains(.third, "rd")
 "##,
                 [
                     Some(event.clone()),
@@ -120,9 +157,9 @@ route:
                 "pass one",
                 r##"
 route:
-    first: .message contains world
-    second: .second contains foo
-    third: .third contains bar
+    first: contains(.message, "world")
+    second: contains(.second, "foo")
+    third: contains(.third, "bar")
 "##,
                 [Some(event.clone()), None, None, None],
             ),
@@ -130,17 +167,22 @@ route:
                 "no match",
                 r##"
 route:
-    first: .message contains foo
-    second: .second contains foo
-    third: .third contains bar
+    first: contains(.message, "foo")
+    second: contains(.second, "foo")
+    third: contains(.third, "bar")
 "##,
                 [None, None, None, Some(event.clone())],
             ),
         ];
 
-        for (_test, config, wants) in tests {
+        for (test, config, wants) in tests {
             let config = serde_yaml::from_str::<Config>(config).unwrap();
-            let mut transform = Route::new(config.route).unwrap();
+            let mut routes = vec![];
+            for (name, script) in config.route {
+                let program = vtl::compile(&script).unwrap();
+                routes.push((name, program));
+            }
+            let mut transform = Route { routes };
             let mut buf = TransformOutputsBuf::new_with_capacity(
                 outputs
                     .iter()
@@ -156,7 +198,7 @@ route:
                 match want {
                     None => assert!(events.is_empty()),
                     Some(want) => {
-                        assert_eq!(events.len(), 1);
+                        assert_eq!(events.len(), 1, "{}", test);
                         let events = events.pop().unwrap();
                         assert_eq!(events.len(), 1);
                         if let Events::Logs(mut logs) = events {
