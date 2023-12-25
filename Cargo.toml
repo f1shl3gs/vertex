@@ -33,7 +33,6 @@ members = [
     "lib/backoff",
     "lib/buffers",
     "lib/codecs",
-    "lib/condition",
     "lib/configurable",
     "lib/configurable-derive",
     "lib/event",
@@ -223,12 +222,12 @@ sources = [
 
 transforms-cardinality = ["dep:bloomy"]
 transforms-dedup = ["dep:lru"]
-transforms-filter = ["dep:condition"]
+transforms-filter = []
 transforms-geoip = ["dep:maxminddb"]
 transforms-metricalize = ["dep:async-stream"]
 transforms-relabel = []
 transforms-rewrite = ["dep:md5"]
-transforms-route = ["dep:condition"]
+transforms-route = []
 transforms-sample = []
 transforms-throttle = ["dep:gcra"]
 
@@ -331,7 +330,6 @@ nix = { version = "0.27.1", default-features = false, features = ["net"] }
 # Workspaces
 buffers = { path = "lib/buffers", optional = true }
 codecs = { path = "lib/codecs" }
-condition = { path = "lib/condition", optional = true }
 configurable = { path = "lib/configurable" }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }

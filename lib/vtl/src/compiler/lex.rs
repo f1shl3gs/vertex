@@ -581,6 +581,11 @@ impl<'input> Lexer<'input> {
     }
 
     #[inline]
+    pub fn set_pos(&mut self, pos: usize) {
+        self.pos = pos
+    }
+
+    #[inline]
     fn skip_whitespace(&mut self) {
         while self.pos < self.text.len() {
             let ch = self.text[self.pos];
