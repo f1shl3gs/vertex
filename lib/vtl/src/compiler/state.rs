@@ -1,7 +1,5 @@
-use value::path::{PathPrefix, TargetPath};
 use value::{OwnedValuePath, Value};
 
-use super::assignment::AssignmentTarget;
 use super::Kind;
 use super::ValueKind;
 
@@ -58,7 +56,7 @@ impl Variable {
     }
 
     #[inline]
-    fn apply_with_path(&mut self, kind: Kind, value_path: &OwnedValuePath) {
+    pub fn apply_with_path(&mut self, kind: Kind, value_path: &OwnedValuePath) {
         self.value.insert(value_path, kind.inner());
     }
 
@@ -79,7 +77,8 @@ pub struct TypeState {
 }
 
 impl TypeState {
-    /// Create a new variable if it is not exists.
+    /// Create a new variable if it is not exists. or return the index
+    /// of exists variable.
     pub fn push(&mut self, name: &str) -> usize {
         match self
             .variables
@@ -87,44 +86,29 @@ impl TypeState {
             .rposition(|var| var.visible && var.name == name)
         {
             Some(index) => index,
-            None => {
-                self.variables.push(Variable {
-                    name: name.to_string(),
-                    visible: true,
-                    value: Value::Null,
-                });
-
-                self.variables.len() - 1
-            }
+            None => self.force_push(name.to_string()),
         }
     }
 
+    /// Force push a variable, no matter it is exists already.
+    pub fn force_push(&mut self, name: String) -> usize {
+        self.variables.push(Variable {
+            name,
+            visible: true,
+            value: Value::Null,
+        });
+
+        self.variables.len() - 1
+    }
+
+    #[inline]
     pub fn variable(&self, index: usize) -> &Variable {
         unsafe { self.variables.get_unchecked(index) }
     }
 
+    #[inline]
     pub fn variable_mut(&mut self, index: usize) -> &mut Variable {
         unsafe { self.variables.get_unchecked_mut(index) }
-    }
-
-    pub fn apply(&mut self, target: &AssignmentTarget, kind: Kind) {
-        match target {
-            AssignmentTarget::Internal(index, path) => {
-                let variable = unsafe { self.variables.get_unchecked_mut(*index) };
-                match path {
-                    Some(path) => variable.apply_with_path(kind, path),
-                    None => variable.apply(kind),
-                }
-            }
-            AssignmentTarget::External(path) => {
-                let value_path = path.value_path();
-
-                match path.prefix() {
-                    PathPrefix::Event => self.target.apply_with_path(kind, value_path),
-                    PathPrefix::Metadata => self.metadata.apply_with_path(kind, value_path),
-                }
-            }
-        }
     }
 }
 
@@ -158,15 +142,5 @@ mod tests {
 
         let value_target = parse_value_path("[0]").unwrap();
         assert_eq!(variable.kind(&value_target), Kind::NULL);
-    }
-
-    #[test]
-    fn local() {
-        let mut state = TypeState::default();
-        state.push("foo"); // a dummy variable, to make suer index 0 did exists
-        let target = AssignmentTarget::Internal(0, None);
-        let kind = Kind::BYTES;
-
-        state.apply(&target, kind);
     }
 }

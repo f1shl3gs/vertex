@@ -566,8 +566,8 @@ impl Compiler<'_> {
                             });
                         }
 
-                        self.type_state.apply(&target, expr_type.kind);
-                        self.type_state.apply(&err, Kind::BYTES);
+                        target.apply_state(&mut self.type_state, expr_type.kind);
+                        err.apply_state(&mut self.type_state, Kind::BYTES);
 
                         Assignment::Infallible {
                             ok: target,
@@ -594,8 +594,8 @@ impl Compiler<'_> {
                             }
                         }
 
-                        self.type_state
-                            .apply(&target, expr.type_def(&self.type_state).kind);
+                        let td = expr.type_def(&self.type_state);
+                        target.apply_state(&mut self.type_state, td.kind);
 
                         Assignment::Single { target, expr }
                     }
@@ -1047,7 +1047,7 @@ impl Compiler<'_> {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
                     // Override variable might happened
-                    self.type_state.push(s)
+                    self.type_state.force_push(s.to_string())
                 }
                 _ => {
                     return Err(SyntaxError::UnexpectedToken {
@@ -1066,7 +1066,7 @@ impl Compiler<'_> {
             Some((token, span)) => match token {
                 Token::Identifier(s) => {
                     // Override variable might happened
-                    self.type_state.push(s)
+                    self.type_state.force_push(s.to_string())
                 }
                 _ => {
                     return Err(SyntaxError::UnexpectedToken {
