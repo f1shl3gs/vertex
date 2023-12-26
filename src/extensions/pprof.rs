@@ -35,7 +35,28 @@ impl ExtensionConfig for Config {
 }
 
 async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
-    let service = make_service_fn(|_conn| async { Ok::<_, Error>(service_fn(handle)) });
+    let service = make_service_fn(|_conn| async {
+        use std::convert::Infallible;
+
+        Ok::<_, Infallible>(service_fn(|req: Request<Body>| async {
+            let resp = match handle(req).await {
+                Ok(resp) => resp,
+                Err(err) => {
+                    let (code, msg) = match err {
+                        Error::Seconds(_) | Error::Frequency(_) => (400, err.to_string()),
+                        err => (500, err.to_string()),
+                    };
+
+                    Response::builder()
+                        .status(code)
+                        .body(Body::from(msg))
+                        .unwrap()
+                }
+            };
+
+            Ok::<_, Infallible>(resp)
+        }))
+    });
 
     let server = Server::bind(&addr)
         .serve(service)
@@ -49,16 +70,16 @@ async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
 
 #[derive(Debug, thiserror::Error)]
 enum Error {
-    #[error("invalid seconds value: {0}")]
+    #[error("parse seconds failed: {0}")]
     Seconds(ParseIntError),
-    #[error("invalid frequency value: {0}")]
+    #[error("parse frequency failed: {0}")]
     Frequency(ParseIntError),
-    #[error("build profiler failed")]
+    #[error("build profiler failed, {0}")]
     BuildProfiler(#[from] pprof::Error),
-
-    // TODO: once prost version of pprof meets ours, then add error
-    #[error("encode to protobuf data failed")]
-    Protobuf,
+    // pprof doesn't re-export EncodeError, so Protobuf(EncodeError) might
+    // broken building, cause our prost and pprof's prost is conflict.
+    #[error("encode to protobuf data failed, {0}")]
+    Protobuf(String),
 }
 
 async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
@@ -104,7 +125,9 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
                 // Pyroscope will consume this kind of data too.
                 let mut buf = BytesMut::new();
                 let profile = report.pprof()?;
-                profile.encode(&mut buf).map_err(|_err| Error::Protobuf)?;
+                profile
+                    .encode(&mut buf)
+                    .map_err(|err| Error::Protobuf(err.to_string()))?;
 
                 buf.freeze()
             };
