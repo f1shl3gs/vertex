@@ -33,7 +33,6 @@ fn default_labels() -> Vec<String> {
     ]
 }
 
-// TODO: this implement is dummy, too many to_string() and clone()
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = parse_ipvs_stats(proc_path.clone()).await?;
 
@@ -69,15 +68,16 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
     let mut sums = BTreeMap::new();
     let mut label_values = BTreeMap::new();
     for backend in backends {
-        let mut local_address = "";
-        if !backend.local_address.is_empty() {
-            local_address = &backend.local_address;
-        }
+        let local_address = if backend.local_address != "<nil>" {
+            backend.local_address
+        } else {
+            String::new()
+        };
 
         let mut kv = Vec::with_capacity(conf.labels.len());
         for (i, label) in conf.labels.iter().enumerate() {
             let lv = match label.as_str() {
-                "local_address" => local_address.to_string(),
+                "local_address" => local_address.clone(),
                 "local_port" => backend.local_port.to_string(),
                 "remote_address" => backend.remote_address.clone(),
                 "remote_port" => backend.remote_port.to_string(),
@@ -283,7 +283,7 @@ async fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatu
         }
     }
 
-    todo!()
+    Ok(status)
 }
 
 fn parse_ip_port(s: &str) -> Result<(String, u16), Error> {
