@@ -1,7 +1,6 @@
 #![deny(warnings)]
 #![deny(unused_qualifications)]
 #![deny(clippy::all)]
-#![deny(clippy::pedantic)]
 #![allow(
     clippy::module_name_repetitions,
     clippy::uninlined_format_args,

@@ -96,6 +96,63 @@ impl Expr {
     }
 }
 
+impl Expression for Expr {
+    fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
+        match self {
+            Expr::Null => Ok(Value::Null),
+            Expr::Boolean(b) => Ok(Value::Boolean(*b)),
+            Expr::Integer(i) => Ok(Value::Integer(*i)),
+            Expr::Float(f) => Ok(Value::Float(*f)),
+            Expr::String(s) => Ok(Value::from(s.clone())),
+            Expr::Ident(index) => Ok(cx.get(*index).clone()),
+            Expr::Query(query) => query.resolve(cx),
+            Expr::Array(array) => {
+                let array = array
+                    .iter()
+                    .map(|expr| expr.resolve(cx))
+                    .collect::<Result<Vec<_>, ExpressionError>>()?;
+                Ok(array.into())
+            }
+            Expr::Binary(b) => b.resolve(cx),
+            Expr::Unary(u) => u.resolve(cx),
+            Expr::Object(map) => {
+                let object = map
+                    .iter()
+                    .map(|(key, expr)| {
+                        let value = expr.resolve(cx)?;
+                        Ok((key.to_string(), value))
+                    })
+                    .collect::<Result<BTreeMap<String, Value>, ExpressionError>>()?;
+
+                Ok(Value::Object(object))
+            }
+
+            Expr::Call(call) => call.function.resolve(cx),
+        }
+    }
+
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        match self {
+            Expr::Ident(index) => state.variable(*index).kind(&OwnedValuePath::root()).into(),
+            Expr::Null => Kind::NULL.into(),
+            Expr::Boolean(_) => Kind::BOOLEAN.into(),
+            Expr::Integer(_) => Kind::INTEGER.into(),
+            Expr::Float(_) => Kind::FLOAT.into(),
+            Expr::String(_) => Kind::BYTES.into(),
+            Expr::Array(_) => Kind::ARRAY.into(),
+            Expr::Object(_) => Kind::OBJECT.into(),
+            Expr::Call(call) => call.type_def(state),
+            Expr::Binary(b) => b.type_def(state),
+            Expr::Unary(u) => u.type_def(state),
+
+            _ => TypeDef {
+                fallible: false,
+                kind: Kind::ANY,
+            },
+        }
+    }
+}
+
 // this mod is used for tests only
 #[cfg(test)]
 mod expr_convert {
@@ -204,63 +261,6 @@ mod expr_convert {
     impl From<OwnedTargetPath> for Expr {
         fn from(value: OwnedTargetPath) -> Self {
             Expr::Query(Query::External(value))
-        }
-    }
-}
-
-impl Expression for Expr {
-    fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        match self {
-            Expr::Null => Ok(Value::Null),
-            Expr::Boolean(b) => Ok(Value::Boolean(*b)),
-            Expr::Integer(i) => Ok(Value::Integer(*i)),
-            Expr::Float(f) => Ok(Value::Float(*f)),
-            Expr::String(s) => Ok(Value::from(s.clone())),
-            Expr::Ident(index) => Ok(cx.get(*index).clone()),
-            Expr::Query(query) => query.resolve(cx),
-            Expr::Array(array) => {
-                let array = array
-                    .iter()
-                    .map(|expr| expr.resolve(cx))
-                    .collect::<Result<Vec<_>, ExpressionError>>()?;
-                Ok(array.into())
-            }
-            Expr::Binary(b) => b.resolve(cx),
-            Expr::Unary(u) => u.resolve(cx),
-            Expr::Object(map) => {
-                let object = map
-                    .iter()
-                    .map(|(key, expr)| {
-                        let value = expr.resolve(cx)?;
-                        Ok((key.to_string(), value))
-                    })
-                    .collect::<Result<BTreeMap<String, Value>, ExpressionError>>()?;
-
-                Ok(Value::Object(object))
-            }
-
-            Expr::Call(call) => call.function.resolve(cx),
-        }
-    }
-
-    fn type_def(&self, state: &TypeState) -> TypeDef {
-        match self {
-            Expr::Ident(index) => state.variable(*index).kind(&OwnedValuePath::root()).into(),
-            Expr::Null => Kind::NULL.into(),
-            Expr::Boolean(_) => Kind::BOOLEAN.into(),
-            Expr::Integer(_) => Kind::INTEGER.into(),
-            Expr::Float(_) => Kind::FLOAT.into(),
-            Expr::String(_) => Kind::BYTES.into(),
-            Expr::Array(_) => Kind::ARRAY.into(),
-            Expr::Object(_) => Kind::OBJECT.into(),
-            Expr::Call(call) => call.type_def(state),
-            Expr::Binary(b) => b.type_def(state),
-            Expr::Unary(u) => u.type_def(state),
-
-            _ => TypeDef {
-                fallible: false,
-                kind: Kind::ANY,
-            },
         }
     }
 }
