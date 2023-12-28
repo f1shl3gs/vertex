@@ -11,6 +11,7 @@ use std::{
 use crossbeam_queue::SegQueue;
 use parking_lot::Mutex;
 use proptest::{prop_assert, prop_assert_eq, proptest};
+use testify::temp_dir;
 use tokio::runtime::Builder;
 
 use crate::{
@@ -830,9 +831,7 @@ proptest! {
         // configuration. This allows us to use a utility that will generate a random directory
         // each time -- parallel runs of this test can't clobber each other anymore -- but
         // also ensure that the directory is cleaned up when the test run is over.
-        let buf_dir = tempfile::tempdir()
-            .expect("creating temp dir should never fail");
-        config.data_dir = buf_dir.path().to_path_buf();
+        config.data_dir = temp_dir();
 
         rt.block_on(async move {
             // This model tries to encapsulate all of the behavior of the disk buffer

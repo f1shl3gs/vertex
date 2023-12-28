@@ -5,6 +5,7 @@ use std::io::Write;
 
 use bytes::Bytes;
 use quickcheck::{Arbitrary, Gen, QuickCheck, TestResult};
+use testify::temp_dir;
 
 use crate::watch::Watcher;
 use crate::ReadFrom;
@@ -164,8 +165,7 @@ impl FileWatcherFile {
 }
 
 fn no_truncations(action: Vec<FileWatcherAction>) {
-    let dir = tempfile::TempDir::new().expect("could not create tempdir");
-    let path = dir.path().join("a_file.log");
+    let path = temp_dir().join("a_file.log");
     let mut fp = fs::File::create(&path).expect("could not create");
     let mut rotation_count = 0;
     let mut fw = Watcher::new(

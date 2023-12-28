@@ -586,15 +586,12 @@ impl Decoder for EntryCodec {
 
 #[cfg(test)]
 mod checkpoints_tests {
-    use tempfile::tempdir;
-
     use super::*;
 
     #[tokio::test]
     async fn test_checkpoints() {
-        let tempdir = tempdir().unwrap();
-        let mut filename = tempdir.path().to_path_buf();
-        filename.push(CHECKPOINT_FILENAME);
+        let filename = testify::temp_dir().join(CHECKPOINT_FILENAME);
+        std::fs::File::create(&filename).unwrap();
         let mut checkpointer = Checkpointer::new(filename).await.unwrap();
 
         // read nothing
@@ -616,7 +613,6 @@ mod tests {
 
     use chrono::TimeZone;
     use event::Event;
-    use tempfile::tempdir;
     use tokio::time::{sleep, timeout, Duration};
     use tokio_stream::StreamExt;
 
@@ -781,8 +777,7 @@ MESSAGE=audit log
     ) -> Vec<Event> {
         let (tx, rx) = Pipeline::new_test();
         let (trigger, shutdown, _) = ShutdownSignal::new_wired();
-        let tempdir = tempdir().unwrap();
-        let mut checkpoint_path = tempdir.path().to_path_buf();
+        let mut checkpoint_path = testify::temp_dir();
         checkpoint_path.push(CHECKPOINT_FILENAME);
 
         let mut checkpointer = Checkpointer::new(checkpoint_path.clone())

@@ -6,6 +6,7 @@ use std::{fs, io::Write};
 
 use bytes::Bytes;
 use quickcheck::{QuickCheck, TestResult};
+use testify::temp_dir;
 
 use crate::{
     watch::{tests::*, Watcher},
@@ -26,8 +27,7 @@ use crate::{
 // time, recording the total number of reads/writes. The SUT reads should be
 // bounded below by the model reads, bounded above by the writes.
 fn experiment(actions: Vec<FileWatcherAction>) {
-    let dir = tempfile::TempDir::new().expect("could not create tempdir");
-    let path = dir.path().join("a_file.log");
+    let path = temp_dir().join("a_file.log");
     let mut fp = fs::File::create(&path).expect("could not create");
     let mut rotation_count = 0;
     let mut fw = Watcher::new(

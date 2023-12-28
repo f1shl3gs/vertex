@@ -203,7 +203,7 @@ where
 mod tests {
     use codecs::encoding::{Framer, NewlineDelimitedEncoder, Serializer, TextSerializer};
     use codecs::Encoder;
-    use testify::{random::random_lines_with_stream, temp::temp_dir};
+    use testify::{random::random_lines_with_stream, temp_dir};
     use tokio::net::UnixListener;
 
     use super::*;

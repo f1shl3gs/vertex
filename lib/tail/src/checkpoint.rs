@@ -272,14 +272,14 @@ impl Checkpointer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::tempdir;
+    use testify::temp_dir;
 
     #[test]
     fn simple_set_and_get() {
         let fp = Fingerprint { dev: 1, inode: 2 };
 
-        let dir = tempdir().unwrap();
-        let checkpointer = Checkpointer::new(dir.path());
+        let dir = temp_dir();
+        let checkpointer = Checkpointer::new(dir.as_path());
         let checkpoints = checkpointer.checkpoints;
 
         checkpoints.update(fp, 3);
@@ -291,17 +291,17 @@ mod tests {
     #[test]
     fn checkpointer_restart() {
         let position = 12345;
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let fp = Fingerprint { dev: 1, inode: 2 };
 
         {
             // checkpointer will be dropped once this block is done.
-            let checkpointer = Checkpointer::new(dir.path());
+            let checkpointer = Checkpointer::new(dir.as_path());
             checkpointer.checkpoints.update(fp, position);
             checkpointer.write_checkpoints().unwrap();
         }
 
-        let mut checkpointer = Checkpointer::new(dir.path());
+        let mut checkpointer = Checkpointer::new(dir.as_path());
         assert!(checkpointer.checkpoints.get(fp).is_none());
         checkpointer.read_checkpoints(None);
         assert_eq!(checkpointer.checkpoints.get(fp).unwrap(), position);

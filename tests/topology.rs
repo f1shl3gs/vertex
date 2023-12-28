@@ -13,7 +13,6 @@ use framework::config::{Config, SinkOuter};
 use framework::{topology, Pipeline};
 use futures_util::{stream, StreamExt};
 use log_schema::log_schema;
-use tempfile::tempdir;
 use tokio::time::sleep;
 use util::{
     sink, sink_failing_healthcheck, sink_with_data, source, source_with_data, start_topology,
@@ -670,7 +669,7 @@ async fn topology_healthcheck_run_for_changes_on_reload() {
 async fn topology_disk_buffer_flushes_on_idle() {
     trace_init();
 
-    let tmpdir = tempdir().expect("no tmpdir");
+    let tmpdir = testify::temp_dir();
     let event = Event::Log(LogRecord::from("foo"));
 
     let (mut in1, source1) = source();
@@ -678,7 +677,7 @@ async fn topology_disk_buffer_flushes_on_idle() {
     let (mut out1, sink1) = sink(10);
 
     let mut config = Config::builder();
-    config.set_data_dir(tmpdir.path());
+    config.set_data_dir(tmpdir.as_path());
     config.add_source("in1", source1);
     config.add_transform("t1", &["in1"], transform1);
     let mut sink1_outer = SinkOuter::new(

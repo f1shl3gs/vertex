@@ -571,7 +571,6 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_client_rpc_stats() {
@@ -847,10 +846,9 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
             },
         ];
 
-        let tmpdir = tempdir().unwrap();
-
+        let tmpdir = testify::temp_dir();
         for case in cases {
-            let path = tmpdir.path().join(case.name);
+            let path = tmpdir.join(case.name);
             std::fs::write(&path, case.content).unwrap();
 
             let result = client_rpc_stats(&path).await;

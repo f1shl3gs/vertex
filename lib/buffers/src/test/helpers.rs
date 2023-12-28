@@ -2,6 +2,7 @@ use std::{future::Future, path::Path, str::FromStr};
 
 use event::{EventStatus, Finalizable};
 use once_cell::sync::Lazy;
+use testify::temp_dir;
 use tracing_fluent_assertions::{AssertionRegistry, AssertionsLayer};
 use tracing_subscriber::{filter::LevelFilter, layer::SubscriberExt, Layer, Registry};
 
@@ -44,8 +45,7 @@ where
     F: FnOnce(&Path) -> Fut,
     Fut: Future<Output = V>,
 {
-    let buf_dir = tempfile::tempdir().expect("creating temp dir should never fail");
-    f(buf_dir.path()).await
+    f(temp_dir().as_path()).await
 }
 
 pub fn install_tracing_helpers() -> AssertionRegistry {
