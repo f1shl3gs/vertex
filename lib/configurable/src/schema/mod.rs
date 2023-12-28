@@ -160,7 +160,7 @@ where
                 SingleOrVec::Vec(its) => {
                     its.len() == 1
                         && its
-                            .get(0)
+                            .first()
                             .filter(|it| *it == &InstanceType::String)
                             .is_some()
                 }

@@ -185,7 +185,7 @@ FRAG6: inuse 0 memory 0"#;
         assert_eq!(ns.used, None);
 
         // TCP6
-        let nsp = ns.protocols.get(0).unwrap();
+        let nsp = ns.protocols.first().unwrap();
         assert_eq!(nsp.protocol, "TCP6");
         assert_eq!(nsp.inuse, 24);
         assert_eq!(nsp.orphan, None);

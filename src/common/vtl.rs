@@ -183,7 +183,7 @@ impl Target for MetricTarget {
                     return Err(ContextError::NotFound);
                 }
 
-                if let Some(paths) = path.to_alternative_components(3).get(0) {
+                if let Some(paths) = path.to_alternative_components(3).first() {
                     match paths.as_slice() {
                         ["tags"] => {
                             if let Value::Object(map) = &value {
@@ -380,7 +380,10 @@ impl Target for MetricTarget {
                     });
                 }
 
-                if let Some(paths) = path.to_alternative_components(MAX_METRIC_PATH_DEPTH).get(0) {
+                if let Some(paths) = path
+                    .to_alternative_components(MAX_METRIC_PATH_DEPTH)
+                    .first()
+                {
                     match paths.as_slice() {
                         ["timestamp"] => {
                             self.metric.timestamp.take();

@@ -364,7 +364,7 @@ impl Statistics {
     fn prune_old_requests(&mut self, now: Instant) {
         let then = now - Duration::from_secs(1);
 
-        while let Some(&first) = self.requests.get(0) {
+        while let Some(&first) = self.requests.front() {
             if first > then {
                 break;
             }
