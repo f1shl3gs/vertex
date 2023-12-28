@@ -4,7 +4,7 @@ use super::random::random_string;
 
 pub fn temp_file() -> PathBuf {
     let path = std::env::temp_dir();
-    let file_name = super::random::random_string(16);
+    let file_name = random_string(16);
     path.join(file_name)
 }
 

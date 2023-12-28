@@ -442,7 +442,7 @@ mod tests {
     use event::{event_path, Event};
     use framework::{Pipeline, ShutdownSignal};
     use multiline::Mode;
-    use tempfile::tempdir;
+    use testify::temp_dir;
     use tokio::time::{sleep, timeout};
 
     use super::*;
@@ -453,11 +453,11 @@ mod tests {
         crate::testing::test_generate_config::<Config>()
     }
 
-    fn test_default_tail_config(dir: &tempfile::TempDir) -> Config {
+    fn test_default_tail_config(dir: PathBuf) -> Config {
         Config {
             ignore_older_than: None,
             host_key: None,
-            include: vec![dir.path().join("*")],
+            include: vec![dir.join("*")],
             exclude: vec![],
             read_from: Default::default(),
             file_key: default_file_key(),
@@ -534,35 +534,29 @@ mod tests {
     #[tokio::test]
     async fn happy_path() {
         let n = 5;
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
-            ..test_default_tail_config(&dir)
+            include: vec![dir.join("*")],
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path1 = dir.path().join("file1");
-        let path2 = dir.path().join("file2");
+        let path1 = dir.join("file1");
+        let path2 = dir.join("file2");
 
-        let received = run_tail(
-            &config,
-            dir.path().to_path_buf(),
-            false,
-            AckingMode::No,
-            async {
-                let mut file1 = File::create(&path1).unwrap();
-                let mut file2 = File::create(&path2).unwrap();
+        let received = run_tail(&config, dir.to_path_buf(), false, AckingMode::No, async {
+            let mut file1 = File::create(&path1).unwrap();
+            let mut file2 = File::create(&path2).unwrap();
 
-                // The files must be observed at their original lengths before writing to them
-                sleep_500_millis().await;
+            // The files must be observed at their original lengths before writing to them
+            sleep_500_millis().await;
 
-                for i in 0..n {
-                    writeln!(file1, "foo {}", i).unwrap();
-                    writeln!(file2, "bar {}", i).unwrap();
-                }
+            for i in 0..n {
+                writeln!(file1, "foo {}", i).unwrap();
+                writeln!(file2, "bar {}", i).unwrap();
+            }
 
-                sleep_500_millis().await;
-            },
-        )
+            sleep_500_millis().await;
+        })
         .await;
 
         let mut foo = 0;
@@ -600,34 +594,28 @@ mod tests {
     async fn file_read_empty_lines() {
         let n = 5;
 
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
-            ..test_default_tail_config(&dir)
+            include: vec![dir.join("*")],
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path = dir.path().join("file");
+        let path = dir.join("file");
 
-        let received = run_tail(
-            &config,
-            dir.path().to_path_buf(),
-            false,
-            AckingMode::No,
-            async {
-                let mut file = File::create(&path).unwrap();
+        let received = run_tail(&config, dir.to_path_buf(), false, AckingMode::No, async {
+            let mut file = File::create(&path).unwrap();
 
-                // The files must be observed at their original
-                // lengths before writing to them
-                sleep_500_millis().await;
+            // The files must be observed at their original
+            // lengths before writing to them
+            sleep_500_millis().await;
 
-                writeln!(&mut file, "line for checkpointing").unwrap();
-                for _i in 0..n {
-                    writeln!(&mut file).unwrap();
-                }
+            writeln!(&mut file, "line for checkpointing").unwrap();
+            for _i in 0..n {
+                writeln!(&mut file).unwrap();
+            }
 
-                sleep_500_millis().await;
-            },
-        )
+            sleep_500_millis().await;
+        })
         .await;
 
         assert_eq!(received.len(), n + 1);
@@ -638,46 +626,40 @@ mod tests {
     async fn file_rotate() {
         let n = 5;
 
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
-            ..test_default_tail_config(&dir)
+            include: vec![dir.join("*")],
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path = dir.path().join("file");
-        let archive_path = dir.path().join("file");
-        let received = run_tail(
-            &config,
-            dir.path().to_path_buf(),
-            false,
-            AckingMode::No,
-            async {
-                let mut file = File::create(&path).unwrap();
+        let path = dir.join("file");
+        let archive_path = dir.join("file");
+        let received = run_tail(&config, dir.to_path_buf(), false, AckingMode::No, async {
+            let mut file = File::create(&path).unwrap();
 
-                // The files must be observed at its original
-                // length before writing to it
-                sleep_500_millis().await;
+            // The files must be observed at its original
+            // length before writing to it
+            sleep_500_millis().await;
 
-                for i in 0..n {
-                    writeln!(&mut file, "prerot {}", i).unwrap();
-                }
+            for i in 0..n {
+                writeln!(&mut file, "prerot {}", i).unwrap();
+            }
 
-                // The writes must be observed before rotating
-                sleep_500_millis().await;
+            // The writes must be observed before rotating
+            sleep_500_millis().await;
 
-                fs::rename(&path, archive_path).expect("could not rename");
-                let mut file = File::create(&path).unwrap();
+            fs::rename(&path, archive_path).expect("could not rename");
+            let mut file = File::create(&path).unwrap();
 
-                // The rotation must be observed before writing again
-                sleep_500_millis().await;
+            // The rotation must be observed before writing again
+            sleep_500_millis().await;
 
-                for i in 0..n {
-                    writeln!(&mut file, "postrot {}", i).unwrap();
-                }
+            for i in 0..n {
+                writeln!(&mut file, "postrot {}", i).unwrap();
+            }
 
-                sleep_500_millis().await
-            },
-        )
+            sleep_500_millis().await
+        })
         .await;
 
         let mut i = 0;
@@ -717,42 +699,36 @@ mod tests {
     async fn multiple_paths() {
         let n = 5;
 
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*.txt"), dir.path().join("a.*")],
-            exclude: vec![dir.path().join("a.*.txt")],
-            ..test_default_tail_config(&dir)
+            include: vec![dir.join("*.txt"), dir.join("a.*")],
+            exclude: vec![dir.join("a.*.txt")],
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path1 = dir.path().join("a.txt");
-        let path2 = dir.path().join("b.txt");
-        let path3 = dir.path().join("a.log");
-        let path4 = dir.path().join("a.ignore.txt");
-        let received = run_tail(
-            &config,
-            dir.path().to_path_buf(),
-            false,
-            AckingMode::No,
-            async {
-                let mut file1 = File::create(&path1).unwrap();
-                let mut file2 = File::create(&path2).unwrap();
-                let mut file3 = File::create(&path3).unwrap();
-                let mut file4 = File::create(&path4).unwrap();
+        let path1 = dir.join("a.txt");
+        let path2 = dir.join("b.txt");
+        let path3 = dir.join("a.log");
+        let path4 = dir.join("a.ignore.txt");
+        let received = run_tail(&config, dir, false, AckingMode::No, async {
+            let mut file1 = File::create(&path1).unwrap();
+            let mut file2 = File::create(&path2).unwrap();
+            let mut file3 = File::create(&path3).unwrap();
+            let mut file4 = File::create(&path4).unwrap();
 
-                // The files must be observed at their original
-                // lengths before writing to them
-                sleep_500_millis().await;
+            // The files must be observed at their original
+            // lengths before writing to them
+            sleep_500_millis().await;
 
-                for i in 0..n {
-                    writeln!(&mut file1, "1 {}", i).unwrap();
-                    writeln!(&mut file2, "2 {}", i).unwrap();
-                    writeln!(&mut file3, "3 {}", i).unwrap();
-                    writeln!(&mut file4, "4 {}", i).unwrap();
-                }
+            for i in 0..n {
+                writeln!(&mut file1, "1 {}", i).unwrap();
+                writeln!(&mut file2, "2 {}", i).unwrap();
+                writeln!(&mut file3, "3 {}", i).unwrap();
+                writeln!(&mut file4, "4 {}", i).unwrap();
+            }
 
-                sleep_500_millis().await;
-            },
-        )
+            sleep_500_millis().await;
+        })
         .await;
 
         let mut is = [0; 3];
@@ -787,13 +763,13 @@ mod tests {
     async fn file_file_key(acks: AckingMode) {
         // Default
         {
-            let dir = tempdir().unwrap();
+            let dir = temp_dir();
             let config = Config {
-                include: vec![dir.path().join("*")],
-                ..test_default_tail_config(&dir)
+                include: vec![dir.join("*")],
+                ..test_default_tail_config(dir.clone())
             };
 
-            let path = dir.path().join("file");
+            let path = dir.join("file");
             let received = run_tail(&config, path.clone(), true, acks.clone(), async {
                 let mut file = File::create(&path).unwrap();
                 sleep_500_millis().await;
@@ -811,14 +787,14 @@ mod tests {
 
         // Custom
         {
-            let dir = tempdir().unwrap();
+            let dir = temp_dir();
             let config = Config {
-                include: vec![dir.path().join("*")],
+                include: vec![dir.join("*")],
                 file_key: "source".to_string(),
-                ..test_default_tail_config(&dir)
+                ..test_default_tail_config(dir.clone())
             };
 
-            let path = dir.path().join("file");
+            let path = dir.join("file");
             let received = run_tail(&config, path.clone(), true, acks.clone(), async {
                 let mut file = File::create(&path).unwrap();
                 sleep_500_millis().await;
@@ -856,13 +832,13 @@ mod tests {
     async fn file_start_position_server_restart_unfinalized() {
         trace_init();
 
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
-            ..test_default_tail_config(&dir)
+            include: vec![dir.join("*")],
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path = dir.path().join("file");
+        let path = dir.join("file");
         let mut file = File::create(&path).unwrap();
         writeln!(&mut file, "the line").unwrap();
         sleep_500_millis().await;
@@ -903,15 +879,15 @@ mod tests {
     }
 
     async fn file_start_position_server_restart_with_file_rotation(acking: AckingMode) {
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
-            ..test_default_tail_config(&dir)
+            include: vec![dir.join("*")],
+            ..test_default_tail_config(dir.clone())
         };
 
-        let data_dir = dir.path().to_path_buf();
-        let path = dir.path().join("file");
-        let path_for_old_file = dir.path().join("file.old");
+        let data_dir = dir.to_path_buf();
+        let path = dir.join("file");
+        let path_for_old_file = dir.join("file.old");
         // Run server first time, collect some lines.
         {
             let received = run_tail(&config, data_dir.clone(), true, acking.clone(), async {
@@ -951,18 +927,18 @@ mod tests {
             time::{Duration, SystemTime},
         };
 
-        let dir = tempdir().unwrap();
-        let path = dir.path().to_path_buf();
+        let dir = temp_dir();
+        let path = dir.to_path_buf();
         let config = Config {
             include: vec![path.join("*")],
             ignore_older_than: Some(Duration::from_secs(5)),
-            ..test_default_tail_config(&dir)
+            ..test_default_tail_config(dir.clone())
         };
 
         let received = run_tail(&config, path, false, AckingMode::No, async {
-            let before_path = dir.path().join("before");
+            let before_path = dir.join("before");
             let mut before_file = File::create(&before_path).unwrap();
-            let after_path = dir.path().join("after");
+            let after_path = dir.join("after");
             let mut after_file = File::create(&after_path).unwrap();
 
             writeln!(&mut before_file, "first line").unwrap(); // first few bytes make up unique file fingerprint
@@ -1048,14 +1024,14 @@ mod tests {
 
     #[tokio::test]
     async fn file_max_line_bytes() {
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
+            include: vec![dir.join("*")],
             max_line_bytes: 10,
-            ..test_default_tail_config(&dir)
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path = dir.path().join("file");
+        let path = dir.join("file");
         let received = run_tail(&config, path.clone(), false, AckingMode::No, async {
             let mut file = File::create(&path).unwrap();
 
@@ -1089,9 +1065,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_multi_line_aggregation() {
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
+            include: vec![dir.join("*")],
             multiline: Some(MultilineConfig {
                 timeout: Duration::from_millis(25),
                 parser: Parser::Custom {
@@ -1100,10 +1076,10 @@ mod tests {
                     mode: Mode::HaltBefore,
                 },
             }),
-            ..test_default_tail_config(&dir)
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path = dir.path().join("file");
+        let path = dir.join("file");
         let received = run_tail(&config, path.clone(), false, AckingMode::No, async {
             let mut file = File::create(&path).unwrap();
 
@@ -1152,21 +1128,21 @@ mod tests {
     #[cfg(not(target_os = "macos"))]
     #[tokio::test]
     async fn test_split_reads() {
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
+            include: vec![dir.join("*")],
             max_read_bytes: 1,
-            ..test_default_tail_config(&dir)
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path = dir.path().join("file");
+        let path = dir.join("file");
         let mut file = File::create(&path).unwrap();
 
         writeln!(&mut file, "hello i am a normal line").unwrap();
 
         sleep_500_millis().await;
 
-        let received = run_tail(&config, dir.into_path(), false, AckingMode::No, async {
+        let received = run_tail(&config, dir, false, AckingMode::No, async {
             sleep_500_millis().await;
 
             write!(&mut file, "i am not a full line").unwrap();
@@ -1193,7 +1169,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gzipped_file() {
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
             ignore_older_than: None,
             include: vec![PathBuf::from("tests/fixtures/gzipped.log")],
@@ -1204,17 +1180,10 @@ mod tests {
             // in the compressed data, or this number of bytes. If it hits EOF before that, it
             // can't return a fingerprint because the value would change once more data is written.
             max_line_bytes: 100,
-            ..test_default_tail_config(&dir)
+            ..test_default_tail_config(dir.clone())
         };
 
-        let received = run_tail(
-            &config,
-            dir.into_path(),
-            false,
-            AckingMode::No,
-            sleep_500_millis(),
-        )
-        .await;
+        let received = run_tail(&config, dir, false, AckingMode::No, sleep_500_millis()).await;
 
         let received = extract_messages_value(received);
 
@@ -1232,21 +1201,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_non_utf8_encoded_file() {
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
             include: vec![PathBuf::from("tests/fixtures/utf-16le.log")],
             charset: Some(UTF_16LE),
-            ..test_default_tail_config(&dir)
+            ..test_default_tail_config(dir.clone())
         };
 
-        let received = run_tail(
-            &config,
-            dir.into_path(),
-            false,
-            AckingMode::No,
-            sleep_500_millis(),
-        )
-        .await;
+        let received = run_tail(&config, dir, false, AckingMode::No, sleep_500_millis()).await;
 
         let received = extract_messages_value(received);
 
@@ -1264,14 +1226,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_non_default_line_delimiter() {
-        let dir = tempdir().unwrap();
+        let dir = temp_dir();
         let config = Config {
-            include: vec![dir.path().join("*")],
+            include: vec![dir.join("*")],
             line_delimiter: "\r\n".to_string(),
-            ..test_default_tail_config(&dir)
+            ..test_default_tail_config(dir.clone())
         };
 
-        let path = dir.path().join("file");
+        let path = dir.join("file");
         let received = run_tail(&config, path.clone(), false, AckingMode::No, async {
             let mut file = File::create(&path).unwrap();
 

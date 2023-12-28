@@ -129,7 +129,7 @@ mod tests {
     use std::fs::File;
     use std::io::Write;
 
-    use testify::temp::{temp_dir, temp_file};
+    use testify::{temp_dir, temp_file};
     use tokio::signal::unix::{signal, SignalKind};
 
     use super::*;

@@ -66,7 +66,7 @@ mod tests {
     use std::fs::remove_file;
 
     use futures::FutureExt;
-    use testify::temp::temp_file;
+    use testify::temp_file;
     use tokio::fs::File;
     use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader, BufWriter};
 
