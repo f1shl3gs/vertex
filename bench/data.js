@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703831141400,
+  "lastUpdate": 1703832445890,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c634a716049bc56b912a91ee58ad0a4a6cba17fb",
-          "message": "chore: style & simplify launch command (#1402)\n\n* remove unnecessary qualifications\r\n\r\n* style & remove unnecessary pub",
-          "timestamp": "2023-11-03T00:01:03+08:00",
-          "tree_id": "94ac7b6fd197c8ffdf66db24510d16a36a5b648f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c634a716049bc56b912a91ee58ad0a4a6cba17fb"
-        },
-        "date": 1698941644005,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 689,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 52757,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0e3ad0bd3cd52a128dd4dda4b49e8342ff3ed21b",
           "message": "deps: bump dyn-clone to 1.0.16 (#1403)",
           "timestamp": "2023-11-03T17:40:54+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41506.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e8cce86087fa5be6cf840373d27afa28fa72df9",
+          "message": "chore(deps): bump memchr from 2.6.4 to 2.7.1 (#1514)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.4 to 2.7.1.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.4...2.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-29T14:36:13+08:00",
+          "tree_id": "7eff978725fea66737cf334d63fc5cc33df74c51",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e8cce86087fa5be6cf840373d27afa28fa72df9"
+        },
+        "date": 1703832430577,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41459,
             "unit": "KiB"
           }
         ]
