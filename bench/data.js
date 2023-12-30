@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1703922702248,
+  "lastUpdate": 1703924668896,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2833fa297ca8c7874246f612ee0f1d70079dd427",
-          "message": "deps: bump libc to 0.2.150 (#1404)",
-          "timestamp": "2023-11-05T20:24:18+08:00",
-          "tree_id": "7f72475e5c04317e0f762ce9789e3733af50a312",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2833fa297ca8c7874246f612ee0f1d70079dd427"
-        },
-        "date": 1699188162549,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 979,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 52745.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d2771428c393cb9b920577dbae1082421a696d94",
           "message": "deps: bump syn to 2.0.39 (#1405)",
           "timestamp": "2023-11-06T19:03:36+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41482.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "46ab7ea36ee1668c427a7438e86ffb564f1240c2",
+          "message": "chore(deps): bump ahash from 0.8.6 to 0.8.7 (#1516)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.6 to 0.8.7.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-12-30T16:13:19+08:00",
+          "tree_id": "85cadb59e3d29f7f7d705db0524d604218abbc56",
+          "url": "https://github.com/f1shl3gs/vertex/commit/46ab7ea36ee1668c427a7438e86ffb564f1240c2"
+        },
+        "date": 1703924654705,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41468.5,
             "unit": "KiB"
           }
         ]
