@@ -43,6 +43,7 @@ members = [
     "lib/measurable",
     "lib/metrics",
     "lib/multiline",
+    "lib/ntp",
     "lib/prometheus",
     "lib/sysinfo",
     "lib/tail",
@@ -171,7 +172,7 @@ sources-mongodb = []
 sources-mysqld = ["dep:sqlx"]
 sources-nginx_stub = []
 sources-node_metrics = ["dep:libc", "dep:netlink-packet-sock-diag", "dep:netlink-sys", "dep:netlink-packet-core"]
-sources-ntp = ["rsntp/tokio", "rsntp/async"]
+sources-ntp = ["dep:ntp"]
 sources-nvidia_smi = ["dep:quick-xml"]
 sources-prometheus_scrape = ["dep:prometheus"]
 sources-prometheus_remote_write = ["dep:snap"]
@@ -336,8 +337,9 @@ jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
 metrics = { path = "lib/metrics" }
 multiline = { path = "lib/multiline", optional = true }
-prometheus = { path = "lib/prometheus", optional = true }
 measurable = { path = "lib/measurable" }
+ntp = { path = "lib/ntp", optional = true }
+prometheus = { path = "lib/prometheus", optional = true }
 sysinfo = { path = "lib/sysinfo", optional = true }
 tail = { path = "lib/tail", optional = true }
 tripwire = { path = "lib/tripwire" }
@@ -416,7 +418,6 @@ percent-encoding = { version = "2.3.1", default-features = false }
 quick-xml = { version = "0.31.0", default-features = false, features = ["serialize"], optional = true }
 regex = { version = "1.10.2", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "d48e59787305614f62d112f185cd234601ac8955", optional = true, features = ["transport-tls"] }
-rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
 smallvec = { version = "1.11.2", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 sqlx = { version = "0.7.3", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
