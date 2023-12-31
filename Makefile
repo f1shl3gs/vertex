@@ -139,10 +139,6 @@ bench-prometheus:
 bench-tracing-limit:
 	cargo bench --manifest-path lib/tracing-limit/Cargo.toml
 
-.PHONY: bench-condition
-bench-condition:
-	cargo bench --manifest-path lib/condition/Cargo.toml
-
 .PHONY: bench-metrics
 bench-metrics:
 	cargo bench --manifest-path lib/metrics/Cargo.toml
