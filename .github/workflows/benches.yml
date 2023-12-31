@@ -45,7 +45,6 @@ jobs:
           - vertex
           - prometheus
           - tracing-limit
-          - condition
           - metrics
           - event
     steps:
