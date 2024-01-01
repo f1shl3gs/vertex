@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704115700996,
+  "lastUpdate": 1704115726260,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e26149cb2b85b84fd0ee1282a0c76917007a5710",
-          "message": "deps: bump futures and futures-util to 0.3.29 (#1386)",
-          "timestamp": "2023-10-27T00:14:00+08:00",
-          "tree_id": "05551c3d821210b06a357579a43e3913cd02446a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e26149cb2b85b84fd0ee1282a0c76917007a5710"
-        },
-        "date": 1698337104562,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 59.909,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 179.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 464.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1357.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1be8cef10ebbcf038942cc795580e9f80d742752",
           "message": "deps: remove unused features of tracing-futures (#1388)",
           "timestamp": "2023-10-27T00:57:13+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 671.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a4c3d4b7935c9cadd306c3b860199a1a5010d7b9",
+          "message": "remove unnecessary features \"parking_lot/serde\" (#1526)",
+          "timestamp": "2024-01-01T21:25:54+08:00",
+          "tree_id": "a72d25e880828a3fcd940bed0b14c3ad471ddbc1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a4c3d4b7935c9cadd306c3b860199a1a5010d7b9"
+        },
+        "date": 1704115711793,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 31.866,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 141.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 325.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 644.96,
             "unit": "ns/op"
           }
         ]
