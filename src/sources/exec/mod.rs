@@ -307,7 +307,7 @@ async fn run_command(
 
     debug!(
         message = "Finished command run",
-        elapsed_ms = start.elapsed().as_millis() as u64
+        elapsed = ?start.elapsed()
     );
 
     match child.try_wait() {

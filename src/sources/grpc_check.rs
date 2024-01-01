@@ -91,7 +91,7 @@ async fn scrape(service: String, endpoint: String, timeout: Duration) -> Vec<Met
         Ok(result) => result,
         Err(err) => Err(err.into()),
     };
-    let elapsed = start.elapsed().as_secs_f64();
+    let elapsed = start.elapsed();
 
     let tags = tags!(
         "service" => service.clone(),

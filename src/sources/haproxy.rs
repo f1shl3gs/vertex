@@ -176,7 +176,7 @@ async fn gather(client: &HttpClient, uri: &Uri, auth: &Option<Auth>) -> Vec<Metr
             vec![]
         }
     };
-    let elapsed = start.elapsed().as_secs_f64();
+    let elapsed = start.elapsed();
     let up = i32::from(!metrics.is_empty());
     let instance = format!("{}:{}", uri.host().unwrap(), uri.port_u16().unwrap());
     metrics.extend_from_slice(&[

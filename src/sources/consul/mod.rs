@@ -140,7 +140,7 @@ async fn gather(client: &Client, health_summary: bool, opts: &Option<QueryOption
         }
     };
 
-    let elapsed = start.elapsed().as_secs_f64();
+    let elapsed = start.elapsed();
     metrics.push(Metric::gauge("consul_scrape_duration_seconds", "", elapsed));
 
     metrics.iter_mut().for_each(|m| {
