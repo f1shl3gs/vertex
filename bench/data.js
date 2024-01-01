@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704015437489,
+  "lastUpdate": 1704099563914,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "86154b685211af2553d9f87050c2ae29c602d407",
-          "message": "chore(deps): bump serde from 1.0.189 to 1.0.190 (#1383)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.189 to 1.0.190.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.189...v1.0.190)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-10-26T13:14:39+08:00",
-          "tree_id": "94906ab08ec11e953da870334ba6a0264e70bc54",
-          "url": "https://github.com/f1shl3gs/vertex/commit/86154b685211af2553d9f87050c2ae29c602d407"
-        },
-        "date": 1698297440977,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 740080,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535970,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1613fb9a9d33de1163db5f2aefbc5cf7744207b7",
+          "message": "chore(deps): bump proc-macro2 from 1.0.72 to 1.0.73 (#1523)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.72 to 1.0.73.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.72...1.0.73)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-01T16:57:00+08:00",
+          "tree_id": "ac03b1bc99ebc6ba853d8ea7c77ee63626044b3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1613fb9a9d33de1163db5f2aefbc5cf7744207b7"
+        },
+        "date": 1704099550307,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 533840,
             "unit": "ns/op"
           }
         ]
