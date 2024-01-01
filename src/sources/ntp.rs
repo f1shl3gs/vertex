@@ -130,7 +130,7 @@ impl Ntp {
                     // LeapAddSecond(1) indicates the last minute of the day has 61 seconds.
                     // LeapDelSecond(2) indicates the last minute of the day has 59 seconds.
                     if resp.leap == 1 || resp.leap == 2 {
-                        // state of leap_midnight is cached as leap flag is dropped right after midnigh
+                        // state of leap_midnight is cached as leap flag is dropped right after midnight
                         leap_midnight = resp.time.duration_trunc(day).unwrap() + day;
                     }
                     if leap_midnight.sub(day) < resp.time && resp.time < leap_midnight.add(day) {

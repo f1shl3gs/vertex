@@ -376,9 +376,9 @@ impl Response {
             return Err(Error::InvalidDispersion);
         }
 
-        // If the server's transmit time is before its referernce time,
+        // If the server's transmit time is before its reference time,
         // the response is invalid.
-        if self.time > self.reference_time {
+        if self.time < self.reference_time {
             return Err(Error::InvalidTime);
         }
 
