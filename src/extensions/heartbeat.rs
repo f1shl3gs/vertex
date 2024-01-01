@@ -45,7 +45,7 @@ pub struct Config {
 #[typetag::serde(name = "heartbeat")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
-        let mut status = VERTEX_STATUS.lock();
+        let mut status = STATUS.lock();
 
         status.uuid = get_uuid();
         status.uptime = chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, false);
@@ -94,7 +94,7 @@ struct Status {
     resources: Vec<Resource>,
 }
 
-static VERTEX_STATUS: Lazy<Mutex<Status>> = Lazy::new(Default::default);
+static STATUS: Lazy<Mutex<Status>> = Lazy::new(Default::default);
 
 pub fn report_config(config: &framework::config::Config) {
     let mut resources = vec![];
@@ -138,7 +138,7 @@ pub fn report_config(config: &framework::config::Config) {
         }));
     }
 
-    VERTEX_STATUS.lock().resources = resources;
+    STATUS.lock().resources = resources;
 }
 
 async fn run(
@@ -147,13 +147,15 @@ async fn run(
     interval: Duration,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
+    let mut ticker = tokio::time::interval(interval);
+
     loop {
         select! {
             _ = &mut shutdown => return Ok(()),
-            _ = tokio::time::sleep(interval) => {}
+            _ = ticker.tick() => {}
         }
 
-        let body = serde_json::to_string(VERTEX_STATUS.deref())
+        let body = serde_json::to_string(STATUS.lock().deref())
             .expect("status serialize should always success");
 
         let req = Request::post(&endpoint.uri)
