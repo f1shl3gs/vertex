@@ -124,7 +124,7 @@ all-integration-tests = [
     "integration-tests-zookeeper"
 ]
 
-extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "parking_lot/serde"]
+extensions-heartbeat = ["dep:uuid", "dep:sysinfo"]
 extensions-healthcheck = []
 extensions-jemalloc = [
     "dep:tikv-jemalloc-ctl",
