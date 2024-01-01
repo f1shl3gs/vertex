@@ -83,7 +83,7 @@ async fn run(config: Config, mut output: Pipeline, mut shutdown: ShutdownSignal)
             Ok(result) => result,
             Err(_err) => Err(Error::Timeout),
         };
-        let elapsed = start.elapsed().as_secs_f64();
+        let elapsed = start.elapsed();
         let up = result.is_ok();
         let mut metrics = vec![
             Metric::gauge("ntp_up", "Could the chronyd be accessible", up),

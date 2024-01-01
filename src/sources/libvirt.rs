@@ -53,7 +53,7 @@ impl SourceConfig for Config {
                     warn!(message = "Scrape libvirt metrics failed", ?err);
                     err
                 });
-                let elapsed = start.elapsed().as_secs_f64();
+                let elapsed = start.elapsed();
                 let up = result.is_ok();
 
                 let mut metrics = result.unwrap_or_default();

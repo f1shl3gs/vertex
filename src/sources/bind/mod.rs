@@ -55,7 +55,7 @@ impl SourceConfig for Config {
                     _ = interval.tick() => {
                         let start = Instant::now();
                         let result = client.stats().await;
-                        let elapsed = start.elapsed().as_secs_f64();
+                        let elapsed = start.elapsed();
                         let success = result.is_ok();
 
                         let mut metrics = vec![

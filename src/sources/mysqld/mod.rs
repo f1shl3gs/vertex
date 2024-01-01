@@ -171,7 +171,7 @@ impl SourceConfig for Config {
 
                 let start = Instant::now();
                 let result = gather(instance.as_ref(), pool.clone()).await;
-                let elapsed = start.elapsed().as_secs_f64();
+                let elapsed = start.elapsed();
                 let up = result.is_ok();
 
                 let mut metrics = result.unwrap_or_default();

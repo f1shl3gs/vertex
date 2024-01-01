@@ -434,7 +434,7 @@ impl Elasticsearch {
         let url = format!("/_nodes/{}/stats", node);
         let start = Instant::now();
         let result = self.fetch::<NodeStatsResp>(url.as_str()).await;
-        let elapsed = start.elapsed().as_secs_f64();
+        let elapsed = start.elapsed();
         let up = result.is_ok();
 
         let mut metrics = match result {

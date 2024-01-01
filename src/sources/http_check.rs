@@ -102,7 +102,7 @@ async fn run(
             Ok(result) => result,
             Err(err) => Err(err.into()),
         };
-        let elapsed = start.elapsed().as_secs_f64();
+        let elapsed = start.elapsed();
         let mut metrics = vec![Metric::gauge_with_tags(
             "http_check_duration",
             "Measures the duration of the HTTP check",
