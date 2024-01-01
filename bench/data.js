@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704116095937,
+  "lastUpdate": 1704116105077,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1be8cef10ebbcf038942cc795580e9f80d742752",
-          "message": "deps: remove unused features of tracing-futures (#1388)",
-          "timestamp": "2023-10-27T00:57:13+08:00",
-          "tree_id": "22ebe2de5f57559778b666de3a167aeaf4e68d80",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1be8cef10ebbcf038942cc795580e9f80d742752"
-        },
-        "date": 1698339636625,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 101.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 227.27,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 370.49,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c2eeb02f2f4970e817f1e1d2c6bc4b3ea7e905c5",
+          "message": "remove unnecessary Duration::as_secs_f64 (#1527)",
+          "timestamp": "2024-01-01T21:32:35+08:00",
+          "tree_id": "e15dedd490f010b8ac4c4a62954162dcf2ce57dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c2eeb02f2f4970e817f1e1d2c6bc4b3ea7e905c5"
+        },
+        "date": 1704116089203,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.866,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 90.848,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 181.15,
             "unit": "ns/op"
           }
         ]
