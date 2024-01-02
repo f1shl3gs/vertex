@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704197306138,
+  "lastUpdate": 1704197737509,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7f0a54c2ac90b184b2e7f7d47d6aa0758b2d79a6",
-          "message": "deps: bump uuid to 1.6.1 (#1427)",
-          "timestamp": "2023-11-21T13:10:45+08:00",
-          "tree_id": "3d6a8a422d47b35e69998b1ece126dc9e0f98bc0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7f0a54c2ac90b184b2e7f7d47d6aa0758b2d79a6"
-        },
-        "date": 1700544168391,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 633,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 52356.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e19e92cdf66171fd592dc35969a17104432e40b",
           "message": "fix memory leak when tags clone (#1428)",
           "timestamp": "2023-11-21T21:54:05+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41491.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d2ff64728d605c339a431a5e702ef2b52b1aab7",
+          "message": "update deps (#1538)",
+          "timestamp": "2024-01-02T20:04:31+08:00",
+          "tree_id": "df5d3298d104d03a4b9c8f6e9e3b38c3c982221b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0d2ff64728d605c339a431a5e702ef2b52b1aab7"
+        },
+        "date": 1704197722046,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
             "unit": "s"
           },
           {
