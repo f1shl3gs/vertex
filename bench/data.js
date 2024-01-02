@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704197796959,
+  "lastUpdate": 1704220373637,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0e3ad0bd3cd52a128dd4dda4b49e8342ff3ed21b",
-          "message": "deps: bump dyn-clone to 1.0.16 (#1403)",
-          "timestamp": "2023-11-03T17:40:54+08:00",
-          "tree_id": "7eade022a3cb87bf60d80c8c824036e29f2ec35f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0e3ad0bd3cd52a128dd4dda4b49e8342ff3ed21b"
-        },
-        "date": 1699004651489,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 100.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 239.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 386.88,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e867ceadcf568423c123633c7adedb938c99d330",
+          "message": "chore(deps): bump serde_path_to_error from 0.1.14 to 0.1.15 (#1539)\n\nBumps [serde_path_to_error](https://github.com/dtolnay/path-to-error) from 0.1.14 to 0.1.15.\r\n- [Release notes](https://github.com/dtolnay/path-to-error/releases)\r\n- [Commits](https://github.com/dtolnay/path-to-error/compare/0.1.14...0.1.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_path_to_error\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-03T02:30:28+08:00",
+          "tree_id": "31d4efa5e29917d377773b4d64520d78844bd68c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e867ceadcf568423c123633c7adedb938c99d330"
+        },
+        "date": 1704220359788,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.848,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 90.874,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.1,
             "unit": "ns/op"
           }
         ]
