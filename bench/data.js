@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704191144935,
+  "lastUpdate": 1704191154298,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1dcd2425109beeb8e9039a7e8b85ca4d823a492f",
-          "message": "chore(deps): bump tracing-subscriber from 0.3.17 to 0.3.18 (#1418)\n\nBumps [tracing-subscriber](https://github.com/tokio-rs/tracing) from 0.3.17 to 0.3.18.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-subscriber-0.3.17...tracing-subscriber-0.3.18)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-11-14T18:15:04+08:00",
-          "tree_id": "3c92edd29647040d15091bc7b82b01c2c12e13c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1dcd2425109beeb8e9039a7e8b85ca4d823a492f"
-        },
-        "date": 1699957634557,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 641,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 52757.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41466.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "770e8da3556ebc18e7c2bd26095f7333ff7b7ecf",
+          "message": "chore(deps): bump serde from 1.0.193 to 1.0.194 (#1531)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.193 to 1.0.194.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.193...v1.0.194)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-02T18:14:45+08:00",
+          "tree_id": "fbd14a7a2b94f90e30111791432c750cfb5b8134",
+          "url": "https://github.com/f1shl3gs/vertex/commit/770e8da3556ebc18e7c2bd26095f7333ff7b7ecf"
+        },
+        "date": 1704191139413,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41491.5,
             "unit": "KiB"
           }
         ]
