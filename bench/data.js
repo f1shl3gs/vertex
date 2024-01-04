@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704336269762,
+  "lastUpdate": 1704336284471,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f7077e36e2c0273ae200bda9781b66954bb6abad",
-          "message": "deps: bump lru to 0.12.1 (#1430)",
-          "timestamp": "2023-11-22T17:38:42+08:00",
-          "tree_id": "4bf25e0b09f4f8618b86b7096b1fe20c14983e31",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f7077e36e2c0273ae200bda9781b66954bb6abad"
-        },
-        "date": 1700646642902,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 627,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 52362.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3ece3d81311bc7ee72a9aad41eb4257c8a6acb52",
           "message": "lib/event: impl `Tags` with cow (#1431)\n\n* shuffle bench keys\r\n* impl Tags with cow",
           "timestamp": "2023-11-22T20:30:32+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41475.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83b91f3a57a9a9fb7a6c0e0dea14280c15b248b5",
+          "message": "chore(deps): bump syn from 2.0.46 to 2.0.47 (#1541)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.46 to 2.0.47.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.46...2.0.47)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-04T10:33:30+08:00",
+          "tree_id": "139f7baa201f52cfb3bc38f73abdf224745930fa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83b91f3a57a9a9fb7a6c0e0dea14280c15b248b5"
+        },
+        "date": 1704336270162,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 580,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41487.7,
             "unit": "KiB"
           }
         ]
