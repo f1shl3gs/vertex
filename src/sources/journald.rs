@@ -613,8 +613,8 @@ mod tests {
 
     use chrono::TimeZone;
     use event::Event;
+    use futures::StreamExt;
     use tokio::time::{sleep, timeout, Duration};
-    use tokio_stream::StreamExt;
 
     use super::*;
 

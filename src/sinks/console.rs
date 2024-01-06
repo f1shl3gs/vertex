@@ -6,14 +6,12 @@ use codecs::encoding::{Framer, NewlineDelimitedEncoder, Transformer};
 use codecs::{Encoder, EncodingConfig};
 use configurable::{configurable_component, Configurable};
 use event::{EventContainer, EventStatus, Events, Finalizable};
-use framework::{
-    config::{DataType, SinkConfig, SinkContext},
-    Healthcheck, Sink, StreamSink,
-};
+use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::{Healthcheck, Sink, StreamSink};
+use futures::StreamExt;
 use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncWriteExt;
-use tokio_stream::StreamExt;
 use tokio_util::codec::Encoder as _;
 
 #[derive(Configurable, Debug, Deserialize, Serialize, Default)]
