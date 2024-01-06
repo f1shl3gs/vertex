@@ -1,7 +1,7 @@
 use std::pin::pin;
 
+use futures::{Stream, StreamExt};
 use tokio::sync::{broadcast, mpsc};
-use tokio_stream::{Stream, StreamExt};
 
 use crate::config::Builder;
 

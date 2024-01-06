@@ -6,8 +6,8 @@ use std::time::Duration;
 use argh::FromArgs;
 use exitcode::ExitCode;
 use framework::{config, signal, topology, SignalTo};
+use futures::StreamExt;
 use tokio_stream::wrappers::UnboundedReceiverStream;
-use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
 use vertex::built_info::{GIT_HASH, PKG_VERSION, RUSTC_VERSION, TARGET};
 #[cfg(feature = "extensions-healthcheck")]
