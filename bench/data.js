@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704567274553,
+  "lastUpdate": 1704567275724,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d6ebfa1d4da163602636466052af16622fc55f6a",
-          "message": "chore(deps): bump tokio from 1.33.0 to 1.34.0 (#1411)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.33.0 to 1.34.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.33.0...tokio-1.34.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-11-10T16:55:39+08:00",
-          "tree_id": "9df5ec2440498419379f930d867bdc03bcc5a21a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d6ebfa1d4da163602636466052af16622fc55f6a"
-        },
-        "date": 1699606727366,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 859050,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 545920,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a86fcf60e432126a5e4c394a84d20d9e20195bca",
+          "message": "remove unnecessary features (#1547)",
+          "timestamp": "2024-01-07T02:52:08+08:00",
+          "tree_id": "53c6542d0df27df670db5604c6c9f3f302c989d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a86fcf60e432126a5e4c394a84d20d9e20195bca"
+        },
+        "date": 1704567259458,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 539150,
             "unit": "ns/op"
           }
         ]
