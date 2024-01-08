@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704678446479,
+  "lastUpdate": 1704678453221,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5e3b281365cfc74c5200f2c289691b09800e5d03",
-          "message": "lib/event: re-implement tags Key/Value (#1436)\n\n* reimplement tags Key/Value",
-          "timestamp": "2023-11-26T19:06:04+08:00",
-          "tree_id": "a606795884a7eddda87c415013332624ffa94ef0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5e3b281365cfc74c5200f2c289691b09800e5d03"
-        },
-        "date": 1700997446759,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 591,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40956.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f22a1d3f34dfda31af21e2efad150aadc4eabff1",
           "message": "lib/event: reimplement Value::String with String (#1438)",
           "timestamp": "2023-11-26T21:12:15+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41470.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "731d409b328f84160ec22a43df7186240ca91656",
+          "message": "chore(deps): bump libc from 0.2.151 to 0.2.152 (#1548)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.151 to 0.2.152.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.151...0.2.152)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-08T09:36:27+08:00",
+          "tree_id": "5a40307a0c2c03db24d1b21456a52f42348eb096",
+          "url": "https://github.com/f1shl3gs/vertex/commit/731d409b328f84160ec22a43df7186240ca91656"
+        },
+        "date": 1704678438611,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 568,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41497.1,
             "unit": "KiB"
           }
         ]
