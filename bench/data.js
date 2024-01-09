@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704778724630,
+  "lastUpdate": 1704778754327,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "47551e393a3f0ad662cb8fe55eaa9852cdf99073",
-          "message": "chore(deps): bump rustls-pemfile from 1.0.3 to 1.0.4 (#1410)\n\nBumps [rustls-pemfile](https://github.com/rustls/pemfile) from 1.0.3 to 1.0.4.\r\n- [Commits](https://github.com/rustls/pemfile/compare/v/1.0.3...v/1.0.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-pemfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-11-10T18:19:20+08:00",
-          "tree_id": "5355624833f930aa11395e2fbae6b436f16bc048",
-          "url": "https://github.com/f1shl3gs/vertex/commit/47551e393a3f0ad662cb8fe55eaa9852cdf99073"
-        },
-        "date": 1699611846982,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 705.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 70875,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 354560,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 708870,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 220.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 21851,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 109480,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 218620,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4886a27244a1cca61cd738e8c1f2b8c8872cafd",
           "message": "chore(deps): bump http from 0.2.9 to 0.2.10 (#1413)\n\nBumps [http](https://github.com/hyperium/http) from 0.2.9 to 0.2.10.\r\n- [Release notes](https://github.com/hyperium/http/releases)\r\n- [Changelog](https://github.com/hyperium/http/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/http/compare/v0.2.9...v0.2.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: http\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-11-11T17:55:16+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 159750,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1fa5243c5307cb3bf124a2bb607a13f6ffb61d77",
+          "message": "chore(deps): bump base64 from 0.21.5 to 0.21.6 (#1551)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.5 to 0.21.6.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.5...v0.21.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-09T13:35:40+08:00",
+          "tree_id": "f97974dc7b5d29ac79d2756de6f880e00d822a2a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1fa5243c5307cb3bf124a2bb607a13f6ffb61d77"
+        },
+        "date": 1704778740350,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 390.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 38917,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 191890,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 400810,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 149.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 14612,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 73280,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 146000,
             "unit": "ns/op"
           }
         ]
