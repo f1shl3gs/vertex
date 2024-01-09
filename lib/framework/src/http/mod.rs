@@ -2,10 +2,8 @@ pub(crate) mod proxy;
 mod trace;
 
 use std::borrow::Cow;
-use std::{
-    fmt,
-    task::{Context, Poll},
-};
+use std::fmt;
+use std::task::{Context, Poll};
 
 use configurable::Configurable;
 use futures::future::BoxFuture;
@@ -18,7 +16,6 @@ use hyper::{
 };
 use hyper_rustls::HttpsConnector;
 use metrics::{exponential_buckets, Attributes};
-pub use proxy::NoProxy;
 use rustls::{ClientConfig, RootCertStore};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -203,7 +200,7 @@ fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue
 struct FormatBody<'a, B>(&'a B);
 
 impl<'a, B: HttpBody> fmt::Display for FormatBody<'a, B> {
-    fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+    fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         let size = self.0.size_hint();
         match (size.lower(), size.upper()) {
             (0, None) => write!(fmt, "[unknown]"),

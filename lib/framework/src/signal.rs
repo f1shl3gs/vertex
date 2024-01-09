@@ -46,11 +46,6 @@ impl SignalHandler {
         )
     }
 
-    /// Clones the transmitter
-    pub fn clone_tx(&self) -> SignalTx {
-        self.tx.clone()
-    }
-
     /// Takes a stream who's elements are convertible to `SignalTo`, and
     /// spawns a permanent takes for transmitting to the receiver.
     pub fn forever<T, S>(&mut self, stream: S)

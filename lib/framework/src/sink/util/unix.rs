@@ -9,7 +9,7 @@ use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tokio::{net::UnixStream, time::sleep};
+use tokio::net::UnixStream;
 use tokio_util::codec::Encoder;
 
 use crate::batch::EncodedEvent;
@@ -84,6 +84,7 @@ impl UnixConnector {
 
     async fn connect_backoff(&self) -> UnixStream {
         let mut backoff = Self::fresh_backoff();
+
         loop {
             match self.connect().await {
                 Ok(stream) => {
@@ -101,7 +102,7 @@ impl UnixConnector {
                         ?self.path
                     );
                     // TODO: metrics
-                    sleep(backoff.next().unwrap()).await;
+                    backoff.wait().await;
                 }
             }
         }
