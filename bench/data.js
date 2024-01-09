@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704779232370,
+  "lastUpdate": 1704779285468,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2fdace40f1955dcfa5be7dd8635a404c2af6023c",
-          "message": "chore(deps): bump proptest from 1.3.1 to 1.4.0 (#1414)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.3.1 to 1.4.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.3.1...v1.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-11-11T18:03:04+08:00",
-          "tree_id": "82cbba14054f69afa34ab97993069539e41f7e5a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2fdace40f1955dcfa5be7dd8635a404c2af6023c"
-        },
-        "date": 1699697099574,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 533030,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540060,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d7ff328a3e123f9e4b8e49bf993328ab3b847596",
+          "message": "chore(deps): bump crossbeam-queue from 0.3.10 to 0.3.11 (#1549)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.10 to 0.3.11.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.10...crossbeam-queue-0.3.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-09T13:45:41+08:00",
+          "tree_id": "e6824265b8a115e2cf8f63f201f884b5c1545e2a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d7ff328a3e123f9e4b8e49bf993328ab3b847596"
+        },
+        "date": 1704779271709,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 541540,
             "unit": "ns/op"
           }
         ]
