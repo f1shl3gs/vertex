@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::convert::Infallible;
 use std::fmt::Write;
 use std::hash::{Hash, Hasher};
-use std::io::Write as IoWrite;
+use std::io::Write as _;
 use std::net::SocketAddr;
 use std::ops::{Deref, DerefMut};
 use std::sync::Arc;
@@ -316,11 +316,10 @@ fn handle(
 
 fn should_compress(req: &Request<Body>) -> bool {
     match req.headers().get(http::header::ACCEPT_ENCODING) {
-        Some(value) => {
-            let value = value.to_str().unwrap_or("");
-
-            value.contains("gzip")
-        }
+        Some(value) => match value.to_str() {
+            Ok(value) => value.contains("gzip"),
+            Err(_err) => false,
+        },
         None => false,
     }
 }

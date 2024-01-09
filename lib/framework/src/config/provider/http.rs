@@ -36,7 +36,7 @@ pub struct RequestConfig {
 #[configurable_component(provider, name = "http")]
 #[derive(Clone)]
 #[serde(deny_unknown_fields)]
-pub struct HttpConfig {
+struct Config {
     /// The URL to download config
     #[configurable(required, format = "uri", example = "https://exampel.com/config")]
     url: Url,
@@ -46,29 +46,37 @@ pub struct HttpConfig {
     interval: Duration,
 
     tls: Option<TlsConfig>,
+
     /// Configures an HTTP/HTTPS proxy for Vertex to use. By default, the globally
     /// configured proxy is used.
     #[serde(default)]
     proxy: ProxyConfig,
+
+    /// HTTP headers to add to the request.
+    #[serde(default)]
+    headers: IndexMap<String, String>,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "http")]
-impl ProviderConfig for HttpConfig {
+impl ProviderConfig for Config {
     async fn build(&mut self, signal_handler: &mut SignalHandler) -> Result<Builder, Vec<String>> {
         let url = self.url.clone();
-
-        let tls_options = self.tls.take();
-        let poll_interval = self.interval;
-        // let request = self.request.clone();
+        let tls_config = self.tls.take();
         let proxy = ProxyConfig::from_env().merge(&self.proxy);
 
-        let mut cfs = Box::pin(poll_http(poll_interval, url, tls_options, proxy));
+        let mut cfs = Box::pin(poll_http(
+            self.interval,
+            url,
+            self.headers.clone(),
+            tls_config,
+            proxy,
+        ));
 
         let builder = match timeout(Duration::from_secs(20), cfs.next()).await {
             Ok(b) => b.expect("first build should not be empty"),
             Err(_err) => {
-                return Err(vec![format!("timeout for the first config")]);
+                return Err(vec!["timeout for the first config".to_string()]);
             }
         };
 
@@ -78,16 +86,19 @@ impl ProviderConfig for HttpConfig {
     }
 }
 
+/// Makes an HTTP request to the provided endpoint, returning the Body.
 async fn http_request(
     url: &Url,
+    headers: &IndexMap<String, String>,
     tls_config: &Option<TlsConfig>,
     proxy: &ProxyConfig,
 ) -> Result<Response<Body>, crate::Error> {
     let client = HttpClient::new(tls_config, proxy)?;
-
-    let req = Request::get(url.as_str())
-        .header(header::ACCEPT, "application/yaml")
-        .body(Body::empty())?;
+    let mut builder = Request::get(url.as_str()).header(header::ACCEPT, "application/yaml");
+    for (key, value) in headers {
+        builder = builder.header(key, value);
+    }
+    let req = builder.body(Body::empty())?;
 
     client.send(req).await.map_err(Into::into)
 }
@@ -96,11 +107,10 @@ fn watchable_response(resp: &Response<Body>) -> bool {
     const CHUNKED: &str = "chunked";
 
     match resp.headers().get("Transfer-Encoding") {
-        Some(hv) => hv
-            .as_bytes()
-            .windows(CHUNKED.len())
-            .any(|w| w == CHUNKED.as_bytes()),
-
+        Some(value) => match value.to_str() {
+            Ok(value) => value.contains(CHUNKED),
+            Err(_err) => false,
+        },
         None => false,
     }
 }
@@ -109,37 +119,40 @@ fn watchable_response(resp: &Response<Body>) -> bool {
 fn poll_http(
     interval: Duration,
     url: Url,
-    tls_options: Option<TlsConfig>,
+    headers: IndexMap<String, String>,
+    tls_config: Option<TlsConfig>,
     proxy: ProxyConfig,
 ) -> impl Stream<Item = Builder> {
-    let mut b = ExponentialBackoff::from_secs(3).max_delay(Duration::from_secs(60));
-    let mut backoff = move || {
-        let to_sleep = b.next().expect("backoff should always return a duration");
-
-        tokio::time::sleep(to_sleep)
-    };
-
     stream! {
         loop {
-            let resp = match http_request(&url, &tls_options, &proxy).await {
-                Ok(resp) => resp,
-                Err(err) => {
-                    warn!(message = "request failed", ?err);
-                    backoff().await;
+            // Before this loop starting, config is loaded already.
+            tokio::time::sleep(interval).await;
+
+            // Retry loop to fetch config
+            let mut backoff = ExponentialBackoff::from_secs(10).max_delay(5 * interval);
+            let resp = loop {
+                let resp = match http_request(&url, &headers, &tls_config, &proxy).await {
+                    Ok(resp) => resp,
+                    Err(err) => {
+                        warn!(message = "fetch request failed", ?err);
+                        backoff.wait().await;
+                        continue;
+                    }
+                };
+
+                if resp.status() != 200 {
+                    warn!(
+                        message = "fetch config failed, unexpected status code",
+                        ?url,
+                        code = ?resp.status(),
+                    );
+
+                    backoff.wait().await;
                     continue;
                 }
+
+                break resp
             };
-
-            if resp.status() != 200 {
-                warn!(
-                    message = "fetch config failed, unexpected status code",
-                    ?url,
-                    code = ?resp.status(),
-                );
-
-                backoff().await;
-                continue;
-            }
 
             if !watchable_response(&resp) {
                 let result = hyper::body::to_bytes(resp.into_body())
@@ -171,7 +184,7 @@ fn poll_http(
                                     error!(message = "load config builder failed", err)
                                 }
 
-                                backoff().await;
+                                backoff.wait().await;
                                 continue;
                             }
                         };
@@ -188,7 +201,7 @@ fn poll_http(
                             ?url
                         );
 
-                        backoff().await;
+                        backoff.wait().await;
 
                         continue
                     }
@@ -244,14 +257,6 @@ fn poll_http(
                     }
                 }
             }
-
-            debug!(
-                message = "HTTP provider is waiting",
-                ?interval,
-                url = ?url.as_str()
-            );
-
-            tokio::time::sleep(interval).await;
         }
     }
 }
@@ -262,7 +267,7 @@ mod tests {
 
     #[test]
     fn test_generate_config() {
-        let cfg = configurable::generate_config::<HttpConfig>();
-        serde_yaml::from_str::<HttpConfig>(&cfg).expect("Invalid config generated");
+        let cfg = configurable::generate_config::<Config>();
+        serde_yaml::from_str::<Config>(&cfg).expect("Invalid config generated");
     }
 }

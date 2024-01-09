@@ -3,10 +3,7 @@ use hyper::http::uri::InvalidUri;
 use serde::{Deserialize, Serialize};
 
 use super::{default_true, skip_serializing_if_default};
-use crate::http::{
-    proxy::{Custom, Intercept, Proxy, ProxyConnector},
-    NoProxy,
-};
+use crate::http::proxy::{Custom, Intercept, NoProxy, Proxy, ProxyConnector};
 
 fn from_env(key: &str) -> Option<String> {
     // use lowercase first and the uppercase

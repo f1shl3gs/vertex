@@ -1,9 +1,7 @@
-use std::{
-    net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr},
-    pin::Pin,
-    task::{Context, Poll},
-    time::Duration,
-};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
+use std::pin::Pin;
+use std::task::{Context, Poll};
+use std::time::Duration;
 
 use async_trait::async_trait;
 use backoff::ExponentialBackoff;
@@ -14,7 +12,7 @@ use event::{Event, EventContainer, EventStatus, Events, Finalizable};
 use futures::{future::BoxFuture, ready, stream::BoxStream, FutureExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tokio::{net::UdpSocket, sync::oneshot, time::sleep};
+use tokio::{net::UdpSocket, sync::oneshot};
 use tokio_util::codec::Encoder;
 
 use super::SinkBuildError;
@@ -141,6 +139,7 @@ impl UdpConnector {
 
     async fn connect_backoff(&self) -> UdpSocket {
         let mut backoff = Self::fresh_backoff();
+
         loop {
             match self.connect().await {
                 Ok(socket) => {
@@ -153,8 +152,9 @@ impl UdpConnector {
                         message = "Unable to connect",
                         %err
                     );
+
                     // TODO: metrics
-                    sleep(backoff.next().unwrap()).await;
+                    backoff.wait().await;
                 }
             }
         }

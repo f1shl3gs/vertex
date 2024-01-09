@@ -1,11 +1,9 @@
+use std::io::ErrorKind;
+use std::net::SocketAddr;
+use std::pin::Pin;
 use std::sync::Arc;
-use std::{
-    io::ErrorKind,
-    net::SocketAddr,
-    pin::Pin,
-    task::{Context, Poll},
-    time::Duration,
-};
+use std::task::{Context, Poll};
+use std::time::Duration;
 
 use async_trait::async_trait;
 use backoff::ExponentialBackoff;
@@ -17,7 +15,7 @@ use futures::{stream::BoxStream, task::noop_waker_ref, SinkExt, StreamExt};
 use rustls::ClientConfig;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tokio::{io::AsyncRead, io::ReadBuf, net::TcpStream, time::sleep};
+use tokio::{io::AsyncRead, io::ReadBuf, net::TcpStream};
 use tokio_rustls::TlsConnector;
 use tokio_util::codec::Encoder;
 
@@ -200,6 +198,7 @@ impl TcpConnector {
 
     async fn connect_backoff(&self) -> MaybeTlsStream<TcpStream> {
         let mut backoff = Self::fresh_backoff();
+
         loop {
             match self.connect().await {
                 Ok(socket) => {
@@ -213,7 +212,7 @@ impl TcpConnector {
                         %err
                     );
 
-                    sleep(backoff.next().unwrap()).await;
+                    backoff.wait().await
                 }
             }
         }

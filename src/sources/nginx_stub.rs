@@ -43,12 +43,11 @@ struct Config {
 #[typetag::serde(name = "nginx_stub")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let http_client = HttpClient::new(&self.tls, &cx.proxy)?;
-
+        let client = HttpClient::new(&self.tls, &cx.proxy)?;
         let mut sources = Vec::with_capacity(self.endpoints.len());
         for endpoint in self.endpoints.iter() {
             sources.push(NginxStub::new(
-                http_client.clone(),
+                client.clone(),
                 endpoint.clone(),
                 self.auth.clone(),
             )?);
