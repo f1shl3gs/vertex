@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704857718599,
+  "lastUpdate": 1704858159274,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "40213e74c6053ecf938b9e3af17139ebfaf69241",
-          "message": "sources/node: add selinux (#1442)\n\n* add selinux",
-          "timestamp": "2023-11-28T06:29:54+08:00",
-          "tree_id": "26ebb82658e3e3252172d08df7a70a350d64f07a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/40213e74c6053ecf938b9e3af17139ebfaf69241"
-        },
-        "date": 1701124891342,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 600,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40684.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a68164e05af4e808009c0e2e9a556b3d5102418b",
           "message": "fix btrfs (#1443)",
           "timestamp": "2023-11-28T21:00:24+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41538.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "630bc0df56329d0cb2fed9d8a052c36b2eab4d7c",
+          "message": "chore(deps): bump maxminddb from 0.23.0 to 0.24.0 (#1553)\n\nBumps [maxminddb](https://github.com/oschwald/maxminddb-rust) from 0.23.0 to 0.24.0.\r\n- [Release notes](https://github.com/oschwald/maxminddb-rust/releases)\r\n- [Changelog](https://github.com/oschwald/maxminddb-rust/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/oschwald/maxminddb-rust/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: maxminddb\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-10T11:31:25+08:00",
+          "tree_id": "78edbc90e1c6a841fab721a227cd584a043a6203",
+          "url": "https://github.com/f1shl3gs/vertex/commit/630bc0df56329d0cb2fed9d8a052c36b2eab4d7c"
+        },
+        "date": 1704858145468,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41518.5,
             "unit": "KiB"
           }
         ]
