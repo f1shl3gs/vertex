@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704857662846,
+  "lastUpdate": 1704857718599,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "56b3293703d418458f4182623d9407e9ba6376de",
-          "message": "deps: bump syslog_loose to 0.21.0 (#1417)",
-          "timestamp": "2023-11-14T00:43:26+08:00",
-          "tree_id": "b1004bfc1b90c5726251b8dc79b6c7a7ea41c05c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/56b3293703d418458f4182623d9407e9ba6376de"
-        },
-        "date": 1699894012322,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 423.26,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 42218,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 212980,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 426600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 158.88,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 15992,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 78949,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 159680,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bef2ea5ca9c4100c98f58d3884ab0965fc668c1f",
           "message": "deps: bump http to 0.2.11 (#1416)",
           "timestamp": "2023-11-14T00:43:50+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 161350,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "630bc0df56329d0cb2fed9d8a052c36b2eab4d7c",
+          "message": "chore(deps): bump maxminddb from 0.23.0 to 0.24.0 (#1553)\n\nBumps [maxminddb](https://github.com/oschwald/maxminddb-rust) from 0.23.0 to 0.24.0.\r\n- [Release notes](https://github.com/oschwald/maxminddb-rust/releases)\r\n- [Changelog](https://github.com/oschwald/maxminddb-rust/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/oschwald/maxminddb-rust/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: maxminddb\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-10T11:31:25+08:00",
+          "tree_id": "78edbc90e1c6a841fab721a227cd584a043a6203",
+          "url": "https://github.com/f1shl3gs/vertex/commit/630bc0df56329d0cb2fed9d8a052c36b2eab4d7c"
+        },
+        "date": 1704857702922,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 420.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 42168,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 213980,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 424060,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 158.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 15758,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 78864,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 158500,
             "unit": "ns/op"
           }
         ]
