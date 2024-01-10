@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1704857627863,
+  "lastUpdate": 1704857633518,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "56b3293703d418458f4182623d9407e9ba6376de",
-          "message": "deps: bump syslog_loose to 0.21.0 (#1417)",
-          "timestamp": "2023-11-14T00:43:26+08:00",
-          "tree_id": "b1004bfc1b90c5726251b8dc79b6c7a7ea41c05c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/56b3293703d418458f4182623d9407e9ba6376de"
-        },
-        "date": 1699893940572,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.469,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.818,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "630bc0df56329d0cb2fed9d8a052c36b2eab4d7c",
+          "message": "chore(deps): bump maxminddb from 0.23.0 to 0.24.0 (#1553)\n\nBumps [maxminddb](https://github.com/oschwald/maxminddb-rust) from 0.23.0 to 0.24.0.\r\n- [Release notes](https://github.com/oschwald/maxminddb-rust/releases)\r\n- [Changelog](https://github.com/oschwald/maxminddb-rust/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/oschwald/maxminddb-rust/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: maxminddb\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-10T11:31:25+08:00",
+          "tree_id": "78edbc90e1c6a841fab721a227cd584a043a6203",
+          "url": "https://github.com/f1shl3gs/vertex/commit/630bc0df56329d0cb2fed9d8a052c36b2eab4d7c"
+        },
+        "date": 1704857619054,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.666,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.918,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 181.75,
             "unit": "ns/op"
           }
         ]
