@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use bytes::Bytes;
@@ -64,7 +65,7 @@ impl DriverResponse for InfluxdbResponse {
 
 #[derive(Clone)]
 pub struct InfluxdbService {
-    client: HttpClient,
+    client: Arc<HttpClient>,
     endpoint: Uri,
     org: String,
     token: String,
@@ -80,7 +81,7 @@ impl Service<InfluxdbRequest> for InfluxdbService {
     }
 
     fn call(&mut self, req: InfluxdbRequest) -> Self::Future {
-        let mut client = self.client.clone();
+        let client = Arc::clone(&self.client);
         let uri = format!("{}?org={}&bucket={}", self.endpoint, self.org, req.bucket);
         let token = self.token.clone();
 
@@ -97,8 +98,7 @@ impl Service<InfluxdbRequest> for InfluxdbService {
             let req = builder
                 .body(Body::from(req.data))
                 .expect("building HTTP request failed unexpectedly");
-
-            let resp = client.call(req).in_current_span().await?;
+            let resp = client.send(req).in_current_span().await?;
             let (parts, body) = resp.into_parts();
             let body = body::to_bytes(body).await?;
 
@@ -114,7 +114,7 @@ impl Service<InfluxdbRequest> for InfluxdbService {
 impl InfluxdbService {
     pub fn new(client: HttpClient, endpoint: Uri, org: String, token: String) -> Self {
         Self {
-            client,
+            client: Arc::new(client),
             endpoint,
             org,
             token,
