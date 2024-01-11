@@ -312,7 +312,7 @@ prost-build = { version = "0.12.3", default-features = false }
 hostname = { git = "https://github.com/svartalf/hostname.git", rev = "ecf28ebbf4511d5d35f90727f66e0ca4b30d5059" }
 
 [dev-dependencies]
-base64 = { version = "0.21.6", default-features = false }
+base64 = { version = "0.21.7", default-features = false }
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
 event = { path = "lib/event", features = ["string_path"] }
 framework = { path = "lib/framework", features = ["test-util"] }
