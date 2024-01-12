@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705030327979,
+  "lastUpdate": 1705030782478,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "456adfdf0644ae7052eb028f8a13511158aabb30",
-          "message": "sources/node: add metric `node_cpu_scaling_governor` (#1445)\n\n* add metric `node_cpu_scaling_governor`",
-          "timestamp": "2023-12-02T17:37:16+08:00",
-          "tree_id": "642a9fbfb6c59f41390a304c68398cf911011e12",
-          "url": "https://github.com/f1shl3gs/vertex/commit/456adfdf0644ae7052eb028f8a13511158aabb30"
-        },
-        "date": 1701510526859,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 604,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40688.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b617385e83e398e13c11dfff657fd6e750ac4cf5",
           "message": "sources/node: implement bcache (#1446)\n\n* implement bcache",
           "timestamp": "2023-12-02T18:20:02+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41518.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "377117877d8a6a913ec0ffd38ef2b4f3e1753d94",
+          "message": "chore(deps): bump base64 from 0.21.6 to 0.21.7 (#1555)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.6 to 0.21.7.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.6...v0.21.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-12T11:28:23+08:00",
+          "tree_id": "3a5c4af80e3f6839ef09b30d15462e673b002b42",
+          "url": "https://github.com/f1shl3gs/vertex/commit/377117877d8a6a913ec0ffd38ef2b4f3e1753d94"
+        },
+        "date": 1705030766883,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41539.1,
             "unit": "KiB"
           }
         ]
