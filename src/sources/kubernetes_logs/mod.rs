@@ -70,9 +70,6 @@ pub struct Config {
     #[serde(default = "default_true")]
     auto_partial_merge: bool,
 
-    /// Override global data_dir
-    data_dir: Option<PathBuf>,
-
     /// A list of glob patterns to exclude from reading the files.
     #[serde(default = "default_path_exclusion")]
     exclude_paths_glob_patterns: Vec<PathBuf>,
