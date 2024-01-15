@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705290207074,
+  "lastUpdate": 1705290658683,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6ba259ee11a0617fdacdcec47e53c9f8e968eecd",
-          "message": "chore(ci): bump actions/labeler from 4 to 5 (#1448)\n\nBumps [actions/labeler](https://github.com/actions/labeler) from 4 to 5.\r\n- [Release notes](https://github.com/actions/labeler/releases)\r\n- [Commits](https://github.com/actions/labeler/compare/v4...v5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: actions/labeler\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-05T18:23:15+08:00",
-          "tree_id": "1a61fd35c4be04ddc8ae8ddef777d8f7b5034fd3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6ba259ee11a0617fdacdcec47e53c9f8e968eecd"
-        },
-        "date": 1701772476500,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 592,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40755.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "633861b30e4a693797c3f247e3bf8875ffdeb608",
           "message": "chore(deps): bump snap from 1.1.0 to 1.1.1 (#1449)\n\nBumps [snap](https://github.com/BurntSushi/rust-snappy) from 1.1.0 to 1.1.1.\r\n- [Release notes](https://github.com/BurntSushi/rust-snappy/releases)\r\n- [Commits](https://github.com/BurntSushi/rust-snappy/compare/1.1.0...1.1.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: snap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-12-06T12:42:17+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41518.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "93e988a62a4cc20c718882864d056da1f72bcb53",
+          "message": "remove data_dir from config (#1558)",
+          "timestamp": "2024-01-15T11:39:46+08:00",
+          "tree_id": "2e93d8e9a390cea3ea17562c913fabf7014e8678",
+          "url": "https://github.com/f1shl3gs/vertex/commit/93e988a62a4cc20c718882864d056da1f72bcb53"
+        },
+        "date": 1705290644121,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 572,
             "unit": "s"
           },
           {
