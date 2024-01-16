@@ -55,7 +55,7 @@ const fn default_delay_deletion() -> Duration {
 pub struct Config {
     /// Specifies the label selector to filter `Pod`s with, to be used in
     /// addition to the built-in `vertex.io/exclude` filter
-    extra_label_selector: Option<String>,
+    label_selector: Option<String>,
 
     /// The `name` of the Kubernetes `Node` that Vertex runs at.
     /// Required to filter the `Pod`s to only include the ones with the
@@ -64,7 +64,7 @@ pub struct Config {
 
     /// Specifies the field selector to filter `Pod`s with, to be used in
     /// addition to the built-in `Node` filter.
-    extra_field_selector: Option<String>,
+    field_selector: Option<String>,
 
     /// Automatically merge partial events.
     #[serde(default = "default_true")]
@@ -114,7 +114,7 @@ impl Config {
             None => std::env::var("VERTEX_NODE_NAME"),
         }?;
 
-        let selector = match &self.extra_field_selector {
+        let selector = match &self.field_selector {
             Some(extra) => format!("spec.nodeName={},{}", node_name, extra),
             None => format!("spec.nodeName={}", node_name),
         };
@@ -123,9 +123,7 @@ impl Config {
     }
 
     fn prepare_label_selector(&self) -> Option<String> {
-        self.extra_label_selector
-            .as_ref()
-            .map(|extra| extra.to_string())
+        self.label_selector.as_ref().map(|extra| extra.to_string())
     }
 }
 
@@ -159,7 +157,6 @@ impl SourceConfig for Config {
     }
 }
 
-#[derive(Clone)]
 struct LogSource {
     source: String,
     field_selector: Option<String>,
@@ -198,17 +195,14 @@ impl LogSource {
         tokio::spawn(async move {
             info!(
                 message = "Obtained Kubernetes Node name to collect logs for (self)",
-                label_selector = ?&label_selector,
-                field_selector = ?&field_selector,
+                label_selector, field_selector,
             );
 
-            let mut watch_config = watcher::Config::default();
-            if let Some(fs) = field_selector {
-                watch_config = watch_config.fields(&fs)
-            }
-            if let Some(ls) = label_selector {
-                watch_config = watch_config.labels(&ls)
-            }
+            let watch_config = watcher::Config {
+                field_selector,
+                label_selector,
+                ..Default::default()
+            };
 
             let mut rfl = reflector::reflector(rfl_store, watcher(api, watch_config))
                 .take_until(rfl_shutdown)
@@ -275,11 +269,15 @@ impl LogSource {
             }
 
             checkpoints.update(line.fingerprint, line.offset);
+
             log
         });
 
+        // send events
         tokio::spawn(async move { output.send_event_stream(&mut events).await });
 
+        // `spawn_blocking` will run this closure in another thread, so our tokio
+        // workers wouldn't be blocked.
         tokio::task::spawn_blocking(move || {
             let result = harvester.run(tx, shutdown.clone(), shutdown.clone(), checkpointer);
 
