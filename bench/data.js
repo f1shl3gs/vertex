@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705388406774,
+  "lastUpdate": 1705388855610,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "633861b30e4a693797c3f247e3bf8875ffdeb608",
-          "message": "chore(deps): bump snap from 1.1.0 to 1.1.1 (#1449)\n\nBumps [snap](https://github.com/BurntSushi/rust-snappy) from 1.1.0 to 1.1.1.\r\n- [Release notes](https://github.com/BurntSushi/rust-snappy/releases)\r\n- [Commits](https://github.com/BurntSushi/rust-snappy/compare/1.1.0...1.1.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: snap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-06T12:42:17+08:00",
-          "tree_id": "cf0379863c7fa34be79a2a0c12e394a87a8f86ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/633861b30e4a693797c3f247e3bf8875ffdeb608"
-        },
-        "date": 1701838400392,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40754.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41518.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1664e0ef486da4dece674f679d8fcece2cf437a0",
+          "message": "small refactoring (#1559)",
+          "timestamp": "2024-01-16T14:56:32+08:00",
+          "tree_id": "de4b181907611ffdf8b1abb603a028933e3450ba",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1664e0ef486da4dece674f679d8fcece2cf437a0"
+        },
+        "date": 1705388841770,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 562,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41514.6,
             "unit": "KiB"
           }
         ]
