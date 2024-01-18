@@ -8,16 +8,18 @@ use super::frame::{Error as FrameErr, Frame};
 #[derive(Debug, thiserror::Error)]
 pub enum RespErr {
     #[error("{0}")]
-    ServerErr(String),
+    Server(String),
+
     #[error(transparent)]
     Io(#[from] io::Error),
+
     #[error(transparent)]
     Frame(#[from] FrameErr),
 }
 
 impl From<String> for RespErr {
     fn from(s: String) -> Self {
-        RespErr::ServerErr(s)
+        RespErr::Server(s)
     }
 }
 
@@ -30,7 +32,7 @@ impl FromRespValue for i64 {
         match frame {
             Frame::Simple(s) => s
                 .parse()
-                .map_err(|err: ParseIntError| RespErr::ServerErr(err.to_string())),
+                .map_err(|err: ParseIntError| RespErr::Server(err.to_string())),
             _ => Err(FrameErr::InvalidResponseType.into()),
         }
     }
@@ -62,7 +64,7 @@ impl FromRespValue for String {
         match frame {
             Frame::Simple(s) => Ok(s),
             Frame::Bulk(b) => String::from_utf8(b.to_vec())
-                .map_err(|_err| RespErr::ServerErr("invalid utf8 bulk".to_string())),
+                .map_err(|_err| RespErr::Server("invalid utf8 bulk".to_string())),
             _ => Err(FrameErr::InvalidResponseType.into()),
         }
     }

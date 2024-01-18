@@ -130,10 +130,9 @@ fn parse_hex(v: &[u8]) -> Result<u64, &str> {
 
 #[cfg(test)]
 mod tests {
-    #![allow(clippy::print_stdout)]
-
     use super::*;
-    use futures_util::TryStreamExt;
+
+    use futures::TryStreamExt;
     use tokio_util::codec::FramedRead;
 
     #[test]

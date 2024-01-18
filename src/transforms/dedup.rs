@@ -61,7 +61,6 @@ fn default_cache_config() -> NonZeroUsize {
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         let cache = Arc::new(Mutex::new(LruCache::new(self.cache)));
-
         let dedup = Dedup {
             cache,
             fields: self.fields.clone(),

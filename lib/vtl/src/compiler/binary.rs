@@ -436,8 +436,7 @@ impl Expression for Binary {
                     self.rhs.type_def(state)
                 } else {
                     // unknown if lhs is true or false
-                    // lhs_def.
-                    todo!()
+                    TypeDef::boolean()
                 }
             }
 

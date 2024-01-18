@@ -36,11 +36,10 @@ impl Function for Del {
         cx: FunctionCompileContext,
         mut arguments: ArgumentList,
     ) -> Result<FunctionCall, SyntaxError> {
-        let expr = arguments.get();
-        let span = expr.span;
-        let query = match expr.node {
-            Expr::Query(query) => span.with(query),
-            _expr => {
+        let Spanned { node, span } = arguments.get();
+        let query = match node {
+            Expr::Query(query) => Spanned::new(query, span),
+            _ => {
                 return Err(SyntaxError::InvalidFunctionArgumentType {
                     function: self.identifier(),
                     argument: "path",
@@ -106,7 +105,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".key").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok("value".into()),
         )
     }
@@ -116,7 +115,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".foo").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(Value::Null),
         )
     }
@@ -126,7 +125,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".array").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(value!([1, 2, 3])),
         )
     }
@@ -136,7 +135,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".null").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(Value::Null),
         )
     }
@@ -146,7 +145,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".map").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(value!({"k1": "v1"})),
         )
     }
@@ -156,7 +155,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".array[1]").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(Value::Integer(2)),
         )
     }

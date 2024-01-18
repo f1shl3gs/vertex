@@ -1,17 +1,17 @@
 pub fn distance(s1: &[u8], s2: &[u8]) -> usize {
     // Early exit if one of the strings is empty
-    let v1len = s1.len();
-    let v2len = s2.len();
-    if v1len == 0 {
-        return v2len;
+    let s1len = s1.len();
+    let s2len = s2.len();
+    if s1len == 0 {
+        return s2len;
     }
-    if v2len == 0 {
-        return v1len;
+    if s2len == 0 {
+        return s1len;
     }
 
     #[inline]
-    fn min3<T: Ord>(v1: T, v2: T, v3: T) -> T {
-        std::cmp::min(v1, std::cmp::min(v2, v3))
+    fn min3<T: Ord>(s1: T, s2: T, s3: T) -> T {
+        std::cmp::min(s1, std::cmp::min(s2, s3))
     }
 
     #[inline]
@@ -23,12 +23,12 @@ pub fn distance(s1: &[u8], s2: &[u8]) -> usize {
         }
     }
 
-    let mut column: Vec<usize> = (0..v1len + 1).collect();
-    for x in 1..v2len + 1 {
+    let mut column: Vec<usize> = (0..s1len + 1).collect();
+    for x in 1..s2len + 1 {
         column[0] = x;
         let mut lastdiag = x - 1;
 
-        for y in 1..v1len + 1 {
+        for y in 1..s1len + 1 {
             let olddiag = column[y];
             column[y] = min3(
                 column[y] + 1,
@@ -39,7 +39,7 @@ pub fn distance(s1: &[u8], s2: &[u8]) -> usize {
         }
     }
 
-    column[v1len]
+    column[s1len]
 }
 
 #[cfg(test)]

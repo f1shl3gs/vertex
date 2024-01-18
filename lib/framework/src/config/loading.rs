@@ -4,9 +4,9 @@ use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
 use once_cell::sync::Lazy;
-use regex::{Captures, Regex};
 use tracing::error;
 
+use super::env::interpolate;
 use super::validation;
 use crate::config::{format, Builder, Config, ConfigPath, Format, FormatHint};
 use crate::signal;
@@ -152,7 +152,7 @@ pub fn load(
         }
     }
 
-    let (with_vars, warnings) = interpolate(&ss, &vars);
+    let (with_vars, warnings) = interpolate(&ss, &vars, false)?;
 
     format::deserialize(&with_vars, format).map(|builder| (builder, warnings))
 }
@@ -170,31 +170,6 @@ pub fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String
         });
 
     Ok(config)
-}
-
-/// (result, warnings)
-fn interpolate(input: &str, vars: &HashMap<String, String>) -> (String, Vec<String>) {
-    let mut warnings = Vec::new();
-    let re = Regex::new(r"\$\$|\$(\w+)|\$\{(\w+)(?::-([^}]+)?)?\}").unwrap();
-    let interpolated = re
-        .replace_all(input, |caps: &Captures<'_>| {
-            caps.get(1)
-                .or_else(|| caps.get(2))
-                .map(|m| m.as_str())
-                .map(|name| {
-                    vars.get(name).map(|val| val.as_str()).unwrap_or_else(|| {
-                        caps.get(3).map(|m| m.as_str()).unwrap_or_else(|| {
-                            warnings.push(format!("Unknown env var in config. name = {:?}", name));
-                            ""
-                        })
-                    })
-                })
-                .unwrap_or("$")
-                .to_string()
-        })
-        .into_owned();
-
-    (interpolated, warnings)
 }
 
 /// Merge the paths coming from different cli flags with different formats

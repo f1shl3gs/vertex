@@ -18,10 +18,6 @@ use futures::{Stream, StreamExt};
 use metrics::Counter;
 use serde::{Deserialize, Serialize};
 
-const fn default_increase_by_value() -> bool {
-    false
-}
-
 fn default_buckets() -> Vec<f64> {
     vec![
         0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0,
@@ -33,7 +29,6 @@ fn default_buckets() -> Vec<f64> {
 enum MetricType {
     Counter {
         /// Controls how to increase the counter.
-        #[serde(default = "default_increase_by_value")]
         increment_by_value: bool,
     },
     Gauge,

@@ -36,17 +36,13 @@ const fn default_restart_delay() -> Duration {
     Duration::from_secs(1)
 }
 
-#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 enum RestartPolicy {
     Always,
-    Never,
-}
 
-impl Default for RestartPolicy {
-    fn default() -> Self {
-        Self::Never
-    }
+    #[default]
+    Never,
 }
 
 #[derive(Configurable, Debug, Deserialize, Serialize)]
@@ -83,6 +79,7 @@ const fn default_maximum_buffer_size() -> usize {
 pub enum ExecConfigError {
     #[error("A non-empty list for command must be provided")]
     CommandEmpty,
+
     #[error("The maximum buffer size must be greater than zero")]
     ZeroBuffer,
 }
@@ -120,6 +117,7 @@ pub struct Config {
     maximum_buffer_size: usize,
 
     framing: Option<FramingConfig>,
+
     #[serde(default)]
     decoding: DeserializerConfig,
 }

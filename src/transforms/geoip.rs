@@ -51,7 +51,7 @@ struct Config {
 #[typetag::serde(name = "geoip")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let database = maxminddb::Reader::open_readfile(self.database.clone())?;
+        let database = maxminddb::Reader::open_readfile(&self.database)?;
 
         Ok(Transform::function(Geoip {
             database: Arc::new(database),

@@ -40,7 +40,7 @@ pub async fn serve(
     config: ThriftHttpConfig,
     shutdown: ShutdownSignal,
     output: Pipeline,
-) -> framework::Result<()> {
+) -> crate::Result<()> {
     let output = Arc::new(Mutex::new(output));
     let listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
 

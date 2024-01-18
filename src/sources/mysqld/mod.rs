@@ -29,10 +29,13 @@ pub enum MysqlError {
         err: sqlx::Error,
         query: &'static str,
     },
+
     #[error("parse mysql version failed, version: {0}")]
     ParseMysqlVersion(String),
+
     #[error("query slave status failed")]
     QuerySlaveStatus,
+
     #[error("task join failed, err: {0}")]
     TaskJoin(#[from] tokio::task::JoinError),
 }

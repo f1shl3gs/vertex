@@ -7,7 +7,7 @@ use std::time::{Duration, Instant};
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
 use futures::future::{select, Either};
-use futures::{stream, Sink, SinkExt};
+use futures::{Sink, SinkExt};
 use tokio::time::sleep;
 
 use super::checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
@@ -69,7 +69,7 @@ where
     // completed.
     pub fn run<C, S1, S2>(
         self,
-        mut chans: C,
+        mut output: C,
         mut shutdown: S1,
         shutdown_checkpointer: S2,
         mut checkpointer: Checkpointer,
@@ -219,8 +219,7 @@ where
 
             if !lines.is_empty() {
                 let sending = std::mem::take(&mut lines);
-                let mut stream = stream::once(futures::future::ok(sending));
-                if let Err(err) = self.handle.block_on(chans.send_all(&mut stream)) {
+                if let Err(err) = self.handle.block_on(output.send(sending)) {
                     error!(
                         message = "Output channel closed",
                         %err

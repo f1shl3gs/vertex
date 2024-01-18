@@ -284,9 +284,9 @@ pub fn compile_and_run<F: Function>(
 
     let mut arguments_list = ArgumentList::new(func.identifier(), func.parameters());
     for argument in arguments {
-        arguments_list
-            .push(Spanned::new(argument, Span::empty()), &state)
-            .expect("invalid argument");
+        if let Err(err) = arguments_list.push(Spanned::new(argument, Span::empty()), &state) {
+            panic!("{}", err)
+        }
     }
 
     let call = func

@@ -5,7 +5,7 @@ use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{SyncTransform, Transform, TransformOutputsBuf};
 use indexmap::IndexMap;
 use value::Value;
-use vtl::{Diagnostic, Program, ValueKind};
+use vtl::{Diagnostic, Program};
 
 use crate::common::vtl::LogTarget;
 
@@ -88,10 +88,20 @@ impl SyncTransform for Route {
                             }
                             value => {
                                 failed += 1;
+                                let typ = match value {
+                                    Value::Bytes(_) => "bytes",
+                                    Value::Float(_) => "float",
+                                    Value::Integer(_) => "integer",
+                                    Value::Boolean(_) => "boolean",
+                                    Value::Timestamp(_) => "timestamp",
+                                    Value::Object(_) => "object",
+                                    Value::Array(_) => "array",
+                                    Value::Null => "null",
+                                };
 
                                 warn!(
                                     message = "unexpected value type resolved",
-                                    r#type = value.kind().to_string(),
+                                    r#type = typ,
                                     internal_log_rate_limit = true
                                 )
                             }

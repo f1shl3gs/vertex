@@ -142,13 +142,9 @@ impl Expression for Expr {
             Expr::Array(_) => Kind::ARRAY.into(),
             Expr::Object(_) => Kind::OBJECT.into(),
             Expr::Call(call) => call.type_def(state),
-            Expr::Binary(b) => b.type_def(state),
-            Expr::Unary(u) => u.type_def(state),
-
-            _ => TypeDef {
-                fallible: false,
-                kind: Kind::ANY,
-            },
+            Expr::Binary(binary) => binary.type_def(state),
+            Expr::Unary(unary) => unary.type_def(state),
+            Expr::Query(query) => query.type_def(state),
         }
     }
 }

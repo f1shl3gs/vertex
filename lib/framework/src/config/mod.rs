@@ -1,5 +1,6 @@
 mod builder;
 mod diff;
+mod env;
 mod extension;
 mod format;
 mod global;
@@ -18,32 +19,30 @@ mod validation;
 #[cfg(all(unix, not(target_os = "macos")))]
 pub mod watcher;
 
-// re-export
-pub use diff::ConfigDiff;
-pub use extension::{ExtensionConfig, ExtensionContext};
-pub use format::{Format, FormatHint};
-pub use helper::*;
-pub use id::{ComponentKey, OutputId};
-pub use loading::{load, load_builder_from_paths, load_from_str, merge_path_lists, process_paths};
-pub use proxy::ProxyConfig;
-pub use sink::{SinkConfig, SinkContext};
-pub use source::{SourceConfig, SourceContext};
-pub use transform::{TransformConfig, TransformContext};
-pub use uri::*;
-pub use validation::warnings;
-
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::BitOr;
 use std::path::PathBuf;
 
-use ::serde::{Deserialize, Serialize};
 pub use builder::Builder;
 pub use global::GlobalOptions;
+use serde::{Deserialize, Serialize};
 // IndexMap preserves insertion order, allowing us to output errors in the
 // same order they are present in the file.
+pub use diff::ConfigDiff;
+pub use extension::{ExtensionConfig, ExtensionContext};
+pub use format::{Format, FormatHint};
+pub use helper::{default_interval, default_true, serde_regex, skip_serializing_if_default};
+pub use id::{ComponentKey, OutputId};
 use indexmap::IndexMap;
 pub use loading::load_from_paths_with_provider;
+pub use loading::{load, load_builder_from_paths, load_from_str, merge_path_lists, process_paths};
+pub use proxy::ProxyConfig;
 pub use resource::{Protocol, Resource};
+pub use sink::{SinkConfig, SinkContext};
+pub use source::{SourceConfig, SourceContext};
+pub use transform::{TransformConfig, TransformContext};
+pub use uri::UriSerde;
+pub use validation::warnings;
 
 pub use crate::config::sink::SinkOuter;
 use crate::config::source::SourceOuter;

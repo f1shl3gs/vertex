@@ -1,4 +1,4 @@
-use std::convert::TryFrom;
+use std::num::ParseIntError;
 use std::ops::Sub;
 use std::time::Duration;
 
@@ -12,12 +12,6 @@ use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use framework::Source;
 use hyper::{Body, StatusCode, Uri};
-use nom::{
-    bytes::complete::{tag, take_while_m_n},
-    combinator::{all_consuming, map_res},
-    error::ErrorKind,
-    sequence::{preceded, terminated, tuple},
-};
 use thiserror::Error;
 
 #[configurable_component(source, name = "nginx_stub")]
@@ -100,21 +94,21 @@ impl SourceConfig for Config {
 }
 
 #[derive(Debug, Error)]
-enum BuildError {
-    #[error("Failed to parse endpoint: {0}")]
-    HostInvalidUri(http::uri::InvalidUri),
-}
-
-#[derive(Debug, Error)]
 enum NginxError {
     #[error("build http request failed: {0}")]
     Http(#[from] http::Error),
+
     #[error("send http request failed: {0}")]
     Request(#[from] HttpError),
+
     #[error("invalid response status: {0}")]
     InvalidResponseStatus(StatusCode),
-    #[error("failed to parse nginx stub status, kind: {0:?}")]
-    ParseError(ErrorKind),
+
+    #[error("failed to parse {field}, err: {err}")]
+    Parse {
+        err: ParseIntError,
+        field: &'static str,
+    },
 }
 
 #[derive(Debug)]
@@ -141,7 +135,7 @@ impl NginxStub {
     }
 
     fn get_endpoint_host(endpoint: &str) -> crate::Result<String> {
-        let uri: Uri = endpoint.parse().map_err(BuildError::HostInvalidUri)?;
+        let uri: Uri = endpoint.parse()?;
 
         let host = match (uri.host().unwrap_or(""), uri.port()) {
             (host, None) => host.to_owned(),
@@ -246,7 +240,7 @@ async fn get_stub_status(
         status => return Err(NginxError::InvalidResponseStatus(status)),
     };
 
-    NginxStubStatus::try_from(String::from_utf8_lossy(&body).as_ref())
+    parse(String::from_utf8_lossy(&body).as_ref())
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -260,49 +254,49 @@ struct NginxStubStatus {
     waiting: u64,
 }
 
-fn get_u64(input: &str) -> nom::IResult<&str, u64, nom::error::Error<&str>> {
-    map_res(
-        take_while_m_n(1, 20, |c: char| c.is_ascii_digit()),
-        |s: &str| s.parse::<u64>(),
-    )(input)
-}
+// The `ngx_http_stub_status_module` response:
+// https://github.com/nginx/nginx/blob/master/src/http/modules/ngx_http_stub_status_module.c#L137-L145
+fn parse(input: &str) -> Result<NginxStubStatus, NginxError> {
+    let parts = input.split_ascii_whitespace().collect::<Vec<_>>();
 
-impl<'a> TryFrom<&'a str> for NginxStubStatus {
-    type Error = NginxError;
+    let active = parts[2].parse().map_err(|err| NginxError::Parse {
+        err,
+        field: "active",
+    })?;
+    let accepts = parts[7].parse().map_err(|err| NginxError::Parse {
+        err,
+        field: "accepts",
+    })?;
+    let handled = parts[8].parse().map_err(|err| NginxError::Parse {
+        err,
+        field: "handled",
+    })?;
+    let requests = parts[9].parse().map_err(|err| NginxError::Parse {
+        err,
+        field: "requests",
+    })?;
+    let reading = parts[11].parse().map_err(|err| NginxError::Parse {
+        err,
+        field: "reading",
+    })?;
+    let writing = parts[13].parse().map_err(|err| NginxError::Parse {
+        err,
+        field: "writing",
+    })?;
+    let waiting = parts[15].parse().map_err(|err| NginxError::Parse {
+        err,
+        field: "waiting",
+    })?;
 
-    // The `ngx_http_stub_status_module` response:
-    // https://github.com/nginx/nginx/blob/master/src/http/modules/ngx_http_stub_status_module.c#L137-L145
-    fn try_from(input: &'a str) -> Result<Self, Self::Error> {
-        // `usize::MAX` eq `18446744073709551615` (20 char)
-        match all_consuming(tuple((
-            preceded(tag("Active connections: "), get_u64),
-            preceded(tag(" \nserver accepts handled requests\n "), get_u64),
-            preceded(tag(" "), get_u64),
-            preceded(tag(" "), get_u64),
-            preceded(tag(" \nReading: "), get_u64),
-            preceded(tag(" Writing: "), get_u64),
-            terminated(preceded(tag(" Waiting: "), get_u64), tag(" \n")),
-        )))(input)
-        {
-            Ok((_, (active, accepts, handled, requests, reading, writing, waiting))) => {
-                Ok(NginxStubStatus {
-                    active,
-                    accepts,
-                    handled,
-                    requests,
-                    reading,
-                    writing,
-                    waiting,
-                })
-            }
-
-            Err(err) => match err {
-                nom::Err::Error(err) => Err(NginxError::ParseError(err.code)),
-
-                nom::Err::Incomplete(_) | nom::Err::Failure(_) => unreachable!(),
-            },
-        }
-    }
+    Ok(NginxStubStatus {
+        active,
+        accepts,
+        handled,
+        requests,
+        reading,
+        writing,
+        waiting,
+    })
 }
 
 #[cfg(test)]
@@ -322,7 +316,7 @@ mod tests {
                     Reading: 6 Writing: 179 Waiting: 106 \n";
 
         assert_eq!(
-            NginxStubStatus::try_from(input).expect("valid data"),
+            parse(input).expect("valid data"),
             NginxStubStatus {
                 active: 291,
                 accepts: 16630948,

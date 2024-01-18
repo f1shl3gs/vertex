@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use std::ops::{BitAnd, BitOr};
+use std::ops::BitOr;
 
 use value::Value;
 
@@ -14,16 +14,12 @@ impl BitOr for Kind {
     }
 }
 
-impl BitAnd for Kind {
-    type Output = Kind;
-
-    fn bitand(self, rhs: Self) -> Self::Output {
-        Kind(self.0 & rhs.0)
-    }
-}
-
 impl Display for Kind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        if *self == Kind::ANY {
+            return f.write_str("any");
+        }
+
         let mut kinds = vec![];
 
         if self.contains(Kind::BYTES) {

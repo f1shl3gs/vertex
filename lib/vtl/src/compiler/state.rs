@@ -32,7 +32,7 @@ pub struct Variable {
 impl Default for Variable {
     fn default() -> Self {
         Variable {
-            name: "".to_string(),
+            name: String::default(),
             visible: true,
             value: Value::Null,
         }

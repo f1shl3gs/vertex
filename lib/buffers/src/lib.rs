@@ -26,9 +26,10 @@ use serde::{Deserialize, Serialize};
 extern crate tracing;
 
 #[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Copy, Clone, Default, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum WhenFull {
+    #[default]
     Block,
     DropNewest,
     Overflow,
@@ -45,12 +46,6 @@ impl Arbitrary for WhenFull {
         } else {
             WhenFull::DropNewest
         }
-    }
-}
-
-impl Default for WhenFull {
-    fn default() -> Self {
-        Self::Block
     }
 }
 
