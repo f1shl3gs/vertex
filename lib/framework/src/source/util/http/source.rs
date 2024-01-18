@@ -34,12 +34,11 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         tls: &Option<TlsConfig>,
         auth: &Option<HttpSourceAuthConfig>,
         cx: SourceContext,
-        acknowledgements: bool,
     ) -> crate::Result<Source> {
         let path = path.to_owned();
         let auth = HttpSourceAuth::try_from(auth.as_ref())?;
         let listener = MaybeTlsListener::bind(&address, tls).await?;
-        let acknowledgements = cx.acknowledgements() || acknowledgements;
+        let acknowledgements = cx.acknowledgements();
         let shutdown = cx.shutdown;
         let output = cx.output;
         let inner = Arc::new(Inner {

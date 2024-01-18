@@ -189,35 +189,6 @@ fn get_basic_auth(authority: &Authority) -> (Authority, Option<Auth>) {
     }
 }
 
-pub fn protocol_endpoint(uri: Uri) -> (String, String) {
-    let mut parts = uri.into_parts();
-
-    // Drop any username and password
-    parts.authority = parts.authority.map(|auth| {
-        let host = auth.host();
-        match auth.port() {
-            None => host.to_string(),
-            Some(port) => format!("{}:{}", host, port),
-        }
-        .parse()
-        .unwrap_or_else(|_| unreachable!())
-    });
-
-    // Drop the query and fragment
-    parts.path_and_query = parts.path_and_query.map(|pq| {
-        pq.path()
-            .parse::<PathAndQuery>()
-            .unwrap_or_else(|_| unreachable!())
-    });
-
-    (
-        parts.scheme.clone().unwrap_or(Scheme::HTTP).as_str().into(),
-        Uri::from_parts(parts)
-            .unwrap_or_else(|_| unreachable!())
-            .to_string(),
-    )
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -256,30 +227,6 @@ mod tests {
                         password: password.to_owned(),
                     }
                 })
-            );
-        }
-    }
-
-    #[test]
-    fn protocol_endpoint_parses_urls() {
-        let tests = [
-            ("http://example.com/", "http", "http://example.com/"),
-            (
-                "https://user:pass@example.org:123/path?query",
-                "https",
-                "https://example.org:123/path",
-            ),
-            (
-                "gopher://example.net:123/path?foo=bar#frag,emt",
-                "gopher",
-                "gopher://example.net:123/path",
-            ),
-        ];
-
-        for (input, protocol, endpoint) in tests {
-            assert_eq!(
-                protocol_endpoint(input.parse().unwrap()),
-                (protocol.into(), endpoint.into())
             );
         }
     }

@@ -1,9 +1,7 @@
-use std::{
-    collections::{HashMap, HashSet},
-    fmt::{Display, Formatter},
-    hash::Hash,
-    net::SocketAddr,
-};
+use std::collections::{HashMap, HashSet};
+use std::fmt::{Display, Formatter};
+use std::hash::Hash;
+use std::net::SocketAddr;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Protocol {

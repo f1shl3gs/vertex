@@ -15,11 +15,6 @@ impl Span {
         }
     }
 
-    #[inline]
-    pub fn with<T>(self, node: T) -> Spanned<T> {
-        Spanned::new(node, self)
-    }
-
     #[cfg(test)]
     pub fn empty() -> Span {
         Span { start: 0, end: 0 }

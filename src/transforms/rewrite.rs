@@ -9,17 +9,6 @@ use vtl::{Diagnostic, Program};
 
 use crate::common::vtl::{precompute_metric_value, LogTarget, MetricTarget};
 
-/// ErrorMode determines how this transformer reacts to errors.
-#[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize, PartialEq)]
-enum ErrorMode {
-    /// Drop the event, and write a log.
-    Drop,
-
-    /// Skip this error, and continue to transform the event.
-    #[default]
-    Continue,
-}
-
 #[derive(Configurable, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 enum Source {

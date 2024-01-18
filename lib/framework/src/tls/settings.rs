@@ -6,9 +6,8 @@ use std::{fs, io};
 use configurable::Configurable;
 use rustls::client::{ServerCertVerified, ServerCertVerifier};
 use rustls::server::{AllowAnyAnonymousOrAuthenticatedClient, NoClientAuth};
-use rustls::{
-    Certificate, ClientConfig, Error, PrivateKey, RootCertStore, ServerConfig, ServerName,
-};
+use rustls::{Certificate, ClientConfig, Error, PrivateKey};
+use rustls::{RootCertStore, ServerConfig, ServerName};
 use serde::{Deserialize, Serialize};
 
 use super::{Result, TlsError};

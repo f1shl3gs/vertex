@@ -25,10 +25,6 @@ struct Config {
     tls: Option<TlsConfig>,
 
     auth: Option<HttpSourceAuthConfig>,
-
-    /// Controls how acknowledgements are handled by this source.
-    #[serde(default)]
-    acknowledgements: bool,
 }
 
 #[async_trait::async_trait]
@@ -45,7 +41,6 @@ impl SourceConfig for Config {
                 &self.tls,
                 &self.auth,
                 cx,
-                self.acknowledgements,
             )
             .await
     }
@@ -259,7 +254,6 @@ mod tests {
             address,
             auth: None,
             tls: tls.clone(),
-            acknowledgements: false,
         };
 
         let source = source.build(SourceContext::new_test(tx)).await.unwrap();

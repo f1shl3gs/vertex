@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{read_to_string, Error};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Config {
     #[serde(with = "serde_regex")]
@@ -17,13 +17,8 @@ pub enum Config {
     #[serde(with = "serde_regex")]
     Exclude(Regex),
 
+    #[default]
     All,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self::All
-    }
 }
 
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {

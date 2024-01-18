@@ -66,7 +66,7 @@ pub(super) async fn serve(
     shutdown: ShutdownSignal,
     decode: impl Fn(Vec<u8>) -> std::io::Result<Batch> + Send + Sync + 'static,
     mut output: Pipeline,
-) -> framework::Result<()> {
+) -> crate::Result<()> {
     let socket = UdpSocket::bind(address)
         .await
         .expect("Failed to bind to udp listener socket");

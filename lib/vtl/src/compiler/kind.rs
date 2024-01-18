@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use std::ops::{BitAnd, BitOr};
+use std::ops::BitOr;
 
 use value::Value;
 
@@ -11,14 +11,6 @@ impl BitOr for Kind {
 
     fn bitor(self, rhs: Self) -> Self::Output {
         Kind(self.0 | rhs.0)
-    }
-}
-
-impl BitAnd for Kind {
-    type Output = Kind;
-
-    fn bitand(self, rhs: Self) -> Self::Output {
-        Kind(self.0 & rhs.0)
     }
 }
 

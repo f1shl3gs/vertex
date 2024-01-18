@@ -66,7 +66,6 @@ struct FormatFunc {
 }
 
 impl Expression for FormatFunc {
-    #[allow(clippy::print_stdout)]
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
         let mut buf = BytesMut::new();
         let segments = self.template.segments();
@@ -77,7 +76,6 @@ impl Expression for FormatFunc {
                 Segment::Literal(s) => buf.extend_from_slice(s.as_bytes()),
                 Segment::Placeholder => {
                     let expr = arguments.next().expect("checked at compile-time");
-
                     let value = expr.resolve(cx)?;
 
                     buf.extend_from_slice(value.to_string_lossy().as_bytes());
@@ -88,10 +86,14 @@ impl Expression for FormatFunc {
         Ok(Value::Bytes(buf.freeze()))
     }
 
-    #[inline]
-    fn type_def(&self, _state: &TypeState) -> TypeDef {
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let fallible = self
+            .arguments
+            .iter()
+            .any(|argument| argument.type_def(state).fallible);
+
         TypeDef {
-            fallible: false,
+            fallible,
             kind: Kind::BYTES,
         }
     }

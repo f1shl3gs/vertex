@@ -208,16 +208,12 @@ impl FunctionTransform for MockTransform {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 enum Mode {
     Normal(Pipeline),
-    Dead,
-}
 
-impl Default for Mode {
-    fn default() -> Self {
-        Self::Dead
-    }
+    #[default]
+    Dead,
 }
 
 #[configurable_component(sink, name = "mock")]

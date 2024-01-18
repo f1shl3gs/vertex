@@ -53,7 +53,7 @@ pub(super) async fn serve(
     config: GrpcServerConfig,
     shutdown: ShutdownSignal,
     output: Pipeline,
-) -> framework::Result<()> {
+) -> crate::Result<()> {
     let service = CollectorServiceServer::new(JaegerCollector {
         output: Mutex::new(output),
     });

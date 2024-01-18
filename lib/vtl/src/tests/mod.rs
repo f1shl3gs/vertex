@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use value::Value;
 
 use crate::compiler::{Compiler, ExpressionError};
-use crate::context::TargetValue;
+use crate::TargetValue;
 
 pub fn assert_ok(input: &str, want: Value) {
     let got = run(

@@ -16,16 +16,10 @@ pub mod transforms;
 #[cfg(test)]
 pub mod testing;
 
-pub use framework::hostname;
-
 #[macro_use]
 extern crate tracing;
 
-/// Vertex's basic error type, dynamically dispatched and safe to send across threads
-pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
-
-/// Vertex's basic result type, defined in terms of [`Error`] and generic over `T`
-pub type Result<T> = std::result::Result<T, Error>;
+pub use framework::{hostname, Error, Result};
 
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));

@@ -70,7 +70,7 @@ impl Expression for ForStatement {
     fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
             fallible: false,
-            kind: Kind::UNDEFINED,
+            kind: Kind::NULL,
         }
     }
 }

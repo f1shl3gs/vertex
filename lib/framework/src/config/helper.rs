@@ -1,5 +1,3 @@
-mod charset;
-
 use std::time::Duration;
 
 pub const fn default_true() -> bool {
@@ -13,12 +11,8 @@ pub const fn default_interval() -> Duration {
 /// Answers "Is it possible to skip serializing this value, because it's the
 /// default?"
 #[inline]
-pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
-    e == &E::default()
-}
-
-pub const fn default_acknowledgements() -> bool {
-    false
+pub fn skip_serializing_if_default<T: Default + PartialEq>(e: &T) -> bool {
+    e == &T::default()
 }
 
 pub mod serde_regex {

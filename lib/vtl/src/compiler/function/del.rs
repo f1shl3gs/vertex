@@ -36,11 +36,10 @@ impl Function for Del {
         cx: FunctionCompileContext,
         mut arguments: ArgumentList,
     ) -> Result<FunctionCall, SyntaxError> {
-        let expr = arguments.get();
-        let span = expr.span;
-        let query = match expr.node {
-            Expr::Query(query) => span.with(query),
-            _expr => {
+        let Spanned { node, span } = arguments.get();
+        let query = match node {
+            Expr::Query(query) => Spanned::new(query, span),
+            _ => {
                 return Err(SyntaxError::InvalidFunctionArgumentType {
                     function: self.identifier(),
                     argument: "path",

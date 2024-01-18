@@ -6,12 +6,8 @@ edition = "2021"
 description = "A lightweight and ultra-fast tool for building observability pipelines"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
-# Minimum supported rust version
-rust-version = "1.70.0"
 
-exclude = [
-    "tests/fixtures"
-]
+exclude = ["tests/fixtures"]
 
 # This profile optimizes for runtime performance and small binary size at the expense of longer
 # build times. It's most suitable for final release builds.
@@ -67,6 +63,7 @@ default = [
 ]
 
 target-x86_64-unknown-linux-musl = [
+    # The default allocator of musl will consume more cpu than jemalloc.
     "jemalloc",
 
     "extensions",
@@ -76,8 +73,6 @@ target-x86_64-unknown-linux-musl = [
 ]
 
 target-x86_64-unknown-linux-gnu = [
-    "jemalloc",
-
     "extensions",
     "sinks",
     "sources",
@@ -228,7 +223,7 @@ transforms-metricalize = ["dep:async-stream"]
 transforms-relabel = []
 transforms-rewrite = ["dep:md5"]
 transforms-route = []
-transforms-sample = []
+transforms-sample = ["dep:ahash"]
 transforms-throttle = ["dep:gcra"]
 
 # transforms

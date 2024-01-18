@@ -8,7 +8,7 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt, BufWriter};
 use tokio::net::{TcpStream, ToSocketAddrs};
 
 use frame::{Error as FrameErr, Frame};
-pub use resp::*;
+pub use resp::{FromRespValue, RespErr};
 
 /// Send and receive `Frame` values from a remote peer.
 ///

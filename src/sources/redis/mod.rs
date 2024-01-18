@@ -442,9 +442,9 @@ async fn databases(cli: &mut Client) -> Result<u64, Error> {
         if key == "databases" {
             let value = &parts[2 * pos + 1];
 
-            return value.parse::<u64>().map_err(|_err| {
-                RespErr::ServerErr("invalid `databases` value".to_string()).into()
-            });
+            return value
+                .parse::<u64>()
+                .map_err(|_err| RespErr::Server("invalid `databases` value".to_string()).into());
         }
     }
 

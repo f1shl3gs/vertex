@@ -6,6 +6,7 @@ use async_trait::async_trait;
 use configurable::configurable_component;
 use framework::config::{DataType, Output, Resource, SourceConfig, SourceContext};
 use framework::Source;
+use futures_util::stream::{FuturesUnordered, StreamExt};
 
 /// Jaeger components implement various APIs for saving or retrieving trace data.
 ///
@@ -24,10 +25,10 @@ impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         let shutdown = cx.shutdown;
         let source = cx.key.to_string();
-        let mut handles = vec![];
+        let mut tasks = FuturesUnordered::new();
 
         if let Some(config) = &self.thrift_compact {
-            handles.push(tokio::spawn(udp::serve(
+            tasks.push(tokio::spawn(udp::serve(
                 source.clone(),
                 config.endpoint,
                 config.max_packet_size,
@@ -42,7 +43,7 @@ impl SourceConfig for Config {
         }
 
         if let Some(config) = &self.thrift_binary {
-            handles.push(tokio::spawn(udp::serve(
+            tasks.push(tokio::spawn(udp::serve(
                 source,
                 config.endpoint,
                 config.max_packet_size,
@@ -57,7 +58,7 @@ impl SourceConfig for Config {
         }
 
         if let Some(config) = &self.grpc {
-            handles.push(tokio::spawn(grpc::serve(
+            tasks.push(tokio::spawn(grpc::serve(
                 config.clone(),
                 shutdown.clone(),
                 cx.output.clone(),
@@ -65,20 +66,31 @@ impl SourceConfig for Config {
         }
 
         if let Some(config) = &self.thrift_http {
-            handles.push(tokio::spawn(http::serve(
+            tasks.push(tokio::spawn(http::serve(
                 config.clone(),
                 shutdown,
                 cx.output,
             )));
         }
 
-        if handles.is_empty() {
+        if tasks.is_empty() {
             return Err("At least one API should be enabled".into());
         }
 
         Ok(Box::pin(async move {
-            // TODO: we need something like `errgroup` in Golang
-            let _result = futures::future::join_all(handles).await;
+            while let Some(result) = tasks.next().await {
+                match result {
+                    Ok(Ok(_)) => {}
+                    Ok(Err(err)) => {
+                        error!(message = "jaeger serve failed", err);
+                        return Err(());
+                    }
+                    Err(err) => {
+                        error!(message = "spawn jaeger server failed", ?err);
+                        return Err(());
+                    }
+                }
+            }
 
             Ok(())
         }))
