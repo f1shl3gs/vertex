@@ -51,7 +51,7 @@ impl Expression for Query {
                         } else {
                             kind
                         }
-                    },
+                    }
                     PathPrefix::Metadata => state.metadata.kind(value_path),
                 }
             }

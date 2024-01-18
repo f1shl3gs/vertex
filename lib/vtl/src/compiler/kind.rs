@@ -17,7 +17,7 @@ impl BitOr for Kind {
 impl Display for Kind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         if *self == Kind::ANY {
-            return f.write_str("any")
+            return f.write_str("any");
         }
 
         let mut kinds = vec![];
