@@ -413,7 +413,7 @@ percent-encoding = { version = "2.3.1", default-features = false }
 quick-xml = { version = "0.31.0", default-features = false, features = ["serialize"], optional = true }
 regex = { version = "1.10.2", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "d48e59787305614f62d112f185cd234601ac8955", optional = true, features = ["transport-tls"] }
-smallvec = { version = "1.12.0", default-features = false, optional = true }
+smallvec = { version = "1.13.0", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 sqlx = { version = "0.7.3", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.56" }
