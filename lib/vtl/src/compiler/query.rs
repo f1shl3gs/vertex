@@ -2,7 +2,7 @@ use value::path::PathPrefix;
 use value::{OwnedTargetPath, OwnedValuePath, Value};
 
 use super::state::TypeState;
-use super::{Expression, ExpressionError, TypeDef};
+use super::{Expression, ExpressionError, Kind, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]
@@ -39,11 +39,19 @@ impl Expression for Query {
                 variable.kind(value_path)
             }
 
+            // .abc
             Query::External(target_path) => {
                 let value_path = &target_path.path;
 
                 match target_path.prefix {
-                    PathPrefix::Event => state.target.kind(value_path),
+                    PathPrefix::Event => {
+                        let kind = state.target.kind(value_path);
+                        if kind == Kind::NULL {
+                            Kind::ANY
+                        } else {
+                            kind
+                        }
+                    },
                     PathPrefix::Metadata => state.metadata.kind(value_path),
                 }
             }

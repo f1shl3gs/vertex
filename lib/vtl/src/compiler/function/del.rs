@@ -105,7 +105,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".key").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok("value".into()),
         )
     }
@@ -115,7 +115,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".foo").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(Value::Null),
         )
     }
@@ -125,7 +125,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".array").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(value!([1, 2, 3])),
         )
     }
@@ -135,7 +135,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".null").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(Value::Null),
         )
     }
@@ -145,7 +145,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".map").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(value!({"k1": "v1"})),
         )
     }
@@ -155,7 +155,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".array[1]").unwrap().into()],
             Del,
-            TypeDef::null(),
+            TypeDef::any(),
             Ok(Value::Integer(2)),
         )
     }
