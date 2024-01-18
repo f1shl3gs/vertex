@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705591520556,
+  "lastUpdate": 1705592001165,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ce9fcbf7ed29b8923ba001dda6019b13107a3f2e",
-          "message": "chore(deps): bump once_cell from 1.18.0 to 1.19.0 (#1452)\n\n* chore(deps): bump once_cell from 1.18.0 to 1.19.0\r\n\r\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.18.0 to 1.19.0.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.18.0...v1.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* add `default-features = false` to `once_cell`\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-12-08T10:47:26+08:00",
-          "tree_id": "12d23b9dc7e75283822095215278360d66ad0dbe",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ce9fcbf7ed29b8923ba001dda6019b13107a3f2e"
-        },
-        "date": 1702004317668,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40732.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "23053cb04774f542b944af7d105ed14506059c5c",
           "message": "chore(deps): bump rustls from 0.21.9 to 0.21.10 (#1453)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.9 to 0.21.10.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.9...v/0.21.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-12-09T07:05:03+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41514.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "405d587a3f1642d3e7d7d15beacf2ff2ee7e47b1",
+          "message": "small refactoring (#1561)\n\n* small refactoring\r\n\r\n* fix tests\r\n\r\n* style",
+          "timestamp": "2024-01-18T23:21:41+08:00",
+          "tree_id": "af4268ac3bd594e48bda6ea81fdb77fabc2eb682",
+          "url": "https://github.com/f1shl3gs/vertex/commit/405d587a3f1642d3e7d7d15beacf2ff2ee7e47b1"
+        },
+        "date": 1705591985445,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 593,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41493.2,
             "unit": "KiB"
           }
         ]
