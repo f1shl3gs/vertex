@@ -9,17 +9,17 @@ use bytes::Bytes;
 use chrono::Utc;
 use configurable::{configurable_component, Configurable};
 use encoding_transcode::{Decoder, Encoder};
-use event::{fields, BatchNotifier, BatchStatus, LogRecord};
+use event::{BatchNotifier, BatchStatus, LogRecord};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::source::util::OrderedFinalizer;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::Stream;
 use futures_util::{FutureExt, StreamExt, TryFutureExt};
-use log_schema::log_schema;
 use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 use tokio::sync::oneshot;
+use value::{owned_value_path, OwnedValuePath, Value};
 
 const POISONED_FAILED_LOCK: &str = "Poisoned lock on failed files set";
 
@@ -36,16 +36,20 @@ pub enum ReadFromConfig {
 }
 
 impl From<ReadFromConfig> for ReadFrom {
-    fn from(c: ReadFromConfig) -> Self {
-        match c {
+    fn from(config: ReadFromConfig) -> Self {
+        match config {
             ReadFromConfig::Beginning => ReadFrom::Beginning,
             ReadFromConfig::End => ReadFrom::End,
         }
     }
 }
 
-fn default_file_key() -> String {
-    "file".into()
+fn default_file_key() -> Option<OwnedValuePath> {
+    Some(owned_value_path!("file"))
+}
+
+fn default_host_key() -> Option<OwnedValuePath> {
+    Some(owned_value_path!("host"))
 }
 
 #[configurable_component(source, name = "tail")]
@@ -59,13 +63,14 @@ struct Config {
     /// Overrides the name of the log field used to add the current hostname to each event.
     ///
     /// By default, the [global `log_schema.host_key` option][global_host_key] is used.
-    host_key: Option<String>,
+    #[serde(default = "default_host_key")]
+    host_key: Option<OwnedValuePath>,
 
     /// Overrides the name of the log field used to add the current hostname to each event.
     ///
     /// By default, the [global `log_schema.host_key` option][global_host_key] is used.
     #[serde(default = "default_file_key")]
-    file_key: String,
+    file_key: Option<OwnedValuePath>,
 
     /// Array of file patterns to include. glob is supported.
     include: Vec<PathBuf>,
@@ -178,7 +183,6 @@ fn tail_source(
     mut output: Pipeline,
     acknowledgements: bool,
 ) -> crate::Result<Source> {
-    let file_key = config.file_key.to_owned();
     let provider = tail::provider::Glob::new(&config.include, &config.exclude)
         .ok_or("glob provider create failed")?;
 
@@ -195,13 +199,20 @@ fn tail_source(
     let multiline = config.multiline.clone();
     let checkpointer = Checkpointer::new(&data_dir);
     let checkpoints = checkpointer.view();
-    let host_key = config
-        .host_key
-        .clone()
-        .unwrap_or_else(|| log_schema().host_key().to_string());
+
+    // metadata keys
+    let ingest_timestamp_key = owned_value_path!("ingest_timestamp");
+    let source_type_key = owned_value_path!("source_type");
+    let offset_key = owned_value_path!(Config::NAME, "offset");
     let hostname = hostname::get().expect("get hostname");
-    let timestamp_key = log_schema().timestamp_key();
-    let source_type_key = log_schema().source_type_key();
+    let host_key = config.host_key.clone().map(|mut key| {
+        key.push_front_field(Config::NAME);
+        key
+    });
+    let file_key = config.file_key.clone().map(|mut key| {
+        key.push_front_field(Config::NAME);
+        key
+    });
 
     // The `failed_files` set contains `Fingerprint`s, provided by
     // the file server, of all files that have received a negative
@@ -383,14 +394,18 @@ fn tail_source(
         // Once harvester ends this will run until it has finished processing remaining
         // logs in the queue
         let mut messages = messages.map(move |line| {
-            let mut log = LogRecord::from(fields!(
-                &file_key => line.filename,
-                &host_key => hostname.as_str(),
-                source_type_key.to_string() => "tail",
-                "message" => line.text,
-                "offset" => line.offset,
-                timestamp_key.to_string() =>  Utc::now()
-            ));
+            let mut log = LogRecord::from(Value::from(line.text));
+
+            let metadata = log.metadata_mut().value_mut();
+            metadata.insert(&ingest_timestamp_key, Utc::now());
+            metadata.insert(&source_type_key, Config::NAME);
+            metadata.insert(&offset_key, line.offset);
+            if let Some(host_key) = &host_key {
+                metadata.insert(host_key, &hostname);
+            }
+            if let Some(path) = &file_key {
+                metadata.insert(path, line.filename);
+            }
 
             if let Some(finalizer) = &finalizer {
                 let (batch, receiver) = BatchNotifier::new_with_receiver();
@@ -438,8 +453,8 @@ mod tests {
 
     use encoding_rs::UTF_16LE;
     use event::log::{path, Value};
+    use event::Event;
     use event::EventStatus;
-    use event::{event_path, Event};
     use framework::{Pipeline, ShutdownSignal};
     use multiline::Mode;
     use testify::temp_dir;
@@ -564,22 +579,19 @@ mod tests {
 
         for event in received {
             let log = event.as_log();
-            let line = log
-                .get(log_schema().message_key())
-                .unwrap()
-                .to_string_lossy();
+            let line = log.get(".").unwrap().to_string_lossy();
 
             if line.starts_with("foo") {
                 assert_eq!(line, format!("foo {}", foo));
                 assert_eq!(
-                    log.get("file").unwrap().to_string_lossy(),
+                    log.get("%tail.file").unwrap().to_string_lossy(),
                     path1.to_str().unwrap()
                 );
                 foo += 1;
             } else {
                 assert_eq!(line, format!("bar {}", bar));
                 assert_eq!(
-                    log.get("file").unwrap().to_string_lossy(),
+                    log.get("%tail.file").unwrap().to_string_lossy(),
                     path2.to_str().unwrap()
                 );
                 bar += 1;
@@ -676,11 +688,7 @@ mod tests {
                 path.to_str().unwrap()
             );
 
-            let line = event
-                .as_log()
-                .get(log_schema().message_key())
-                .unwrap()
-                .to_string_lossy();
+            let line = event.as_log().get(".").unwrap().to_string_lossy();
             if pre_rot {
                 assert_eq!(line, format!("prerot {}", i));
             } else {
@@ -733,11 +741,7 @@ mod tests {
 
         let mut is = [0; 3];
         for event in received {
-            let line = event
-                .as_log()
-                .get(log_schema().message_key())
-                .unwrap()
-                .to_string_lossy();
+            let line = event.as_log().get(".").unwrap().to_string_lossy();
             let mut split = line.split(' ');
             let file = split.next().unwrap().parse::<usize>().unwrap();
             assert_ne!(file, 4);
@@ -780,7 +784,11 @@ mod tests {
 
             assert_eq!(received.len(), 1);
             assert_eq!(
-                received[0].as_log().get("file").unwrap().to_string_lossy(),
+                received[0]
+                    .as_log()
+                    .get("%tail.file")
+                    .unwrap()
+                    .to_string_lossy(),
                 path.to_str().unwrap()
             );
         }
@@ -790,7 +798,7 @@ mod tests {
             let dir = temp_dir();
             let config = Config {
                 include: vec![dir.join("*")],
-                file_key: "source".to_string(),
+                file_key: Some(owned_value_path!("source")),
                 ..test_default_tail_config(dir.clone())
             };
 
@@ -807,7 +815,7 @@ mod tests {
             assert_eq!(
                 received[0]
                     .as_log()
-                    .get("source")
+                    .get("%tail.source")
                     .unwrap()
                     .to_string_lossy(),
                 path.to_str().unwrap()
@@ -819,12 +827,7 @@ mod tests {
         received
             .into_iter()
             .map(Event::into_log)
-            .map(|log| {
-                log.get(log_schema().message_key())
-                    .unwrap()
-                    .to_string_lossy()
-                    .into_owned()
-            })
+            .map(|log| log.get(".").unwrap().to_string_lossy().into_owned())
             .collect()
     }
 
@@ -981,7 +984,7 @@ mod tests {
         })
         .await;
 
-        let file_path = event_path!("file");
+        let file_path = "%tail.file";
         let before_lines = received
             .iter()
             .filter(|event| {
@@ -992,13 +995,7 @@ mod tests {
                     .to_string_lossy()
                     .ends_with("before")
             })
-            .map(|event| {
-                event
-                    .as_log()
-                    .get(log_schema().message_key())
-                    .unwrap()
-                    .to_string_lossy()
-            })
+            .map(|event| event.as_log().get(".").unwrap().to_string_lossy())
             .collect::<Vec<_>>();
         let after_lines = received
             .iter()
@@ -1010,13 +1007,7 @@ mod tests {
                     .to_string_lossy()
                     .ends_with("after")
             })
-            .map(|event| {
-                event
-                    .as_log()
-                    .get(log_schema().message_key())
-                    .unwrap()
-                    .to_string_lossy()
-            })
+            .map(|event| event.as_log().get(".").unwrap().to_string_lossy())
             .collect::<Vec<_>>();
         assert_eq!(before_lines, vec!["second line"]);
         assert_eq!(after_lines, vec!["_first line", "_second line"]);
@@ -1265,7 +1256,7 @@ mod tests {
         received
             .into_iter()
             .map(Event::into_log)
-            .map(|log| log.get(log_schema().message_key()).unwrap().clone())
+            .map(|log| log.value().clone())
             .collect()
     }
 }
