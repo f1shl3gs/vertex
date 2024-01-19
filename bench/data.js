@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705679292529,
+  "lastUpdate": 1705679343418,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "91b73b48e234cf1d5b75ec228badcfbd16c84385",
-          "message": "optimize for BTreeMap's `contains_key` and `insert` (#1458)",
-          "timestamp": "2023-12-11T21:36:22+08:00",
-          "tree_id": "acd511892da75e43fa1441e2b697d47423782563",
-          "url": "https://github.com/f1shl3gs/vertex/commit/91b73b48e234cf1d5b75ec228badcfbd16c84385"
-        },
-        "date": 1702302463016,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40372.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1b658f3cdcf756fca73c955b644aeda27ca37e7a",
           "message": "VTL (#1459)\n\n* add From<u16> for Value\r\n\r\n* add `array_value!`\r\n\r\n* add vtl",
           "timestamp": "2023-12-11T22:20:56+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41518.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "5d93aa614de0505d043defec5bb05e2a18d136f1",
+          "message": "stable uuid",
+          "timestamp": "2024-01-19T23:37:14+08:00",
+          "tree_id": "3df93d1f6f59dd0d0af3fddac3075fed8d38cb47",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5d93aa614de0505d043defec5bb05e2a18d136f1"
+        },
+        "date": 1705679328329,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 597,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41519.2,
             "unit": "KiB"
           }
         ]
