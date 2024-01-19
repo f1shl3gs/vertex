@@ -147,7 +147,7 @@ pub fn load(
 
     let mut vars = std::env::vars().collect::<HashMap<_, _>>();
     if !vars.contains_key("HOSTNAME") {
-        if let Ok(hostname) = crate::hostname() {
+        if let Ok(hostname) = hostname::get() {
             vars.insert("HOSTNAME".into(), hostname);
         }
     }

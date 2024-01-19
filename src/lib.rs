@@ -19,7 +19,7 @@ pub mod testing;
 #[macro_use]
 extern crate tracing;
 
-pub use framework::{hostname, Error, Result};
+pub use framework::{Error, Result};
 
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));

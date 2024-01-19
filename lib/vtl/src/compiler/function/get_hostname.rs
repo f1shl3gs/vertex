@@ -36,8 +36,6 @@ impl Expression for GetHostnameFunc {
                 message: err.to_string(),
                 span: Span { start: 0, end: 0 },
             })?
-            .to_string_lossy()
-            .to_string()
             .into();
 
         Ok(hostname)
@@ -58,9 +56,7 @@ mod tests {
 
     #[test]
     fn get() {
-        let hostname = hostname::get()
-            .map(|s| s.to_string_lossy().to_string())
-            .unwrap();
+        let hostname = hostname::get().unwrap();
 
         compile_and_run(
             vec![],

@@ -139,7 +139,7 @@ impl Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         self.validate()?;
-        let hostname = crate::hostname()?;
+        let hostname = hostname::get()?;
         let framing = self
             .framing
             .clone()
