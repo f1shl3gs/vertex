@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705669519527,
+  "lastUpdate": 1705669526408,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3ece3d81311bc7ee72a9aad41eb4257c8a6acb52",
-          "message": "lib/event: impl `Tags` with cow (#1431)\n\n* shuffle bench keys\r\n* impl Tags with cow",
-          "timestamp": "2023-11-22T20:30:32+08:00",
-          "tree_id": "0e42ac0c861febb7eebd95e923740a184c27265c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ece3d81311bc7ee72a9aad41eb4257c8a6acb52"
-        },
-        "date": 1700656366921,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.97,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.927,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.75,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 184.66,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5617eab824764274765060aa27bd16499e3e23dd",
+          "message": "chore(deps): bump uuid from 1.6.1 to 1.7.0 (#1566)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.6.1 to 1.7.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.6.1...1.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-19T21:03:06+08:00",
+          "tree_id": "e8a9f6ebfc70e324139671364402a9d4d38f084e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5617eab824764274765060aa27bd16499e3e23dd"
+        },
+        "date": 1705669511741,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.911,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 92.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.16,
             "unit": "ns/op"
           }
         ]
