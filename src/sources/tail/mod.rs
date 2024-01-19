@@ -12,7 +12,7 @@ use encoding_transcode::{Decoder, Encoder};
 use event::{fields, BatchNotifier, BatchStatus, LogRecord};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::source::util::OrderedFinalizer;
-use framework::{hostname, Pipeline, ShutdownSignal, Source};
+use framework::{Pipeline, ShutdownSignal, Source};
 use futures::Stream;
 use futures_util::{FutureExt, StreamExt, TryFutureExt};
 use log_schema::log_schema;
@@ -199,7 +199,7 @@ fn tail_source(
         .host_key
         .clone()
         .unwrap_or_else(|| log_schema().host_key().to_string());
-    let hostname = hostname().expect("get hostname");
+    let hostname = hostname::get().expect("get hostname");
     let timestamp_key = log_schema().timestamp_key();
     let source_type_key = log_schema().source_type_key();
 

@@ -49,7 +49,7 @@ impl ExtensionConfig for Config {
 
         status.uuid = get_uuid();
         status.uptime = chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, false);
-        status.hostname = framework::hostname().expect("get hostname failed");
+        status.hostname = hostname::get().expect("get hostname failed");
         status.version = crate::get_version();
         status.lease = humanize::duration::duration(&(self.interval + Duration::from_secs(15)));
         status.os = sysinfo::os().unwrap_or_default();

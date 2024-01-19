@@ -1,0 +1,10 @@
+[package]
+name = "hostname"
+version = "0.1.0"
+edition = "2021"
+
+[target.'cfg(unix)'.dependencies]
+libc = { version = "0.2.152", default-features = false }
+
+# [target.'cfg(windows)'.dependencies]
+# windows-targets = "0.48"

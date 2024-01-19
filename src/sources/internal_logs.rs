@@ -55,7 +55,7 @@ async fn run(
     shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     let mut subscription = TraceSubscription::subscribe();
-    let hostname = crate::hostname().expect("get hostname success");
+    let hostname = hostname::get().expect("get hostname success");
     let pid = std::process::id();
 
     // chain the logs emitted before the source started first
