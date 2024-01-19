@@ -17,7 +17,8 @@ use nix::net::if_::InterfaceFlags;
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use serde::Serialize;
-use tokio::select;
+
+static UUID: Lazy<String> = Lazy::new(|| uuid::Uuid::new_v4().to_string());
 
 const fn default_interval() -> Duration {
     Duration::from_secs(60)
@@ -47,7 +48,7 @@ impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
         let mut status = STATUS.lock();
 
-        status.uuid = get_uuid();
+        status.uuid = UUID.clone();
         status.uptime = chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, false);
         status.hostname = hostname::get().expect("get hostname failed");
         status.version = crate::get_version();
@@ -150,7 +151,7 @@ async fn run(
     let mut ticker = tokio::time::interval(interval);
 
     loop {
-        select! {
+        tokio::select! {
             _ = &mut shutdown => return Ok(()),
             _ = ticker.tick() => {}
         }
@@ -180,19 +181,6 @@ async fn run(
 
                 continue;
             }
-        }
-    }
-}
-
-fn get_uuid() -> String {
-    match sysinfo::machine_id() {
-        Ok(id) => id,
-        Err(err) => {
-            if err.kind() != std::io::ErrorKind::NotFound {
-                warn!(message = "cannot find /etc/machine-id, use random", ?err)
-            }
-
-            uuid::Uuid::new_v4().to_string()
         }
     }
 }
