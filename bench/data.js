@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705636078335,
+  "lastUpdate": 1705636510713,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1435aac7aa588d39e3eaa997d67f90810c393d30",
-          "message": "deps: bump serde to 1.0.193 (#1426)",
-          "timestamp": "2023-11-21T13:11:04+08:00",
-          "tree_id": "78e7cc0c257a3b1a71b3786c424677e160c35bb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1435aac7aa588d39e3eaa997d67f90810c393d30"
-        },
-        "date": 1700544120893,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 21544000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 600050,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.686,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e19e92cdf66171fd592dc35969a17104432e40b",
           "message": "fix memory leak when tags clone (#1428)",
           "timestamp": "2023-11-21T21:54:05+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.539,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d41191fbaeeec142084dbb42d9e52de553f7575e",
+          "message": "chore(deps): bump smallvec from 1.12.0 to 1.13.0 (#1562)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.12.0 to 1.13.0.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.12.0...v1.13.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-19T11:44:08+08:00",
+          "tree_id": "d86ab246e341850206a488ea7d38ee3b93e02799",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d41191fbaeeec142084dbb42d9e52de553f7575e"
+        },
+        "date": 1705636496370,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17398000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 465950,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.353,
             "unit": "ns/op"
           }
         ]
