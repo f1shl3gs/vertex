@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705678771376,
+  "lastUpdate": 1705678782202,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c2a6e97b789d9ecdcb7c81adeb0f6ae18c0b165e",
-          "message": "chore(deps): bump percent-encoding from 2.3.0 to 2.3.1 (#1433)\n\nBumps [percent-encoding](https://github.com/servo/rust-url) from 2.3.0 to 2.3.1.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.3.0...v2.3.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: percent-encoding\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-11-23T16:51:32+08:00",
-          "tree_id": "92cf6991071cc620fca452b511f5c92d445a015e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c2a6e97b789d9ecdcb7c81adeb0f6ae18c0b165e"
-        },
-        "date": 1700729623674,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.772,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.655,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.45,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.16,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "5d93aa614de0505d043defec5bb05e2a18d136f1",
+          "message": "stable uuid",
+          "timestamp": "2024-01-19T23:37:14+08:00",
+          "tree_id": "3df93d1f6f59dd0d0af3fddac3075fed8d38cb47",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5d93aa614de0505d043defec5bb05e2a18d136f1"
+        },
+        "date": 1705678767178,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.748,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.373,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.27,
             "unit": "ns/op"
           }
         ]
