@@ -17,7 +17,7 @@ pub fn kernel() -> Option<String> {
     }
 }
 
-pub fn os_version() -> Option<String> {
+pub fn os() -> Option<String> {
     let content = match std::fs::read_to_string("/etc/os-release") {
         Ok(content) => content,
         Err(_) => match std::fs::read_to_string("/etc/lsb-release") {
