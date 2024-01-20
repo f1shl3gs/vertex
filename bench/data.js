@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705723346826,
+  "lastUpdate": 1705723353683,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2e99e39144a9a89defa566c0a0721562321abe3f",
-          "message": "chore(deps): bump url from 2.4.1 to 2.5.0 (#1432)\n\nBumps [url](https://github.com/servo/rust-url) from 2.4.1 to 2.5.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.4.1...v2.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-11-23T17:15:46+08:00",
-          "tree_id": "174548d6eca9b01a34d98c9881289cd5259a3b07",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2e99e39144a9a89defa566c0a0721562321abe3f"
-        },
-        "date": 1700731082205,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.611,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.89,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 184.27,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb8500d304df7197d98dd8bb3e1c92400aa05cfc",
+          "message": "chore(deps): bump h2 from 0.3.21 to 0.3.24 (#1567)\n\nBumps [h2](https://github.com/hyperium/h2) from 0.3.21 to 0.3.24.\r\n- [Release notes](https://github.com/hyperium/h2/releases)\r\n- [Changelog](https://github.com/hyperium/h2/blob/v0.3.24/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/h2/compare/v0.3.21...v0.3.24)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: h2\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-20T11:59:58+08:00",
+          "tree_id": "1fb9c6318bc0a3c69b8afcfe51276f8dbc821ac7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb8500d304df7197d98dd8bb3e1c92400aa05cfc"
+        },
+        "date": 1705723339428,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.733,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.713,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.92,
             "unit": "ns/op"
           }
         ]
