@@ -358,7 +358,7 @@ tokio-util = { version = "0.7.10", default-features = false, features = ["codec"
 tracing = { version = "0.1.40", default-features = false }
 
 # HTTP
-hyper = { version = "0.14.28", default-features = false, features = ["full"] }
+hyper = { version = "1.1.0", default-features = false, features = ["full"] }
 http = { version = "0.2.11", default-features = false }
 
 # Tower
