@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705723353683,
+  "lastUpdate": 1705723358057,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4441bd19d56c0a4a126a3322fc6996abaac3eb3d",
-          "message": "chore(deps): bump sqlx from 0.7.2 to 0.7.3 (#1434)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.2 to 0.7.3.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/commits/v0.7.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-11-24T00:21:11+08:00",
-          "tree_id": "f7bbce32cf224e5a318d9ea8a0c6aa33709be7c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4441bd19d56c0a4a126a3322fc6996abaac3eb3d"
-        },
-        "date": 1700756606041,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 547130,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540630,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f5621735cec6b859e128a0afab899ad19bc87d05",
+          "message": "chore(deps): bump smallvec from 1.13.0 to 1.13.1 (#1568)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.13.0 to 1.13.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.13.0...v1.13.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-20T12:00:27+08:00",
+          "tree_id": "4150864efa6961c0af0ff33548d7c897fa5bfe90",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f5621735cec6b859e128a0afab899ad19bc87d05"
+        },
+        "date": 1705723343762,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 542730,
             "unit": "ns/op"
           }
         ]
