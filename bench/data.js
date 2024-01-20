@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705723860623,
+  "lastUpdate": 1705723887390,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1b658f3cdcf756fca73c955b644aeda27ca37e7a",
-          "message": "VTL (#1459)\n\n* add From<u16> for Value\r\n\r\n* add `array_value!`\r\n\r\n* add vtl",
-          "timestamp": "2023-12-11T22:20:56+08:00",
-          "tree_id": "cbe055b95df46ac36c673800edf9f85710c63fd1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1b658f3cdcf756fca73c955b644aeda27ca37e7a"
-        },
-        "date": 1702305116815,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 568,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40394.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "711444ce2af390e7ff7563a07b15f7fa0883041f",
           "message": "simplify value macro (#1460)\n\n* simplify value macro",
           "timestamp": "2023-12-12T00:02:22+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41519.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb8500d304df7197d98dd8bb3e1c92400aa05cfc",
+          "message": "chore(deps): bump h2 from 0.3.21 to 0.3.24 (#1567)\n\nBumps [h2](https://github.com/hyperium/h2) from 0.3.21 to 0.3.24.\r\n- [Release notes](https://github.com/hyperium/h2/releases)\r\n- [Changelog](https://github.com/hyperium/h2/blob/v0.3.24/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/h2/compare/v0.3.21...v0.3.24)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: h2\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-20T11:59:58+08:00",
+          "tree_id": "1fb9c6318bc0a3c69b8afcfe51276f8dbc821ac7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb8500d304df7197d98dd8bb3e1c92400aa05cfc"
+        },
+        "date": 1705723871528,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41496,
             "unit": "KiB"
           }
         ]
