@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705723887390,
+  "lastUpdate": 1705723888871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "711444ce2af390e7ff7563a07b15f7fa0883041f",
-          "message": "simplify value macro (#1460)\n\n* simplify value macro",
-          "timestamp": "2023-12-12T00:02:22+08:00",
-          "tree_id": "8d75006fb9aa1db851027cc7cd6378dd129dcff1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/711444ce2af390e7ff7563a07b15f7fa0883041f"
-        },
-        "date": 1702311220194,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40394.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "090a3e57aca3dc1e1eac01d83bbbdc88a69bdab3",
           "message": "VTL: implement diagnostic (#1461)\n\n* implement diagnostic",
           "timestamp": "2023-12-12T05:13:07+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41496,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f5621735cec6b859e128a0afab899ad19bc87d05",
+          "message": "chore(deps): bump smallvec from 1.13.0 to 1.13.1 (#1568)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.13.0 to 1.13.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.13.0...v1.13.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-20T12:00:27+08:00",
+          "tree_id": "4150864efa6961c0af0ff33548d7c897fa5bfe90",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f5621735cec6b859e128a0afab899ad19bc87d05"
+        },
+        "date": 1705723874546,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41495.1,
             "unit": "KiB"
           }
         ]
