@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705897825188,
+  "lastUpdate": 1705898246322,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5e3b281365cfc74c5200f2c289691b09800e5d03",
-          "message": "lib/event: re-implement tags Key/Value (#1436)\n\n* reimplement tags Key/Value",
-          "timestamp": "2023-11-26T19:06:04+08:00",
-          "tree_id": "a606795884a7eddda87c415013332624ffa94ef0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5e3b281365cfc74c5200f2c289691b09800e5d03"
-        },
-        "date": 1700997395092,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 17083000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 431280,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.045,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f22a1d3f34dfda31af21e2efad150aadc4eabff1",
           "message": "lib/event: reimplement Value::String with String (#1438)",
           "timestamp": "2023-11-26T21:12:15+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 40.912,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "121ab1778cff6d591aca7d8dece40a56c84417f8",
+          "message": "chore(deps): bump regex from 1.10.2 to 1.10.3 (#1570)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.10.2 to 1.10.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.10.2...1.10.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-22T12:26:45+08:00",
+          "tree_id": "dc7e302be766c19a38d8463d702d0afef27c2619",
+          "url": "https://github.com/f1shl3gs/vertex/commit/121ab1778cff6d591aca7d8dece40a56c84417f8"
+        },
+        "date": 1705898231116,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17352000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 466800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.274,
             "unit": "ns/op"
           }
         ]
