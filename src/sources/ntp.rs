@@ -135,7 +135,7 @@ impl Ntp {
                     }
                     if leap_midnight.sub(day) < resp.time && resp.time < leap_midnight.add(day) {
                         // tolerate leap smearing
-                        max_err = max_err + chrono::Duration::seconds(1);
+                        max_err += chrono::Duration::seconds(1);
                     }
 
                     let sanity = resp.validate().is_ok()
