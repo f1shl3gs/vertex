@@ -10,7 +10,7 @@ harness = false
 test = false
 
 [dev-dependencies]
-chrono = { version = "0.4.32", default-features = false, features = ["clock", "serde"] }
+chrono = { version = "0.4.32", default-features = false, features = ["now", "serde"] }
 quickcheck = { version = "1.0.3", default-features = false }
 tokio = { version = "1.35.1", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
 testify = { path = "../testify" }
