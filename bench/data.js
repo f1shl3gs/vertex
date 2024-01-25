@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706184700549,
+  "lastUpdate": 1706185249488,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0d7d617165dc6cd620061c33a3c725e88880160c",
-          "message": "bump rust to 1.74.1 (#1465)",
-          "timestamp": "2023-12-13T03:58:28+08:00",
-          "tree_id": "0bde0aa5b3807e3179f8abf0ac5c605a7e969ab0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0d7d617165dc6cd620061c33a3c725e88880160c"
-        },
-        "date": 1702411823534,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 614,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40389.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b0119fec9fc2f2671dfc58ec3347ad8ba7204dc7",
           "message": "bump syn to 2.0.41 (#1467)",
           "timestamp": "2023-12-13T13:32:30+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41538.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "95e2642f7f4664af97de90336fefe38bcff716dd",
+          "message": "chore(deps): bump memmap2 from 0.9.3 to 0.9.4 (#1574)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.9.3 to 0.9.4.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.9.3...v0.9.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-25T20:09:21+08:00",
+          "tree_id": "50bc2446209ef2360399cd094e02d1737b33641e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/95e2642f7f4664af97de90336fefe38bcff716dd"
+        },
+        "date": 1706185232271,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41511.9,
             "unit": "KiB"
           }
         ]
