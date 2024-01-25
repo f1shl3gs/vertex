@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1705986900159,
+  "lastUpdate": 1706184700549,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "967382afecc999c09e34d5ada72ae91c159a3566",
-          "message": "add dmi and softirqs (#1439)",
-          "timestamp": "2023-11-27T04:13:48+08:00",
-          "tree_id": "bb0b0161c22fa612012a01f5a546e4ae90095da9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/967382afecc999c09e34d5ada72ae91c159a3566"
-        },
-        "date": 1701029767876,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542560,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 538730,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "95e2642f7f4664af97de90336fefe38bcff716dd",
+          "message": "chore(deps): bump memmap2 from 0.9.3 to 0.9.4 (#1574)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.9.3 to 0.9.4.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.9.3...v0.9.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-25T20:09:21+08:00",
+          "tree_id": "50bc2446209ef2360399cd094e02d1737b33641e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/95e2642f7f4664af97de90336fefe38bcff716dd"
+        },
+        "date": 1706184686639,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 543150,
             "unit": "ns/op"
           }
         ]
