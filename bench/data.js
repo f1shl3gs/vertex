@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706244624588,
+  "lastUpdate": 1706247641558,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5647b41eab9fdccd6f05f62753c4c099c2da2329",
-          "message": "bump crossbeam-utils to 0.8.17 (#1471)",
-          "timestamp": "2023-12-14T11:40:39+08:00",
-          "tree_id": "ffb0b27553b224a8f69b7f596c96867e68102df1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5647b41eab9fdccd6f05f62753c4c099c2da2329"
-        },
-        "date": 1702525896175,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40406.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e4785c4937d25b4bf0b8295f9049e0936252e8e",
           "message": "VTL: check more when compile (#1472)\n\n* add more details of error",
           "timestamp": "2023-12-14T12:14:01+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41534.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cb5cdb0601a7576762aef01d5d9545cd3087ec9f",
+          "message": "chore(deps): bump kube from 0.88.0 to 0.88.1 (#1578)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.88.0 to 0.88.1.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.88.0...0.88.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-26T13:29:34+08:00",
+          "tree_id": "2582c07df13d82c8128851f97315c5499c8da5a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cb5cdb0601a7576762aef01d5d9545cd3087ec9f"
+        },
+        "date": 1706247627337,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 571,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41517.1,
             "unit": "KiB"
           }
         ]
