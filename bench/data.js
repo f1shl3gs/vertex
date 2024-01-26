@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706244572298,
+  "lastUpdate": 1706244588687,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "be39879814eca0d83e83e72c11e68635f9f3badd",
-          "message": "simplify (#1468)",
-          "timestamp": "2023-12-14T09:34:49+08:00",
-          "tree_id": "a5e1ab7944bafb81fd848dda2d7a1e5eede1a516",
-          "url": "https://github.com/f1shl3gs/vertex/commit/be39879814eca0d83e83e72c11e68635f9f3badd"
-        },
-        "date": 1702518349049,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40407.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41534.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3ce857b7257e0ea83e503bbb9bb3bc5d7171cbdd",
+          "message": "chore(ci): bump dorny/paths-filter from 2 to 3 (#1576)\n\nBumps [dorny/paths-filter](https://github.com/dorny/paths-filter) from 2 to 3.\r\n- [Release notes](https://github.com/dorny/paths-filter/releases)\r\n- [Changelog](https://github.com/dorny/paths-filter/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/dorny/paths-filter/compare/v2...v3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dorny/paths-filter\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-26T12:38:37+08:00",
+          "tree_id": "f1a4b766e1ee4da7d19a9936020517f3dc5b62ff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3ce857b7257e0ea83e503bbb9bb3bc5d7171cbdd"
+        },
+        "date": 1706244573099,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
             "unit": "s"
           },
           {
