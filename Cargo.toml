@@ -397,7 +397,7 @@ glob = { version = "0.3.1" }
 indexmap = { version = "2.1.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.14", default-features = false }
 k8s-openapi = { version = "0.21.0", default-features = false, optional = true, features = ["v1_24"] }
-kube = { version = "0.88.0", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
+kube = { version = "0.88.1", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
 libc = { version = "0.2.152", default-features = false, optional = true }
 lru = { version = "0.12.1", default-features = false, optional = true }
 maxminddb = { version = "0.24.0", default-features = false, optional = true }
