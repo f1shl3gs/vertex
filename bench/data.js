@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706366122847,
+  "lastUpdate": 1706366656492,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "adf9aea3e24cc2ad57ca81ba316498295e115c04",
-          "message": "add vtl (#1473)",
-          "timestamp": "2023-12-14T16:32:07+08:00",
-          "tree_id": "9a82a510e1b77ff50b3651a5c7783d68003a5031",
-          "url": "https://github.com/f1shl3gs/vertex/commit/adf9aea3e24cc2ad57ca81ba316498295e115c04"
-        },
-        "date": 1702543401964,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40821.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1445cdad4f7dd1d79d0c087415bf97323ca265a0",
           "message": "VTL: add merge keys and values (#1474)\n\n* add keys, merge and values",
           "timestamp": "2023-12-15T10:44:58+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41539.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7156d00689124b3d0b2dcd2a64708377d1fc433f",
+          "message": "chore(deps): bump serde from 1.0.195 to 1.0.196 (#1580)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.195 to 1.0.196.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.195...v1.0.196)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-27T22:33:38+08:00",
+          "tree_id": "c655c1ea05006d3337313c281029bea734013ab2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7156d00689124b3d0b2dcd2a64708377d1fc433f"
+        },
+        "date": 1706366642737,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 546,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41531,
             "unit": "KiB"
           }
         ]
