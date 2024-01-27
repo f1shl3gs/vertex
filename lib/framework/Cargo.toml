@@ -67,7 +67,7 @@ regex = { version = "1.10.3", default-features = false }
 rustls = { version = "0.21.10", default-features = false, features = ["dangerous_configuration"] }
 rustls-native-certs = { version = "0.6.3", default-features = false }
 smallvec = { version = "1.13.1", default-features = false }
-serde = { version = "1.0.195", default-features = false, features = ["derive", "std"] }
+serde = { version = "1.0.196", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.111", default-features = false }
 serde_yaml = { version = "0.9.30", default-features = false }
 snap = { version = "1.1.1", default-features = false }
