@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706247641558,
+  "lastUpdate": 1706366122847,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4e4785c4937d25b4bf0b8295f9049e0936252e8e",
-          "message": "VTL: check more when compile (#1472)\n\n* add more details of error",
-          "timestamp": "2023-12-14T12:14:01+08:00",
-          "tree_id": "ec33ca86b229319eef9715ae3e0dcff49daa0b86",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e4785c4937d25b4bf0b8295f9049e0936252e8e"
-        },
-        "date": 1702527905166,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 573,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40406.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "adf9aea3e24cc2ad57ca81ba316498295e115c04",
           "message": "add vtl (#1473)",
           "timestamp": "2023-12-14T16:32:07+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41517.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0a7d09a2be108078000f3a5d7259d9d966b52b7",
+          "message": "chore(deps): bump inventory from 0.3.14 to 0.3.15 (#1579)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.14 to 0.3.15.\r\n- [Release notes](https://github.com/dtolnay/inventory/releases)\r\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.14...0.3.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inventory\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-27T22:24:02+08:00",
+          "tree_id": "56eea97b68e73bec6b5b78c59e898a4773a76f76",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e0a7d09a2be108078000f3a5d7259d9d966b52b7"
+        },
+        "date": 1706366108249,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 571,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41539.9,
             "unit": "KiB"
           }
         ]
