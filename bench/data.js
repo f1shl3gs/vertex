@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706453922846,
+  "lastUpdate": 1706454380610,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5f3ad078588d6af6543e4c2b0179633a523e591a",
-          "message": "chore(deps): bump zerocopy from 0.7.14 to 0.7.31 (#1475)\n\nBumps [zerocopy](https://github.com/google/zerocopy) from 0.7.14 to 0.7.31.\r\n- [Release notes](https://github.com/google/zerocopy/releases)\r\n- [Changelog](https://github.com/google/zerocopy/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/google/zerocopy/compare/v0.7.14...v0.7.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zerocopy\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-16T06:42:28+08:00",
-          "tree_id": "e5f36ab998e4e7f452513a883dbe929c05d8193d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f3ad078588d6af6543e4c2b0179633a523e591a"
-        },
-        "date": 1702680821170,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 592,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40830.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 569,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41512.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e34d7ccc2ef941c7f16b2954651b19bc63657a38",
+          "message": "fix vertex bench (#1582)",
+          "timestamp": "2024-01-28T22:55:05+08:00",
+          "tree_id": "28197aef23b61fe0e71616fefe8c8a28fbee5b27",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e34d7ccc2ef941c7f16b2954651b19bc63657a38"
+        },
+        "date": 1706454364487,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
             "unit": "s"
           },
           {
