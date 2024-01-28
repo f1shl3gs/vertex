@@ -3,12 +3,6 @@
 use std::path::{Path, PathBuf};
 
 use event::{tags, tags::Key, Metric};
-use nom::branch::alt;
-use nom::bytes::complete::{tag, take_while};
-use nom::character::complete::{digit1, multispace0};
-use nom::combinator::{map_res, recognize};
-use nom::number::complete::double;
-use nom::IResult;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
@@ -106,9 +100,10 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
         let mut speed = 0f64;
         let mut finish = 0f64;
         let mut pct = 0f64;
-        let recovering = lines[sync_line_index].contains("recovery");
-        let resyncing = lines[sync_line_index].contains("resync");
-        let checking = lines[sync_line_index].contains("check");
+        let sync_line = lines[sync_line_index];
+        let recovering = sync_line.contains("recovery");
+        let resyncing = sync_line.contains("resync");
+        let checking = sync_line.contains("check");
 
         // Append recovery and resyncing state info
         if recovering || resyncing || checking {
@@ -121,20 +116,13 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
             }
 
             // Handle case when resync=PENDING or resync=DELAYED.
-            if lines[sync_line_index].contains("PENDING")
-                || lines[sync_line_index].contains("DELAYED")
-            {
+            if sync_line.contains("PENDING") || sync_line.contains("DELAYED") {
                 synced_blocks = 0;
             } else {
-                let (_, (_pct, _synced_blocks, _finish, _speed)) =
-                    recovery_line(lines[sync_line_index]).map_err(|err| {
-                        let msg = format!("parse recovery line failed, err: {}", err);
-                        Error::from(msg)
-                    })?;
-                synced_blocks = _synced_blocks;
-                pct = _pct;
-                finish = _finish;
-                speed = _speed;
+                (pct, synced_blocks, finish, speed) = recovery_line(sync_line).map_err(|err| {
+                    let msg = format!("parse recovery line failed, err: {}", err);
+                    Error::from(msg)
+                })?;
             }
         }
 
@@ -232,23 +220,45 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
 
 // the line looks like
 // [=>...................]  recovery =  8.5% (16775552/195310144) finish=17.0min speed=259783K/sec
-fn recovery_line(input: &str) -> IResult<&str, (f64, i64, f64, f64)> {
-    let input = input.trim();
-    let (input, _) =
-        take_while(|c| c == '[' || c == '=' || c == '>' || c == '.' || c == ']')(input)?;
-    let (input, _) = multispace0(input)?;
-    let (input, _) = alt((tag("recovery = "), tag("resync = "), tag("check = ")))(input)?;
-    let (input, _) = multispace0(input)?;
-    let (input, pct) = double(input)?;
-    let (input, _) = take_while(|c: char| c == ' ' || c == '%' || c == '(')(input)?;
-    let (input, synced_blocks) = map_res(recognize(digit1), str::parse)(input)?;
-    let (input, _) = take_while(|c: char| c.is_ascii_digit() || c == '/')(input)?;
-    let (input, _) = tag(") finish=")(input)?;
-    let (input, finish) = double(input)?;
-    let (input, _) = tag("min speed=")(input)?;
-    let (input, speed) = double(input)?;
+fn recovery_line(input: &str) -> Result<(f64, i64, f64, f64), Error> {
+    let mut percent = 0.0;
+    let mut synced_blocks = 0i64;
+    let mut finish = 0.0;
+    let mut speed = 0.0;
 
-    Ok((input, (pct, synced_blocks, finish, speed)))
+    for part in input.split_ascii_whitespace() {
+        // percent
+        if let Some(text) = part.strip_suffix('%') {
+            percent = text.parse()?;
+            continue;
+        }
+
+        // synced_blocks
+        if let Some(text) = part.strip_prefix('(') {
+            if let Some((text, _)) = text.split_once('/') {
+                synced_blocks = text.parse()?;
+                continue;
+            }
+        }
+
+        // finish
+        if let Some(text) = part.strip_prefix("finish=") {
+            finish = text
+                .trim_end_matches(|c: char| c.is_ascii_alphabetic())
+                .parse()?;
+            continue;
+        }
+
+        // speed
+        if let Some(text) = part.strip_prefix("speed=") {
+            speed = text
+                .trim_end_matches(|c: char| c.is_ascii_alphabetic() || c == '/')
+                .parse()?;
+            continue;
+        }
+    }
+
+    Ok((percent, synced_blocks, finish, speed))
 }
 
 fn state_metric_value(key: &str, state: &str) -> f64 {
@@ -378,7 +388,7 @@ mod tests {
     fn test_parse_recovering_line() {
         let line = r#"[=>...................]  recovery =  8.5% (16775552/195310144) finish=17.0min speed=259783K/sec"#;
 
-        let (_, (pct, synced_blocks, finish, speed)) = recovery_line(line).unwrap();
+        let (pct, synced_blocks, finish, speed) = recovery_line(line).unwrap();
         assert_eq!(pct, 8.5);
         assert_eq!(synced_blocks, 16775552);
         assert_eq!(finish, 17.0);
