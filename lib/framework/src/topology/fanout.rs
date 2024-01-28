@@ -65,7 +65,7 @@ impl Fanout {
     /// Remove an existing sink as an output.
     fn remove(&mut self, id: &ComponentKey) {
         assert!(
-            self.senders.remove(id).is_some(),
+            self.senders.shift_remove(id).is_some(),
             "Removing non-existent sink from fanout: {id}"
         );
     }
@@ -290,7 +290,7 @@ impl<'a> SendGroup<'a> {
         // sender if it exists, otherwise we'd be hanging around still
         // trying to send to it.
         assert!(
-            self.senders.remove(id).is_some(),
+            self.senders.shift_remove(id).is_some(),
             "Removing non-existent sink from fanout: {id}"
         );
 
