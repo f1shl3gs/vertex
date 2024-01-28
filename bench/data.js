@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706472065083,
+  "lastUpdate": 1706472081175,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "40213e74c6053ecf938b9e3af17139ebfaf69241",
-          "message": "sources/node: add selinux (#1442)\n\n* add selinux",
-          "timestamp": "2023-11-28T06:29:54+08:00",
-          "tree_id": "26ebb82658e3e3252172d08df7a70a350d64f07a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/40213e74c6053ecf938b9e3af17139ebfaf69241"
-        },
-        "date": 1701124356354,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 32.624,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 149.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 330.01,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 675.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a68164e05af4e808009c0e2e9a556b3d5102418b",
           "message": "fix btrfs (#1443)",
           "timestamp": "2023-11-28T21:00:24+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 664.42,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0b4a704199c7b9dce197d734b34674770ff940d1",
+          "message": "chore(deps): bump indexmap from 2.1.0 to 2.2.0 (#1584)\n\n* chore(deps): bump indexmap from 2.1.0 to 2.2.0\r\n\r\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.1.0 to 2.2.0.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.1.0...2.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecate method warning\r\n\r\n* replace swap_remove with shift_remove to keep orders of the IndexMap/IndexSet\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-01-29T03:58:37+08:00",
+          "tree_id": "a9f4485ea7196d4f938c2f9a5e22028f67ac06e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0b4a704199c7b9dce197d734b34674770ff940d1"
+        },
+        "date": 1706472066948,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 31.823,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 151.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 381.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 674.57,
             "unit": "ns/op"
           }
         ]
