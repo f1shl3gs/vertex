@@ -4226,7 +4226,6 @@ dependencies = [
  "netlink-packet-sock-diag",
  "netlink-sys",
  "nix 0.27.1",
- "nom",
  "ntp",
  "once_cell",
  "parking_lot",
