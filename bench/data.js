@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706472615618,
+  "lastUpdate": 1706530686305,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "456adfdf0644ae7052eb028f8a13511158aabb30",
-          "message": "sources/node: add metric `node_cpu_scaling_governor` (#1445)\n\n* add metric `node_cpu_scaling_governor`",
-          "timestamp": "2023-12-02T17:37:16+08:00",
-          "tree_id": "642a9fbfb6c59f41390a304c68398cf911011e12",
-          "url": "https://github.com/f1shl3gs/vertex/commit/456adfdf0644ae7052eb028f8a13511158aabb30"
-        },
-        "date": 1701509949757,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 543360,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537530,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eb5c87eda9f75c6487c6066c421e986ea9316e2c",
+          "message": "chore(deps): bump lru from 0.12.1 to 0.12.2 (#1587)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.1 to 0.12.2.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.1...0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-29T20:15:52+08:00",
+          "tree_id": "77ba2bb2b4f792da09e18273509588599bc443b6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eb5c87eda9f75c6487c6066c421e986ea9316e2c"
+        },
+        "date": 1706530671835,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 535520,
             "unit": "ns/op"
           }
         ]
