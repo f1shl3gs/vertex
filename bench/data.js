@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706531236967,
+  "lastUpdate": 1706531258008,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "91fb1f99ea7ab9dc4775001da745e0b6b2ffc3ef",
-          "message": "deps: bump memmap2 to 0.9.2 (#1479)",
-          "timestamp": "2023-12-18T12:52:09+08:00",
-          "tree_id": "c7a80d41ae00ab3b0d93c8367fdc161b0c83d5e0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/91fb1f99ea7ab9dc4775001da745e0b6b2ffc3ef"
-        },
-        "date": 1702875781903,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40785.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "047ac234a3ee508a07b20a4d5de56424dcccdb8c",
           "message": "VTL: add extra functions and some small refactor (#1480)\n\n* simplify object expr convertion\r\n* check types when compile",
           "timestamp": "2023-12-18T18:48:40+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41507.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a12798871c578b1b575103ac29ca7b8257a8853",
+          "message": "chore(deps): bump serde_json from 1.0.112 to 1.0.113 (#1588)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.112 to 1.0.113.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.112...v1.0.113)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-29T20:16:29+08:00",
+          "tree_id": "5872e14992408edd80e55e196b2f549b17212f98",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a12798871c578b1b575103ac29ca7b8257a8853"
+        },
+        "date": 1706531243483,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41503.1,
             "unit": "KiB"
           }
         ]
