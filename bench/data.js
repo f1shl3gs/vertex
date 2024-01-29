@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706530718226,
+  "lastUpdate": 1706530720979,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "633861b30e4a693797c3f247e3bf8875ffdeb608",
-          "message": "chore(deps): bump snap from 1.1.0 to 1.1.1 (#1449)\n\nBumps [snap](https://github.com/BurntSushi/rust-snappy) from 1.1.0 to 1.1.1.\r\n- [Release notes](https://github.com/BurntSushi/rust-snappy/releases)\r\n- [Commits](https://github.com/BurntSushi/rust-snappy/compare/1.1.0...1.1.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: snap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-06T12:42:17+08:00",
-          "tree_id": "cf0379863c7fa34be79a2a0c12e394a87a8f86ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/633861b30e4a693797c3f247e3bf8875ffdeb608"
-        },
-        "date": 1701837873174,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 547340,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 562910,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a12798871c578b1b575103ac29ca7b8257a8853",
+          "message": "chore(deps): bump serde_json from 1.0.112 to 1.0.113 (#1588)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.112 to 1.0.113.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.112...v1.0.113)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-01-29T20:16:29+08:00",
+          "tree_id": "5872e14992408edd80e55e196b2f549b17212f98",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a12798871c578b1b575103ac29ca7b8257a8853"
+        },
+        "date": 1706530706876,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 547660,
             "unit": "ns/op"
           }
         ]
