@@ -366,7 +366,7 @@ tower = { version = "0.4.13", default-features = false }
 
 # Serde
 serde = { version = "1.0.196", default-features = false, features = ["derive"] }
-serde_yaml = { version = "0.9.30", default-features = false }
+serde_yaml = { version = "0.9.31", default-features = false }
 serde_json = { version = "1.0.113", default-features = false }
 
 # Netlink
