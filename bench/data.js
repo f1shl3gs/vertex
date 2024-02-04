@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707071566367,
+  "lastUpdate": 1707072007685,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a8a7b644e1f2b97cf849ba39c7b40c1902059d64",
-          "message": "fix hwmon properties insertion (#1486)",
-          "timestamp": "2023-12-21T14:31:04+08:00",
-          "tree_id": "e079c3b194d588ad6d09c7b095cdf9b0aac0c47c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a8a7b644e1f2b97cf849ba39c7b40c1902059d64"
-        },
-        "date": 1703140943089,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 583,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40779.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41458,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a51dabc9d7d68e9e9ce36a1219606eb5854664d6",
+          "message": "fix some lint warnings (#1593)",
+          "timestamp": "2024-02-05T02:29:12+08:00",
+          "tree_id": "a10635ebd4b6622b726ebea23dbdfafa728cc5fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a51dabc9d7d68e9e9ce36a1219606eb5854664d6"
+        },
+        "date": 1707071992427,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
             "unit": "s"
           },
           {
