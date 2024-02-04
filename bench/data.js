@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707060325831,
+  "lastUpdate": 1707060340034,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8b43eb1c9d10c5e1647e0cb0e4d5fc2e37cf46f2",
-          "message": "fix enum generate (#1484)",
-          "timestamp": "2023-12-20T18:35:50+08:00",
-          "tree_id": "c58bae3293f1c424ff9913dfeb116c5ee1955aa1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b43eb1c9d10c5e1647e0cb0e4d5fc2e37cf46f2"
-        },
-        "date": 1703069220417,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 588,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40779.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a8a7b644e1f2b97cf849ba39c7b40c1902059d64",
           "message": "fix hwmon properties insertion (#1486)",
           "timestamp": "2023-12-21T14:31:04+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41466,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "48cb1d70893621a3a673acfe6ec25ad64711b213",
+          "message": "remove unnecessary lint (#1592)",
+          "timestamp": "2024-02-04T23:14:24+08:00",
+          "tree_id": "9d64be07a4c75e23c7f350f4342f6225be41f799",
+          "url": "https://github.com/f1shl3gs/vertex/commit/48cb1d70893621a3a673acfe6ec25ad64711b213"
+        },
+        "date": 1707060325762,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41458,
             "unit": "KiB"
           }
         ]
