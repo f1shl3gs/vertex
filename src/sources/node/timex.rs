@@ -132,9 +132,7 @@ struct Timex {
     pub esterror: i64,
     pub status: i32,
     pub constant: i64,
-    #[allow(dead_code)]
     pub precision: i64,
-    #[allow(dead_code)]
     pub tolerance: i64,
     pub tick: i64,
     pub ppsfreq: i64,

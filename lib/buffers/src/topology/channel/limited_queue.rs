@@ -15,7 +15,6 @@ use tokio::sync::{Notify, OwnedSemaphorePermit, Semaphore, TryAcquireError};
 use crate::Bufferable;
 
 /// Error returned by `LimitedSender`.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, PartialEq)]
 pub struct SendError<T>(pub T);
 

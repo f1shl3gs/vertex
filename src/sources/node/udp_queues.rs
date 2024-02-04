@@ -86,7 +86,6 @@ async fn net_udp6_summary(root: PathBuf) -> Result<NetIPSocketSummary, Error> {
 /// NetIPSocketLine represents the fields parsed from a single line
 /// in /proc/net/{t,u}dp{,6}. Fields which are not used by IPSocket are skipped.
 /// For the proc file format details, see https://linux.die.net/man/5/proc.
-#[allow(dead_code)]
 struct NetIPSocketLine {
     sl: u64,
     local_addr: String,

@@ -40,7 +40,6 @@ enum SinkBuildError {
 }
 
 #[derive(Debug, Clone, Copy)]
-#[allow(dead_code)] // some features only use some variants
 pub enum SocketMode {
     Tcp,
     Udp,
@@ -48,7 +47,6 @@ pub enum SocketMode {
 }
 
 impl SocketMode {
-    #[allow(dead_code)]
     const fn as_str(self) -> &'static str {
         match self {
             Self::Tcp => "tcp",

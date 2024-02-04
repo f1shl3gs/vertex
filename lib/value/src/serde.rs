@@ -133,7 +133,7 @@ impl<'de> Deserialize<'de> for Value {
             where
                 E: Error,
             {
-                Ok(v.into())
+                Ok(Value::Bytes(v.into()))
             }
 
             #[inline]

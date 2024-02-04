@@ -1308,40 +1308,6 @@ pub fn unescape_string(mut s: &str) -> String {
 mod tests {
     use super::*;
 
-    #[allow(dead_code)]
-    fn unescape(s: &str) -> String {
-        let mut buf = String::with_capacity(s.len());
-        let text = s.as_bytes();
-        let mut pos = 0;
-
-        while pos < text.len() {
-            let c = text[pos] as char;
-            if c != '\\' {
-                buf.push(c);
-                pos += 1;
-                continue;
-            }
-
-            if pos + 1 == text.len() {
-                buf.push(c);
-                break;
-            }
-
-            pos += 1;
-            match text[pos] {
-                b'\'' => buf.push('\''),
-                b'"' => buf.push('"'),
-                b'\\' => buf.push('\\'),
-                b'n' => buf.push('\n'),
-                b'r' => buf.push('\r'),
-                b't' => buf.push('\t'),
-                c => buf.push(c as char),
-            }
-        }
-
-        buf
-    }
-
     #[allow(clippy::print_stdout)]
     fn assert_compile(input: &str) {
         match Compiler::compile(input) {

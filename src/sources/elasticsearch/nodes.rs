@@ -367,7 +367,6 @@ struct Http {
 }
 
 /// `NodeStats` defines node stats information structure for nodes
-#[allow(dead_code)]
 #[derive(Deserialize)]
 struct NodeStats {
     name: String,
