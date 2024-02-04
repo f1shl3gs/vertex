@@ -73,7 +73,6 @@ fn flatten_enum() {
         },
     }
 
-    #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Configurable, Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
     #[serde(rename_all = "snake_case")]
     pub enum LimitExceededAction {

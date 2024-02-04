@@ -317,7 +317,6 @@ struct InodeOperationStats {
 }
 
 // LogOperationStats contains statistics regarding the XFS log buffer
-#[allow(dead_code)]
 #[derive(Debug, Default)]
 struct LogOperationStats {
     writes: u32,

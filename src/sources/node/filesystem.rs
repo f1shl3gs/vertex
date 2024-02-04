@@ -193,7 +193,6 @@ fn statfs(path: &str) -> Result<Usage, std::io::Error> {
     }
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 struct Stat {
     device: String,

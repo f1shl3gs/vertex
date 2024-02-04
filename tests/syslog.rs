@@ -20,7 +20,6 @@ use vertex::sources::syslog::{default_max_length, Config as SyslogConfig, Mode};
 
 use crate::util::{start_topology, trace_init};
 
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
 #[derive(Copy, Clone, Deserialize, PartialEq, Debug)]
 pub enum Severity {
@@ -42,7 +41,6 @@ pub enum Severity {
     LOG_DEBUG,
 }
 
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
 #[derive(Copy, Clone, PartialEq, Deserialize, Debug)]
 pub enum Facility {

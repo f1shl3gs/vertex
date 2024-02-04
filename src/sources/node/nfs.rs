@@ -8,7 +8,6 @@ use tokio::io::AsyncBufReadExt;
 use super::Error;
 
 /// Network models the "net" line.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Default, PartialEq)]
 pub struct Network {
     pub net_count: u64,
@@ -35,7 +34,6 @@ impl TryFrom<Vec<u64>> for Network {
 }
 
 /// V2Stats models the "proc2" line.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Default, PartialEq)]
 pub struct V2Stats {
     pub null: u64,
@@ -91,7 +89,6 @@ impl TryFrom<Vec<u64>> for V2Stats {
 }
 
 /// V3Stats models the "proc3" line.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Default, PartialEq)]
 pub struct V3Stats {
     pub null: u64,
@@ -155,7 +152,6 @@ impl TryFrom<Vec<u64>> for V3Stats {
 }
 
 /// ClientV4Stats models the nfs "proc4" line
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Default, PartialEq)]
 pub struct ClientV4Stats {
     null: u64,
@@ -300,7 +296,6 @@ impl TryFrom<Vec<u64>> for ClientV4Stats {
 }
 
 /// ClientRPC models the nfs "rpc" line
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Default, PartialEq)]
 pub struct ClientRPC {
     rpc_count: u64,
@@ -378,10 +373,10 @@ macro_rules! procedure_metric {
         Metric::sum_with_tags(
             "node_nfs_requests_total",
             "Number of NFS procedures invoked.",
-            $value as f64,
+            $value,
             tags! {
-                "proto" => $proto.to_string(),
-                "method" => $name.to_string()
+                "proto" => $proto,
+                "method" => $name
             },
         )
     };

@@ -99,8 +99,6 @@ impl<const N: usize> FixedEncodable for Message<N> {
     }
 }
 
-#[allow(dead_code)]
-#[allow(clippy::type_complexity)]
 pub async fn setup<const N: usize>(
     variant: BufferType,
     total_events: usize,

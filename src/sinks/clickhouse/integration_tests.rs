@@ -29,7 +29,6 @@ fn gen_table() -> String {
 }
 
 #[derive(Debug, Deserialize)]
-#[allow(dead_code)] // deserialize all fields
 struct Stats {
     bytes_read: usize,
     elapsed: f64,
@@ -37,7 +36,6 @@ struct Stats {
 }
 
 #[derive(Debug, Deserialize)]
-#[allow(dead_code)] // deserialize all fields
 struct QueryResponse {
     data: Vec<Value>,
     meta: Vec<Value>,

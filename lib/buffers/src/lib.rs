@@ -25,7 +25,6 @@ use serde::{Deserialize, Serialize};
 #[macro_use]
 extern crate tracing;
 
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Copy, Clone, Default, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum WhenFull {

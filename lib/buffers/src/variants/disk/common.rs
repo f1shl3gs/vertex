@@ -224,7 +224,6 @@ where
     /// that causes a data file to exceed this value by as much as `max_record_size`.
     ///
     /// Defaults to 128MB.
-    #[allow(dead_code)]
     pub fn max_data_file_size(mut self, amount: u64) -> Self {
         self.max_data_file_size = Some(amount);
         self
@@ -236,7 +235,6 @@ where
     /// will not be written to the buffer.
     ///
     /// Defaults to 8MB.
-    #[allow(dead_code)]
     pub fn max_record_size(mut self, amount: usize) -> Self {
         self.max_record_size = Some(amount);
         self
@@ -248,7 +246,6 @@ where
     /// turn reduces the number of syscalls needed to issue writes to the underlying data file.
     ///
     /// Defaults to 256KB.
-    #[allow(dead_code)]
     pub fn write_buffer_size(mut self, amount: usize) -> Self {
         self.write_buffer_size = Some(amount);
         self
@@ -264,7 +261,6 @@ where
     /// amount of data written since the last flush would be lost.
     ///
     /// Defaults to 500ms.
-    #[allow(dead_code)]
     pub fn flush_interval(mut self, interval: Duration) -> Self {
         self.flush_interval = Some(interval);
         self
@@ -277,7 +273,6 @@ where
     /// the data file objects we get when opening a data file.
     ///
     /// Defaults to a Tokio-backed implementation.
-    #[allow(dead_code)]
     pub fn filesystem<FS2>(self, filesystem: FS2) -> DiskBufferConfigBuilder<FS2>
     where
         FS2: Filesystem,

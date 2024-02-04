@@ -16,7 +16,6 @@ use tokio_util::time::DelayQueue;
 use super::serde_regex;
 
 /// The mode of operation of the line aggregator
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Mode {

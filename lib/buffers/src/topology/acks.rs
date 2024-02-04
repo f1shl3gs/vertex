@@ -30,7 +30,6 @@ where
 }
 
 /// The length of an eligible marker.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum EligibleMarkerLength<N> {
     /// The marker's length was declared upfront when added.
@@ -90,7 +89,6 @@ where
 /// information as we reasonably based on the data we have, whether it's simply that the ID didn't
 /// match the next expected ID, or that we know it is definitively ahead or behind the next expected
 /// ID.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, PartialEq)]
 pub enum MarkerError {
     /// The given marker ID is behind the next expected marker ID.

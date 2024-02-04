@@ -15,7 +15,6 @@ pub struct LayoutUsage {
 }
 
 /// AllocationStats contains allocation statistics for a data type
-#[allow(dead_code)]
 pub struct AllocationStats {
     // Usage statistics
     disk_used_bytes: u64,
@@ -39,7 +38,6 @@ pub struct AllocationStats {
 
 /// Allocation contains allocation statistics for data,
 /// metadata and system data
-#[allow(dead_code)]
 pub struct Allocation {
     global_rsv_reserved: u64,
     global_rsv_size: u64,
@@ -56,7 +54,6 @@ struct Device {
 
 /// Stats contains statistics for a single Btrfs filesystem.
 /// See Linux fs/btrfs/sysfs.c for more information
-#[allow(dead_code)]
 pub struct Stats {
     uuid: String,
     label: String,
