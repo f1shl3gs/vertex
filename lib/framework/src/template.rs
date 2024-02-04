@@ -213,7 +213,7 @@ impl<'de> Deserialize<'de> for Template {
         impl<'de> serde::de::Visitor<'de> for TemplateVisitor {
             type Value = Template;
 
-            fn expecting(&self, formatter: &mut Formatter<'_>) -> std::fmt::Result {
+            fn expecting(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
                 write!(formatter, "a string")
             }
 

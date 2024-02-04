@@ -176,7 +176,7 @@ impl SinkConfig for TestConfig {
         );
         *self.controller_stats.lock().unwrap() = stats;
 
-        Ok((crate::Sink::from_event_sink(sink), healthcheck))
+        Ok((Sink::from_event_sink(sink), healthcheck))
     }
 
     fn input_type(&self) -> DataType {
@@ -725,7 +725,11 @@ async fn all_tests() {
         .expect("Could not open data directory")
         .map(|entry| entry.expect("Could not read data directory").path())
         .filter_map(|file_path| {
-            if (file_path.extension().map(|ext| ext == "yaml")).unwrap_or(false) {
+            if file_path
+                .extension()
+                .map(|ext| ext == "yaml")
+                .unwrap_or(false)
+            {
                 let mut data = String::new();
                 File::open(&file_path)
                     .unwrap()

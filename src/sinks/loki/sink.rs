@@ -242,7 +242,7 @@ impl EventEncoder {
         let schema = log_schema::log_schema();
         let timestamp_key = schema.timestamp_key();
         let timestamp = match event.as_log().get(timestamp_key) {
-            Some(event::log::Value::Timestamp(ts)) => ts.timestamp_nanos_opt().unwrap(),
+            Some(Value::Timestamp(ts)) => ts.timestamp_nanos_opt().unwrap(),
             _ => chrono::Utc::now()
                 .timestamp_nanos_opt()
                 .expect("should success"),

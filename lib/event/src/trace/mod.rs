@@ -5,7 +5,7 @@ mod span;
 
 use std::borrow::Cow;
 use std::collections::VecDeque;
-use std::fmt::{self, Debug};
+use std::fmt::{self, Debug, Display};
 use std::num::ParseIntError;
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
@@ -67,13 +67,16 @@ impl From<String> for AnyValue {
     }
 }
 
-impl ToString for AnyValue {
-    fn to_string(&self) -> String {
+impl Display for AnyValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            AnyValue::String(s) => s.to_string(),
-            AnyValue::Int64(i) => i.to_string(),
-            AnyValue::Float(f) => f.to_string(),
-            AnyValue::Boolean(b) => b.to_string(),
+            AnyValue::String(s) => f.write_str(s),
+            AnyValue::Int64(i) => f.write_str(i.to_string().as_str()),
+            AnyValue::Float(v) => f.write_str(v.to_string().as_str()),
+            AnyValue::Boolean(b) => {
+                let s = if *b { "true" } else { "false" };
+                f.write_str(s)
+            }
         }
     }
 }
@@ -146,7 +149,7 @@ impl TraceState {
             return false;
         }
 
-        let allowed_special = |b: u8| (b == b'_' || b == b'-' || b == b'*' || b == b'/');
+        let allowed_special = |b: u8| b == b'_' || b == b'-' || b == b'*' || b == b'/';
         let mut vendor_start = None;
         for (i, &b) in key.as_bytes().iter().enumerate() {
             if !(b.is_ascii_lowercase() || b.is_ascii_digit() || allowed_special(b) || b == b'@') {
@@ -336,7 +339,7 @@ impl FromStr for TraceState {
 pub struct TraceId(pub u128);
 
 impl Debug for TraceId {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_fmt(format_args!("{:032x}", self.0))
     }
 }
@@ -385,7 +388,7 @@ impl TraceId {
 pub struct SpanId(pub u64);
 
 impl Debug for SpanId {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_fmt(format_args!("{:016x}", self.0))
     }
 }

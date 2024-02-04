@@ -4,7 +4,6 @@ use chrono::TimeZone;
 use tracing::error;
 
 use crate::log::Value;
-use crate::metadata::WithMetadata;
 use crate::proto::{
     proto_event::Log as PLog, value::Kind as PVKind, Value as PValue, ValueArray as PValueArray,
     ValueMap as PValueMap,

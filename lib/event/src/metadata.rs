@@ -138,30 +138,3 @@ impl EventMetadata {
         self.finalizers.merge(finalizers);
     }
 }
-
-// TODO: impl EventDataEq ?
-
-/// This is a simple wrapper to allow attaching `EventMetadata` to
-/// any other type. This is primarily used in conversion functions,
-/// such as `impl From<X> for WithMetadata<Y>`.
-pub struct WithMetadata<T> {
-    /// The data item being wrapped
-    pub data: T,
-    /// The additional metadata sidecar
-    pub metadata: EventMetadata,
-}
-
-/*
-impl<T> WithMetadata<T> {
-    /// Covert from one wrapped type to another, where the underlying
-    /// type allows direct conversion.
-    pub fn into<T1: From<T>>(self) -> WithMetadata<T1> {
-        // We would like to `impl From` instead, but this fails due to
-        // conflicting implementations of `impl<T> From<T> for T`.
-        WithMetadata {
-            data: T1::from(self.data),
-            metadata: self.metadata,
-        }
-    }
-}
-*/

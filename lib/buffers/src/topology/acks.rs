@@ -873,7 +873,7 @@ mod tests {
                                         // calculate the gap from.
                                         //
                                         // This is most likely a bug in our model if it happens.
-                                        assert!(marker_stack.len() == 1,
+                                        assert_eq!(marker_stack.len(), 1,
                                             "SUT returned None but unknown length marker is calculable");
                                     },
                                 }

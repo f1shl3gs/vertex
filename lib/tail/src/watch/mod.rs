@@ -90,7 +90,7 @@ impl Watcher {
                 (Box::new(null_reader()), 0)
             }
             (true, false, ReadFrom::Beginning) => {
-                (Box::new(io::BufReader::new(MultiGzDecoder::new(reader))), 0)
+                (Box::new(BufReader::new(MultiGzDecoder::new(reader))), 0)
             }
             (false, true, _) => {
                 let pos = reader.seek(io::SeekFrom::End(0)).unwrap();
@@ -175,13 +175,13 @@ impl Watcher {
         let inode = meta.ino();
 
         if (devno, inode) != (self.devno, self.inode) {
-            let mut reader = io::BufReader::new(File::open(&path)?);
+            let mut reader = BufReader::new(File::open(&path)?);
             let gzipped = is_gzipped(&mut reader)?;
             let new_reader: Box<dyn BufRead> = if gzipped {
                 if self.position != 0 {
                     Box::new(null_reader())
                 } else {
-                    Box::new(io::BufReader::new(MultiGzDecoder::new(reader)))
+                    Box::new(BufReader::new(MultiGzDecoder::new(reader)))
                 }
             } else {
                 reader.seek(io::SeekFrom::Start(self.position))?;

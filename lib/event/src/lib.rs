@@ -33,12 +33,10 @@ use std::collections::BTreeMap;
 
 use bytes::Bytes;
 use chrono::Utc;
+use log::Logs;
 use log_schema::log_schema;
 use measurable::ByteSizeOf;
 use serde::Serialize;
-
-use log::Logs;
-use tags::{Key, Tags};
 
 #[derive(PartialEq, Debug, Clone, Serialize)]
 #[serde(rename_all = "snake_case")]

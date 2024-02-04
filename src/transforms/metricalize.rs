@@ -186,7 +186,7 @@ impl TaskTransform for Metricalize {
                             }
                         }
                     }
-                };
+                }
             }
         })
     }

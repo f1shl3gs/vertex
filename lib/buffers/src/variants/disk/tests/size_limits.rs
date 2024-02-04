@@ -261,7 +261,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded() {
             writer.flush().await.expect("flush should not fail");
             writer.close();
 
-            assert_buffer_size!(ledger, 2, (first_bytes_written + second_bytes_written));
+            assert_buffer_size!(ledger, 2, first_bytes_written + second_bytes_written);
             assert_reader_writer_file_positions!(ledger, 0, 1);
 
             // Now read both records, make sure they are what we expect, etc.
@@ -269,7 +269,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded() {
             assert_eq!(first_record_read, first_record);
             acknowledge(first_record_read).await;
 
-            assert_buffer_size!(ledger, 2, (first_bytes_written + second_bytes_written));
+            assert_buffer_size!(ledger, 2, first_bytes_written + second_bytes_written);
             assert_reader_writer_file_positions!(ledger, 0, 1);
 
             let second_record_read = reader.next().await.expect("ok").unwrap();
@@ -356,7 +356,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded_after_reload() {
             writer.flush().await.expect("flush should not fail");
             writer.close();
 
-            assert_buffer_size!(ledger, 2, (first_bytes_written + second_bytes_written));
+            assert_buffer_size!(ledger, 2, first_bytes_written + second_bytes_written);
             assert_reader_writer_file_positions!(ledger, 0, 1);
 
             // Now read both records, make sure they are what we expect, etc.
@@ -364,7 +364,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded_after_reload() {
             assert_eq!(first_record_read, first_record);
             acknowledge(first_record_read).await;
 
-            assert_buffer_size!(ledger, 2, (first_bytes_written + second_bytes_written));
+            assert_buffer_size!(ledger, 2, first_bytes_written + second_bytes_written);
             assert_reader_writer_file_positions!(ledger, 0, 1);
 
             let second_record_read = reader.next().await.expect("ok").unwrap();

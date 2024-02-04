@@ -60,7 +60,7 @@ pub const MAX_FILE_ID: u16 = u16::MAX;
 pub const MAX_FILE_ID: u16 = 6;
 
 pub(crate) fn create_crc32c_hasher() -> Hasher {
-    crc32fast::Hasher::new()
+    Hasher::new()
 }
 
 /// Gets the maximum possible data file size given the type-level numerical

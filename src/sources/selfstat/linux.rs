@@ -66,7 +66,7 @@ fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
 
 fn find_statistic(all: &str, pat: &str) -> Result<f64, std::io::Error> {
     if let Some(idx) = all.find(pat) {
-        let mut iter = (all[idx + pat.len()..]).split_whitespace();
+        let mut iter = all[idx + pat.len()..].split_whitespace();
         if let Some(v) = iter.next() {
             return v.parse().map_err(|e| {
                 // Error::Msg(format!("read statistic {} failed: {}", pat, e))

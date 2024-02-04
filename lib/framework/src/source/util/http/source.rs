@@ -187,7 +187,7 @@ fn ok_resp(body: Option<String>) -> Response<Body> {
     let body = body.map_or(Body::empty(), Body::from);
 
     Response::builder()
-        .status(http::StatusCode::OK)
+        .status(StatusCode::OK)
         .body(body)
         .unwrap()
 }

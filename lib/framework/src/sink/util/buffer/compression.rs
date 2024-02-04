@@ -88,7 +88,7 @@ impl<'de> de::Deserialize<'de> for Compression {
             Gzip,
         }
 
-        impl<'de> serde::de::Visitor<'de> for StringOrMap {
+        impl<'de> de::Visitor<'de> for StringOrMap {
             type Value = Compression;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
@@ -102,7 +102,7 @@ impl<'de> de::Deserialize<'de> for Compression {
                 match v {
                     "none" => Ok(Compression::None),
                     "gzip" => Ok(Compression::gzip_default()),
-                    _ => Err(de::Error::invalid_value(
+                    _ => Err(Error::invalid_value(
                         de::Unexpected::Str(v),
                         &r#""none" or "gzip""#,
                     )),
@@ -120,24 +120,19 @@ impl<'de> de::Deserialize<'de> for Compression {
                     match key.as_str() {
                         "algorithm" => {
                             if algorithm.is_some() {
-                                return Err(de::Error::duplicate_field("algorithm"));
+                                return Err(Error::duplicate_field("algorithm"));
                             }
 
                             let value = map.next_value::<String>()?;
                             algorithm = match value.as_str() {
                                 "none" => Some(Algorithm::None),
                                 "gzip" => Some(Algorithm::Gzip),
-                                _ => {
-                                    return Err(de::Error::unknown_variant(
-                                        &value,
-                                        &["none", "gzip"],
-                                    ))
-                                }
+                                _ => return Err(Error::unknown_variant(&value, &["none", "gzip"])),
                             };
                         }
                         "level" => {
                             if level.is_some() {
-                                return Err(de::Error::duplicate_field("level"));
+                                return Err(Error::duplicate_field("level"));
                             }
                             level = Some(match map.next_value::<serde_json::Value>()? {
                                 serde_json::Value::Number(level) => match level.as_u64() {
@@ -145,7 +140,7 @@ impl<'de> de::Deserialize<'de> for Compression {
                                         flate2::Compression::new(value as u32)
                                     }
                                     Some(_) | None => {
-                                        return Err(de::Error::invalid_value(
+                                        return Err(Error::invalid_value(
                                             de::Unexpected::Other(&level.to_string()),
                                             &"0, 1, 2, 3, 4, 5, 6, 7, 8 or 9",
                                         ));
@@ -157,27 +152,27 @@ impl<'de> de::Deserialize<'de> for Compression {
                                     "default" => flate2::Compression::default(),
                                     "best" => flate2::Compression::best(),
                                     level => {
-                                        return Err(de::Error::invalid_value(
+                                        return Err(Error::invalid_value(
                                             de::Unexpected::Str(level),
                                             &r#""none", "fast", "best" or "default""#,
                                         ));
                                     }
                                 },
                                 value => {
-                                    return Err(de::Error::invalid_type(
+                                    return Err(Error::invalid_type(
                                         de::Unexpected::Other(&value.to_string()),
                                         &"integer or string",
                                     ));
                                 }
                             });
                         }
-                        _ => return Err(de::Error::unknown_field(&key, &["algorithm", "level"])),
+                        _ => return Err(Error::unknown_field(&key, &["algorithm", "level"])),
                     };
                 }
 
-                match algorithm.ok_or_else(|| de::Error::missing_field("algorithm"))? {
+                match algorithm.ok_or_else(|| Error::missing_field("algorithm"))? {
                     Algorithm::None => match level {
-                        Some(_) => Err(de::Error::unknown_field("level", &[])),
+                        Some(_) => Err(Error::unknown_field("level", &[])),
                         None => Ok(Compression::None),
                     },
                     Algorithm::Gzip => Ok(Compression::Gzip(level.unwrap_or_default())),

@@ -141,16 +141,6 @@ impl<'de> de::Visitor<'de> for BufferConfigVisitor {
         formatter.write_str("enum BufferType")
     }
 
-    fn visit_map<A>(self, map: A) -> Result<Self::Value, A::Error>
-    where
-        A: de::MapAccess<'de>,
-    {
-        let stage = BufferTypeVisitor::visit_map_impl(map)?;
-        Ok(BufferConfig {
-            stages: vec![stage],
-        })
-    }
-
     fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
     where
         A: de::SeqAccess<'de>,
@@ -160,6 +150,16 @@ impl<'de> de::Visitor<'de> for BufferConfigVisitor {
             stages.push(stage);
         }
         Ok(BufferConfig { stages })
+    }
+
+    fn visit_map<A>(self, map: A) -> Result<Self::Value, A::Error>
+    where
+        A: de::MapAccess<'de>,
+    {
+        let stage = BufferTypeVisitor::visit_map_impl(map)?;
+        Ok(BufferConfig {
+            stages: vec![stage],
+        })
     }
 }
 

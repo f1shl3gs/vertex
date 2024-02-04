@@ -425,14 +425,14 @@ pub struct ProxyConnector<C> {
 
 impl<C> ProxyConnector<C> {
     /// Create a new secured Proxies
-    pub fn new(connector: C) -> Result<Self, io::Error> {
+    pub fn new(connector: C) -> Result<Self, Error> {
         let certs = rustls_native_certs::load_native_certs()
-            .map_err(|err| io::Error::new(ErrorKind::InvalidData, err))?;
+            .map_err(|err| Error::new(ErrorKind::InvalidData, err))?;
         let mut store = RootCertStore::empty();
         for cert in certs {
             store
                 .add(&rustls::Certificate(cert.0))
-                .map_err(|err| io::Error::new(ErrorKind::InvalidData, err))?;
+                .map_err(|err| Error::new(ErrorKind::InvalidData, err))?;
         }
 
         let config = ClientConfig::builder()
@@ -466,13 +466,13 @@ where
     C::Error: Into<BoxError>,
 {
     type Response = ProxyStream<C::Response>;
-    type Error = io::Error;
+    type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         match self.connector.poll_ready(cx) {
             Poll::Ready(Ok(())) => Poll::Ready(Ok(())),
-            Poll::Ready(Err(err)) => Poll::Ready(Err(io::Error::new(io::ErrorKind::Other, err))),
+            Poll::Ready(Err(err)) => Poll::Ready(Err(Error::new(ErrorKind::Other, err))),
             Poll::Pending => Poll::Pending,
         }
     }
@@ -505,7 +505,7 @@ where
                             Err(err) => break Err(err),
                         }
                         .await
-                        .map_err(|err| io::Error::new(ErrorKind::Other, err))
+                        .map_err(|err| Error::new(ErrorKind::Other, err))
                         {
                             Ok(v) => v,
                             Err(err) => break Err(err),
@@ -523,7 +523,7 @@ where
                                 let secure_stream = match tls
                                     .connect(dnsref, tunnel_stream)
                                     .await
-                                    .map_err(|err| io::Error::new(ErrorKind::Other, err))
+                                    .map_err(|err| Error::new(ErrorKind::Other, err))
                                 {
                                     Ok(v) => v,
                                     Err(err) => break Err(err),
@@ -542,11 +542,9 @@ where
                         self.connector
                             .call(proxy_uri)
                             .map_ok(ProxyStream::Regular)
-                            .map_err(|err| io::Error::new(ErrorKind::Other, err)),
+                            .map_err(|err| Error::new(ErrorKind::Other, err)),
                     ),
-                    Err(err) => {
-                        Box::pin(futures::future::err(io::Error::new(ErrorKind::Other, err)))
-                    }
+                    Err(err) => Box::pin(futures::future::err(Error::new(ErrorKind::Other, err))),
                 }
             }
         } else {
@@ -554,7 +552,7 @@ where
                 self.connector
                     .call(uri)
                     .map_ok(ProxyStream::NoProxy)
-                    .map_err(|err| io::Error::new(ErrorKind::Other, err)),
+                    .map_err(|err| Error::new(ErrorKind::Other, err)),
             )
         }
     }
@@ -563,7 +561,7 @@ where
 fn proxy_dst(dst: &Uri, proxy: &Uri) -> io::Result<Uri> {
     Uri::builder()
         .scheme(proxy.scheme_str().ok_or_else(|| {
-            io::Error::new(
+            Error::new(
                 ErrorKind::Other,
                 format!("proxy uri missing scheme: {}", proxy),
             )
@@ -572,7 +570,7 @@ fn proxy_dst(dst: &Uri, proxy: &Uri) -> io::Result<Uri> {
             proxy
                 .authority()
                 .ok_or_else(|| {
-                    io::Error::new(
+                    Error::new(
                         ErrorKind::Other,
                         format!("proxy uri missing host: {}", proxy),
                     )
@@ -581,7 +579,7 @@ fn proxy_dst(dst: &Uri, proxy: &Uri) -> io::Result<Uri> {
         )
         .path_and_query(dst.path_and_query().unwrap().clone())
         .build()
-        .map_err(|err| io::Error::new(ErrorKind::Other, format!("other error: {}", err)))
+        .map_err(|err| Error::new(ErrorKind::Other, format!("other error: {}", err)))
 }
 
 struct TunnelConnect {
@@ -628,7 +626,7 @@ struct Tunnel<S> {
 }
 
 impl<S: AsyncRead + AsyncWrite + Unpin> Future for Tunnel<S> {
-    type Output = Result<S, io::Error>;
+    type Output = Result<S, Error>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         if self.stream.is_none() {
@@ -650,7 +648,7 @@ impl<S: AsyncRead + AsyncWrite + Unpin> Future for Tunnel<S> {
                     this.state = TunnelState::Reading;
                     this.buf.truncate(0);
                 } else if n == 0 {
-                    return Poll::Ready(Err(io::Error::new(
+                    return Poll::Ready(Err(Error::new(
                         ErrorKind::Other,
                         "unexpected EOF while tunnel writing",
                     )));
@@ -661,7 +659,7 @@ impl<S: AsyncRead + AsyncWrite + Unpin> Future for Tunnel<S> {
                 match fut.poll(cx) {
                     Poll::Ready(Ok(n)) => {
                         if n == 0 {
-                            return Poll::Ready(Err(io::Error::new(
+                            return Poll::Ready(Err(Error::new(
                                 ErrorKind::Other,
                                 "unexpected EOF while tunnel reading",
                             )));
@@ -680,7 +678,7 @@ impl<S: AsyncRead + AsyncWrite + Unpin> Future for Tunnel<S> {
                         // else read more
                     } else {
                         let len = read.len().min(16);
-                        return Poll::Ready(Err(io::Error::new(
+                        return Poll::Ready(Err(Error::new(
                             ErrorKind::Other,
                             format!(
                                 "unsuccessful tunnel ({})",

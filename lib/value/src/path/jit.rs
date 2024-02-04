@@ -181,9 +181,9 @@ impl<'a> Iterator for JitValuePathIter<'a> {
                         },
                         JitState::EscapedQuote => match c {
                             '\"' => (
-                                (Some(Some(BorrowedSegment::Field(
+                                Some(Some(BorrowedSegment::Field(
                                     std::mem::take(&mut self.escape_buffer).into(),
-                                )))),
+                                ))),
                                 JitState::Continue,
                             ),
                             '\\' => match self.chars.next() {
@@ -311,9 +311,9 @@ impl<'a> Iterator for JitValuePathIter<'a> {
                             '|' => {
                                 self.coalesce_count += 1;
                                 (
-                                    (Some(Some(BorrowedSegment::CoalesceField(
+                                    Some(Some(BorrowedSegment::CoalesceField(
                                         std::mem::take(&mut self.escape_buffer).into(),
-                                    )))),
+                                    ))),
                                     JitState::CoalesceStart,
                                 )
                             }
@@ -323,9 +323,9 @@ impl<'a> Iterator for JitValuePathIter<'a> {
                                 } else {
                                     self.coalesce_count = 0;
                                     (
-                                        (Some(Some(BorrowedSegment::CoalesceEnd(
+                                        Some(Some(BorrowedSegment::CoalesceEnd(
                                             std::mem::take(&mut self.escape_buffer).into(),
-                                        )))),
+                                        ))),
                                         JitState::Continue,
                                     )
                                 }

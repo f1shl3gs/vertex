@@ -523,7 +523,7 @@ async fn cluster_info(cli: &mut Client) -> Result<Vec<Metric>, Error> {
     let keyword = "cluster_enabled:1".as_bytes();
     let infos = cli.query::<Bytes>(&["cluster", "info"]).await?;
 
-    if (infos[..]).windows(keyword.len()).any(|p| p == keyword) {
+    if infos[..].windows(keyword.len()).any(|p| p == keyword) {
         let mut metrics = vec![];
 
         infos

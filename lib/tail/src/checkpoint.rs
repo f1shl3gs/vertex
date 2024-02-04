@@ -28,7 +28,7 @@ pub struct Fingerprint {
 }
 
 impl TryFrom<&PathBuf> for Fingerprint {
-    type Error = std::io::Error;
+    type Error = io::Error;
 
     fn try_from(path: &PathBuf) -> Result<Self, Self::Error> {
         let metadata = path.metadata()?;
