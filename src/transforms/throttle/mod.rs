@@ -223,14 +223,14 @@ window: 5s
         }
         assert_eq!(2, count);
 
-        std::thread::sleep(Duration::from_secs(2));
+        tokio::time::sleep(Duration::from_secs(2)).await;
 
         tx.send(Event::from("")).await.unwrap();
 
         // We should be back to pending, having the second event dropped.
         assert_eq!(Poll::Pending, futures::poll!(out_stream.next()));
 
-        std::thread::sleep(Duration::from_secs(3));
+        tokio::time::sleep(Duration::from_secs(3)).await;
 
         tx.send(Event::from("")).await.unwrap();
 

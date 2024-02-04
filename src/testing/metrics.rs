@@ -50,7 +50,7 @@ impl metrics::Reporter for Reporter {
                     })
                     .collect::<Vec<_>>();
 
-                event::Metric::histogram_with_tags(name, description, tags, count, h.sum, buckets)
+                Metric::histogram_with_tags(name, description, tags, count, h.sum, buckets)
             }
         };
 

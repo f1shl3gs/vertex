@@ -8,17 +8,10 @@ mod proto_event {
     include!(concat!(env!("OUT_DIR"), "/event.rs"));
 }
 
-use std::borrow::Cow;
-use std::collections::BTreeMap;
-
 use chrono::TimeZone;
 pub use proto_event::*;
-use tracing::error;
 
-use super::{Key, LogRecord, MetricValue, Tags};
-use crate::metadata::WithMetadata;
 use crate::proto::event_wrapper::Event;
-use crate::tags::Array;
 
 impl From<Log> for Event {
     fn from(log: Log) -> Self {

@@ -1,4 +1,5 @@
 use std::net::SocketAddr;
+use std::time::Duration;
 
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
@@ -27,7 +28,7 @@ async fn gather() {
         .parse::<SocketAddr>()
         .unwrap();
 
-    std::thread::sleep(std::time::Duration::from_secs(15));
+    tokio::time::sleep(Duration::from_secs(15)).await;
 
     let pool = MySqlPool::connect_with(
         MySqlConnectOptions::new()

@@ -228,7 +228,7 @@ mod integration_tests {
             .with_env("ZOO_4LW_COMMANDS_WHITELIST", "*")
             .run()
             .unwrap();
-        std::thread::sleep(Duration::from_secs(5));
+        tokio::time::sleep(Duration::from_secs(5)).await;
         // container.wait(WaitFor::Stdout("- Started ")).unwrap();
         let addr = container.get_host_port(2181).unwrap();
 

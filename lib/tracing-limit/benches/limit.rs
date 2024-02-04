@@ -123,13 +123,13 @@ where
         values.record(&mut visitor);
     }
 
+    fn on_follows_from(&self, id: &span::Id, follows: &span::Id, _ctx: Context<'_, S>) {
+        let _ = (id, follows);
+    }
+
     fn on_event(&self, event: &Event<'_>, _ctx: Context<'_, S>) {
         let mut visitor = Visitor(self.mutex.lock().unwrap());
         event.record(&mut visitor);
-    }
-
-    fn on_follows_from(&self, id: &span::Id, follows: &span::Id, _ctx: Context<'_, S>) {
-        let _ = (id, follows);
     }
 
     fn on_enter(&self, id: &span::Id, _ctx: Context<'_, S>) {

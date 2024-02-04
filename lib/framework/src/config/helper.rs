@@ -38,7 +38,7 @@ mod tests {
     #[derive(Deserialize, Serialize)]
     struct RE {
         #[serde(with = "serde_regex")]
-        re: ::regex::Regex,
+        re: regex::Regex,
     }
 
     #[test]

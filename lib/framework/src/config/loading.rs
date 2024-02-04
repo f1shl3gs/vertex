@@ -330,7 +330,7 @@ sinks:
         let cursor = std::io::Cursor::new(INPUT.to_string());
         let reader = std::io::BufReader::new(cursor);
 
-        let (builder, warnings) = load(reader, format::FormatHint::Some(Format::YAML)).unwrap();
+        let (builder, warnings) = load(reader, Some(Format::YAML)).unwrap();
         assert_eq!(warnings.len(), 0);
         assert_eq!(builder.sources.len(), 5);
         assert_eq!(builder.transforms.len(), 1);

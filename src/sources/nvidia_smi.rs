@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::fmt::Display;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{Duration, Instant};
@@ -263,16 +264,17 @@ enum Unit {
     MHz,
 }
 
-impl ToString for Unit {
-    fn to_string(&self) -> String {
-        match self {
+impl Display for Unit {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
             Unit::Celsius => "C",
             Unit::MiB => "MiB",
             Unit::Percentage => "%",
             Unit::Watt => "W",
             Unit::MHz => "MHz",
-        }
-        .to_string()
+        };
+
+        f.write_str(s)
     }
 }
 
@@ -313,7 +315,7 @@ impl Serialize for Value {
     where
         S: Serializer,
     {
-        let raw = format!("{} {}", self.value, self.unit.to_string());
+        let raw = format!("{} {}", self.value, self.unit);
         serializer.serialize_str(&raw)
     }
 }

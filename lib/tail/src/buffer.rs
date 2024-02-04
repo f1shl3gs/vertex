@@ -143,7 +143,7 @@ mod tests {
                         within_max_size,
                         chunk_index: i,
                         interior_index,
-                        byte_range: (previous_offset..global_index),
+                        byte_range: previous_offset..global_index,
                     });
                     previous_offset = global_index + 1;
                 }

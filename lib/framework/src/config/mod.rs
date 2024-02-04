@@ -348,7 +348,7 @@ sinks:
 
         ";
 
-        let _b: Builder = format::deserialize(text, Some(format::Format::YAML)).unwrap();
+        let _b: Builder = format::deserialize(text, Some(Format::YAML)).unwrap();
     }
 
     #[test]

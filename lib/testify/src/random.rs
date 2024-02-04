@@ -14,7 +14,7 @@ pub fn random_string(len: usize) -> String {
 }
 
 pub fn random_lines(len: usize) -> impl Iterator<Item = String> {
-    std::iter::repeat(()).map(move |_| random_string(len))
+    iter::repeat(()).map(move |_| random_string(len))
 }
 
 pub fn random_map(max_size: usize, field_len: usize) -> HashMap<String, String> {

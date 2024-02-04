@@ -89,6 +89,6 @@ where
     F: Fn(&T) -> usize,
 {
     fn size(&self, item: &T) -> usize {
-        (self)(item)
+        self(item)
     }
 }

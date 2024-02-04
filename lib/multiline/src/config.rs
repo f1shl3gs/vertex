@@ -158,7 +158,7 @@ impl<'de> Deserialize<'de> for MultilineConfig {
                         parser: Parser::NoIndent,
                     }),
                     _ => Err(Error::invalid_value(
-                        serde::de::Unexpected::Str(v),
+                        Unexpected::Str(v),
                         &r#"cri, docker, go or java"#,
                     )),
                 }
@@ -185,7 +185,7 @@ impl<'de> Deserialize<'de> for MultilineConfig {
 
                             let v = parse_duration(&value).map_err(|_err| {
                                 Error::invalid_value(
-                                    serde::de::Unexpected::Str(&value),
+                                    Unexpected::Str(&value),
                                     &r#"something like 5s, 10s"#,
                                 )
                             })?;

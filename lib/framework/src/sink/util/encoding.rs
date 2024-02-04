@@ -29,14 +29,14 @@ impl<W> Write for TrackWriter<W>
 where
     W: Write,
 {
-    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         #[allow(clippy::disallowed_methods)]
         let n = self.writer.write(buf)?;
         self.written += n;
         Ok(n)
     }
 
-    fn flush(&mut self) -> std::io::Result<()> {
+    fn flush(&mut self) -> io::Result<()> {
         self.writer.flush()
     }
 }
@@ -45,11 +45,11 @@ pub trait Encoder<T> {
     /// Encodes the input into the provided writer.
     ///
     /// If an I/O error is encountered while encoding the input, an error variant will be returned.
-    fn encode(&self, input: T, writer: &mut dyn io::Write) -> io::Result<usize>;
+    fn encode(&self, input: T, writer: &mut dyn Write) -> io::Result<usize>;
 }
 
 impl Encoder<Vec<Event>> for (Transformer, codecs::Encoder<Framer>) {
-    fn encode(&self, mut events: Vec<Event>, writer: &mut dyn io::Write) -> io::Result<usize> {
+    fn encode(&self, mut events: Vec<Event>, writer: &mut dyn Write) -> io::Result<usize> {
         let mut encoder = self.1.clone();
         let mut written = 0;
         let batch_prefix = encoder.batch_prefix();
@@ -64,7 +64,7 @@ impl Encoder<Vec<Event>> for (Transformer, codecs::Encoder<Framer>) {
 
                 encoder
                     .encode(event, &mut buf)
-                    .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err))?;
+                    .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))?;
 
                 writer.write_all(&buf)?;
                 written += buf.len();
@@ -89,7 +89,7 @@ impl Encoder<Vec<Event>> for (Transformer, codecs::Encoder<Framer>) {
 }
 
 impl Encoder<Event> for (Transformer, codecs::encoding::Encoder<()>) {
-    fn encode(&self, mut event: Event, writer: &mut dyn io::Write) -> io::Result<usize> {
+    fn encode(&self, mut event: Event, writer: &mut dyn Write) -> io::Result<usize> {
         let mut encoder = self.1.clone();
 
         self.0.transform(&mut event);
@@ -104,17 +104,17 @@ impl Encoder<Event> for (Transformer, codecs::encoding::Encoder<()>) {
     }
 }
 
-pub fn as_tracked_write<F, I, E>(inner: &mut dyn io::Write, input: I, f: F) -> io::Result<usize>
+pub fn as_tracked_write<F, I, E>(inner: &mut dyn Write, input: I, f: F) -> io::Result<usize>
 where
-    F: FnOnce(&mut dyn io::Write, I) -> Result<(), E>,
+    F: FnOnce(&mut dyn Write, I) -> Result<(), E>,
     E: Into<io::Error> + 'static,
 {
     struct Tracked<'inner> {
         count: usize,
-        inner: &'inner mut dyn io::Write,
+        inner: &'inner mut dyn Write,
     }
 
-    impl<'inner> io::Write for Tracked<'inner> {
+    impl<'inner> Write for Tracked<'inner> {
         fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
             #[allow(clippy::disallowed_methods)] // We pass on the result of `write` to the caller.
             let n = self.inner.write(buf)?;
@@ -137,12 +137,11 @@ where
 pub struct NoopEncoder;
 
 impl<T> Encoder<T> for NoopEncoder {
-    fn encode(&self, _input: T, _writer: &mut dyn io::Write) -> io::Result<usize> {
+    fn encode(&self, _input: T, _writer: &mut dyn Write) -> io::Result<usize> {
         panic!("NoopEncoder should never be called")
     }
 }
 
-// TODO: tests
 #[cfg(test)]
 mod tests {
     use super::*;

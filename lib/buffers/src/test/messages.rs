@@ -246,7 +246,7 @@ message_wrapper!(MultiEventRecord: u32, |m: &Self| m.0);
 
 impl MultiEventRecord {
     pub fn encoded_len(&self) -> usize {
-        usize::try_from(self.0).unwrap_or(usize::MAX) + std::mem::size_of::<u32>()
+        usize::try_from(self.0).unwrap_or(usize::MAX) + mem::size_of::<u32>()
     }
 }
 
@@ -285,7 +285,7 @@ pub(crate) struct PoisonPillMultiEventRecord(pub u32);
 
 impl PoisonPillMultiEventRecord {
     pub fn encoded_size(&self) -> usize {
-        usize::try_from(self.0).unwrap_or(usize::MAX) + std::mem::size_of::<u32>()
+        usize::try_from(self.0).unwrap_or(usize::MAX) + mem::size_of::<u32>()
     }
 }
 

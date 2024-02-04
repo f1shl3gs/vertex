@@ -223,7 +223,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
     }
 
     #[cfg(feature = "sources-utils-tcp-socket")]
-    pub fn set_receive_buffer_bytes(&mut self, bytes: usize) -> std::io::Result<()> {
+    pub fn set_receive_buffer_bytes(&mut self, bytes: usize) -> io::Result<()> {
         let stream = self.get_ref().ok_or_else(|| {
             io::Error::new(
                 io::ErrorKind::NotConnected,

@@ -7,7 +7,6 @@ use framework::config::{ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::Compression;
-use framework::tls::TlsSettings;
 use futures_util::future::ready;
 use futures_util::stream;
 use http::{Method, Request};

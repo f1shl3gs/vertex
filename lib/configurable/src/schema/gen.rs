@@ -105,7 +105,7 @@ impl SchemaGenerator {
     /// If the given `schema` has a [`$ref`](../schema/struct.SchemaObject.html#structfield.reference)
     /// property which refers to another schema in `self`'s schema definitions, the referenced
     /// schema will be returned.  Otherwise, returns `None`.
-    pub fn dereference<'a>(&'a self, schema: &Schema) -> Option<&'a Schema> {
+    pub fn dereference(&self, schema: &Schema) -> Option<&Schema> {
         match schema {
             Schema::Object(SchemaObject {
                 reference: Some(ref schema_ref),
