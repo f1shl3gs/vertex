@@ -10,7 +10,7 @@ use super::{
     Resource,
 };
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct SinkContext {
     pub globals: GlobalOptions,
     pub proxy: ProxyConfig,
