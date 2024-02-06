@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use crate::config::{ComponentKey, DataType, ExpandType, GlobalOptions, Output};
 use crate::transform::Noop;
 
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct TransformContext {
     // This is optional because currently there are a lot of places we use `TransformContext`
     // that may not have the relevant data available (e.g. tests). In the furture it'd be
@@ -20,10 +20,7 @@ pub struct TransformContext {
 
 impl TransformContext {
     pub fn new_with_globals(globals: GlobalOptions) -> Self {
-        Self {
-            globals,
-            ..Default::default()
-        }
+        Self { globals, key: None }
     }
 }
 
