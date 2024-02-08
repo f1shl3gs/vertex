@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707393459077,
+  "lastUpdate": 1707393897852,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "36a802613ff75b8d5512b81136a83ab1a81400db",
-          "message": "chore(deps): bump async-trait from 0.1.74 to 0.1.75 (#1488)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.74 to 0.1.75.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.74...0.1.75)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-21T14:46:03+08:00",
-          "tree_id": "30e7f25f265596e329f474f7f131ed1ecf1c3125",
-          "url": "https://github.com/f1shl3gs/vertex/commit/36a802613ff75b8d5512b81136a83ab1a81400db"
-        },
-        "date": 1703141823520,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40804.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "025e99a36c8f005cdc118740764738cb7196e1c1",
           "message": "chore(deps): bump syn from 2.0.41 to 2.0.42 (#1487)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.41 to 2.0.42.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.41...2.0.42)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-12-21T14:51:50+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41458,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bf3127bf07654a56faa59175910b1d1db093ef8e",
+          "message": "chore(deps): bump num-traits from 0.2.17 to 0.2.18 (#1595)\n\nBumps [num-traits](https://github.com/rust-num/num-traits) from 0.2.17 to 0.2.18.\r\n- [Changelog](https://github.com/rust-num/num-traits/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/rust-num/num-traits/compare/num-traits-0.2.17...num-traits-0.2.18)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: num-traits\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-08T19:53:56+08:00",
+          "tree_id": "6b0f983d75734f0450a158477b980488bdfad5cd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bf3127bf07654a56faa59175910b1d1db093ef8e"
+        },
+        "date": 1707393882579,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41480.8,
             "unit": "KiB"
           }
         ]
