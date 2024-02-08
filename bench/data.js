@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707393376434,
+  "lastUpdate": 1707393402516,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "91b73b48e234cf1d5b75ec228badcfbd16c84385",
-          "message": "optimize for BTreeMap's `contains_key` and `insert` (#1458)",
-          "timestamp": "2023-12-11T21:36:22+08:00",
-          "tree_id": "acd511892da75e43fa1441e2b697d47423782563",
-          "url": "https://github.com/f1shl3gs/vertex/commit/91b73b48e234cf1d5b75ec228badcfbd16c84385"
-        },
-        "date": 1702301970047,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 32.494,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 150.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 337,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 685.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1b658f3cdcf756fca73c955b644aeda27ca37e7a",
           "message": "VTL (#1459)\n\n* add From<u16> for Value\r\n\r\n* add `array_value!`\r\n\r\n* add vtl",
           "timestamp": "2023-12-11T22:20:56+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 656.35,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bf3127bf07654a56faa59175910b1d1db093ef8e",
+          "message": "chore(deps): bump num-traits from 0.2.17 to 0.2.18 (#1595)\n\nBumps [num-traits](https://github.com/rust-num/num-traits) from 0.2.17 to 0.2.18.\r\n- [Changelog](https://github.com/rust-num/num-traits/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/rust-num/num-traits/compare/num-traits-0.2.17...num-traits-0.2.18)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: num-traits\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-08T19:53:56+08:00",
+          "tree_id": "6b0f983d75734f0450a158477b980488bdfad5cd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bf3127bf07654a56faa59175910b1d1db093ef8e"
+        },
+        "date": 1707393388388,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 31.909,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 154.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 338.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 677.37,
             "unit": "ns/op"
           }
         ]
