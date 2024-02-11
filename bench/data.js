@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707646410652,
+  "lastUpdate": 1707646425341,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8458eb6313ff9c207a65adcfa119e76176f60c55",
-          "message": "transforms: rename transform `rewrite` to `relabel` (#1462)",
-          "timestamp": "2023-12-12T06:01:42+08:00",
-          "tree_id": "7c48ab61484f7ab706e66e6ddf24b4ef9c512de3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8458eb6313ff9c207a65adcfa119e76176f60c55"
-        },
-        "date": 1702332267356,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 34.698,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 147.15,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 322.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 669.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "29d79dba27b755bdfbddb3fa1f997874dc6bb954",
           "message": "setting `threads` or `max-blocking-threads` by env (#1463)",
           "timestamp": "2023-12-12T06:14:37+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 655.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8490696aae69433ebc055aa86f5259af75a2be5d",
+          "message": "chore(deps): bump ahash from 0.8.7 to 0.8.8 (#1600)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.7 to 0.8.8.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/0.8.7...v0.8.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-11T18:10:46+08:00",
+          "tree_id": "925b2f6b708d1ffede1e4884776cb0c3241cca42",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8490696aae69433ebc055aa86f5259af75a2be5d"
+        },
+        "date": 1707646410366,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 31.824,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 155.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 326.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 651.55,
             "unit": "ns/op"
           }
         ]
