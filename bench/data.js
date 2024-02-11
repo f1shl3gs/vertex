@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707633063230,
+  "lastUpdate": 1707633072752,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c16c82e9238e6d626109b558025ac44bbea4ab28",
-          "message": "chore(deps): bump proc-macro2 from 1.0.70 to 1.0.71 (#1490)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.70 to 1.0.71.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.70...1.0.71)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-22T11:14:02+08:00",
-          "tree_id": "1b353974441a87792176eb5a75a5b72fea1c3db5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c16c82e9238e6d626109b558025ac44bbea4ab28"
-        },
-        "date": 1703215506649,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 583,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40805,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d157e47994b10dcaa3f893475e5401ced501dd2b",
           "message": "chore(deps): bump inventory from 0.3.13 to 0.3.14 (#1489)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.13 to 0.3.14.\r\n- [Release notes](https://github.com/dtolnay/inventory/releases)\r\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.13...0.3.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inventory\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-12-22T11:20:26+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41431.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a0bbd69243b23a1594e6410f2eae6e273016f62e",
+          "message": "replace md5 with md-5 (#1598)",
+          "timestamp": "2024-02-11T14:19:49+08:00",
+          "tree_id": "98a2d30dd9c0c16478d6f6a4b4975a2e4a9992f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a0bbd69243b23a1594e6410f2eae6e273016f62e"
+        },
+        "date": 1707633056285,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41431.1,
             "unit": "KiB"
           }
         ]
