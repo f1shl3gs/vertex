@@ -6,6 +6,7 @@ use event::Events;
 use framework::config::serde_regex;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
+use md5::{Digest, Md5};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
@@ -85,10 +86,10 @@ impl Operation {
             } => {
                 if let Some(value) = tags.get(source) {
                     let s = value.to_string_lossy();
-                    let digest = md5::compute(s.as_bytes()).0[8..]
-                        .try_into()
-                        .expect("must success");
-                    let m = (<u64>::from_be_bytes(digest) % modules) as i64;
+                    let mut hasher = Md5::new();
+                    hasher.update(s.as_bytes());
+                    let result = hasher.finalize()[8..].try_into().expect("must success");
+                    let m = (<u64>::from_be_bytes(result) % modules) as i64;
                     match target {
                         Some(target) => tags.insert(target.clone(), m),
                         None => tags.insert(source.clone(), m),
