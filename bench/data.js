@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707830482577,
+  "lastUpdate": 1707830484764,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6324f40963384a17dae049405c6567a2ae5f6c5f",
-          "message": "remove unused extern (#1464)",
-          "timestamp": "2023-12-12T10:53:36+08:00",
-          "tree_id": "9c91b19399be871623ace82bfa455c81c950bbc8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6324f40963384a17dae049405c6567a2ae5f6c5f"
-        },
-        "date": 1702349786178,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 32.314,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 160.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 331.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 680.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b0119fec9fc2f2671dfc58ec3347ad8ba7204dc7",
           "message": "bump syn to 2.0.41 (#1467)",
           "timestamp": "2023-12-13T13:32:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 657.93,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f0fd533adfb22e8a37fa855b8f572c2eaa804856",
+          "message": "chore(deps): bump chrono-tz from 0.8.5 to 0.8.6 (#1601)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.8.5 to 0.8.6.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Changelog](https://github.com/chronotope/chrono-tz/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono-tz/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-13T21:18:29+08:00",
+          "tree_id": "59214b1fcda6aecd450493f9c650dcc7d6289804",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f0fd533adfb22e8a37fa855b8f572c2eaa804856"
+        },
+        "date": 1707830468525,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 31.637,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 141.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 309.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 634.81,
             "unit": "ns/op"
           }
         ]
