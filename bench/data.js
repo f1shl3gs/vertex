@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707830956897,
+  "lastUpdate": 1707830975578,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6324f40963384a17dae049405c6567a2ae5f6c5f",
-          "message": "remove unused extern (#1464)",
-          "timestamp": "2023-12-12T10:53:36+08:00",
-          "tree_id": "9c91b19399be871623ace82bfa455c81c950bbc8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6324f40963384a17dae049405c6567a2ae5f6c5f"
-        },
-        "date": 1702350283035,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 18380000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 494890,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.856,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b0119fec9fc2f2671dfc58ec3347ad8ba7204dc7",
           "message": "bump syn to 2.0.41 (#1467)",
           "timestamp": "2023-12-13T13:32:30+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.863,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9737d48ecba83596bc247df1527c220ce8d91ad2",
+          "message": "chore(deps): bump crc32fast from 1.3.2 to 1.4.0 (#1604)\n\nBumps [crc32fast](https://github.com/srijs/rust-crc32fast) from 1.3.2 to 1.4.0.\r\n- [Commits](https://github.com/srijs/rust-crc32fast/compare/v1.3.2...v1.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crc32fast\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-13T21:18:54+08:00",
+          "tree_id": "e025d30cb9ba0b3221cc0612b79f408ddbc223f2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9737d48ecba83596bc247df1527c220ce8d91ad2"
+        },
+        "date": 1707830960918,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17034000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 478420,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.152,
             "unit": "ns/op"
           }
         ]
