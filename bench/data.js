@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1707830469681,
+  "lastUpdate": 1707830475565,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "be39879814eca0d83e83e72c11e68635f9f3badd",
-          "message": "simplify (#1468)",
-          "timestamp": "2023-12-14T09:34:49+08:00",
-          "tree_id": "a5e1ab7944bafb81fd848dda2d7a1e5eede1a516",
-          "url": "https://github.com/f1shl3gs/vertex/commit/be39879814eca0d83e83e72c11e68635f9f3badd"
-        },
-        "date": 1702517806484,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532970,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 554540,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9737d48ecba83596bc247df1527c220ce8d91ad2",
+          "message": "chore(deps): bump crc32fast from 1.3.2 to 1.4.0 (#1604)\n\nBumps [crc32fast](https://github.com/srijs/rust-crc32fast) from 1.3.2 to 1.4.0.\r\n- [Commits](https://github.com/srijs/rust-crc32fast/compare/v1.3.2...v1.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crc32fast\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-13T21:18:54+08:00",
+          "tree_id": "e025d30cb9ba0b3221cc0612b79f408ddbc223f2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9737d48ecba83596bc247df1527c220ce8d91ad2"
+        },
+        "date": 1707830459180,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 548360,
             "unit": "ns/op"
           }
         ]
