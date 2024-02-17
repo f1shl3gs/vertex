@@ -22,11 +22,11 @@ pub enum Value {
     /// Bytes - usually representing a UTF8 String,
     Bytes(Bytes),
 
-    /// Float
-    Float(f64),
-
     /// Integer
     Integer(i64),
+
+    /// Float
+    Float(f64),
 
     /// Boolean
     Boolean(bool),
