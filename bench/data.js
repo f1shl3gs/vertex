@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708227845129,
+  "lastUpdate": 1708331773854,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5f3ad078588d6af6543e4c2b0179633a523e591a",
-          "message": "chore(deps): bump zerocopy from 0.7.14 to 0.7.31 (#1475)\n\nBumps [zerocopy](https://github.com/google/zerocopy) from 0.7.14 to 0.7.31.\r\n- [Release notes](https://github.com/google/zerocopy/releases)\r\n- [Changelog](https://github.com/google/zerocopy/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/google/zerocopy/compare/v0.7.14...v0.7.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zerocopy\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-16T06:42:28+08:00",
-          "tree_id": "e5f36ab998e4e7f452513a883dbe929c05d8193d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f3ad078588d6af6543e4c2b0179633a523e591a"
-        },
-        "date": 1702680261895,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 531460,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537570,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff2647f3ea358f3929b5ed05ccc8c9b89482e363",
+          "message": "chore(deps): bump serde_yaml from 0.9.31 to 0.9.32 (#1609)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.31 to 0.9.32.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.31...0.9.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-19T16:33:56+08:00",
+          "tree_id": "f5f1db2a2ac4ebc2633a52b406304efeb135076f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff2647f3ea358f3929b5ed05ccc8c9b89482e363"
+        },
+        "date": 1708331759481,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536340,
             "unit": "ns/op"
           }
         ]
