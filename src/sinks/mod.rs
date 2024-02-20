@@ -20,12 +20,3 @@ mod prometheus_exporter;
 mod prometheus_remote_write;
 #[cfg(feature = "sinks-socket")]
 pub mod socket;
-
-use thiserror::Error;
-
-/// Common build errors
-#[derive(Debug, Error)]
-pub enum BuildError {
-    #[error("URI parse error: {0}")]
-    UriParse(http::uri::InvalidUri),
-}
