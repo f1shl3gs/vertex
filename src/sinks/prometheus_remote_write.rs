@@ -23,8 +23,6 @@ use hyper::{body, Body};
 use prost::Message;
 use tower::{Service, ServiceBuilder};
 
-use super::BuildError;
-
 #[derive(Copy, Clone, Debug, Default)]
 pub struct PrometheusRemoteWriteDefaultBatchSettings;
 
@@ -60,7 +58,7 @@ pub struct Config {
 #[typetag::serde(name = "prometheus_remote_write")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let endpoint = self.endpoint.parse::<Uri>().map_err(BuildError::UriParse)?;
+        let endpoint = self.endpoint.parse::<Uri>()?;
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.unwrap_with(&RequestConfig::default());
 
