@@ -4,7 +4,7 @@ mod udp;
 
 use async_trait::async_trait;
 use configurable::configurable_component;
-use framework::config::{DataType, Output, Resource, SourceConfig, SourceContext};
+use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::Source;
 use futures_util::stream::{FuturesUnordered, StreamExt};
 
@@ -97,7 +97,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Trace)]
+        vec![Output::traces()]
     }
 
     fn resources(&self) -> Vec<Resource> {

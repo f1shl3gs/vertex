@@ -8,7 +8,7 @@ use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::Output;
 use framework::{
-    config::{default_interval, DataType, SourceConfig, SourceContext},
+    config::{default_interval, SourceConfig, SourceContext},
     Error, Source,
 };
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -77,7 +77,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

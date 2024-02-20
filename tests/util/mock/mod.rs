@@ -112,7 +112,7 @@ impl SourceConfig for MockSourceConfig {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(self.data_type.unwrap_or(DataType::Metric))]
+        vec![Output::new(self.data_type.unwrap_or(DataType::Metric))]
     }
 }
 
@@ -147,7 +147,7 @@ impl TransformConfig for MockTransformConfig {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::All)]
+        vec![Output::new(DataType::All)]
     }
 }
 

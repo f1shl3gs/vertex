@@ -6,7 +6,7 @@ use async_trait::async_trait;
 use bytes::{Buf, Bytes};
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -47,7 +47,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

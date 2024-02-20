@@ -8,7 +8,7 @@ use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{fields, LogRecord};
 use framework::{
-    config::{DataType, Output, SourceConfig, SourceContext},
+    config::{Output, SourceConfig, SourceContext},
     Source,
 };
 use tokio::io::AsyncReadExt;
@@ -73,7 +73,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 }
 

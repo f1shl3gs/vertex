@@ -129,10 +129,7 @@ impl TransformConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![
-            Output::default(DataType::Metric),
-            Output::default(DataType::Trace),
-        ]
+        vec![Output::metrics(), Output::traces()]
     }
 }
 

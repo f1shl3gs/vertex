@@ -75,7 +75,7 @@ impl TransformConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 }
 

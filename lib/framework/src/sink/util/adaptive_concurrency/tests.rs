@@ -469,7 +469,7 @@ async fn run_test(_params: TestParams) -> TestResults {
 }
 
 mod mock {
-    use crate::config::{DataType, Output, SourceConfig, SourceContext};
+    use crate::config::{Output, SourceConfig, SourceContext};
     use crate::{Pipeline, ShutdownSignal, Source};
     use chrono::Utc;
     use configurable::configurable_component;
@@ -499,7 +499,7 @@ mod mock {
         }
 
         fn outputs(&self) -> Vec<Output> {
-            vec![Output::default(DataType::Log)]
+            vec![Output::logs()]
         }
     }
 

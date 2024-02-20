@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use configurable::configurable_component;
 use event::{tags, Metric, INSTANCE_KEY};
-use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{Error, Source};
@@ -35,7 +35,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

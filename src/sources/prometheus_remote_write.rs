@@ -5,7 +5,7 @@ use bytes::Bytes;
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Event, Metric, Quantile};
-use framework::config::{DataType, Output, Resource, SourceConfig, SourceContext};
+use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::util::http::{decode, ErrorMessage};
 use framework::source::util::http::{HttpSource, HttpSourceAuthConfig};
 use framework::{tls::TlsConfig, Source};
@@ -46,7 +46,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 
     fn resources(&self) -> Vec<Resource> {

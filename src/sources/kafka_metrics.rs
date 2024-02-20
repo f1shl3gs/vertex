@@ -3,9 +3,7 @@ use std::time::{Duration, Instant};
 use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{
-    default_interval, serde_regex, DataType, Output, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, serde_regex, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
@@ -59,7 +57,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

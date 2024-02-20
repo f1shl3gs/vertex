@@ -347,7 +347,7 @@ mod test {
             self.nodes.insert(
                 id.into(),
                 Node::Source {
-                    outputs: vec![Output::default(ty)],
+                    outputs: vec![Output::new(ty)],
                 },
             );
         }
@@ -365,7 +365,7 @@ mod test {
                 id.clone(),
                 Node::Transform {
                     in_ty,
-                    outputs: vec![Output::default(out_ty)],
+                    outputs: vec![Output::new(out_ty)],
                 },
             );
             for from in inputs {
@@ -597,13 +597,13 @@ mod test {
         graph.nodes.insert(
             ComponentKey::from("foo.bar"),
             Node::Source {
-                outputs: vec![Output::default(DataType::All)],
+                outputs: vec![Output::new(DataType::All)],
             },
         );
         graph.nodes.insert(
             ComponentKey::from("foo.bar"),
             Node::Source {
-                outputs: vec![Output::default(DataType::All)],
+                outputs: vec![Output::new(DataType::All)],
             },
         );
         graph.nodes.insert(
@@ -611,7 +611,7 @@ mod test {
             Node::Transform {
                 in_ty: DataType::All,
                 outputs: vec![
-                    Output::default(DataType::All),
+                    Output::new(DataType::All),
                     Output::from(("bar", DataType::All)),
                 ],
             },
@@ -621,7 +621,7 @@ mod test {
         graph.nodes.insert(
             ComponentKey::from("baz.errors"),
             Node::Source {
-                outputs: vec![Output::default(DataType::All)],
+                outputs: vec![Output::new(DataType::All)],
             },
         );
         graph.nodes.insert(
@@ -629,7 +629,7 @@ mod test {
             Node::Transform {
                 in_ty: DataType::All,
                 outputs: vec![
-                    Output::default(DataType::All),
+                    Output::new(DataType::All),
                     Output::from(("errors", DataType::All)),
                 ],
             },

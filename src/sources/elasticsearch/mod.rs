@@ -9,7 +9,7 @@ use std::time::Duration;
 use async_trait::async_trait;
 use configurable::configurable_component;
 use event::Metric;
-use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::sink::Response;
 use framework::tls::TlsConfig;
@@ -60,7 +60,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

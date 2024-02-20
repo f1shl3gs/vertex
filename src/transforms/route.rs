@@ -56,9 +56,9 @@ impl TransformConfig for Config {
         let mut result: Vec<Output> = self
             .route
             .keys()
-            .map(|name| Output::default(DataType::Log).with_port(name))
+            .map(|name| Output::logs().with_port(name))
             .collect();
-        result.push(Output::default(DataType::Log).with_port(UNMATCHED_ROUTE));
+        result.push(Output::logs().with_port(UNMATCHED_ROUTE));
 
         result
     }
@@ -196,7 +196,7 @@ route:
             let mut buf = TransformOutputsBuf::new_with_capacity(
                 outputs
                     .iter()
-                    .map(|name| Output::default(DataType::Log).with_port(name.to_string()))
+                    .map(|name| Output::logs().with_port(*name))
                     .collect(),
                 1,
             );

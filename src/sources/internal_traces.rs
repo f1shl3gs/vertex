@@ -4,7 +4,7 @@ use std::fmt::Debug;
 use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{tags, Trace};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext};
 use framework::trace::SpanSubscription;
 use framework::Source;
 use futures::StreamExt;
@@ -64,7 +64,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Trace)]
+        vec![Output::traces()]
     }
 }
 

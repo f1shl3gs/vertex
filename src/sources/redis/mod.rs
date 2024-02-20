@@ -9,7 +9,7 @@ use client::{Client, RespErr};
 use configurable::configurable_component;
 use event::tags::Tags;
 use event::{tags, Metric};
-use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
@@ -283,7 +283,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

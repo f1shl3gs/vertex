@@ -61,7 +61,7 @@ impl TransformConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log | DataType::Metric)]
+        vec![Output::new(DataType::Log | DataType::Metric)]
     }
 }
 

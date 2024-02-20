@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::{fields, LogRecord};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
@@ -118,7 +118,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 }
 
