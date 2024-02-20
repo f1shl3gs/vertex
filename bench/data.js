@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708399507621,
+  "lastUpdate": 1708399519192,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5f3ad078588d6af6543e4c2b0179633a523e591a",
-          "message": "chore(deps): bump zerocopy from 0.7.14 to 0.7.31 (#1475)\n\nBumps [zerocopy](https://github.com/google/zerocopy) from 0.7.14 to 0.7.31.\r\n- [Release notes](https://github.com/google/zerocopy/releases)\r\n- [Changelog](https://github.com/google/zerocopy/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/google/zerocopy/compare/v0.7.14...v0.7.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zerocopy\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-16T06:42:28+08:00",
-          "tree_id": "e5f36ab998e4e7f452513a883dbe929c05d8193d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f3ad078588d6af6543e4c2b0179633a523e591a"
-        },
-        "date": 1702680297131,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 32.484,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 148.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 344.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 718.75,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 657.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64f9cf8541ca92d7903811515b1d2021fda0204b",
+          "message": "chore(deps): bump ahash from 0.8.8 to 0.8.9 (#1611)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.8 to 0.8.9.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.8...v0.8.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-20T11:22:26+08:00",
+          "tree_id": "c1e3a9d4dc833326bd1133ae9da7452bc8eb9d38",
+          "url": "https://github.com/f1shl3gs/vertex/commit/64f9cf8541ca92d7903811515b1d2021fda0204b"
+        },
+        "date": 1708399503914,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 31.805,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 146.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 306.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 649.72,
             "unit": "ns/op"
           }
         ]
