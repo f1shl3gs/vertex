@@ -395,7 +395,7 @@ mod tests {
         }
 
         fn outputs(&self) -> Vec<Output> {
-            vec![Output::default(DataType::Log)]
+            vec![Output::logs()]
         }
     }
 
@@ -411,7 +411,7 @@ mod tests {
         }
 
         fn outputs(&self) -> Vec<Output> {
-            vec![Output::default(DataType::All)]
+            vec![Output::new(DataType::All)]
         }
     }
 

@@ -10,7 +10,7 @@ use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{default_interval, DataType, Output, SourceConfig, SourceContext},
+    config::{default_interval, Output, SourceConfig, SourceContext},
     Source,
 };
 
@@ -34,7 +34,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

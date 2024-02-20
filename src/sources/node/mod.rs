@@ -65,9 +65,7 @@ use std::time::Duration;
 use configurable::configurable_component;
 use error::Error;
 use event::{tags, tags::Key, Metric};
-use framework::config::{
-    default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, default_true, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
@@ -838,7 +836,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

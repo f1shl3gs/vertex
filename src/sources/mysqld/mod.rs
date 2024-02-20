@@ -11,9 +11,7 @@ use std::time::{Duration, Instant};
 
 use configurable::{configurable_component, Configurable};
 use event::{Metric, INSTANCE_KEY};
-use framework::config::{
-    default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, default_true, Output, SourceConfig, SourceContext};
 use framework::{tls::TlsConfig, Source};
 use serde::{Deserialize, Serialize};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
@@ -204,7 +202,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

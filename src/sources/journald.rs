@@ -8,7 +8,7 @@ use bytes::{Buf, BytesMut};
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{event_path, log::Value, Event};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
@@ -120,7 +120,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 }
 

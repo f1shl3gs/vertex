@@ -5,7 +5,7 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Key, Tags};
 use event::{tags, Kind as MetricKind, Metric};
-use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Error, Source};
@@ -120,7 +120,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

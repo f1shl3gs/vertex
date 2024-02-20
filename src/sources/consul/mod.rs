@@ -8,9 +8,7 @@ use std::time::{Duration, Instant};
 use chrono::Utc;
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{
-    default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, default_true, Output, SourceConfig, SourceContext};
 use framework::http::HttpClient;
 use framework::tls::TlsConfig;
 use framework::Source;
@@ -98,7 +96,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

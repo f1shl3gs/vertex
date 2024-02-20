@@ -12,8 +12,7 @@ use configurable::{configurable_component, Configurable};
 use event::log::path::PathPrefix;
 use event::log::OwnedValuePath;
 use event::{event_path, Event};
-use framework::config::Output;
-use framework::config::{DataType, Resource, SourceConfig, SourceContext};
+use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::source::util::{
@@ -164,7 +163,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 
     fn resources(&self) -> Vec<Resource> {

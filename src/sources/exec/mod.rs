@@ -12,7 +12,7 @@ use configurable::{configurable_component, Configurable};
 use event::log::path::TargetPath;
 use event::{event_path, Event};
 use framework::async_read::VecAsyncReadExt;
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::FutureExt;
 use futures_util::StreamExt;
@@ -172,7 +172,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 }
 

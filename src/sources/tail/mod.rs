@@ -10,7 +10,7 @@ use chrono::Utc;
 use configurable::{configurable_component, Configurable};
 use encoding_transcode::{Decoder, Encoder};
 use event::{BatchNotifier, BatchStatus, LogRecord};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext};
 use framework::source::util::OrderedFinalizer;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::Stream;
@@ -168,7 +168,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 
     fn acknowledgable(&self) -> bool {

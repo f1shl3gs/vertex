@@ -314,7 +314,7 @@ impl TransformConfig for Noop {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::All)]
+        vec![Output::new(DataType::All)]
     }
 }
 

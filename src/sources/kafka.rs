@@ -10,7 +10,7 @@ use codecs::{Decoder, DecodingConfig};
 use configurable::{configurable_component, Configurable};
 use event::log::{parse_value_path, OwnedValuePath, TargetPath};
 use event::{log::Value, LogRecord};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{Error, Source};
@@ -189,7 +189,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 }
 

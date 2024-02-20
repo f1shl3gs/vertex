@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use tonic::Code;
 use tonic_health::pb::health_check_response::ServingStatus;
@@ -51,7 +51,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

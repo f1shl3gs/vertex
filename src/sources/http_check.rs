@@ -3,9 +3,7 @@ use std::time::{Duration, Instant};
 use async_trait::async_trait;
 use configurable::{configurable_component, Configurable};
 use event::{tags, Metric};
-use framework::config::{
-    default_interval, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, Output, ProxyConfig, SourceConfig, SourceContext};
 use framework::http::HttpClient;
 use framework::{Pipeline, ShutdownSignal, Source};
 use http::Request;
@@ -72,7 +70,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Metric)]
+        vec![Output::metrics()]
     }
 }
 

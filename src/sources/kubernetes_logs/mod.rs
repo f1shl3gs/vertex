@@ -12,7 +12,7 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::log::{path, OwnedTargetPath, TargetPath, Value};
 use event::LogRecord;
-use framework::config::{default_true, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_true, Output, SourceConfig, SourceContext};
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::{StreamExt, TryFutureExt, TryStreamExt};
@@ -153,7 +153,7 @@ impl SourceConfig for Config {
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Log)]
+        vec![Output::logs()]
     }
 }
 

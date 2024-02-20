@@ -139,12 +139,49 @@ pub struct Output {
 }
 
 impl Output {
+    /// Create an `Output` of the given data type that contains no output `Definition`s.
+    /// Designed for use in metrics sources
+    ///
+    /// Sets the datatype to be [`DataType::Metric`]
+    #[must_use]
+    pub fn metrics() -> Self {
+        Self {
+            port: None,
+            typ: DataType::Metric,
+        }
+    }
+
+    /// Create an `Output` of the given data type that contains a single output `Definition`s.
+    /// Designed for use in log sources.
+    ///
+    /// Sets the datatype to be [`DataType::Log`]
+    #[must_use]
+    pub fn logs() -> Self {
+        Self {
+            port: None,
+            typ: DataType::Log,
+        }
+    }
+
+    /// Create an `Output` of the given data type that contains no output `Definition`s.
+    /// Designed for use in trace sources.
+    ///
+    /// Sets the datatype to be [`DataType::Trace`]
+    #[must_use]
+    pub fn traces() -> Self {
+        Self {
+            port: None,
+            typ: DataType::Trace,
+        }
+    }
+
     /// Create a default `Output` of the given data type
     ///
     /// A default output is one without a port identifier (i.e. not a named output)
     /// and the default output consumers will receive if they declare the component
     /// itself as an input
-    pub const fn default(typ: DataType) -> Self {
+    #[must_use]
+    pub const fn new(typ: DataType) -> Self {
         Self { port: None, typ }
     }
 
