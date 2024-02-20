@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708400048145,
+  "lastUpdate": 1708400061286,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fe38eb8972cb041241702c6de2a8d67e20677f38",
-          "message": "deps: bump thiserror to 1.0.51 (#1477)",
-          "timestamp": "2023-12-16T11:20:20+08:00",
-          "tree_id": "8472a77c3e8cd953e2b26dfbec964d603f017d50",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe38eb8972cb041241702c6de2a8d67e20677f38"
-        },
-        "date": 1702697424949,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 17303000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 440670,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.787,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ad49d0815b3066200db1642545d59a56d8404272",
           "message": "deps: bump memmap2 to 0.9.1 (#1478)",
           "timestamp": "2023-12-17T12:11:55+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.123,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2bf9b31adcd058cfdfa4f6e97791d9b85c238b2",
+          "message": "chore(deps): bump syn from 2.0.49 to 2.0.50 (#1612)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.49 to 2.0.50.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.49...2.0.50)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-20T11:22:44+08:00",
+          "tree_id": "7c441c8ca2d436e09d2b34405b18ae62e24fa060",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2bf9b31adcd058cfdfa4f6e97791d9b85c238b2"
+        },
+        "date": 1708400045473,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17385000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 464650,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.408,
             "unit": "ns/op"
           }
         ]
