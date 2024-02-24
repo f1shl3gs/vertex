@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 use std::fmt::Debug;
-use std::net::Ipv4Addr;
 use std::ops::Deref;
 use std::time::Duration;
 
@@ -197,15 +196,7 @@ fn get_advertise_addr() -> std::io::Result<String> {
             }
 
             let sockaddr = addr.address?.as_sockaddr_in()?.ip();
-            let ne = u32::from_be(sockaddr);
-            let ip = Ipv4Addr::new(
-                (ne & 0xFF) as u8,
-                ((ne >> 8) & 0xFF) as u8,
-                ((ne >> 16) & 0xFF) as u8,
-                (ne >> 24) as u8,
-            );
-
-            Some(ip.to_string())
+            Some(sockaddr.to_string())
         })
         .collect::<Vec<_>>();
 
