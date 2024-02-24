@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708443323585,
+  "lastUpdate": 1708745461649,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "56589320eef29c4577f77c4f0cb64e6fc8bd6240",
-          "message": "chore(deps): bump pem from 3.0.2 to 3.0.3 (#1466)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.2 to 3.0.3.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.2...v3.0.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-19T11:27:29+08:00",
-          "tree_id": "6d4858cfd1bf369696c7f70bf3b0d67abc03477b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/56589320eef29c4577f77c4f0cb64e6fc8bd6240"
-        },
-        "date": 1702956571612,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540140,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 548470,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "633773783d867a3064443cdf14b53c3fc1db28eb",
+          "message": "chore(deps): bump socket2 from 0.5.5 to 0.5.6 (#1617)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.5 to 0.5.6.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/compare/v0.5.5...v0.5.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-24T11:28:45+08:00",
+          "tree_id": "9d99057af443e539d2040fa2db30a62739e581cb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/633773783d867a3064443cdf14b53c3fc1db28eb"
+        },
+        "date": 1708745447185,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 549860,
             "unit": "ns/op"
           }
         ]
