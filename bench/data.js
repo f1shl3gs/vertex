@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708745983023,
+  "lastUpdate": 1708746029902,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d3fe4beda5a8464459807541bc65b0086e1fc5ab",
-          "message": "bump rust to 1.75.0 (#1513)",
-          "timestamp": "2023-12-29T02:42:49+08:00",
-          "tree_id": "3b81d677ae8dc659b6b9b5f58929ab3c56a54578",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d3fe4beda5a8464459807541bc65b0086e1fc5ab"
-        },
-        "date": 1703789631080,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41502.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41421.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "633773783d867a3064443cdf14b53c3fc1db28eb",
+          "message": "chore(deps): bump socket2 from 0.5.5 to 0.5.6 (#1617)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.5 to 0.5.6.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/compare/v0.5.5...v0.5.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-24T11:28:45+08:00",
+          "tree_id": "9d99057af443e539d2040fa2db30a62739e581cb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/633773783d867a3064443cdf14b53c3fc1db28eb"
+        },
+        "date": 1708746015338,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41443.5,
             "unit": "KiB"
           }
         ]
