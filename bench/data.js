@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708936270726,
+  "lastUpdate": 1708936282286,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "46ab7ea36ee1668c427a7438e86ffb564f1240c2",
-          "message": "chore(deps): bump ahash from 0.8.6 to 0.8.7 (#1516)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.6 to 0.8.7.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-30T16:13:19+08:00",
-          "tree_id": "85cadb59e3d29f7f7d705db0524d604218abbc56",
-          "url": "https://github.com/f1shl3gs/vertex/commit/46ab7ea36ee1668c427a7438e86ffb564f1240c2"
-        },
-        "date": 1703924654705,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 573,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41468.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "396bb35c0f90df13f3c9c2f0fd19b30b1b40a1e7",
           "message": "chore(deps): bump thiserror from 1.0.52 to 1.0.53 (#1518)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.52 to 1.0.53.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.52...1.0.53)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-12-31T06:43:58+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41446.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a0883cfd5831c496d2bbc50fdc66790c24b7443",
+          "message": "chore(deps): bump typetag from 0.2.15 to 0.2.16 (#1621)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.15 to 0.2.16.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.15...0.2.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-26T16:20:26+08:00",
+          "tree_id": "38c075ff1e668d0a984727fd30637683df94b1e3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a0883cfd5831c496d2bbc50fdc66790c24b7443"
+        },
+        "date": 1708936267682,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41445.4,
             "unit": "KiB"
           }
         ]
