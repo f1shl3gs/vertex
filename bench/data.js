@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708935798172,
+  "lastUpdate": 1708935799139,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a62b62f793e86dd503caf38ef436109edf4bdce9",
-          "message": "chore(deps): bump serde_yaml from 0.9.27 to 0.9.28 (#1485)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.27 to 0.9.28.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.27...0.9.28)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-21T14:39:39+08:00",
-          "tree_id": "f0007ba423fafd263d108fc0ddd855048aff4cbe",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a62b62f793e86dd503caf38ef436109edf4bdce9"
-        },
-        "date": 1703140899615,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532910,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531280,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf7b8e3a814b53f93d2fcac18e9a50dbadffb932",
+          "message": "chore(deps): bump dyn-clone from 1.0.16 to 1.0.17 (#1620)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.16 to 1.0.17.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.16...1.0.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-26T16:20:55+08:00",
+          "tree_id": "13262b60dc4f3f635a67e6588a13a814892105a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf7b8e3a814b53f93d2fcac18e9a50dbadffb932"
+        },
+        "date": 1708935784691,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540580,
             "unit": "ns/op"
           }
         ]
