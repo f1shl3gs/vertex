@@ -560,7 +560,7 @@ dependencies = [
  "encoding_rs",
  "event",
  "humanize",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "inventory",
  "regex",
  "serde",
@@ -1010,7 +1010,7 @@ dependencies = [
  "humanize",
  "hyper",
  "hyper-rustls",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "inventory",
  "ipnet",
  "listenfd",
@@ -1218,7 +1218,7 @@ dependencies = [
  "futures-sink",
  "futures-util",
  "http",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "slab",
  "tokio",
  "tokio-util",
@@ -1499,9 +1499,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.2.3"
+version = "2.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "233cf39063f058ea2caae4091bf4a3ef70a653afbc026f5c4a4135d114e3c177"
+checksum = "967d6dd42f16dbf0eb8040cb9e477933562684d3918f7d253f2ff9087fb3e7a3"
 dependencies = [
  "equivalent",
  "hashbrown 0.14.1",
@@ -1515,7 +1515,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c50453ec3a6555fad17b1cd1a80d16af5bc7cb35094f64e429fd46549018c6a3"
 dependencies = [
  "ahash",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "is-terminal",
  "itoa",
  "log",
@@ -2428,7 +2428,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e1d3afd2628e69da2be385eb6f2fd57c8ac7977ceeff6dc166ff1657b0e386a9"
 dependencies = [
  "fixedbitset",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
 ]
 
 [[package]]
@@ -2610,7 +2610,7 @@ name = "prometheus"
 version = "0.1.0"
 dependencies = [
  "criterion",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "prost",
  "prost-build",
 ]
@@ -3149,7 +3149,7 @@ version = "0.9.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fd075d994154d4a774f95b51fb96bdc2832b0ea48425c92546073816cda1f2f"
 dependencies = [
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "itoa",
  "ryu",
  "serde",
@@ -3309,7 +3309,7 @@ dependencies = [
  "futures-util",
  "hashlink",
  "hex",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "log",
  "memchr",
  "once_cell",
@@ -4234,7 +4234,7 @@ dependencies = [
  "http",
  "humanize",
  "hyper",
- "indexmap 2.2.3",
+ "indexmap 2.2.4",
  "inventory",
  "jaeger",
  "k8s-openapi",
