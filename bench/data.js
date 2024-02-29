@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709195980282,
+  "lastUpdate": 1709196029856,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e9e46dd0407f552583fb928ccc0c06a86101acde",
-          "message": "chore(deps): bump async-trait from 0.1.75 to 0.1.76 (#1520)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.75 to 0.1.76.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.75...0.1.76)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-31T16:18:47+08:00",
-          "tree_id": "7a2c87487656e6a1556579ef2b30dd7d4b59edbc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e9e46dd0407f552583fb928ccc0c06a86101acde"
-        },
-        "date": 1704011408362,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 581,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41487.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41441,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7964acc461d102d8d0fd67d761b4b265862ec2da",
+          "message": "chore(deps): bump indexmap from 2.2.3 to 2.2.4 (#1625)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.3 to 2.2.4.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.3...2.2.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-29T16:28:54+08:00",
+          "tree_id": "3ce054e15554775bfa0a217324b9c1b4ba2cb556",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7964acc461d102d8d0fd67d761b4b265862ec2da"
+        },
+        "date": 1709196014304,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 592,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41427.7,
             "unit": "KiB"
           }
         ]
