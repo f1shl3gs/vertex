@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709119662485,
+  "lastUpdate": 1709187193711,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "025e99a36c8f005cdc118740764738cb7196e1c1",
-          "message": "chore(deps): bump syn from 2.0.41 to 2.0.42 (#1487)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.41 to 2.0.42.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.41...2.0.42)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-21T14:51:50+08:00",
-          "tree_id": "7978938449055aed16213537e1a2e0c058167a2c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/025e99a36c8f005cdc118740764738cb7196e1c1"
-        },
-        "date": 1703141635142,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542910,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "77086b1f6b4421362494a8932ac2011d16388acd",
+          "message": "chore(deps): bump syn from 2.0.51 to 2.0.52 (#1624)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.51 to 2.0.52.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.51...2.0.52)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-29T14:10:46+08:00",
+          "tree_id": "98b59a26d8ebed4ffb5c1b37096489f5efeaf6fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/77086b1f6b4421362494a8932ac2011d16388acd"
+        },
+        "date": 1709187178113,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 538160,
             "unit": "ns/op"
           }
         ]
