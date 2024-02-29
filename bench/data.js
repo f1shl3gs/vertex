@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709187759393,
+  "lastUpdate": 1709195471208,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c16c82e9238e6d626109b558025ac44bbea4ab28",
-          "message": "chore(deps): bump proc-macro2 from 1.0.70 to 1.0.71 (#1490)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.70 to 1.0.71.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.70...1.0.71)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-22T11:14:02+08:00",
-          "tree_id": "1b353974441a87792176eb5a75a5b72fea1c3db5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c16c82e9238e6d626109b558025ac44bbea4ab28"
-        },
-        "date": 1703214965034,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 548220,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 538160,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7964acc461d102d8d0fd67d761b4b265862ec2da",
+          "message": "chore(deps): bump indexmap from 2.2.3 to 2.2.4 (#1625)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.3 to 2.2.4.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.3...2.2.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-02-29T16:28:54+08:00",
+          "tree_id": "3ce054e15554775bfa0a217324b9c1b4ba2cb556",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7964acc461d102d8d0fd67d761b4b265862ec2da"
+        },
+        "date": 1709195455828,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540150,
             "unit": "ns/op"
           }
         ]
