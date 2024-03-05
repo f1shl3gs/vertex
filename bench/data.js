@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709549594158,
+  "lastUpdate": 1709632120339,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dfb61f8ee152d8795a31e0e95eb75edb06efd7af",
-          "message": "deps: bump hyper to 0.14.28 (#1492)",
-          "timestamp": "2023-12-22T17:29:22+08:00",
-          "tree_id": "19a6ef65f8424579427af9f905095738e540d051",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dfb61f8ee152d8795a31e0e95eb75edb06efd7af"
-        },
-        "date": 1703237481025,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 544240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 539810,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a2b3845b63433e9e151d85f768b027ef025aed19",
+          "message": "chore(deps): bump mio from 0.8.9 to 0.8.11 (#1632)\n\nBumps [mio](https://github.com/tokio-rs/mio) from 0.8.9 to 0.8.11.\r\n- [Release notes](https://github.com/tokio-rs/mio/releases)\r\n- [Changelog](https://github.com/tokio-rs/mio/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/mio/compare/v0.8.9...v0.8.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mio\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-05T17:46:22+08:00",
+          "tree_id": "ff40c69f1224e2d9b4638378660cbb769d39bda9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a2b3845b63433e9e151d85f768b027ef025aed19"
+        },
+        "date": 1709632104740,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536810,
             "unit": "ns/op"
           }
         ]
