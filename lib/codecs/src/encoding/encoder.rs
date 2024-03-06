@@ -108,6 +108,16 @@ impl Encoder<Framer> {
         Self { framer, serializer }
     }
 
+    /// Get the framer
+    pub fn framer(&self) -> &Framer {
+        &self.framer
+    }
+
+    /// Get the serializer
+    pub fn serializer(&self) -> &Serializer {
+        &self.serializer
+    }
+
     /// Get the prefix that encloses a batch of events.
     pub const fn batch_prefix(&self) -> &[u8] {
         match (&self.framer, &self.serializer) {

@@ -92,6 +92,14 @@ pub trait SinkBuilderExt: Stream {
         B::Request: Send,
     {
         let builder = Arc::new(builder);
+        let limit = match limit {
+            None => {
+                let n = crate::WORKER_THREADS.get().copied().unwrap_or(8);
+
+                NonZeroUsize::new(n)
+            }
+            _ => limit,
+        };
 
         self.concurrent_map(limit, move |input| {
             let builder = Arc::clone(&builder);

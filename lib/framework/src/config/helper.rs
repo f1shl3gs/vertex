@@ -30,6 +30,34 @@ pub mod serde_regex {
     }
 }
 
+pub mod serde_uri {
+    use http::Uri;
+    use serde::{Deserializer, Serializer};
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Uri, D::Error> {
+        let s: String = serde::Deserialize::deserialize(deserializer)?;
+        s.parse::<Uri>().map_err(serde::de::Error::custom)
+    }
+
+    pub fn serialize<S: Serializer>(uri: &Uri, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(&uri.to_string())
+    }
+}
+
+pub mod serde_http_method {
+    use http::Method;
+    use serde::{Deserializer, Serializer};
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Method, D::Error> {
+        let s: &str = serde::Deserialize::deserialize(deserializer)?;
+        Method::try_from(s).map_err(serde::de::Error::custom)
+    }
+
+    pub fn serialize<S: Serializer>(method: &Method, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(method.as_str())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

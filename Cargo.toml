@@ -33,7 +33,8 @@ members = [
     "lib/configurable-derive",
     "lib/event",
     "lib/finalize",
-    "lib/framework", "lib/hostname",
+    "lib/framework",
+    "lib/hostname",
     "lib/jaeger",
     "lib/log_schema",
     "lib/measurable",
@@ -245,6 +246,7 @@ sinks-blackhole = []
 sinks-clickhouse = []
 sinks-console = []
 sinks-elasticsearch = []
+sinks-http = []
 sinks-influxdb = []
 sinks-jaeger = ["dep:jaeger"]
 sinks-kafka = ["dep:rskafka"]
@@ -258,6 +260,7 @@ sinks = [
     "sinks-clickhouse",
     "sinks-console",
     "sinks-elasticsearch",
+    "sinks-http",
     "sinks-influxdb",
     "sinks-jaeger",
     "sinks-kafka",

@@ -31,22 +31,24 @@ use serde::{Deserialize, Serialize};
 pub use diff::ConfigDiff;
 pub use extension::{ExtensionConfig, ExtensionContext};
 pub use format::{Format, FormatHint};
-pub use helper::{default_interval, default_true, serde_regex, skip_serializing_if_default};
+pub use helper::{
+    default_interval, default_true, serde_http_method, serde_regex, serde_uri,
+    skip_serializing_if_default,
+};
 pub use id::{ComponentKey, OutputId};
 use indexmap::IndexMap;
 pub use loading::load_from_paths_with_provider;
 pub use loading::{load, load_builder_from_paths, load_from_str, merge_path_lists, process_paths};
 pub use proxy::ProxyConfig;
 pub use resource::{Protocol, Resource};
+pub use sink::SinkOuter;
 pub use sink::{SinkConfig, SinkContext};
+use source::SourceOuter;
 pub use source::{SourceConfig, SourceContext};
+use transform::TransformOuter;
 pub use transform::{TransformConfig, TransformContext};
 pub use uri::UriSerde;
 pub use validation::warnings;
-
-pub use crate::config::sink::SinkOuter;
-use crate::config::source::SourceOuter;
-use crate::config::transform::TransformOuter;
 
 /// Healthcheck options
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]

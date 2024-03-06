@@ -61,7 +61,7 @@ pub struct RequestConfig {
     #[serde(with = "humanize::duration::serde_option")]
     pub rate_limit_duration: Option<Duration>,
 
-    /// The maximum number of requests allowed within the `rate_limit_duration_secs` time window.
+    /// The maximum number of requests allowed within the `rate_limit_duration` time window.
     pub rate_limit_num: Option<u64>,
 
     /// The maximum number of retries to make for failed requests.
