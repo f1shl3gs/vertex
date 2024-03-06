@@ -8,8 +8,9 @@ use framework::sink::util::retries::{RetryAction, RetryLogic};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
-use http::{Method, Request, Response, StatusCode, Uri};
+use http::{HeaderName, HeaderValue, Method, Request, Response, StatusCode, Uri};
 use hyper::{body, Body};
+use indexmap::IndexMap;
 use tower::Service;
 
 #[derive(Clone)]
@@ -17,6 +18,7 @@ pub struct HttpService {
     client: Arc<HttpClient>,
     uri: Uri,
     method: Method,
+    headers: IndexMap<HeaderName, HeaderValue>,
     content_type: Option<String>,
     content_encoding: Option<&'static str>,
 }
@@ -27,6 +29,7 @@ impl HttpService {
         client: HttpClient,
         uri: Uri,
         method: Method,
+        headers: IndexMap<HeaderName, HeaderValue>,
         content_type: Option<String>,
         content_encoding: Option<&'static str>,
     ) -> Self {
@@ -34,6 +37,7 @@ impl HttpService {
             client: Arc::new(client),
             uri,
             method,
+            headers,
             content_type,
             content_encoding,
         }
@@ -116,6 +120,9 @@ impl Service<HttpRequest> for HttpService {
         }
         if let Some(ce) = self.content_encoding {
             builder = builder.header(CONTENT_ENCODING, ce);
+        }
+        for (key, value) in self.headers.iter() {
+            builder = builder.header(key, value)
         }
 
         Box::pin(async move {

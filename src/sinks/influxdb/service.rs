@@ -85,19 +85,20 @@ impl Service<InfluxdbRequest> for InfluxdbService {
         let uri = format!("{}?org={}&bucket={}", self.endpoint, self.org, req.bucket);
         let token = self.token.clone();
 
-        Box::pin(async move {
-            let batch_size = req.batch_size;
-            let event_size = req.data.len();
-            let mut builder = Request::post(uri)
-                .header(CONTENT_TYPE, "text/plain")
-                .header(AUTHORIZATION, format!("Token {}", token));
-            if let Some(ct) = req.compression.content_encoding() {
-                builder = builder.header(CONTENT_ENCODING, ct);
-            }
+        let batch_size = req.batch_size;
+        let event_size = req.data.len();
+        let mut builder = Request::post(uri)
+            .header(CONTENT_TYPE, "text/plain")
+            .header(AUTHORIZATION, format!("Token {}", token));
+        if let Some(ct) = req.compression.content_encoding() {
+            builder = builder.header(CONTENT_ENCODING, ct);
+        }
 
-            let req = builder
-                .body(Body::from(req.data))
-                .expect("building HTTP request failed unexpectedly");
+        let req = builder
+            .body(Body::from(req.data))
+            .expect("building HTTP request failed unexpectedly");
+
+        Box::pin(async move {
             let resp = client.send(req).in_current_span().await?;
             let (parts, body) = resp.into_parts();
             let body = body::to_bytes(body).await?;

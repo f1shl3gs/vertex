@@ -5,7 +5,7 @@ use bytes::{Bytes, BytesMut};
 use configurable::configurable_component;
 use event::{Event, Metric};
 use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{serde_uri, DataType, SinkConfig, SinkContext};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::http::HttpRetryLogic;
 use framework::sink::util::service::RequestConfig;
@@ -37,7 +37,8 @@ impl SinkBatchSettings for PrometheusRemoteWriteDefaultBatchSettings {
 pub struct Config {
     /// Endpoint of Prometheus's remote write API.
     #[configurable(required, format = "uri", example = "http://10.1.1.1:8000")]
-    pub endpoint: String,
+    #[serde(with = "serde_uri")]
+    pub endpoint: Uri,
 
     #[serde(default)]
     pub batch: BatchConfig<PrometheusRemoteWriteDefaultBatchSettings>,
@@ -58,17 +59,16 @@ pub struct Config {
 #[typetag::serde(name = "prometheus_remote_write")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let endpoint = self.endpoint.parse::<Uri>()?;
         let batch = self.batch.into_batch_settings()?;
-        let request = self.request.unwrap_with(&RequestConfig::default());
+        let request = self.request.into_settings();
 
         let client = HttpClient::new(&self.tls, cx.proxy())?;
         let tenant_id = self.tenant_id.clone();
         let auth = self.auth.clone();
 
-        let healthcheck = healthcheck(endpoint.clone(), client.clone()).boxed();
+        let healthcheck = healthcheck(self.endpoint.clone(), client.clone()).boxed();
         let service = RemoteWriteService {
-            endpoint,
+            endpoint: self.endpoint.clone(),
             client,
             auth,
         };

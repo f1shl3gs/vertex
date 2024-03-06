@@ -60,8 +60,7 @@ impl ElasticsearchCommon {
             },
         };
 
-        let request_settings = config.request.unwrap_with(&RequestConfig::default());
-
+        let request_settings = config.request.into_settings();
         let mut query_params = config.query.clone().unwrap_or_default();
         query_params.insert(
             "timeout".into(),

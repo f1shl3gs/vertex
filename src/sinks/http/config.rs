@@ -47,8 +47,10 @@ pub struct Config {
     pub request: RequestConfig,
 
     #[serde(flatten)]
+    #[configurable(required)]
     pub encoding: EncodingConfigWithFraming,
 
+    #[serde(default)]
     pub acknowledgements: bool,
 }
 
@@ -81,14 +83,12 @@ impl SinkConfig for Config {
             client.clone(),
             self.uri.clone(),
             self.method.clone(),
+            self.request.header_map()?,
             content_type,
             content_encoding,
         );
         let service = ServiceBuilder::new()
-            .settings(
-                self.request.unwrap_with(&RequestConfig::default()),
-                HttpRetryLogic,
-            )
+            .settings(self.request.into_settings(), HttpRetryLogic)
             .service(http_service);
         let encoder = HttpEncoder::new(encoder, transformer);
         let request_builder = HttpRequestBuilder::new(self.compression, encoder);

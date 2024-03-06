@@ -1,17 +1,16 @@
 mod concurrency;
 mod map;
 
-use std::collections::BTreeMap;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-// re-export
-pub use concurrency::*;
-pub use map::Map;
-
+use http::{HeaderName, HeaderValue};
 use std::time::Duration;
 
+pub use concurrency::{concurrency_is_none, Concurrency};
 use configurable::Configurable;
+use indexmap::IndexMap;
+pub use map::Map;
 use serde::{Deserialize, Serialize};
 use tower::layer::util::Stack;
 use tower::limit::RateLimit;
@@ -19,13 +18,13 @@ use tower::retry::Retry;
 use tower::timeout::Timeout;
 use tower::{Layer, Service, ServiceBuilder};
 
+use super::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
+use super::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
+use super::retries::{FixedRetryPolicy, RetryLogic};
+use super::service::map::MapLayer;
+use super::sink::{BatchSink, PartitionBatchSink, Response};
 use crate::batch::Batch;
-use crate::sink::util::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
-use crate::sink::util::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
-use crate::sink::util::retries::{FixedRetryPolicy, RetryLogic};
-use crate::sink::util::service::map::MapLayer;
-use crate::sink::util::sink::{BatchSink, PartitionBatchSink, Response};
 
 pub const CONCURRENCY_DEFAULT: Concurrency = Concurrency::None;
 pub const RATE_LIMIT_DURATION_DEFAULT: Duration = Duration::from_secs(1);
@@ -38,6 +37,30 @@ pub const TIMEOUT_DEFAULT: Duration = Duration::from_secs(60);
 pub type Svc<S, L> = RateLimit<AdaptiveConcurrencyLimit<Retry<FixedRetryPolicy<L>, Timeout<S>>, L>>;
 pub type BatchedSink<S, B, RL> = BatchSink<Svc<S, RL>, B>;
 pub type PartitionSink<S, B, RL, K> = PartitionBatchSink<Svc<S, RL>, B, K>;
+
+const fn default_timeout() -> Duration {
+    TIMEOUT_DEFAULT
+}
+
+const fn default_rate_limit_duration() -> Duration {
+    RATE_LIMIT_DURATION_DEFAULT
+}
+
+const fn default_rate_limit_num() -> u64 {
+    RATE_LIMIT_NUM_DEFAULT
+}
+
+const fn default_retry_attempts() -> usize {
+    RETRY_ATTEMPTS_DEFAULT
+}
+
+const fn default_retry_initial_backoff() -> Duration {
+    RETRY_INITIAL_BACKOFF_DEFAULT
+}
+
+const fn default_retry_max_duration() -> Duration {
+    RETRY_MAX_DURATION_DEFAULT
+}
 
 /// Middleware settings for outbound requests.
 ///
@@ -54,38 +77,49 @@ pub struct RequestConfig {
     /// It is highly recommended that you do not lower this value below the service’s
     /// internal timeout, as this could create orphaned requests, pile on retries, and
     /// result in duplicate data downstream.
-    #[serde(with = "humanize::duration::serde_option")]
-    pub timeout: Option<Duration>,
+    #[serde(default = "default_timeout", with = "humanize::duration::serde")]
+    pub timeout: Duration,
 
     /// The time window used for the `rate_limit_num` option.
-    #[serde(with = "humanize::duration::serde_option")]
-    pub rate_limit_duration: Option<Duration>,
+    #[serde(
+        default = "default_rate_limit_duration",
+        with = "humanize::duration::serde"
+    )]
+    pub rate_limit_duration: Duration,
 
     /// The maximum number of requests allowed within the `rate_limit_duration` time window.
-    pub rate_limit_num: Option<u64>,
+    #[serde(default = "default_rate_limit_num")]
+    pub rate_limit_num: u64,
 
     /// The maximum number of retries to make for failed requests.
     ///
     /// The default, for all intents and purposes, represents an infinite number of retries.
-    pub retry_attempts: Option<usize>,
+    #[serde(default = "default_retry_attempts")]
+    pub retry_attempts: usize,
 
     /// The maximum amount of time to wait between retries.
-    #[serde(with = "humanize::duration::serde_option")]
-    pub retry_max_duration: Option<Duration>,
+    #[serde(
+        default = "default_retry_max_duration",
+        with = "humanize::duration::serde"
+    )]
+    pub retry_max_duration: Duration,
 
     /// The amount of time to wait before attempting the first retry for a failed request.
     ///
     /// After the first retry has failed, the fibonacci sequence will be used to select
     /// future backoffs.
-    #[serde(with = "humanize::duration::serde_option")]
-    pub retry_initial_backoff: Option<Duration>,
+    #[serde(
+        default = "default_retry_initial_backoff",
+        with = "humanize::duration::serde"
+    )]
+    pub retry_initial_backoff: Duration,
 
     #[serde(default)]
     pub adaptive_concurrency: AdaptiveConcurrencySettings,
 
     /// Headers that will be added to the request.
     #[serde(default)]
-    pub headers: BTreeMap<String, String>,
+    pub headers: IndexMap<String, String>,
 }
 
 impl Default for RequestConfig {
@@ -98,42 +132,40 @@ impl RequestConfig {
     pub fn new(concurrency: Concurrency) -> Self {
         Self {
             concurrency,
-            timeout: Some(TIMEOUT_DEFAULT),
-            rate_limit_duration: Some(RATE_LIMIT_DURATION_DEFAULT),
-            rate_limit_num: Some(RATE_LIMIT_NUM_DEFAULT),
-            retry_attempts: Some(RETRY_ATTEMPTS_DEFAULT),
-            retry_max_duration: Some(RETRY_MAX_DURATION_DEFAULT),
-            retry_initial_backoff: Some(RETRY_INITIAL_BACKOFF_DEFAULT),
+            timeout: TIMEOUT_DEFAULT,
+            rate_limit_duration: RATE_LIMIT_DURATION_DEFAULT,
+            rate_limit_num: RATE_LIMIT_NUM_DEFAULT,
+            retry_attempts: RETRY_ATTEMPTS_DEFAULT,
+            retry_max_duration: RETRY_MAX_DURATION_DEFAULT,
+            retry_initial_backoff: RETRY_INITIAL_BACKOFF_DEFAULT,
             adaptive_concurrency: AdaptiveConcurrencySettings::const_default(),
             headers: Default::default(),
         }
     }
 
-    pub fn unwrap_with(&self, defaults: &Self) -> RequestSettings {
+    pub fn into_settings(&self) -> RequestSettings {
         RequestSettings {
-            concurrency: self.concurrency.parse_concurrency(defaults.concurrency),
-            timeout: self.timeout.unwrap_or(TIMEOUT_DEFAULT),
-            rate_limit_duration: self
-                .rate_limit_duration
-                .unwrap_or(RATE_LIMIT_DURATION_DEFAULT),
-            rate_limit_num: self
-                .rate_limit_num
-                .or(defaults.rate_limit_num)
-                .unwrap_or(RATE_LIMIT_NUM_DEFAULT),
-            retry_attempts: self
-                .retry_attempts
-                .or(defaults.retry_attempts)
-                .unwrap_or(RETRY_ATTEMPTS_DEFAULT),
-            retry_max_duration: self
-                .retry_max_duration
-                .or(defaults.retry_max_duration)
-                .unwrap_or(RETRY_MAX_DURATION_DEFAULT),
-            retry_initial_backoff: self
-                .retry_initial_backoff
-                .or(defaults.retry_initial_backoff)
-                .unwrap_or(RETRY_INITIAL_BACKOFF_DEFAULT),
+            concurrency: self.concurrency.parse_concurrency(),
+            timeout: self.timeout,
+            rate_limit_duration: self.rate_limit_duration,
+            rate_limit_num: self.rate_limit_num,
+            retry_attempts: self.retry_attempts,
+            retry_max_duration: self.retry_max_duration,
+            retry_initial_backoff: self.retry_initial_backoff,
             adaptive_concurrency: self.adaptive_concurrency,
         }
+    }
+
+    pub fn header_map(&self) -> Result<IndexMap<HeaderName, HeaderValue>, crate::Error> {
+        let mut headers = IndexMap::with_capacity(self.headers.len());
+
+        for (key, value) in &self.headers {
+            let key = HeaderName::from_bytes(key.as_bytes())?;
+            let value = HeaderValue::from_bytes(value.as_bytes())?;
+            headers.insert(key, value);
+        }
+
+        Ok(headers)
     }
 }
 

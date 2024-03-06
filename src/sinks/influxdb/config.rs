@@ -79,10 +79,7 @@ impl SinkConfig for Config {
             self.token.clone(),
         );
         let service = ServiceBuilder::new()
-            .settings(
-                self.request.unwrap_with(&RequestConfig::default()),
-                InfluxdbRetryLogic::default(),
-            )
+            .settings(self.request.into_settings(), InfluxdbRetryLogic::default())
             .service(service);
 
         let sink = InfluxdbSink::new(self.bucket.clone(), batch, self.compression, service);

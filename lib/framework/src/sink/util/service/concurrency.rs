@@ -37,17 +37,11 @@ impl Configurable for Concurrency {
 }
 
 impl Concurrency {
-    pub const fn if_none(self, other: Self) -> Self {
+    pub const fn parse_concurrency(&self) -> Option<usize> {
         match self {
-            Self::None => other,
-            _ => self,
-        }
-    }
-
-    pub const fn parse_concurrency(&self, default: Self) -> Option<usize> {
-        match self.if_none(default) {
-            Concurrency::None | Concurrency::Adaptive => None,
-            Concurrency::Fixed(limit) => Some(limit),
+            Concurrency::None => Some(1),
+            Concurrency::Adaptive => None,
+            Concurrency::Fixed(limit) => Some(*limit),
         }
     }
 }
