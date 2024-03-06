@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::ops::Add;
 
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, TimeDelta, Utc};
 use tokio::net::{ToSocketAddrs, UdpSocket};
 
 const HEADER_SIZE: usize = 48;
@@ -93,8 +93,8 @@ impl Client {
 
         // Keep track of the time the response was received.
         let mut delta = Utc::now() - transmit_time;
-        if delta < Duration::zero() {
-            delta = Duration::zero();
+        if delta < TimeDelta::zero() {
+            delta = TimeDelta::zero();
         }
         let recv_time = transmit_time.add(delta);
 
@@ -288,14 +288,14 @@ pub struct Response {
     /// clock_offset is the estimated offset of the local system clock
     /// relative to the server's clock. Add this value to subsequent local
     /// system time measurements in order to obtain a more accurate time.
-    pub clock_offset: Duration,
+    pub clock_offset: TimeDelta,
 
     /// rtt is the measured round-trip-time delay estimate between the client
     /// and the server.
-    pub rtt: Duration,
+    pub rtt: TimeDelta,
 
     /// precision is the reported precision of the server's clock.
-    pub precision: Duration,
+    pub precision: TimeDelta,
 
     /// stratum is the "stratum level" of the server. The smaller the number,
     /// the closer the server is to the reference clock. Stratum 1 servers are
@@ -318,15 +318,15 @@ pub struct Response {
 
     /// root_delay is the server's estimated aggregate round-trip-time delay to
     /// the stratum 1 server.
-    pub root_delay: Duration,
+    pub root_delay: TimeDelta,
 
     /// root_dispersion is the server's estimated maximum measurement error
     /// relative to the stratum 1 server.
-    pub root_dispersion: Duration,
+    pub root_dispersion: TimeDelta,
 
     /// root_distance is an estimate of the total synchronization distance
     /// between the client and the stratum 1 server.
-    pub root_distance: Duration,
+    pub root_distance: TimeDelta,
 
     /// Leap indicates whether a leap second should be added or removed from
     /// the current month's last minute.
@@ -338,7 +338,7 @@ pub struct Response {
     /// causality. In other words, the NTP server's response may indicate
     /// that a message was received before it was sent. In such cases, the
     /// minimum error may be useful.
-    pub min_err: Duration,
+    pub min_err: TimeDelta,
 
     /// kiss_code is a 4-character string describing the reason for a
     /// "kiss of death" response (stratum=0). For a list of standard kiss
@@ -347,7 +347,7 @@ pub struct Response {
 
     /// Poll is the maximum interval between successive NTP query messages to
     /// the server.
-    pub poll: Duration,
+    pub poll: TimeDelta,
 }
 
 impl Response {
@@ -362,7 +362,7 @@ impl Response {
         // Estimate the "freshness" of the time. If it exceeds the maximum
         // polling interval (~36 hours), then it cannot be considered "fresh"
         let freshness = self.time - self.reference_time;
-        if freshness > Duration::seconds(1 << 17) {
+        if freshness > TimeDelta::try_seconds(1 << 17).unwrap() {
             return Err(Error::ServerClockFreshness);
         }
 
@@ -372,7 +372,7 @@ impl Response {
         // for synchronization purposes.
         // https://tools.ietf.org/html/rfc5905#appendix-A.5.1.1.
         let lambda = self.root_delay / 2 + self.root_dispersion;
-        if lambda > Duration::seconds(17) {
+        if lambda > TimeDelta::try_seconds(17).unwrap() {
             return Err(Error::InvalidDispersion);
         }
 
@@ -393,7 +393,7 @@ impl Response {
 }
 
 #[allow(clippy::comparison_chain)]
-fn to_interval(t: i8) -> Duration {
+fn to_interval(t: i8) -> TimeDelta {
     let duration = if t > 0 {
         NANOS_PER_SEC << t
     } else if t < 0 {
@@ -402,7 +402,7 @@ fn to_interval(t: i8) -> Duration {
         NANOS_PER_SEC
     };
 
-    Duration::nanoseconds(duration as i64)
+    TimeDelta::nanoseconds(duration as i64)
 }
 
 fn generate_response(header: Header, dst: u64) -> Response {
@@ -415,21 +415,21 @@ fn generate_response(header: Header, dst: u64) -> Response {
 
     Response {
         time: nanos_to_timestamp(header.transmit_time),
-        clock_offset: Duration::nanoseconds(clock_offset),
-        rtt: Duration::nanoseconds(rtt as i64),
+        clock_offset: TimeDelta::nanoseconds(clock_offset),
+        rtt: TimeDelta::nanoseconds(rtt as i64),
         precision,
         stratum: header.stratum,
         reference_id: header.reference_id,
         reference_time: nanos_to_timestamp(header.reference_time),
-        root_delay: Duration::nanoseconds(header.root_delay as i64),
-        root_dispersion: Duration::nanoseconds(header.root_dispersion as i64),
-        root_distance: Duration::nanoseconds(root_distance(
+        root_delay: TimeDelta::nanoseconds(header.root_delay as i64),
+        root_dispersion: TimeDelta::nanoseconds(header.root_dispersion as i64),
+        root_distance: TimeDelta::nanoseconds(root_distance(
             rtt,
             header.root_delay as u64,
             header.root_dispersion as u64,
         ) as i64),
         leap: header.leap(),
-        min_err: Duration::nanoseconds(min_err(
+        min_err: TimeDelta::nanoseconds(min_err(
             header.origin_time,
             header.receive_time,
             header.transmit_time,

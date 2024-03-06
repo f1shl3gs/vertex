@@ -2,7 +2,7 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::ops::{Add, Sub};
 use std::time::{Duration, Instant};
 
-use chrono::{DurationRound, Utc};
+use chrono::{DurationRound, TimeDelta, Utc};
 use configurable::configurable_component;
 use event::Metric;
 use framework::pipeline::Pipeline;
@@ -106,11 +106,11 @@ impl Ntp {
         interval: Duration,
         timeout: Duration,
     ) -> Result<(), ()> {
-        let max_distance = chrono::Duration::nanoseconds(3466080000); // 3.46608s
+        let max_distance = TimeDelta::nanoseconds(3466080000); // 3.46608s
         let mut ticker = tokio::time::interval(interval);
-        let mut max_err = chrono::Duration::milliseconds(1);
+        let mut max_err = TimeDelta::try_milliseconds(1).unwrap();
         let mut leap_midnight = Utc::now(); // dummy default value
-        let day = chrono::Duration::days(1);
+        let day = TimeDelta::try_days(1).unwrap();
 
         loop {
             tokio::select! {
@@ -135,7 +135,7 @@ impl Ntp {
                     }
                     if leap_midnight.sub(day) < resp.time && resp.time < leap_midnight.add(day) {
                         // tolerate leap smearing
-                        max_err += chrono::Duration::seconds(1);
+                        max_err += TimeDelta::try_seconds(1).unwrap();
                     }
 
                     let sanity = resp.validate().is_ok()

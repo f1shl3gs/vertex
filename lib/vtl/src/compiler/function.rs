@@ -272,8 +272,7 @@ pub fn compile_and_run<F: Function>(
     td: crate::compiler::TypeDef,
     want: Result<value::Value, crate::compiler::ExpressionError>,
 ) {
-    use chrono::TimeZone;
-    use chrono::Utc;
+    use chrono::{TimeZone, Utc};
     use value::{value, Value};
 
     use crate::context::Context;

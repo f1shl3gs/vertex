@@ -5,7 +5,7 @@ use std::os::unix::fs::MetadataExt;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, TimeDelta, Utc};
 use dashmap::DashMap;
 use serde::{Deserialize, Serialize};
 
@@ -96,7 +96,7 @@ impl CheckpointsView {
             .filter(|entry| {
                 let ts = entry.value();
                 let duration = now - *ts;
-                duration > chrono::Duration::seconds(60)
+                duration > TimeDelta::try_seconds(60).unwrap()
             })
             .map(|entry| *entry.key())
             .collect::<Vec<Fingerprint>>();

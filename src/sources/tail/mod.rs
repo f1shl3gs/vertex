@@ -6,7 +6,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use bytes::Bytes;
-use chrono::Utc;
+use chrono::{TimeDelta, Utc};
 use configurable::{configurable_component, Configurable};
 use encoding_transcode::{Decoder, Encoder};
 use event::{BatchNotifier, BatchStatus, LogRecord};
@@ -193,7 +193,7 @@ fn tail_source(
 
     let ignore_before = config
         .ignore_older_than
-        .map(|d| Utc::now() - chrono::Duration::from_std(d).unwrap());
+        .map(|d| Utc::now() - TimeDelta::from_std(d).unwrap());
     let include = config.include.clone();
     let exclude = config.exclude.clone();
     let multiline = config.multiline.clone();

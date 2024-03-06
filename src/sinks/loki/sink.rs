@@ -405,9 +405,12 @@ impl StreamSink for LokiSink {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    use std::pin::pin;
+
+    use chrono::TimeDelta;
     use codecs::encoding::JsonSerializer;
     use log_schema::log_schema;
-    use std::pin::pin;
     use testify::random::random_lines;
 
     #[test]
@@ -539,7 +542,7 @@ mod tests {
                 let ts = if i % 5 == 1 {
                     base
                 } else {
-                    base + chrono::Duration::seconds(i as i64)
+                    base + TimeDelta::try_seconds(i as i64).unwrap()
                 };
 
                 log.insert(log_schema().timestamp_key(), ts);

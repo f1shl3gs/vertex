@@ -146,12 +146,12 @@ fn parse_status(val: &str) -> Option<f64> {
 
     // e.g. Jan 02 15:04:05 2006 MST
     if let Ok(date) = NaiveDateTime::parse_from_str(&text, "%b %d %X %Y %Z") {
-        return Some(date.timestamp() as f64);
+        return Some(date.and_utc().timestamp() as f64);
     }
 
     // e.g. 2006-01-02 15:04:05
     if let Ok(date) = NaiveDateTime::parse_from_str(&text, "%F %X") {
-        return Some(date.timestamp() as f64);
+        return Some(date.and_utc().timestamp() as f64);
     }
 
     // NOTE: cannot find anything about this
