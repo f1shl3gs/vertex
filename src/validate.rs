@@ -175,7 +175,8 @@ impl Validate {
                         .sinks
                         .get(&id)
                         .expect("Sink not present")
-                        .health_check()
+                        .healthcheck()
+                        .enabled
                     {
                         fmt.success(format!("Health check \"{}\"", id));
                     } else {

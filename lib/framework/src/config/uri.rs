@@ -13,6 +13,7 @@ use crate::http::Auth;
 
 /// A wrapper for `http::Uri` that implements the serde traits.
 /// Authorization credentials, if exist, will be removed from the URI and stored in `auth`.
+///
 /// For example: `http:?/user:password@example.com`
 #[derive(Clone, Default, Debug)]
 pub struct UriSerde {
@@ -122,7 +123,7 @@ impl<'a> Visitor<'a> for UriVisitor {
     type Value = UriSerde;
 
     fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-        write!(formatter, "a string containning a valid HTTP Uri")
+        write!(formatter, "a string containing a valid HTTP Uri")
     }
 
     fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>

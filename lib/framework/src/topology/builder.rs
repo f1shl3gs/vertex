@@ -533,8 +533,8 @@ pub async fn build_pieces(
         .filter(|(name, _)| diff.sinks.contains_new(name))
     {
         let sink_inputs = &sink.inputs;
-        let health_check = sink.health_check();
-        let enable_health_check = health_check && config.healthcheck.enabled;
+        let healthcheck = sink.healthcheck();
+        let enable_healthcheck = healthcheck.enabled && config.healthcheck.enabled;
         let typetag = sink.inner.component_name();
         let input_type = sink.inner.input_type();
 
@@ -572,7 +572,7 @@ pub async fn build_pieces(
         };
 
         let cx = SinkContext {
-            health_check,
+            healthcheck,
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, sink.proxy()),
         };
@@ -622,7 +622,7 @@ pub async fn build_pieces(
         let task = Task::new(name.clone(), typetag, sink);
         let component_key = name.clone();
         let healthcheck_task = async move {
-            if enable_health_check {
+            if enable_healthcheck {
                 let duration = Duration::from_secs(10);
                 timeout(duration, healthcheck)
                     .map(|result| match result {

@@ -1,20 +1,115 @@
-use std::fmt::Debug;
+use std::fmt::{Debug, Formatter};
 
 use async_trait::async_trait;
 use buffers::BufferType;
 use configurable::NamedComponent;
-use serde::{Deserialize, Serialize};
+use http::Uri;
+use serde::de::{Error, MapAccess, Unexpected};
+use serde::ser::SerializeStruct;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use super::{
-    default_true, skip_serializing_if_default, ComponentKey, DataType, GlobalOptions, ProxyConfig,
-    Resource,
+    skip_serializing_if_default, ComponentKey, DataType, GlobalOptions, ProxyConfig, Resource,
 };
+
+#[derive(Clone, Debug)]
+pub struct HealthcheckConfig {
+    /// Whether or not to check the health of the sink when Vertex starts up.
+    pub enabled: bool,
+
+    /// The full URI to make HTTP healthcheck requests to.
+    ///
+    /// This must be a valid URI, which requires at least the scheme and host.
+    /// All other components -- port, path, etc -- are allowed as well
+    pub uri: Option<Uri>,
+}
+
+impl Default for HealthcheckConfig {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            uri: None,
+        }
+    }
+}
+
+impl Serialize for HealthcheckConfig {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match &self.uri {
+            None => serializer.serialize_bool(self.enabled),
+            Some(uri) => {
+                let mut s = serializer.serialize_struct("HealthcheckConfig", 2)?;
+                s.serialize_field("enabled", &self.enabled)?;
+                s.serialize_field("uri", &uri.to_string())?;
+                s.end()
+            }
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for HealthcheckConfig {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct HealthcheckConfigVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for HealthcheckConfigVisitor {
+            type Value = HealthcheckConfig;
+
+            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                formatter.write_str("bool or map")
+            }
+
+            fn visit_bool<E>(self, v: bool) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                Ok(HealthcheckConfig {
+                    enabled: v,
+                    uri: None,
+                })
+            }
+
+            fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+            where
+                A: MapAccess<'de>,
+            {
+                // default values
+                let mut enabled = false;
+                let mut uri = None;
+
+                while let Some(key) = map.next_key::<String>()? {
+                    match key.as_str() {
+                        "enabled" => {
+                            enabled = map.next_value()?;
+                        }
+                        "uri" => {
+                            let s = map.next_value::<String>()?;
+                            uri = Some(s.parse::<Uri>().map_err(|_err| {
+                                Error::invalid_value(Unexpected::Str(&s), &"valid uri")
+                            })?);
+                        }
+                        _ => return Err(Error::unknown_field(&key, &["enabled", "uri"])),
+                    }
+                }
+
+                Ok(HealthcheckConfig { enabled, uri })
+            }
+        }
+
+        deserializer.deserialize_any(HealthcheckConfigVisitor)
+    }
+}
 
 #[derive(Clone)]
 pub struct SinkContext {
     pub globals: GlobalOptions,
     pub proxy: ProxyConfig,
-    pub health_check: bool,
+    pub healthcheck: HealthcheckConfig,
 }
 
 impl SinkContext {
@@ -27,7 +122,7 @@ impl SinkContext {
         Self {
             globals: Default::default(),
             proxy: Default::default(),
-            health_check: true,
+            healthcheck: Default::default(),
         }
     }
 }
@@ -70,8 +165,8 @@ pub struct SinkOuter<T> {
     #[serde(default)]
     pub buffer: buffers::BufferConfig,
 
-    #[serde(default = "default_true")]
-    pub health_check: bool,
+    #[serde(default)]
+    pub healthcheck: HealthcheckConfig,
 
     #[serde(default)]
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
@@ -85,7 +180,7 @@ impl<T> SinkOuter<T> {
             inputs,
             buffer: Default::default(),
             proxy: Default::default(),
-            health_check: true,
+            healthcheck: Default::default(),
         }
     }
 
@@ -106,9 +201,8 @@ impl<T> SinkOuter<T> {
         resources
     }
 
-    #[inline]
-    pub const fn health_check(&self) -> bool {
-        self.health_check
+    pub fn healthcheck(&self) -> HealthcheckConfig {
+        self.healthcheck.clone()
     }
 
     pub const fn proxy(&self) -> &ProxyConfig {
@@ -120,8 +214,67 @@ impl<T> SinkOuter<T> {
             inputs,
             inner: self.inner,
             buffer: self.buffer,
-            health_check: self.health_check,
+            healthcheck: self.healthcheck,
             proxy: self.proxy,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::str::FromStr;
+
+    #[test]
+    fn healthcheck_deserialize() {
+        for (input, want) in [
+            (
+                r#"true"#,
+                HealthcheckConfig {
+                    enabled: true,
+                    uri: None,
+                },
+            ),
+            (
+                r#"false"#,
+                HealthcheckConfig {
+                    enabled: false,
+                    uri: None,
+                },
+            ),
+            (
+                r#"{"enabled": true}"#,
+                HealthcheckConfig {
+                    enabled: true,
+                    uri: None,
+                },
+            ),
+            (
+                r#"{"enabled": false, "uri": "http://abc"}"#,
+                HealthcheckConfig {
+                    enabled: false,
+                    uri: Some(Uri::from_str("http://abc").unwrap()),
+                },
+            ),
+            (
+                r#"{"uri": "http://abc"}"#,
+                HealthcheckConfig {
+                    enabled: false,
+                    uri: Some(Uri::from_str("http://abc").unwrap()),
+                },
+            ),
+        ] {
+            let got = serde_json::from_str::<HealthcheckConfig>(input).unwrap();
+            assert_eq!(got.enabled, want.enabled);
+            match (got.uri, want.uri) {
+                (Some(got), Some(want)) => assert_eq!(want.to_string(), got.to_string()),
+                (None, None) => {
+                    // ok
+                }
+                (got, want) => {
+                    panic!("want: {:?}, got: {:?}", want, got)
+                }
+            }
         }
     }
 }

@@ -97,9 +97,9 @@ pub enum SinkType {
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct EncodingConfigWithFraming {
-    framing: Option<FramingConfig>,
-
     encoding: EncodingConfig,
+
+    framing: Option<FramingConfig>,
 }
 
 impl EncodingConfigWithFraming {
