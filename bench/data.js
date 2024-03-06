@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709739312034,
+  "lastUpdate": 1709741997133,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "18740e65a334241b5a87bb3be678888db1c67e7d",
-          "message": "lib/vtl: refine type def & address variables by index (#1495)\n\n* add variables to TypeState\r\n* address variables by index",
-          "timestamp": "2023-12-24T15:12:01+08:00",
-          "tree_id": "6c968023be086809a4b94f626349d5a083771842",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18740e65a334241b5a87bb3be678888db1c67e7d"
-        },
-        "date": 1703402044872,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 545480,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532570,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d2cb6068d5244e7e50d76e7a929520e927c0d2a",
+          "message": "chore(deps): bump chrono from 0.4.34 to 0.4.35 (#1634)\n\n* chore(deps): bump chrono from 0.4.34 to 0.4.35\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.34 to 0.4.35.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.34...v0.4.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix chrono's deprecated methods\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-03-07T00:17:46+08:00",
+          "tree_id": "a38066953214bcfdd5a0bd0f08a4a32de28a79cd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d2cb6068d5244e7e50d76e7a929520e927c0d2a"
+        },
+        "date": 1709741982479,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 541940,
             "unit": "ns/op"
           }
         ]
