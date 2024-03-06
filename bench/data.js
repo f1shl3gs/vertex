@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709742532380,
+  "lastUpdate": 1709742600940,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "240e95a9d8ce1ee68979ccec2db139a3dd99d906",
-          "message": "fix sanity (#1525)",
-          "timestamp": "2024-01-01T19:44:19+08:00",
-          "tree_id": "701d5df91c60bb065338d65733086547147d270c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/240e95a9d8ce1ee68979ccec2db139a3dd99d906"
-        },
-        "date": 1704110139797,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 592,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41475.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a4c3d4b7935c9cadd306c3b860199a1a5010d7b9",
           "message": "remove unnecessary features \"parking_lot/serde\" (#1526)",
           "timestamp": "2024-01-01T21:25:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41676.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d2cb6068d5244e7e50d76e7a929520e927c0d2a",
+          "message": "chore(deps): bump chrono from 0.4.34 to 0.4.35 (#1634)\n\n* chore(deps): bump chrono from 0.4.34 to 0.4.35\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.34 to 0.4.35.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.34...v0.4.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix chrono's deprecated methods\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-03-07T00:17:46+08:00",
+          "tree_id": "a38066953214bcfdd5a0bd0f08a4a32de28a79cd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d2cb6068d5244e7e50d76e7a929520e927c0d2a"
+        },
+        "date": 1709742586270,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41681.4,
             "unit": "KiB"
           }
         ]
