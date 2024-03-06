@@ -154,7 +154,7 @@ impl SinkConfig for TestConfig {
         batch_settings.size.events = 1;
         batch_settings.timeout = Duration::from_secs(9999);
 
-        let request = self.request.unwrap_with(&RequestConfig::default());
+        let request = self.request.into_settings();
         let sink = request
             .batch_sink(
                 TestRetryLogic,

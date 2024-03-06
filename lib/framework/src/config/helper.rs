@@ -16,12 +16,14 @@ pub fn skip_serializing_if_default<T: Default + PartialEq>(e: &T) -> bool {
 }
 
 pub mod serde_regex {
+    use std::borrow::Cow;
+
     use serde::{Deserializer, Serializer};
 
     pub fn deserialize<'de, D: Deserializer<'de>>(
         deserializer: D,
     ) -> Result<regex::Regex, D::Error> {
-        let s: String = serde::Deserialize::deserialize(deserializer)?;
+        let s: Cow<str> = serde::Deserialize::deserialize(deserializer)?;
         regex::Regex::new(&s).map_err(serde::de::Error::custom)
     }
 
@@ -31,11 +33,13 @@ pub mod serde_regex {
 }
 
 pub mod serde_uri {
+    use std::borrow::Cow;
+
     use http::Uri;
     use serde::{Deserializer, Serializer};
 
     pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Uri, D::Error> {
-        let s: String = serde::Deserialize::deserialize(deserializer)?;
+        let s: Cow<str> = serde::Deserialize::deserialize(deserializer)?;
         s.parse::<Uri>().map_err(serde::de::Error::custom)
     }
 

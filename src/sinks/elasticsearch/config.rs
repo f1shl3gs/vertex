@@ -337,7 +337,7 @@ impl SinkConfig for Config {
         let common = ElasticsearchCommon::parse_config(self).await?;
         let http_client = HttpClient::new(&self.tls, cx.proxy())?;
         let batch_settings = self.batch.into_batcher_settings()?;
-        let request_limits = self.request.unwrap_with(&RequestConfig::default());
+        let request_limits = self.request.into_settings();
         let http_request_builder = HttpRequestBuilder {
             bulk_uri: common.bulk_uri.clone(),
             request_config: self.request.clone(),

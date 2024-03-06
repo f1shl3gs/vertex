@@ -17,6 +17,7 @@ use self::http::HttpSinkConfig;
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct CollectorConfig {}
 
+#[allow(clippy::large_enum_variant)]
 #[configurable_component(sink, name = "jaeger")]
 #[serde(rename_all = "lowercase", tag = "protocol")]
 enum Config {
