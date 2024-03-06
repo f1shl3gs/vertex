@@ -2,8 +2,7 @@ use std::future::Future;
 use std::time::Duration;
 
 use bytes::Bytes;
-use chrono::TimeZone;
-use chrono::Utc;
+use chrono::{TimeZone, Utc};
 use event::{fields, BatchNotifier, BatchStatus, Events, LogRecord};
 use framework::batch::BatchConfig;
 use framework::config::{ProxyConfig, SinkConfig, SinkContext};

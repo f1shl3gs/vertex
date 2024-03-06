@@ -345,7 +345,7 @@ impl<T> Stream for ReceiverStream<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{DateTime, Duration, Utc};
+    use chrono::{DateTime, TimeDelta, Utc};
     use event::LogRecord;
     use rand::{thread_rng, Rng};
 
@@ -362,7 +362,7 @@ mod tests {
     async fn emit_and_test(make_event: impl FnOnce(DateTime<Utc>) -> Event) {
         let (mut sender, _stream) = Pipeline::new_test();
         let millis = thread_rng().gen_range(10..10000);
-        let timestamp = Utc::now() - Duration::milliseconds(millis);
+        let timestamp = Utc::now() - TimeDelta::try_milliseconds(millis).unwrap();
         let _expected = millis as f64 / 1000.0;
 
         let event = make_event(timestamp);

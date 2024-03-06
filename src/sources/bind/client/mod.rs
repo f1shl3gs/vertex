@@ -1,5 +1,5 @@
 use bytes::Buf;
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::{DateTime, Utc};
 use framework::http::{HttpClient, HttpError};
 use framework::sink::util::sink::Response;
 use http::StatusCode;
@@ -41,7 +41,7 @@ pub struct Server {
 impl Default for Server {
     fn default() -> Self {
         let zero = DateTime::from_naive_utc_and_offset(
-            NaiveDateTime::from_timestamp_millis(0).expect("zero datetime"),
+            DateTime::from_timestamp_millis(0).unwrap().naive_utc(),
             Utc,
         );
 
