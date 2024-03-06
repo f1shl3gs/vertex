@@ -48,7 +48,6 @@ impl<'de> Deserialize<'de> for Transformer {
                 formatter.write_str("expect a map")
             }
 
-            #[allow(unused_mut)]
             fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
             where
                 A: MapAccess<'de>,

@@ -82,8 +82,8 @@ impl<'de> Deserialize<'de> for HealthcheckConfig {
                 let mut enabled = false;
                 let mut uri = None;
 
-                while let Some(key) = map.next_key::<String>()? {
-                    match key.as_str() {
+                while let Some(key) = map.next_key::<&str>()? {
+                    match key {
                         "enabled" => {
                             enabled = map.next_value()?;
                         }
@@ -93,7 +93,7 @@ impl<'de> Deserialize<'de> for HealthcheckConfig {
                                 Error::invalid_value(Unexpected::Str(&s), &"valid uri")
                             })?);
                         }
-                        _ => return Err(Error::unknown_field(&key, &["enabled", "uri"])),
+                        _ => return Err(Error::unknown_field(key, &["enabled", "uri"])),
                     }
                 }
 

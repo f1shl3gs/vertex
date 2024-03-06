@@ -176,8 +176,8 @@ impl<'de> Deserialize<'de> for MultilineConfig {
 
                 // serde_json can work with `&str` or `String`, while serde_yaml cannot work with `&str`,
                 // so the string is allocated here.
-                while let Some((key, value)) = map.next_entry::<String, String>()? {
-                    match key.as_str() {
+                while let Some((key, value)) = map.next_entry::<&str, String>()? {
+                    match key {
                         "timeout" => {
                             if timeout.is_some() {
                                 return Err(Error::duplicate_field("timeout"));
@@ -269,7 +269,7 @@ impl<'de> Deserialize<'de> for MultilineConfig {
 
                         _ => {
                             return Err(Error::unknown_field(
-                                &key,
+                                key,
                                 &[
                                     "parser",
                                     "timeout",
