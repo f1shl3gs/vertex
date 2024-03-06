@@ -226,7 +226,7 @@ impl<'de> Deserialize<'de> for Tags {
                 A: MapAccess<'de>,
             {
                 let mut tags = Tags::default();
-                while let Some((key, value)) = map.next_entry::<String, Value>()? {
+                while let Some((key, value)) = map.next_entry::<Key, Value>()? {
                     tags.insert(key, value);
                 }
 

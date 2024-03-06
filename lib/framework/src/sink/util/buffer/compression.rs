@@ -116,8 +116,8 @@ impl<'de> de::Deserialize<'de> for Compression {
                 let mut algorithm = None;
                 let mut level = None;
 
-                while let Some(key) = map.next_key::<String>()? {
-                    match key.as_str() {
+                while let Some(key) = map.next_key::<&str>()? {
+                    match key {
                         "algorithm" => {
                             if algorithm.is_some() {
                                 return Err(Error::duplicate_field("algorithm"));
@@ -166,7 +166,7 @@ impl<'de> de::Deserialize<'de> for Compression {
                                 }
                             });
                         }
-                        _ => return Err(Error::unknown_field(&key, &["algorithm", "level"])),
+                        _ => return Err(Error::unknown_field(key, &["algorithm", "level"])),
                     };
                 }
 

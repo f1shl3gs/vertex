@@ -394,4 +394,16 @@ mod tests {
         assert_eq!(k1.as_str(), "foo");
         assert_eq!(k2.as_str(), "foo");
     }
+
+    #[test]
+    fn deserialize() {
+        #[derive(::serde::Deserialize)]
+        struct Foo {
+            key: Key,
+        }
+
+        let want = Key::from_static("foo");
+        let got: Foo = serde_json::from_str(r#"{"key": "foo"}"#).unwrap();
+        assert_eq!(want, got.key);
+    }
 }
