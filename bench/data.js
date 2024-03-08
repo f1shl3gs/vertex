@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709894222979,
+  "lastUpdate": 1709894229001,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2c55ce4fe4f2dfd32e6f7f80a150932d0c4eec45",
-          "message": "chore(deps): bump crossbeam-queue from 0.3.9 to 0.3.10 (#1499)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.9 to 0.3.10.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.9...crossbeam-queue-0.3.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-25T12:12:01+08:00",
-          "tree_id": "f0321aba2bcba3d537e83fde53003c034e061fd6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2c55ce4fe4f2dfd32e6f7f80a150932d0c4eec45"
-        },
-        "date": 1703477647109,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.639,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.445,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 184.25,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "8366ee28d45c9134d0ae663fccf584a4842cfef1",
+          "message": "rename crate measurable to bytesize",
+          "timestamp": "2024-03-08T18:34:44+08:00",
+          "tree_id": "eac01f093b64d205fe3cb33845710e9765832839",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8366ee28d45c9134d0ae663fccf584a4842cfef1"
+        },
+        "date": 1709894214332,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.827,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.216,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.97,
             "unit": "ns/op"
           }
         ]
