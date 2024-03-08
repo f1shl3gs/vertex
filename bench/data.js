@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1709765122313,
+  "lastUpdate": 1709894222979,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2a4d20e226347e2999a0b123ec15f8da5964ec39",
-          "message": "chore(deps): bump futures from 0.3.29 to 0.3.30 (#1500)\n\nBumps [futures](https://github.com/rust-lang/futures-rs) from 0.3.29 to 0.3.30.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.29...0.3.30)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-12-25T12:12:38+08:00",
-          "tree_id": "1a7ce58562d163913dc326b911df76f1e420551d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2a4d20e226347e2999a0b123ec15f8da5964ec39"
-        },
-        "date": 1703477679326,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 546790,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 533980,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "8366ee28d45c9134d0ae663fccf584a4842cfef1",
+          "message": "rename crate measurable to bytesize",
+          "timestamp": "2024-03-08T18:34:44+08:00",
+          "tree_id": "eac01f093b64d205fe3cb33845710e9765832839",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8366ee28d45c9134d0ae663fccf584a4842cfef1"
+        },
+        "date": 1709894208273,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 538640,
             "unit": "ns/op"
           }
         ]
