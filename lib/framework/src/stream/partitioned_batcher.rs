@@ -5,8 +5,8 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
+use bytesize::ByteSizeOf;
 use futures::{ready, Stream};
-use measurable::ByteSizeOf;
 use pin_project_lite::pin_project;
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;

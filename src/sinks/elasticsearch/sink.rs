@@ -2,6 +2,7 @@ use std::fmt::Debug;
 use std::num::NonZeroUsize;
 
 use async_trait::async_trait;
+use bytesize::ByteSizeOf;
 use codecs::encoding::Transformer;
 use event::log::path::PathPrefix;
 use event::log::{OwnedValuePath, Value};
@@ -11,7 +12,6 @@ use framework::stream::{BatcherSettings, DriverResponse};
 use framework::StreamSink;
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
-use measurable::ByteSizeOf;
 use tower::Service;
 
 use super::encoder::ProcessedEvent;

@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
 use std::collections::{HashMap, VecDeque};
 
-use measurable::ByteSizeOf;
+use bytesize::ByteSizeOf;
 use serde::Serialize;
 
 use super::{AnyValue, Key, KeyValue};

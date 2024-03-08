@@ -16,8 +16,8 @@ pub use topology::{builder, channel};
 
 use std::fmt::Debug;
 
+use bytesize::ByteSizeOf;
 use finalize::AddBatchNotifier;
-use measurable::ByteSizeOf;
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};
 use serde::{Deserialize, Serialize};

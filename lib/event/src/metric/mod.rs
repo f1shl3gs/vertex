@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter, Write};
 
+use bytesize::ByteSizeOf;
 use chrono::{DateTime, Utc};
-use measurable::ByteSizeOf;
 use serde::Serialize;
 
 use super::metadata::EventMetadata;

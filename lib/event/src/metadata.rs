@@ -1,8 +1,8 @@
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 
+use bytesize::ByteSizeOf;
 use finalize::{EventFinalizers, EventStatus};
-use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 use value::Value;
 

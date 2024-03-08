@@ -341,6 +341,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "bytes",
+ "bytesize",
  "crc32fast",
  "criterion",
  "crossbeam-queue",
@@ -349,7 +350,6 @@ dependencies = [
  "finalize",
  "fslock",
  "futures",
- "measurable",
  "memmap2 0.9.4",
  "metrics",
  "num-traits",
@@ -392,6 +392,14 @@ name = "bytes"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2bd12c1caf447e69cd4528f47f94d203fd2582878ecb9e9465484c4148a8223"
+
+[[package]]
+name = "bytesize"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "value",
+]
 
 [[package]]
 name = "cast"
@@ -875,12 +883,12 @@ name = "event"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "bytesize",
  "chrono",
  "criterion",
  "finalize",
  "futures",
  "log_schema",
- "measurable",
  "prost",
  "prost-build",
  "prost-types",
@@ -926,9 +934,9 @@ name = "finalize"
 version = "0.1.0"
 dependencies = [
  "async-stream",
+ "bytesize",
  "crossbeam-utils",
  "futures",
- "measurable",
  "pin-project-lite",
  "tokio",
  "tracing",
@@ -992,6 +1000,7 @@ dependencies = [
  "backoff 0.1.0",
  "buffers",
  "bytes",
+ "bytesize",
  "chrono",
  "chrono-tz",
  "codecs",
@@ -1016,7 +1025,6 @@ dependencies = [
  "ipnet",
  "listenfd",
  "log_schema",
- "measurable",
  "memchr",
  "metrics",
  "nix 0.28.0",
@@ -1947,14 +1955,6 @@ checksum = "d89e7ee0cfbedfc4da3340218492196241d89eefb6dab27de5df917a6d2e78cf"
 dependencies = [
  "cfg-if",
  "digest",
-]
-
-[[package]]
-name = "measurable"
-version = "0.1.0"
-dependencies = [
- "bytes",
- "value",
 ]
 
 [[package]]
@@ -4218,6 +4218,7 @@ dependencies = [
  "bloomy",
  "buffers",
  "bytes",
+ "bytesize",
  "chrono",
  "codecs",
  "configurable",
@@ -4245,7 +4246,6 @@ dependencies = [
  "lru",
  "maxminddb",
  "md-5",
- "measurable",
  "metrics",
  "mimalloc",
  "multiline",

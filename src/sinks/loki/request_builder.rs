@@ -2,9 +2,9 @@ use std::collections::HashMap;
 use std::io::Write;
 
 use bytes::Bytes;
+use bytesize::ByteSizeOf;
 use event::{EventFinalizers, Finalizable};
 use framework::sink::util::encoding::Encoder;
-use measurable::ByteSizeOf;
 use prost::Message;
 use serde::{ser::SerializeSeq, Serialize, Serializer};
 

@@ -13,7 +13,7 @@ use std::hash::{Hash, Hasher};
 use std::marker::PhantomData;
 use std::ptr::{drop_in_place, slice_from_raw_parts_mut, NonNull};
 
-use measurable::ByteSizeOf;
+use bytesize::ByteSizeOf;
 use serde::de::{MapAccess, Visitor};
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};

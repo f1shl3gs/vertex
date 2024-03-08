@@ -6,9 +6,9 @@ use std::collections::BTreeMap;
 use std::fmt::Debug;
 
 use bytes::Bytes;
+use bytesize::ByteSizeOf;
 use chrono::Utc;
 use log_schema::log_schema;
-use measurable::ByteSizeOf;
 use serde::Serialize;
 use value::path::{PathPrefix, ValuePath};
 pub use value::{

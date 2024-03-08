@@ -8,6 +8,7 @@ use std::time::Duration;
 use annotator::FieldsSpec;
 use async_trait::async_trait;
 use bytes::Bytes;
+use bytesize::ByteSizeOf;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::log::{path, OwnedTargetPath, TargetPath, Value};
@@ -20,7 +21,6 @@ use k8s_openapi::api::core::v1::Pod;
 use kube::runtime::watcher;
 use kube::{Api, Client};
 use log_schema::log_schema;
-use measurable::ByteSizeOf;
 use provider::KubernetesPathsProvider;
 use tail::{Checkpointer, Line};
 

@@ -1,8 +1,8 @@
 use std::{error, fmt, num::NonZeroUsize};
 
 use bytes::{Buf, BufMut};
+use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier};
-use measurable::ByteSizeOf;
 
 use super::builder::TopologyBuilder;
 use crate::{

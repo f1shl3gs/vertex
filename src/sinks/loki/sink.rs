@@ -3,6 +3,7 @@ use std::io::Error;
 use std::num::NonZeroUsize;
 
 use bytes::{Bytes, BytesMut};
+use bytesize::ByteSizeOf;
 use codecs::encoding::Transformer;
 use codecs::Encoder;
 use event::log::path::parse_target_path;
@@ -18,7 +19,6 @@ use framework::template::Template;
 use framework::StreamSink;
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
-use measurable::ByteSizeOf;
 use thiserror::Error;
 use tokio_util::codec::Encoder as _;
 

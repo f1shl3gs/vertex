@@ -1,7 +1,7 @@
 use std::{iter, slice, vec};
 
+use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
-use measurable::ByteSizeOf;
 
 use crate::{Event, EventMetadata, EventRef, LogRecord, Logs, Metric, Metrics, Trace, Traces};
 

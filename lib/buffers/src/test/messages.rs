@@ -3,8 +3,8 @@
 use std::{error, fmt, io, mem};
 
 use bytes::{Buf, BufMut};
+use bytesize::ByteSizeOf;
 use event::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
-use measurable::ByteSizeOf;
 use quickcheck::{Arbitrary, Gen};
 
 use crate::{encoding::FixedEncodable, EventCount};

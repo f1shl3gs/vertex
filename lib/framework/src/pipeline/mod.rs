@@ -4,13 +4,13 @@ use std::collections::HashMap;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
+use bytesize::ByteSizeOf;
 use errors::ClosedError;
 #[cfg(any(test, feature = "test-util"))]
 use event::array::into_event_stream;
 use event::{Event, EventContainer, Events};
 use futures::Stream;
 use futures_util::StreamExt;
-use measurable::ByteSizeOf;
 use metrics::{Attributes, Counter};
 use pin_project_lite::pin_project;
 use tokio::sync::mpsc;

@@ -32,10 +32,10 @@ pub use trace::{Trace, Traces};
 use std::collections::BTreeMap;
 
 use bytes::Bytes;
+use bytesize::ByteSizeOf;
 use chrono::Utc;
 use log::Logs;
 use log_schema::log_schema;
-use measurable::ByteSizeOf;
 use serde::Serialize;
 
 #[derive(PartialEq, Debug, Clone, Serialize)]

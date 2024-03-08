@@ -1,9 +1,9 @@
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
+use bytesize::ByteSizeOf;
 use event::EventContainer;
 use futures::Stream;
-use measurable::ByteSizeOf;
 use metrics::{Attributes, Counter};
 use pin_project_lite::pin_project;
 

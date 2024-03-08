@@ -53,7 +53,7 @@ inventory = { version = "0.3.15", default-features = false }
 ipnet = { version = "2.9.0", default-features = false, features = ["std"] }
 listenfd = { version = "1.0.1", default-features = false, optional = true }
 log_schema = { path = "../log_schema" }
-measurable = { path = "../measurable" }
+bytesize = { path = "../bytesize" }
 memchr = { version = "2.7.1", default-features = false }
 metrics = { path = "../metrics" }
 # wired feature requirement, see: https://docs.rs/notify/latest/notify/#crossbeam-channel--tokio

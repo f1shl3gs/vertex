@@ -2,11 +2,11 @@ use std::collections::HashMap;
 use std::pin::Pin;
 
 use async_trait::async_trait;
+use bytesize::ByteSizeOf;
 use configurable::configurable_component;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
 use futures_util::{stream, StreamExt};
-use measurable::ByteSizeOf;
 
 use crate::config::{DataType, Output, TransformConfig, TransformContext};
 use crate::topology::{ControlChannel, Fanout};

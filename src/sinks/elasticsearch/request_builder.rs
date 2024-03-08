@@ -1,7 +1,7 @@
 use bytes::Bytes;
+use bytesize::ByteSizeOf;
 use event::{EventFinalizers, Finalizable};
 use framework::sink::util::{Compression, EncodeResult, RequestBuilder};
-use measurable::ByteSizeOf;
 
 use super::encoder::{ElasticsearchEncoder, ProcessedEvent};
 use super::service::ElasticsearchRequest;

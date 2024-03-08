@@ -9,8 +9,8 @@ use buffers::{
     BufferType, EventCount,
 };
 use bytes::{Buf, BufMut};
+use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier};
-use measurable::ByteSizeOf;
 use tracing::Span;
 
 #[derive(Clone, Copy, Debug)]

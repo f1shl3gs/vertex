@@ -10,10 +10,10 @@ use std::num::ParseIntError;
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 
+use bytesize::ByteSizeOf;
 pub use evicted_hash_map::EvictedHashMap;
 pub use evicted_queue::EvictedQueue;
 pub use generator::RngGenerator;
-use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 pub use span::{Event, Link, Span, SpanContext, SpanKind, Status, StatusCode};
 

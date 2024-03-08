@@ -1,4 +1,4 @@
-use measurable::ByteSizeOf;
+use bytesize::ByteSizeOf;
 
 use super::data::BatchData;
 

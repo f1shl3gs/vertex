@@ -7,12 +7,12 @@ use std::time::Duration;
 
 use async_trait::async_trait;
 use bytes::{Buf, Bytes};
+use bytesize::ByteSizeOf;
 use event::Event;
 use futures::ready;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
 use hyper::{body, Body};
-use measurable::ByteSizeOf;
 use pin_project_lite::pin_project;
 use tower::Service;
 

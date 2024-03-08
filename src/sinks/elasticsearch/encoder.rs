@@ -1,10 +1,10 @@
 use std::io;
 use std::io::Write;
 
+use bytesize::ByteSizeOf;
 use codecs::encoding::Transformer;
 use event::{Event, EventFinalizers, Finalizable, LogRecord};
 use framework::sink::util::{as_tracked_write, Encoder};
-use measurable::ByteSizeOf;
 
 use super::BulkAction;
 

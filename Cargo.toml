@@ -37,7 +37,7 @@ members = [
     "lib/hostname",
     "lib/jaeger",
     "lib/log_schema",
-    "lib/measurable",
+    "lib/bytesize",
     "lib/metrics",
     "lib/multiline",
     "lib/ntp",
@@ -333,7 +333,7 @@ jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
 metrics = { path = "lib/metrics" }
 multiline = { path = "lib/multiline", optional = true }
-measurable = { path = "lib/measurable" }
+bytesize = { path = "lib/bytesize" }
 ntp = { path = "lib/ntp", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 sysinfo = { path = "lib/sysinfo", optional = true }

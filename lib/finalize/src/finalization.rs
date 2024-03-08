@@ -4,9 +4,9 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::task::Poll;
 
+use bytesize::ByteSizeOf;
 use crossbeam_utils::atomic::AtomicCell;
 use futures::FutureExt;
-use measurable::ByteSizeOf;
 use pin_project_lite::pin_project;
 use tokio::sync::oneshot;
 use tracing::error;

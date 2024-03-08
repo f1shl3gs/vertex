@@ -1,8 +1,8 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
+use bytesize::ByteSizeOf;
 use chrono::Utc;
-use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
 use super::{EvictedHashMap, EvictedQueue, KeyValue, SpanId, TraceFlags, TraceId, TraceState};

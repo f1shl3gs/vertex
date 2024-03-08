@@ -1,8 +1,8 @@
 use std::{error, fmt, mem};
 
 use bytes::{Buf, BufMut};
+use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers};
-use measurable::ByteSizeOf;
 
 use crate::{
     encoding::FixedEncodable,

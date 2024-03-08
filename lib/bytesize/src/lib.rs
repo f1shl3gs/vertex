@@ -2,8 +2,6 @@ mod external;
 
 use std::collections::BTreeMap;
 
-use bytes::{Bytes, BytesMut};
-
 pub trait ByteSizeOf {
     /// Returns the in-memory size of this type
     ///
@@ -83,17 +81,5 @@ where
 {
     fn allocated_bytes(&self) -> usize {
         self.as_ref().map_or(0, ByteSizeOf::allocated_bytes)
-    }
-}
-
-impl ByteSizeOf for Bytes {
-    fn allocated_bytes(&self) -> usize {
-        self.len()
-    }
-}
-
-impl ByteSizeOf for BytesMut {
-    fn allocated_bytes(&self) -> usize {
-        self.len()
     }
 }

@@ -4,8 +4,8 @@ use std::{
 };
 
 use bytes::{Buf, BufMut};
+use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier};
-use measurable::ByteSizeOf;
 use memmap2::MmapMut;
 use tokio::{
     fs::OpenOptions,

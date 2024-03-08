@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use measurable::ByteSizeOf;
+use bytesize::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]

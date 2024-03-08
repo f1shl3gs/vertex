@@ -1,4 +1,5 @@
 use bytes::Bytes;
+use bytesize::ByteSizeOf;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::http::HttpBatchService;
@@ -7,7 +8,6 @@ use framework::sink::util::Compression;
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::{Request, Response, Uri};
-use measurable::ByteSizeOf;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::task::{Context, Poll};
