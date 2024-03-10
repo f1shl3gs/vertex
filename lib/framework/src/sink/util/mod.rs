@@ -9,12 +9,12 @@ mod request_builder;
 pub mod retries;
 pub mod service;
 pub mod sink;
+mod snappy;
 mod socket_bytes_sink;
 pub mod tcp;
 pub mod udp;
 #[cfg(unix)]
 pub mod unix;
-mod snappy;
 
 #[cfg(any(test, feature = "test-util"))]
 pub mod testing;
