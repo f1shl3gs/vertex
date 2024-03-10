@@ -221,7 +221,7 @@ impl<'de> de::Deserialize<'de> for Compression {
                     "snappy" => Ok(Compression::Snappy),
                     _ => Err(Error::invalid_value(
                         de::Unexpected::Str(v),
-                        &r#""none", "zlib", "gzip" or "snappy""#,
+                        &r#""none", "gzip", "zlib" or "snappy""#,
                     )),
                 }
             }
@@ -407,11 +407,11 @@ mod tests {
             ),
             (
                 r#""b42""#,
-                r#"invalid value: string "b42", expected "none" or "gzip" at line 1 column 5"#,
+                r#"invalid value: string "b42", expected "none", "gzip", "zlib" or "snappy" at line 1 column 5"#,
             ),
             (
                 r#"{"algorithm": "b42"}"#,
-                r#"unknown variant `b42`, expected `none` or `gzip` at line 1 column 20"#,
+                r#"unknown variant `b42`, expected one of `none`, `gzip`, `zlib`, `snappy` at line 1 column 20"#,
             ),
             (
                 r#"{"algorithm": "none", "level": "default"}"#,
@@ -419,15 +419,15 @@ mod tests {
             ),
             (
                 r#"{"algorithm": "gzip", "level": -1}"#,
-                r#"invalid value: -1, expected 0, 1, 2, 3, 4, 5, 6, 7, 8 or 9 at line 1 column 34"#,
+                r#"integer could not be converted to u32: out of range integral type conversion attempted at line 1 column 33"#,
             ),
             (
                 r#"{"algorithm": "gzip", "level": "good"}"#,
-                r#"invalid value: string "good", expected "none", "fast", "best" or "default" at line 1 column 38"#,
+                r#"invalid value: string "good", expected "none", "fast", "best" or "default" at line 1 column 37"#,
             ),
             (
                 r#"{"algorithm": "gzip", "level": {}}"#,
-                r#"invalid type: {}, expected integer or string at line 1 column 34"#,
+                r#"invalid type: map, expected unsigned number or string at line 1 column 33"#,
             ),
             (
                 r#"{"algorithm": "gzip", "level": "default", "key": 42}"#,

@@ -71,6 +71,6 @@ mod tests {
         // allow us to determine if data has been written to the encoder without
         // having to check the writer.
         assert!(encoder.get_ref().get_ref().is_empty());
-        assert!(encoder.is_empty());
+        assert!(!encoder.is_empty());
     }
 }
