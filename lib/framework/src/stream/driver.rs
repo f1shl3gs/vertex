@@ -13,7 +13,12 @@ use super::futures_unordered_chunked::FuturesUnorderedChunked;
 
 pub trait DriverResponse {
     fn event_status(&self) -> EventStatus;
-    fn events_send(&self) -> (usize, usize, Option<&'static str>);
+
+    /// Returns the number of events that were sent in the request.
+    fn events_send(&self) -> usize;
+
+    /// Returns the number of bytes that were sent in the request that returned this response.
+    fn bytes_sent(&self) -> usize;
 }
 
 /// Drives the interaction between a stream of items and a service which processes
@@ -161,7 +166,8 @@ where
                                         finalizers.update_status(resp.event_status());
 
                                         // TODO: metrics
-                                        let (count, bytes, _) = resp.events_send();
+                                        let count = resp.events_send();
+                                        let bytes = resp.bytes_sent();
                                         metrics::register_counter(
                                             "component_sent_events_total",
                                             "The total number of events emitted by this component.",
@@ -250,8 +256,12 @@ mod tests {
             EventStatus::Delivered
         }
 
-        fn events_send(&self) -> (usize, usize, Option<&'static str>) {
-            (1, 1, None)
+        fn events_send(&self) -> usize {
+            1
+        }
+
+        fn bytes_sent(&self) -> usize {
+            1
         }
     }
 

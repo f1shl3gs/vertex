@@ -23,11 +23,11 @@ impl HttpRequestBuilder {
 }
 
 impl RequestBuilder<Vec<Event>> for HttpRequestBuilder {
-    type Metadata = (EventFinalizers, usize);
+    type Metadata = (EventFinalizers, usize, usize);
     type Events = Vec<Event>;
     type Encoder = HttpEncoder;
     type Payload = Bytes;
-    type Request = HttpRequest<()>;
+    type Request = HttpRequest;
     type Error = io::Error;
 
     fn compression(&self) -> Compression {
@@ -40,7 +40,7 @@ impl RequestBuilder<Vec<Event>> for HttpRequestBuilder {
 
     fn split_input(&self, mut input: Vec<Event>) -> (Self::Metadata, Self::Events) {
         let finalizers = input.take_finalizers();
-        ((finalizers, input.len()), input)
+        ((finalizers, input.len(), 0), input)
     }
 
     fn build_request(
@@ -48,6 +48,6 @@ impl RequestBuilder<Vec<Event>> for HttpRequestBuilder {
         metadata: Self::Metadata,
         payload: EncodeResult<Self::Payload>,
     ) -> Self::Request {
-        HttpRequest::new(payload.payload, metadata.0, ())
+        HttpRequest::new(payload.payload, metadata.0, metadata.1, metadata.2, ())
     }
 }

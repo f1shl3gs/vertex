@@ -303,18 +303,36 @@ impl<F, B> Clone for HttpBatchService<F, B> {
 pub struct HttpRequest<T = ()> {
     payload: Bytes,
     finalizers: EventFinalizers,
+    /// Number of events represented by this batch request
+    event_count: usize,
+    /// Size, in bytes, of the in-memory representation of all events in this batch request.
+    events_byte_size: usize,
+
     metadata: T,
 }
 
 impl<T: Send> HttpRequest<T> {
     /// Creates a nwe `HttpRequest`
     #[inline]
-    pub fn new(payload: Bytes, finalizers: EventFinalizers, metadata: T) -> Self {
+    pub fn new(
+        payload: Bytes,
+        finalizers: EventFinalizers,
+        event_count: usize,
+        events_byte_size: usize,
+        metadata: T,
+    ) -> Self {
         Self {
             payload,
             finalizers,
+            event_count,
+            events_byte_size,
             metadata,
         }
+    }
+
+    #[inline]
+    pub fn count_and_bytes(&self) -> (usize, usize) {
+        (self.event_count, self.events_byte_size)
     }
 
     #[inline]
@@ -337,8 +355,10 @@ impl<T: Send> Finalizable for HttpRequest<T> {
 /// Response type for use in the 'Service' implementation of HTTP stream skins
 pub struct HttpResponse {
     http_resp: Response<Bytes>,
-    batch_size: usize,
-    event_size: usize,
+    /// Number of events represented by this batch request
+    event_count: usize,
+    /// Size, in bytes, of the in-memory representation of all events in this batch request.
+    events_byte_size: usize,
 }
 
 impl DriverResponse for HttpResponse {
@@ -354,8 +374,12 @@ impl DriverResponse for HttpResponse {
         }
     }
 
-    fn events_send(&self) -> (usize, usize, Option<&'static str>) {
-        (self.batch_size, self.event_size, None)
+    fn events_send(&self) -> usize {
+        self.event_count
+    }
+
+    fn bytes_sent(&self) -> usize {
+        self.events_byte_size
     }
 }
 
@@ -400,15 +424,17 @@ where
         let client = self.client.clone();
 
         Box::pin(async move {
+            let (event_count, events_byte_size) = req.count_and_bytes();
             let req = builder.build(req)?.map(Body::from);
+
             let resp = client.send(req).await?;
             let (parts, body) = resp.into_parts();
             let body = hyper::body::to_bytes(body).await?;
 
             Ok(HttpResponse {
                 http_resp: Response::from_parts(parts, body),
-                batch_size: 0,
-                event_size: 0,
+                event_count,
+                events_byte_size,
             })
         })
     }

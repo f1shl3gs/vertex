@@ -77,8 +77,15 @@ impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
         metadata: Self::Metadata,
         payload: EncodeResult<Self::Payload>,
     ) -> Self::Request {
-        let (pk, finalizers, _batch_size) = metadata;
+        let (pk, finalizers, batch_size) = metadata;
+        let events_byte_size = payload.payload.len();
 
-        HttpRequest::new(payload.payload, finalizers, pk)
+        HttpRequest::new(
+            payload.payload,
+            finalizers,
+            batch_size,
+            events_byte_size,
+            pk,
+        )
     }
 }

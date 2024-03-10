@@ -37,7 +37,7 @@ impl HttpSinkRequestBuilder {
 }
 
 impl HttpRequestBuilder<()> for HttpSinkRequestBuilder {
-    fn build(&self, mut req: HttpRequest<()>) -> Result<Request<Bytes>, Error> {
+    fn build(&self, mut req: HttpRequest) -> Result<Request<Bytes>, Error> {
         let mut builder = Request::builder()
             .method(self.method.clone())
             .uri(self.uri.clone());
