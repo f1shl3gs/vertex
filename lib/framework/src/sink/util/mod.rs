@@ -15,6 +15,7 @@ pub mod tcp;
 pub mod udp;
 #[cfg(unix)]
 pub mod unix;
+mod zstd;
 
 #[cfg(any(test, feature = "test-util"))]
 pub mod testing;

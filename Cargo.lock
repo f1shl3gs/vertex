@@ -1065,6 +1065,7 @@ dependencies = [
  "twox-hash",
  "typetag",
  "url",
+ "zstd",
 ]
 
 [[package]]

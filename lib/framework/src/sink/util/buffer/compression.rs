@@ -7,6 +7,8 @@ use serde::ser::SerializeMap;
 use serde::{de, ser, Serializer};
 use serde::{Deserializer, Serialize};
 
+use crate::sink::util::zstd::ZstdCompressionLevel;
+
 /// Compression Level
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub enum CompressionLevel {
@@ -127,6 +129,11 @@ pub enum Compression {
     /// [zlib]: https://en.wikipedia.org/wiki/Zlib
     Zlib(CompressionLevel),
 
+    /// Zstandard compression.
+    ///
+    /// [zstd]: https://facebook.github.io/zstd/
+    Zstd(CompressionLevel),
+
     /// Snappy compression.
     ///
     /// [snappy]: https://github.com/google/snappy/blob/main/docs/README.md
@@ -157,7 +164,9 @@ impl Compression {
     pub fn compression_level(&self) -> CompressionLevel {
         match self {
             Compression::None | Compression::Snappy => CompressionLevel::None,
-            Compression::Gzip(level) | Compression::Zlib(level) => *level,
+            Compression::Gzip(level) | Compression::Zlib(level) | Compression::Zstd(level) => {
+                *level
+            }
         }
     }
 
@@ -165,6 +174,7 @@ impl Compression {
         match self {
             Compression::None | Compression::Snappy => 0,
             Compression::Gzip(_) | Compression::Zlib(_) => 9,
+            Compression::Zstd(_) => 21,
         }
     }
 
@@ -173,6 +183,7 @@ impl Compression {
             Compression::None => None,
             Compression::Gzip(_) => Some("gzip"),
             Compression::Zlib(_) => Some("deflate"),
+            Compression::Zstd(_) => Some("zstd"),
             Compression::Snappy => Some("snappy"),
         }
     }
@@ -191,6 +202,9 @@ impl Display for Compression {
             Compression::None => f.write_str("none"),
             Compression::Gzip(ref level) => write!(f, "gzip({})", level.as_flate2().level()),
             Compression::Zlib(ref level) => write!(f, "zlib({})", level.as_flate2().level()),
+            Compression::Zstd(ref level) => {
+                write!(f, "zstd({})", ZstdCompressionLevel::from(*level))
+            }
             Compression::Snappy => f.write_str("snappy"),
         }
     }
@@ -319,6 +333,16 @@ impl ser::Serialize for Compression {
                     map.end()
                 } else {
                     serializer.serialize_str("zlib")
+                }
+            }
+            Compression::Zstd(level) => {
+                if *level != CompressionLevel::Default {
+                    let mut map = serializer.serialize_map(None)?;
+                    map.serialize_entry("algorithm", "zstd")?;
+                    map.serialize_entry("level", &level)?;
+                    map.end()
+                } else {
+                    serializer.serialize_str("zstd")
                 }
             }
             Compression::Snappy => serializer.serialize_str("snappy"),
