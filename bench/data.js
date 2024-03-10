@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710094003113,
+  "lastUpdate": 1710094004706,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "25d13919abafe70eed77c7315598f1fad424cf18",
-          "message": "chore(deps): bump quote from 1.0.33 to 1.0.34 (#1524)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.33 to 1.0.34.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.33...1.0.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-01T17:11:26+08:00",
-          "tree_id": "961b647cf09139dfa2b577f7ce044902a83c6044",
-          "url": "https://github.com/f1shl3gs/vertex/commit/25d13919abafe70eed77c7315598f1fad424cf18"
-        },
-        "date": 1704100414066,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 551670,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 533930,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9a053d85e944e490ad51599b54158f115bf6dfa9",
+          "message": "implement with HttpService (#1640)",
+          "timestamp": "2024-03-11T02:04:18+08:00",
+          "tree_id": "fed4f811c39c555f000b6fd2b52dfe53749bb752",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9a053d85e944e490ad51599b54158f115bf6dfa9"
+        },
+        "date": 1710093989820,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537330,
             "unit": "ns/op"
           }
         ]
