@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710057760619,
+  "lastUpdate": 1710058205777,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9d735be20ba4650395d9bc32f1675db9913c48d2",
-          "message": "chore(deps): bump serde_json from 1.0.108 to 1.0.109 (#1522)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.108 to 1.0.109.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.108...v1.0.109)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-01T16:57:38+08:00",
-          "tree_id": "fb6c406f1b67a8a9405c3c724398b631d0d2184b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9d735be20ba4650395d9bc32f1675db9913c48d2"
-        },
-        "date": 1704100107934,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 17848000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 429750,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.569,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1613fb9a9d33de1163db5f2aefbc5cf7744207b7",
           "message": "chore(deps): bump proc-macro2 from 1.0.72 to 1.0.73 (#1523)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.72 to 1.0.73.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.72...1.0.73)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-01T16:57:00+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.55,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c7f55b4983a0de7c6804c57c4b7ccb093ad601d1",
+          "message": "compression: add snappy support (#1639)\n\n* add snappy support",
+          "timestamp": "2024-03-10T15:58:59+08:00",
+          "tree_id": "3aba7e50478e0290c7bde833d9f5504c52744263",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c7f55b4983a0de7c6804c57c4b7ccb093ad601d1"
+        },
+        "date": 1710058190747,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17753000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 482450,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.462,
             "unit": "ns/op"
           }
         ]
