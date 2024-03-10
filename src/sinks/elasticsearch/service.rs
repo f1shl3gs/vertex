@@ -108,8 +108,12 @@ impl DriverResponse for ElasticsearchResponse {
         self.event_status
     }
 
-    fn events_send(&self) -> (usize, usize, Option<&'static str>) {
-        (self.batch_size, self.events_byte_size, None)
+    fn events_send(&self) -> usize {
+        self.batch_size
+    }
+
+    fn bytes_sent(&self) -> usize {
+        self.events_byte_size
     }
 }
 

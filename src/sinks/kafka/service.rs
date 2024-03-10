@@ -35,8 +35,12 @@ impl DriverResponse for KafkaResponse {
         EventStatus::Delivered
     }
 
-    fn events_send(&self) -> (usize, usize, Option<&'static str>) {
-        (1, self.event_byte_size, None)
+    fn events_send(&self) -> usize {
+        1
+    }
+
+    fn bytes_sent(&self) -> usize {
+        self.event_byte_size
     }
 }
 
