@@ -1,15 +1,15 @@
 use bytes::Bytes;
 use event::{EventFinalizers, Finalizable, Metric};
 use framework::partition::Partitioner;
+use framework::sink::util::http::HttpRequest;
 use framework::sink::util::{Compression, EncodeResult, RequestBuilder};
 use framework::template::Template;
 
 use super::encoder::LineProtocolEncoder;
-use super::service::InfluxdbRequest;
 
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub struct PartitionKey {
-    bucket: String,
+    pub bucket: String,
 }
 
 /// KeyPartitioner that partitions events by (org, bucket) pair.
@@ -55,7 +55,7 @@ impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
     type Events = Vec<Metric>;
     type Encoder = LineProtocolEncoder;
     type Payload = Bytes;
-    type Request = InfluxdbRequest;
+    type Request = HttpRequest<PartitionKey>;
     type Error = std::io::Error;
 
     fn compression(&self) -> Compression {
@@ -77,14 +77,8 @@ impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
         metadata: Self::Metadata,
         payload: EncodeResult<Self::Payload>,
     ) -> Self::Request {
-        let (pk, finalizers, batch_size) = metadata;
+        let (pk, finalizers, _batch_size) = metadata;
 
-        InfluxdbRequest {
-            bucket: pk.bucket,
-            compression: self.compression,
-            finalizers,
-            data: payload.payload,
-            batch_size,
-        }
+        HttpRequest::new(payload.payload, finalizers, pk)
     }
 }

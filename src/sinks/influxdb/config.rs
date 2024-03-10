@@ -4,15 +4,17 @@ use configurable::configurable_component;
 use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::http::HttpClient;
+use framework::sink::util::http::{http_response_retry_logic, HttpService};
 use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
 use framework::sink::util::Compression;
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
+use http::Uri;
 use tower::ServiceBuilder;
 
 use super::health;
-use super::service::{InfluxdbRetryLogic, InfluxdbService};
+use super::service::InfluxdbHttpRequestBuilder;
 use super::sink::InfluxdbSink;
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -70,20 +72,21 @@ struct Config {
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let client = HttpClient::new(&self.tls, &cx.proxy)?;
-        let endpoint = format!("{}/api/v2/write", self.endpoint).parse()?;
+        let endpoint = format!("{}/api/v2/write", self.endpoint).parse::<Uri>()?;
         let batch = self.batch.into_batcher_settings()?;
-        let service = InfluxdbService::new(
-            client.clone(),
-            endpoint,
-            self.org.clone(),
+
+        let http_request_builder = InfluxdbHttpRequestBuilder::new(
+            endpoint.to_string(),
             self.token.clone(),
+            self.request.header_map()?,
+            self.compression,
         );
+        let http_service = HttpService::new(client.clone(), http_request_builder);
         let service = ServiceBuilder::new()
-            .settings(self.request.into_settings(), InfluxdbRetryLogic::default())
-            .service(service);
+            .settings(self.request.into_settings(), http_response_retry_logic())
+            .service(http_service);
 
         let sink = InfluxdbSink::new(self.bucket.clone(), batch, self.compression, service);
-
         let healthcheck = health::healthcheck(client, self.endpoint.clone(), self.token.clone());
 
         Ok((Sink::Stream(Box::new(sink)), Box::pin(healthcheck)))
