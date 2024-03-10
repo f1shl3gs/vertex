@@ -1,5 +1,6 @@
 use std::fmt;
 use std::future::Future;
+use std::marker::PhantomData;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
@@ -8,10 +9,10 @@ use std::time::Duration;
 use async_trait::async_trait;
 use bytes::{Buf, Bytes};
 use bytesize::ByteSizeOf;
-use event::Event;
+use event::{Event, EventFinalizers, EventStatus, Finalizable};
 use futures::ready;
 use futures_util::future::BoxFuture;
-use http::StatusCode;
+use http::{Request, Response, StatusCode};
 use hyper::{body, Body};
 use pin_project_lite::pin_project;
 use tower::Service;
@@ -21,13 +22,14 @@ use crate::http::{HttpClient, HttpError};
 use crate::sink::util::retries::{RetryAction, RetryLogic};
 use crate::sink::util::service::BatchedSink;
 use crate::sink::util::{service::RequestSettings, sink};
+use crate::stream::DriverResponse;
 
 #[derive(Clone, Debug, Default)]
 pub struct HttpRetryLogic;
 
 impl RetryLogic for HttpRetryLogic {
     type Error = HttpError;
-    type Response = hyper::Response<Bytes>;
+    type Response = Response<Bytes>;
 
     fn is_retriable_error(&self, _err: &Self::Error) -> bool {
         true
@@ -48,7 +50,7 @@ impl RetryLogic for HttpRetryLogic {
     }
 }
 
-impl<T: fmt::Debug> sink::Response for http::Response<T> {
+impl<T: fmt::Debug> sink::Response for Response<T> {
     fn is_successful(&self) -> bool {
         self.status().is_success()
     }
@@ -102,7 +104,7 @@ pin_project! {
         sink: Arc<T>,
         #[pin]
         inner: BatchedSink<
-            HttpBatchService<BoxFuture<'static, crate::Result<hyper::Request<Bytes>>>, B::Output>,
+            HttpBatchService<BoxFuture<'static, crate::Result<Request<Bytes>>>, B::Output>,
             B,
             RL,
         >,
@@ -251,7 +253,7 @@ impl<F, B> HttpBatchService<F, B> {
 
 impl<F, B> Service<B> for HttpBatchService<F, B>
 where
-    F: Future<Output = crate::Result<hyper::Request<Bytes>>> + Send + 'static,
+    F: Future<Output = crate::Result<Request<Bytes>>> + Send + 'static,
     B: ByteSizeOf + Send + 'static,
 {
     type Response = http::Response<Bytes>;
@@ -279,7 +281,7 @@ where
 
             let (parts, body) = response.into_parts();
             let mut body = body::aggregate(body).await?;
-            Ok(hyper::Response::from_parts(
+            Ok(Response::from_parts(
                 parts,
                 body.copy_to_bytes(body.remaining()),
             ))
@@ -294,4 +296,189 @@ impl<F, B> Clone for HttpBatchService<F, B> {
             request_builder: Arc::clone(&self.request_builder),
         }
     }
+}
+
+/// Request type for use in the `Service` implementation of HTTP stream sinks.
+#[derive(Clone)]
+pub struct HttpRequest<T = ()> {
+    payload: Bytes,
+    finalizers: EventFinalizers,
+    metadata: T,
+}
+
+impl<T: Send> HttpRequest<T> {
+    /// Creates a nwe `HttpRequest`
+    #[inline]
+    pub fn new(payload: Bytes, finalizers: EventFinalizers, metadata: T) -> Self {
+        Self {
+            payload,
+            finalizers,
+            metadata,
+        }
+    }
+
+    #[inline]
+    pub const fn metadata(&self) -> &T {
+        &self.metadata
+    }
+
+    #[inline]
+    pub fn take_payload(&mut self) -> Bytes {
+        std::mem::take(&mut self.payload)
+    }
+}
+
+impl<T: Send> Finalizable for HttpRequest<T> {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        self.finalizers.take_finalizers()
+    }
+}
+
+/// Response type for use in the 'Service' implementation of HTTP stream skins
+pub struct HttpResponse {
+    http_resp: Response<Bytes>,
+    batch_size: usize,
+    event_size: usize,
+}
+
+impl DriverResponse for HttpResponse {
+    fn event_status(&self) -> EventStatus {
+        let status = self.http_resp.status();
+
+        if status.is_success() {
+            EventStatus::Delivered
+        } else if status.is_server_error() {
+            EventStatus::Errored
+        } else {
+            EventStatus::Rejected
+        }
+    }
+
+    fn events_send(&self) -> (usize, usize, Option<&'static str>) {
+        (self.batch_size, self.event_size, None)
+    }
+}
+
+/// HTTP request builder for HTTP stream sinks using the generic `HttpService`
+pub trait HttpRequestBuilder<T: Send> {
+    fn build(&self, req: HttpRequest<T>) -> Result<Request<Bytes>, crate::Error>;
+}
+
+/// Generic 'Service' implementation for HTTP stream sink.
+#[derive(Clone)]
+pub struct HttpService<B> {
+    client: HttpClient<Body>,
+    request_builder: Arc<B>,
+}
+
+impl<B> HttpService<B> {
+    pub fn new(client: HttpClient, request_builder: B) -> Self {
+        let request_builder = Arc::new(request_builder);
+
+        Self {
+            client,
+            request_builder,
+        }
+    }
+}
+
+impl<B, T> Service<HttpRequest<T>> for HttpService<B>
+where
+    B: HttpRequestBuilder<T> + Send + Sync + 'static,
+    T: Send + 'static,
+{
+    type Response = HttpResponse;
+    type Error = crate::Error;
+    type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
+
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn call(&mut self, req: HttpRequest<T>) -> Self::Future {
+        let builder = Arc::clone(&self.request_builder);
+        let client = self.client.clone();
+
+        Box::pin(async move {
+            let req = builder.build(req)?.map(Body::from);
+            let resp = client.send(req).await?;
+            let (parts, body) = resp.into_parts();
+            let body = hyper::body::to_bytes(body).await?;
+
+            Ok(HttpResponse {
+                http_resp: Response::from_parts(parts, body),
+                batch_size: 0,
+                event_size: 0,
+            })
+        })
+    }
+}
+
+/// A more generic version of `HttpRetryLogic` that accepts anything that can
+/// be converted to a status code.
+pub struct HttpStatusRetryLogic<F, T> {
+    f: F,
+    _request: PhantomData<T>,
+}
+
+impl<F, T> HttpStatusRetryLogic<F, T>
+where
+    F: Fn(&T) -> StatusCode + Clone + Send + Sync + 'static,
+    T: Send + Sync + 'static,
+{
+    pub const fn new(f: F) -> HttpStatusRetryLogic<F, T> {
+        Self {
+            f,
+            _request: PhantomData,
+        }
+    }
+}
+
+impl<F, T> RetryLogic for HttpStatusRetryLogic<F, T>
+where
+    F: Fn(&T) -> StatusCode + Clone + Send + Sync + 'static,
+    T: Send + Sync + 'static,
+{
+    type Error = HttpError;
+    type Response = T;
+
+    fn is_retriable_error(&self, _err: &Self::Error) -> bool {
+        true
+    }
+
+    fn should_retry_resp(&self, resp: &Self::Response) -> RetryAction {
+        let status = (self.f)(resp);
+
+        match status {
+            StatusCode::TOO_MANY_REQUESTS => RetryAction::Retry("too many requests".into()),
+            StatusCode::NOT_IMPLEMENTED => {
+                RetryAction::DontRetry("endpoint not implemented".into())
+            }
+            _ if status.is_server_error() => {
+                RetryAction::Retry(format!("Http Status: {}", status).into())
+            }
+            _ if status.is_success() => RetryAction::Successful,
+            _ => RetryAction::DontRetry(format!("Http status: {}", status).into()),
+        }
+    }
+}
+
+impl<F, T> Clone for HttpStatusRetryLogic<F, T>
+where
+    F: Clone,
+{
+    fn clone(&self) -> Self {
+        Self {
+            f: self.f.clone(),
+            _request: PhantomData,
+        }
+    }
+}
+
+/// Creates a `RetryLogic` for use with `HttpResponse`
+pub fn http_response_retry_logic() -> HttpStatusRetryLogic<
+    impl Fn(&HttpResponse) -> StatusCode + Clone + Send + Sync + 'static,
+    HttpResponse,
+> {
+    HttpStatusRetryLogic::new(|resp: &HttpResponse| resp.http_resp.status())
 }

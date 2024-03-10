@@ -158,18 +158,40 @@ pub struct Merged;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Unmerged;
 
+const fn default_max_bytes<D: SinkBatchSettings>() -> Option<usize> {
+    D::MAX_BYTES
+}
+
+const fn default_max_events<D: SinkBatchSettings>() -> Option<usize> {
+    D::MAX_EVENTS
+}
+
+const fn default_timeout<D: SinkBatchSettings>() -> Option<Duration> {
+    Some(D::TIMEOUT)
+}
+
 /// Configures the sink batching behavior.
 #[derive(Configurable, Clone, Copy, Debug, Default, Deserialize, Serialize)]
 pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
-    /// The maximum size of a batch, before it is flushed.
-    #[serde(with = "humanize::bytes::serde_option")]
+    /// The maximum size of a batch that is processed by a sink.
+    ///
+    /// This is based on the uncompressed size of the batched events, before they
+    /// are serialized/compressed
+    #[serde(
+        default = "default_max_bytes::<D>",
+        with = "humanize::bytes::serde_option"
+    )]
     pub max_bytes: Option<usize>,
 
-    /// The maximum events of a batch, before it is flushed.
+    /// The maximum size of a batch before it is flushed.
+    #[serde(default = "default_max_events::<D>")]
     pub max_events: Option<usize>,
 
     /// The maximum age of a batch before it is flushed.
-    #[serde(with = "humanize::duration::serde_option")]
+    #[serde(
+        default = "default_timeout::<D>",
+        with = "humanize::duration::serde_option"
+    )]
     pub timeout: Option<Duration>,
 
     #[serde(skip)]
