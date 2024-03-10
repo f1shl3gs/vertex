@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710100357463,
+  "lastUpdate": 1710100807528,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e325de4e3ca9286f6cc565722276a3d8df868223",
-          "message": "chore(deps): bump serde_yaml from 0.9.29 to 0.9.30 (#1537)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.29 to 0.9.30.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.29...0.9.30)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-02T18:38:43+08:00",
-          "tree_id": "cd1d796ce027f81f7e46f1c320474d96a8551230",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e325de4e3ca9286f6cc565722276a3d8df868223"
-        },
-        "date": 1704192572517,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 563,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41464.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e3461bfa29ebaa68fa8d58969ebcd59a18d573e9",
           "message": "chore(deps): bump thiserror from 1.0.55 to 1.0.56 (#1534)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.55 to 1.0.56.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.55...1.0.56)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-02T18:39:18+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41685.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1fad7af7a19fc197397747763f6e5d10dbbe13aa",
+          "message": "add Zstd support (#1642)",
+          "timestamp": "2024-03-11T03:49:05+08:00",
+          "tree_id": "7bf2a5541ca763eb35b61acea5c9cc95f9005d18",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1fad7af7a19fc197397747763f6e5d10dbbe13aa"
+        },
+        "date": 1710100791858,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 571,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41707.2,
             "unit": "KiB"
           }
         ]
