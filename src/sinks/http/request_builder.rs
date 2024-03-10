@@ -2,10 +2,10 @@ use std::io;
 
 use bytes::Bytes;
 use event::{Event, EventFinalizers, Finalizable};
+use framework::sink::util::http::HttpRequest;
 use framework::sink::util::{Compression, EncodeResult, RequestBuilder};
 
 use super::encoder::HttpEncoder;
-use super::service::HttpRequest;
 
 pub struct HttpRequestBuilder {
     compression: Compression,
@@ -27,7 +27,7 @@ impl RequestBuilder<Vec<Event>> for HttpRequestBuilder {
     type Events = Vec<Event>;
     type Encoder = HttpEncoder;
     type Payload = Bytes;
-    type Request = HttpRequest;
+    type Request = HttpRequest<()>;
     type Error = io::Error;
 
     fn compression(&self) -> Compression {
@@ -48,6 +48,6 @@ impl RequestBuilder<Vec<Event>> for HttpRequestBuilder {
         metadata: Self::Metadata,
         payload: EncodeResult<Self::Payload>,
     ) -> Self::Request {
-        HttpRequest::new(payload.payload, metadata.0, metadata.1)
+        HttpRequest::new(payload.payload, metadata.0, ())
     }
 }

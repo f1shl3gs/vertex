@@ -5,6 +5,7 @@ use configurable::configurable_component;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::{serde_http_method, serde_uri, DataType, SinkConfig, SinkContext};
 use framework::http::{Auth, HttpClient};
+use framework::sink::util::http::{http_response_retry_logic, HttpService};
 use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
 use framework::sink::util::Compression;
 use framework::tls::TlsConfig;
@@ -16,7 +17,7 @@ use tower::ServiceBuilder;
 
 use super::encoder::HttpEncoder;
 use super::request_builder::HttpRequestBuilder;
-use super::service::{HttpRetryLogic, HttpService};
+use super::service::HttpSinkRequestBuilder;
 use super::sink::HttpSink;
 
 /// Configuration for the `http` sink
@@ -79,20 +80,22 @@ impl SinkConfig for Config {
         };
         let content_encoding = self.compression.content_encoding();
         let client = HttpClient::new(&self.tls, &cx.proxy)?;
-        let http_service = HttpService::new(
-            client.clone(),
-            self.uri.clone(),
+
+        let encoder = HttpEncoder::new(encoder, transformer);
+        let request_builder = HttpRequestBuilder::new(self.compression, encoder);
+        let sink_request_builder = HttpSinkRequestBuilder::new(
             self.method.clone(),
+            self.uri.clone(),
+            self.auth.clone(),
             self.request.header_map()?,
             content_type,
             content_encoding,
         );
-        let service = ServiceBuilder::new()
-            .settings(self.request.into_settings(), HttpRetryLogic)
-            .service(http_service);
-        let encoder = HttpEncoder::new(encoder, transformer);
-        let request_builder = HttpRequestBuilder::new(self.compression, encoder);
 
+        let http_service = HttpService::new(client.clone(), sink_request_builder);
+        let service = ServiceBuilder::new()
+            .settings(self.request.into_settings(), http_response_retry_logic())
+            .service(http_service);
         let sink = HttpSink::new(service, batch_settings, request_builder);
         let healthcheck = match &cx.healthcheck.uri {
             None => future::ok(()).boxed(),

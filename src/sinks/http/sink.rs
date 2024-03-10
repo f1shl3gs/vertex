@@ -3,6 +3,7 @@ use std::fmt::Debug;
 use async_trait::async_trait;
 use event::{EventContainer, Events};
 use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::util::http::HttpRequest;
 use framework::stream::{BatcherSettings, DriverResponse};
 use framework::StreamSink;
 use futures::StreamExt;
@@ -10,7 +11,6 @@ use futures_util::stream::BoxStream;
 use tower::Service;
 
 use super::request_builder::HttpRequestBuilder;
-use super::service::HttpRequest;
 
 pub struct HttpSink<S> {
     service: S,
