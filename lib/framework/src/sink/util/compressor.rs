@@ -1,8 +1,10 @@
-use bytes::{BufMut, BytesMut};
-use flate2::write::{GzEncoder, ZlibEncoder};
 use std::io::Write;
 
+use bytes::{BufMut, BytesMut};
+use flate2::write::{GzEncoder, ZlibEncoder};
+
 use super::buffer::Compression;
+use super::snappy::SnappyEncoder;
 
 const BUFFER_SIZE: usize = 1024;
 
@@ -10,6 +12,7 @@ enum Writer {
     Plain(bytes::buf::Writer<BytesMut>),
     Gzip(GzEncoder<bytes::buf::Writer<BytesMut>>),
     Zlib(ZlibEncoder<bytes::buf::Writer<BytesMut>>),
+    Snappy(SnappyEncoder<bytes::buf::Writer<BytesMut>>),
 }
 
 impl Writer {
@@ -18,6 +21,7 @@ impl Writer {
             Writer::Plain(inner) => inner.get_ref(),
             Writer::Gzip(inner) => inner.get_ref().get_ref(),
             Writer::Zlib(inner) => inner.get_ref().get_ref(),
+            Writer::Snappy(inner) => inner.get_ref().get_ref(),
         }
     }
 }
@@ -28,8 +32,9 @@ impl From<Compression> for Writer {
 
         match compression {
             Compression::None => Writer::Plain(writer),
-            Compression::Gzip(level) => Writer::Gzip(GzEncoder::new(writer, level)),
-            Compression::Zlib(level) => Writer::Zlib(ZlibEncoder::new(writer, level)),
+            Compression::Gzip(level) => Writer::Gzip(GzEncoder::new(writer, level.as_flate2())),
+            Compression::Zlib(level) => Writer::Zlib(ZlibEncoder::new(writer, level.as_flate2())),
+            Compression::Snappy => Writer::Snappy(SnappyEncoder::new(writer)),
         }
     }
 }
@@ -41,6 +46,7 @@ impl Write for Writer {
             Writer::Plain(inner) => inner.write(buf),
             Writer::Gzip(writer) => writer.write(buf),
             Writer::Zlib(writer) => writer.write(buf),
+            Writer::Snappy(writer) => writer.write(buf),
         }
     }
 
@@ -49,6 +55,7 @@ impl Write for Writer {
             Writer::Plain(writer) => writer.flush(),
             Writer::Gzip(writer) => writer.flush(),
             Writer::Zlib(writer) => writer.flush(),
+            Writer::Snappy(writer) => writer.flush(),
         }
     }
 }
@@ -91,6 +98,7 @@ impl Compressor {
             Writer::Plain(writer) => writer,
             Writer::Gzip(writer) => writer.finish()?,
             Writer::Zlib(writer) => writer.finish()?,
+            Writer::Snappy(writer) => writer.finish()?,
         };
 
         Ok(buf.into_inner())
@@ -114,6 +122,9 @@ impl Compressor {
             Writer::Zlib(writer) => writer
                 .finish()
                 .expect("zlib writer should not fail to finish"),
+            Writer::Snappy(writer) => writer
+                .finish()
+                .expect("snappy writer should not fail to finish"),
         }
         .into_inner()
     }

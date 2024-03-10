@@ -14,6 +14,7 @@ pub mod tcp;
 pub mod udp;
 #[cfg(unix)]
 pub mod unix;
+mod snappy;
 
 #[cfg(any(test, feature = "test-util"))]
 pub mod testing;
