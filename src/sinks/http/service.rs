@@ -3,15 +3,14 @@ use framework::http::Auth;
 use framework::sink::util::http::{HttpRequest, HttpRequestBuilder};
 use framework::Error;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
-use http::{HeaderName, HeaderValue, Method, Request, Uri};
-use indexmap::IndexMap;
+use http::{HeaderMap, Method, Request, Uri};
 
 #[derive(Clone)]
 pub struct HttpSinkRequestBuilder {
     method: Method,
     uri: Uri,
     auth: Option<Auth>,
-    headers: IndexMap<HeaderName, HeaderValue>,
+    headers: HeaderMap,
     content_type: Option<String>,
     content_encoding: Option<&'static str>,
 }
@@ -22,7 +21,7 @@ impl HttpSinkRequestBuilder {
         method: Method,
         uri: Uri,
         auth: Option<Auth>,
-        headers: IndexMap<HeaderName, HeaderValue>,
+        headers: HeaderMap,
         content_type: Option<String>,
         content_encoding: Option<&'static str>,
     ) -> Self {

@@ -4,7 +4,7 @@ mod map;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-use http::{HeaderName, HeaderValue};
+use http::{HeaderMap, HeaderName, HeaderValue};
 use std::time::Duration;
 
 pub use concurrency::{concurrency_is_none, Concurrency};
@@ -156,8 +156,8 @@ impl RequestConfig {
         }
     }
 
-    pub fn header_map(&self) -> Result<IndexMap<HeaderName, HeaderValue>, crate::Error> {
-        let mut headers = IndexMap::with_capacity(self.headers.len());
+    pub fn header_map(&self) -> Result<HeaderMap, crate::Error> {
+        let mut headers = HeaderMap::new();
 
         for (key, value) in &self.headers {
             let key = HeaderName::from_bytes(key.as_bytes())?;

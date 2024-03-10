@@ -1,30 +1,38 @@
+use std::fmt::Debug;
+
 use async_trait::async_trait;
 use event::Events;
 use framework::sink::util::builder::SinkBuilderExt;
-use framework::sink::util::service::Svc;
+use framework::sink::util::http::HttpRequest;
 use framework::sink::util::Compression;
-use framework::stream::BatcherSettings;
+use framework::stream::{BatcherSettings, DriverResponse};
 use framework::template::Template;
 use framework::StreamSink;
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
+use tower::Service;
 
-use super::request_builder::{InfluxdbRequestBuilder, KeyPartitioner};
-use super::service::{InfluxdbRetryLogic, InfluxdbService};
+use super::request_builder::{InfluxdbRequestBuilder, KeyPartitioner, PartitionKey};
 
-pub struct InfluxdbSink {
+pub struct InfluxdbSink<S> {
     bucket: Template,
     batch: BatcherSettings,
     compression: Compression,
-    service: Svc<InfluxdbService, InfluxdbRetryLogic>,
+    service: S,
 }
 
-impl InfluxdbSink {
+impl<S> InfluxdbSink<S>
+where
+    S: Service<HttpRequest<PartitionKey>> + Send + 'static,
+    S::Future: Send + 'static,
+    S::Response: DriverResponse + Send + 'static,
+    S::Error: Debug + Into<crate::Error> + Send,
+{
     pub fn new(
         bucket: Template,
         batch: BatcherSettings,
         compression: Compression,
-        service: Svc<InfluxdbService, InfluxdbRetryLogic>,
+        service: S,
     ) -> Self {
         Self {
             bucket,
@@ -62,7 +70,13 @@ impl InfluxdbSink {
 }
 
 #[async_trait]
-impl StreamSink for InfluxdbSink {
+impl<S> StreamSink for InfluxdbSink<S>
+where
+    S: Service<HttpRequest<PartitionKey>> + Send + 'static,
+    S::Future: Send + 'static,
+    S::Response: DriverResponse + Send + 'static,
+    S::Error: Debug + Into<crate::Error> + Send,
+{
     async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         self.run_inner(input).await
     }
