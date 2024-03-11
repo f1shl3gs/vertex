@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710162442097,
+  "lastUpdate": 1710162446799,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c2eeb02f2f4970e817f1e1d2c6bc4b3ea7e905c5",
-          "message": "remove unnecessary Duration::as_secs_f64 (#1527)",
-          "timestamp": "2024-01-01T21:32:35+08:00",
-          "tree_id": "e15dedd490f010b8ac4c4a62954162dcf2ce57dd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c2eeb02f2f4970e817f1e1d2c6bc4b3ea7e905c5"
-        },
-        "date": 1704116089203,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.866,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 90.848,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 181.15,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 184.62,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7216632b5d7c4b450059391df8e77f82e849116a",
+          "message": "sinks/blackhole implement rate (#1645)",
+          "timestamp": "2024-03-11T21:05:03+08:00",
+          "tree_id": "ac28fb91a7b34f54423dd3ba2ac4abd65609cb86",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7216632b5d7c4b450059391df8e77f82e849116a"
+        },
+        "date": 1710162432024,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.888,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.23,
             "unit": "ns/op"
           }
         ]
