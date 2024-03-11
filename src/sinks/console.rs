@@ -2,11 +2,11 @@ use std::fmt::Debug;
 
 use async_trait::async_trait;
 use bytes::BytesMut;
-use codecs::encoding::{Framer, NewlineDelimitedEncoder, Transformer};
-use codecs::{Encoder, EncodingConfig};
+use codecs::encoding::{Framer, SinkType, Transformer};
+use codecs::{Encoder, EncodingConfigWithFraming};
 use configurable::{configurable_component, Configurable};
 use event::{EventContainer, EventStatus, Events, Finalizable};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{default_true, DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::StreamExt;
 use futures::{stream::BoxStream, FutureExt};
@@ -14,19 +14,22 @@ use serde::{Deserialize, Serialize};
 use tokio::io::AsyncWriteExt;
 use tokio_util::codec::Encoder as _;
 
+/// The [standard stream][standard_streams] to write to.
+///
+/// [standard_streams]: https://en.wikipedia.org/wiki/Standard_streams
 #[derive(Configurable, Debug, Deserialize, Serialize, Default)]
 #[serde(rename_all = "lowercase")]
 enum Stream {
+    /// Write output to `stdout`
+    ///
+    /// [stdout]: https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)
     #[default]
     Stdout,
-    Stderr,
-}
 
-#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone)]
-#[serde(rename_all = "snake_case")]
-pub enum Encoding {
-    Json,
-    Text,
+    /// Write output to `stderr`
+    ///
+    /// [stderr]: https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)
+    Stderr,
 }
 
 #[configurable_component(sink, name = "console")]
@@ -36,7 +39,11 @@ pub struct Config {
     #[serde(default)]
     stream: Stream,
 
-    encoding: EncodingConfig,
+    #[serde(flatten)]
+    encoding: EncodingConfigWithFraming,
+
+    #[serde(default = "default_true")]
+    acknowledgements: bool,
 }
 
 #[async_trait]
@@ -44,8 +51,8 @@ pub struct Config {
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let transformer = self.encoding.transformer();
-        let encoder =
-            Encoder::<Framer>::new(NewlineDelimitedEncoder::new().into(), self.encoding.build());
+        let (framer, serializer) = self.encoding.build(SinkType::StreamBased);
+        let encoder = Encoder::<Framer>::new(framer, serializer);
 
         let sink = match self.stream {
             Stream::Stdout => Sink::Stream(Box::new(WriteSink {
@@ -65,6 +72,10 @@ impl SinkConfig for Config {
 
     fn input_type(&self) -> DataType {
         DataType::All
+    }
+
+    fn acknowledgements(&self) -> bool {
+        self.acknowledgements
     }
 }
 
