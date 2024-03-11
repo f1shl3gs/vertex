@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710157190059,
+  "lastUpdate": 1710157210451,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a4c3d4b7935c9cadd306c3b860199a1a5010d7b9",
-          "message": "remove unnecessary features \"parking_lot/serde\" (#1526)",
-          "timestamp": "2024-01-01T21:25:54+08:00",
-          "tree_id": "a72d25e880828a3fcd940bed0b14c3ad471ddbc1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a4c3d4b7935c9cadd306c3b860199a1a5010d7b9"
-        },
-        "date": 1704115687148,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.485,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 92.149,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 181.29,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.69,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4fcc899e3d873436de0981ac685778276af05718",
+          "message": "sinks/console reuse EncodingConfigWithFraming (#1644)",
+          "timestamp": "2024-03-11T19:37:36+08:00",
+          "tree_id": "128b1f20144b8633d2350f874024a2aeaaca87d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4fcc899e3d873436de0981ac685778276af05718"
+        },
+        "date": 1710157195844,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.706,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.526,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.62,
             "unit": "ns/op"
           }
         ]
