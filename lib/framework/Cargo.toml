@@ -72,7 +72,7 @@ serde_json = { version = "1.0.114", default-features = false }
 serde_yaml = { version = "0.9.32", default-features = false }
 snap = { version = "1.1.1", default-features = false }
 socket2 = { version = "0.5.6", default-features = false }
-thiserror = { version = "1.0.57" }
+thiserror = { version = "1.0.58" }
 tokio = { version = "1.36.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
 tokio-rustls = { version = "0.24.1", default-features = false }
 tokio-stream = { version = "0.1.14", default-features = false, features = ["net", "sync"] }
