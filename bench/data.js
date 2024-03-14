@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710459833461,
+  "lastUpdate": 1710459851828,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4f045db7f6d2d8247dbf0196ac6ca860a04f873a",
-          "message": "chore(deps): bump async-trait from 0.1.76 to 0.1.77 (#1532)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.76 to 0.1.77.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-02T18:15:17+08:00",
-          "tree_id": "3969e00d3e8189a32427f3e072d9468974467544",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4f045db7f6d2d8247dbf0196ac6ca860a04f873a"
-        },
-        "date": 1704190736839,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 417.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 42505,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 210000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 419420,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 156.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 15609,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 77963,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 156140,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e325de4e3ca9286f6cc565722276a3d8df868223",
           "message": "chore(deps): bump serde_yaml from 0.9.29 to 0.9.30 (#1537)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.29 to 0.9.30.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.29...0.9.30)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-02T18:38:43+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 154500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee4db2ce54bbe83b7a812931413e81c7774c696b",
+          "message": "chore(deps): bump tokio-stream from 0.1.14 to 0.1.15 (#1650)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.14 to 0.1.15.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.14...tokio-stream-0.1.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-15T07:40:26+08:00",
+          "tree_id": "daa5bb29bb46c8d1f9c4ae7fd40542b7eec38867",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee4db2ce54bbe83b7a812931413e81c7774c696b"
+        },
+        "date": 1710459837296,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 419.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 41794,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 218550,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 428290,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 162.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 15932,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 79593,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 159290,
             "unit": "ns/op"
           }
         ]
