@@ -62,12 +62,26 @@ impl SourceContext {
 #[typetag::serde(tag = "type")]
 pub trait SourceConfig: NamedComponent + Debug + Send + Sync {
     /// Builds the source with the given context.
+    ///
+    /// If the source is built successfully, `Ok(...)` is returned containing the source.
+    ///
+    /// # Errors
+    ///
+    /// If an error occurs while building the source, an error variant explaining the
+    /// issue is returned.
     async fn build(&self, cx: SourceContext) -> crate::Result<crate::Source>;
 
     /// Gets the list of outputs exposed by this source.
     fn outputs(&self) -> Vec<Output>;
 
-    /// Resources that the source is using.
+    /// Gets the list of resources, if any, used by this source.
+    ///
+    /// Resources represent dependencies -- network ports, file descriptors, and so
+    /// on -- that cannot be shared between components at runtime. This ensures that
+    /// components can not be configured in a way that would deadlock the spawning
+    /// of a topology, and as well, allows Vertex to determine the correct order
+    /// for rebuilding a topology during configuration reload when resources must
+    /// first be reclaimed before being reassigned, and so on.
     fn resources(&self) -> Vec<Resource> {
         Vec::new()
     }
