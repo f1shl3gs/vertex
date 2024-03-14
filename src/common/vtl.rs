@@ -4,7 +4,7 @@ use bytes::Bytes;
 use event::tags::Tags;
 use event::{LogRecord, Metric, MetricValue};
 use value::path::{PathPrefix, TargetPath};
-use value::{ObjectMap, OwnedSegment, OwnedTargetPath, Value};
+use value::{OwnedSegment, OwnedTargetPath, Value};
 use vtl::{ContextError, Target};
 
 const VALID_METRIC_PATHS_SET: &str = ".name, .timestamp, .kind, .tags";
@@ -87,7 +87,7 @@ fn tags_to_value(tags: &Tags) -> Value {
 /// This structure is partially populated based on the fields accessed
 /// by the VTL program as informed by `Program`.
 pub fn precompute_metric_value(metric: &Metric, paths: &[OwnedTargetPath]) -> Value {
-    let mut map = ObjectMap::new();
+    let mut map = BTreeMap::new();
 
     let mut set_name = false;
     let mut set_type = false;
