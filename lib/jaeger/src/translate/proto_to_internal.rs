@@ -1,10 +1,8 @@
-use base64::engine::general_purpose::STANDARD as BASE64_STANDARD;
-use base64::Engine;
+use base64::prelude::{Engine as _, BASE64_STANDARD};
 use event::tags::{Tags, Value};
-use event::{
-    trace::{AnyValue, EvictedHashMap, Key, SpanContext, SpanId, SpanKind, TraceId, TraceState},
-    Events, Trace,
-};
+use event::trace::{AnyValue, EvictedHashMap, Key, SpanContext, SpanId};
+use event::trace::{SpanKind, Trace, TraceId, TraceState};
+use event::Events;
 
 use crate::proto::{self, Batch, ValueType};
 

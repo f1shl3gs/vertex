@@ -1,11 +1,8 @@
 use std::collections::HashMap;
 
-use base64::engine::general_purpose::STANDARD as BASE64_STANDARD;
-use base64::Engine;
-use event::trace::{
-    AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanKind,
-    Status, StatusCode,
-};
+use base64::prelude::{Engine as _, BASE64_STANDARD};
+use event::trace::{AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue};
+use event::trace::{Link, SpanContext, SpanKind, Status, StatusCode};
 use event::{tags::Value, Events, Trace};
 
 use crate::thrift::jaeger::{Batch, Log, Span, SpanRef, Tag, TagType};
