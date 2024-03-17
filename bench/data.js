@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710706493139,
+  "lastUpdate": 1710706503606,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "23f33f1c91c06715e6ea858b5d85cebbe369a7dc",
-          "message": "chore(deps): bump proc-macro2 from 1.0.74 to 1.0.75 (#1540)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.74 to 1.0.75.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.74...1.0.75)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-04T10:21:26+08:00",
-          "tree_id": "94eb34e55c163cac05747a76897c4a36846ebf1e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/23f33f1c91c06715e6ea858b5d85cebbe369a7dc"
-        },
-        "date": 1704335024533,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.746,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 89.245,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 178.36,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 175.64,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "037a7ef64cbb22d5c716e271259f3d3f1341cb50",
+          "message": "bump http to 0.2.12 (#1656)",
+          "timestamp": "2024-03-18T04:12:29+08:00",
+          "tree_id": "3f0176a7c343848dd5b6c2f270ada32d04ca5c84",
+          "url": "https://github.com/f1shl3gs/vertex/commit/037a7ef64cbb22d5c716e271259f3d3f1341cb50"
+        },
+        "date": 1710706487771,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.402,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 89.474,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.44,
             "unit": "ns/op"
           }
         ]
