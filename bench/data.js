@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710658302770,
+  "lastUpdate": 1710704648490,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "23f33f1c91c06715e6ea858b5d85cebbe369a7dc",
-          "message": "chore(deps): bump proc-macro2 from 1.0.74 to 1.0.75 (#1540)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.74 to 1.0.75.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.74...1.0.75)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-04T10:21:26+08:00",
-          "tree_id": "94eb34e55c163cac05747a76897c4a36846ebf1e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/23f33f1c91c06715e6ea858b5d85cebbe369a7dc"
-        },
-        "date": 1704335008831,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536150,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 544560,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a62eb5e7dd4a4b1d55ec8c9841818a8607206ba",
+          "message": "chore(deps): bump async-recursion from 1.0.5 to 1.1.0 (#1655)\n\nBumps [async-recursion](https://github.com/dcchut/async-recursion) from 1.0.5 to 1.1.0.\r\n- [Release notes](https://github.com/dcchut/async-recursion/releases)\r\n- [Commits](https://github.com/dcchut/async-recursion/compare/v1.0.5...v1.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-recursion\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-18T03:41:45+08:00",
+          "tree_id": "6b39835b2228d5d3ba4f728be943a80f3984e7f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a62eb5e7dd4a4b1d55ec8c9841818a8607206ba"
+        },
+        "date": 1710704632883,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 542450,
             "unit": "ns/op"
           }
         ]
