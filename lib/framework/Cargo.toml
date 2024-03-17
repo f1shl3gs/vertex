@@ -45,7 +45,7 @@ glob = { version = "0.3.1" }
 headers = { version = "0.3.9" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
 hostname = { path = "../hostname" }
-http = { version = "0.2.11", default-features = false }
+http = { version = "0.2.12", default-features = false }
 hyper = { version = "0.14.28", default-features = false, features = ["full"] }
 hyper-rustls = { version = "0.24.2", default-features = false }
 indexmap = { version = "2.2.5", default-features = false, features = ["serde"] }
