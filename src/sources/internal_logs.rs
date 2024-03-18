@@ -21,7 +21,7 @@ fn default_pid_key() -> Option<OwnedTargetPath> {
 
 #[configurable_component(source, name = "internal_logs")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// Host key
     #[serde(default = "default_host_key")]
     host_key: Option<OwnedTargetPath>,

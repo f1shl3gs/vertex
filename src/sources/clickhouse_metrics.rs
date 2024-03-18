@@ -336,49 +336,6 @@ async fn run(
     }
 }
 
-#[instrument(skip(client, auth))]
-async fn fetch_metrics(
-    client: &HttpClient,
-    auth: Option<&Auth>,
-    url: &str,
-) -> crate::Result<Vec<(String, i64)>> {
-    let mut req = Request::builder()
-        .method(Method::GET)
-        .uri(url)
-        .body(Body::empty())?;
-
-    if let Some(auth) = auth {
-        auth.apply(&mut req);
-    }
-
-    let resp = client.send(req).await?;
-    let (parts, body) = resp.into_parts();
-
-    if !parts.status.is_success() {
-        return Err(format!("unexpected status code {}", parts.status).into());
-    }
-
-    let buf = hyper::body::aggregate(body).await?.reader();
-    let results = buf
-        .lines()
-        .filter_map(|s| match s {
-            Ok(line) => {
-                let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-                if parts.len() != 2 {
-                    return None;
-                }
-
-                let v = parts[1].parse::<i64>().ok()?;
-
-                Some((parts[0].to_string(), v))
-            }
-            Err(_) => None,
-        })
-        .collect::<Vec<_>>();
-
-    Ok(results)
-}
-
 // sanitize_metric_name convert the given string to snake case following the Golang format:
 // acronyms are converted to lower-case and preceded by an underscore.
 fn sanitize_metric_name(name: &str) -> String {

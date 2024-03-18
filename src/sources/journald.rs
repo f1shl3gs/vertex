@@ -14,10 +14,8 @@ use framework::shutdown::ShutdownSignal;
 use framework::Source;
 use futures::{stream::BoxStream, StreamExt};
 use log_schema::log_schema;
-use nix::{
-    sys::signal::{kill, Signal},
-    unistd::Pid,
-};
+use nix::sys::signal::{kill, Signal};
+use nix::unistd::Pid;
 use tokio::fs::OpenOptions;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
 use tokio::{process::Command, time::sleep};
@@ -44,30 +42,30 @@ const JOURNALCTL: &str = "journalctl";
 /// This source requires permissions to run `journalctl`.
 #[configurable_component(source, name = "journald")]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
-pub struct Config {
+struct Config {
     /// Only include entries that occurred after the current boot of the system.
-    pub current_boot_only: Option<bool>,
+    current_boot_only: Option<bool>,
 
     /// A list of unit names to monitor. If empty or not present, all units are accepted.
     /// Unit names lacking a `.` have `.service` appended to make them a valid service
     /// unit name.
-    pub units: Vec<String>,
+    units: Vec<String>,
 
     /// The list of unit names to exclude from monitoring. Unit names lacking a "." will have
     /// ".service" appended to make them a valid service unit name.
-    pub excludes: Vec<String>,
+    excludes: Vec<String>,
 
     /// The systemd journal is read in batches, and a checkpoint is set at the end of each batch.
     /// This option limits the size of the batch.
-    pub batch_size: Option<usize>,
+    batch_size: Option<usize>,
 
     /// The absolutely path of the `journalctl` executable. If not set, a search is done for
     /// the journalctl path.
-    pub journalctl_path: Option<PathBuf>,
+    journalctl_path: Option<PathBuf>,
 
     /// The absolutely path of the journal directory. If not set, `journalctl` uses the
     /// default system journal path.
-    pub journal_directory: Option<PathBuf>,
+    journal_directory: Option<PathBuf>,
 }
 
 #[async_trait::async_trait]

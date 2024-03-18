@@ -13,7 +13,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 
 #[derive(Configurable, Copy, Clone, Debug, Serialize, Default)]
 #[serde(rename_all = "snake_case")]
-pub enum LimitExceededAction {
+enum LimitExceededAction {
     #[default]
     Drop,
 
@@ -57,7 +57,7 @@ const fn default_cache_size() -> usize {
 /// Controls the approach token for tracking tag cardinality.
 #[derive(Configurable, Copy, Clone, Debug, Deserialize, Serialize)]
 #[serde(tag = "mode", rename_all = "snake_case", deny_unknown_fields)]
-pub enum Mode {
+enum Mode {
     /// Tracks cardinality probabilistically.
     ///
     /// This mode has lower memory requirements than `exact`, but may occasionally

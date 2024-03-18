@@ -24,7 +24,7 @@ use prost::Message;
 use tower::{Service, ServiceBuilder};
 
 #[derive(Copy, Clone, Debug, Default)]
-pub struct PrometheusRemoteWriteDefaultBatchSettings;
+struct PrometheusRemoteWriteDefaultBatchSettings;
 
 impl SinkBatchSettings for PrometheusRemoteWriteDefaultBatchSettings {
     const MAX_EVENTS: Option<usize> = Some(1000);
@@ -34,25 +34,26 @@ impl SinkBatchSettings for PrometheusRemoteWriteDefaultBatchSettings {
 
 #[configurable_component(sink, name = "prometheus_remote_write")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// Endpoint of Prometheus's remote write API.
     #[configurable(required, format = "uri", example = "http://10.1.1.1:8000")]
     #[serde(with = "serde_uri")]
-    pub endpoint: Uri,
+    endpoint: Uri,
 
-    #[serde(default)]
-    pub batch: BatchConfig<PrometheusRemoteWriteDefaultBatchSettings>,
+    auth: Option<Auth>,
+
+    tls: Option<TlsConfig>,
 
     /// Configures the sink request behavior.
     #[serde(default)]
-    pub request: RequestConfig,
+    request: RequestConfig,
+
+    #[serde(default)]
+    batch: BatchConfig<PrometheusRemoteWriteDefaultBatchSettings>,
 
     /// Tenant ID is a special label for Cortex, Thanos or VictoriaMetrics.
     #[serde(default)]
-    pub tenant_id: Option<Template>,
-
-    pub tls: Option<TlsConfig>,
-    pub auth: Option<Auth>,
+    tenant_id: Option<Template>,
 }
 
 #[async_trait::async_trait]

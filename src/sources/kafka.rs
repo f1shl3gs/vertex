@@ -68,7 +68,7 @@ const fn default_framing_message_based() -> FramingConfig {
 
 #[derive(Debug, Default, Deserialize, Serialize, Configurable)]
 #[serde(rename = "lowercase")]
-pub enum AutoOffsetReset {
+enum AutoOffsetReset {
     /// At the earlist known offset.
     ///
     /// This might be larger than 0 if some records were already deleted due to a retention policy.

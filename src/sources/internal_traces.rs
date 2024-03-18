@@ -22,7 +22,7 @@ pub fn default_service() -> String {
 #[serde(deny_unknown_fields)]
 struct Config {
     #[serde(default = "default_service")]
-    pub service: String,
+    service: String,
 }
 
 #[async_trait]

@@ -12,7 +12,7 @@ use tokio::time::sleep_until;
 
 #[configurable_component(sink, name = "blackhole")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// The number of events, per second, that the sink is allowed to consume.
     ///
     /// By default, there is no limit.

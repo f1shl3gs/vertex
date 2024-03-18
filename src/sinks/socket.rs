@@ -8,14 +8,6 @@ use framework::sink::util::{tcp::TcpSinkConfig, udp::UdpSinkConfig};
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 
-#[configurable_component(sink, name = "socket")]
-pub struct Config {
-    #[serde(flatten)]
-    pub mode: Mode,
-
-    pub encoding: EncodingConfigWithFraming,
-}
-
 #[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
 #[serde(tag = "mode", rename_all = "snake_case")]
 pub enum Mode {
@@ -28,6 +20,16 @@ pub enum Mode {
     /// Listen on a Unix domain socket (UDS), in stream mode.
     #[cfg(unix)]
     Unix(UnixSinkConfig),
+}
+
+#[configurable_component(sink, name = "socket")]
+pub struct Config {
+    #[serde(flatten)]
+    pub mode: Mode,
+
+    #[serde(flatten)]
+    #[configurable(required)]
+    pub encoding: EncodingConfigWithFraming,
 }
 
 impl Config {
