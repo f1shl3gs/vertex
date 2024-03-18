@@ -14,7 +14,7 @@ use url::Url;
 
 use super::sink::{healthcheck, ClickhouseRetryLogic};
 
-pub fn default_database() -> String {
+fn default_database() -> String {
     "default".to_string()
 }
 

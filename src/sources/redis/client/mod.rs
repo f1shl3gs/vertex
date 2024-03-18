@@ -4,11 +4,10 @@ mod resp;
 use std::io::{self, Cursor};
 
 use bytes::{Buf, BytesMut};
-use tokio::io::{AsyncReadExt, AsyncWriteExt, BufWriter};
-use tokio::net::{TcpStream, ToSocketAddrs};
-
 use frame::{Error as FrameErr, Frame};
 pub use resp::{FromRespValue, RespErr};
+use tokio::io::{AsyncReadExt, AsyncWriteExt, BufWriter};
+use tokio::net::{TcpStream, ToSocketAddrs};
 
 /// Send and receive `Frame` values from a remote peer.
 ///

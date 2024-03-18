@@ -245,7 +245,7 @@ impl From<std::num::ParseFloatError> for Error {
 
 #[configurable_component(source, name = "redis")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// Redis address
     #[configurable(required, format = "ip-address")]
     endpoint: String,

@@ -204,7 +204,7 @@ impl TcpSource for SyslogTcpSource {
     }
 }
 
-pub fn udp(
+fn udp(
     addr: SocketAddr,
     _max_length: usize,
     host_key: OwnedValuePath,

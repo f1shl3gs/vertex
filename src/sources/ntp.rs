@@ -25,7 +25,7 @@ const fn default_bind() -> SocketAddr {
 #[configurable_component(source, name = "ntp")]
 #[derive(Clone)]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// SocketAddr which UdpSocket is going to bind.
     #[serde(default = "default_bind")]
     bind: SocketAddr,

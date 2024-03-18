@@ -8,14 +8,6 @@ use framework::sink::util::{tcp::TcpSinkConfig, udp::UdpSinkConfig};
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 
-#[configurable_component(sink, name = "socket")]
-pub struct Config {
-    #[serde(flatten)]
-    pub mode: Mode,
-
-    pub encoding: EncodingConfigWithFraming,
-}
-
 #[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
 #[serde(tag = "mode", rename_all = "snake_case")]
 pub enum Mode {
@@ -30,10 +22,24 @@ pub enum Mode {
     Unix(UnixSinkConfig),
 }
 
+#[configurable_component(sink, name = "socket")]
+pub struct Config {
+    #[serde(flatten)]
+    pub mode: Mode,
+
+    pub encoding: EncodingConfigWithFraming,
+
+    pub acknowledgements: bool,
+}
+
 impl Config {
     // TODO: add ack support
     pub const fn new(mode: Mode, encoding: EncodingConfigWithFraming) -> Self {
-        Config { mode, encoding }
+        Config {
+            mode,
+            encoding,
+            acknowledgements: false,
+        }
     }
 
     pub fn make_basic_tcp_config(address: String) -> Self {
@@ -62,6 +68,10 @@ impl SinkConfig for Config {
 
     fn input_type(&self) -> DataType {
         DataType::Log
+    }
+
+    fn acknowledgements(&self) -> bool {
+        self.acknowledgements
     }
 }
 

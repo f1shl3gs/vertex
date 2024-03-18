@@ -7,12 +7,10 @@ use std::time::Duration;
 
 use configurable::configurable_component;
 use event::Metric;
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::{
-    config::{default_interval, Output, SourceConfig, SourceContext},
-    Source,
-};
+use framework::Source;
 
 #[configurable_component(source, name = "selfstat")]
 #[derive(Copy, Clone)]
