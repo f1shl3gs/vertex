@@ -51,7 +51,6 @@ pub struct Config {
     #[configurable(required)]
     pub encoding: EncodingConfigWithFraming,
 
-    #[serde(default)]
     pub acknowledgements: bool,
 }
 

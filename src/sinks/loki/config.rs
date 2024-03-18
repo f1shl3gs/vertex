@@ -103,7 +103,7 @@ pub struct Config {
 
     #[serde(default)]
     pub batch: BatchConfig<LokiDefaultBatchSettings>,
-    #[serde(default)]
+
     acknowledgements: bool,
 }
 
