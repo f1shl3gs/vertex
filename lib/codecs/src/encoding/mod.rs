@@ -23,6 +23,7 @@ pub use format::{
 pub use framing::{
     bytes::BytesEncoder,
     character::{CharacterDelimitedEncoder, CharacterDelimitedFramerConfig},
+    length_delimited::LengthDelimitedEncoder,
     newline::NewlineDelimitedEncoder,
 };
 pub use transformer::{TimestampFormat, Transformer};
@@ -145,6 +146,8 @@ pub enum Framer {
     Bytes(BytesEncoder),
     /// Uses a `CharacterDelimitedEncoder` for framing.
     CharacterDelimited(CharacterDelimitedEncoder),
+    /// Uses a `LengthDelimitedEncoder` for framing.
+    LengthDelimited(LengthDelimitedEncoder),
     /// Uses a `NewlineDelimitedEncoder` for framing.
     NewlineDelimited(NewlineDelimitedEncoder),
 }
@@ -168,6 +171,7 @@ impl tokio_util::codec::Encoder<()> for Framer {
         match self {
             Framer::Bytes(f) => f.encode((), buf),
             Framer::CharacterDelimited(f) => f.encode((), buf),
+            Framer::LengthDelimited(f) => f.encode((), buf),
             Framer::NewlineDelimited(f) => f.encode((), buf),
         }
     }

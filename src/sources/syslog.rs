@@ -5,7 +5,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::Utc;
 use codecs::decoding::{
-    BytesDeserializerConfig, DecodeError, OctetCountingDecoder, SyslogDeserializer,
+    BytesDeserializerDecoder, DecodeError, OctetCountingDecoder, SyslogDeserializer,
 };
 use codecs::Decoder;
 use configurable::{configurable_component, Configurable};
@@ -146,7 +146,7 @@ impl SourceConfig for Config {
             Mode::Unix { path } => {
                 let decoder = Decoder::new(
                     OctetCountingDecoder::new_with_max_length(self.max_length).into(),
-                    SyslogDeserializer.into(),
+                    SyslogDeserializer::default().into(),
                 );
 
                 Ok(build_unix_stream_source(
@@ -191,7 +191,7 @@ impl TcpSource for SyslogTcpSource {
     fn decoder(&self) -> Self::Decoder {
         Decoder::new(
             OctetCountingDecoder::new_with_max_length(self.max_length).into(),
-            SyslogDeserializer.into(),
+            SyslogDeserializer::default().into(),
         )
     }
 
@@ -236,8 +236,8 @@ fn udp(
         let mut stream = UdpFramed::new(
             socket,
             Decoder::new(
-                BytesDeserializerConfig::new().into(),
-                SyslogDeserializer.into(),
+                BytesDeserializerDecoder::new().into(),
+                SyslogDeserializer::default().into(),
             ),
         )
         .take_until(shutdown)
@@ -417,7 +417,7 @@ address: 127.0.0.1:12345
         bytes: Bytes,
     ) -> Option<Event> {
         let byte_size = bytes.len();
-        let parser = SyslogDeserializer;
+        let parser = SyslogDeserializer::default();
         let mut events = parser.parse(bytes).ok()?;
         let host_key = parse_value_path(host_key).unwrap();
         handle_events(&mut events, &host_key, default_host, byte_size);

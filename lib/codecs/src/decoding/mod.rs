@@ -4,7 +4,7 @@
 mod config;
 mod error;
 pub mod format;
-mod framing;
+pub mod framing;
 
 use std::fmt::Debug;
 
@@ -14,23 +14,22 @@ use format::{DeserializeError, Deserializer as _};
 use smallvec::SmallVec;
 use tracing::warn;
 
-pub use config::*;
+use super::FramingError;
+pub use config::{DecodingConfig, DeserializerConfig, FramingConfig};
 pub use error::{DecodeError, StreamDecodingError};
 #[cfg(feature = "syslog")]
 pub use format::SyslogDeserializer;
-pub use format::{BytesDeserializer, JsonDeserializer, LogfmtDeserializer};
+use format::{BytesDeserializer, JsonDeserializer, LogfmtDeserializer};
 pub use framing::{
-    BytesDeserializerConfig, CharacterDelimitedDecoder, CharacterDelimitedDecoderConfig,
-    NewlineDelimitedDecoder, NewlineDelimitedDecoderConfig, OctetCountingDecoder,
+    BytesDeserializerDecoder, CharacterDelimitedDecoder, NewlineDelimitedDecoder,
+    OctetCountingDecoder,
 };
-
-use super::FramingError;
 
 /// Produce byte frames from a byte stream / byte message
 #[derive(Clone, Debug)]
 pub enum Framer {
     /// Uses a `BytesDecoder` for framing
-    Bytes(BytesDeserializerConfig),
+    Bytes(BytesDeserializerDecoder),
     /// Uses a `CharacterDelimitedDecoder` for framing.
     CharacterDelimited(CharacterDelimitedDecoder),
     /// Uses a `NewlineDelimitedDecoder` for framing.
@@ -45,8 +44,8 @@ impl From<OctetCountingDecoder> for Framer {
     }
 }
 
-impl From<BytesDeserializerConfig> for Framer {
-    fn from(f: BytesDeserializerConfig) -> Self {
+impl From<BytesDeserializerDecoder> for Framer {
+    fn from(f: BytesDeserializerDecoder) -> Self {
         Self::Bytes(f)
     }
 }
