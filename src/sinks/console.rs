@@ -33,7 +33,6 @@ enum Stream {
 }
 
 #[configurable_component(sink, name = "console")]
-#[serde(deny_unknown_fields)]
 struct Config {
     /// The standard stream to write to.
     #[serde(default)]

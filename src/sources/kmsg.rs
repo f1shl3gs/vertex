@@ -13,7 +13,7 @@ use tokio::io::AsyncReadExt;
 
 #[configurable_component(source, name = "kmsg")]
 #[serde(deny_unknown_fields)]
-struct Config;
+struct Config {}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kmsg")]

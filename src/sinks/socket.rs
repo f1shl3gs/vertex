@@ -27,15 +27,19 @@ pub struct Config {
     #[serde(flatten)]
     pub mode: Mode,
 
-    #[serde(flatten)]
-    #[configurable(required)]
     pub encoding: EncodingConfigWithFraming,
+
+    pub acknowledgements: bool,
 }
 
 impl Config {
     // TODO: add ack support
     pub const fn new(mode: Mode, encoding: EncodingConfigWithFraming) -> Self {
-        Config { mode, encoding }
+        Config {
+            mode,
+            encoding,
+            acknowledgements: false,
+        }
     }
 
     pub fn make_basic_tcp_config(address: String) -> Self {
@@ -64,6 +68,10 @@ impl SinkConfig for Config {
 
     fn input_type(&self) -> DataType {
         DataType::Log
+    }
+
+    fn acknowledgements(&self) -> bool {
+        self.acknowledgements
     }
 }
 
