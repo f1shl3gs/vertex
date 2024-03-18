@@ -2,12 +2,13 @@ use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "syslog")]
-use super::SyslogDeserializer;
-use super::{
-    framing::OctetCountingDecoderConfig, BytesDeserializer, BytesDeserializerConfig,
-    CharacterDelimitedDecoderConfig, Decoder, Deserializer, Framer, JsonDeserializer,
-    LogfmtDeserializer, NewlineDelimitedDecoderConfig,
+use super::format::SyslogDeserializerConfig;
+use super::format::{BytesDeserializer, JsonDeserializerConfig, LogfmtDeserializer};
+use super::framing::{
+    BytesDeserializerDecoder, CharacterDelimitedDecoderConfig, NewlineDelimitedDecoderConfig,
+    OctetCountingDecoderConfig,
 };
+use super::{Decoder, Deserializer, Framer};
 
 /// Configuration for building a `Framer`.
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
@@ -30,7 +31,7 @@ impl FramingConfig {
     /// Build a `Framer` for this configuration.
     pub fn build(&self) -> Framer {
         match self {
-            FramingConfig::Bytes => Framer::Bytes(BytesDeserializerConfig::new()),
+            FramingConfig::Bytes => Framer::Bytes(BytesDeserializerDecoder::new()),
             FramingConfig::CharacterDelimited(config) => Framer::CharacterDelimited(config.build()),
             FramingConfig::NewlineDelimited(config) => Framer::NewlineDelimited(config.build()),
             FramingConfig::OctetCounting(config) => Framer::OctetCounting(config.build()),
@@ -45,14 +46,16 @@ pub enum DeserializerConfig {
     /// Configures the `BytesDeserializer`
     #[default]
     Bytes,
+
     /// Configures the `JsonDeserializer`
-    Json,
+    Json(JsonDeserializerConfig),
+
     /// Configures the `LogfmtDeserializer`
     Logfmt,
 
     #[cfg(feature = "syslog")]
     /// Configures the `SyslogDeserializer`
-    Syslog,
+    Syslog(SyslogDeserializerConfig),
 }
 
 impl DeserializerConfig {
@@ -60,22 +63,24 @@ impl DeserializerConfig {
     pub fn build(&self) -> Deserializer {
         match self {
             DeserializerConfig::Bytes => Deserializer::Bytes(BytesDeserializer),
-            DeserializerConfig::Json => Deserializer::Json(JsonDeserializer),
+            DeserializerConfig::Json(config) => Deserializer::Json(config.build()),
             DeserializerConfig::Logfmt => Deserializer::Logfmt(LogfmtDeserializer),
             #[cfg(feature = "syslog")]
-            DeserializerConfig::Syslog => Deserializer::Syslog(SyslogDeserializer),
+            DeserializerConfig::Syslog(config) => Deserializer::Syslog(config.build()),
         }
     }
 
     /// Return an appropriate default framer for the given deserializer
     pub fn default_stream_framing(&self) -> FramingConfig {
         match self {
-            DeserializerConfig::Bytes | DeserializerConfig::Json | DeserializerConfig::Logfmt => {
+            DeserializerConfig::Bytes
+            | DeserializerConfig::Json(_)
+            | DeserializerConfig::Logfmt => {
                 FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default())
             }
 
             #[cfg(feature = "syslog")]
-            DeserializerConfig::Syslog => {
+            DeserializerConfig::Syslog(_) => {
                 FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default())
             }
         }

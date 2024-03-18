@@ -1,23 +1,64 @@
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 
 use bytes::Bytes;
 use chrono::{DateTime, Datelike, Utc};
+use configurable::Configurable;
 use event::log::Value;
 use event::{event_path, Event, LogRecord};
 use log_schema::log_schema;
+use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};
 use syslog_loose::{IncompleteDate, Message, ProcId, Protocol, Variant};
 
 use super::{DeserializeError, Deserializer};
+use crate::serde::{default_lossy, skip_serializing_if_default};
+
+/// Config used to build a `SyslogDeserializer`
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+pub struct SyslogDeserializerConfig {
+    /// Determines whether or not to replace invalid UTF-8 sequences instead of failing.
+    ///
+    /// When true, invalid UTF-8 sequences are replaced with the [`U+FFFD REPLACEMENT CHARACTER`][U+FFFD].
+    ///
+    /// [U+FFFD]: https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character
+    #[serde(
+        default = "default_lossy",
+        skip_serializing_if = "skip_serializing_if_default"
+    )]
+    lossy: bool,
+}
+
+impl SyslogDeserializerConfig {
+    /// Build the `SyslogDeserializer` from this configuration.
+    #[inline]
+    pub fn build(&self) -> SyslogDeserializer {
+        SyslogDeserializer { lossy: self.lossy }
+    }
+}
 
 /// Deserializer that builds on `Event` from a byte frame containing a syslog
 /// message.
 #[derive(Clone, Debug)]
-pub struct SyslogDeserializer;
+pub struct SyslogDeserializer {
+    lossy: bool,
+}
+
+impl Default for SyslogDeserializer {
+    fn default() -> Self {
+        Self {
+            lossy: default_lossy(),
+        }
+    }
+}
 
 impl Deserializer for SyslogDeserializer {
     fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
-        let line = std::str::from_utf8(&buf)?;
+        let line = if self.lossy {
+            String::from_utf8_lossy(&buf)
+        } else {
+            Cow::from(std::str::from_utf8(&buf)?)
+        };
         let parsed = syslog_loose::parse_message_with_year_exact(
             line.trim(),
             resolve_year,

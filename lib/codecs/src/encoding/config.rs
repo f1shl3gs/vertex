@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{
     transformer::Transformer, BytesEncoder, CharacterDelimitedEncoder, Framer,
-    NewlineDelimitedEncoder, Serializer, SerializerConfig,
+    LengthDelimitedEncoder, NewlineDelimitedEncoder, Serializer, SerializerConfig,
 };
 
 /// Configuration for building a `Framer`.
@@ -19,6 +19,11 @@ pub enum FramingConfig {
         delimiter: u8,
     },
 
+    /// Event data is prefixed with its length in bytes.
+    ///
+    /// The prefix is a 32-bit unsigned integer, little endian.
+    LengthDelimited,
+
     /// Configures the `NewlineDelimitedEncoder`
     NewlineDelimited,
 }
@@ -30,6 +35,9 @@ impl FramingConfig {
             FramingConfig::Bytes => Framer::Bytes(BytesEncoder::new()),
             FramingConfig::CharacterDelimited { delimiter } => {
                 Framer::CharacterDelimited(CharacterDelimitedEncoder::new(*delimiter))
+            }
+            FramingConfig::LengthDelimited => {
+                Framer::LengthDelimited(LengthDelimitedEncoder::default())
             }
             FramingConfig::NewlineDelimited => {
                 Framer::NewlineDelimited(NewlineDelimitedEncoder::new())

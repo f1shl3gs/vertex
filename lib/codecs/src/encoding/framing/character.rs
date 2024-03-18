@@ -2,12 +2,14 @@ use bytes::{BufMut, BytesMut};
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::Encoder;
 
+use crate::serde::ascii_char;
 use crate::FramingError;
 
 /// Config used to build a `CharacterDelimitedEncoder`
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CharacterDelimitedFramerConfig {
     /// Options for the character delimited encoder.
+    #[serde(with = "ascii_char")]
     pub delimiter: u8,
 }
 

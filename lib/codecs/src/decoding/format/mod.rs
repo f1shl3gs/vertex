@@ -14,11 +14,11 @@ use ::bytes::Bytes;
 use event::Event;
 use smallvec::SmallVec;
 
-pub use self::bytes::*;
-pub use json::JsonDeserializer;
+pub use self::bytes::BytesDeserializer;
+pub use json::{JsonDeserializer, JsonDeserializerConfig};
 pub use logfmt::LogfmtDeserializer;
 #[cfg(feature = "syslog")]
-pub use syslog::SyslogDeserializer;
+pub use syslog::{SyslogDeserializer, SyslogDeserializerConfig};
 
 /// An error that occurred while decoding structured events from a byte stream /
 /// byte messages.

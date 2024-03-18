@@ -8,6 +8,7 @@ pub mod decoding;
 pub mod encoding;
 mod error;
 mod ready_frames;
+mod serde;
 
 pub use decoding::{Decoder, DecodingConfig};
 pub use encoding::{Encoder, EncodingConfig, EncodingConfigWithFraming};
