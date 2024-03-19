@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710765426926,
+  "lastUpdate": 1710819508753,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b83ed216b9c3602d67a51fe684e1e3fa569d9b8c",
-          "message": "chore(deps): bump serde from 1.0.194 to 1.0.195 (#1545)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.194 to 1.0.195.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.194...v1.0.195)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-06T14:15:40+08:00",
-          "tree_id": "691ac3cd9bc9f5232280467b736e3174009d52e7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b83ed216b9c3602d67a51fe684e1e3fa569d9b8c"
-        },
-        "date": 1704521869489,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529100,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 542490,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36294558477d8f83696eff7995d66584185f651d",
+          "message": "chore(deps): bump uuid from 1.7.0 to 1.8.0 (#1660)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.7.0 to 1.8.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.7.0...1.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-19T11:36:07+08:00",
+          "tree_id": "b837d05754fd22c1062a950b91294ad38ee1dc9e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/36294558477d8f83696eff7995d66584185f651d"
+        },
+        "date": 1710819493937,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546630,
             "unit": "ns/op"
           }
         ]
