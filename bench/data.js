@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1710820082673,
+  "lastUpdate": 1710820096829,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "630bc0df56329d0cb2fed9d8a052c36b2eab4d7c",
-          "message": "chore(deps): bump maxminddb from 0.23.0 to 0.24.0 (#1553)\n\nBumps [maxminddb](https://github.com/oschwald/maxminddb-rust) from 0.23.0 to 0.24.0.\r\n- [Release notes](https://github.com/oschwald/maxminddb-rust/releases)\r\n- [Changelog](https://github.com/oschwald/maxminddb-rust/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/oschwald/maxminddb-rust/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: maxminddb\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-10T11:31:25+08:00",
-          "tree_id": "78edbc90e1c6a841fab721a227cd584a043a6203",
-          "url": "https://github.com/f1shl3gs/vertex/commit/630bc0df56329d0cb2fed9d8a052c36b2eab4d7c"
-        },
-        "date": 1704858145468,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41518.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41819.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36294558477d8f83696eff7995d66584185f651d",
+          "message": "chore(deps): bump uuid from 1.7.0 to 1.8.0 (#1660)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.7.0 to 1.8.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.7.0...1.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-19T11:36:07+08:00",
+          "tree_id": "b837d05754fd22c1062a950b91294ad38ee1dc9e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/36294558477d8f83696eff7995d66584185f651d"
+        },
+        "date": 1710820081943,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 621,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41798,
             "unit": "KiB"
           }
         ]
