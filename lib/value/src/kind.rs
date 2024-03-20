@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use std::ops::BitOr;
 
-use value::Value;
+use super::Value;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Kind(u16);
@@ -104,12 +104,8 @@ impl Kind {
     }
 }
 
-pub trait ValueKind {
-    fn kind(&self) -> Kind;
-}
-
-impl ValueKind for Value {
-    fn kind(&self) -> Kind {
+impl Value {
+    pub fn kind(&self) -> Kind {
         match self {
             Value::Bytes(_) => Kind::BYTES,
             Value::Float(_) => Kind::FLOAT,

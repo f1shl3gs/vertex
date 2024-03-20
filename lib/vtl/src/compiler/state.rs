@@ -1,7 +1,6 @@
 use value::{OwnedValuePath, Value};
 
 use super::Kind;
-use super::ValueKind;
 
 pub struct Variable {
     /// The name of this variable

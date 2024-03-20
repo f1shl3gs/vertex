@@ -8,7 +8,7 @@ use super::expr::Expr;
 use super::span::{Span, Spanned};
 use super::state::TypeState;
 use super::{Expression, TypeDef};
-use super::{ExpressionError, Kind, ValueKind};
+use super::{ExpressionError, Kind};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
 

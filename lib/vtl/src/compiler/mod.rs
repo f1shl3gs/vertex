@@ -6,7 +6,6 @@ mod for_statement;
 mod function;
 mod function_call;
 mod if_statement;
-mod kind;
 mod lex;
 // mod literal;
 mod levenshtein;
@@ -28,11 +27,11 @@ use state::TypeState;
 use value::{OwnedTargetPath, Value};
 
 pub use binary::BinaryError;
-pub use kind::{Kind, ValueKind};
 pub use parser::{Compiler, SyntaxError};
 pub use span::{Span, Spanned};
 pub use template::Template;
 pub use type_def::TypeDef;
+pub use value::Kind;
 
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};

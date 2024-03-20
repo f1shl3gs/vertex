@@ -5,7 +5,7 @@ use value::Value;
 
 use super::expr::Expr;
 use super::state::TypeState;
-use super::{Expression, ExpressionError, Kind, TypeDef, ValueKind};
+use super::{Expression, ExpressionError, Kind, TypeDef};
 use super::{Span, Spanned};
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};

@@ -5,7 +5,7 @@ use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
 use value::Value;
-use vtl::{Diagnostic, Program, ValueKind};
+use vtl::{Diagnostic, Program};
 
 use crate::common::vtl::LogTarget;
 
