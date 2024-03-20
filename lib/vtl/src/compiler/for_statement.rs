@@ -4,7 +4,7 @@ use super::block::Block;
 use super::expr::Expr;
 use super::state::TypeState;
 use super::{Expression, Spanned, TypeDef};
-use super::{ExpressionError, Kind, ValueKind};
+use super::{ExpressionError, Kind};
 use crate::context::Context;
 
 #[derive(Clone)]

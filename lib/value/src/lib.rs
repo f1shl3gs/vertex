@@ -1,6 +1,7 @@
 mod convert;
 mod crud;
 mod display;
+mod kind;
 pub mod path;
 mod serde;
 
@@ -9,6 +10,7 @@ use std::hash::{Hash, Hasher};
 
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
+pub use kind::Kind;
 use path::ValuePath;
 
 pub use path::{

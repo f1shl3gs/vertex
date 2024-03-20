@@ -7,7 +7,7 @@ use crate::compiler::parser::SyntaxError;
 use crate::compiler::span::Spanned;
 use crate::compiler::state::TypeState;
 use crate::compiler::type_def::TypeDef;
-use crate::compiler::{Expression, ExpressionError, Kind, ValueKind};
+use crate::compiler::{Expression, ExpressionError, Kind};
 use crate::context::Context;
 
 pub struct Abs;
