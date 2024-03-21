@@ -4,8 +4,8 @@ use std::time::Duration;
 use codecs::EncodingConfig;
 use configurable::{configurable_component, Configurable};
 use framework::batch::{BatchConfig, SinkBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext, UriSerde};
-use framework::http::{Auth, HttpClient, MaybeAuth};
+use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::http::{Auth, HttpClient};
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::Compression;
 use framework::tls::TlsConfig;
@@ -13,8 +13,8 @@ use framework::Sink;
 use framework::{template::Template, Healthcheck};
 use futures_util::FutureExt;
 use serde::{Deserialize, Serialize};
+use url::Url;
 
-use super::healthcheck::health_check;
 use super::sink::LokiSink;
 
 #[derive(Clone, Copy, Default, Debug)]
@@ -48,7 +48,11 @@ pub enum OutOfOrderAction {
 pub struct Config {
     /// The base URL of the Loki instance
     #[configurable(required, format = "uri", example = "http://example.com/ingest")]
-    pub endpoint: UriSerde,
+    pub endpoint: Url,
+
+    pub auth: Option<Auth>,
+
+    pub tls: Option<TlsConfig>,
 
     /// Configures the encoding specific sink behavior.
     pub encoding: EncodingConfig,
@@ -92,9 +96,6 @@ pub struct Config {
     #[serde(default)]
     pub out_of_order_action: OutOfOrderAction,
 
-    pub auth: Option<Auth>,
-    pub tls: Option<TlsConfig>,
-
     #[serde(default = "Compression::gzip_default")]
     pub compression: Compression,
 
@@ -126,20 +127,35 @@ impl SinkConfig for Config {
 
         let client = self.build_client(cx.clone())?;
 
-        let config = Config {
-            auth: self.auth.choose_one(&self.auth)?,
-            ..self.clone()
-        };
+        let sink = LokiSink::new(self.clone(), client.clone())?;
+        let healthcheck = healthcheck(self.endpoint.clone(), self.auth.clone(), client).boxed();
 
-        let sink = LokiSink::new(config.clone(), client.clone(), cx)?;
-
-        let health_check = health_check(config, client).boxed();
-
-        Ok((Sink::Stream(Box::new(sink)), health_check))
+        Ok((Sink::Stream(Box::new(sink)), healthcheck))
     }
 
     fn input_type(&self) -> DataType {
         DataType::Log
+    }
+}
+
+pub async fn healthcheck(
+    mut endpoint: Url,
+    auth: Option<Auth>,
+    client: HttpClient,
+) -> crate::Result<()> {
+    endpoint.set_path("ready");
+    let mut req = http::Request::get(endpoint.as_str())
+        .body(hyper::Body::empty())
+        .expect("Building request never fails");
+
+    if let Some(auth) = &auth {
+        auth.apply(&mut req);
+    }
+
+    let resp = client.send(req).await?;
+    match resp.status() {
+        http::StatusCode::OK => Ok(()),
+        _ => Err(format!("A non-successful status returned: {}", resp.status()).into()),
     }
 }
 

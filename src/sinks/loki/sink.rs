@@ -9,7 +9,6 @@ use codecs::Encoder;
 use event::log::path::parse_target_path;
 use event::log::Value;
 use event::{Event, EventContainer, EventFinalizers, Events, Finalizable};
-use framework::config::SinkContext;
 use framework::http::HttpClient;
 use framework::partition::Partitioner;
 use framework::sink::util::builder::SinkBuilderExt;
@@ -40,12 +39,14 @@ impl Partitioner for RecordPartitionner {
 
 #[derive(Clone)]
 pub struct LokiRequestBuilder {
+    compression: Compression,
     encoder: LokiBatchEncoder,
 }
 
 impl LokiRequestBuilder {
-    const fn new() -> Self {
+    const fn new(compression: Compression) -> Self {
         Self {
+            compression,
             encoder: LokiBatchEncoder,
         }
     }
@@ -72,7 +73,7 @@ impl RequestBuilder<(PartitionKey, Vec<LokiRecord>)> for LokiRequestBuilder {
     type Error = RequestBuildError;
 
     fn compression(&self) -> Compression {
-        Compression::None
+        self.compression
     }
 
     fn encoder(&self) -> &Self::Encoder {
@@ -337,13 +338,19 @@ pub struct LokiSink {
 }
 
 impl LokiSink {
-    pub fn new(config: Config, client: HttpClient, _cx: SinkContext) -> crate::Result<Self> {
+    pub fn new(config: Config, client: HttpClient) -> crate::Result<Self> {
         let transformer = config.encoding.transformer();
         let serializer = config.encoding.build();
         let encoder = Encoder::<()>::new(serializer);
+        let service = LokiService::new(
+            client,
+            config.endpoint,
+            config.auth,
+            config.compression.content_encoding(),
+        )?;
 
         Ok(Self {
-            request_builder: LokiRequestBuilder::new(),
+            request_builder: LokiRequestBuilder::new(config.compression),
             encoder: EventEncoder {
                 key_partitioner: KeyPartitioner::new(config.tenant),
                 transformer,
@@ -354,7 +361,7 @@ impl LokiSink {
             },
             batch_settings: config.batch.into_batcher_settings()?,
             out_of_order_action: config.out_of_order_action,
-            service: LokiService::new(client, config.endpoint, config.auth)?,
+            service,
         })
     }
 
