@@ -3,9 +3,9 @@ use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use framework::sink::util::testing::{build_test_server, load_sink};
 use futures_util::StreamExt;
+use url::Url;
 
-use super::config::Config;
-use super::healthcheck::health_check;
+use super::config::{healthcheck, Config};
 use super::sink::LokiSink;
 
 #[test]
@@ -25,7 +25,7 @@ remove_label_fields: true
     )
     .unwrap();
     let client = config.build_client(cx.clone()).unwrap();
-    let mut sink = LokiSink::new(config, client, cx).unwrap();
+    let mut sink = LokiSink::new(config, client).unwrap();
 
     let event1 = Event::from(fields!(
         "message" => "hello",
@@ -70,8 +70,8 @@ encoding:
     )
     .unwrap();
 
-    let client = config.build_client(cx.clone()).unwrap();
-    let mut sink = LokiSink::new(config, client, cx).unwrap();
+    let client = config.build_client(cx).unwrap();
+    let mut sink = LokiSink::new(config, client).unwrap();
 
     let mut event = Event::from("hello");
     event.as_mut_log().insert("foo", "bar");
@@ -106,9 +106,8 @@ auth:
     let endpoint = format!("http://{}", addr);
     config.endpoint = endpoint
         .clone()
-        .parse::<http::Uri>()
-        .expect("Could not create URI")
-        .into();
+        .parse::<Url>()
+        .expect("Could not create URL");
 
     let (rx, _trigger, server) = build_test_server(addr);
     tokio::spawn(server);
@@ -116,7 +115,7 @@ auth:
     let proxy = ProxyConfig::default();
     let client = HttpClient::new(&config.tls, &proxy).expect("Could not create http client");
 
-    health_check(config, client)
+    healthcheck(config.endpoint, config.auth, client)
         .await
         .expect("health check failed");
 
