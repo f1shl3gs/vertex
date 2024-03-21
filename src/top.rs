@@ -14,16 +14,16 @@ use tokio::time::MissedTickBehavior;
 use tracing::warn;
 
 #[derive(Debug, Deserialize)]
-pub struct Point {
-    pub attrs: BTreeMap<String, String>,
-    pub value: f64,
+struct Point {
+    attrs: BTreeMap<String, String>,
+    value: f64,
 }
 
 #[derive(Debug, Deserialize)]
-pub struct Metric {
-    pub name: String,
-    pub description: String,
-    pub points: Vec<Point>,
+struct Metric {
+    name: String,
+    // description: String,
+    points: Vec<Point>,
 }
 
 fn default_interval() -> String {
@@ -108,7 +108,7 @@ fn into_parts(point: &Point) -> Option<(Component, u64)> {
 }
 
 #[derive(Default, Debug)]
-pub struct Throughput {
+struct Throughput {
     received: u64,
     received_bytes: u64,
     sent: u64,
@@ -151,20 +151,14 @@ async fn fetch(uri: &str) -> framework::Result<TopStats> {
     Ok(TopStats(top))
 }
 
-#[allow(dead_code)]
 struct Row {
     key: String,
-    kind: String,
     typ: String,
 
-    received: String,
-    received_rate: f64,
-    received_bytes: String,
-    received_bytes_rate: f64,
-    sent: String,
-    sent_rate: f64,
-    sent_bytes: String,
-    sent_bytes_rate: f64,
+    events_in: String,
+    events_out: String,
+    bytes_in: String,
+    bytes_out: String,
 }
 
 struct TopStats(BTreeMap<Component, Throughput>);
@@ -199,6 +193,14 @@ struct PrevStats {
 
 const MINIMUM_PADDING_RIGHT: usize = 1;
 
+fn format_row(total: u64, throughput: u64) -> String {
+    if total == 0 {
+        return "N/A".to_string();
+    }
+
+    format!("{}/{}ps", total, throughput)
+}
+
 struct Table {
     uri: String,
     interval: String,
@@ -231,98 +233,112 @@ impl Table {
         };
 
         let now = Instant::now();
-        let mut rows = stats
+        let rows = stats
             .0
             .iter()
             .map(|(component, throughput)| {
-                let (received, received_rate, sent, sent_rate) = if let Some(prev_stats) =
-                    &self.prev
-                {
-                    let duration = (now - prev_stats.timestamp).as_secs_f64();
+                let (events_in, events_out, bytes_in, bytes_out) =
+                    if let Some(prev_stats) = &self.prev {
+                        let duration = (now - prev_stats.timestamp).as_secs_f64().ceil() as u64;
 
-                    match prev_stats.stats.0.get(component) {
-                        Some(prev_throughput) => {
-                            let received_rate =
-                                (throughput.received - prev_throughput.received) as f64 / duration;
-                            let received =
-                                format!("{} ({:.2}/s)", throughput.received, received_rate);
+                        match prev_stats.stats.0.get(component) {
+                            Some(prev_throughput) => {
+                                let events_in = format_row(
+                                    throughput.received,
+                                    (throughput.received - prev_throughput.received) / duration,
+                                );
+                                let events_out = format_row(
+                                    throughput.sent,
+                                    (throughput.sent - prev_throughput.sent) / duration,
+                                );
+                                let bytes_in = format_row(
+                                    throughput.received_bytes,
+                                    (throughput.received_bytes - prev_throughput.received_bytes)
+                                        / duration,
+                                );
+                                let bytes_out = format_row(
+                                    throughput.sent_bytes,
+                                    (throughput.sent_bytes - prev_throughput.sent_bytes) / duration,
+                                );
 
-                            let sent_rate =
-                                (throughput.sent - prev_throughput.sent) as f64 / duration;
-                            let sent = format!("{} ({:.2}/s)", throughput.sent, sent_rate);
+                                (events_in, events_out, bytes_in, bytes_out)
+                            }
 
-                            (received, received_rate, sent, sent_rate)
+                            // previous stats exist, but the component stats is not
+                            None => (
+                                "N/A".to_string(),
+                                "N/A".to_string(),
+                                "N/A".to_string(),
+                                "N/A".to_string(),
+                            ),
                         }
-
-                        // previous stats exist, but the component stats is not
-                        None => (
-                            format!("{} (--/s)", throughput.received),
-                            0.0,
-                            format!("{} (--/s)", throughput.sent),
-                            0.0,
-                        ),
-                    }
-                } else {
-                    // previous stats is not exist
-                    (
-                        format!("{} (--/s)", throughput.received),
-                        0.0,
-                        format!("{} (--/s)", throughput.sent),
-                        0.0,
-                    )
-                };
+                    } else {
+                        // previous stats is not exist
+                        (
+                            "N/A".to_string(),
+                            "N/A".to_string(),
+                            "N/A".to_string(),
+                            "N/A".to_string(),
+                        )
+                    };
 
                 Row {
                     key: component.name.clone(),
-                    kind: component.kind.clone(),
-                    typ: component.typ.clone(),
-                    received,
-                    received_rate,
-                    received_bytes: "".into(),
-                    received_bytes_rate: 0.0,
-                    sent,
-                    sent_rate,
-                    sent_bytes: "".into(),
-                    sent_bytes_rate: 0.0,
+                    typ: format!("{}/{}", component.kind, component.typ),
+                    events_in,
+                    events_out,
+                    bytes_in,
+                    bytes_out,
                 }
             })
             .collect::<Vec<_>>();
 
-        let (mut key_width, mut kind_width, mut typ_width, mut received_width, mut sent_width) =
-            rows.iter().fold((0, 0, 0, 0, 0), |mut acc, row| {
-                acc.0 = acc.0.max(row.key.len() + MINIMUM_PADDING_RIGHT);
-                acc.1 = acc.1.max(row.kind.len() + MINIMUM_PADDING_RIGHT);
-                acc.2 = acc.2.max(row.typ.len() + MINIMUM_PADDING_RIGHT);
-                acc.3 = acc.3.max(row.received.len() + MINIMUM_PADDING_RIGHT);
-                acc.4 = acc.4.max(row.sent.len() + MINIMUM_PADDING_RIGHT);
-                acc
-            });
+        let (
+            mut key_width,
+            mut typ_width,
+            mut events_in_width,
+            mut events_out_width,
+            mut bytes_in_width,
+            mut bytes_out_width,
+        ) = rows.iter().fold((0, 0, 0, 0, 0, 0), |mut acc, row| {
+            acc.0 = acc.0.max(row.key.len() + MINIMUM_PADDING_RIGHT);
+            acc.1 = acc.1.max(row.typ.len() + MINIMUM_PADDING_RIGHT);
+            acc.2 = acc.2.max(row.events_in.len() + MINIMUM_PADDING_RIGHT);
+            acc.3 = acc.3.max(row.events_out.len() + MINIMUM_PADDING_RIGHT);
+            acc.4 = acc.4.max(row.bytes_in.len() + MINIMUM_PADDING_RIGHT);
+            acc.5 = acc.5.max(row.bytes_out.len() + MINIMUM_PADDING_RIGHT);
+            acc
+        });
 
         if let Some((_max_height, max_width)) = termsize::get() {
-            if let Some(mut n) = max_width
-                .checked_sub(key_width + kind_width + typ_width + received_width + sent_width)
-            {
-                let padding = n % 5;
-                n /= 5;
+            if let Some(mut n) = max_width.checked_sub(
+                key_width
+                    + typ_width
+                    + events_in_width
+                    + events_out_width
+                    + bytes_in_width
+                    + bytes_out_width,
+            ) {
+                let padding = n % 6;
+                n /= 6;
 
                 key_width += n;
-                kind_width += n;
                 typ_width += n;
-                received_width += n;
-                sent_width += n + padding;
+                events_in_width += n;
+                events_out_width += n;
+                bytes_in_width += n;
+                bytes_out_width += n + padding;
             }
         }
 
         // header
-        println!("\x1b[7m{:key_width$}{:kind_width$}{:typ_width$}{:received_width$}{:sent_width$}\x1b[0m",
-                 "ID", "Kind", "Type", "Received", "Sent");
+        println!("\x1b[7m{:key_width$}{:typ_width$}{:events_in_width$}{:events_out_width$}{:bytes_in_width$}{:bytes_out_width$}\x1b[0m",
+                 "ID", "Type", "Events In", "Events Out", "Bytes In", "Bytes Out");
 
-        // sort by received rate for now
-        rows.sort_by(|a, b| b.received_rate.total_cmp(&a.received_rate));
         rows.iter().for_each(|row| {
             println!(
-                "{:key_width$}{:kind_width$}{:typ_width$}{:received_width$}{:sent_width$}",
-                row.key, row.kind, row.typ, row.received, row.sent
+                "{:key_width$}{:typ_width$}{:events_in_width$}{:events_out_width$}{:bytes_in_width$}{:bytes_out_width$}",
+                row.key, row.typ, row.events_in, row.events_out, row.bytes_in, row.bytes_out
             );
         });
 
@@ -372,9 +388,9 @@ mod termsize {
     #[derive(Debug)]
     struct UnixSize {
         /// number of rows
-        pub rows: c_ushort,
+        rows: c_ushort,
         /// number of columns
-        pub cols: c_ushort,
+        cols: c_ushort,
         x: c_ushort,
         y: c_ushort,
     }
