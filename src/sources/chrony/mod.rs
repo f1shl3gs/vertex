@@ -106,19 +106,16 @@ async fn run(config: Config, mut output: Pipeline, mut shutdown: ShutdownSignal)
     Ok(())
 }
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 enum Error {
-    Io(io::Error),
+    #[error(transparent)]
+    Io(#[from] io::Error),
 
+    #[error("timeout")]
     Timeout,
 
+    #[error("protocol error {0}")]
     Protocol(String),
-}
-
-impl From<io::Error> for Error {
-    fn from(value: io::Error) -> Self {
-        Error::Io(value)
-    }
 }
 
 impl From<&'static str> for Error {

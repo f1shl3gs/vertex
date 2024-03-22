@@ -134,17 +134,14 @@ async fn handle_request(
     match events {
         Ok(mut events) => {
             let receiver = BatchNotifier::maybe_apply_to(acknowledgements, &mut events);
-
-            match output
+            let result = output
                 .send_batch(events)
                 .map_err(move |err| {
                     // can only fail if receiving end disconnected, so we are
                     // shutting down, probably not gracefully.
-                    error!(message = "Failed to forward events, downstream is closed");
-
                     error!(
-                        message = "Tried to send the following event",
-                        %err
+                        message = "Failed to forward events, downstream is closed",
+                        ?err
                     );
 
                     ErrorMessage::new(
@@ -153,8 +150,9 @@ async fn handle_request(
                     )
                 })
                 .and_then(|_r| handle_batch_status(receiver))
-                .await
-            {
+                .await;
+
+            match result {
                 Ok(resp) => resp,
                 Err(err) => err.into(),
             }

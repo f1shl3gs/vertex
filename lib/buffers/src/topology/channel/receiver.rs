@@ -4,7 +4,6 @@ use std::{
     task::{Context, Poll},
 };
 
-use async_recursion::async_recursion;
 use futures::{ready, Stream};
 use tokio::select;
 use tokio_util::sync::ReusableBoxFuture;
@@ -109,7 +108,6 @@ impl<T: Bufferable> BufferReceiver<T> {
         self.instrumentation = Some(handle);
     }
 
-    #[async_recursion]
     pub async fn next(&mut self) -> Option<T> {
         // We want to poll both our base and overflow receivers without waiting for one or the
         // other to entirely drain before checking the other.  This ensures that we're fairly
@@ -128,7 +126,7 @@ impl<T: Bufferable> BufferReceiver<T> {
             },
             Some(mut overflow) => {
                 select! {
-                    Some(item) = overflow.next() => (item, false),
+                    Some(item) = Box::pin(overflow.next()) => (item, false),
                     Some(item) = self.base.next() => (item, true),
                     else => return None,
                 }
@@ -157,6 +155,8 @@ impl<T: Bufferable> BufferReceiver<T> {
 enum StreamState<T: Bufferable> {
     Idle(BufferReceiver<T>),
     Polling,
+
+    #[allow(dead_code)]
     Closed(BufferReceiver<T>),
 }
 
