@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711096242881,
+  "lastUpdate": 1711098303271,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d7ff328a3e123f9e4b8e49bf993328ab3b847596",
-          "message": "chore(deps): bump crossbeam-queue from 0.3.10 to 0.3.11 (#1549)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.10 to 0.3.11.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.10...crossbeam-queue-0.3.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-09T13:45:41+08:00",
-          "tree_id": "e6824265b8a115e2cf8f63f201f884b5c1545e2a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d7ff328a3e123f9e4b8e49bf993328ab3b847596"
-        },
-        "date": 1704779271709,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541540,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 538900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4f6a809e186c6215dce91537e5f8df53ab8fc694",
+          "message": "bump toolchain to 1.77.0 (#1666)",
+          "timestamp": "2024-03-22T17:02:41+08:00",
+          "tree_id": "98f3d0f45d0f939cb51381a4476dd2151debf8d4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4f6a809e186c6215dce91537e5f8df53ab8fc694"
+        },
+        "date": 1711098288302,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537700,
             "unit": "ns/op"
           }
         ]
