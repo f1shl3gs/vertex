@@ -1,5 +1,3 @@
-#![allow(clippy::cast_possible_truncation)]
-
 use std::alloc::{alloc, Layout};
 use std::cmp::Ordering;
 use std::fmt;
@@ -21,8 +19,8 @@ const INLINE_CAP: usize = 23;
 ///   pointer(8b) + len(8b)
 #[repr(C)]
 pub struct Key {
-    data: NonNull<u8>,
     cap: usize,
+    data: NonNull<u8>,
     len: u32,
     padding1: u16,
     padding2: u8,
@@ -61,13 +59,20 @@ impl Key {
 
     fn inline(text: &str) -> Key {
         let len = text.len();
-        let mut data = [0u8; KEY_SIZE];
+        let key = Key {
+            cap: 0,
+            data: NonNull::dangling(),
+            len: 0,
+            padding1: 0,
+            padding2: 0,
+            last: len as u8,
+        };
 
         unsafe {
-            copy_nonoverlapping(text.as_bytes().as_ptr(), data.as_mut_ptr(), len);
-            data[KEY_SIZE - 1] = len as u8;
-            transmute(data)
+            copy_nonoverlapping(text.as_bytes().as_ptr(), key.as_ptr().cast_mut(), len);
         }
+
+        key
     }
 
     #[inline]
@@ -233,12 +238,11 @@ unsafe impl Sync for Key {}
 mod serde {
     use std::fmt::Formatter;
     use std::mem::transmute;
-    use std::ptr::copy_nonoverlapping;
 
     use serde::de::{Error, Visitor};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    use super::{Key, INLINE_CAP, KEY_SIZE, MAX_LENGTH};
+    use super::{Key, INLINE_CAP, MAX_LENGTH};
 
     impl<'de> Deserialize<'de> for Key {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
@@ -265,87 +269,17 @@ mod serde {
                         ));
                     }
 
-                    if len <= INLINE_CAP {
-                        return Ok(Key::inline(v));
-                    }
+                    let key = if len <= INLINE_CAP {
+                        Key::inline(v)
+                    } else {
+                        unsafe { transmute(v.to_string()) }
+                    };
 
-                    Ok(unsafe { transmute(v.to_string()) })
-                }
-
-                fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
-                where
-                    E: Error,
-                {
-                    let len = v.len();
-                    if len == 0 || len > MAX_LENGTH {
-                        return Err(Error::custom(
-                            "key length should be large than 0 and less than 128",
-                        ));
-                    }
-
-                    if len <= INLINE_CAP {
-                        return Ok(Key::inline(&v));
-                    }
-
-                    Ok(unsafe { transmute(v) })
-                }
-
-                fn visit_bytes<E>(self, v: &[u8]) -> Result<Self::Value, E>
-                where
-                    E: Error,
-                {
-                    let len = v.len();
-                    if len == 0 || len > MAX_LENGTH {
-                        return Err(Error::custom(
-                            "key length should be large than 0 and less than 128",
-                        ));
-                    }
-
-                    if len <= INLINE_CAP {
-                        let mut data = [0u8; KEY_SIZE];
-
-                        return unsafe {
-                            copy_nonoverlapping(v.as_ptr(), data.as_mut_ptr(), len);
-                            data[KEY_SIZE - 1] = len as u8;
-                            Ok(transmute(data))
-                        };
-                    }
-
-                    match String::from_utf8(v.to_vec()) {
-                        Ok(s) => Ok(unsafe { transmute(s) }),
-                        Err(err) => Err(Error::custom(err)),
-                    }
-                }
-
-                fn visit_byte_buf<E>(self, v: Vec<u8>) -> Result<Self::Value, E>
-                where
-                    E: Error,
-                {
-                    let len = v.len();
-                    if len == 0 || len > MAX_LENGTH {
-                        return Err(Error::custom(
-                            "key length should be large than 0 and less than 128",
-                        ));
-                    }
-
-                    if len <= INLINE_CAP {
-                        let mut data = [0u8; KEY_SIZE];
-
-                        return unsafe {
-                            copy_nonoverlapping(v.as_ptr(), data.as_mut_ptr(), len);
-                            data[KEY_SIZE - 1] = len as u8;
-                            Ok(transmute(data))
-                        };
-                    }
-
-                    match String::from_utf8(v) {
-                        Ok(s) => Ok(unsafe { transmute(s) }),
-                        Err(err) => Err(Error::custom(err)),
-                    }
+                    Ok(key)
                 }
             }
 
-            deserializer.deserialize_any(KeyVisitor)
+            deserializer.deserialize_str(KeyVisitor)
         }
     }
 
@@ -354,7 +288,7 @@ mod serde {
         where
             S: Serializer,
         {
-            serializer.serialize_str(self)
+            serializer.serialize_str(self.as_str())
         }
     }
 }
@@ -383,6 +317,7 @@ mod tests {
         let k = "abcdefghijklmnopqrstuvwxyz";
         let k1 = Key::from_string(k.to_string());
         let k2 = k1.clone();
+        assert_eq!(k1.as_str(), k);
         drop(k1);
         assert_eq!(k2.as_str(), k);
     }

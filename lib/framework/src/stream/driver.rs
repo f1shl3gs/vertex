@@ -229,7 +229,7 @@ mod tests {
 
     type Counter = Arc<AtomicUsize>;
 
-    struct DelayRequest(usize, EventFinalizers);
+    struct DelayRequest(EventFinalizers);
 
     impl DelayRequest {
         fn new(value: usize, counter: &Counter) -> Self {
@@ -239,13 +239,13 @@ mod tests {
                 receiver.await;
                 counter.fetch_add(value, Ordering::Relaxed);
             });
-            Self(value, EventFinalizers::new(EventFinalizer::new(batch)))
+            Self(EventFinalizers::new(EventFinalizer::new(batch)))
         }
     }
 
     impl Finalizable for DelayRequest {
         fn take_finalizers(&mut self) -> EventFinalizers {
-            EventFinalizers::default()
+            std::mem::take(&mut self.0)
         }
     }
 
@@ -333,7 +333,7 @@ mod tests {
             Poll::Ready(Ok(()))
         }
 
-        fn call(&mut self, _req: DelayRequest) -> Self::Future {
+        fn call(&mut self, req: DelayRequest) -> Self::Future {
             let permit = self
                 .permit
                 .take()
@@ -346,6 +346,7 @@ mod tests {
                 // Manually drop our permit here so that we take ownership and then actually
                 // release the slot back to the semaphore.
                 drop(permit);
+                drop(req);
 
                 Ok(DelayResponse)
             })

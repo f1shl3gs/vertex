@@ -1,6 +1,5 @@
 use std::sync::Arc;
 
-use async_recursion::async_recursion;
 use tokio::sync::Mutex;
 
 use super::limited_queue::LimitedSender;
@@ -121,7 +120,7 @@ where
 /// of the fields we already have here, but instead of cascading via calling into `overflow`, we'd
 /// linearize the nesting instead, so that `BufferSender` would only ever be calling the underlying
 /// `SenderAdapter` instances instead... which would let us get rid of the boxing and
-/// `#[async_recursion]` stuff.
+/// async recursion stuff.
 #[derive(Clone, Debug)]
 pub struct BufferSender<T: Bufferable> {
     base: SenderAdapter<T>,
@@ -178,7 +177,6 @@ impl<T: Bufferable> BufferSender<T> {
         self.overflow.as_ref().map(AsRef::as_ref)
     }
 
-    #[async_recursion]
     pub async fn send(&mut self, item: T) -> crate::Result<()> {
         let item_sizing = self
             .instrumentation
@@ -197,11 +195,13 @@ impl<T: Bufferable> BufferSender<T> {
             WhenFull::Overflow => {
                 if let Some(item) = self.base.try_send(item).await? {
                     sent_to_base = false;
-                    self.overflow
-                        .as_mut()
-                        .expect("overflow must exist")
-                        .send(item)
-                        .await?;
+                    Box::pin(
+                        self.overflow
+                            .as_mut()
+                            .expect("overflow must exist")
+                            .send(item),
+                    )
+                    .await?;
                 }
             }
         };
@@ -228,11 +228,10 @@ impl<T: Bufferable> BufferSender<T> {
         Ok(())
     }
 
-    #[async_recursion]
     pub async fn flush(&mut self) -> crate::Result<()> {
         self.base.flush().await?;
         if let Some(overflow) = self.overflow.as_mut() {
-            overflow.flush().await?;
+            Box::pin(overflow.flush()).await?;
         }
 
         Ok(())
