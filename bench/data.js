@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711202997157,
+  "lastUpdate": 1711203021646,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cab71cb11cb124e857891d5de6b1dee258528f26",
-          "message": "chore: small refactoring (#1554)\n\n* avoid cloning of HttpClient",
-          "timestamp": "2024-01-10T11:57:44+08:00",
-          "tree_id": "b6c232e3c3b166f1da60a127640f91ce2d58a0e3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cab71cb11cb124e857891d5de6b1dee258528f26"
-        },
-        "date": 1704859191324,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540600,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf8659b01514b5cb1f9d838a599f67322153d697",
+          "message": "chore(deps): bump indexmap from 2.2.5 to 2.2.6 (#1670)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.5 to 2.2.6.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.5...2.2.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-23T22:07:57+08:00",
+          "tree_id": "9111673b79317ccd346123563963c18ae6814fec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf8659b01514b5cb1f9d838a599f67322153d697"
+        },
+        "date": 1711203005831,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530690,
             "unit": "ns/op"
           }
         ]
