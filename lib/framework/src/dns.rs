@@ -1,21 +1,44 @@
-use std::{
-    net::{IpAddr, Ipv4Addr, SocketAddr, ToSocketAddrs},
-    task::{Context, Poll},
-};
+use std::net::{Ipv4Addr, SocketAddr};
+use std::sync::Arc;
+use std::task::{Context, Poll};
 
-use futures::{future::BoxFuture, FutureExt};
+use futures::future::BoxFuture;
+use hickory_resolver::{system_conf, TokioAsyncResolver};
 use hyper::client::connect::dns::Name;
 use thiserror::Error;
-use tokio::task::spawn_blocking;
 use tower::Service;
 
 pub struct LookupIp(std::vec::IntoIter<SocketAddr>);
 
-#[derive(Debug, Clone, Copy)]
-pub struct Resolver;
+#[derive(Debug, Error)]
+pub enum DnsError {
+    #[error(transparent)]
+    Resolve(hickory_resolver::error::ResolveError),
+}
+
+#[derive(Clone, Debug)]
+pub struct Resolver(Arc<TokioAsyncResolver>);
+
+impl Iterator for LookupIp {
+    type Item = SocketAddr;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.next()
+    }
+}
 
 impl Resolver {
-    pub async fn lookup_ip(self, name: String) -> Result<LookupIp, DnsError> {
+    /// Create a new Async resolver
+    #[allow(clippy::new_without_default)]
+    pub fn new() -> Resolver {
+        let (config, opts) =
+            system_conf::read_system_conf().expect("Read system config of DNS failed");
+        let inner = TokioAsyncResolver::tokio(config, opts);
+
+        Resolver(Arc::new(inner))
+    }
+
+    pub async fn lookup_ip(&self, name: &str) -> Result<LookupIp, DnsError> {
         // We need to add port with the name so that `to_socket_addrs`
         // resolves it properly. We will be discarding the port afterwards.
         //
@@ -30,28 +53,17 @@ impl Resolver {
                 vec![SocketAddr::new(Ipv4Addr::LOCALHOST.into(), dummy_port)].into_iter(),
             ))
         } else {
-            spawn_blocking(move || {
-                let name_ref = match name.as_str() {
-                    // strip IPv6 prefix and suffix
-                    name if name.starts_with('[') && name.ends_with(']') => {
-                        &name[1..name.len() - 1]
-                    }
-                    name => name,
-                };
-                (name_ref, dummy_port).to_socket_addrs()
-            })
-            .await?
-            .map(LookupIp)
-            .map_err(Into::into)
+            let addrs = self
+                .0
+                .lookup_ip(name)
+                .await
+                .map_err(DnsError::Resolve)?
+                .iter()
+                .map(|addr| SocketAddr::new(addr, 0))
+                .collect::<Vec<_>>();
+
+            Ok(LookupIp(addrs.into_iter()))
         }
-    }
-}
-
-impl Iterator for LookupIp {
-    type Item = IpAddr;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.0.next().map(|address| address.ip())
     }
 }
 
@@ -65,16 +77,10 @@ impl Service<Name> for Resolver {
     }
 
     fn call(&mut self, name: Name) -> Self::Future {
-        self.lookup_ip(name.as_str().to_owned()).boxed()
-    }
-}
+        let resolver = self.clone();
 
-#[derive(Debug, Error)]
-pub enum DnsError {
-    #[error("Unable to resolve name: {0}")]
-    UnableLookup(#[from] tokio::io::Error),
-    #[error("Failed to join with resolving future: {0}")]
-    JoinError(#[from] tokio::task::JoinError),
+        Box::pin(async move { resolver.lookup_ip(name.as_str()).await })
+    }
 }
 
 #[cfg(test)]
@@ -82,8 +88,8 @@ mod tests {
     use super::Resolver;
 
     async fn resolve(name: &str) -> bool {
-        let resolver = Resolver;
-        resolver.lookup_ip(name.to_owned()).await.is_ok()
+        let resolver = Resolver::new();
+        resolver.lookup_ip(name).await.is_ok()
     }
 
     #[tokio::test]

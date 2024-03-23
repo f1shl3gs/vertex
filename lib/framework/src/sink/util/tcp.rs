@@ -1,5 +1,4 @@
 use std::io::ErrorKind;
-use std::net::SocketAddr;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
@@ -21,6 +20,7 @@ use tokio_util::codec::Encoder;
 
 use super::{SinkBuildError, SocketMode};
 use crate::batch::EncodedEvent;
+use crate::dns::Resolver;
 use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::sink::VecSinkExt;
 use crate::tcp::TcpKeepaliveConfig;
@@ -112,6 +112,7 @@ struct TcpConnector {
     keepalive: Option<TcpKeepaliveConfig>,
     tls: Option<Arc<ClientConfig>>,
     send_buffer_bytes: Option<usize>,
+    resolver: Resolver,
 }
 
 impl TcpConnector {
@@ -123,6 +124,7 @@ impl TcpConnector {
         send_buffer_bytes: Option<usize>,
     ) -> Self {
         Self {
+            resolver: Resolver::new(),
             host,
             port,
             keepalive,
@@ -144,14 +146,15 @@ impl TcpConnector {
     }
 
     async fn connect(&self) -> Result<MaybeTlsStream<TcpStream>, TcpError> {
-        let ip = dns::Resolver
-            .lookup_ip(self.host.clone())
+        let mut addr = self
+            .resolver
+            .lookup_ip(&self.host)
             .await
             .map_err(TcpError::ResolveDns)?
             .next()
             .ok_or(TcpError::NoAddresses)?;
 
-        let addr = SocketAddr::new(ip, self.port);
+        addr.set_port(self.port);
         let mut maybe_tls = match &self.tls {
             Some(config) => {
                 let domain = self

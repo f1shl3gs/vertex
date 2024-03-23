@@ -8,14 +8,13 @@ use std::task::{Context, Poll};
 use configurable::Configurable;
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
-use http::{header, header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
-use hyper::{
-    body::{Body, HttpBody},
-    client,
-    client::{Client, HttpConnector},
-};
+use http::header::{AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION, SET_COOKIE};
+use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
+use hyper::body::{Body, HttpBody};
+use hyper::client::{self, Client, HttpConnector};
 use hyper_rustls::HttpsConnector;
 use metrics::{exponential_buckets, Attributes};
+use proxy::ProxyConnector;
 use rustls::{ClientConfig, RootCertStore};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -24,6 +23,7 @@ use tracing_futures::Instrument;
 use tracing_internal::SpanExt;
 
 use crate::config::ProxyConfig;
+use crate::dns::Resolver;
 use crate::tls::{TlsConfig, TlsError};
 
 #[derive(Debug, Error)]
@@ -43,7 +43,7 @@ pub enum HttpError {
 pub type HttpClientFuture = <HttpClient as Service<Request<Body>>>::Future;
 
 pub struct HttpClient<B = Body> {
-    client: Client<proxy::ProxyConnector<HttpsConnector<HttpConnector>>, B>,
+    client: Client<ProxyConnector<HttpsConnector<HttpConnector<Resolver>>>, B>,
     user_agent: HeaderValue,
 }
 
@@ -65,7 +65,7 @@ where
         proxy_config: &ProxyConfig,
         client_builder: &mut client::Builder,
     ) -> Result<HttpClient<B>, HttpError> {
-        let mut http = HttpConnector::new();
+        let mut http = HttpConnector::new_with_resolver(Resolver::new());
         http.enforce_http(false);
 
         let config = match tls_config {
@@ -217,12 +217,7 @@ impl<'a, B: HttpBody> fmt::Display for FormatBody<'a, B> {
 
 fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> {
     let mut headers = headers.clone();
-    for name in &[
-        header::AUTHORIZATION,
-        header::PROXY_AUTHORIZATION,
-        header::COOKIE,
-        header::SET_COOKIE,
-    ] {
+    for name in &[AUTHORIZATION, PROXY_AUTHORIZATION, COOKIE, SET_COOKIE] {
         if let Some(value) = headers.get_mut(name) {
             value.set_sensitive(true);
         }
