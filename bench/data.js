@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711203502918,
+  "lastUpdate": 1711203548286,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "70a9464a183e08eb8216ccdd3d3e37bb3b91030e",
-          "message": "simplify (#1563)",
-          "timestamp": "2024-01-19T12:54:54+08:00",
-          "tree_id": "b9f29a292162f4af9052d26969739a13f02bb9da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/70a9464a183e08eb8216ccdd3d3e37bb3b91030e"
-        },
-        "date": 1705640740512,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 568,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41493.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7fb732748959f0f3a9fb567e0a18730ab4006e62",
           "message": "add lib/hostname (#1564)",
           "timestamp": "2024-01-19T13:32:17+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 560,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36081.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf8659b01514b5cb1f9d838a599f67322153d697",
+          "message": "chore(deps): bump indexmap from 2.2.5 to 2.2.6 (#1670)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.5 to 2.2.6.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.5...2.2.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-23T22:07:57+08:00",
+          "tree_id": "9111673b79317ccd346123563963c18ae6814fec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf8659b01514b5cb1f9d838a599f67322153d697"
+        },
+        "date": 1711203533283,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
             "unit": "s"
           },
           {
