@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711203566654,
+  "lastUpdate": 1711227288045,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "377117877d8a6a913ec0ffd38ef2b4f3e1753d94",
-          "message": "chore(deps): bump base64 from 0.21.6 to 0.21.7 (#1555)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.6 to 0.21.7.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.6...v0.21.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-12T11:28:23+08:00",
-          "tree_id": "3a5c4af80e3f6839ef09b30d15462e673b002b42",
-          "url": "https://github.com/f1shl3gs/vertex/commit/377117877d8a6a913ec0ffd38ef2b4f3e1753d94"
-        },
-        "date": 1705030226183,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539900,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 530690,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a5ea4f491b772dbf3fdbe231e987f5721504b1c1",
+          "message": "async dns resolver (#1671)",
+          "timestamp": "2024-03-24T04:52:32+08:00",
+          "tree_id": "5a0ec10a0d74c2de47cf1b7b2a350e3b58886522",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a5ea4f491b772dbf3fdbe231e987f5721504b1c1"
+        },
+        "date": 1711227273205,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 529010,
             "unit": "ns/op"
           }
         ]
