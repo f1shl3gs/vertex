@@ -16,7 +16,7 @@ serde_path_to_error = { version = "0.1.16" }
 tokio = { version = "1.36.0", default-features = false, features = ["test-util", "macros"] }
 
 [dependencies]
-bytes = { version = "1.5.0", default-features = false }
+bytes = { version = "1.6.0", default-features = false }
 chrono = { version = "0.4.35", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
