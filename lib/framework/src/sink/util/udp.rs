@@ -16,6 +16,7 @@ use tokio::{net::UdpSocket, sync::oneshot};
 use tokio_util::codec::Encoder;
 
 use super::SinkBuildError;
+use crate::dns::Resolver;
 use crate::{dns, udp, Healthcheck, Sink, StreamSink};
 
 #[derive(Debug, Error)]
@@ -94,14 +95,17 @@ struct UdpConnector {
     host: String,
     port: u16,
     send_buffer_bytes: Option<usize>,
+
+    resolver: Resolver,
 }
 
 impl UdpConnector {
-    const fn new(host: String, port: u16, send_buffer_bytes: Option<usize>) -> Self {
+    fn new(host: String, port: u16, send_buffer_bytes: Option<usize>) -> Self {
         Self {
             host,
             port,
             send_buffer_bytes,
+            resolver: Resolver::new(),
         }
     }
 
@@ -113,13 +117,14 @@ impl UdpConnector {
     }
 
     async fn connect(&self) -> Result<UdpSocket, UdpError> {
-        let ip = dns::Resolver
-            .lookup_ip(self.host.clone())
+        let mut addr = self
+            .resolver
+            .lookup_ip(&self.host)
             .await?
             .next()
             .ok_or(UdpError::NoAddresses)?;
 
-        let addr = SocketAddr::new(ip, self.port);
+        addr.set_port(self.port);
         let bind_address = find_bind_address(&addr);
 
         let socket = UdpSocket::bind(bind_address)
