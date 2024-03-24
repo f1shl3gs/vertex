@@ -56,7 +56,7 @@ pub struct Config {
     /// The tenant id that's sent with every request, by default
     /// this is not required since a proxy should set this header.
     /// When running Loki locally a tenant id is not required either.
-    /// Your can read more abount tenant id's at
+    /// Your can read more about tenant id's at
     /// https://github.com/grafana/loki/blob/master/docs/operations/multi-tenancy.md
     ///
     /// Note: This parameter supports Vertex's template syntax, which
@@ -104,6 +104,7 @@ pub struct Config {
     #[serde(default)]
     pub batch: BatchConfig<LokiDefaultBatchSettings>,
 
+    #[serde(default)]
     acknowledgements: bool,
 }
 
