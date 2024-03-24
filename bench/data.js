@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711277163444,
+  "lastUpdate": 1711288342097,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3ac5fd95dd08e419b418a8e367c45d6d3ca4c764",
-          "message": "chore(ci): bump actions/cache from 3 to 4 (#1560)\n\nBumps [actions/cache](https://github.com/actions/cache) from 3 to 4.\r\n- [Release notes](https://github.com/actions/cache/releases)\r\n- [Changelog](https://github.com/actions/cache/blob/main/RELEASES.md)\r\n- [Commits](https://github.com/actions/cache/compare/v3...v4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: actions/cache\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-18T11:38:11+08:00",
-          "tree_id": "06e27031a713bef29aaf065e8bf5a2792b41eea9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ac5fd95dd08e419b418a8e367c45d6d3ca4c764"
-        },
-        "date": 1705549209174,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539830,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 553280,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6245df893a7f9cc0fe2af9a7d318b6c89b11eca6",
+          "message": "remove acknowledable() from SourceConfig (#1674)",
+          "timestamp": "2024-03-24T21:50:07+08:00",
+          "tree_id": "ccbc9c764ab77ba4e49ebf688d3a6baa4b4ad3b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6245df893a7f9cc0fe2af9a7d318b6c89b11eca6"
+        },
+        "date": 1711288327324,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 528920,
             "unit": "ns/op"
           }
         ]
