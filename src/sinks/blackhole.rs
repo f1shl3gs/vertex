@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{EventContainer, Events};
-use framework::config::{default_true, DataType, SinkConfig, SinkContext};
+use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::stream::BoxStream;
 use futures::FutureExt;
@@ -18,7 +18,6 @@ struct Config {
     /// By default, there is no limit.
     rate: Option<usize>,
 
-    #[serde(default = "default_true")]
     acknowledgements: bool,
 }
 

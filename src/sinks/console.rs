@@ -6,7 +6,7 @@ use codecs::encoding::{Framer, SinkType, Transformer};
 use codecs::{Encoder, EncodingConfigWithFraming};
 use configurable::{configurable_component, Configurable};
 use event::{EventContainer, EventStatus, Events, Finalizable};
-use framework::config::{default_true, DataType, SinkConfig, SinkContext};
+use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::StreamExt;
 use futures::{stream::BoxStream, FutureExt};
@@ -41,7 +41,6 @@ struct Config {
     #[serde(flatten)]
     encoding: EncodingConfigWithFraming,
 
-    #[serde(default = "default_true")]
     acknowledgements: bool,
 }
 
