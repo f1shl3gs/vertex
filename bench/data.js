@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711288432153,
+  "lastUpdate": 1711288883796,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fb8500d304df7197d98dd8bb3e1c92400aa05cfc",
-          "message": "chore(deps): bump h2 from 0.3.21 to 0.3.24 (#1567)\n\nBumps [h2](https://github.com/hyperium/h2) from 0.3.21 to 0.3.24.\r\n- [Release notes](https://github.com/hyperium/h2/releases)\r\n- [Changelog](https://github.com/hyperium/h2/blob/v0.3.24/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/h2/compare/v0.3.21...v0.3.24)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: h2\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-20T11:59:58+08:00",
-          "tree_id": "1fb9c6318bc0a3c69b8afcfe51276f8dbc821ac7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fb8500d304df7197d98dd8bb3e1c92400aa05cfc"
-        },
-        "date": 1705723871528,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41496,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f5621735cec6b859e128a0afab899ad19bc87d05",
           "message": "chore(deps): bump smallvec from 1.13.0 to 1.13.1 (#1568)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.13.0 to 1.13.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.13.0...v1.13.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-20T12:00:27+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37406.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6245df893a7f9cc0fe2af9a7d318b6c89b11eca6",
+          "message": "remove acknowledable() from SourceConfig (#1674)",
+          "timestamp": "2024-03-24T21:50:07+08:00",
+          "tree_id": "ccbc9c764ab77ba4e49ebf688d3a6baa4b4ad3b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6245df893a7f9cc0fe2af9a7d318b6c89b11eca6"
+        },
+        "date": 1711288869060,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 577,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37406.8,
             "unit": "KiB"
           }
         ]
