@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711288963696,
+  "lastUpdate": 1711296673272,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3ac5fd95dd08e419b418a8e367c45d6d3ca4c764",
-          "message": "chore(ci): bump actions/cache from 3 to 4 (#1560)\n\nBumps [actions/cache](https://github.com/actions/cache) from 3 to 4.\r\n- [Release notes](https://github.com/actions/cache/releases)\r\n- [Changelog](https://github.com/actions/cache/blob/main/RELEASES.md)\r\n- [Commits](https://github.com/actions/cache/compare/v3...v4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: actions/cache\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-18T11:38:11+08:00",
-          "tree_id": "06e27031a713bef29aaf065e8bf5a2792b41eea9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ac5fd95dd08e419b418a8e367c45d6d3ca4c764"
-        },
-        "date": 1705549217541,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.566,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 90.114,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 197.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f440fde8c1a768b999f6751fc8c4c5d7fc562d96",
+          "message": "sources/demo_logs: generate json, syslog or text logs  (#1675)\n\n* generate json, syslog or text log event",
+          "timestamp": "2024-03-25T00:08:47+08:00",
+          "tree_id": "f276567b65d2004e08217cc997fb6452b8abcbcb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f440fde8c1a768b999f6751fc8c4c5d7fc562d96"
+        },
+        "date": 1711296658318,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.901,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 103.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 197.52,
             "unit": "ns/op"
           }
         ]
