@@ -10,6 +10,14 @@ use tower::Service;
 
 pub struct LookupIp(std::vec::IntoIter<SocketAddr>);
 
+impl Iterator for LookupIp {
+    type Item = SocketAddr;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.next()
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum DnsError {
     #[error(transparent)]
@@ -18,14 +26,6 @@ pub enum DnsError {
 
 #[derive(Clone, Debug)]
 pub struct Resolver(Arc<TokioAsyncResolver>);
-
-impl Iterator for LookupIp {
-    type Item = SocketAddr;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.0.next()
-    }
-}
 
 impl Resolver {
     /// Create a new Async resolver
