@@ -154,9 +154,6 @@ struct Config {
 
     #[serde(default = "default_decoding")]
     decoding: DeserializerConfig,
-
-    #[serde(default)]
-    acknowledgement: bool,
 }
 
 #[async_trait::async_trait]

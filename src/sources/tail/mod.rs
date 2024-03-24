@@ -170,10 +170,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
-
-    fn acknowledgable(&self) -> bool {
-        true
-    }
 }
 
 fn tail_source(
