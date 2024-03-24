@@ -66,3 +66,13 @@ pub mod syslog;
 mod tail;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
+
+use codecs::decoding::{DeserializerConfig, FramingConfig};
+
+pub const fn default_decoding() -> DeserializerConfig {
+    DeserializerConfig::Bytes
+}
+
+pub const fn default_framing_message_based() -> FramingConfig {
+    FramingConfig::Bytes
+}

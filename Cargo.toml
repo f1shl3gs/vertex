@@ -312,7 +312,6 @@ criterion = { version = "0.5.1", default-features = false, features = ["async_to
 event = { path = "lib/event", features = ["string_path"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.0", default-features = false, features = ["std"] }
-rand = { version = "0.8.5", default-features = false }
 serde_path_to_error = { version = "0.1.16", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.36.0", default-features = false, features = ["test-util", "time"] }
@@ -411,6 +410,7 @@ once_cell = { version = "1.19.0", default-features = false }
 parking_lot = { version = "0.12.1", default-features = false, optional = true }
 percent-encoding = { version = "2.3.1", default-features = false }
 quick-xml = { version = "0.31.0", default-features = false, features = ["serialize"], optional = true }
+rand = { version = "0.8.5", default-features = false }
 regex = { version = "1.10.4", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "d48e59787305614f62d112f185cd234601ac8955", optional = true, features = ["transport-tls"] }
 smallvec = { version = "1.13.2", default-features = false, optional = true }

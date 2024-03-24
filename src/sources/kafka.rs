@@ -26,6 +26,8 @@ use rskafka::topic::Topic;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;
 
+use super::{default_decoding, default_framing_message_based};
+
 const fn default_session_timeout() -> Duration {
     Duration::from_secs(10)
 }
@@ -56,14 +58,6 @@ fn default_offset_key() -> OwnedValuePath {
 
 fn default_headers_key() -> OwnedValuePath {
     parse_value_path("headers").unwrap()
-}
-
-const fn default_decoding() -> DeserializerConfig {
-    DeserializerConfig::Bytes
-}
-
-const fn default_framing_message_based() -> FramingConfig {
-    FramingConfig::Bytes
 }
 
 #[derive(Debug, Default, Deserialize, Serialize, Configurable)]

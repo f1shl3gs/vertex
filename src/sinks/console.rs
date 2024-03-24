@@ -41,6 +41,7 @@ struct Config {
     #[serde(flatten)]
     encoding: EncodingConfigWithFraming,
 
+    #[serde(default)]
     acknowledgements: bool,
 }
 
