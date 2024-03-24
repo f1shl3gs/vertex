@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711296753135,
+  "lastUpdate": 1711297223669,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f5621735cec6b859e128a0afab899ad19bc87d05",
-          "message": "chore(deps): bump smallvec from 1.13.0 to 1.13.1 (#1568)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.13.0 to 1.13.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.13.0...v1.13.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-20T12:00:27+08:00",
-          "tree_id": "4150864efa6961c0af0ff33548d7c897fa5bfe90",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f5621735cec6b859e128a0afab899ad19bc87d05"
-        },
-        "date": 1705723874546,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41495.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6782087504a4d055ae4b778b53c0ed2e81bda0f5",
           "message": "chore(deps): bump proc-macro2 from 1.0.76 to 1.0.78 (#1569)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.76 to 1.0.78.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.76...1.0.78)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-21T12:32:59+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37406.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f440fde8c1a768b999f6751fc8c4c5d7fc562d96",
+          "message": "sources/demo_logs: generate json, syslog or text logs  (#1675)\n\n* generate json, syslog or text log event",
+          "timestamp": "2024-03-25T00:08:47+08:00",
+          "tree_id": "f276567b65d2004e08217cc997fb6452b8abcbcb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f440fde8c1a768b999f6751fc8c4c5d7fc562d96"
+        },
+        "date": 1711297207792,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37478.8,
             "unit": "KiB"
           }
         ]
