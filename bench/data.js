@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711339996322,
+  "lastUpdate": 1711340002661,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "405d587a3f1642d3e7d7d15beacf2ff2ee7e47b1",
-          "message": "small refactoring (#1561)\n\n* small refactoring\r\n\r\n* fix tests\r\n\r\n* style",
-          "timestamp": "2024-01-18T23:21:41+08:00",
-          "tree_id": "af4268ac3bd594e48bda6ea81fdb77fabc2eb682",
-          "url": "https://github.com/f1shl3gs/vertex/commit/405d587a3f1642d3e7d7d15beacf2ff2ee7e47b1"
-        },
-        "date": 1705591440418,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 90.177,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.23,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 197.52,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "acfa005e3aff7831fc43228854b3c697bc1ed691",
+          "message": "chore(deps): bump syn from 2.0.53 to 2.0.55 (#1676)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.53 to 2.0.55.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.53...2.0.55)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-25T12:10:53+08:00",
+          "tree_id": "55ea4cb6520a029b76636713acbaa20e1bd63e31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/acfa005e3aff7831fc43228854b3c697bc1ed691"
+        },
+        "date": 1711339986699,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.05,
             "unit": "ns/op"
           }
         ]
