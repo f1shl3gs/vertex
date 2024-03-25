@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711297281294,
+  "lastUpdate": 1711339996322,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d41191fbaeeec142084dbb42d9e52de553f7575e",
-          "message": "chore(deps): bump smallvec from 1.12.0 to 1.13.0 (#1562)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.12.0 to 1.13.0.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.12.0...v1.13.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-19T11:44:08+08:00",
-          "tree_id": "d86ab246e341850206a488ea7d38ee3b93e02799",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d41191fbaeeec142084dbb42d9e52de553f7575e"
-        },
-        "date": 1705635976272,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542570,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535750,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "acfa005e3aff7831fc43228854b3c697bc1ed691",
+          "message": "chore(deps): bump syn from 2.0.53 to 2.0.55 (#1676)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.53 to 2.0.55.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.53...2.0.55)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-25T12:10:53+08:00",
+          "tree_id": "55ea4cb6520a029b76636713acbaa20e1bd63e31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/acfa005e3aff7831fc43228854b3c697bc1ed691"
+        },
+        "date": 1711339980521,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 539810,
             "unit": "ns/op"
           }
         ]
