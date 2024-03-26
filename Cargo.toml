@@ -6,8 +6,10 @@ edition = "2021"
 description = "A lightweight and ultra-fast tool for building observability pipelines"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
-
-exclude = ["tests/fixtures"]
+rust-version = "1.76"
+exclude = [
+    "tests/fixtures"
+]
 
 # This profile optimizes for runtime performance and small binary size at the expense of longer
 # build times. It's most suitable for final release builds.
