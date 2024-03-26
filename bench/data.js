@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711467122798,
+  "lastUpdate": 1711467428327,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "46f06f7aab68a32af73858f783a01677e290695f",
-          "message": "chore(deps): bump chrono from 0.4.31 to 0.4.32 (#1573)\n\n* chore(deps): bump chrono from 0.4.31 to 0.4.32\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.31 to 0.4.32.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.31...v0.4.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* style\r\n\r\n* replace chrono/clock with chrono/now\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2024-01-23T13:03:47+08:00",
-          "tree_id": "8411e7f1dfdbd64a637cd44a213c13701520455d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/46f06f7aab68a32af73858f783a01677e290695f"
-        },
-        "date": 1705986886059,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41538.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "95e2642f7f4664af97de90336fefe38bcff716dd",
           "message": "chore(deps): bump memmap2 from 0.9.3 to 0.9.4 (#1574)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.9.3 to 0.9.4.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.9.3...v0.9.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-25T20:09:21+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37477.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0ce9eebf8e355c81c57f0dd485474a5fcdf93d14",
+          "message": "chore(deps): bump serde_json from 1.0.114 to 1.0.115 (#1680)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.114 to 1.0.115.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.114...v1.0.115)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-26T23:25:33+08:00",
+          "tree_id": "451a179ff62cdbdad1387fab08505e5279c30037",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0ce9eebf8e355c81c57f0dd485474a5fcdf93d14"
+        },
+        "date": 1711467413114,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 586,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37481.4,
             "unit": "KiB"
           }
         ]
