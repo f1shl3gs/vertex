@@ -15,4 +15,4 @@ chrono = { version = "0.4.35", default-features = false, features = ["now"] }
 bytes = { version = "1.6.0", default-features = false }
 chrono = { version = "0.4.35", default-features = false, features = ["now"] }
 serde = { version = "1.0.197", default-features = false, features = ["derive"] }
-serde_json = { version = "1.0.114", default-features = false, features = ["std"] }
+serde_json = { version = "1.0.115", default-features = false, features = ["std"] }
