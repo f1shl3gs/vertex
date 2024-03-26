@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711423940738,
+  "lastUpdate": 1711424401570,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f703ccdbfd80fe39ea314b5087431e0778cd6434",
-          "message": "bump kube to 0.88.0, k8s-openapi to 0.21.0 (#1572)",
-          "timestamp": "2024-01-22T12:44:56+08:00",
-          "tree_id": "e22ed3c6fdca1fa9c903eb1ec34227f21f95b51a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f703ccdbfd80fe39ea314b5087431e0778cd6434"
-        },
-        "date": 1705899356627,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 573,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41530.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 582,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37477.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a5b85940145b00b7486ac7b711c0aa34ab43308",
+          "message": "set MSRV to 1.76 (#1679)",
+          "timestamp": "2024-03-26T11:28:31+08:00",
+          "tree_id": "023238b8f98c77089e98286de952c21e7c4d9f3a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a5b85940145b00b7486ac7b711c0aa34ab43308"
+        },
+        "date": 1711424386612,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 586,
             "unit": "s"
           },
           {
