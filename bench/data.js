@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711466967703,
+  "lastUpdate": 1711467038262,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5617eab824764274765060aa27bd16499e3e23dd",
-          "message": "chore(deps): bump uuid from 1.6.1 to 1.7.0 (#1566)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.6.1 to 1.7.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.6.1...1.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-19T21:03:06+08:00",
-          "tree_id": "e8a9f6ebfc70e324139671364402a9d4d38f084e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5617eab824764274765060aa27bd16499e3e23dd"
-        },
-        "date": 1705669503205,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 549840,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537980,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a30b39ec5cecbd65755cd0d5e063a3030be0aa59",
+          "message": "chore(deps): bump kube from 0.88.1 to 0.89.0 (#1681)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.88.1 to 0.89.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.88.1...0.89.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-26T23:28:22+08:00",
+          "tree_id": "79c9aee56313f13c7330bfb4c15226e3ff4c4a64",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a30b39ec5cecbd65755cd0d5e063a3030be0aa59"
+        },
+        "date": 1711467022252,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534940,
             "unit": "ns/op"
           }
         ]
