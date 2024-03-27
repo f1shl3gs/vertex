@@ -89,7 +89,7 @@ tripwire = { path = "../tripwire" }
 twox-hash = { version = "1.6.3", default-features = false }
 typetag = { version = "0.2.16" }
 url = { version = "2.5.0", features = ["serde"] }
-zstd = { version = "0.13.0", default-features = false }
+zstd = { version = "0.13.1", default-features = false }
 
 [target.'cfg(unix)'.dependencies]
 nix = { version = "0.28.0", default-features = false, features = ["signal"] }
