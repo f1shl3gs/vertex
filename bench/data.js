@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711467639524,
+  "lastUpdate": 1711542548737,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "5d93aa614de0505d043defec5bb05e2a18d136f1",
-          "message": "stable uuid",
-          "timestamp": "2024-01-19T23:37:14+08:00",
-          "tree_id": "3df93d1f6f59dd0d0af3fddac3075fed8d38cb47",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5d93aa614de0505d043defec5bb05e2a18d136f1"
-        },
-        "date": 1705678756275,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540020,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 534940,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d815b023cf68b7016e71aedf4323f4ef6dd6dc00",
+          "message": "chore(deps): bump chrono from 0.4.35 to 0.4.37 (#1682)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.35 to 0.4.37.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.35...v0.4.37)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-27T20:26:41+08:00",
+          "tree_id": "312b4880d89935d701d30a62c3f905f8d855eb45",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d815b023cf68b7016e71aedf4323f4ef6dd6dc00"
+        },
+        "date": 1711542533630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 535370,
             "unit": "ns/op"
           }
         ]
