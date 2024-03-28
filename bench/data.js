@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1711618223385,
+  "lastUpdate": 1711618706868,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3ce857b7257e0ea83e503bbb9bb3bc5d7171cbdd",
-          "message": "chore(ci): bump dorny/paths-filter from 2 to 3 (#1576)\n\nBumps [dorny/paths-filter](https://github.com/dorny/paths-filter) from 2 to 3.\r\n- [Release notes](https://github.com/dorny/paths-filter/releases)\r\n- [Changelog](https://github.com/dorny/paths-filter/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/dorny/paths-filter/compare/v2...v3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dorny/paths-filter\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-26T12:38:37+08:00",
-          "tree_id": "f1a4b766e1ee4da7d19a9936020517f3dc5b62ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ce857b7257e0ea83e503bbb9bb3bc5d7171cbdd"
-        },
-        "date": 1706244573099,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41534.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ea5fb06c153dc1177f5e3c7257b491e4545bf8fd",
           "message": "chore(ci): bump styfle/cancel-workflow-action from 0.12.0 to 0.12.1 (#1577)\n\nBumps [styfle/cancel-workflow-action](https://github.com/styfle/cancel-workflow-action) from 0.12.0 to 0.12.1.\r\n- [Release notes](https://github.com/styfle/cancel-workflow-action/releases)\r\n- [Commits](https://github.com/styfle/cancel-workflow-action/compare/0.12.0...0.12.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: styfle/cancel-workflow-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-26T12:39:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37824.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf83287bf3eeac8b94f58d4e0bdb2565f63c39b9",
+          "message": "chore(deps): bump zstd from 0.13.0 to 0.13.1 (#1683)\n\nBumps [zstd](https://github.com/gyscos/zstd-rs) from 0.13.0 to 0.13.1.\r\n- [Release notes](https://github.com/gyscos/zstd-rs/releases)\r\n- [Commits](https://github.com/gyscos/zstd-rs/compare/v0.13.0...v0.13.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zstd\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-03-28T17:26:28+08:00",
+          "tree_id": "0a83dca2fcafa33ae34b3807d879ef79b70f64b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf83287bf3eeac8b94f58d4e0bdb2565f63c39b9"
+        },
+        "date": 1711618691975,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 601,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37695.7,
             "unit": "KiB"
           }
         ]
