@@ -70,7 +70,7 @@ rustls-native-certs = { version = "0.6.3", default-features = false }
 smallvec = { version = "1.13.2", default-features = false }
 serde = { version = "1.0.197", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.115", default-features = false }
-serde_yaml = { version = "0.9.33", default-features = false }
+serde_yaml = { version = "0.9.34", default-features = false }
 snap = { version = "1.1.1", default-features = false }
 socket2 = { version = "0.5.6", default-features = false }
 thiserror = { version = "1.0.58" }
