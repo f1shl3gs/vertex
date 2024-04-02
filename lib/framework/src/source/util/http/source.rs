@@ -17,7 +17,6 @@ use crate::pipeline::Pipeline;
 use crate::tls::{MaybeTlsListener, TlsConfig};
 use crate::Source;
 
-#[async_trait::async_trait]
 pub trait HttpSource: Clone + Send + Sync + 'static {
     fn build_events(
         &self,

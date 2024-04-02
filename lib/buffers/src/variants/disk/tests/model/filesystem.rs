@@ -1,14 +1,10 @@
-use std::{
-    cmp,
-    collections::HashMap,
-    fmt, io,
-    path::{Path, PathBuf},
-    pin::Pin,
-    sync::Arc,
-    task::{Context, Poll},
-};
+use std::collections::HashMap;
+use std::path::{Path, PathBuf};
+use std::pin::Pin;
+use std::sync::Arc;
+use std::task::{Context, Poll};
+use std::{cmp, fmt, io};
 
-use async_trait::async_trait;
 use parking_lot::Mutex;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 
@@ -207,7 +203,6 @@ impl AsyncWrite for TestFile {
     }
 }
 
-#[async_trait]
 impl AsyncFile for TestFile {
     #[instrument(skip(self), level = "debug")]
     async fn metadata(&self) -> io::Result<Metadata> {
@@ -305,7 +300,6 @@ impl Default for TestFilesystem {
     }
 }
 
-#[async_trait]
 impl Filesystem for TestFilesystem {
     type File = TestFile;
     type MemoryMap = TestMmap;

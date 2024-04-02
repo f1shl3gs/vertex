@@ -1,6 +1,5 @@
 use std::{io, path::Path};
 
-use async_trait::async_trait;
 use tokio::io::{AsyncRead, AsyncWrite};
 
 /// File metadata.
@@ -16,7 +15,6 @@ impl Metadata {
 }
 
 /// Generalized interface for opening and deleting files from a filesystem.
-#[async_trait]
 pub trait Filesystem: Send + Sync {
     type File: AsyncFile;
     type MemoryMap: ReadableMemoryMap;
@@ -83,7 +81,6 @@ pub trait Filesystem: Send + Sync {
     async fn delete_file(&self, path: &Path) -> io::Result<()>;
 }
 
-#[async_trait]
 pub trait AsyncFile: AsyncRead + AsyncWrite + Send + Sync {
     /// Queries metadata about the underlying file.
     ///
@@ -122,7 +119,6 @@ pub trait WritableMemoryMap: ReadableMemoryMap {
 #[derive(Clone, Debug)]
 pub struct ProductionFilesystem;
 
-#[async_trait]
 impl Filesystem for ProductionFilesystem {
     type File = tokio::fs::File;
     type MemoryMap = memmap2::Mmap;
@@ -171,7 +167,6 @@ impl Filesystem for ProductionFilesystem {
     }
 }
 
-#[async_trait]
 impl AsyncFile for tokio::fs::File {
     async fn metadata(&self) -> io::Result<Metadata> {
         let metadata = self.metadata().await?;

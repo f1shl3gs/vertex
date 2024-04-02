@@ -1,4 +1,5 @@
-#[deny(clippy::cast_precision_loss)]
+#![allow(async_fn_in_trait)]
+
 mod buffer_usage_data;
 mod config;
 pub mod encoding;

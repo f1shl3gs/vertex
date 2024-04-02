@@ -6,7 +6,6 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
-use async_trait::async_trait;
 use bytes::{Buf, Bytes};
 use bytesize::ByteSizeOf;
 use event::{Event, EventFinalizers, EventStatus, Finalizable};
@@ -64,7 +63,6 @@ pub trait HttpEventEncoder<T> {
     fn encode_event(&mut self, event: Event) -> Option<T>;
 }
 
-#[async_trait]
 pub trait HttpSink: Send + Sync + 'static {
     type Input;
     type Output;
@@ -72,7 +70,10 @@ pub trait HttpSink: Send + Sync + 'static {
 
     fn build_encoder(&self) -> Self::Encoder;
 
-    async fn build_request(&self, events: Self::Output) -> crate::Result<http::Request<Bytes>>;
+    fn build_request(
+        &self,
+        events: Self::Output,
+    ) -> impl Future<Output = crate::Result<Request<Bytes>>> + Send;
 }
 
 pin_project! {
@@ -161,7 +162,7 @@ where
     ) -> Self {
         let sink = Arc::new(sink);
         let sink1 = Arc::clone(&sink);
-        let request_builder = move |b| -> BoxFuture<'static, crate::Result<http::Request<Bytes>>> {
+        let request_builder = move |b| -> BoxFuture<'static, crate::Result<Request<Bytes>>> {
             let sink = Arc::clone(&sink1);
             Box::pin(async move { sink.build_request(b).await })
         };
