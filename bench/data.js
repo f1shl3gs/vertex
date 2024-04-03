@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712146969271,
+  "lastUpdate": 1712147026314,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "eb5c87eda9f75c6487c6066c421e986ea9316e2c",
-          "message": "chore(deps): bump lru from 0.12.1 to 0.12.2 (#1587)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.1 to 0.12.2.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.1...0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-29T20:15:52+08:00",
-          "tree_id": "77ba2bb2b4f792da09e18273509588599bc443b6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eb5c87eda9f75c6487c6066c421e986ea9316e2c"
-        },
-        "date": 1706530759228,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 419.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 42438,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 209400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 420710,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 154.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 15423,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 78160,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 154200,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f7922409f4c2ad9273b6577a33a46afe02a8042d",
           "message": "chore(deps): bump indexmap from 2.2.0 to 2.2.1 (#1586)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.0 to 2.2.1.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.0...2.2.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-29T20:16:14+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 155180,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "65b58d0048f312ced9a17cc79a15f2361a58e571",
+          "message": "simplify resolve (#1692)",
+          "timestamp": "2024-04-03T20:19:55+08:00",
+          "tree_id": "254ed32c8b332abda61915d02bf5fe3ff540fe37",
+          "url": "https://github.com/f1shl3gs/vertex/commit/65b58d0048f312ced9a17cc79a15f2361a58e571"
+        },
+        "date": 1712147011332,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 438.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 43847,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 217960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 439220,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 155.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 15513,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 77746,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 155400,
             "unit": "ns/op"
           }
         ]
