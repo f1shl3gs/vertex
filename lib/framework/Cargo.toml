@@ -28,7 +28,7 @@ async-trait = { version = "0.1.79", default-features = false }
 backoff = { path = "../backoff" }
 buffers = { path = "../buffers" }
 bytes = { version = "1.6.0", default-features = false }
-chrono = { version = "0.4.37", default-features = false, features = ["clock"] }
+chrono = { version = "0.4.37", default-features = false, features = ["now"] }
 chrono-tz = { version = "0.8.6", default-features = false, features = ["serde"] }
 codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }
