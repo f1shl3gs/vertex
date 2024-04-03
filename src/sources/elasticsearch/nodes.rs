@@ -1378,6 +1378,7 @@ mod tests {
     use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine};
     use framework::config::ProxyConfig;
     use framework::http::Auth;
+    use http::header::AUTHORIZATION;
     use http::{Method, Request, Response};
     use hyper::service::{make_service_fn, service_fn};
     use hyper::Body;
@@ -1397,7 +1398,7 @@ mod tests {
         }
 
         if let Some((username, password)) = cx.auth {
-            let av = match req.headers().get("Authorization") {
+            let av = match req.headers().get(AUTHORIZATION) {
                 Some(value) => value,
                 None => return Ok(unauthorized()),
             };

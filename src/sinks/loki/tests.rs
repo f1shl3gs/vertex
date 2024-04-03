@@ -3,6 +3,7 @@ use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use framework::sink::util::testing::{build_test_server, load_sink};
 use futures_util::StreamExt;
+use http::header::AUTHORIZATION;
 use url::Url;
 
 use super::config::{healthcheck, Config};
@@ -125,6 +126,6 @@ auth:
         Some(&http::header::HeaderValue::from_static(
             "Basic dXNlcm5hbWU6c29tZV9wYXNzd29yZA=="
         )),
-        output[0].0.headers.get("authorization")
+        output[0].0.headers.get(AUTHORIZATION)
     )
 }

@@ -1008,7 +1008,6 @@ dependencies = [
  "configurable",
  "console-subscriber",
  "dyn-clone",
- "encoding_rs",
  "event",
  "exitcode",
  "flate2",

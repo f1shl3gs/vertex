@@ -4,6 +4,7 @@ use bytes::Buf;
 use configurable::Configurable;
 use framework::config::default_true;
 use framework::http::HttpClient;
+use http::header::{CACHE_CONTROL, LOCATION};
 use http::StatusCode;
 use hyper::Body;
 use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
@@ -241,7 +242,7 @@ impl QueryOptions {
 
             if !cc.is_empty() {
                 let value = cc.join(",");
-                builder = builder.header("Cache-Control", value);
+                builder = builder.header(CACHE_CONTROL, value);
             }
         }
 
@@ -335,7 +336,7 @@ impl Client {
                         Ok(body)
                     }
                     StatusCode::MOVED_PERMANENTLY => {
-                        return match parts.headers.get("Location") {
+                        return match parts.headers.get(LOCATION) {
                             Some(redirect) => {
                                 let value = redirect
                                     .to_str()

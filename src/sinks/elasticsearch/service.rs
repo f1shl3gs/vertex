@@ -1,3 +1,7 @@
+use std::collections::HashMap;
+use std::sync::Arc;
+use std::task::{Context, Poll};
+
 use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use event::{EventFinalizers, EventStatus, Finalizable};
@@ -7,10 +11,8 @@ use framework::sink::util::service::RequestConfig;
 use framework::sink::util::Compression;
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
+use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{Request, Response, Uri};
-use std::collections::HashMap;
-use std::sync::Arc;
-use std::task::{Context, Poll};
 use tower::{Service, ServiceExt};
 
 #[derive(Clone)]
@@ -74,10 +76,10 @@ impl HttpRequestBuilder {
     ) -> Result<Request<Bytes>, crate::Error> {
         let mut builder = Request::post(&self.bulk_uri);
 
-        builder = builder.header("Content-Type", "application/x-ndjson");
+        builder = builder.header(CONTENT_TYPE, "application/x-ndjson");
 
         if let Some(ce) = self.compression.content_encoding() {
-            builder = builder.header("Content-Encoding", ce);
+            builder = builder.header(CONTENT_ENCODING, ce);
         }
 
         for (k, v) in &self.request_config.headers {

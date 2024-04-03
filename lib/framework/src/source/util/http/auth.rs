@@ -1,5 +1,6 @@
 use configurable::Configurable;
 use headers::{Authorization, HeaderMapExt};
+use http::header::AUTHORIZATION;
 use http::{HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
 
@@ -24,7 +25,7 @@ impl TryFrom<Option<&HttpSourceAuthConfig>> for HttpSourceAuth {
                 let token = Authorization::basic(&config.username, &config.password);
                 headers.typed_insert(token);
 
-                match headers.get("authorization") {
+                match headers.get(AUTHORIZATION) {
                     Some(value) => {
                         let token = value
                             .to_str()

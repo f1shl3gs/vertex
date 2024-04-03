@@ -5,6 +5,7 @@ use framework::http::{HttpClient, HttpError};
 use framework::sink::util::http::{HttpEventEncoder, HttpRetryLogic, HttpSink};
 use framework::sink::util::retries::{RetryAction, RetryLogic};
 use framework::HealthcheckError;
+use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{Request, StatusCode, Uri};
 use hyper::Body;
 
@@ -48,10 +49,10 @@ impl HttpSink for Config {
         )
         .expect("unable to encode uri");
 
-        let mut builder = Request::post(&uri).header("Content-Type", "application/x-ndjson");
+        let mut builder = Request::post(&uri).header(CONTENT_TYPE, "application/x-ndjson");
 
         if let Some(ce) = self.compression.content_encoding() {
-            builder = builder.header("Content-Encoding", ce);
+            builder = builder.header(CONTENT_ENCODING, ce);
         }
 
         let mut request = builder.body(events.freeze())?;

@@ -34,7 +34,7 @@ impl ElasticsearchCommon {
         let mut builder = Request::post(&url);
 
         if let Some(ce) = self.request_builder.compression.content_encoding() {
-            builder = builder.header("Content-Encoding", ce);
+            builder = builder.header(CONTENT_ENCODING, ce);
         }
 
         for (k, v) in &self.request.headers {
@@ -59,7 +59,7 @@ impl ElasticsearchCommon {
     async fn query(&self, base_url: &str, index: &str) -> crate::Result<serde_json::Value> {
         let mut builder = Request::get(format!("{}/{}/_search", base_url, index));
         if let Some(ce) = self.request_builder.compression.content_encoding() {
-            builder = builder.header("Content-Encoding", ce);
+            builder = builder.header(CONTENT_ENCODING, ce);
         }
 
         for (k, v) in &self.request.headers {
@@ -70,7 +70,7 @@ impl ElasticsearchCommon {
             builder = auth.apply_builder(builder);
         }
 
-        builder = builder.header("Content-Type", "application/json");
+        builder = builder.header(CONTENT_TYPE, "application/json");
         let req = builder.body(Bytes::from(r#"{"query":{"query_string":{"query":"*"}}}"#))?;
         let proxy = ProxyConfig::default();
         let client = HttpClient::new(&self.tls, &proxy).expect("Could not build client to query");
@@ -405,7 +405,7 @@ async fn insert_events_over_https() {
 async fn create_template_index(common: &ElasticsearchCommon, name: &str) -> crate::Result<()> {
     let mut builder = Request::put(format!("{}/_index_template/{}", common.base_url, name));
     if let Some(ce) = common.request_builder.compression.content_encoding() {
-        builder = builder.header("Content-Encoding", ce);
+        builder = builder.header(CONTENT_ENCODING, ce);
     }
 
     for (k, v) in &common.request.headers {
@@ -416,7 +416,7 @@ async fn create_template_index(common: &ElasticsearchCommon, name: &str) -> crat
         builder = auth.apply_builder(builder);
     }
 
-    builder = builder.header("Content-Type", "application/json");
+    builder = builder.header(CONTENT_TYPE, "application/json");
     let req = builder
         .body(Bytes::from(
             r#"{"index_patterns":["*-*"],"data_stream":{}}"#,
@@ -437,7 +437,7 @@ async fn create_template_index(common: &ElasticsearchCommon, name: &str) -> crat
 async fn create_data_stream(common: &ElasticsearchCommon, name: &str) -> crate::Result<()> {
     let mut builder = Request::put(format!("{}/_data_stream/{}", common.base_url, name));
     if let Some(ce) = common.request_builder.compression.content_encoding() {
-        builder = builder.header("Content-Encoding", ce);
+        builder = builder.header(CONTENT_ENCODING, ce);
     }
 
     for (k, v) in &common.request.headers {
@@ -448,7 +448,7 @@ async fn create_data_stream(common: &ElasticsearchCommon, name: &str) -> crate::
         builder = auth.apply_builder(builder);
     }
 
-    builder = builder.header("Content-Type", "application/json");
+    builder = builder.header(CONTENT_TYPE, "application/json");
     let req = builder.body(Bytes::from("")).unwrap();
     let proxy = ProxyConfig::default();
     let client = HttpClient::new(&common.tls, &proxy).unwrap();

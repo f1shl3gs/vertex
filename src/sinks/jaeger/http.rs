@@ -10,6 +10,7 @@ use framework::sink::util::{Buffer, Compression};
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures_util::{FutureExt, SinkExt};
+use http::header::CONTENT_TYPE;
 use http::Request;
 use hyper::Body;
 use serde::{Deserialize, Serialize};
@@ -86,7 +87,7 @@ impl HttpSink for HttpSinkConfig {
 
     async fn build_request(&self, events: Self::Output) -> framework::Result<Request<Bytes>> {
         let req = Request::post(&self.endpoint)
-            .header("Content-Type", "application/vnd.apache.thrift.binary")
+            .header(CONTENT_TYPE, "application/vnd.apache.thrift.binary")
             .body(events.freeze())?;
 
         Ok(req)

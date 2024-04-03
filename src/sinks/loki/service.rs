@@ -5,7 +5,7 @@ use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
-use http::header::CONTENT_ENCODING;
+use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::StatusCode;
 use thiserror::Error;
 use tower::Service;
@@ -92,7 +92,7 @@ impl Service<LokiRequest> for LokiService {
 
     fn call(&mut self, request: LokiRequest) -> Self::Future {
         let mut builder = http::Request::post(self.endpoint.as_str())
-            .header("Content-Type", "application/x-protobuf");
+            .header(CONTENT_TYPE, "application/x-protobuf");
 
         if let Some(content_encoding) = self.content_encoding {
             builder = builder.header(CONTENT_ENCODING, content_encoding);
