@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712156114908,
+  "lastUpdate": 1712177945512,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3a12798871c578b1b575103ac29ca7b8257a8853",
-          "message": "chore(deps): bump serde_json from 1.0.112 to 1.0.113 (#1588)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.112 to 1.0.113.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.112...v1.0.113)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-29T20:16:29+08:00",
-          "tree_id": "5872e14992408edd80e55e196b2f549b17212f98",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3a12798871c578b1b575103ac29ca7b8257a8853"
-        },
-        "date": 1706530706876,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 547660,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535040,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd6f66a9d76dc6f68d9059c2bcdbf87c22bb8af3",
+          "message": "replace chrono feature clock with now (#1695)",
+          "timestamp": "2024-04-04T04:56:42+08:00",
+          "tree_id": "f8caff8e250ce7a60db3b69ebec91b0e6ce4293f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd6f66a9d76dc6f68d9059c2bcdbf87c22bb8af3"
+        },
+        "date": 1712177930547,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536350,
             "unit": "ns/op"
           }
         ]
