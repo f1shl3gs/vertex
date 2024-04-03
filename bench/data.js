@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712177945512,
+  "lastUpdate": 1712179381045,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f9c9d8b4e14fbfbe7a59c71e8028208ed901cef3",
-          "message": "chore(deps): bump serde_yaml from 0.9.30 to 0.9.31 (#1585)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.30 to 0.9.31.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.30...0.9.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-29T20:27:07+08:00",
-          "tree_id": "00c8dcb29973981a2facbb7f7622cfa968220bc8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f9c9d8b4e14fbfbe7a59c71e8028208ed901cef3"
-        },
-        "date": 1706531341393,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 547440,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 536350,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7a347162427ffb78a279881f73b546f66f9b5349",
+          "message": "chore(deps): bump kube from 0.89.0 to 0.90.0 (#1694)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.89.0 to 0.90.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.89.0...0.90.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-04T05:20:33+08:00",
+          "tree_id": "50b70284f1c84750599582029de25de1bc11e485",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7a347162427ffb78a279881f73b546f66f9b5349"
+        },
+        "date": 1712179364771,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 533980,
             "unit": "ns/op"
           }
         ]
