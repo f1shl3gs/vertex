@@ -9,6 +9,7 @@ use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::util::http::{decode, ErrorMessage};
 use framework::source::util::http::{HttpSource, HttpSourceAuthConfig};
 use framework::{tls::TlsConfig, Source};
+use http::header::CONTENT_ENCODING;
 use http::{HeaderMap, Method, StatusCode, Uri};
 use prometheus::{proto, GroupKind, MetricGroup};
 use prost::Message;
@@ -85,7 +86,7 @@ impl HttpSource for RemoteWriteSource {
         mut body: Bytes,
     ) -> Result<Vec<Event>, ErrorMessage> {
         if headers
-            .get("Content-Encoding")
+            .get(CONTENT_ENCODING)
             .map(|header| header.as_ref())
             .is_some()
         {

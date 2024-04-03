@@ -9,6 +9,7 @@ use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::Extension;
 use futures_util::FutureExt;
+use http::header::CONTENT_TYPE;
 use http::{Method, Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
@@ -73,7 +74,7 @@ async fn http_handle(req: Request<Body>) -> framework::Result<Response<Body>> {
             let data = serde_json::to_vec(&stats.metrics)?;
 
             let resp = Response::builder()
-                .header("content-type", "application/json")
+                .header(CONTENT_TYPE, "application/json")
                 .status(StatusCode::OK)
                 .body(Body::from(data))?;
 

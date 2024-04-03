@@ -5,6 +5,7 @@ use bytes::Bytes;
 use event::{BatchNotifier, BatchStatus, BatchStatusReceiver, Event};
 use futures::TryFutureExt;
 use futures_util::FutureExt;
+use http::header::AUTHORIZATION;
 use http::{HeaderMap, Method, Request, Response, StatusCode, Uri};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
@@ -83,7 +84,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
 
                         // authorization
                         let headers = &parts.headers;
-                        if !inner.auth.validate(headers.get("authorization")) {
+                        if !inner.auth.validate(headers.get(AUTHORIZATION)) {
                             let resp = Response::builder()
                                 .status(StatusCode::UNAUTHORIZED)
                                 .body(Body::empty())

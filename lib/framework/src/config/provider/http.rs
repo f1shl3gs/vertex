@@ -8,7 +8,8 @@ use bytes::Buf;
 use chunk::ChunkedDecoder;
 use configurable::{configurable_component, Configurable};
 use futures::{Stream, StreamExt, TryStreamExt};
-use http::{header, Request, Response};
+use http::header::{ACCEPT, TRANSFER_ENCODING};
+use http::{Request, Response};
 use hyper::Body;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
@@ -94,7 +95,7 @@ async fn http_request(
     proxy: &ProxyConfig,
 ) -> Result<Response<Body>, crate::Error> {
     let client = HttpClient::new(tls_config, proxy)?;
-    let mut builder = Request::get(url.as_str()).header(header::ACCEPT, "application/yaml");
+    let mut builder = Request::get(url.as_str()).header(ACCEPT, "application/yaml");
     for (key, value) in headers {
         builder = builder.header(key, value);
     }
@@ -106,7 +107,7 @@ async fn http_request(
 fn watchable_response(resp: &Response<Body>) -> bool {
     const CHUNKED: &str = "chunked";
 
-    match resp.headers().get("Transfer-Encoding") {
+    match resp.headers().get(TRANSFER_ENCODING) {
         Some(value) => match value.to_str() {
             Ok(value) => value.contains(CHUNKED),
             Err(_err) => false,

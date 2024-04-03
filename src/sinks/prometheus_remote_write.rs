@@ -18,6 +18,7 @@ use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{future::BoxFuture, stream, FutureExt, SinkExt};
+use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{StatusCode, Uri};
 use hyper::{body, Body};
 use prost::Message;
@@ -171,8 +172,8 @@ impl Service<PartitionInnerBuffer<Vec<Metric>, PartitionKey>> for RemoteWriteSer
 
         let mut builder = http::Request::post(&self.endpoint)
             .header("X-Prometheus-Remote-Write-Version", "0.1.0")
-            .header("Content-Encoding", "snappy")
-            .header("Content-Type", "application/x-protobuf");
+            .header(CONTENT_ENCODING, "snappy")
+            .header(CONTENT_TYPE, "application/x-protobuf");
         if let Some(tenant_id) = key.tenant {
             builder = builder.header("X-Scope-OrgID", tenant_id);
         }
@@ -263,8 +264,8 @@ mod tests {
             assert_eq!(parts.uri.path(), "/write");
             let headers = parts.headers;
             assert_eq!(headers["x-prometheus-remote-write-version"], "0.1.0");
-            assert_eq!(headers["content-encoding"], "snappy");
-            assert_eq!(headers["content-type"], "application/x-protobuf");
+            assert_eq!(headers[CONTENT_ENCODING], "snappy");
+            assert_eq!(headers[CONTENT_TYPE], "application/x-protobuf");
 
             if config.auth.is_some() {
                 assert!(headers.contains_key("authorization"));

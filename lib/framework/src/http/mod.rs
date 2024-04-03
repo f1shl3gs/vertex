@@ -8,7 +8,9 @@ use std::task::{Context, Poll};
 use configurable::Configurable;
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
-use http::header::{AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION, SET_COOKIE};
+use http::header::{
+    ACCEPT_ENCODING, AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION, SET_COOKIE, USER_AGENT,
+};
 use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
 use hyper::body::{Body, HttpBody};
 use hyper::client::{self, Client, HttpConnector};
@@ -181,18 +183,16 @@ where
 }
 
 fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue) {
-    if !request.headers().contains_key("User-Agent") {
-        request
-            .headers_mut()
-            .insert("User-Agent", user_agent.clone());
+    if !request.headers().contains_key(USER_AGENT) {
+        request.headers_mut().insert(USER_AGENT, user_agent.clone());
     }
 
-    if !request.headers().contains_key("Accept-Encoding") {
+    if !request.headers().contains_key(ACCEPT_ENCODING) {
         // hardcoding until we support compressed responses:
         // https://github.com/timberio/vector/issues/5440
         request
             .headers_mut()
-            .insert("Accept-Encoding", HeaderValue::from_static("identity"));
+            .insert(ACCEPT_ENCODING, HeaderValue::from_static("identity"));
     }
 }
 
@@ -343,6 +343,7 @@ mod tests {
     use std::convert::Infallible;
     use std::time::Duration;
 
+    use http::header::USER_AGENT;
     use http::{Method, Response};
     use hyper::service::{make_service_fn, service_fn};
     use hyper::Server;
@@ -356,26 +357,26 @@ mod tests {
         let mut request = Request::post("http://example.com").body(()).unwrap();
         default_request_headers(&mut request, &user_agent);
         assert_eq!(
-            request.headers().get("Accept-Encoding"),
+            request.headers().get(ACCEPT_ENCODING),
             Some(&HeaderValue::from_static("identity")),
         );
-        assert_eq!(request.headers().get("User-Agent"), Some(&user_agent));
+        assert_eq!(request.headers().get(USER_AGENT), Some(&user_agent));
     }
 
     #[test]
     fn test_default_request_headers_does_not_overwrite() {
         let mut request = Request::post("http://example.com")
-            .header("Accept-Encoding", "gzip")
-            .header("User-Agent", "foo")
+            .header(ACCEPT_ENCODING, "gzip")
+            .header(USER_AGENT, "foo")
             .body(())
             .unwrap();
         default_request_headers(&mut request, &HeaderValue::from_static("Vertex"));
         assert_eq!(
-            request.headers().get("Accept-Encoding"),
+            request.headers().get(ACCEPT_ENCODING),
             Some(&HeaderValue::from_static("gzip")),
         );
         assert_eq!(
-            request.headers().get("User-Agent"),
+            request.headers().get(USER_AGENT),
             Some(&HeaderValue::from_static("foo"))
         );
     }
