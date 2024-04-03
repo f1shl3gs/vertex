@@ -6,7 +6,7 @@ edition = "2021"
 description = "A lightweight and ultra-fast tool for building observability pipelines"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
-rust-version = "1.76"
+rust-version = "1.77"
 exclude = [
     "tests/fixtures"
 ]

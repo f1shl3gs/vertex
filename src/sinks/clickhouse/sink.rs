@@ -1,4 +1,3 @@
-use async_trait::async_trait;
 use bytes::{BufMut, Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use event::Event;
@@ -28,7 +27,6 @@ impl HttpEventEncoder<BytesMut> for ClickhouseEventEncoder {
     }
 }
 
-#[async_trait]
 impl HttpSink for Config {
     type Input = BytesMut;
     type Output = BytesMut;

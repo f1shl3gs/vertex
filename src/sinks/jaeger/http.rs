@@ -1,4 +1,3 @@
-use async_trait::async_trait;
 use bytes::{Bytes, BytesMut};
 use configurable::Configurable;
 use event::Event;
@@ -76,7 +75,6 @@ impl HttpEventEncoder<BytesMut> for JaegerEventEncoder {
     }
 }
 
-#[async_trait]
 impl HttpSink for HttpSinkConfig {
     type Input = BytesMut;
     type Output = BytesMut;
