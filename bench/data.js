@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712156072971,
+  "lastUpdate": 1712156114908,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f7922409f4c2ad9273b6577a33a46afe02a8042d",
-          "message": "chore(deps): bump indexmap from 2.2.0 to 2.2.1 (#1586)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.0 to 2.2.1.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.0...2.2.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-29T20:16:14+08:00",
-          "tree_id": "80b488807db25030cfa638cd3430dfee155c458e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f7922409f4c2ad9273b6577a33a46afe02a8042d"
-        },
-        "date": 1706531222422,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 20347000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 508790,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.056,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3a12798871c578b1b575103ac29ca7b8257a8853",
           "message": "chore(deps): bump serde_json from 1.0.112 to 1.0.113 (#1588)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.112 to 1.0.113.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.112...v1.0.113)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-29T20:16:29+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.823,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0bbcc0b7a7b4f10cca00496b2997863a2e21ff32",
+          "message": "chore(deps): bump netlink-sys from 0.8.5 to 0.8.6 (#1693)\n\nBumps [netlink-sys](https://github.com/rust-netlink/netlink-sys) from 0.8.5 to 0.8.6.\r\n- [Release notes](https://github.com/rust-netlink/netlink-sys/releases)\r\n- [Changelog](https://github.com/rust-netlink/netlink-sys/blob/main/CHANGELOG)\r\n- [Commits](https://github.com/rust-netlink/netlink-sys/compare/v0.8.5...v0.8.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: netlink-sys\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-03T22:42:49+08:00",
+          "tree_id": "2da214b5f0d0a5ca1415d76e9355f3d6bff14761",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0bbcc0b7a7b4f10cca00496b2997863a2e21ff32"
+        },
+        "date": 1712156098146,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 26275000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 447820,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.48,
             "unit": "ns/op"
           }
         ]
