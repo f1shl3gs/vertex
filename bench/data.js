@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712133188824,
+  "lastUpdate": 1712133644331,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0b4a704199c7b9dce197d734b34674770ff940d1",
-          "message": "chore(deps): bump indexmap from 2.1.0 to 2.2.0 (#1584)\n\n* chore(deps): bump indexmap from 2.1.0 to 2.2.0\r\n\r\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.1.0 to 2.2.0.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.1.0...2.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecate method warning\r\n\r\n* replace swap_remove with shift_remove to keep orders of the IndexMap/IndexSet\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2024-01-29T03:58:37+08:00",
-          "tree_id": "a9f4485ea7196d4f938c2f9a5e22028f67ac06e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0b4a704199c7b9dce197d734b34674770ff940d1"
-        },
-        "date": 1706472580148,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41507,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eb5c87eda9f75c6487c6066c421e986ea9316e2c",
           "message": "chore(deps): bump lru from 0.12.1 to 0.12.2 (#1587)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.1 to 0.12.2.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.1...0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-29T20:15:52+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37729.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f176e839b0a5f8ed3f3230db8525c491d0923d31",
+          "message": "chore(deps): bump syn from 2.0.57 to 2.0.58 (#1690)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.57 to 2.0.58.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.57...2.0.58)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-03T16:29:14+08:00",
+          "tree_id": "9a66184ab17193a40bd099bb8c26fdfbf9f263a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f176e839b0a5f8ed3f3230db8525c491d0923d31"
+        },
+        "date": 1712133629442,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37729.9,
             "unit": "KiB"
           }
         ]
