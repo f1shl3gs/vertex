@@ -1,20 +1,28 @@
-use std::net::{Ipv4Addr, SocketAddr};
+use std::net::SocketAddr;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::future::BoxFuture;
+use hickory_resolver::lookup::{Lookup, LookupIntoIter};
+use hickory_resolver::proto::op::Query;
+use hickory_resolver::proto::rr::rdata::A;
+use hickory_resolver::proto::rr::RData;
 use hickory_resolver::{system_conf, TokioAsyncResolver};
 use hyper::client::connect::dns::Name;
 use thiserror::Error;
 use tower::Service;
 
-pub struct LookupIp(std::vec::IntoIter<SocketAddr>);
+pub struct LookupIp(LookupIntoIter);
 
 impl Iterator for LookupIp {
     type Item = SocketAddr;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.0.next()
+        self.0.next().map(|rdata| match rdata {
+            RData::A(a) => SocketAddr::from((a.0, 0)),
+            RData::AAAA(aaaa) => SocketAddr::from((aaaa.0, 0)),
+            _ => panic!("invalid resolve response"),
+        })
     }
 }
 
@@ -39,31 +47,16 @@ impl Resolver {
     }
 
     pub async fn lookup_ip(&self, name: &str) -> Result<LookupIp, DnsError> {
-        // We need to add port with the name so that `to_socket_addrs`
-        // resolves it properly. We will be discarding the port afterwards.
-        //
-        // Any port will do, but `9` is a well defined port for discarding
-        // packets.
-        let dummy_port = 9;
-        // https://tools.ietf.org/html/rfc6761#section-6.3
-        if name == "localhost" {
+        let lookup = if name == "localhost" {
             // Not all operating systems support `localhost` as IPv6 `::1`, so
             // we resolving it to it's IPv4 value.
-            Ok(LookupIp(
-                vec![SocketAddr::new(Ipv4Addr::LOCALHOST.into(), dummy_port)].into_iter(),
-            ))
+            Lookup::from_rdata(Query::default(), RData::A(A::new(127, 0, 0, 1)))
         } else {
-            let addrs = self
-                .0
-                .lookup_ip(name)
-                .await
-                .map_err(DnsError::Resolve)?
-                .iter()
-                .map(|addr| SocketAddr::new(addr, 0))
-                .collect::<Vec<_>>();
+            let inner = self.0.lookup_ip(name).await.map_err(DnsError::Resolve)?;
+            Lookup::from(inner)
+        };
 
-            Ok(LookupIp(addrs.into_iter()))
-        }
+        Ok(LookupIp(lookup.into_iter()))
     }
 }
 
