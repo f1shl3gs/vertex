@@ -1020,7 +1020,7 @@ dependencies = [
  "http 0.2.12",
  "humanize",
  "hyper 0.14.28",
- "hyper-rustls 0.24.2",
+ "hyper-rustls",
  "indexmap 2.2.6",
  "inventory",
  "ipnet",
@@ -1546,20 +1546,6 @@ dependencies = [
 
 [[package]]
 name = "hyper-rustls"
-version = "0.24.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec3efd23720e2049821a693cbc7e65ea87c72f1c58ff2f9522ff332b1491e590"
-dependencies = [
- "futures-util",
- "http 0.2.12",
- "hyper 0.14.28",
- "rustls 0.21.10",
- "tokio",
- "tokio-rustls 0.24.1",
-]
-
-[[package]]
-name = "hyper-rustls"
 version = "0.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "736f15a50e749d033164c56c09783b6102c4ff8da79ad77dbddbbaea0f8567f7"
@@ -1951,7 +1937,7 @@ dependencies = [
  "http-body 1.0.0",
  "http-body-util",
  "hyper 1.2.0",
- "hyper-rustls 0.27.0",
+ "hyper-rustls",
  "hyper-timeout 0.5.1",
  "hyper-util",
  "jsonpath-rust",
