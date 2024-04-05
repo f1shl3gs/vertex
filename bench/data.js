@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712179963167,
+  "lastUpdate": 1712347596492,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fcfc5792faba293dd49873ee832d59770cc5c55d",
-          "message": "chore(deps): bump libc from 0.2.152 to 0.2.153 (#1589)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.152 to 0.2.153.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.152...0.2.153)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-01T17:45:29+08:00",
-          "tree_id": "33624d9ab8a50f9c226dd09a04fe83049c350a04",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fcfc5792faba293dd49873ee832d59770cc5c55d"
-        },
-        "date": 1706780848952,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 550510,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 533980,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cb794b3cb3b96e3d633970411044ba67d316fc7b",
+          "message": "chore(deps): bump h2 from 0.3.25 to 0.3.26 (#1697)\n\nBumps [h2](https://github.com/hyperium/h2) from 0.3.25 to 0.3.26.\r\n- [Release notes](https://github.com/hyperium/h2/releases)\r\n- [Changelog](https://github.com/hyperium/h2/blob/v0.3.26/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/h2/compare/v0.3.25...v0.3.26)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: h2\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-06T04:04:25+08:00",
+          "tree_id": "9304747482c1e6466f91fe459f1bff90fbd93892",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cb794b3cb3b96e3d633970411044ba67d316fc7b"
+        },
+        "date": 1712347581340,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534720,
             "unit": "ns/op"
           }
         ]
