@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712348398166,
+  "lastUpdate": 1712348405516,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "48cb1d70893621a3a673acfe6ec25ad64711b213",
-          "message": "remove unnecessary lint (#1592)",
-          "timestamp": "2024-02-04T23:14:24+08:00",
-          "tree_id": "9d64be07a4c75e23c7f350f4342f6225be41f799",
-          "url": "https://github.com/f1shl3gs/vertex/commit/48cb1d70893621a3a673acfe6ec25ad64711b213"
-        },
-        "date": 1707060325762,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 576,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41458,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a51dabc9d7d68e9e9ce36a1219606eb5854664d6",
           "message": "fix some lint warnings (#1593)",
           "timestamp": "2024-02-05T02:29:12+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37832.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64ae894c99bb7a356acc9eb12834319a0a560d3e",
+          "message": "chore(deps): bump chrono-tz from 0.8.6 to 0.9.0 (#1699)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.8.6 to 0.9.0.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Changelog](https://github.com/chronotope/chrono-tz/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono-tz/compare/v0.8.6...v0.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-06T04:08:34+08:00",
+          "tree_id": "f50b0ce658d9211d2fcf438b626c5a4d05628f7b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/64ae894c99bb7a356acc9eb12834319a0a560d3e"
+        },
+        "date": 1712348390440,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37836.5,
             "unit": "KiB"
           }
         ]
