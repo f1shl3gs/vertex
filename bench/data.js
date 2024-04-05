@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712347849362,
+  "lastUpdate": 1712347852297,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d07f4562d171f516a13f08ad8fd2fc0fa80513d5",
-          "message": "chore(deps): bump tokio from 1.35.1 to 1.36.0 (#1591)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.35.1 to 1.36.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.35.1...tokio-1.36.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-03T19:47:54+08:00",
-          "tree_id": "64433eeaee600d049fe95377d5fac5503a0c3920",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d07f4562d171f516a13f08ad8fd2fc0fa80513d5"
-        },
-        "date": 1706960988365,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 537450,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64ae894c99bb7a356acc9eb12834319a0a560d3e",
+          "message": "chore(deps): bump chrono-tz from 0.8.6 to 0.9.0 (#1699)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.8.6 to 0.9.0.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Changelog](https://github.com/chronotope/chrono-tz/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono-tz/compare/v0.8.6...v0.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-06T04:08:34+08:00",
+          "tree_id": "f50b0ce658d9211d2fcf438b626c5a4d05628f7b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/64ae894c99bb7a356acc9eb12834319a0a560d3e"
+        },
+        "date": 1712347836920,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 531330,
             "unit": "ns/op"
           }
         ]
