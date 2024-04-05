@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712347852297,
+  "lastUpdate": 1712347867744,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3a12798871c578b1b575103ac29ca7b8257a8853",
-          "message": "chore(deps): bump serde_json from 1.0.112 to 1.0.113 (#1588)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.112 to 1.0.113.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.112...v1.0.113)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-01-29T20:16:29+08:00",
-          "tree_id": "5872e14992408edd80e55e196b2f549b17212f98",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3a12798871c578b1b575103ac29ca7b8257a8853"
-        },
-        "date": 1706530743836,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.825,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 142.41,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 321.27,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 633.46,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f9c9d8b4e14fbfbe7a59c71e8028208ed901cef3",
           "message": "chore(deps): bump serde_yaml from 0.9.30 to 0.9.31 (#1585)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.30 to 0.9.31.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.30...0.9.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-01-29T20:27:07+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 784.49,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bc9683a5572d0bda80b0a1ec2de28e7a5b1eb266",
+          "message": "chore(deps): bump the prost group with 3 updates (#1698)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.3 to 0.12.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.3...v0.12.4)\r\n\r\nUpdates `prost-types` from 0.12.3 to 0.12.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.3...v0.12.4)\r\n\r\nUpdates `prost-build` from 0.12.3 to 0.12.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.3...v0.12.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-06T04:08:09+08:00",
+          "tree_id": "78a9e7a89361c5da56cec68513f3d0a93f67a238",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bc9683a5572d0bda80b0a1ec2de28e7a5b1eb266"
+        },
+        "date": 1712347852383,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.997,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 156.33,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 348.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 744.35,
             "unit": "ns/op"
           }
         ]
