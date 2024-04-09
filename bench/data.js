@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712348405516,
+  "lastUpdate": 1712685598534,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "48cb1d70893621a3a673acfe6ec25ad64711b213",
-          "message": "remove unnecessary lint (#1592)",
-          "timestamp": "2024-02-04T23:14:24+08:00",
-          "tree_id": "9d64be07a4c75e23c7f350f4342f6225be41f799",
-          "url": "https://github.com/f1shl3gs/vertex/commit/48cb1d70893621a3a673acfe6ec25ad64711b213"
-        },
-        "date": 1707059777101,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540320,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531330,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b",
+          "message": "chore(deps): bump pem from 3.0.3 to 3.0.4 (#1700)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.3 to 3.0.4.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.3...v3.0.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-10T01:57:40+08:00",
+          "tree_id": "e0112da000d9b31a2eaba10d5f68692daf165356",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b"
+        },
+        "date": 1712685583564,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536870,
             "unit": "ns/op"
           }
         ]
