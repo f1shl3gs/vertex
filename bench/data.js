@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712685600418,
+  "lastUpdate": 1712686149888,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a51dabc9d7d68e9e9ce36a1219606eb5854664d6",
-          "message": "fix some lint warnings (#1593)",
-          "timestamp": "2024-02-05T02:29:12+08:00",
-          "tree_id": "a10635ebd4b6622b726ebea23dbdfafa728cc5fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a51dabc9d7d68e9e9ce36a1219606eb5854664d6"
-        },
-        "date": 1707071992427,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 565,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41458,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "039b42f1a86e66415389b2c09e92deae9f730114",
           "message": "remove unnecessary debug derive (#1594)",
           "timestamp": "2024-02-06T18:45:53+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37836.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b",
+          "message": "chore(deps): bump pem from 3.0.3 to 3.0.4 (#1700)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.3 to 3.0.4.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.3...v3.0.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-10T01:57:40+08:00",
+          "tree_id": "e0112da000d9b31a2eaba10d5f68692daf165356",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b"
+        },
+        "date": 1712686134717,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 590,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37832.1,
             "unit": "KiB"
           }
         ]
