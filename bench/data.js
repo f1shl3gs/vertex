@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712790082130,
+  "lastUpdate": 1712790100086,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "039b42f1a86e66415389b2c09e92deae9f730114",
-          "message": "remove unnecessary debug derive (#1594)",
-          "timestamp": "2024-02-06T18:45:53+08:00",
-          "tree_id": "4cb6c787d848d21b540eb8ee5cf8d962ff47556e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/039b42f1a86e66415389b2c09e92deae9f730114"
-        },
-        "date": 1707216471031,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540090,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e823db9fc4991efc6b0a2040d19f9b17e2ba78bb",
+          "message": "chore(deps): bump encoding_rs from 0.8.33 to 0.8.34 (#1702)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.33 to 0.8.34.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.33...v0.8.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-11T06:59:14+08:00",
+          "tree_id": "6e5c98610ac2debd9c1a3168b6aa320f005f1ffb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e823db9fc4991efc6b0a2040d19f9b17e2ba78bb"
+        },
+        "date": 1712790084095,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 543330,
             "unit": "ns/op"
           }
         ]
