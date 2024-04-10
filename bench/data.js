@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712790100086,
+  "lastUpdate": 1712790110854,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a51dabc9d7d68e9e9ce36a1219606eb5854664d6",
-          "message": "fix some lint warnings (#1593)",
-          "timestamp": "2024-02-05T02:29:12+08:00",
-          "tree_id": "a10635ebd4b6622b726ebea23dbdfafa728cc5fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a51dabc9d7d68e9e9ce36a1219606eb5854664d6"
-        },
-        "date": 1707071472376,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.519,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 90.983,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 181.41,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.38,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e823db9fc4991efc6b0a2040d19f9b17e2ba78bb",
+          "message": "chore(deps): bump encoding_rs from 0.8.33 to 0.8.34 (#1702)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.33 to 0.8.34.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.33...v0.8.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-11T06:59:14+08:00",
+          "tree_id": "6e5c98610ac2debd9c1a3168b6aa320f005f1ffb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e823db9fc4991efc6b0a2040d19f9b17e2ba78bb"
+        },
+        "date": 1712790094709,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.202,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.816,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.79,
             "unit": "ns/op"
           }
         ]
