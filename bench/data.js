@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712807380664,
+  "lastUpdate": 1712807979538,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bf3127bf07654a56faa59175910b1d1db093ef8e",
-          "message": "chore(deps): bump num-traits from 0.2.17 to 0.2.18 (#1595)\n\nBumps [num-traits](https://github.com/rust-num/num-traits) from 0.2.17 to 0.2.18.\r\n- [Changelog](https://github.com/rust-num/num-traits/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/rust-num/num-traits/compare/num-traits-0.2.17...num-traits-0.2.18)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: num-traits\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-08T19:53:56+08:00",
-          "tree_id": "6b0f983d75734f0450a158477b980488bdfad5cd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bf3127bf07654a56faa59175910b1d1db093ef8e"
-        },
-        "date": 1707393352971,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 546310,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 543330,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd14085a024cc3467fa58ccd1e262f3b39e11bef",
+          "message": "cargo update (#1704)",
+          "timestamp": "2024-04-11T11:57:18+08:00",
+          "tree_id": "744643c16dce422eb98f102c015684019237abb1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd14085a024cc3467fa58ccd1e262f3b39e11bef"
+        },
+        "date": 1712807964468,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 531270,
             "unit": "ns/op"
           }
         ]
