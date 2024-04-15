@@ -1,28 +1,40 @@
-use std::fs::Permissions;
 use std::io;
-use std::io::{Cursor, Read, Write};
-use std::net::Shutdown;
-use std::os::unix::fs::PermissionsExt;
+use std::io::Cursor;
+use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use bytes::Buf;
-use configurable::configurable_component;
+use configurable::{configurable_component, Configurable};
 use event::{tags, Metric};
 use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
-use tokio::net::UnixDatagram;
+use serde::{Deserialize, Serialize};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::{UdpSocket, UnixSocket};
 use tokio::time::timeout;
 
-const BUFFER_SIZE: usize = 104;
+const BUFFER_SIZE: usize = 108;
 
 const PROTOCOL_VERSION: u8 = 6;
 const PACKET_REQUEST: u8 = 1;
 const PACKET_RESPONSE: u8 = 2;
 
-fn default_address() -> PathBuf {
-    "/var/run/chrony/chronyd.sock".into()
+#[derive(Clone, Debug, Deserialize, Serialize, Configurable)]
+#[serde(untagged)]
+enum ServerAddr {
+    // 127.0.0.1:323
+    SocketAddr(SocketAddr),
+
+    // /var/run/chrony/chronyd.sock
+    Unix(PathBuf),
+}
+
+impl Default for ServerAddr {
+    fn default() -> Self {
+        ServerAddr::SocketAddr(SocketAddr::from(([127, 0, 0, 1], 323)))
+    }
 }
 
 const fn default_timeout() -> Duration {
@@ -39,9 +51,9 @@ struct Config {
     /// The Address on where to communicate to `chronyd`.
     ///
     /// Make sure vertex has the right permission to access this address.
-    #[serde(default = "default_address")]
+    #[serde(default)]
     #[configurable(required)]
-    address: PathBuf,
+    address: ServerAddr,
 
     /// How frequent this source should poll.
     #[serde(with = "humanize::duration::serde", default = "default_interval")]
@@ -68,6 +80,7 @@ impl SourceConfig for Config {
 }
 
 async fn run(config: Config, mut output: Pipeline, mut shutdown: ShutdownSignal) -> Result<(), ()> {
+    let client = Client::new(config.address);
     let mut ticker = tokio::time::interval(config.interval);
 
     loop {
@@ -79,15 +92,14 @@ async fn run(config: Config, mut output: Pipeline, mut shutdown: ShutdownSignal)
         }
 
         let start = Instant::now();
-        let result = match timeout(config.timeout, scrape(&config.address)).await {
-            Ok(result) => result,
-            Err(_err) => Err(Error::Timeout),
-        };
+        let result = timeout(config.timeout, scrape(&client))
+            .await
+            .unwrap_or_else(|_err| Err(Error::Timeout));
         let elapsed = start.elapsed();
         let up = result.is_ok();
         let mut metrics = vec![
-            Metric::gauge("ntp_up", "Could the chronyd be accessible", up),
-            Metric::gauge("ntp_scrape_duration_seconds", "", elapsed),
+            Metric::gauge("chrony_up", "Could the chronyd be accessible", up),
+            Metric::gauge("chrony_scrape_duration_seconds", "", elapsed),
         ];
 
         match result {
@@ -131,48 +143,44 @@ impl From<String> for Error {
 }
 
 struct Client {
-    stream: UnixDatagram,
-}
-
-impl Drop for Client {
-    fn drop(&mut self) {
-        if let Ok(addr) = self.stream.local_addr() {
-            if let Some(path) = addr.as_pathname() {
-                let _ = self.stream.shutdown(Shutdown::Both);
-                let _ = std::fs::remove_file(path);
-            }
-        }
-    }
+    addr: ServerAddr,
 }
 
 impl Client {
-    fn connect(addr: &PathBuf) -> io::Result<Self> {
-        let pid = std::process::id();
-        let path = format!("/var/run/chrony/vertex-{pid}.sock");
-
-        let stream = UnixDatagram::bind(&path)?;
-        std::fs::set_permissions(&path, Permissions::from_mode(0o777))?;
-        stream.connect(addr)?;
-
-        Ok(Self { stream })
+    fn new(addr: ServerAddr) -> Self {
+        Client { addr }
     }
 
     async fn get_tracking_data(&self) -> Result<TrackingResponse, Error> {
         let req = TrackingRequest::new();
-        let data = req.encode()?;
-        let _n = self.stream.send(&data).await?;
+        let mut buf = req.encode()?;
 
-        let mut resp = [0u8; BUFFER_SIZE];
-        let _n = self.stream.recv(&mut resp).await?;
+        match &self.addr {
+            ServerAddr::SocketAddr(addr) => {
+                // UNSPECIFIED
+                let bind_addr = SocketAddr::from(([0, 0, 0, 0], 0));
+                let sock = UdpSocket::bind(bind_addr).await?;
+                sock.connect(addr).await?;
 
-        TrackingResponse::decode(Cursor::new(resp)).map_err(Into::into)
+                // tracking request does not have payload, but we still need
+                // some space to make sure chronyd can handle it properly.
+                sock.send(&buf).await?;
+                sock.recv(&mut buf).await?;
+            }
+            ServerAddr::Unix(path) => {
+                let sock = UnixSocket::new_datagram()?;
+                let mut stream = sock.connect(path).await?;
+
+                stream.write_all(&buf).await?;
+                stream.read_exact(&mut buf).await?;
+            }
+        }
+
+        TrackingResponse::decode(Cursor::new(buf)).map_err(Into::into)
     }
 }
 
-async fn scrape(addr: &PathBuf) -> Result<Vec<Metric>, Error> {
-    /*    let tracking = get_tracking_data(addr).await?; */
-
-    let client = Client::connect(addr)?;
+async fn scrape(client: &Client) -> Result<Vec<Metric>, Error> {
     let tracking = client.get_tracking_data().await?;
     let tags = tags!(
         "leap_status" => tracking.leap_status()
@@ -180,42 +188,42 @@ async fn scrape(addr: &PathBuf) -> Result<Vec<Metric>, Error> {
 
     Ok(vec![
         Metric::gauge(
-            "ntp_stratum",
+            "chrony_stratum",
             "The number of hops away from the reference system keeping the reference time",
             tracking.stratum,
         ),
         Metric::gauge_with_tags(
-            "ntp_time_correction_seconds",
+            "chrony_time_correction_seconds",
             "The number of seconds difference between the system's clock and the reference clock",
             tracking.current_correction,
             tags.clone()
         ),
         Metric::gauge_with_tags(
-            "ntp_time_last_offset_seconds",
+            "chrony_time_last_offset_seconds",
             "The estimated local offset on the last clock update",
             tracking.last_offset,
             tags.clone()
         ),
         Metric::gauge_with_tags(
-            "ntp_time_rms_offset_seconds",
+            "chrony_time_rms_offset_seconds",
             "the long term average of the offset value",
             tracking.rms_offset,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
-            "ntp_frequency_offset_ppm",
+            "chrony_frequency_offset_ppm",
             "The frequency is the rate by which the system s clock would be wrong if chronyd was not correcting it.",
             tracking.freq_ppm,
             tags.clone()
         ),
         Metric::gauge_with_tags(
-            "ntp_skew_ppm",
+            "chrony_skew_ppm",
             "This is the estimated error bound on the frequency.",
             tracking.skew_ppm,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
-            "ntp_time_root_delay_seconds",
+            "chrony_time_root_delay_seconds",
             "This is the total of the network path delays to the stratum-1 system from which the system is ultimately synchronised.",
             tracking.root_delay,
             tags
@@ -223,41 +231,18 @@ async fn scrape(addr: &PathBuf) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-#[allow(clippy::disallowed_methods)] // Caller handles the result of `write`.
-trait WriteExt: Write {
-    fn write_u8(&mut self, n: u8) -> io::Result<()> {
-        self.write_all(&n.to_be_bytes())
-    }
-
-    fn write_u16(&mut self, n: u16) -> io::Result<()> {
-        self.write_all(&n.to_be_bytes())
-    }
-
-    fn write_u32(&mut self, n: u32) -> io::Result<()> {
-        self.write_all(&n.to_be_bytes())
-    }
-
-    fn write_u64(&mut self, n: u64) -> io::Result<()> {
-        self.write_all(&n.to_be_bytes())
-    }
-}
-
-impl<T: Write> WriteExt for T {}
-
 struct TrackingRequest {
-    /// Protocol version.
-    version: u8,
-    /// What sort of packet this is
-    pkt_type: u8,
+    // Header
+    version: u8,  // Protocol version.
+    pkt_type: u8, // What sort of packet this is
     _res1: u8,
     _res2: u8,
-    command: u16, // always 33
-    attempt: u16,
-
-    /// Client's sequence number.
-    sequence: u32,
+    command: u16,  // which command is being issued, always 33 for our use case
+    attempt: u16,  // how many resends the client has done
+    sequence: u32, // client's sequence number
     _pad1: u32,
     _pad2: u32,
+    // no payload
 }
 
 impl TrackingRequest {
@@ -277,74 +262,77 @@ impl TrackingRequest {
 
     fn encode(self) -> Result<[u8; BUFFER_SIZE], Error> {
         /*
-            typedef struct {
-                uint8_t version; /* Protocol version */
-                uint8_t pkt_type; /* What sort of packet this is */
-                uint8_t res1;
-                uint8_t res2;
-                uint16_t command; /* Which command is being issued */
-                uint16_t attempt; /* How many resends the client has done
+        typedef struct {
+          uint8_t version; /* Protocol version */
+          uint8_t pkt_type; /* What sort of packet this is */
+          uint8_t res1;
+          uint8_t res2;
+          uint16_t command; /* Which command is being issued */
+          uint16_t attempt; /* How many resends the client has done
                                      (count up from zero for same sequence
                                      number) */
-                uint32_t sequence; /* Client's sequence number */
-                uint32_t pad1;
-                uint32_t pad2;
+          uint32_t sequence; /* Client's sequence number */
+          uint32_t pad1;
+          uint32_t pad2;
 
-                union {
-                  REQ_Null null;
-                  REQ_Online online;
-                  REQ_Offline offline;
-                  REQ_Burst burst;
-                  REQ_Modify_Minpoll modify_minpoll;
-                  REQ_Modify_Maxpoll modify_maxpoll;
-                  REQ_Dump dump;
-                  REQ_Modify_Maxdelay modify_maxdelay;
-                  REQ_Modify_Maxdelayratio modify_maxdelayratio;
-                  REQ_Modify_Maxdelaydevratio modify_maxdelaydevratio;
-                  REQ_Modify_Minstratum modify_minstratum;
-                  REQ_Modify_Polltarget modify_polltarget;
-                  REQ_Modify_Maxupdateskew modify_maxupdateskew;
-                  REQ_Modify_Makestep modify_makestep;
-                  REQ_Logon logon;
-                  REQ_Settime settime;
-                  REQ_Local local;
-                  REQ_Manual manual;
-                  REQ_Source_Data source_data;
-                  REQ_Allow_Deny allow_deny;
-                  REQ_Ac_Check ac_check;
-                  REQ_NTP_Source ntp_source;
-                  REQ_Del_Source del_source;
-                  REQ_Dfreq dfreq;
-                  REQ_Doffset doffset;
-                  REQ_Sourcestats sourcestats;
-                  REQ_ClientAccessesByIndex client_accesses_by_index;
-                  REQ_ManualDelete manual_delete;
-                  REQ_ReselectDistance reselect_distance;
-                  REQ_SmoothTime smoothtime;
-                  REQ_NTPData ntp_data;
-                  REQ_NTPSourceName ntp_source_name;
-                  REQ_AuthData auth_data;
-                  REQ_SelectData select_data;
-                } data; /* Command specific parameters */
+          union {
+            REQ_Null null;
+            REQ_Online online;
+            REQ_Offline offline;
+            REQ_Burst burst;
+            REQ_Modify_Minpoll modify_minpoll;
+            REQ_Modify_Maxpoll modify_maxpoll;
+            REQ_Dump dump;
+            REQ_Modify_Maxdelay modify_maxdelay;
+            REQ_Modify_Maxdelayratio modify_maxdelayratio;
+            REQ_Modify_Maxdelaydevratio modify_maxdelaydevratio;
+            REQ_Modify_Minstratum modify_minstratum;
+            REQ_Modify_Polltarget modify_polltarget;
+            REQ_Modify_Maxupdateskew modify_maxupdateskew;
+            REQ_Modify_Makestep modify_makestep;
+            REQ_Logon logon;
+            REQ_Settime settime;
+            REQ_Local local;
+            REQ_Manual manual;
+            REQ_Source_Data source_data;
+            REQ_Allow_Deny allow_deny;
+            REQ_Ac_Check ac_check;
+            REQ_NTP_Source ntp_source;
+            REQ_Del_Source del_source;
+            REQ_Dfreq dfreq;
+            REQ_Doffset doffset;
+            REQ_Sourcestats sourcestats;
+            REQ_ClientAccessesByIndex client_accesses_by_index;
+            REQ_ManualDelete manual_delete;
+            REQ_ReselectDistance reselect_distance;
+            REQ_SmoothTime smoothtime;
+            REQ_NTPData ntp_data;
+            REQ_NTPSourceName ntp_source_name;
+            REQ_AuthData auth_data;
+            REQ_SelectData select_data;
+            REQ_SelectData select_data;
+            REQ_Modify_SelectOpts modify_select_opts;
+            REQ_Modify_Offset modify_offset;
+          } data; /* Command specific parameters */
 
-                /* Padding used to prevent traffic amplification.  It only defines the
-                   maximum size of the packet, there is no hole after the data field. */
-                uint8_t padding[MAX_PADDING_LENGTH];
+          /* Padding used to prevent traffic amplification.  It only defines the
+             maximum size of the packet, there is no hole after the data field. */
+          uint8_t padding[MAX_PADDING_LENGTH];
 
-            } CMD_Request;
+          } CMD_Request;
         */
 
-        let mut w = Cursor::new([0u8; BUFFER_SIZE]);
+        let mut buf = [0u8; BUFFER_SIZE];
 
-        w.write_u8(self.version)?;
-        w.write_u8(self.pkt_type)?;
-        w.write_u16(0)?; // _res1 & _res2
-        w.write_u16(self.command)?; // command
-        w.write_u16(self.attempt)?;
-        w.write_u32(self.sequence)?;
-        w.write_u64(0)?; // _pad1 & _pad2
+        buf[..1].copy_from_slice(&self.version.to_be_bytes());
+        buf[1..2].copy_from_slice(&self.pkt_type.to_be_bytes());
+        // _res1 & _res2 is zero so we don't need to set the value
+        buf[4..6].copy_from_slice(&self.command.to_be_bytes());
+        buf[6..8].copy_from_slice(&self.attempt.to_be_bytes());
+        buf[8..12].copy_from_slice(&self.sequence.to_be_bytes());
+        // _pad1 & _pad2 is zero so we don't need to set the value
 
-        Ok(w.into_inner())
+        Ok(buf)
     }
 }
 
@@ -377,45 +365,17 @@ fn to_std_f32(v: i32) -> f32 {
     coef as f32 * 2.0f32.powf(exp as f32)
 }
 
-trait ReadExt: Read {
-    fn read_u8(&mut self) -> io::Result<u8> {
-        let mut buf = [0u8; 1];
-        self.read_exact(&mut buf)?;
-        Ok(u8::from_be_bytes(buf))
-    }
-
-    fn read_u16(&mut self) -> io::Result<u16> {
-        let mut buf = [0u8; 2];
-        self.read_exact(&mut buf)?;
-        Ok(u16::from_be_bytes(buf))
-    }
-
-    fn read_u32(&mut self) -> io::Result<u32> {
-        let mut buf = [0u8; 4];
-        self.read_exact(&mut buf)?;
-        Ok(u32::from_be_bytes(buf))
-    }
-
-    fn read_i32(&mut self) -> io::Result<i32> {
-        let mut buf = [0u8; 4];
-        self.read_exact(&mut buf)?;
-        Ok(i32::from_be_bytes(buf))
-    }
-}
-
-impl<T: Read> ReadExt for T {}
-
-#[allow(dead_code)]
+#[repr(C)]
 struct TrackingResponse {
-    // head
+    // header
     version: u8,
     pkt_type: u8,
-    command: u16,
-    reply: u16,
-    status: u16,
-    sequence: u32,
+    command: u16,  // Which command is being replied to
+    reply: u16,    // which format of replay this is
+    status: u16,   // status of command processing
+    sequence: u32, // Echo of client's sequence number
 
-    // content
+    // payload
     ref_id: u32,
     stratum: u16,
     leap_status: u16,
@@ -428,7 +388,7 @@ struct TrackingResponse {
 }
 
 impl TrackingResponse {
-    fn decode(mut r: impl ReadExt + Buf) -> Result<Self, Error> {
+    fn decode(mut r: impl Buf) -> Result<Self, Error> {
         // decode header first, see: https://github.com/mlichvar/chrony/blob/master/candm.h#L797
         //
         // typedef struct {
@@ -466,35 +426,34 @@ impl TrackingResponse {
         //   } data; /* Reply specific parameters */
         //
         // } CMD_Reply;
-        let version = r.read_u8()?;
+        let version = r.get_u8();
         if version != PROTOCOL_VERSION {
             return Err(format!("unknown protocol version {version}").into());
         }
 
-        let pkt_type = r.read_u8()?;
+        let pkt_type = r.get_u8();
         if pkt_type != PACKET_RESPONSE {
             return Err("expect to receive response packet".into());
         }
 
-        let _ = r.read_u16()?;
-        let command = r.read_u16()?;
-        let reply = r.read_u16()?;
+        let _ = r.get_u16();
+        let command = r.get_u16();
+        let reply = r.get_u16();
         if reply != 5 {
             // https://github.com/mlichvar/chrony/blob/4.3/candm.h#L502
             return Err(format!("unknown reply code from chronyd: {reply}").into());
         }
 
-        let status = r.read_u16()?;
+        let status = r.get_u16();
         if status != 0 {
             return Err("request failed".into());
         }
 
-        let _pad1 = r.read_u16()?;
-        let _pad2 = r.read_u16()?;
-        let _pad3 = r.read_u16()?;
-        let sequence = r.read_u32()?;
-        let _pad4 = r.read_u32()?;
-        let _pad5 = r.read_u32()?;
+        // skip pad1, pad2 and pad3
+        r.advance(3 * 2);
+        let sequence = r.get_u32();
+        // skip pad4 and pad5
+        r.advance(2 * 4);
 
         // decode content part, see: https://github.com/mlichvar/chrony/blob/master/candm.h#L593
         //
@@ -516,21 +475,23 @@ impl TrackingResponse {
         //   int32_t EOR;
         // } RPY_Tracking;
         //
-        // N.B. chrony's Float is i32 not normal f64, see: https://github.com/mlichvar/chrony/blob/master/candm.h#L125
-        let ref_id = r.read_u32()?;
+        // N.B. chrony's Float is i32 not normal f64,
+        // see: https://github.com/mlichvar/chrony/blob/master/candm.h#L125
+        let ref_id = r.get_u32();
         r.advance(16 + 2 + 2); // ip_addr
-        let stratum = r.read_u16()?;
-        let leap_status = r.read_u16()?;
+        let stratum = r.get_u16();
+        let leap_status = r.get_u16();
         r.advance(3 * 4); // Timespec: 3 * u32
-        let current_correction = to_std_f32(r.read_i32()?);
-        let last_offset = to_std_f32(r.read_i32()?);
-        let rms_offset = to_std_f32(r.read_i32()?);
-        let freq_ppm = to_std_f32(r.read_i32()?);
-        let _resid_freq_ppm = r.read_i32()?;
-        let skew_ppm = to_std_f32(r.read_i32()?);
-        let root_delay = to_std_f32(r.read_i32()?);
-        let _root_dispersion = r.read_i32()?;
-        let _last_update_interval = r.read_i32()?;
+        let current_correction = to_std_f32(r.get_i32());
+        let last_offset = to_std_f32(r.get_i32());
+        let rms_offset = to_std_f32(r.get_i32());
+        let freq_ppm = to_std_f32(r.get_i32());
+        // skip resid_freq_ppm
+        r.advance(4);
+        let skew_ppm = to_std_f32(r.get_i32());
+        let root_delay = to_std_f32(r.get_i32());
+        // skip root_dispersion and last_update_interval
+        r.advance(2 * 4);
 
         Ok(Self {
             // head
@@ -596,7 +557,7 @@ mod tests {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         ];
 
         let req = TrackingRequest::new();
@@ -609,34 +570,6 @@ mod tests {
     fn decode() {
         // This test ported from
         // https://github.com/facebook/time/blob/main/ntp/chrony/packet_test.go#L151
-        //
-        // ReplyHead: ReplyHead{
-        //     Version:  protoVersionNumber,
-        //     PKTType:  pktTypeCmdReply,
-        //     Res1:     0,
-        //     Res2:     0,
-        //     Command:  reqTracking,
-        //     Reply:    rpyTracking,
-        //     Status:   sttSuccess,
-        //     Sequence: 2,
-        // },
-        // Tracking: Tracking{
-        // 	   RefID:              3861235310,
-        // 	   IPAddr:             net.IP{36, 1, 219, 0, 49, 16, 33, 50, 250, 206, 0, 0, 0, 142, 0, 0},
-        // 	   Stratum:            3,
-        // 	   LeapStatus:         0,
-        // 	   RefTime:            time.Unix(0, 1631117697915705301),
-        // 	   CurrentCorrection:  -3.4395072816550964e-06,
-        // 	   LastOffset:         -2.823539716700907e-06,
-        // 	   RMSOffset:          1.405413968313951e-05,
-        // 	   FreqPPM:            -1.5478190183639526,
-        // 	   ResidFreqPPM:       -0.00012660636275541037,
-        // 	   SkewPPM:            0.005385049618780613,
-        // 	   RootDelay:          0.00022063794312998652,
-        // 	   RootDispersion:     0.0010384710039943457,
-        // 	   LastUpdateInterval: 520.4907836914062,
-        // },
-
         let data = [
             0x06, 0x02, 0x00, 0x00, 0x00, 0x21, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
