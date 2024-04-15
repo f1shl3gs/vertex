@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713201307769,
+  "lastUpdate": 1713201387501,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9737d48ecba83596bc247df1527c220ce8d91ad2",
-          "message": "chore(deps): bump crc32fast from 1.3.2 to 1.4.0 (#1604)\n\nBumps [crc32fast](https://github.com/srijs/rust-crc32fast) from 1.3.2 to 1.4.0.\r\n- [Commits](https://github.com/srijs/rust-crc32fast/compare/v1.3.2...v1.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crc32fast\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-13T21:18:54+08:00",
-          "tree_id": "e025d30cb9ba0b3221cc0612b79f408ddbc223f2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9737d48ecba83596bc247df1527c220ce8d91ad2"
-        },
-        "date": 1707830986741,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 563,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41422.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "edeff01dda0aeb10e2b9037cf046f11e567f2650",
           "message": "chore(deps): bump thiserror from 1.0.56 to 1.0.57 (#1602)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.56 to 1.0.57.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.56...1.0.57)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-13T21:19:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37852.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "890888627445dbb8de4c15f993c904138d7436a8",
+          "message": "support udp (#1708)",
+          "timestamp": "2024-04-16T01:04:34+08:00",
+          "tree_id": "3cbad067247b05a7b2ab3511ce00c6a8039b5606",
+          "url": "https://github.com/f1shl3gs/vertex/commit/890888627445dbb8de4c15f993c904138d7436a8"
+        },
+        "date": 1713201372396,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37861.5,
             "unit": "KiB"
           }
         ]
