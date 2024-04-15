@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713200722839,
+  "lastUpdate": 1713200727845,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bf3127bf07654a56faa59175910b1d1db093ef8e",
-          "message": "chore(deps): bump num-traits from 0.2.17 to 0.2.18 (#1595)\n\nBumps [num-traits](https://github.com/rust-num/num-traits) from 0.2.17 to 0.2.18.\r\n- [Changelog](https://github.com/rust-num/num-traits/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/rust-num/num-traits/compare/num-traits-0.2.17...num-traits-0.2.18)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: num-traits\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-08T19:53:56+08:00",
-          "tree_id": "6b0f983d75734f0450a158477b980488bdfad5cd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bf3127bf07654a56faa59175910b1d1db093ef8e"
-        },
-        "date": 1707393361990,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.545,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.419,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.04,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 194.86,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "81ee9b330c43ad0ad2ff6bea475f8341e1793fb9",
+          "message": "chore(deps): bump syn from 2.0.58 to 2.0.59 (#1709)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.58 to 2.0.59.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.58...2.0.59)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-16T01:02:59+08:00",
+          "tree_id": "39626b7003bbaacd216cc3059e17078f8d5ae07e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/81ee9b330c43ad0ad2ff6bea475f8341e1793fb9"
+        },
+        "date": 1713200712695,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.911,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 104.35,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 198.52,
             "unit": "ns/op"
           }
         ]
