@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713407700949,
+  "lastUpdate": 1713408252216,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "646a55d7afe4cb1e94cec210393cd193b630f2be",
-          "message": "chore(deps): bump k8s-openapi from 0.21.0 to 0.21.1 (#1607)\n\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.21.0 to 0.21.1.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.21.0...v0.21.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-18T10:57:01+08:00",
-          "tree_id": "7bab3ac60683df305a9ca701c73affb4e701a99e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/646a55d7afe4cb1e94cec210393cd193b630f2be"
-        },
-        "date": 1708225673310,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41449.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37865.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e2175755eaba4014873140d2eb4c06b17c2c9977",
+          "message": "chore(deps): bump syn from 2.0.59 to 2.0.60 (#1714)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.59 to 2.0.60.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.59...2.0.60)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-18T10:32:37+08:00",
+          "tree_id": "cf831e39cb846edbff70f12df1c939aebfe861b2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e2175755eaba4014873140d2eb4c06b17c2c9977"
+        },
+        "date": 1713408236557,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37856.5,
             "unit": "KiB"
           }
         ]
