@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713408252216,
+  "lastUpdate": 1713494769378,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "71731abc6b5498178015818dbd4f104c00d44db9",
-          "message": "chore(deps): bump syn from 2.0.48 to 2.0.49 (#1605)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.48 to 2.0.49.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.48...2.0.49)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-16T23:59:52+08:00",
-          "tree_id": "ee5fe111faa4ea7159d42a0818675a06b595d35e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/71731abc6b5498178015818dbd4f104c00d44db9"
-        },
-        "date": 1708099333597,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 537360,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535090,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5b3b5953ca464494895522afabe2414445d0207b",
+          "message": "chore(deps): bump hickory-resolver from 0.24.0 to 0.24.1 (#1715)\n\nBumps [hickory-resolver](https://github.com/hickory-dns/hickory-dns) from 0.24.0 to 0.24.1.\r\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\r\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.0...v0.24.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hickory-resolver\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-19T10:43:50+08:00",
+          "tree_id": "940cd90c18b450a3d60e14c0b6c334114fa25c39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5b3b5953ca464494895522afabe2414445d0207b"
+        },
+        "date": 1713494753815,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 524770,
             "unit": "ns/op"
           }
         ]
