@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713678793543,
+  "lastUpdate": 1713678794397,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0ca99f038595e964f1a8e26b2626d10b5280b349",
-          "message": "fix enum order (#1606)",
-          "timestamp": "2024-02-18T07:15:17+08:00",
-          "tree_id": "fa8336a9aebf5c717a81069b6b4b0c8dc418b0b3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0ca99f038595e964f1a8e26b2626d10b5280b349"
-        },
-        "date": 1708211843560,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539300,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524770,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "931de852edfc4ed0b7b5a9e9fa18de821ace35f5",
+          "message": "chore(deps): bump thiserror from 1.0.58 to 1.0.59 (#1716)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.58 to 1.0.59.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.58...1.0.59)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-21T13:50:46+08:00",
+          "tree_id": "627378ae7b5211d32ef4f12e4d446f74bfa230f2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/931de852edfc4ed0b7b5a9e9fa18de821ace35f5"
+        },
+        "date": 1713678778247,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 525260,
             "unit": "ns/op"
           }
         ]
