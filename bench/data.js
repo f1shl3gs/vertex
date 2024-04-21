@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713679338000,
+  "lastUpdate": 1713706955723,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "646a55d7afe4cb1e94cec210393cd193b630f2be",
-          "message": "chore(deps): bump k8s-openapi from 0.21.0 to 0.21.1 (#1607)\n\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.21.0 to 0.21.1.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.21.0...v0.21.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-18T10:57:01+08:00",
-          "tree_id": "7bab3ac60683df305a9ca701c73affb4e701a99e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/646a55d7afe4cb1e94cec210393cd193b630f2be"
-        },
-        "date": 1708225143674,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 538370,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525260,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f2660e439354bdb2bd4e501d037a48239f1faae",
+          "message": "bump rustls to 0.21.11 (#1717)",
+          "timestamp": "2024-04-21T21:40:20+08:00",
+          "tree_id": "9f94e4029d875e7c03610f915ab3689df7bc1fbf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f2660e439354bdb2bd4e501d037a48239f1faae"
+        },
+        "date": 1713706940598,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 524100,
             "unit": "ns/op"
           }
         ]
