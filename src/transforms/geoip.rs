@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 use std::str::FromStr;
 use std::sync::Arc;
@@ -9,7 +10,7 @@ use event::log::OwnedTargetPath;
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use serde::Serialize;
+use value::Value;
 
 fn default_target() -> OwnedTargetPath {
     parse_target_path("geoip").unwrap()
@@ -51,13 +52,16 @@ struct Config {
 #[typetag::serde(name = "geoip")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let database = maxminddb::Reader::open_readfile(&self.database)?;
+        let database = maxminddb::Reader::open_mmap(&self.database)?;
+        let metadata = database.metadata()?;
+        let has_isp = metadata.database_type == ASN_TYPE || metadata.database_type == ISP_TYPE;
 
         Ok(Transform::function(Geoip {
             database: Arc::new(database),
             source: self.source.clone(),
             target: self.target.clone(),
             locale: self.locale.clone(),
+            has_isp,
         }))
     }
 
@@ -76,22 +80,16 @@ impl TransformConfig for Config {
 const ASN_TYPE: &str = "GeoLite2-ASN";
 const ISP_TYPE: &str = "GeoIP2-ISP";
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 struct Geoip {
-    database: Arc<maxminddb::Reader<Vec<u8>>>,
+    database: Arc<maxminddb::Reader<maxminddb::Mmap>>,
     source: OwnedTargetPath,
     target: OwnedTargetPath,
     locale: String,
+    has_isp: bool,
 }
 
-impl Geoip {
-    fn has_isp_db(&self) -> bool {
-        self.database.metadata.database_type == ASN_TYPE
-            || self.database.metadata.database_type == ISP_TYPE
-    }
-}
-
-#[derive(Default, Serialize)]
+#[derive(Default)]
 struct Isp<'a> {
     autonomous_system_number: i64,
     autonomous_system_organization: &'a str,
@@ -99,10 +97,26 @@ struct Isp<'a> {
     organization: &'a str,
 }
 
+impl<'a> From<Isp<'a>> for Value {
+    fn from(isp: Isp<'a>) -> Self {
+        let mut value = Value::Object(BTreeMap::default());
+
+        value.insert("autonomous_system_number", isp.autonomous_system_number);
+        value.insert(
+            "autonomous_system_organization",
+            isp.autonomous_system_organization,
+        );
+        value.insert("isp", isp.isp);
+        value.insert("organization", isp.organization);
+
+        value
+    }
+}
+
 // Some fields's description can be found at
 //
 // https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en#locations-files
-#[derive(Default, Serialize)]
+#[derive(Default)]
 struct City<'a> {
     city_name: &'a str,
     continent_code: &'a str,
@@ -117,6 +131,26 @@ struct City<'a> {
     metro_code: String, // converted from u16 for consistency
 }
 
+impl<'a> From<City<'a>> for Value {
+    fn from(city: City<'a>) -> Self {
+        let mut value = Value::Object(BTreeMap::default());
+
+        value.insert("city_name", city.city_name);
+        value.insert("continent_code", city.continent_code);
+        value.insert("country_code", city.country_code);
+        value.insert("country_name", city.country_name);
+        value.insert("timezone", city.timezone);
+        value.insert("latitude", city.latitude);
+        value.insert("longitude", city.longitude);
+        value.insert("postal_code", city.postal_code);
+        value.insert("region_code", city.region_code);
+        value.insert("region_name", city.region_name);
+        value.insert("metro_code", city.metro_code);
+
+        value
+    }
+}
+
 impl FunctionTransform for Geoip {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
@@ -127,8 +161,8 @@ impl FunctionTransform for Geoip {
             if let Some(value) = &ipaddress {
                 match FromStr::from_str(value) {
                     Ok(ip) => {
-                        if self.has_isp_db() {
-                            if let Ok(data) = self.database.lookup::<maxminddb::geoip2::Isp>(ip) {
+                        if self.has_isp {
+                            if let Ok(data) = self.database.lookup::<maxminddb::Isp>(ip) {
                                 if let Some(as_number) = data.autonomous_system_number {
                                     isp.autonomous_system_number = as_number as i64;
                                 }
@@ -145,10 +179,12 @@ impl FunctionTransform for Geoip {
                                     isp.organization = organization;
                                 }
                             }
-                        } else if let Ok(data) = self.database.lookup::<maxminddb::geoip2::City>(ip)
-                        {
+                        } else if let Ok(data) = self.database.lookup::<maxminddb::City>(ip) {
                             if let Some(city_names) = data.city.and_then(|c| c.names) {
-                                if let Some(city_name) = city_names.get("en") {
+                                if let Some(city_name) = city_names
+                                    .iter()
+                                    .find_map(|(key, value)| (*key == "en").then_some(*value))
+                                {
                                     city.city_name = city_name;
                                 }
                             }
@@ -162,11 +198,11 @@ impl FunctionTransform for Geoip {
                                     city.country_code = country_code;
                                 }
 
-                                if let Some(country_name) = country
-                                    .names
-                                    .as_ref()
-                                    .and_then(|names| names.get(&*self.locale))
-                                {
+                                if let Some(country_name) = country.names.and_then(|names| {
+                                    names.iter().find_map(|(key, value)| {
+                                        (*key == self.locale).then_some(*value)
+                                    })
+                                }) {
                                     city.country_name = country_name;
                                 }
                             }
@@ -191,13 +227,14 @@ impl FunctionTransform for Geoip {
                             if let Some(subdivision) =
                                 data.subdivisions.as_ref().and_then(|s| s.last())
                             {
-                                if let Some(name) = subdivision
-                                    .names
-                                    .as_ref()
-                                    .and_then(|names| names.get(&*self.locale))
-                                {
+                                if let Some(name) = subdivision.names.as_ref().and_then(|names| {
+                                    names.iter().find_map(|(key, value)| {
+                                        (*key == self.locale).then_some(*value)
+                                    })
+                                }) {
                                     city.region_name = name;
                                 }
+
                                 if let Some(iso_code) = subdivision.iso_code {
                                     city.region_code = iso_code;
                                 }
@@ -226,14 +263,10 @@ impl FunctionTransform for Geoip {
                 )
             }
 
-            let json_value = if self.has_isp_db() {
-                serde_json::to_value(isp)
+            if self.has_isp {
+                log.insert(&self.target, isp);
             } else {
-                serde_json::to_value(city)
-            };
-
-            if let Ok(value) = json_value {
-                log.insert(&self.target, value);
+                log.insert(&self.target, city);
             }
         });
 
@@ -316,12 +349,15 @@ mod tests {
 
         for (name, input, database, want) in tests {
             let database =
-                maxminddb::Reader::open_readfile(database).expect("Open geoip database success");
+                maxminddb::Reader::open_mmap(database).expect("Open geoip database success");
+            let metadata = database.metadata().unwrap();
+            let has_isp = metadata.database_type == ASN_TYPE || metadata.database_type == ISP_TYPE;
             let mut transform = Geoip {
                 database: Arc::new(database),
                 source: parse_target_path("remote_addr").unwrap(),
                 target: parse_target_path("geo").unwrap(),
                 locale: "en".to_string(),
+                has_isp,
             };
             let event = transform_one(&mut transform, input).unwrap();
 
