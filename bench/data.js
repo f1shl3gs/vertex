@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713857650573,
+  "lastUpdate": 1713875581645,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ff2647f3ea358f3929b5ed05ccc8c9b89482e363",
-          "message": "chore(deps): bump serde_yaml from 0.9.31 to 0.9.32 (#1609)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.31 to 0.9.32.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.31...0.9.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-19T16:33:56+08:00",
-          "tree_id": "f5f1db2a2ac4ebc2633a52b406304efeb135076f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff2647f3ea358f3929b5ed05ccc8c9b89482e363"
-        },
-        "date": 1708331759481,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536340,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524830,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c13d0904d52fc87ada9db5cd362db1f67296419",
+          "message": "chore(deps): bump mimalloc from 0.1.40 to 0.1.41 (#1719)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.40 to 0.1.41.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.40...v0.1.41)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-23T20:30:37+08:00",
+          "tree_id": "d6a3f71e660f91b44ff6d730f03c2506d51c4f11",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c13d0904d52fc87ada9db5cd362db1f67296419"
+        },
+        "date": 1713875565325,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 528090,
             "unit": "ns/op"
           }
         ]
