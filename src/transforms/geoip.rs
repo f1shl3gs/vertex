@@ -10,7 +10,7 @@ use event::log::OwnedTargetPath;
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use value::Value;
+use value::{path, Value};
 
 fn default_target() -> OwnedTargetPath {
     parse_target_path("geoip").unwrap()
@@ -101,13 +101,16 @@ impl<'a> From<Isp<'a>> for Value {
     fn from(isp: Isp<'a>) -> Self {
         let mut value = Value::Object(BTreeMap::default());
 
-        value.insert("autonomous_system_number", isp.autonomous_system_number);
         value.insert(
-            "autonomous_system_organization",
+            path!("autonomous_system_number"),
+            isp.autonomous_system_number,
+        );
+        value.insert(
+            path!("autonomous_system_organization"),
             isp.autonomous_system_organization,
         );
-        value.insert("isp", isp.isp);
-        value.insert("organization", isp.organization);
+        value.insert(path!("isp"), isp.isp);
+        value.insert(path!("organization"), isp.organization);
 
         value
     }
@@ -135,17 +138,17 @@ impl<'a> From<City<'a>> for Value {
     fn from(city: City<'a>) -> Self {
         let mut value = Value::Object(BTreeMap::default());
 
-        value.insert("city_name", city.city_name);
-        value.insert("continent_code", city.continent_code);
-        value.insert("country_code", city.country_code);
-        value.insert("country_name", city.country_name);
-        value.insert("timezone", city.timezone);
-        value.insert("latitude", city.latitude);
-        value.insert("longitude", city.longitude);
-        value.insert("postal_code", city.postal_code);
-        value.insert("region_code", city.region_code);
-        value.insert("region_name", city.region_name);
-        value.insert("metro_code", city.metro_code);
+        value.insert(path!("city_name"), city.city_name);
+        value.insert(path!("continent_code"), city.continent_code);
+        value.insert(path!("country_code"), city.country_code);
+        value.insert(path!("country_name"), city.country_name);
+        value.insert(path!("timezone"), city.timezone);
+        value.insert(path!("latitude"), city.latitude);
+        value.insert(path!("longitude"), city.longitude);
+        value.insert(path!("postal_code"), city.postal_code);
+        value.insert(path!("region_code"), city.region_code);
+        value.insert(path!("region_name"), city.region_name);
+        value.insert(path!("metro_code"), city.metro_code);
 
         value
     }
