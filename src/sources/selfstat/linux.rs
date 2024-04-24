@@ -6,7 +6,7 @@ const USER_HZ: f64 = 100.0;
 const PAGE_SIZE: f64 = 4096.0;
 
 pub async fn proc_info() -> Result<Vec<Metric>, std::io::Error> {
-    let pid = unsafe { libc::getpid() };
+    let pid = std::process::id();
     let fds = open_fds(pid)? as f64;
     let max_fds = max_fds(pid)?;
     let (cpu_total, threads, start_time, vsize, rss) = get_proc_stat("/proc", pid).await?;
@@ -42,7 +42,7 @@ pub async fn proc_info() -> Result<Vec<Metric>, std::io::Error> {
     ])
 }
 
-fn open_fds(pid: i32) -> Result<usize, std::io::Error> {
+fn open_fds(pid: u32) -> Result<usize, std::io::Error> {
     let path = format!("/proc/{}/fd", pid);
 
     std::fs::read_dir(path)?.try_fold(0usize, |acc, item| {
@@ -56,7 +56,7 @@ fn open_fds(pid: i32) -> Result<usize, std::io::Error> {
 
 const MAXFD_PATTERN: &str = "Max open files";
 
-fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
+fn max_fds(pid: u32) -> Result<f64, std::io::Error> {
     let mut buffer = String::new();
     std::fs::File::open(format!("/proc/{}/limits", pid))
         .and_then(|mut f| f.read_to_string(&mut buffer))?;
@@ -78,7 +78,7 @@ fn find_statistic(all: &str, pat: &str) -> Result<f64, std::io::Error> {
     Err(std::io::Error::from(std::io::ErrorKind::InvalidInput))
 }
 
-async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64), std::io::Error> {
+async fn get_proc_stat(root: &str, pid: u32) -> Result<(f64, f64, f64, f64, f64), std::io::Error> {
     let path = format!("{}/{}/stat", root, pid);
     let content = tokio::fs::read_to_string(&path).await?;
     let parts = content.split_ascii_whitespace().collect::<Vec<_>>();
