@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713954876593,
+  "lastUpdate": 1713954882847,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d2bf9b31adcd058cfdfa4f6e97791d9b85c238b2",
-          "message": "chore(deps): bump syn from 2.0.49 to 2.0.50 (#1612)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.49 to 2.0.50.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.49...2.0.50)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-20T11:22:44+08:00",
-          "tree_id": "7c441c8ca2d436e09d2b34405b18ae62e24fa060",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d2bf9b31adcd058cfdfa4f6e97791d9b85c238b2"
-        },
-        "date": 1708399489076,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 549440,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 520830,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e3da1ab28cedd34e2e0756054b8f0a0c74955449",
+          "message": "remove libc calls (#1721)",
+          "timestamp": "2024-04-24T18:32:07+08:00",
+          "tree_id": "007011d0f060e81ae368721fb1e45acef552eb8b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e3da1ab28cedd34e2e0756054b8f0a0c74955449"
+        },
+        "date": 1713954867051,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 554550,
             "unit": "ns/op"
           }
         ]
