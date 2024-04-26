@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713955426523,
+  "lastUpdate": 1714097988735,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "88dc6573e62723891a0150edae8cda2496f9ec52",
-          "message": "chore(deps): bump serde_json from 1.0.113 to 1.0.114 (#1610)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.113 to 1.0.114.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.113...v1.0.114)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-20T11:23:03+08:00",
-          "tree_id": "3213bef681d217399ec562cbf59de3f23bd2f394",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88dc6573e62723891a0150edae8cda2496f9ec52"
-        },
-        "date": 1708399514655,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 564940,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 554550,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cdd1e5f97a1bd5b641544c82fb8c712ccb805a50",
+          "message": "chore(deps): bump parking_lot from 0.12.1 to 0.12.2 (#1722)\n\nBumps [parking_lot](https://github.com/Amanieu/parking_lot) from 0.12.1 to 0.12.2.\r\n- [Changelog](https://github.com/Amanieu/parking_lot/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Amanieu/parking_lot/compare/0.12.1...0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: parking_lot\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-26T10:17:32+08:00",
+          "tree_id": "7d0462292775e4d4fc506fc9335f06b0b1fb6f27",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cdd1e5f97a1bd5b641544c82fb8c712ccb805a50"
+        },
+        "date": 1714097973587,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 523140,
             "unit": "ns/op"
           }
         ]
