@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714124945444,
+  "lastUpdate": 1714125495772,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "633773783d867a3064443cdf14b53c3fc1db28eb",
-          "message": "chore(deps): bump socket2 from 0.5.5 to 0.5.6 (#1617)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.5 to 0.5.6.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/compare/v0.5.5...v0.5.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-24T11:28:45+08:00",
-          "tree_id": "9d99057af443e539d2040fa2db30a62739e581cb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/633773783d867a3064443cdf14b53c3fc1db28eb"
-        },
-        "date": 1708746015338,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 599,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41443.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "91c28de548ee322caafd43b9106cc243501ac606",
           "message": "chore(deps): bump nix from 0.27.1 to 0.28.0 (#1618)\n\n* chore(deps): bump nix from 0.27.1 to 0.28.0\r\n\r\nBumps [nix](https://github.com/nix-rust/nix) from 0.27.1 to 0.28.0.\r\n- [Changelog](https://github.com/nix-rust/nix/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/nix-rust/nix/compare/v0.27.1...v0.28.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: nix\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix compatible error\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2024-02-24T15:50:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37801.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a37501216743fc84e81f5768d2a694461572ea7a",
+          "message": "chore(deps): bump flate2 from 1.0.28 to 1.0.29 (#1723)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.28 to 1.0.29.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.28...1.0.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-26T17:46:38+08:00",
+          "tree_id": "b8fd77c316a4160c345f0ed3e6783223e21380f6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a37501216743fc84e81f5768d2a694461572ea7a"
+        },
+        "date": 1714125480592,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 596,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37801.5,
             "unit": "KiB"
           }
         ]
