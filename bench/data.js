@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714097988735,
+  "lastUpdate": 1714098003489,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b37001061eccffc054ed0bf94b526b8e3d8795aa",
-          "message": "bump rsa to 0.9.6 (#1608)",
-          "timestamp": "2024-02-18T11:32:41+08:00",
-          "tree_id": "c2ced7b537ace6e540c66856b0a4b38779371128",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b37001061eccffc054ed0bf94b526b8e3d8795aa"
-        },
-        "date": 1708227291790,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.826,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 89.885,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.38,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.39,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cdd1e5f97a1bd5b641544c82fb8c712ccb805a50",
+          "message": "chore(deps): bump parking_lot from 0.12.1 to 0.12.2 (#1722)\n\nBumps [parking_lot](https://github.com/Amanieu/parking_lot) from 0.12.1 to 0.12.2.\r\n- [Changelog](https://github.com/Amanieu/parking_lot/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Amanieu/parking_lot/compare/0.12.1...0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: parking_lot\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-26T10:17:32+08:00",
+          "tree_id": "7d0462292775e4d4fc506fc9335f06b0b1fb6f27",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cdd1e5f97a1bd5b641544c82fb8c712ccb805a50"
+        },
+        "date": 1714097984326,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.172,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.5,
             "unit": "ns/op"
           }
         ]
