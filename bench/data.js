@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714388612358,
+  "lastUpdate": 1714388624301,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "64f9cf8541ca92d7903811515b1d2021fda0204b",
-          "message": "chore(deps): bump ahash from 0.8.8 to 0.8.9 (#1611)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.8 to 0.8.9.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.8...v0.8.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-20T11:22:26+08:00",
-          "tree_id": "c1e3a9d4dc833326bd1133ae9da7452bc8eb9d38",
-          "url": "https://github.com/f1shl3gs/vertex/commit/64f9cf8541ca92d7903811515b1d2021fda0204b"
-        },
-        "date": 1708399520442,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.732,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 91.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "766e808d93305d88b2ca90e1c0e2ba2ea3cca0b3",
+          "message": "bump socket2 to 0.5.7 (#1726)",
+          "timestamp": "2024-04-29T19:01:20+08:00",
+          "tree_id": "a16beeec6c934aa7ac97d84caf7c1a5d36e4b937",
+          "url": "https://github.com/f1shl3gs/vertex/commit/766e808d93305d88b2ca90e1c0e2ba2ea3cca0b3"
+        },
+        "date": 1714388608376,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.378,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 89.944,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 177.28,
             "unit": "ns/op"
           }
         ]
