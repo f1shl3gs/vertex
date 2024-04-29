@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714388624301,
+  "lastUpdate": 1714389161362,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "31da6a8f7385e5431c96d02e8ed1b47c672b21d0",
-          "message": "chore(deps): bump syn from 2.0.50 to 2.0.51 (#1622)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.50 to 2.0.51.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.50...2.0.51)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-26T16:19:58+08:00",
-          "tree_id": "dcb35a084f9ad5e7a05ddf6190d5ad8cf8a1e23b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/31da6a8f7385e5431c96d02e8ed1b47c672b21d0"
-        },
-        "date": 1708936256209,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41446.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2a0883cfd5831c496d2bbc50fdc66790c24b7443",
           "message": "chore(deps): bump typetag from 0.2.15 to 0.2.16 (#1621)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.15 to 0.2.16.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.15...0.2.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-26T16:20:26+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37797.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "766e808d93305d88b2ca90e1c0e2ba2ea3cca0b3",
+          "message": "bump socket2 to 0.5.7 (#1726)",
+          "timestamp": "2024-04-29T19:01:20+08:00",
+          "tree_id": "a16beeec6c934aa7ac97d84caf7c1a5d36e4b937",
+          "url": "https://github.com/f1shl3gs/vertex/commit/766e808d93305d88b2ca90e1c0e2ba2ea3cca0b3"
+        },
+        "date": 1714389145965,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 586,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37801.7,
             "unit": "KiB"
           }
         ]
