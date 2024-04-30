@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714452505528,
+  "lastUpdate": 1714452571934,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "df53e70fc62249f6b3af3b3dad631dd999b7f1be",
-          "message": "chore(deps): bump lru from 0.12.2 to 0.12.3 (#1619)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.2 to 0.12.3.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.2...0.12.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-25T00:08:59+08:00",
-          "tree_id": "d0571398320ef3ea4bf1fb0520f8a44c655373f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/df53e70fc62249f6b3af3b3dad631dd999b7f1be"
-        },
-        "date": 1708791066050,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 548720,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 528480,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da25c6867f1219622134d46a07d1dc7269761008",
+          "message": "chore(deps): bump libc from 0.2.153 to 0.2.154 (#1728)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.153 to 0.2.154.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.153...0.2.154)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-30T12:47:20+08:00",
+          "tree_id": "17e18ac8ba77f4e918b564180247057b4e34be9b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da25c6867f1219622134d46a07d1dc7269761008"
+        },
+        "date": 1714452557078,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 541430,
             "unit": "ns/op"
           }
         ]
