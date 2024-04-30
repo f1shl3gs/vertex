@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714453069055,
+  "lastUpdate": 1714453126230,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cf7b8e3a814b53f93d2fcac18e9a50dbadffb932",
-          "message": "chore(deps): bump dyn-clone from 1.0.16 to 1.0.17 (#1620)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.16 to 1.0.17.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.16...1.0.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-26T16:20:55+08:00",
-          "tree_id": "13262b60dc4f3f635a67e6588a13a814892105a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf7b8e3a814b53f93d2fcac18e9a50dbadffb932"
-        },
-        "date": 1708936304735,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 573,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41443.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6d7b0becbf7f9082d724e67a0f4fd27d9eefd727",
           "message": "chore(deps): bump ahash from 0.8.9 to 0.8.10 (#1623)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.9 to 0.8.10.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.9...v0.8.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-28T19:16:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37801.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da25c6867f1219622134d46a07d1dc7269761008",
+          "message": "chore(deps): bump libc from 0.2.153 to 0.2.154 (#1728)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.153 to 0.2.154.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.153...0.2.154)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-04-30T12:47:20+08:00",
+          "tree_id": "17e18ac8ba77f4e918b564180247057b4e34be9b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da25c6867f1219622134d46a07d1dc7269761008"
+        },
+        "date": 1714453111304,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37801.7,
             "unit": "KiB"
           }
         ]
