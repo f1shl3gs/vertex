@@ -309,7 +309,7 @@ path = "benches/haproxy.rs"
 prost-build = { version = "0.12.4", default-features = false }
 
 [dev-dependencies]
-base64 = { version = "0.22.0", default-features = false }
+base64 = { version = "0.22.1", default-features = false }
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
 event = { path = "lib/event", features = ["string_path"] }
 framework = { path = "lib/framework", features = ["test-util"] }
