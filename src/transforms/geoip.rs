@@ -52,7 +52,7 @@ struct Config {
 #[typetag::serde(name = "geoip")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let database = maxminddb::Reader::open_mmap(&self.database)?;
+        let database = maxminddb::Reader::mmap(&self.database)?;
         let metadata = database.metadata()?;
         let has_isp = metadata.database_type == ASN_TYPE || metadata.database_type == ISP_TYPE;
 
@@ -351,8 +351,7 @@ mod tests {
         ];
 
         for (name, input, database, want) in tests {
-            let database =
-                maxminddb::Reader::open_mmap(database).expect("Open geoip database success");
+            let database = maxminddb::Reader::mmap(database).expect("Open geoip database success");
             let metadata = database.metadata().unwrap();
             let has_isp = metadata.database_type == ASN_TYPE || metadata.database_type == ISP_TYPE;
             let mut transform = Geoip {
