@@ -2139,7 +2139,7 @@ checksum = "0e7465ac9959cc2b1404e8e2367b43684a6d13790fe23056cc8c6c5a6b7bcb94"
 [[package]]
 name = "maxminddb"
 version = "0.1.0"
-source = "git+https://github.com/f1shl3gs/maxminddb.git?rev=feb36e1eb9338930853962ec586fd97d43789f31#feb36e1eb9338930853962ec586fd97d43789f31"
+source = "git+https://github.com/f1shl3gs/maxminddb.git?rev=eb9a6d1861cfe7313589c0e0281ddbb660a88962#eb9a6d1861cfe7313589c0e0281ddbb660a88962"
 dependencies = [
  "memmap2",
 ]
