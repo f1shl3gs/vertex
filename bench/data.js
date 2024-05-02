@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714615864820,
+  "lastUpdate": 1714616409045,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7964acc461d102d8d0fd67d761b4b265862ec2da",
-          "message": "chore(deps): bump indexmap from 2.2.3 to 2.2.4 (#1625)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.3 to 2.2.4.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.3...2.2.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-29T16:28:54+08:00",
-          "tree_id": "3ce054e15554775bfa0a217324b9c1b4ba2cb556",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7964acc461d102d8d0fd67d761b4b265862ec2da"
-        },
-        "date": 1709196014304,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 592,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41427.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "db590153d25e93fa15c6cc41a2293eae444481bd",
           "message": "chore(deps): bump indexmap from 2.2.4 to 2.2.5 (#1628)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.4 to 2.2.5.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.4...2.2.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-03-01T17:32:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37801.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8dd861974dd36a2d9b803b04c17ec1e98be12a04",
+          "message": "bump maxminddb to latest commit (#1731)",
+          "timestamp": "2024-05-02T10:08:40+08:00",
+          "tree_id": "a512b83550e25f50f650f26d8be775333d2d0c90",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8dd861974dd36a2d9b803b04c17ec1e98be12a04"
+        },
+        "date": 1714616394050,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37793.8,
             "unit": "KiB"
           }
         ]
