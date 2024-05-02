@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714613831264,
+  "lastUpdate": 1714615862042,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cf7b8e3a814b53f93d2fcac18e9a50dbadffb932",
-          "message": "chore(deps): bump dyn-clone from 1.0.16 to 1.0.17 (#1620)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.16 to 1.0.17.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.16...1.0.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-26T16:20:55+08:00",
-          "tree_id": "13262b60dc4f3f635a67e6588a13a814892105a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf7b8e3a814b53f93d2fcac18e9a50dbadffb932"
-        },
-        "date": 1708935784691,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540580,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529050,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8dd861974dd36a2d9b803b04c17ec1e98be12a04",
+          "message": "bump maxminddb to latest commit (#1731)",
+          "timestamp": "2024-05-02T10:08:40+08:00",
+          "tree_id": "a512b83550e25f50f650f26d8be775333d2d0c90",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8dd861974dd36a2d9b803b04c17ec1e98be12a04"
+        },
+        "date": 1714615846228,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 529210,
             "unit": "ns/op"
           }
         ]
