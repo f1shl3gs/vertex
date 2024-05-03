@@ -424,7 +424,7 @@ impl TryFrom<serde_json::Value> for Event {
                     .map(|(k, v)| (k, v.into()))
                     .collect::<BTreeMap<_, _>>(),
             )),
-            _ => Err(crate::Error::from(
+            _ => Err(Error::from(
                 "Attempted to convert non-Object JSON into an Event.",
             )),
         }

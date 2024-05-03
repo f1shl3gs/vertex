@@ -4,7 +4,7 @@
 #![allow(clippy::unused_unit)]
 #![allow(unused_imports)]
 #![allow(unused_extern_crates)]
-#![cfg_attr(feature = "cargo-clippy", allow(clippy::too_many_arguments, clippy::type_complexity))]
+#![cfg_attr(feature = "clippy", allow(clippy::too_many_arguments, clippy::type_complexity))]
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
 extern crate thrift;
@@ -504,6 +504,7 @@ pub struct Span {
 }
 
 impl Span {
+  #[allow(clippy::too_many_arguments)]
   pub fn new<F1, F3, F4, F5, F6, F8, F9, F10, F11, F12>(trace_id: F1, name: F3, id: F4, parent_id: F5, annotations: F6, binary_annotations: F8, debug: F9, timestamp: F10, duration: F11, trace_id_high: F12) -> Span where F1: Into<Option<i64>>, F3: Into<Option<String>>, F4: Into<Option<i64>>, F5: Into<Option<i64>>, F6: Into<Option<Vec<Annotation>>>, F8: Into<Option<Vec<BinaryAnnotation>>>, F9: Into<Option<bool>>, F10: Into<Option<i64>>, F11: Into<Option<i64>>, F12: Into<Option<i64>> {
     Span {
       trace_id: trace_id.into(),

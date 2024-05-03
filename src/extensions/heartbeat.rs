@@ -47,7 +47,7 @@ impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
         let mut status = STATUS.lock();
 
-        status.uuid = UUID.clone();
+        status.uuid.clone_from(&UUID);
         status.uptime = chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, false);
         status.hostname = hostname::get().expect("get hostname failed");
         status.version = crate::get_version();
