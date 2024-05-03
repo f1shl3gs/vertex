@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714616409045,
+  "lastUpdate": 1714700325553,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6d7b0becbf7f9082d724e67a0f4fd27d9eefd727",
-          "message": "chore(deps): bump ahash from 0.8.9 to 0.8.10 (#1623)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.9 to 0.8.10.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.9...v0.8.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-28T19:16:25+08:00",
-          "tree_id": "fdeecb3de526981f6216ddf838a67c8c7c194131",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6d7b0becbf7f9082d724e67a0f4fd27d9eefd727"
-        },
-        "date": 1709119099248,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532800,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7c27c66861acdda75f43f3dfc111b594fb0e36d5",
+          "message": "bump toolchain to 1.78.0 (#1732)\n\n* bump toolchain to 1.78.0",
+          "timestamp": "2024-05-03T09:36:25+08:00",
+          "tree_id": "8955bd90b32c49426739f5d484e842e6e7eca121",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c27c66861acdda75f43f3dfc111b594fb0e36d5"
+        },
+        "date": 1714700310395,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 522280,
             "unit": "ns/op"
           }
         ]
