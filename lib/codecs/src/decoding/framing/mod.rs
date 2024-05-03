@@ -1,6 +1,8 @@
 //! A collection of framing methods that can be used to convert from byte frames
 //! with defined boundaries to byte chunks.
 
+#![allow(clippy::new_without_default)]
+
 mod bytes;
 mod character;
 mod newline;

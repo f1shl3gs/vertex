@@ -1,6 +1,8 @@
 //! A collection of support structures that are used in the process of encoding
 //! events into bytes.
 
+#![allow(clippy::new_without_default)]
+
 mod config;
 mod encoder;
 mod format;

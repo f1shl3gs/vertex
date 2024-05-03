@@ -212,7 +212,7 @@ impl LogSource {
                 // TODO: metric
             }
 
-            Ok::<(), kube::runtime::watcher::Error>(())
+            Ok::<(), watcher::Error>(())
         });
 
         let provider = KubernetesPathsProvider::new(store.clone(), exclude_pattern).await?;

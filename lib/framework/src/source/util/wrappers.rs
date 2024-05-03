@@ -2,7 +2,7 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use pin_project_lite::pin_project;
-use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
+use tokio::io::{AsyncRead, ReadBuf};
 
 pin_project! {
     /// This wraps the inner socket and emits `BytesReceived` with the
@@ -11,12 +11,6 @@ pin_project! {
         #[pin]
         inner: T,
         after_read: F,
-    }
-}
-
-impl<T, F> AfterRead<T, F> {
-    pub const fn new(inner: T, after_read: F) -> Self {
-        Self { inner, after_read }
     }
 }
 
@@ -37,20 +31,5 @@ where
         }
 
         result
-    }
-}
-
-pub trait AfterReadExt {
-    fn after_read<F>(self, after_read: F) -> AfterRead<Self, F>
-    where
-        Self: Sized;
-}
-
-impl<T: AsyncRead + AsyncWrite> AfterReadExt for T {
-    fn after_read<F>(self, after_read: F) -> AfterRead<Self, F>
-    where
-        Self: Sized,
-    {
-        AfterRead::new(self, after_read)
     }
 }

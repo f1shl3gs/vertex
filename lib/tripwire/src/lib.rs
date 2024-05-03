@@ -165,7 +165,7 @@ impl Future for Tripwire {
             .entry(self.id)
             .and_modify(|prev| {
                 if !prev.will_wake(cx.waker()) {
-                    *prev = cx.waker().clone();
+                    prev.clone_from(cx.waker());
                 }
             })
             .or_insert_with(|| cx.waker().clone());

@@ -61,7 +61,6 @@ macro_rules! impl_write {
 pub trait WriteExt: Write {
     impl_write!(write_u32, u32);
     impl_write!(write_i32, i32);
-    impl_write!(write_usize, usize);
 }
 
 impl<T: Write> WriteExt for T {}

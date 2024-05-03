@@ -680,7 +680,7 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
 
     for i in 0..dbcount {
         let name = format!("db{}", i);
-        if handled_dbs.get(name.as_str()).is_none() {
+        if handled_dbs.contains(name.as_str()) {
             metrics.extend_from_slice(&[
                 Metric::gauge_with_tags(
                     "db_keys",
