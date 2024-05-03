@@ -30,6 +30,10 @@ pub enum DeserializeError {
     /// The error occurred while deserializing it from JSON
     Json(serde_json::Error),
 
+    #[cfg(feature = "syslog")]
+    /// The error occurred while deserializing it from Syslog
+    Syslog(::syslog::Error),
+
     /// The error occurred while deserializing
     Other(Box<dyn std::error::Error + Send + Sync + 'static>),
 }
