@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1714879114805,
+  "lastUpdate": 1714879115485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7964acc461d102d8d0fd67d761b4b265862ec2da",
-          "message": "chore(deps): bump indexmap from 2.2.3 to 2.2.4 (#1625)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.3 to 2.2.4.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.3...2.2.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-29T16:28:54+08:00",
-          "tree_id": "3ce054e15554775bfa0a217324b9c1b4ba2cb556",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7964acc461d102d8d0fd67d761b4b265862ec2da"
-        },
-        "date": 1709195455828,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540150,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 522140,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "86fd7726b18bcb81e4055df2355bac199e250043",
+          "message": "chore(deps): bump tokio-util from 0.7.10 to 0.7.11 (#1736)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.10 to 0.7.11.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.10...tokio-util-0.7.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-05T11:16:12+08:00",
+          "tree_id": "9ccd6a0cc87d64d94207a6818df29f855f041207",
+          "url": "https://github.com/f1shl3gs/vertex/commit/86fd7726b18bcb81e4055df2355bac199e250043"
+        },
+        "date": 1714879099745,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 522790,
             "unit": "ns/op"
           }
         ]
