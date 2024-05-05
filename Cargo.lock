@@ -531,7 +531,7 @@ dependencies = [
  "serde_path_to_error",
  "serde_yaml",
  "smallvec",
- "syslog_loose",
+ "syslog",
  "tokio",
  "tokio-util",
  "tracing",
@@ -3723,13 +3723,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "syslog_loose"
-version = "0.21.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "161028c00842709450114c39db3b29f44c898055ed8833bb9b535aba7facf30e"
+name = "syslog"
+version = "0.1.0"
+source = "git+https://github.com/f1shl3gs/syslog.git?rev=a6efd1131c002b1c773b997fbcd551db8d118ef7#a6efd1131c002b1c773b997fbcd551db8d118ef7"
 dependencies = [
  "chrono",
- "nom",
 ]
 
 [[package]]

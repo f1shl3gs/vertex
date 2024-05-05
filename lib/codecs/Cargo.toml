@@ -6,7 +6,6 @@ publish = false
 
 [features]
 default = []
-syslog = ["syslog_loose"]
 
 [dev-dependencies]
 event = { path = "../event", features = ["string_path"] }
@@ -32,4 +31,4 @@ serde = { version = "1.0.200", default-features = false }
 smallvec = { version = "1.13.2", default-features = false }
 
 # Optional
-syslog_loose = { version = "0.21.0", default-features = false, optional = true }
+syslog = { git = "https://github.com/f1shl3gs/syslog.git", rev = "a6efd1131c002b1c773b997fbcd551db8d118ef7", optional = true }
