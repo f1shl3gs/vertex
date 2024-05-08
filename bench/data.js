@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715139956316,
+  "lastUpdate": 1715139979550,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a2b3845b63433e9e151d85f768b027ef025aed19",
-          "message": "chore(deps): bump mio from 0.8.9 to 0.8.11 (#1632)\n\nBumps [mio](https://github.com/tokio-rs/mio) from 0.8.9 to 0.8.11.\r\n- [Release notes](https://github.com/tokio-rs/mio/releases)\r\n- [Changelog](https://github.com/tokio-rs/mio/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/mio/compare/v0.8.9...v0.8.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mio\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-05T17:46:22+08:00",
-          "tree_id": "ff40c69f1224e2d9b4638378660cbb769d39bda9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a2b3845b63433e9e151d85f768b027ef025aed19"
-        },
-        "date": 1709632104740,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536810,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 515040,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef35af668ad84353c7813f5af6a99dd998f3de58",
+          "message": "chore(deps): bump syn from 2.0.60 to 2.0.61 (#1738)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.60 to 2.0.61.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.60...2.0.61)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-08T11:44:01+08:00",
+          "tree_id": "8fdab3ef62675af97b978fc97c1d4069420b1b94",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef35af668ad84353c7813f5af6a99dd998f3de58"
+        },
+        "date": 1715139964506,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 519310,
             "unit": "ns/op"
           }
         ]
