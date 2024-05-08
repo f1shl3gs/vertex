@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715051032635,
+  "lastUpdate": 1715139956316,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "85d024613e37f360b235b7c87afeee5b00e4e941",
-          "message": "chore(deps): bump ahash from 0.8.10 to 0.8.11 (#1630)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.10 to 0.8.11.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.10...v0.8.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-04T18:42:25+08:00",
-          "tree_id": "3224a58698e9a6eb893fe76c0a5d4dcbfcad1313",
-          "url": "https://github.com/f1shl3gs/vertex/commit/85d024613e37f360b235b7c87afeee5b00e4e941"
-        },
-        "date": 1709549061217,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539810,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 521100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7446f06abfee2b1406e4224beb78b78297fdb3a2",
+          "message": "chore(deps): bump thiserror from 1.0.59 to 1.0.60 (#1740)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.59 to 1.0.60.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.59...1.0.60)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-08T11:43:33+08:00",
+          "tree_id": "ed9b94f57d743d5633d16ff7e444c6094de4adf8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7446f06abfee2b1406e4224beb78b78297fdb3a2"
+        },
+        "date": 1715139940179,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 515040,
             "unit": "ns/op"
           }
         ]
