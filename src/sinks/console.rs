@@ -90,12 +90,14 @@ where
     T: tokio::io::AsyncWrite + Send + Sync + Unpin,
 {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
+        let mut buf = BytesMut::new();
+
         while let Some(events) = input.next().await {
             for mut event in events.into_events() {
                 self.transformer.transform(&mut event);
 
                 let finalizers = event.take_finalizers();
-                let mut buf = BytesMut::new();
+                buf.clear();
                 self.encoder.encode(event, &mut buf).map_err(|_| {
                     // Error is handled by `Encoder`
                     finalizers.update_status(EventStatus::Errored);
