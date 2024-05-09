@@ -48,7 +48,7 @@ impl MaybeTlsListener {
         Ok(acceptor)
     }
 
-    pub(crate) async fn accept(&mut self) -> crate::tls::Result<MaybeTlsIncomingStream<TcpStream>> {
+    pub async fn accept(&mut self) -> crate::tls::Result<MaybeTlsIncomingStream<TcpStream>> {
         self.listener
             .accept()
             .await
