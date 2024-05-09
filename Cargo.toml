@@ -167,6 +167,7 @@ sources-kubernetes_events = ["kubernetes"]
 sources-libvirt = ["dep:virt"]
 sources-memcached = []
 sources-mongodb = []
+sources-mqtt = []
 sources-mysqld = ["dep:sqlx"]
 sources-nginx_stub = []
 sources-node_metrics = ["dep:libc", "dep:netlink-packet-sock-diag", "dep:netlink-sys", "dep:netlink-packet-core"]
@@ -204,6 +205,7 @@ sources = [
     "sources-libvirt",
     "sources-memcached",
     "sources-mongodb",
+    "sources-mqtt",
     "sources-mysqld",
     "sources-nginx_stub",
     "sources-node_metrics",

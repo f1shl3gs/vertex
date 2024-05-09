@@ -42,6 +42,8 @@ mod kubernetes_logs;
 mod libvirt;
 #[cfg(feature = "sources-memcached")]
 mod memcached;
+#[cfg(feature = "sources-mqtt")]
+mod mqtt;
 #[cfg(feature = "sources-mysqld")]
 mod mysqld;
 #[cfg(feature = "sources-nginx_stub")]
