@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-MATCHED=$(grep 'Finished release \[optimized] target(s)' build.txt | grep -oE "([0-9]+)")
+MATCHED=$(grep 'Finished' build.txt | grep -oE "([0-9]+)")
 DURATION=0
 FACTOR=60
 for VALUE in $MATCHED; do
