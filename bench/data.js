@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715254568354,
+  "lastUpdate": 1715317055732,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "db590153d25e93fa15c6cc41a2293eae444481bd",
-          "message": "chore(deps): bump indexmap from 2.2.4 to 2.2.5 (#1628)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.4 to 2.2.5.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.4...2.2.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-01T17:32:25+08:00",
-          "tree_id": "4a3f073f5638685be913efbdebc1d1623b7f6478",
-          "url": "https://github.com/f1shl3gs/vertex/commit/db590153d25e93fa15c6cc41a2293eae444481bd"
-        },
-        "date": 1709286203937,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 569,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41438.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "85d024613e37f360b235b7c87afeee5b00e4e941",
           "message": "chore(deps): bump ahash from 0.8.10 to 0.8.11 (#1630)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.10 to 0.8.11.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.10...v0.8.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-03-04T18:42:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37793.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "c3adaf992a7e2a4cc2c508bd9da1697bd6bc0a58",
+          "message": "fix grep",
+          "timestamp": "2024-05-10T12:46:27+08:00",
+          "tree_id": "c98d22e3332989f306d8be49256cbd651b9ec776",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c3adaf992a7e2a4cc2c508bd9da1697bd6bc0a58"
+        },
+        "date": 1715317040624,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 558,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37888.8,
             "unit": "KiB"
           }
         ]
