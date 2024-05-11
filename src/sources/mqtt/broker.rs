@@ -133,7 +133,6 @@ pub async fn serve_connection(
                         //   10       Keepalive LSB
                         //   11
                         //   12
-
                         let mut len = payload[0] as usize;
                         len |= payload[1] as usize;
 
