@@ -40,7 +40,7 @@ impl SourceConfig for Config {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        vec![Resource::udp(self.listen)]
+        vec![Resource::tcp(self.listen)]
     }
 }
 
