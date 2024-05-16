@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715900738939,
+  "lastUpdate": 1715900747487,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a2b3845b63433e9e151d85f768b027ef025aed19",
-          "message": "chore(deps): bump mio from 0.8.9 to 0.8.11 (#1632)\n\nBumps [mio](https://github.com/tokio-rs/mio) from 0.8.9 to 0.8.11.\r\n- [Release notes](https://github.com/tokio-rs/mio/releases)\r\n- [Changelog](https://github.com/tokio-rs/mio/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/mio/compare/v0.8.9...v0.8.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mio\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-05T17:46:22+08:00",
-          "tree_id": "ff40c69f1224e2d9b4638378660cbb769d39bda9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a2b3845b63433e9e151d85f768b027ef025aed19"
-        },
-        "date": 1709632106631,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.673,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 91.368,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.73,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d78ce35421d7e67fbe0914fdb57c1f66fb5646a9",
+          "message": "chore(deps): bump syn from 2.0.63 to 2.0.64 (#1748)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.63 to 2.0.64.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.63...2.0.64)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-17T07:03:31+08:00",
+          "tree_id": "414ea595ea3df29347c0f04e9ab3f429959fea99",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d78ce35421d7e67fbe0914fdb57c1f66fb5646a9"
+        },
+        "date": 1715900732245,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.056,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.537,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 202.86,
             "unit": "ns/op"
           }
         ]
