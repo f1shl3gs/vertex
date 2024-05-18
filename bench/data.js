@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715992838186,
+  "lastUpdate": 1715992839447,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "60a423fb799ec404c41d071b5c2daac074523d18",
-          "message": "fix bytes and count in sink request (#1643)",
-          "timestamp": "2024-03-11T06:14:02+08:00",
-          "tree_id": "1c152d92b8e207c571aaa804d82a72a3a669e9ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/60a423fb799ec404c41d071b5c2daac074523d18"
-        },
-        "date": 1710108956129,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534900,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 544220,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aaf928266a72ca36881d45c97485534484603982",
+          "message": "chore(deps): bump thiserror from 1.0.60 to 1.0.61 (#1750)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.60 to 1.0.61.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.60...1.0.61)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-18T08:38:34+08:00",
+          "tree_id": "b577c6b1e25ab2bd3452b5d7ce55ccd1366e07f6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aaf928266a72ca36881d45c97485534484603982"
+        },
+        "date": 1715992823498,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 532980,
             "unit": "ns/op"
           }
         ]
