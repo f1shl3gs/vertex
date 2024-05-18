@@ -308,7 +308,7 @@ harness = false
 path = "benches/haproxy.rs"
 
 [build-dependencies]
-prost-build = { version = "0.12.4", default-features = false }
+prost-build = { version = "0.12.6", default-features = false }
 
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
@@ -381,8 +381,8 @@ netlink-packet-sock-diag = { version = "0.4.2", optional = true }
 netlink-packet-core = { version = "0.7.0", optional = true }
 
 # Protobuf
-prost = { version = "0.12.4", default-features = false, features = ["std"] }
-prost-types = { version = "0.12.4", default-features = false }
+prost = { version = "0.12.6", default-features = false, features = ["std"] }
+prost-types = { version = "0.12.6", default-features = false }
 
 # Profile
 pprof = { version = "0.13.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
