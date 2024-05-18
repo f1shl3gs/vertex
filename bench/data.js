@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1715992848261,
+  "lastUpdate": 1715992922664,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4fcc899e3d873436de0981ac685778276af05718",
-          "message": "sinks/console reuse EncodingConfigWithFraming (#1644)",
-          "timestamp": "2024-03-11T19:37:36+08:00",
-          "tree_id": "128b1f20144b8633d2350f874024a2aeaaca87d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4fcc899e3d873436de0981ac685778276af05718"
-        },
-        "date": 1710157175484,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539790,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532980,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6160fc0b8a1a4b179148584c3fba2c879427583a",
+          "message": "chore(deps): bump libc from 0.2.154 to 0.2.155 (#1751)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.154 to 0.2.155.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.154...0.2.155)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-18T08:39:40+08:00",
+          "tree_id": "733eff973b6e76918d19c8ed19ef9667d68f871b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6160fc0b8a1a4b179148584c3fba2c879427583a"
+        },
+        "date": 1715992905925,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536050,
             "unit": "ns/op"
           }
         ]
