@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716204279700,
+  "lastUpdate": 1716204308326,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "40361a1ea15285426be81c8c75b5f30f059f78d7",
-          "message": "implement with HttpService (#1638)",
-          "timestamp": "2024-03-10T12:50:30+08:00",
-          "tree_id": "4f08d0b8ab15722e6d7ba84777ca043f26e691da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/40361a1ea15285426be81c8c75b5f30f059f78d7"
-        },
-        "date": 1710046355553,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.696,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 91.451,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.31,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 198.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b3d59b93dd8337677b4e7af393c16ba5cf54768f",
+          "message": "chore(deps): bump mimalloc from 0.1.41 to 0.1.42 (#1754)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.41 to 0.1.42.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.41...v0.1.42)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-20T19:22:41+08:00",
+          "tree_id": "924edee5024f83079cb0ac67917d7099b42795a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b3d59b93dd8337677b4e7af393c16ba5cf54768f"
+        },
+        "date": 1716204293075,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.119,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.959,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 195.98,
             "unit": "ns/op"
           }
         ]
