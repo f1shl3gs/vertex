@@ -14,7 +14,7 @@ async-trait = { version = "0.1.80", default-features = false }
 bytes = { version = "1.6.0", default-features = false }
 crc32fast = { version = "1.4.0", default-features = false, features = ["std"] }
 crossbeam-queue = { version = "0.3.11", default-features = false, features = ["std"] }
-crossbeam-utils = { version = "0.8.19", default-features = false }
+crossbeam-utils = { version = "0.8.20", default-features = false }
 event = { path = "../event" }
 finalize = { path = "../finalize" }
 fslock = { version = "0.2.1", default-features = false, features = ["std"] }
