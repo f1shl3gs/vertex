@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716267201898,
+  "lastUpdate": 1716267693516,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4fcc899e3d873436de0981ac685778276af05718",
-          "message": "sinks/console reuse EncodingConfigWithFraming (#1644)",
-          "timestamp": "2024-03-11T19:37:36+08:00",
-          "tree_id": "128b1f20144b8633d2350f874024a2aeaaca87d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4fcc899e3d873436de0981ac685778276af05718"
-        },
-        "date": 1710157751887,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 605,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41697.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7216632b5d7c4b450059391df8e77f82e849116a",
           "message": "sinks/blackhole implement rate (#1645)",
           "timestamp": "2024-03-11T21:05:03+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37798.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "31fc8b019dce1d470fe39d3011e5d28024d2099d",
+          "message": "--- (#1757)\n\nupdated-dependencies:\r\n- dependency-name: crc32fast\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-21T12:50:59+08:00",
+          "tree_id": "1f19c46027bbb9c8fbff50a61f07b3b14e1cc699",
+          "url": "https://github.com/f1shl3gs/vertex/commit/31fc8b019dce1d470fe39d3011e5d28024d2099d"
+        },
+        "date": 1716267678543,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 543,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37798.6,
             "unit": "KiB"
           }
         ]
