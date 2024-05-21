@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716204828468,
+  "lastUpdate": 1716267201898,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ee4db2ce54bbe83b7a812931413e81c7774c696b",
-          "message": "chore(deps): bump tokio-stream from 0.1.14 to 0.1.15 (#1650)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.14 to 0.1.15.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.14...tokio-stream-0.1.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-15T07:40:26+08:00",
-          "tree_id": "daa5bb29bb46c8d1f9c4ae7fd40542b7eec38867",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee4db2ce54bbe83b7a812931413e81c7774c696b"
-        },
-        "date": 1710459748966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 545240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 520820,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "31fc8b019dce1d470fe39d3011e5d28024d2099d",
+          "message": "--- (#1757)\n\nupdated-dependencies:\r\n- dependency-name: crc32fast\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-21T12:50:59+08:00",
+          "tree_id": "1f19c46027bbb9c8fbff50a61f07b3b14e1cc699",
+          "url": "https://github.com/f1shl3gs/vertex/commit/31fc8b019dce1d470fe39d3011e5d28024d2099d"
+        },
+        "date": 1716267186671,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 518930,
             "unit": "ns/op"
           }
         ]
