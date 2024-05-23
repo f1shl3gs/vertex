@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716267693516,
+  "lastUpdate": 1716436056671,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "68e0721f1a7fa314ae433ab777f64b5b8c634400",
-          "message": "chore(deps): bump tokio-test from 0.4.3 to 0.4.4 (#1651)\n\nBumps [tokio-test](https://github.com/tokio-rs/tokio) from 0.4.3 to 0.4.4.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-test-0.4.3...tokio-test-0.4.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-test\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-15T07:41:01+08:00",
-          "tree_id": "9e1037ffc740676d76d685d59ad1e320e033193b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/68e0721f1a7fa314ae433ab777f64b5b8c634400"
-        },
-        "date": 1710459785078,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 535840,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 518930,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "30a98352306ef0db9320ae1f976ca71db2c2f0bc",
+          "message": "simplify receive loop (#1758)",
+          "timestamp": "2024-05-23T11:45:30+08:00",
+          "tree_id": "e4fe1d2ce1d0998b31933db1e5ea43875cc604a4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/30a98352306ef0db9320ae1f976ca71db2c2f0bc"
+        },
+        "date": 1716436041717,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 516150,
             "unit": "ns/op"
           }
         ]
