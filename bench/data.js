@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716436070510,
+  "lastUpdate": 1716436573278,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7216632b5d7c4b450059391df8e77f82e849116a",
-          "message": "sinks/blackhole implement rate (#1645)",
-          "timestamp": "2024-03-11T21:05:03+08:00",
-          "tree_id": "ac28fb91a7b34f54423dd3ba2ac4abd65609cb86",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7216632b5d7c4b450059391df8e77f82e849116a"
-        },
-        "date": 1710162967984,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 576,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41701.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37798.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "30a98352306ef0db9320ae1f976ca71db2c2f0bc",
+          "message": "simplify receive loop (#1758)",
+          "timestamp": "2024-05-23T11:45:30+08:00",
+          "tree_id": "e4fe1d2ce1d0998b31933db1e5ea43875cc604a4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/30a98352306ef0db9320ae1f976ca71db2c2f0bc"
+        },
+        "date": 1716436557615,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37792.3,
             "unit": "KiB"
           }
         ]
