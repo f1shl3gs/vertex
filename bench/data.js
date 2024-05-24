@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716436573278,
+  "lastUpdate": 1716516227918,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ef2efbe4708ae431c4e0ee42f962c0fcc45ba4b5",
-          "message": "chore(deps): bump base64 from 0.21.7 to 0.22.0 (#1629)\n\n* chore(deps): bump base64 from 0.21.7 to 0.22.0\r\n\r\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.7 to 0.22.0.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.7...v0.22.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* add alloc feature to base64\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2024-03-15T09:49:05+08:00",
-          "tree_id": "88a0795caa62a586199fbdac5a0d3a91e7453caa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ef2efbe4708ae431c4e0ee42f962c0fcc45ba4b5"
-        },
-        "date": 1710467469141,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539130,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 516150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dddc3ed241efeb20774d180c2d8c69eaf93a2fd6",
+          "message": "chore(deps): bump syn from 2.0.65 to 2.0.66 (#1759)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.65 to 2.0.66.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.65...2.0.66)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-24T10:01:38+08:00",
+          "tree_id": "ca4befa978c19a2269828178b05cf5827cad6e52",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dddc3ed241efeb20774d180c2d8c69eaf93a2fd6"
+        },
+        "date": 1716516212631,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537750,
             "unit": "ns/op"
           }
         ]
