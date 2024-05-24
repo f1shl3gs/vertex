@@ -91,4 +91,4 @@ url = { version = "2.5.0", features = ["serde"] }
 zstd = { version = "0.13.1", default-features = false }
 
 [target.'cfg(unix)'.dependencies]
-nix = { version = "0.28.0", default-features = false, features = ["signal"] }
+nix = { version = "0.29.0", default-features = false, features = ["signal"] }

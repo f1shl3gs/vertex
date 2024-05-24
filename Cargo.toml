@@ -321,7 +321,7 @@ testify = { path = "lib/testify" }
 tokio = { version = "1.37.0", default-features = false, features = ["test-util", "time"] }
 
 [target.'cfg(unix)'.dependencies]
-nix = { version = "0.28.0", default-features = false, features = ["net"] }
+nix = { version = "0.29.0", default-features = false, features = ["net"] }
 
 [dependencies]
 # Workspaces
