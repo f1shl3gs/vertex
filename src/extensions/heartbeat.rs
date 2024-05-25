@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 use std::fmt::Debug;
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 use std::ops::Deref;
 use std::time::Duration;
 
@@ -12,7 +13,6 @@ use framework::tls::TlsConfig;
 use framework::{Extension, ShutdownSignal};
 use http::Request;
 use hyper::Body;
-use nix::net::if_::InterfaceFlags;
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use serde::Serialize;
@@ -53,7 +53,7 @@ impl ExtensionConfig for Config {
         status.version = crate::get_version();
         status.lease = humanize::duration::duration(&(self.interval + Duration::from_secs(15)));
         status.os = sysinfo::os().unwrap_or_default();
-        status.address = get_advertise_addr()?;
+        status.address = get_advertise_addr()?.to_string();
         status.kernel = sysinfo::kernel().unwrap_or_default();
         status.tags = self.tags.clone();
 
@@ -184,27 +184,67 @@ async fn run(
     }
 }
 
-fn get_advertise_addr() -> std::io::Result<String> {
-    let ifaddrs = nix::ifaddrs::getifaddrs()?;
+fn get_advertise_addr() -> std::io::Result<IpAddr> {
+    let mut advertised = None;
 
-    let addrs = ifaddrs
-        .filter_map(|addr| {
-            if addr.flags.intersects(InterfaceFlags::IFF_LOOPBACK)
-                || !addr.flags.intersects(InterfaceFlags::IFF_RUNNING)
-            {
-                return None;
+    unsafe {
+        let mut addrs = std::mem::MaybeUninit::<*mut libc::ifaddrs>::uninit();
+        let ret = libc::getifaddrs(addrs.as_mut_ptr());
+        if ret == -1 {
+            panic!("{}", std::io::Error::last_os_error());
+        }
+
+        let base = addrs.assume_init();
+        let mut next = addrs.assume_init();
+
+        while let Some(addr) = next.as_ref() {
+            if addr.ifa_flags & libc::IFF_LOOPBACK as libc::c_uint != 0 {
+                next = addr.ifa_next;
+                continue;
             }
 
-            let sockaddr = addr.address?.as_sockaddr_in()?.ip();
-            Some(sockaddr.to_string())
-        })
-        .collect::<Vec<_>>();
+            if addr.ifa_flags & libc::IFF_RUNNING as libc::c_uint == 0 {
+                next = addr.ifa_next;
+                continue;
+            }
 
-    Ok(if addrs.is_empty() {
-        "".to_string()
-    } else {
-        addrs[0].to_string()
-    })
+            if addr.ifa_addr.is_null() {
+                next = addr.ifa_next;
+                continue;
+            }
+
+            match (*addr.ifa_addr).sa_family as libc::c_int {
+                libc::AF_INET => {
+                    let sockaddr: libc::sockaddr_in =
+                        std::ptr::read_unaligned(addr.ifa_addr as *const _);
+                    let ip = Ipv4Addr::from(sockaddr.sin_addr.s_addr.to_ne_bytes());
+                    advertised = Some(IpAddr::V4(ip));
+                    break;
+                }
+                libc::AF_INET6 => {
+                    let sockaddr: libc::sockaddr_in6 =
+                        std::ptr::read_unaligned(addr.ifa_addr as *const _);
+                    let ip = Ipv6Addr::from(sockaddr.sin6_addr.s6_addr);
+                    advertised = Some(IpAddr::V6(ip));
+                    break;
+                }
+                _ => {
+                    next = addr.ifa_next;
+                    continue;
+                }
+            }
+        }
+
+        libc::freeifaddrs(base);
+    }
+
+    match advertised {
+        Some(addr) => Ok(addr),
+        None => Err(std::io::Error::new(
+            std::io::ErrorKind::AddrNotAvailable,
+            "cannot find a valid addr",
+        )),
+    }
 }
 
 #[cfg(test)]

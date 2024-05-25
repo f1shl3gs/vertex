@@ -80,14 +80,14 @@ pub fn spawn_thread<'a>(
 }
 
 fn raise_sighup() {
-    use nix::sys::signal;
-
-    let _ = signal::raise(signal::Signal::SIGHUP).map_err(|err| {
+    let ret = unsafe { libc::raise(libc::SIGHUP) };
+    if ret == -1 {
+        let err = std::io::Error::last_os_error();
         error!(
             message = "Unable to reload configuration file. Restart Vertex to reload it",
-            cause = %err
-        )
-    });
+            ?err
+        );
+    }
 }
 
 fn create_watcher(

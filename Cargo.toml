@@ -320,9 +320,6 @@ serde_path_to_error = { version = "0.1.16", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.37.0", default-features = false, features = ["test-util", "time"] }
 
-[target.'cfg(unix)'.dependencies]
-nix = { version = "0.28.0", default-features = false, features = ["net"] }
-
 [dependencies]
 # Workspaces
 buffers = { path = "lib/buffers", optional = true }
