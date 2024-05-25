@@ -14,8 +14,6 @@ use framework::shutdown::ShutdownSignal;
 use framework::Source;
 use futures::{stream::BoxStream, StreamExt};
 use log_schema::log_schema;
-use nix::sys::signal::{kill, Signal};
-use nix::unistd::Pid;
 use tokio::fs::OpenOptions;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
 use tokio::{process::Command, time::sleep};
@@ -383,9 +381,9 @@ fn start_journalctl(
     let mut child = command.spawn()?;
     let stream = FramedRead::new(child.stdout.take().unwrap(), EntryCodec::new()).boxed();
 
-    let pid = Pid::from_raw(child.id().unwrap() as _);
+    let pid = child.id().unwrap();
     let stop = Box::new(move || {
-        let _ = kill(pid, Signal::SIGTERM);
+        let _ = unsafe { libc::kill(pid as libc::pid_t, libc::SIGTERM) };
     });
 
     Ok((stream, stop))
