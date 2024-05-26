@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716607097557,
+  "lastUpdate": 1716689212630,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "480aa3f8cc114b2187901a90fd8941f1cebae922",
-          "message": "chore(deps): bump async-trait from 0.1.77 to 0.1.78 (#1652)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.77 to 0.1.78.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.77...0.1.78)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-17T09:33:20+08:00",
-          "tree_id": "0910b501b0b20ff1ac2d072026779b7c2ac75353",
-          "url": "https://github.com/f1shl3gs/vertex/commit/480aa3f8cc114b2187901a90fd8941f1cebae922"
-        },
-        "date": 1710639321320,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536920,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537750,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "13e4a57d42995a7d1577edbea4dfaa07d6574518",
+          "message": "chore(deps): bump parking_lot from 0.12.2 to 0.12.3 (#1762)\n\nBumps [parking_lot](https://github.com/Amanieu/parking_lot) from 0.12.2 to 0.12.3.\r\n- [Changelog](https://github.com/Amanieu/parking_lot/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Amanieu/parking_lot/compare/0.12.2...0.12.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: parking_lot\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-05-26T10:04:33+08:00",
+          "tree_id": "14dfb62da45e7874c7c77523295ec4370be4a177",
+          "url": "https://github.com/f1shl3gs/vertex/commit/13e4a57d42995a7d1577edbea4dfaa07d6574518"
+        },
+        "date": 1716689196925,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 529080,
             "unit": "ns/op"
           }
         ]
