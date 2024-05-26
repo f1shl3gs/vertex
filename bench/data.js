@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716698192572,
+  "lastUpdate": 1716698705394,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "68e0721f1a7fa314ae433ab777f64b5b8c634400",
-          "message": "chore(deps): bump tokio-test from 0.4.3 to 0.4.4 (#1651)\n\nBumps [tokio-test](https://github.com/tokio-rs/tokio) from 0.4.3 to 0.4.4.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-test-0.4.3...tokio-test-0.4.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-test\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-15T07:41:01+08:00",
-          "tree_id": "9e1037ffc740676d76d685d59ad1e320e033193b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/68e0721f1a7fa314ae433ab777f64b5b8c634400"
-        },
-        "date": 1710460321896,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 580,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41717.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ef2efbe4708ae431c4e0ee42f962c0fcc45ba4b5",
           "message": "chore(deps): bump base64 from 0.21.7 to 0.22.0 (#1629)\n\n* chore(deps): bump base64 from 0.21.7 to 0.22.0\r\n\r\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.7 to 0.22.0.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.7...v0.22.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* add alloc feature to base64\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2024-03-15T09:49:05+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37787.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56d485f17234fc956b6e1ed0cc890a0a94f50e46",
+          "message": "cargo update (#1765)",
+          "timestamp": "2024-05-26T12:34:00+08:00",
+          "tree_id": "9f83ff685aa1d8cff7ff33271f888992fd6c35b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56d485f17234fc956b6e1ed0cc890a0a94f50e46"
+        },
+        "date": 1716698689491,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 559,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37803.6,
             "unit": "KiB"
           }
         ]
