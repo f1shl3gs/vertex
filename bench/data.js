@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1716689774865,
+  "lastUpdate": 1716698178276,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5a62eb5e7dd4a4b1d55ec8c9841818a8607206ba",
-          "message": "chore(deps): bump async-recursion from 1.0.5 to 1.1.0 (#1655)\n\nBumps [async-recursion](https://github.com/dcchut/async-recursion) from 1.0.5 to 1.1.0.\r\n- [Release notes](https://github.com/dcchut/async-recursion/releases)\r\n- [Commits](https://github.com/dcchut/async-recursion/compare/v1.0.5...v1.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-recursion\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-18T03:41:45+08:00",
-          "tree_id": "6b39835b2228d5d3ba4f728be943a80f3984e7f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5a62eb5e7dd4a4b1d55ec8c9841818a8607206ba"
-        },
-        "date": 1710704632883,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542450,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 523250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56d485f17234fc956b6e1ed0cc890a0a94f50e46",
+          "message": "cargo update (#1765)",
+          "timestamp": "2024-05-26T12:34:00+08:00",
+          "tree_id": "9f83ff685aa1d8cff7ff33271f888992fd6c35b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56d485f17234fc956b6e1ed0cc890a0a94f50e46"
+        },
+        "date": 1716698162667,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 524440,
             "unit": "ns/op"
           }
         ]
