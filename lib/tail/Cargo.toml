@@ -15,7 +15,7 @@ quickcheck = { version = "1.0.3", default-features = false }
 tokio = { version = "1.38.0", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
 testify = { path = "../testify" }
 criterion = { version = "0.5.1", default-features = false }
-tracing-test = { version = "0.2.4" }
+tracing-test = { version = "0.2.5" }
 
 [dependencies]
 serde = { version = "1.0.203", default-features = false, features = ["derive"] }
