@@ -30,6 +30,7 @@ const MQTT_QOS_LEV2: u8 = 2; /* PUBREC packet */
 
 // Protocol version
 const MQTT_VERSION_311: u8 = 4;
+const MQTT_VERSION_5: u8 = 5;
 
 const fn type_name(typ: u8) -> &'static str {
     match typ {
@@ -53,6 +54,7 @@ pub async fn serve_connection(
     mut output: Pipeline,
 ) {
     let mut buf = BytesMut::new();
+    let mut version = 0;
 
     'RECV: loop {
         if let Err(err) = conn.read_buf(&mut buf).await {
@@ -66,38 +68,33 @@ pub async fn serve_connection(
 
         loop {
             let ctrl_byte = buf[0];
-            let mut remaining = 0usize;
-            let mut shift = 0;
-            for pos in 1..buf.len() {
-                let byte = buf[pos] as usize;
-                remaining += (byte & 0x7F) << shift;
-
-                // stop when continue bit is 0
-                if byte & 0x80 == 0 {
-                    let want = 1 + pos + remaining;
+            let remaining = match variant_length(&buf[1..]) {
+                Ok((len, advanced)) => {
+                    let want = 1 + len + advanced;
                     if buf.len() < want {
+                        // packet is not enough, continue read
                         continue 'RECV;
                     }
 
-                    buf.advance(1 + pos);
-
-                    break;
+                    buf.advance(1 + advanced); // 1 for the ctrl_byte
+                    len
                 }
-
-                shift += 7;
-
-                // Only a max of 4 bytes allowed for remaining length
-                // more than 4 shifts(0, 7, 14, 21) implies bad length
-                if shift > 21 {
-                    error!(message = "invalid remaining length");
+                Err(LengthError::MalformedRemainingLength) => {
+                    error!(message = "malformed remaining length", ?peer);
                     return;
                 }
-            }
+                Err(LengthError::InsufficientBytes) => {
+                    // variant length is not enough, continue read
+                    continue 'RECV;
+                }
+            };
 
-            // handle packets
+            // handle packet
             let mut payload = buf.split_to(remaining).freeze();
             match ctrl_byte >> 4 {
                 MQTT_CONNECT => {
+                    //  Common parts
+                    //
                     //   PROTOCOL NAME
                     // byte     description
                     //   1        Protocol Name MSB
@@ -110,8 +107,6 @@ pub async fn serve_connection(
                     //   8        Connect Flags
                     //   9        Keepalive MSB
                     //   10       Keepalive LSB
-                    //   11
-                    //   12
                     let mut len = payload[0] as usize;
                     len |= payload[1] as usize;
 
@@ -120,16 +115,56 @@ pub async fn serve_connection(
                         return;
                     }
 
-                    let version = payload[6];
-                    if payload[6] != MQTT_VERSION_311 {
+                    version = payload[6];
+                    if version != MQTT_VERSION_311 && version != MQTT_VERSION_5 {
                         error!(message = "unsupported MQTT version", version);
                         return;
                     }
 
-                    if let Err(err) = conn.write_all(&[MQTT_CONNACK << 4, 2, 0, 0]).await {
+                    let mut keepalive = payload[8];
+                    keepalive |= payload[9];
+                    // When keepalive feature is disabled client can live forever, which is
+                    // not good in distributed broker context so currently we don't allow it.
+                    if keepalive == 0 {
+                        warn!(message = "zero keepalive", ?peer, version);
+                        return;
+                    }
+
+                    // todo: handle auth
+
+                    let resp = if version == MQTT_VERSION_311 {
+                        [MQTT_CONNACK << 4, 2, 0, 0].as_slice()
+                    } else {
+                        // handle connect properties
+                        //
+                        // https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901046
+                        match variant_length(&payload[10..]) {
+                            Ok((_len, _advanced)) => {}
+                            Err(err) => {
+                                error!(message = "read properties length", ?peer, ?err);
+                                return;
+                            }
+                        }
+
+                        [
+                            MQTT_CONNACK << 4,
+                            3,
+                            // session_present
+                            0,
+                            // connect code
+                            0,
+                            // no more
+                            0,
+                        ]
+                        .as_slice()
+                    };
+
+                    if let Err(err) = conn.write_all(resp).await {
                         error!(message = "write CONNACK failed", ?err, ?peer);
                         return;
                     }
+
+                    debug!(message = "client connected", ?peer, version);
                 }
                 MQTT_PUBLISH => {
                     let mut len = payload[0] as usize;
@@ -171,6 +206,21 @@ pub async fn serve_connection(
                         payload.advance(2);
                     }
 
+                    if version == MQTT_VERSION_5 {
+                        // publish properties
+                        //
+                        // https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901109
+                        match variant_length(&payload) {
+                            Ok((len, advanced)) => {
+                                payload.advance(advanced + len);
+                            }
+                            Err(err) => {
+                                error!(message = "read publish properties failed", ?peer, ?err);
+                                return;
+                            }
+                        }
+                    }
+
                     let value: event::log::Value = serde_json::from_slice(&payload).unwrap();
                     let mut log = LogRecord::from(value);
                     log.metadata_mut()
@@ -183,6 +233,7 @@ pub async fn serve_connection(
                     }
                 }
                 MQTT_PINGREQ => {
+                    // this response is compatible with MQTT_VERSION_311 & MQTT_VERSION_5
                     let resp = [MQTT_PINGRESP >> 4, 0];
                     if let Err(err) = conn.write(&resp).await {
                         error!(message = "wrtie PINGRESP failed", ?err, ?peer);
@@ -211,4 +262,48 @@ pub async fn serve_connection(
             }
         }
     }
+}
+
+#[derive(Debug)]
+enum LengthError {
+    MalformedRemainingLength,
+    InsufficientBytes,
+}
+
+/// Parses variable byte integer in the stream and returns the length
+/// and number of bytes that make it. Used for remaining length calculation
+/// as well as for calculating property lengths.
+fn variant_length(buf: &[u8]) -> Result<(usize, usize), LengthError> {
+    let mut len = 0;
+    let mut shift = 0;
+    let mut done = false;
+    let mut advanced = 0;
+
+    for byte in buf {
+        let byte = *byte as usize;
+        len += (byte & 0x7F) << shift;
+        advanced += 1;
+
+        // stop when continue bit is 0
+        done = (byte & 0x80) == 0;
+        if done {
+            break;
+        }
+
+        shift += 7;
+
+        // Only a max of 4 bytes allowed for remaining length
+        // more than 4 shifts (0, 7, 14, 21) implies bad length
+        if shift > 21 {
+            return Err(LengthError::MalformedRemainingLength);
+        }
+    }
+
+    // Not enough bytes to frame remaining length. wait for one
+    // more byte.
+    if !done {
+        return Err(LengthError::InsufficientBytes);
+    }
+
+    Ok((len, advanced))
 }
