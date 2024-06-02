@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717160560913,
+  "lastUpdate": 1717348013398,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "644794575e5271ec290a539e544d16b2ff12f4c5",
-          "message": "chore: cleanup unused & fmt (#1657)\n\n* cleanup unused & fmt",
-          "timestamp": "2024-03-18T13:44:37+08:00",
-          "tree_id": "46eac472028219ebc1dffc64c51ef14c58380ba8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/644794575e5271ec290a539e544d16b2ff12f4c5"
-        },
-        "date": 1710740801694,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 546240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 526420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "416e0628c29ff8b895e886611da1338bde12bb17",
+          "message": "chore(deps): bump proc-macro2 from 1.0.84 to 1.0.85 (#1768)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.84 to 1.0.85.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.84...1.0.85)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-03T01:04:37+08:00",
+          "tree_id": "6f51733f6f2fcc220ef8d8807fe1ff22682589b0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/416e0628c29ff8b895e886611da1338bde12bb17"
+        },
+        "date": 1717347998153,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 521000,
             "unit": "ns/op"
           }
         ]
