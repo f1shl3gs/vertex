@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717418523874,
+  "lastUpdate": 1717418972318,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "037a7ef64cbb22d5c716e271259f3d3f1341cb50",
-          "message": "bump http to 0.2.12 (#1656)",
-          "timestamp": "2024-03-18T04:12:29+08:00",
-          "tree_id": "3f0176a7c343848dd5b6c2f270ada32d04ca5c84",
-          "url": "https://github.com/f1shl3gs/vertex/commit/037a7ef64cbb22d5c716e271259f3d3f1341cb50"
-        },
-        "date": 1710707022535,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41743.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "644794575e5271ec290a539e544d16b2ff12f4c5",
           "message": "chore: cleanup unused & fmt (#1657)\n\n* cleanup unused & fmt",
           "timestamp": "2024-03-18T13:44:37+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37800.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a8354280909a9bc30c4b8498bfd33e58e9cc0b6",
+          "message": "ci: fix vertex bench (#1772)",
+          "timestamp": "2024-06-03T20:37:45+08:00",
+          "tree_id": "6c60a0bfc8aa8d4e921e5301cdd7506b26cb666f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a8354280909a9bc30c4b8498bfd33e58e9cc0b6"
+        },
+        "date": 1717418956144,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 571,
             "unit": "s"
           },
           {
