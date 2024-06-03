@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717440389096,
+  "lastUpdate": 1717440423716,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7edd440e5e1ffedae64b1dcf434b20f148795933",
-          "message": "Cleanup (#1649)\n\n* remove ObjectMap\r\n\r\n* add more doc",
-          "timestamp": "2024-03-15T00:16:19+08:00",
-          "tree_id": "c636c00b8ce739179e40173ee5b5635c4a1521c4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7edd440e5e1ffedae64b1dcf434b20f148795933"
-        },
-        "date": 1710433115223,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.787,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 89.606,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 191.75,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7786851517304e7ad3efaf3cb2e4d4ef49ed32c1",
+          "message": "remove async_stream macro (#1773)",
+          "timestamp": "2024-06-04T02:43:44+08:00",
+          "tree_id": "e091e551cb638cc66cd13e78c914b00a7e676867",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7786851517304e7ad3efaf3cb2e4d4ef49ed32c1"
+        },
+        "date": 1717440407648,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.034,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.982,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 188.68,
             "unit": "ns/op"
           }
         ]
