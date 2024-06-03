@@ -4,7 +4,6 @@
 
 pub mod async_read;
 pub mod batch;
-mod common;
 pub mod config;
 pub mod dns;
 mod extension;
@@ -33,7 +32,6 @@ mod utilization;
 
 use std::sync::OnceLock;
 
-pub use common::*;
 pub use extension::Extension;
 pub use pipeline::Pipeline;
 pub use shutdown::*;

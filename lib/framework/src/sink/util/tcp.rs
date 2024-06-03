@@ -25,7 +25,7 @@ use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::sink::VecSinkExt;
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsStream, TlsConfig, TlsError};
-use crate::{dns, Healthcheck, OpenGauge, Sink, StreamSink};
+use crate::{dns, Healthcheck, Sink, StreamSink};
 
 #[derive(Debug, Error)]
 enum TcpError {
@@ -313,7 +313,6 @@ where
 
         while Pin::new(&mut input).peek().await.is_some() {
             let mut sink = self.connect().await;
-            let _open_token = OpenGauge::new();
 
             let result = match sink.send_all_peekable(&mut (&mut input).peekable()).await {
                 Ok(()) => sink.close().await,
