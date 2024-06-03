@@ -1,6 +1,9 @@
-use std::pin::pin;
+use std::pin::{pin, Pin};
+use std::task::{Context, Poll};
 
 use futures::{Stream, StreamExt};
+use pin_project_lite::pin_project;
+use tokio::signal::unix::Signal;
 use tokio::sync::{broadcast, mpsc};
 
 use crate::config::Builder;
@@ -113,25 +116,62 @@ impl SignalHandler {
     }
 }
 
+pin_project! {
+    pub struct Signals {
+        #[pin]
+        sigint: Signal,
+        #[pin]
+        sigterm: Signal,
+        #[pin]
+        sigquit: Signal,
+        #[pin]
+        sighup: Signal
+    }
+}
+
+impl Stream for Signals {
+    type Item = SignalTo;
+
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        let mut this = self.project();
+
+        if this.sigint.poll_recv(cx).is_ready() {
+            info!(message = "Signal received", signal = "SIGINT");
+            return Poll::Ready(Some(SignalTo::Shutdown));
+        }
+
+        if this.sigterm.poll_recv(cx).is_ready() {
+            info!(message = "Signal received", signal = "SIGTERM");
+            return Poll::Ready(Some(SignalTo::Shutdown));
+        }
+
+        if this.sigquit.poll_recv(cx).is_ready() {
+            info!(message = "Signal received", signal = "SIGQUIT");
+            return Poll::Ready(Some(SignalTo::Quit));
+        }
+
+        if this.sighup.poll_recv(cx).is_ready() {
+            info!(message = "Signal received", signal = "SIGHUP");
+            return Poll::Ready(Some(SignalTo::ReloadFromDisk));
+        }
+
+        Poll::Pending
+    }
+}
+
 /// Signals from OS/user
-pub fn os_signals() -> impl Stream<Item = SignalTo> {
+pub fn os_signals() -> Signals {
     use tokio::signal::unix::{signal, SignalKind};
 
-    let mut sigint = signal(SignalKind::interrupt()).expect("Signal handlers should not panic");
-    let mut sigterm = signal(SignalKind::terminate()).expect("Signal handlers should not panic");
-    let mut sigquit = signal(SignalKind::quit()).expect("Signal handlers should not panic");
-    let mut sighup = signal(SignalKind::hangup()).expect("Signal handlers should not panic");
+    let sigint = signal(SignalKind::interrupt()).expect("Failed to set up SIGINT handle");
+    let sigterm = signal(SignalKind::terminate()).expect("Failed to set up SIGTERM handle");
+    let sigquit = signal(SignalKind::quit()).expect("Failed to set up SIGQUIT handle");
+    let sighup = signal(SignalKind::hangup()).expect("Failed to set up SIGHUP handle");
 
-    async_stream::stream! {
-        loop {
-            let signal = tokio::select! {
-                _ = sigint.recv() => SignalTo::Shutdown,
-                _ = sigterm.recv() => SignalTo::Shutdown,
-                _ = sigquit.recv() => SignalTo::Quit,
-                _ = sighup.recv() => SignalTo::ReloadFromDisk,
-            };
-
-            yield signal;
-        }
+    Signals {
+        sigint,
+        sigterm,
+        sigquit,
+        sighup,
     }
 }
