@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717418447973,
+  "lastUpdate": 1717418462606,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fcfc5792faba293dd49873ee832d59770cc5c55d",
-          "message": "chore(deps): bump libc from 0.2.152 to 0.2.153 (#1589)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.152 to 0.2.153.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.152...0.2.153)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-01T17:45:29+08:00",
-          "tree_id": "33624d9ab8a50f9c226dd09a04fe83049c350a04",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fcfc5792faba293dd49873ee832d59770cc5c55d"
-        },
-        "date": 1706780901444,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 32.027,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 138.23,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 683.01,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e0cf5e69fe166e5e0f397e4b64551f64e3bcd191",
           "message": "chore(deps): bump indexmap from 2.2.1 to 2.2.2 (#1590)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.1 to 2.2.2.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.1...2.2.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-01T17:58:10+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 673.49,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a8354280909a9bc30c4b8498bfd33e58e9cc0b6",
+          "message": "ci: fix vertex bench (#1772)",
+          "timestamp": "2024-06-03T20:37:45+08:00",
+          "tree_id": "6c60a0bfc8aa8d4e921e5301cdd7506b26cb666f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a8354280909a9bc30c4b8498bfd33e58e9cc0b6"
+        },
+        "date": 1717418446707,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 25.311,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 350.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 715.58,
             "unit": "ns/op"
           }
         ]
