@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717440462804,
+  "lastUpdate": 1717440874183,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "644794575e5271ec290a539e544d16b2ff12f4c5",
-          "message": "chore: cleanup unused & fmt (#1657)\n\n* cleanup unused & fmt",
-          "timestamp": "2024-03-18T13:44:37+08:00",
-          "tree_id": "46eac472028219ebc1dffc64c51ef14c58380ba8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/644794575e5271ec290a539e544d16b2ff12f4c5"
-        },
-        "date": 1710741337300,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41744.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0dbeb499846ed940bb4c043fcc9b3ef64e2c71f5",
           "message": "add lossy to decoding config (#1659)",
           "timestamp": "2024-03-18T20:25:01+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37800.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7786851517304e7ad3efaf3cb2e4d4ef49ed32c1",
+          "message": "remove async_stream macro (#1773)",
+          "timestamp": "2024-06-04T02:43:44+08:00",
+          "tree_id": "e091e551cb638cc66cd13e78c914b00a7e676867",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7786851517304e7ad3efaf3cb2e4d4ef49ed32c1"
+        },
+        "date": 1717440858324,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 547,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37805.3,
             "unit": "KiB"
           }
         ]
