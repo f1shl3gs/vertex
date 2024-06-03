@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717416302891,
+  "lastUpdate": 1717416824211,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5a62eb5e7dd4a4b1d55ec8c9841818a8607206ba",
-          "message": "chore(deps): bump async-recursion from 1.0.5 to 1.1.0 (#1655)\n\nBumps [async-recursion](https://github.com/dcchut/async-recursion) from 1.0.5 to 1.1.0.\r\n- [Release notes](https://github.com/dcchut/async-recursion/releases)\r\n- [Commits](https://github.com/dcchut/async-recursion/compare/v1.0.5...v1.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-recursion\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-18T03:41:45+08:00",
-          "tree_id": "6b39835b2228d5d3ba4f728be943a80f3984e7f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5a62eb5e7dd4a4b1d55ec8c9841818a8607206ba"
-        },
-        "date": 1710705159673,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 571,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41747.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37800.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e021e5d788b810f9d983ef41c179e8ae400cb86b",
+          "message": "remove unused (#1771)",
+          "timestamp": "2024-06-03T20:02:29+08:00",
+          "tree_id": "e7a0b26182ea282bdd23d63f04e761838665e1ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e021e5d788b810f9d983ef41c179e8ae400cb86b"
+        },
+        "date": 1717416808788,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
             "unit": "s"
           },
           {
