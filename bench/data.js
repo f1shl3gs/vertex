@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717548944776,
+  "lastUpdate": 1717549351255,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0dbeb499846ed940bb4c043fcc9b3ef64e2c71f5",
-          "message": "add lossy to decoding config (#1659)",
-          "timestamp": "2024-03-18T20:25:01+08:00",
-          "tree_id": "e42f1e7e57c2ba09904fd910d3a8edcf861aca64",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0dbeb499846ed940bb4c043fcc9b3ef64e2c71f5"
-        },
-        "date": 1710765368877,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 582,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41819.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37805.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f4872325cb4d06be3d87a0b5ee8fecdeb396181f",
+          "message": "bump hyper to 0.14.29 (#1774)",
+          "timestamp": "2024-06-05T08:52:01+08:00",
+          "tree_id": "369a10f6f2784c43b85cdbee658ba911c9acba33",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f4872325cb4d06be3d87a0b5ee8fecdeb396181f"
+        },
+        "date": 1717549335627,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 536,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37809.7,
             "unit": "KiB"
           }
         ]
