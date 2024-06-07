@@ -1,11 +1,223 @@
 use std::path::PathBuf;
-use std::sync::mpsc::{channel, Receiver};
-use std::thread;
 use std::time::Duration;
 
-use notify::{Config, Event, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
+use futures_util::StreamExt;
 
 use crate::Error;
+
+mod inotify {
+    use std::ffi::{c_void, CString, OsStr};
+    use std::io;
+    use std::os::fd::{AsRawFd, RawFd};
+    use std::os::unix::ffi::OsStrExt;
+    use std::path::Path;
+    use std::pin::Pin;
+    use std::task::{ready, Context, Poll};
+
+    use futures::Stream;
+    use tokio::io::unix::AsyncFd;
+
+    // the size of inotify_event
+    const EVENT_SIZE: usize = 16;
+
+    pub struct Watcher {
+        fd: AsyncFd<libc::c_int>,
+        wds: Vec<RawFd>,
+    }
+
+    impl Watcher {
+        pub fn new() -> io::Result<Watcher> {
+            let fd = unsafe {
+                let ret = libc::inotify_init1(libc::IN_CLOEXEC | libc::IN_NONBLOCK);
+                if ret == -1 {
+                    return Err(io::Error::last_os_error());
+                }
+
+                ret
+            };
+
+            Ok(Watcher {
+                fd: AsyncFd::new(fd)?,
+                wds: vec![],
+            })
+        }
+
+        pub fn add(&mut self, path: impl AsRef<Path>) -> io::Result<()> {
+            let path = CString::new(path.as_ref().as_os_str().as_bytes())?;
+
+            let wd = unsafe {
+                let ret = libc::inotify_add_watch(
+                    self.fd.as_raw_fd(),
+                    path.as_ptr() as *const _,
+                    libc::IN_CLOSE_WRITE
+                        | libc::IN_MOVE
+                        | libc::IN_MOVED_TO
+                        | libc::IN_MODIFY
+                        | libc::IN_CREATE,
+                );
+                if ret == -1 {
+                    return Err(io::Error::last_os_error());
+                }
+
+                ret
+            };
+
+            self.wds.push(wd);
+
+            Ok(())
+        }
+
+        pub fn into_stream(self, buf: &[u8]) -> EventStream {
+            EventStream {
+                fd: self.fd,
+                wds: self.wds,
+                buf,
+            }
+        }
+    }
+
+    #[allow(dead_code)]
+    pub struct EventStream<'a> {
+        fd: AsyncFd<RawFd>,
+        wds: Vec<RawFd>,
+        buf: &'a [u8],
+    }
+
+    impl<'a> Stream for EventStream<'a> {
+        type Item = io::Result<Events<'a>>;
+
+        fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+            loop {
+                let mut guard = ready!(self.fd.poll_read_ready(cx))?;
+
+                #[allow(clippy::blocks_in_conditions)]
+                match guard.try_io(|inner| {
+                    let ret = unsafe {
+                        libc::read(
+                            inner.as_raw_fd(),
+                            self.buf.as_ptr() as *mut c_void,
+                            self.buf.len(),
+                        )
+                    };
+                    if ret == -1 {
+                        return Err(io::Error::last_os_error());
+                    }
+
+                    Ok(ret as usize)
+                }) {
+                    Ok(Ok(len)) => {
+                        return Poll::Ready(Some(Ok(Events {
+                            buf: self.buf,
+                            pos: 0,
+                            len,
+                        })))
+                    }
+                    Ok(Err(err)) => return Poll::Ready(Some(Err(err))),
+                    Err(_would_block) => continue,
+                }
+            }
+        }
+    }
+
+    /// An inotify event
+    ///
+    /// A file system event that describes a change that the user previously
+    /// registered interest in. To watch for events.
+    pub struct Event<S> {
+        /// Identifies the watch this event originates from.
+        pub wd: i32,
+
+        /// Indicates what kind of event this is
+        pub mask: u32,
+
+        /// Connects related events to each other
+        ///
+        /// When a file is renamed, this results two events: [`MOVED_FROM`] and
+        /// [`MOVED_TO`]. The `cookie` field will be the same for both of them,
+        /// thereby making is possible to connect the event pair.
+        pub cookie: u32,
+
+        /// The name of the file the event originates from
+        ///
+        /// This field is set only if the subject of the event is a file or directory
+        /// in watched directory. If the event concerns a file or directory that is
+        /// watched directly, `name` will be `None`.
+        pub name: Option<S>,
+    }
+
+    /// Iterator over inotify events.
+    #[derive(Debug)]
+    pub struct Events<'a> {
+        buf: &'a [u8],
+        pos: usize,
+        len: usize,
+    }
+
+    impl<'a> Iterator for Events<'a> {
+        type Item = Event<&'a OsStr>;
+
+        fn next(&mut self) -> Option<Self::Item> {
+            if self.pos < self.len {
+                let ev = unsafe {
+                    let ptr = self.buf.as_ptr().add(self.pos) as *const libc::inotify_event;
+                    ptr.read_unaligned()
+                };
+
+                let name = if ev.len == 0 {
+                    None
+                } else {
+                    let name =
+                        &self.buf[self.pos + EVENT_SIZE..self.pos + EVENT_SIZE + ev.len as usize];
+                    let name = name.splitn(2, |b| b == &0u8).next().unwrap();
+
+                    Some(OsStr::from_bytes(name))
+                };
+
+                self.pos += EVENT_SIZE + ev.len as usize;
+
+                Some(Event {
+                    wd: ev.wd,
+                    mask: ev.mask,
+                    cookie: ev.cookie,
+                    name,
+                })
+            } else {
+                None
+            }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use futures_util::StreamExt;
+        use std::fs::File;
+        use std::io::Write;
+
+        use testify::temp_dir;
+
+        #[tokio::test]
+        async fn write() {
+            let directory = temp_dir();
+            let filepath = directory.join("test.txt");
+            let mut file = File::create(&filepath).unwrap();
+
+            let mut watcher = Watcher::new().unwrap();
+            watcher.add(directory).unwrap();
+            let buf = [0u8; 4096];
+            let mut stream = watcher.into_stream(&buf);
+
+            file.write_all(&[0]).unwrap();
+            file.sync_all().unwrap();
+
+            if let Some(Ok(_evs)) = stream.next().await {
+                // ok
+            } else {
+                panic!("change should detected");
+            }
+        }
+    }
+}
 
 /// Per notify own documentation, it's advised to have delay of more than 30 sec,
 /// so to avoid receiving repetitions of previous events on MacOS.
@@ -18,61 +230,49 @@ const DEFAULT_WATCH_DELAY: Duration = Duration::from_secs(1);
 
 const RETRY_TIMEOUT: Duration = Duration::from_secs(10);
 
-pub fn spawn_thread<'a>(
+pub fn watch_configs<'a>(
     config_paths: impl IntoIterator<Item = &'a PathBuf> + 'a,
-    delay: impl Into<Option<Duration>>,
 ) -> Result<(), Error> {
-    let delay = delay.into().unwrap_or(DEFAULT_WATCH_DELAY);
     let config_paths: Vec<_> = config_paths.into_iter().cloned().collect();
 
-    // Create watcher now so not to miss any changes happening between
-    // returning from this function and the thread starting.
-    let mut watcher = Some(create_watcher(&config_paths)?);
+    // first init
+    let mut watcher = inotify::Watcher::new()?;
+    config_paths.iter().try_for_each(|path| watcher.add(path))?;
 
     info!(message = "Watching configuration files");
+    tokio::spawn(async move {
+        let buf = [0u8; 4096];
+        let mut stream = watcher.into_stream(&buf);
 
-    thread::spawn(move || loop {
-        if let Some((mut watcher, receiver)) = watcher.take() {
-            while let Ok(event) = receiver.recv() {
-                if matches!(
-                    event.kind,
-                    EventKind::Create(_) | EventKind::Remove(_) | EventKind::Modify(_)
-                ) {
-                    debug!(message = "Configuration file change detected", ?event);
-
-                    // Consume events until delay amount of time has passed since the latest event.
-                    while receiver.recv_timeout(delay).is_ok() {}
-
-                    // We need to read paths to resolve any inode changes that may have happened.
-                    // And we need to do it before raising sighup to avoid missing any change.
-                    if let Err(err) = add_paths(&mut watcher, &config_paths) {
-                        error!(message = "Failed to add files to watch", ?err);
-                        break;
+        loop {
+            match stream.next().await {
+                Some(res) => match res {
+                    Ok(_events) => {
+                        info!(message = "Configuration file changed.");
+                        raise_sighup();
                     }
+                    Err(err) => {
+                        error!(message = "read inotify failed, retrying watch", ?err);
 
-                    info!(message = "Configuration file changed.");
-                    raise_sighup();
-                } else {
-                    debug!(message = "Ignoring event", ?event);
+                        // error occurs, sleep a while and retry
+                        tokio::time::sleep(RETRY_TIMEOUT).await;
+
+                        drop(stream);
+
+                        let mut watcher = inotify::Watcher::new()?;
+                        config_paths.iter().try_for_each(|path| watcher.add(path))?;
+                        stream = watcher.into_stream(&buf);
+
+                        continue;
+                    }
+                },
+                None => {
+                    // this shall never happen
+                    return Ok::<(), Error>(());
                 }
             }
-        }
 
-        thread::sleep(RETRY_TIMEOUT);
-
-        watcher = create_watcher(&config_paths)
-            .map_err(|err| {
-                error!(message = "Failed to create file watcher", ?err);
-            })
-            .ok();
-
-        if watcher.is_some() {
-            // Config files could have changed while we weren't watching,
-            // so for a good measure raise SIGHUP and let reload logic
-            // determine if anything changed.
-            info!(message = "Speculating that configuration files have changed",);
-
-            raise_sighup();
+            tokio::time::sleep(DEFAULT_WATCH_DELAY).await;
         }
     });
 
@@ -88,40 +288,6 @@ fn raise_sighup() {
             ?err
         );
     }
-}
-
-fn create_watcher(
-    config_paths: &[PathBuf],
-) -> Result<(RecommendedWatcher, Receiver<Event>), Error> {
-    info!(message = "Creating configuration file watcher");
-
-    let (sender, receiver) = channel();
-    let mut watcher = RecommendedWatcher::new(
-        move |result| match result {
-            Ok(event) => {
-                if let Err(err) = sender.send(event) {
-                    warn!(message = "send notify event failed", ?err);
-                }
-            }
-
-            Err(err) => {
-                error!(message = "receive notify event failed", ?err);
-            }
-        },
-        Config::default(),
-    )?;
-
-    add_paths(&mut watcher, config_paths)?;
-
-    Ok((watcher, receiver))
-}
-
-fn add_paths(watcher: &mut RecommendedWatcher, config_paths: &[PathBuf]) -> Result<(), Error> {
-    config_paths.iter().try_for_each(|path| {
-        watcher
-            .watch(path, RecursiveMode::NonRecursive)
-            .map_err(Into::into)
-    })
 }
 
 #[cfg(all(test, unix, not(target_os = "macos")))]
@@ -145,12 +311,12 @@ mod tests {
 
     #[tokio::test]
     async fn file_directory_update() {
-        let delay = Duration::from_secs(3);
+        let delay = Duration::from_secs(2);
         let directory = temp_dir();
         let filepath = directory.join("test.txt");
         let mut file = File::create(&filepath).unwrap();
 
-        spawn_thread(&[directory], delay).unwrap();
+        watch_configs(&[directory]).unwrap();
 
         assert!(test(&mut file, delay * 5).await)
     }
@@ -161,7 +327,7 @@ mod tests {
         let filepath = temp_file();
         let mut file = File::create(&filepath).unwrap();
 
-        spawn_thread(&[filepath], delay).unwrap();
+        watch_configs(&[filepath]).unwrap();
 
         assert!(test(&mut file, delay * 5).await)
     }
@@ -174,7 +340,7 @@ mod tests {
         let mut file = File::create(&filepath).unwrap();
         std::os::unix::fs::symlink(&filepath, &sym_file).unwrap();
 
-        spawn_thread(&[sym_file], delay).unwrap();
+        watch_configs(&[filepath]).unwrap();
 
         assert!(test(&mut file, delay * 5).await);
     }
