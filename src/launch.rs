@@ -199,7 +199,7 @@ impl RootCommand {
             #[cfg(all(unix, not(target_os = "macos")))]
             if watch_config {
                 // Start listening for config changes immediately.
-                config::watcher::spawn_thread(config_paths.iter().map(Into::into), None)
+                config::watcher::watch_configs(config_paths.iter().map(Into::into))
                     .map_err(|err| {
                         error!(
                         message = "Unable to start config watcher",
