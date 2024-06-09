@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717794545496,
+  "lastUpdate": 1717949960001,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "222c4b0e1489fdf180168056d9e5a6e1659537ee",
-          "message": "chore(deps): bump bytes from 1.5.0 to 1.6.0 (#1667)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.5.0 to 1.6.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.5.0...v1.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-23T14:07:56+08:00",
-          "tree_id": "c903f19183bea19efe500cbd12f864c9fc7318e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/222c4b0e1489fdf180168056d9e5a6e1659537ee"
-        },
-        "date": 1711174219663,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 533540,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 518970,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94fefa862e4e2e84ba7e20a8ef935580b0eff72e",
+          "message": "chore(deps): bump regex from 1.10.4 to 1.10.5 (#1778)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.10.4 to 1.10.5.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.10.4...1.10.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-10T00:17:04+08:00",
+          "tree_id": "bf2a9694f18e79e1d39f8df2f62a90d3970cbe6c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94fefa862e4e2e84ba7e20a8ef935580b0eff72e"
+        },
+        "date": 1717949944356,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 520820,
             "unit": "ns/op"
           }
         ]
