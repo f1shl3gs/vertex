@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1717950039955,
+  "lastUpdate": 1717950454947,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f6d0eff934852cb1994ddda06b5310ddb19e1317",
-          "message": "chore(deps): bump smallvec from 1.13.1 to 1.13.2 (#1662)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.13.1 to 1.13.2.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.13.1...v1.13.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-21T10:46:34+08:00",
-          "tree_id": "6bc9eca680d59fb22073c76bcf272da81846b7b3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f6d0eff934852cb1994ddda06b5310ddb19e1317"
-        },
-        "date": 1710989851764,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 568,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41806.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37666.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94fefa862e4e2e84ba7e20a8ef935580b0eff72e",
+          "message": "chore(deps): bump regex from 1.10.4 to 1.10.5 (#1778)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.10.4 to 1.10.5.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.10.4...1.10.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-10T00:17:04+08:00",
+          "tree_id": "bf2a9694f18e79e1d39f8df2f62a90d3970cbe6c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94fefa862e4e2e84ba7e20a8ef935580b0eff72e"
+        },
+        "date": 1717950439866,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 539,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37666,
             "unit": "KiB"
           }
         ]
