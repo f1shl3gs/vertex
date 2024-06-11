@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718070520536,
+  "lastUpdate": 1718070537475,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d2d78298f179a2b0242f88926c851f5717b2788c",
-          "message": "chore(deps): bump the tonic group with 3 updates (#1597)\n\nBumps the tonic group with 3 updates: [tonic](https://github.com/hyperium/tonic), [tonic-health](https://github.com/hyperium/tonic) and [tonic-build](https://github.com/hyperium/tonic).\r\n\r\n\r\nUpdates `tonic` from 0.10.2 to 0.11.0\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.2...v0.11.0)\r\n\r\nUpdates `tonic-health` from 0.10.2 to 0.11.0\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.2...v0.11.0)\r\n\r\nUpdates `tonic-build` from 0.10.2 to 0.11.0\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.2...v0.11.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n  dependency-group: tonic\r\n- dependency-name: tonic-health\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n  dependency-group: tonic\r\n- dependency-name: tonic-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n  dependency-group: tonic\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-09T05:24:42+08:00",
-          "tree_id": "ace2c996b9190575940f295f29c94578199d71c7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d2d78298f179a2b0242f88926c851f5717b2788c"
-        },
-        "date": 1707427648260,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.882,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 684.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 742.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "07290035c0ab672a2c1978941cd05cbf362bad4b",
+          "message": "chore(deps): bump quick-xml from 0.31.0 to 0.32.0 (#1781)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.31.0 to 0.32.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.31.0...v0.32.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-11T09:46:14+08:00",
+          "tree_id": "54ec1853fd42e91823ec30814485763f701aa5ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/07290035c0ab672a2c1978941cd05cbf362bad4b"
+        },
+        "date": 1718070522148,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.272,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 149.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 337.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 695.99,
             "unit": "ns/op"
           }
         ]
