@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718070537475,
+  "lastUpdate": 1718070541721,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a5ea4f491b772dbf3fdbe231e987f5721504b1c1",
-          "message": "async dns resolver (#1671)",
-          "timestamp": "2024-03-24T04:52:32+08:00",
-          "tree_id": "5a0ec10a0d74c2de47cf1b7b2a350e3b58886522",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a5ea4f491b772dbf3fdbe231e987f5721504b1c1"
-        },
-        "date": 1711227273205,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529010,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 523300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a4e33794757b262ad84ed0dec3f20354193d2ef8",
+          "message": "chore(deps): bump url from 2.5.0 to 2.5.1 (#1780)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.0 to 2.5.1.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.0...v2.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-11T09:46:47+08:00",
+          "tree_id": "26d3df19eff556dbc5d231168a7305c2650d67e0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a4e33794757b262ad84ed0dec3f20354193d2ef8"
+        },
+        "date": 1718070526519,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 523120,
             "unit": "ns/op"
           }
         ]
