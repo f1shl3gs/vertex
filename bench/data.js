@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718071028786,
+  "lastUpdate": 1718071063578,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ec477eedbf1542530d32d9227e156d5bb259a7dc",
-          "message": "update (#1665)",
-          "timestamp": "2024-03-22T16:19:25+08:00",
-          "tree_id": "5c9fd13bc14945baa3822eacdb086e69f27a59db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ec477eedbf1542530d32d9227e156d5bb259a7dc"
-        },
-        "date": 1711096177159,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 531,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41412.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4f6a809e186c6215dce91537e5f8df53ab8fc694",
           "message": "bump toolchain to 1.77.0 (#1666)",
           "timestamp": "2024-03-22T17:02:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37788,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a4e33794757b262ad84ed0dec3f20354193d2ef8",
+          "message": "chore(deps): bump url from 2.5.0 to 2.5.1 (#1780)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.0 to 2.5.1.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.0...v2.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-11T09:46:47+08:00",
+          "tree_id": "26d3df19eff556dbc5d231168a7305c2650d67e0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a4e33794757b262ad84ed0dec3f20354193d2ef8"
+        },
+        "date": 1718071048508,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 552,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37930.9,
             "unit": "KiB"
           }
         ]
