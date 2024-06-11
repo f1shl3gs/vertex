@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718070456523,
+  "lastUpdate": 1718070509138,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cf8659b01514b5cb1f9d838a599f67322153d697",
-          "message": "chore(deps): bump indexmap from 2.2.5 to 2.2.6 (#1670)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.5 to 2.2.6.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.5...2.2.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-23T22:07:57+08:00",
-          "tree_id": "9111673b79317ccd346123563963c18ae6814fec",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf8659b01514b5cb1f9d838a599f67322153d697"
-        },
-        "date": 1711203005831,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 530690,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 522630,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "07290035c0ab672a2c1978941cd05cbf362bad4b",
+          "message": "chore(deps): bump quick-xml from 0.31.0 to 0.32.0 (#1781)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.31.0 to 0.32.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.31.0...v0.32.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-11T09:46:14+08:00",
+          "tree_id": "54ec1853fd42e91823ec30814485763f701aa5ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/07290035c0ab672a2c1978941cd05cbf362bad4b"
+        },
+        "date": 1718070493424,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 523300,
             "unit": "ns/op"
           }
         ]
