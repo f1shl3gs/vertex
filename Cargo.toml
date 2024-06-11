@@ -416,5 +416,5 @@ thiserror = { version = "1.0.61" }
 tonic = { version = "0.11.0", default-features = false, features = ["transport"], optional = true }
 tonic-health = { version = "0.11.0", default-features = false, optional = true }
 typetag = { version = "0.2.16" }
-url = { version = "2.5.0", features = ["serde"] }
+url = { version = "2.5.1", features = ["serde"] }
 uuid = { version = "1.8.0", default-features = false, features = ["v4"], optional = true }
