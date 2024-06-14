@@ -227,36 +227,10 @@ impl Client {
     }
 
     pub async fn storage_pools(&mut self) -> Result<Vec<StoragePoolInfo>, Error> {
-        /*        let req = self.make_request(
-            REMOTE_PROC_CONNECT_LIST_STORAGE_POOLS,
-            ListAllStoragePoolsRequest::new(2), // 2 for active pools
-        );
-        let resp: ListAllStoragePoolsResponse = self.do_request(req).await?;
-        let pools = resp.pools();
-        let mut infos = Vec::with_capacity(pools.len());
-
-        for pool in pools {
-            let name = pool.name.0.clone();
-            let req = self.make_request(
-                REMOTE_PROC_STORAGE_POOL_GET_INFO,
-                StoragePoolGetInfoRequest::new(pool),
-            );
-            let resp: StoragePoolGetInfoResponse = self.do_request(req).await?;
-            infos.push(StoragePoolInfo {
-                name,
-                state: resp.0.state as u32,
-                capacity: resp.0.capacity,
-                allocation: resp.0.allocation,
-                available: resp.0.available,
-            })
-        }
-
-        Ok(infos)*/
-
         let resp: ConnectListStoragePoolsResponse = self
             .send(ConnectListStoragePoolsRequest { maxnames: 2 })
             .await?;
-        let mut infos = Vec::with_capacity(resp.pools.len());
+        let mut infos = Vec::with_capacity(resp.ret as usize);
 
         for pool in resp.pools {
             let req = GetStoragePoolInfoRequest { pool: &pool };

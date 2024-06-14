@@ -792,6 +792,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
+#[allow(dead_code)]
 mod schema {
     use serde::Deserialize;
 

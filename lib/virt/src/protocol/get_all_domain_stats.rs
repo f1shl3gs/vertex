@@ -6,6 +6,7 @@ use super::{pack_flex, unpack_flex, unpack_string, Domain, Pack, Unpack};
 
 pub const REMOTE_CONNECT_GET_ALL_DOMAIN_STATS_MAX: usize = 4096;
 
+#[allow(dead_code)]
 pub enum RemoteTypedParamValue {
     Const1(i32),
     Const2(u32),

@@ -123,6 +123,7 @@ mod inotify {
     ///
     /// A file system event that describes a change that the user previously
     /// registered interest in. To watch for events.
+    #[allow(dead_code)]
     pub struct Event<S> {
         /// Identifies the watch this event originates from.
         pub wd: i32,

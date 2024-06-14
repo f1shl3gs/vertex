@@ -49,6 +49,7 @@ impl<R: Read> Unpack<R> for VcpuInfo {
 
 pub struct GetDomainVcpusResponse {
     pub infos: Vec<VcpuInfo>,
+    #[allow(dead_code)]
     pub maps: Vec<u8>,
 }
 
