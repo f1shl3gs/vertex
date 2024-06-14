@@ -13,7 +13,13 @@ pub struct FunctionCall {
 impl Expression for FunctionCall {
     #[inline]
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        self.function.resolve(cx)
+        self.function.resolve(cx).map_err(|err| match err {
+            ExpressionError::Error { message, .. } => ExpressionError::Error {
+                message,
+                span: self.span,
+            },
+            err => err,
+        })
     }
 
     #[inline]

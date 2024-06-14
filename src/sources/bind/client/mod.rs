@@ -81,6 +81,7 @@ pub struct ZoneView {
 }
 
 /// ThreadModel contains task and worker information
+#[allow(dead_code)]
 #[derive(Default, Deserialize)]
 pub struct ThreadModel {
     #[serde(rename = "type")]

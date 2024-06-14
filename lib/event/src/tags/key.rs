@@ -53,7 +53,7 @@ impl Key {
         if s.len() <= INLINE_CAP {
             Key::inline(&s)
         } else {
-            unsafe { transmute(s) }
+            unsafe { transmute::<String, Key>(s) }
         }
     }
 
@@ -169,7 +169,7 @@ impl From<&str> for Key {
             unsafe {
                 copy_nonoverlapping(v.as_ptr(), data.as_mut_ptr(), len);
                 data[KEY_SIZE - 1] = len as u8;
-                return transmute(data);
+                return transmute::<[u8; 24], Key>(data);
             }
         }
 
@@ -183,7 +183,7 @@ impl From<&String> for Key {
         if v.len() < INLINE_CAP {
             Key::inline(v)
         } else {
-            unsafe { transmute(v.to_string()) }
+            unsafe { transmute::<String, Key>(v.to_string()) }
         }
     }
 }
@@ -197,7 +197,7 @@ impl From<String> for Key {
 impl From<Key> for String {
     fn from(key: Key) -> Self {
         if key.last == 0 {
-            return unsafe { transmute(key) };
+            return unsafe { transmute::<Key, String>(key) };
         }
 
         key.as_str().to_string()
@@ -272,7 +272,7 @@ mod serde {
                     let key = if len <= INLINE_CAP {
                         Key::inline(v)
                     } else {
-                        unsafe { transmute(v.to_string()) }
+                        unsafe { transmute::<String, Key>(v.to_string()) }
                     };
 
                     Ok(key)
