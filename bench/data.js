@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718393545111,
+  "lastUpdate": 1718393551166,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0dbeb499846ed940bb4c043fcc9b3ef64e2c71f5",
-          "message": "add lossy to decoding config (#1659)",
-          "timestamp": "2024-03-18T20:25:01+08:00",
-          "tree_id": "e42f1e7e57c2ba09904fd910d3a8edcf861aca64",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0dbeb499846ed940bb4c043fcc9b3ef64e2c71f5"
-        },
-        "date": 1710764849374,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.385,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 89.492,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 177.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26",
+          "message": "chore(deps): bump memchr from 2.7.3 to 2.7.4 (#1785)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.7.3 to 2.7.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.7.3...2.7.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-15T03:30:05+08:00",
+          "tree_id": "d06fe38fab6f6fe7a16f729b8eeb9175e792b551",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26"
+        },
+        "date": 1718393535890,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 177.66,
             "unit": "ns/op"
           }
         ]
