@@ -55,7 +55,7 @@ listenfd = { version = "1.0.1", default-features = false, optional = true }
 libc = { version = "0.2.155", default-features = false }
 log_schema = { path = "../log_schema" }
 bytesize = { path = "../bytesize" }
-memchr = { version = "2.7.3", default-features = false }
+memchr = { version = "2.7.4", default-features = false }
 metrics = { path = "../metrics" }
 once_cell = { version = "1.19.0", default-features = false }
 pem = { version = "3.0.4", default-features = false, features = ["std"] }
