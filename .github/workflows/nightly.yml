@@ -30,7 +30,7 @@ jobs:
           command: build
           args: --target x86_64-unknown-linux-musl --release --no-default-features --features target-x86_64-unknown-linux-musl
       - run: cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         with:
           context: distribution/docker
           push: true
@@ -57,7 +57,7 @@ jobs:
           command: build
           args: --target x86_64-unknown-linux-gnu --release --no-default-features --features target-x86_64-unknown-linux-gnu
       - run: cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker
-      - uses: docker/build-push-action@v5
+      - uses: docker/build-push-action@v6
         with:
           context: distribution/docker
           push: true
