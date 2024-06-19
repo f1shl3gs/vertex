@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718797744963,
+  "lastUpdate": 1718797766521,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f0fd533adfb22e8a37fa855b8f572c2eaa804856",
-          "message": "chore(deps): bump chrono-tz from 0.8.5 to 0.8.6 (#1601)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.8.5 to 0.8.6.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Changelog](https://github.com/chronotope/chrono-tz/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono-tz/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-13T21:18:29+08:00",
-          "tree_id": "59214b1fcda6aecd450493f9c650dcc7d6289804",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f0fd533adfb22e8a37fa855b8f572c2eaa804856"
-        },
-        "date": 1707830468525,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.637,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 141.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 309.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 634.81,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9737d48ecba83596bc247df1527c220ce8d91ad2",
           "message": "chore(deps): bump crc32fast from 1.3.2 to 1.4.0 (#1604)\n\nBumps [crc32fast](https://github.com/srijs/rust-crc32fast) from 1.3.2 to 1.4.0.\r\n- [Commits](https://github.com/srijs/rust-crc32fast/compare/v1.3.2...v1.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crc32fast\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-13T21:18:54+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 663.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "668a50bf7ff7686d3cc0503ccae936118633dafb",
+          "message": "chore(deps): bump url from 2.5.1 to 2.5.2 (#1788)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.1 to 2.5.2.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.1...v2.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-19T19:46:35+08:00",
+          "tree_id": "70c29dd0a4e2cbb121cda13fbbab9284d73dbe8b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/668a50bf7ff7686d3cc0503ccae936118633dafb"
+        },
+        "date": 1718797751169,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.607,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 155.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 331.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 676.52,
             "unit": "ns/op"
           }
         ]
