@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718798555156,
+  "lastUpdate": 1718798978818,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "01ef4733120934ac2c37e37b6786e3ea709c5026",
-          "message": "chore(deps): bump async-trait from 0.1.78 to 0.1.79 (#1672)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.78 to 0.1.79.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.78...0.1.79)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-24T11:27:04+08:00",
-          "tree_id": "3857f22e0689d1e335188013628605ae1300af97",
-          "url": "https://github.com/f1shl3gs/vertex/commit/01ef4733120934ac2c37e37b6786e3ea709c5026"
-        },
-        "date": 1711251495390,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 581,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37406.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37578.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1e11489d16bd06d848069a1d28cbccddf8a525c",
+          "message": "chore(deps): bump dashmap from 5.5.3 to 6.0.0 (#1787)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.3 to 6.0.0.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v.5.5.3...v6.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-19T19:58:52+08:00",
+          "tree_id": "2626b84680752d55b9afe5fddf5403781d5e2554",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1e11489d16bd06d848069a1d28cbccddf8a525c"
+        },
+        "date": 1718798963636,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 544,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37574.5,
             "unit": "KiB"
           }
         ]
