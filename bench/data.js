@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718939848478,
+  "lastUpdate": 1718939867427,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b57cc37092c1cf6bfaaf4554c2efb63e80be8879",
-          "message": "fix compression (#1663)",
-          "timestamp": "2024-03-21T16:35:38+08:00",
-          "tree_id": "cb8d6bb1a3c2a8f6c5b804b7830d8fab5c455350",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b57cc37092c1cf6bfaaf4554c2efb63e80be8879"
-        },
-        "date": 1711010270535,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.487,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 91.986,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 190.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e80461f48d5c251655d7e084d5e29c91ab6aa6ef",
+          "message": "chore(deps): bump proc-macro2 from 1.0.85 to 1.0.86 (#1790)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.85 to 1.0.86.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.85...1.0.86)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-21T11:15:30+08:00",
+          "tree_id": "3e349bc6a686b8107b245608b83c97ac32740b28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e80461f48d5c251655d7e084d5e29c91ab6aa6ef"
+        },
+        "date": 1718939852167,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.671,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 181.77,
             "unit": "ns/op"
           }
         ]
