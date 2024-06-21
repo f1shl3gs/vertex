@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1718939867427,
+  "lastUpdate": 1718939873089,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "edeff01dda0aeb10e2b9037cf046f11e567f2650",
-          "message": "chore(deps): bump thiserror from 1.0.56 to 1.0.57 (#1602)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.56 to 1.0.57.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.56...1.0.57)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-13T21:19:22+08:00",
-          "tree_id": "351e68b7d5bb29b9c40409010280fe641feb126c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/edeff01dda0aeb10e2b9037cf046f11e567f2650"
-        },
-        "date": 1707830602426,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 32.006,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 155.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 678.31,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "71731abc6b5498178015818dbd4f104c00d44db9",
           "message": "chore(deps): bump syn from 2.0.48 to 2.0.49 (#1605)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.48 to 2.0.49.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.48...2.0.49)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-16T23:59:52+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 711.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "acb523312e8057664f5e7117ef2c7471d16d4516",
+          "message": "chore(deps): bump syn from 2.0.66 to 2.0.67 (#1791)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.66 to 2.0.67.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.66...2.0.67)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-21T11:15:07+08:00",
+          "tree_id": "c5623e53cb7a6b01c7e1a8eeb1a7c779cc338801",
+          "url": "https://github.com/f1shl3gs/vertex/commit/acb523312e8057664f5e7117ef2c7471d16d4516"
+        },
+        "date": 1718939857742,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.312,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 156.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 340.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 703.84,
             "unit": "ns/op"
           }
         ]
