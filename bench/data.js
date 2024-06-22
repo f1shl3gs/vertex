@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719024793898,
+  "lastUpdate": 1719024858509,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "edeff01dda0aeb10e2b9037cf046f11e567f2650",
-          "message": "chore(deps): bump thiserror from 1.0.56 to 1.0.57 (#1602)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.56 to 1.0.57.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.56...1.0.57)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-13T21:19:22+08:00",
-          "tree_id": "351e68b7d5bb29b9c40409010280fe641feb126c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/edeff01dda0aeb10e2b9037cf046f11e567f2650"
-        },
-        "date": 1707831107215,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 18532000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 518020,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.737,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "71731abc6b5498178015818dbd4f104c00d44db9",
           "message": "chore(deps): bump syn from 2.0.48 to 2.0.49 (#1605)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.48 to 2.0.49.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.48...2.0.49)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-16T23:59:52+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.264,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6480ab78d9dc4be349d7900fb68b101a527844c8",
+          "message": "chore(deps): bump quick-xml from 0.32.0 to 0.33.0 (#1792)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.32.0 to 0.33.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.32.0...v0.33.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-22T10:42:41+08:00",
+          "tree_id": "9d601dc68642ba7ec60fcc87e99974525e3bfb38",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6480ab78d9dc4be349d7900fb68b101a527844c8"
+        },
+        "date": 1719024842386,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 26296000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 502950,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 43.545,
             "unit": "ns/op"
           }
         ]
