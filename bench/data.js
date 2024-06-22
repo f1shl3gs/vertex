@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719024306866,
+  "lastUpdate": 1719024325862,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0ca99f038595e964f1a8e26b2626d10b5280b349",
-          "message": "fix enum order (#1606)",
-          "timestamp": "2024-02-18T07:15:17+08:00",
-          "tree_id": "fa8336a9aebf5c717a81069b6b4b0c8dc418b0b3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0ca99f038595e964f1a8e26b2626d10b5280b349"
-        },
-        "date": 1708211889140,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.891,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 328.26,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 652.88,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 696.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6480ab78d9dc4be349d7900fb68b101a527844c8",
+          "message": "chore(deps): bump quick-xml from 0.32.0 to 0.33.0 (#1792)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.32.0 to 0.33.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.32.0...v0.33.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-22T10:42:41+08:00",
+          "tree_id": "9d601dc68642ba7ec60fcc87e99974525e3bfb38",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6480ab78d9dc4be349d7900fb68b101a527844c8"
+        },
+        "date": 1719024310687,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.341,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 153.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 675.66,
             "unit": "ns/op"
           }
         ]
