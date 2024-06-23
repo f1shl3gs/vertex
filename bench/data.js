@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719117657847,
+  "lastUpdate": 1719118066121,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f440fde8c1a768b999f6751fc8c4c5d7fc562d96",
-          "message": "sources/demo_logs: generate json, syslog or text logs  (#1675)\n\n* generate json, syslog or text log event",
-          "timestamp": "2024-03-25T00:08:47+08:00",
-          "tree_id": "f276567b65d2004e08217cc997fb6452b8abcbcb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f440fde8c1a768b999f6751fc8c4c5d7fc562d96"
-        },
-        "date": 1711297207792,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 589,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37478.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16595,6 +16561,40 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/f1shl3gs/vertex/commit/6480ab78d9dc4be349d7900fb68b101a527844c8"
         },
         "date": 1719024778651,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 535,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37577.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf3c8546758be4eb2036c3493eed18dec5230ce1",
+          "message": "chore(deps): bump proptest from 1.4.0 to 1.5.0 (#1793)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-23T12:37:18+08:00",
+          "tree_id": "3ceb36cb4c038a85e9a9b27605cee376a7519cbd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf3c8546758be4eb2036c3493eed18dec5230ce1"
+        },
+        "date": 1719118050964,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
