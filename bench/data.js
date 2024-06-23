@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719117580618,
+  "lastUpdate": 1719117612791,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "646a55d7afe4cb1e94cec210393cd193b630f2be",
-          "message": "chore(deps): bump k8s-openapi from 0.21.0 to 0.21.1 (#1607)\n\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.21.0 to 0.21.1.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.21.0...v0.21.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-18T10:57:01+08:00",
-          "tree_id": "7bab3ac60683df305a9ca701c73affb4e701a99e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/646a55d7afe4cb1e94cec210393cd193b630f2be"
-        },
-        "date": 1708225181927,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.921,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 146.09,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 317.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 658.98,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 675.66,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf3c8546758be4eb2036c3493eed18dec5230ce1",
+          "message": "chore(deps): bump proptest from 1.4.0 to 1.5.0 (#1793)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-23T12:37:18+08:00",
+          "tree_id": "3ceb36cb4c038a85e9a9b27605cee376a7519cbd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf3c8546758be4eb2036c3493eed18dec5230ce1"
+        },
+        "date": 1719117597267,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.994,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 152.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 340.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 706.14,
             "unit": "ns/op"
           }
         ]
