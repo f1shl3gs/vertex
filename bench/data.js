@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719209713872,
+  "lastUpdate": 1719209773493,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "646a55d7afe4cb1e94cec210393cd193b630f2be",
-          "message": "chore(deps): bump k8s-openapi from 0.21.0 to 0.21.1 (#1607)\n\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.21.0 to 0.21.1.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.21.0...v0.21.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-18T10:57:01+08:00",
-          "tree_id": "7bab3ac60683df305a9ca701c73affb4e701a99e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/646a55d7afe4cb1e94cec210393cd193b630f2be"
-        },
-        "date": 1708225659095,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 17734000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 450300,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.017,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.005,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bff26087c0ab65625d595c4a81d928334603fe01",
+          "message": "chore(deps): bump uuid from 1.8.0 to 1.9.0 (#1796)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.8.0 to 1.9.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.8.0...1.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-24T14:04:14+08:00",
+          "tree_id": "807d560a4ea26985579e0852165ce06f8c9b4939",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bff26087c0ab65625d595c4a81d928334603fe01"
+        },
+        "date": 1719209756660,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 26784000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 496200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 43.449,
             "unit": "ns/op"
           }
         ]
