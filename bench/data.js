@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719209191693,
+  "lastUpdate": 1719209193534,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cf83287bf3eeac8b94f58d4e0bdb2565f63c39b9",
-          "message": "chore(deps): bump zstd from 0.13.0 to 0.13.1 (#1683)\n\nBumps [zstd](https://github.com/gyscos/zstd-rs) from 0.13.0 to 0.13.1.\r\n- [Release notes](https://github.com/gyscos/zstd-rs/releases)\r\n- [Commits](https://github.com/gyscos/zstd-rs/compare/v0.13.0...v0.13.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zstd\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-28T17:26:28+08:00",
-          "tree_id": "0a83dca2fcafa33ae34b3807d879ef79b70f64b1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf83287bf3eeac8b94f58d4e0bdb2565f63c39b9"
-        },
-        "date": 1711618120705,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539140,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 528680,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0daf0691018a0416c5ad8fd92ff6ba1e4f540ca5",
+          "message": "chore(deps): bump syn from 2.0.67 to 2.0.68 (#1795)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.67 to 2.0.68.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.67...2.0.68)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-24T14:04:27+08:00",
+          "tree_id": "1a81c120037ca8d394aa97adb3c89f0ef21b55eb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0daf0691018a0416c5ad8fd92ff6ba1e4f540ca5"
+        },
+        "date": 1719209178028,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 529910,
             "unit": "ns/op"
           }
         ]
