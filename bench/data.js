@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719289578621,
+  "lastUpdate": 1719317685176,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "67c0163f065a83c5bd81f022828caa1db58d1fc7",
-          "message": "chore(deps): bump pin-project-lite from 0.2.13 to 0.2.14 (#1687)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.13 to 0.2.14.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.13...v0.2.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-30T12:57:25+08:00",
-          "tree_id": "8a70e7fde712b93989cffcf507f144293b0e8e0d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/67c0163f065a83c5bd81f022828caa1db58d1fc7"
-        },
-        "date": 1711774791788,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 535940,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531390,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2d7460505971eb0fc4aea320c125b2797e1158c6",
+          "message": "chore(deps): bump serde_json from 1.0.117 to 1.0.118 (#1800)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.117 to 1.0.118.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.117...v1.0.118)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-25T20:12:27+08:00",
+          "tree_id": "95507f0b792dd13aa3f161e560160936bd9d2a6c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2d7460505971eb0fc4aea320c125b2797e1158c6"
+        },
+        "date": 1719317669063,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527280,
             "unit": "ns/op"
           }
         ]
