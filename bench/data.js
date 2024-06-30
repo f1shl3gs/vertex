@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719728461036,
+  "lastUpdate": 1719728812426,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ccbb38d4a4a9c4d4df38e2ee846d3d2fc2ab440c",
-          "message": "chore(deps): bump memchr from 2.7.1 to 2.7.2 (#1684)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.7.1 to 2.7.2.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.7.1...2.7.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-28T18:32:33+08:00",
-          "tree_id": "16888cab42371f20a7c2998a7aa799d171f5fb27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ccbb38d4a4a9c4d4df38e2ee846d3d2fc2ab440c"
-        },
-        "date": 1711622653942,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 589,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37694.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6851989aac11a779215e2074b544d861f3528c4b",
           "message": "chore(deps): bump tokio from 1.36.0 to 1.37.0 (#1685)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.36.0 to 1.37.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.36.0...tokio-1.37.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-03-29T17:27:07+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37573.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "68dc8bbdbab5e69766285df9093eea207a56bfac",
+          "message": "chore(deps): bump quick-xml from 0.34.0 to 0.35.0 (#1801)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.34.0 to 0.35.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.34.0...v0.35.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-06-30T14:16:18+08:00",
+          "tree_id": "ca8aaf614d97644533b6af646a82b61d0a7f0080",
+          "url": "https://github.com/f1shl3gs/vertex/commit/68dc8bbdbab5e69766285df9093eea207a56bfac"
+        },
+        "date": 1719728797244,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 527,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37578.5,
             "unit": "KiB"
           }
         ]
