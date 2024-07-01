@@ -583,7 +583,7 @@ mod test {
         );
 
         // make sure that we're not cool with an unknown dotted path
-        let expected = "Input \"log_to_log.not_errors\" for sink \"bad_log_sink\" doesn't match any components.".to_string();
+        let expected = "Input \"log_to_log.not_errors\" for sink \"bad_log_sink\" doesn't match any components".to_string();
         assert_eq!(
             Err(expected),
             graph.test_add_input("bad_log_sink", "log_to_log.not_errors")
