@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719836035615,
+  "lastUpdate": 1719836057381,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "91c28de548ee322caafd43b9106cc243501ac606",
-          "message": "chore(deps): bump nix from 0.27.1 to 0.28.0 (#1618)\n\n* chore(deps): bump nix from 0.27.1 to 0.28.0\r\n\r\nBumps [nix](https://github.com/nix-rust/nix) from 0.27.1 to 0.28.0.\r\n- [Changelog](https://github.com/nix-rust/nix/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/nix-rust/nix/compare/v0.27.1...v0.28.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: nix\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix compatible error\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2024-02-24T15:50:51+08:00",
-          "tree_id": "fc6a84c4db234f05952511641254d8dd71386953",
-          "url": "https://github.com/f1shl3gs/vertex/commit/91c28de548ee322caafd43b9106cc243501ac606"
-        },
-        "date": 1708761207270,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.721,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 150.26,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 331.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 669.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "df53e70fc62249f6b3af3b3dad631dd999b7f1be",
           "message": "chore(deps): bump lru from 0.12.2 to 0.12.3 (#1619)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.2 to 0.12.3.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.2...0.12.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-25T00:08:59+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 694.49,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b1e2c0195d293b9dfc85c814ab2c507730deebff",
+          "message": "support TLS config (#1803)",
+          "timestamp": "2024-07-01T20:11:34+08:00",
+          "tree_id": "6b5064b9e608ac158e2933e0a30a942525a4fe96",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b1e2c0195d293b9dfc85c814ab2c507730deebff"
+        },
+        "date": 1719836042113,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 204.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 379.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 720.99,
             "unit": "ns/op"
           }
         ]
