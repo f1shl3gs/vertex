@@ -13,7 +13,7 @@ dyn-clone = { version = "1.0.17", default-features = false }
 hostname = { path = "../hostname" }
 regex = { version = "1.10.5", default-features = false, features = ["unicode"] }
 serde = { version = "1.0.203", default-features = false }
-serde_json = { version = "1.0.119", default-features = false }
+serde_json = { version = "1.0.120", default-features = false }
 twox-hash = { version = "1.6.3", default-features = false }
 url = { version = "2.5.2", default-features = false }
 value = { path = "../value" }

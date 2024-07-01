@@ -6,7 +6,7 @@ publish = false
 
 [dev-dependencies]
 tokio = { version = "1.38.0", default-features = false, features = ["test-util", "macros"] }
-serde_json = { version = "1.0.119", default-features = false }
+serde_json = { version = "1.0.120", default-features = false }
 serde_yaml = { version = "0.9.34", default-features = false }
 
 [dependencies]
@@ -16,5 +16,5 @@ humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = fa
 pin-project-lite = { version = "0.2.14" }
 regex = { version = "1.10.5", default-features = false }
 serde = { version = "1.0.203", default-features = false, features = ["derive"] }
-serde_json = { version = "1.0.119", default-features = false }
+serde_json = { version = "1.0.120", default-features = false }
 tokio-util = { version = "0.7.11", default-features = false, features = ["codec", "time"] }
