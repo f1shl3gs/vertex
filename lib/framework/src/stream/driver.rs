@@ -155,6 +155,7 @@ where
                                             ?err,
                                             request_id,
                                         );
+
                                         finalizers.update_status(EventStatus::Rejected);
                                     },
                                     Ok(resp) => {

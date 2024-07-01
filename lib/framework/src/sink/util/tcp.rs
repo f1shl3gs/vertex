@@ -171,7 +171,7 @@ impl TcpConnector {
                     .await
                     .map_err(|err| TcpError::Connect(TlsError::Handshake(err)))?;
 
-                debug!(message = "Negotiated TLS.");
+                debug!(message = "Negotiated TLS");
 
                 MaybeTlsStream::Tls { tls: stream }
             }
@@ -186,13 +186,13 @@ impl TcpConnector {
 
         if let Some(keepalive) = self.keepalive {
             if let Err(err) = maybe_tls.set_keepalive(keepalive) {
-                warn!(message = "Failed configuring TCP keepalive.", %err);
+                warn!(message = "Failed configuring TCP keepalive", %err);
             }
         }
 
         if let Some(send_buffer_bytes) = self.send_buffer_bytes {
             if let Err(err) = maybe_tls.set_send_buffer_bytes(send_buffer_bytes) {
-                warn!(message = "Failed configuring send buffer size on TCP socket.", %err);
+                warn!(message = "Failed configuring send buffer size on TCP socket", %err);
             }
         }
 
@@ -321,7 +321,7 @@ where
 
             if let Err(err) = result {
                 if err.kind() == ErrorKind::Other && err.to_string() == "ShutdownCheck::Close" {
-                    debug!(message = "Received EOF from the server, shutdown",);
+                    debug!(message = "Received EOF from the server, shutdown");
 
                     // TODO: metric
                 } else {

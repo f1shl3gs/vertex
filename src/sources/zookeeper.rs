@@ -167,7 +167,7 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<Str
         let (key, value) = match line.split_once('\t') {
             Some(pair) => pair,
             None => {
-                warn!("split mntr line failed, parsing: \"{}\"", line);
+                warn!(message = "split mntr line failed", line);
                 continue;
             }
         };
@@ -190,7 +190,7 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<Str
         if let Ok(v) = value.parse::<f64>() {
             stats.insert(key.to_string(), v);
         } else {
-            warn!("parse mntr value failed, parsing: {}", line);
+            warn!(message = "parse mntr value failed", line);
         }
     }
 

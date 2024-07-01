@@ -114,7 +114,7 @@ impl RunningTopology {
                 .join(", ");
 
             error!(
-              message = "Failed to gracefully shut down in time. Killing components.",
+                message = "Failed to gracefully shut down in time. Killing components",
                 components = ?remaining_components
             );
         };
@@ -205,7 +205,7 @@ impl RunningTopology {
         }
 
         // We need to rebuild the removed.
-        info!("Rebuilding old configuration.");
+        info!(message = "Rebuilding old configuration.");
         let diff = diff.flip();
         if let Some(mut new_pieces) = build_or_log_errors(&self.config, &diff, buffers).await {
             if self
@@ -237,15 +237,15 @@ impl RunningTopology {
                 .map(|(_, task)| task);
             let healthchecks = future::try_join_all(healthchecks);
 
-            info!("Running healthchecks.");
+            info!(message = "Running healthchecks.");
             if options.require_healthy {
                 let success = healthchecks.await;
 
                 if success.is_ok() {
-                    info!("All healthchecks passed.");
+                    info!(message = "All healthchecks passed.");
                     true
                 } else {
-                    error!("Sinks unhealthy.");
+                    error!(message = "Sinks unhealthy.");
                     false
                 }
             } else {
@@ -294,8 +294,8 @@ impl RunningTopology {
             }
 
             debug!(
-                "Waiting for up to {} seconds for source(s) to finish shutting down",
-                timeout.as_secs()
+                message = "Waiting for source(s) to finish shutting down",
+                remaining = timeout.as_secs()
             );
             futures::future::join_all(source_shutdown_handles).await;
 
@@ -659,7 +659,7 @@ impl RunningTopology {
                     // pause it now to pause further sends through that component until we
                     // reconnect.
                     debug!(
-                        message = "Pausing componnet input in fanout",
+                        message = "Pausing component input in fanout",
                         component = %key,
                         fanout = %input
                     );

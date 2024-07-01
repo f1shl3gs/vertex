@@ -202,9 +202,9 @@ impl RootCommand {
                 config::watcher::watch_configs(config_paths.iter().map(Into::into))
                     .map_err(|err| {
                         error!(
-                        message = "Unable to start config watcher",
-                        ?err
-                    );
+                            message = "Unable to start config watcher",
+                            ?err
+                        );
 
                         exitcode::CONFIG
                     })?;
@@ -250,10 +250,10 @@ impl RootCommand {
                                                 #[cfg(feature = "extensions-heartbeat")]
                                                 heartbeat::report_config(topology.config());
 
-                                                info!("Vertex reloaded");
+                                                info!(message = "Vertex reloaded");
                                             },
                                             Ok(false) => {
-                                                info!("Vertex reload failed");
+                                                info!(message = "Vertex reload failed");
                                             },
                                             // Trigger graceful shutdown for what remains of the topology
                                             Err(()) => {
@@ -265,7 +265,7 @@ impl RootCommand {
                                     },
 
                                     Err(_) => {
-                                        warn!("Vertex config reload failed");
+                                        warn!(message = "Vertex config reload failed");
                                     }
                                 }
                             }
@@ -281,10 +281,10 @@ impl RootCommand {
                                     new_config.healthcheck.set_require_healthy(true);
                                     match topology.reload_config_and_respawn(new_config).await {
                                         Ok(true) => {
-                                            info!("Reload config successes");
+                                            info!(message = "Reload config successes");
                                         },
                                         Ok(false) => {
-                                            warn!("Reload config failed");
+                                            warn!(message = "Reload config failed");
                                         },
                                         Err(()) => {
                                             break SignalTo::Shutdown;
@@ -293,7 +293,7 @@ impl RootCommand {
 
                                     sources_finished = topology.sources_finished();
                                 } else {
-                                    warn!("Reload config failed");
+                                    warn!(message = "Reload config failed");
                                 }
                             }
 
@@ -313,7 +313,7 @@ impl RootCommand {
 
             match signal {
                 SignalTo::Shutdown => {
-                    info!("Shutdown signal received");
+                    info!(message = "Shutdown signal received");
 
                     tokio::select! {
                         // graceful shutdown finished
@@ -327,7 +327,7 @@ impl RootCommand {
                 }
 
                 SignalTo::Quit => {
-                    info!("Quit signal received");
+                    info!(message = "Quit signal received");
 
                     // It is highly unlikely that this event will exit from topology
                     drop(topology);

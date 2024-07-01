@@ -125,7 +125,7 @@ impl Graph {
                 _ => panic!("only transforms and sinks have inputs"),
             };
             Err(format!(
-                "Input \"{}\" for {} \"{}\" doesn't match any components.",
+                "Input \"{}\" for {} \"{}\" doesn't match any components",
                 from, output_type, to
             ))
         }

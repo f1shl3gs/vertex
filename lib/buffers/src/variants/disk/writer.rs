@@ -463,10 +463,10 @@ where
         // before attempting the writer again.
         if !self.can_write(serialized_len) {
             debug!(
+                message = "Archived record is too large to fit in remaining free space of current data file",
                 current_data_file_size = self.current_data_file_size,
                 max_data_file_size = self.max_data_file_size,
                 archive_on_disk_len = serialized_len,
-                "Archived record is too large to fit in remaining free space of current data file."
             );
 
             // We have to decode the record back out to actually be able to give it back.  If we
@@ -761,13 +761,13 @@ where
     pub(super) async fn validate_last_write(&mut self) -> Result<(), WriterError<T>> {
         // We don't try validating again after doing so initially.
         if self.ready_to_write {
-            warn!("Writer already initialized.");
+            warn!(message = "Writer already initialized.");
             return Ok(());
         }
 
         debug!(
+            message = "Validating last written record in current data file",
             current_writer_data_file = ?self.ledger.get_current_writer_data_file_path(),
-            "Validating last written record in current data file."
         );
         self.ensure_ready_for_write().await?;
 
@@ -825,10 +825,8 @@ where
                     Ordering::Equal => {
                         // We're exactly where the ledger thinks we should be, so nothing to do.
                         debug!(
-                            ledger_next,
-                            last_record_id,
-                            record_events,
-                            "Synchronized with ledger. Writer ready."
+                            message = "Synchronized with ledger. Writer ready",
+                            ledger_next, last_record_id, record_events,
                         );
                         false
                     }
@@ -837,8 +835,10 @@ where
                         // likely missed flushing some records, or partially flushed the data file.
                         // Better roll over to be safe.
                         error!(
+                            message = "Last record written to data file is behind expected position. Events have likely been lost",
                             ledger_next, last_record_id, record_events,
-                            "Last record written to data file is behind expected position. Events have likely been lost.");
+                        );
+
                         true
                     }
                     Ordering::Less => {
@@ -849,11 +849,11 @@ where
                         // reality of the data file.  If there were somehow gaps in the data file,
                         // the reader will detect it, and this way, we avoid duplicate record IDs.
                         debug!(
+                            message = "Ledger desynchronized from data files. Fast forwarding ledger state",
                             ledger_next,
                             last_record_id,
                             record_events,
                             new_ledger_next = record_next,
-                            "Ledger desynchronized from data files. Fast forwarding ledger state."
                         );
                         let ledger_record_delta = record_next - ledger_next;
                         let next_record_id = self
@@ -874,8 +874,9 @@ where
             // We skip to the next data file to try and start from a clean slate.
             RecordStatus::Corrupted { .. } => {
                 error!(
-                    "Last written record did not match the expected checksum. Corruption likely."
+                    message = "Last written record did not match the expected checksum. Corruption likely."
                 );
+
                 true
             }
             // The record itself was corrupted, somehow: it was sufficiently different that `rkyv`
@@ -887,8 +888,9 @@ where
             RecordStatus::FailedDeserialization(de) => {
                 let reason = de.into_inner();
                 error!(
+                    message =
+                        "Last written record was unable to be deserialized. Corruption likely",
                     ?reason,
-                    "Last written record was unable to be deserialized. Corruption likely."
                 );
                 true
             }
@@ -933,9 +935,9 @@ where
             }
 
             trace!(
+                message = "Buffer size limit reached. Waiting for reader progress",
                 total_buffer_size = self.ledger.get_total_buffer_size() + self.unflushed_bytes,
                 max_buffer_size = self.config.max_buffer_size,
-                "Buffer size limit reached. Waiting for reader progress."
             );
 
             self.ledger.wait_for_reader().await;
@@ -1037,9 +1039,9 @@ where
             if let Some((data_file, data_file_size)) = file {
                 // We successfully opened the file and it can be written to.
                 debug!(
+                    message = "Opened data file for writing",
                     data_file_path = data_file_path.to_string_lossy().as_ref(),
                     existing_file_size = data_file_size,
-                    "Opened data file for writing."
                 );
 
                 // Make sure the file is flushed to disk, especially if we just created it.
@@ -1061,8 +1063,8 @@ where
                     self.ledger.notify_writer_waiters();
 
                     debug!(
+                        message = "Writer now on new data file",
                         new_writer_file_id = self.ledger.get_current_writer_file_id(),
-                        "Writer now on new data file."
                     );
                 }
 
@@ -1071,7 +1073,10 @@ where
 
             // The file is still present and waiting for a reader to finish reading it in order
             // to delete it.  Wait until the reader signals progress and try again.
-            debug!("Target data file is still present and not yet processed. Waiting for reader.");
+            debug!(
+                message =
+                    "Target data file is still present and not yet processed. Waiting for reader"
+            );
             self.ledger.wait_for_reader().await;
         }
     }
@@ -1139,10 +1144,10 @@ where
                         record = old_record;
 
                         debug!(
+                            message = "Current data file reached maximum size. Rolling to the next data file",
                             current_data_file_size = self.data_file_size,
                             max_data_file_size = self.config.max_data_file_size,
                             last_attempted_write_size = serialized_len,
-                            "Current data file reached maximum size. Rolling to the next data file."
                         );
 
                         continue;
@@ -1192,11 +1197,11 @@ where
         }
 
         trace!(
+            message = "Wrote record",
             record_id,
             record_events,
             bytes_written,
             data_file_id = self.ledger.get_current_writer_file_id(),
-            "Wrote record."
         );
 
         Ok(Ok(bytes_written))
@@ -1287,7 +1292,7 @@ where
     #[instrument(skip(self), level = "trace")]
     pub fn close(&mut self) {
         if self.ledger.mark_writer_done() {
-            debug!("Writer marked as closed.");
+            debug!(message = "Writer marked as closed");
             self.ledger.notify_writer_waiters();
         }
     }

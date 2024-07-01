@@ -16,7 +16,8 @@ fn main() {
 
     tracing::dispatcher::with_default(&dispatch, || {
         for i in 0..40 {
-            trace!("This field is not rate limited!");
+            trace!(message = "This field is not rate limited!");
+
             info!(
                 message = "This message is rate limited",
                 count = &i,

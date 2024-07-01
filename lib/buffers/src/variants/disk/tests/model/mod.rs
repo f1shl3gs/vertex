@@ -820,11 +820,11 @@ proptest! {
 
         let _a = install_tracing_helpers();
         info!(
+            message = "Starting model",
             actions = actions.len(),
             max_buffer_size = config.max_buffer_size,
             max_data_file_size = config.max_data_file_size,
             max_record_size = config.max_record_size,
-            "Starting model.",
         );
 
         // We generate a new temporary directory and overwrite the data directory in the buffer

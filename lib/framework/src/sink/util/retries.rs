@@ -84,7 +84,7 @@ impl<L: RetryLogic> FixedRetryPolicy<L> {
         let policy = self.advance();
         let delay = Box::pin(sleep(self.backoff()));
 
-        debug!(message = "Retrying request.", delay_ms = %self.backoff().as_millis());
+        debug!(message = "Retrying request", delay_ms = %self.backoff().as_millis());
         RetryPolicyFuture { delay, policy }
     }
 }
@@ -102,18 +102,20 @@ where
                 RetryAction::Retry(reason) => {
                     if self.remaining_attempts == 0 {
                         error!(
-                            message = "OK/retry response but retries exhausted; dropping the request.",
-                            reason = ?reason
+                            message =
+                                "OK/retry response but retries exhausted; dropping the request",
+                            ?reason
                         );
                         return None;
                     }
 
-                    warn!(message = "Retrying after response.", reason = %reason);
+                    warn!(message = "Retrying after response", %reason);
+
                     Some(self.build_retry())
                 }
 
                 RetryAction::DontRetry(reason) => {
-                    error!(message = "Not retriable; dropping the request.", reason = ?reason);
+                    error!(message = "Not retriable; dropping the request", ?reason);
                     None
                 }
 
@@ -121,27 +123,27 @@ where
             },
             Err(err) => {
                 if self.remaining_attempts == 0 {
-                    error!(message = "Retries exhausted; dropping the request.", %err);
+                    error!(message = "Retries exhausted; dropping the request", %err);
                     return None;
                 }
 
                 if let Some(expected) = err.downcast_ref::<L::Error>() {
                     if self.logic.is_retriable_error(expected) {
-                        warn!(message = "Retrying after error.", error = %expected);
+                        warn!(message = "Retrying after error", error = %expected);
                         Some(self.build_retry())
                     } else {
                         error!(
-                            message = "Non-retriable error; dropping the request.",
+                            message = "Non-retriable error; dropping the request",
                             %err
                         );
                         None
                     }
                 } else if err.downcast_ref::<Elapsed>().is_some() {
-                    warn!("Request timed out. If this happens often while the events are actually reaching their destination, try decreasing `batch.max_bytes` and/or using `compression` if applicable. Alternatively `request.timeout_secs` can be increased.");
+                    warn!(message = "Request timed out. If this happens often while the events are actually reaching their destination, try decreasing `batch.max_bytes` and/or using `compression` if applicable. Alternatively `request.timeout_secs` can be increased.");
                     Some(self.build_retry())
                 } else {
                     error!(
-                        message = "Unexpected error type; dropping the request.",
+                        message = "Unexpected error type; dropping the request",
                         %err
                     );
                     None

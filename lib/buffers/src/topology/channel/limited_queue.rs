@@ -119,7 +119,7 @@ impl<T: Bufferable> LimitedSender<T> {
             .expect("acquired permits but channel reporeted being full");
         self.inner.read_waker.notify_one();
 
-        trace!("sent item");
+        trace!(message = "sent item");
 
         Ok(())
     }
@@ -158,7 +158,7 @@ impl<T: Bufferable> LimitedSender<T> {
             .expect("acquired permits but channel reported being full");
         self.inner.read_waker.notify_one();
 
-        trace!("attempt to send item success");
+        trace!(message = "attempt to send item success");
 
         Ok(())
     }

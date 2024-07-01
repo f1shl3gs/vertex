@@ -362,7 +362,7 @@ impl Future for BatchStatusReceiver {
             Poll::Ready(Ok(status)) => Poll::Ready(status),
             Poll::Ready(Err(err)) => {
                 error!(
-                    message = "Batch status receiver dropped before sending.",
+                    message = "Batch status receiver dropped before sending",
                     %err,
                 );
 

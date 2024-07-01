@@ -56,7 +56,7 @@ pub(super) fn decode_value(input: PValue) -> Option<Value> {
         )),
         Some(PVKind::Null(_)) => Some(Value::Null),
         None => {
-            error!(message = "Encode event contains unknown value kind.");
+            error!(message = "Encode event contains unknown value kind");
             None
         }
     }

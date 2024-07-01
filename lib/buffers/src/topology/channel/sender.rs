@@ -45,7 +45,7 @@ where
                     // allow for recovering the original event value because we have to
                     // consume it to do the encoding... but that might not always be
                     // the case.
-                    error!("Disk buffer writer has encountered an unrecoverable error.");
+                    error!(message = "Disk buffer writer has encountered an unrecoverable error");
 
                     err.into()
                 })
@@ -68,7 +68,7 @@ where
                     // error during encoding -- but the traits don't allow for recovering the
                     // original event value because we have to consume it to do the encoding... but
                     // that might not always be the case.
-                    error!("Disk buffer writer has encountered an unrecoverable error.");
+                    error!(message = "Disk buffer writer has encountered an unrecoverable error");
 
                     err.into()
                 })
@@ -81,11 +81,11 @@ where
             Self::Memory(_) => Ok(()),
             Self::Disk(writer) => {
                 let mut writer = writer.lock().await;
-                writer.flush().await.map_err(|e| {
+                writer.flush().await.map_err(|err| {
                     // Errors on the I/O path, which is all that flushing touches, are never recoverable.
-                    error!("Disk buffer writer has encountered an unrecoverable error.");
+                    error!(message = "Disk buffer writer has encountered an unrecoverable error");
 
-                    e.into()
+                    err.into()
                 })
             }
         }

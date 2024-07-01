@@ -113,7 +113,7 @@ fn build_task_transform(
     let stream = t.transform(Box::pin(filtered));
     let transform = async move {
         fanout.send_stream(stream).await;
-        debug!("Finished");
+        debug!(message = "Finished");
         Ok(TaskOutput::Transform)
     };
 
@@ -369,7 +369,7 @@ pub async fn build_pieces(
 
             match result {
                 Ok(()) => {
-                    debug!(message = "Finished.");
+                    debug!(message = "Finished");
                     Ok(TaskOutput::Source)
                 }
                 Err(()) => Err(()),
@@ -627,7 +627,7 @@ pub async fn build_pieces(
                 timeout(duration, healthcheck)
                     .map(|result| match result {
                         Ok(Ok(_)) => {
-                            info!("Healthcheck: Passed");
+                            info!(message = "Healthcheck: Passed");
                             Ok(TaskOutput::HealthCheck)
                         }
 
@@ -654,7 +654,7 @@ pub async fn build_pieces(
                     })
                     .await
             } else {
-                info!("Healthcheck: Disabled");
+                info!(message = "Healthcheck: Disabled");
                 Ok(TaskOutput::HealthCheck)
             }
         };

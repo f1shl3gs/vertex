@@ -37,7 +37,7 @@ pub async fn load_from_paths_with_provider(
     let (config, build_warnings) = builder.build_with_warnings()?;
 
     for warning in load_warnings.into_iter().chain(build_warnings) {
-        warn!("{}", warning);
+        warn!(message = warning);
     }
 
     Ok(config)
@@ -166,7 +166,7 @@ pub fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String
         .into_iter()
         .chain(build_warnings)
         .for_each(|warning| {
-            warn!("{}", warning);
+            warn!(message = warning);
         });
 
     Ok(config)

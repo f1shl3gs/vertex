@@ -215,9 +215,9 @@ where
             .expect("overflowing unclaimed acknowledgements is a serious bug");
 
         trace!(
+            message = "Added acknowledgements",
             unclaimed_acks = %self.unclaimed_acks,
             added_acks = %amount,
-            "Added acknowledgements."
         );
     }
 
@@ -375,11 +375,11 @@ where
         let effective_acked_marker_id = self.acked_marker_id.wrapping_add(&self.unclaimed_acks);
 
         trace!(
+            message = "Searching for eligible marker",
             acked_marker_id = %self.acked_marker_id,
             %effective_acked_marker_id,
             unclaimed_acks = %self.unclaimed_acks,
             pending_markers = self.pending_markers.len(),
-            "Searching for eligible marker."
         );
 
         let maybe_eligible_marker =

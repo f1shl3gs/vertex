@@ -63,7 +63,7 @@ impl SignalHandler {
 
             while let Some(value) = stream.next().await {
                 if tx.send(value.into()).await.is_err() {
-                    error!("couldn't send signal");
+                    error!(message = "couldn't send signal");
                     break;
                 }
             }
@@ -94,12 +94,12 @@ impl SignalHandler {
                     _ = shutdown_rx.recv() => break,
                     Some(value) = stream.next() => {
                         if tx.send(value.into()).await.is_err() {
-                            error!("couldn't send signal");
+                            error!(message = "couldn't send signal");
                             break;
                         }
                     }
                     else => {
-                        error!("underlying stream is closed");
+                        error!(message = "underlying stream is closed");
                         break;
                     }
                 }
