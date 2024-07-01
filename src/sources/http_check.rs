@@ -3,13 +3,13 @@ use std::time::{Duration, Instant};
 use async_trait::async_trait;
 use configurable::{configurable_component, Configurable};
 use event::{tags, Metric};
-use framework::config::{default_interval, Output, ProxyConfig, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::http::HttpClient;
-use framework::{Pipeline, ShutdownSignal, Source};
-use http::Request;
+use framework::tls::TlsConfig;
+use framework::{Error, Pipeline, ShutdownSignal, Source};
+use http::{Request, StatusCode};
 use hyper::Body;
 use serde::{Deserialize, Serialize};
-use tokio::time::{interval, timeout};
 use url::Url;
 
 const fn default_timeout() -> Duration {
@@ -24,25 +24,19 @@ enum Method {
     Get,
 }
 
-impl Method {
-    const fn as_str(&self) -> &'static str {
-        match self {
-            Method::Get => "GET",
-        }
-    }
-}
-
 /// The HTTP Check source can be used for synthethic checks against HTTP
 /// endpoints. This source will make a request to the specified `endpoint`
 /// using the configured `method`. This scraper generates a metric with
 /// a label for each HTTP response status class with a value of `1` if
 /// the status code matches the class.
 #[configurable_component(source, name = "http_check")]
-#[derive(Clone)]
 struct Config {
     /// The URL of the endpoint to be monitored.
     #[configurable(required, format = "uri", example = "http://localhost:80")]
     endpoint: Url,
+
+    /// TLS configuration
+    tls: Option<TlsConfig>,
 
     /// The method used to call the endpoint.
     #[serde(default)]
@@ -61,9 +55,17 @@ struct Config {
 #[typetag::serde(name = "http_check")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
+        let client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let method = match self.method {
+            Method::Get => http::Method::GET,
+        };
+
         Ok(Box::pin(run(
-            self.clone(),
-            cx.proxy,
+            client,
+            method,
+            self.endpoint.clone(),
+            self.interval,
+            self.timeout,
             cx.output,
             cx.shutdown,
         )))
@@ -75,12 +77,15 @@ impl SourceConfig for Config {
 }
 
 async fn run(
-    config: Config,
-    proxy: ProxyConfig,
+    client: HttpClient,
+    method: http::Method,
+    endpoint: Url,
+    interval: Duration,
+    timeout: Duration,
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
-    let mut ticker = interval(config.interval);
+    let mut ticker = tokio::time::interval(interval);
 
     loop {
         tokio::select! {
@@ -91,34 +96,26 @@ async fn run(
         };
 
         let start = Instant::now();
-        let result = match timeout(
-            config.timeout,
-            scrape(config.method.as_str(), config.endpoint.as_str(), &proxy),
-        )
-        .await
-        {
-            Ok(result) => result,
-            Err(err) => Err(err.into()),
-        };
+        let result = probe(&client, &method, endpoint.as_str(), timeout).await;
         let elapsed = start.elapsed();
         let mut metrics = vec![Metric::gauge_with_tags(
             "http_check_duration",
             "Measures the duration of the HTTP check",
             elapsed,
             tags!(
-                "url" => config.endpoint.to_string()
+                "url" => endpoint.to_string()
             ),
         )];
 
         match result {
             Ok(status_code) => {
-                let status_class = if status_code < 200 {
+                let status_class = if status_code.is_informational() {
                     "1xx"
-                } else if status_code < 300 {
+                } else if status_code.is_success() {
                     "2xx"
-                } else if status_code < 400 {
+                } else if status_code.is_redirection() {
                     "3xx"
-                } else if status_code < 500 {
+                } else if status_code.is_client_error() {
                     "4xx"
                 } else {
                     "5xx"
@@ -127,10 +124,10 @@ async fn run(
                 metrics.push(Metric::gauge_with_tags(
                     "http_check_status",
                     "The check resulted in status_code.",
-                    status_code,
+                    status_code.as_u16(),
                     tags!(
-                        "url" => config.endpoint.to_string(),
-                        "method" => config.method.as_str(),
+                        "url" => endpoint.to_string(),
+                        "method" => method.as_str(),
                         "status_class" => status_class,
                     ),
                 ))
@@ -141,8 +138,8 @@ async fn run(
                     "Records errors occurring during HTTP check.",
                     1,
                     tags!(
-                        "method" => config.method.as_str(),
-                        "url" => config.endpoint.to_string(),
+                        "method" => method.as_str(),
+                        "url" => endpoint.to_string(),
                         "err" => err.to_string(),
                     ),
                 ));
@@ -158,21 +155,28 @@ async fn run(
     Ok(())
 }
 
-async fn scrape(
-    method: &str,
-    endpoint: &str,
-    proxy: &ProxyConfig,
-) -> Result<u16, framework::Error> {
-    let client = HttpClient::new(&None, proxy)?;
+async fn probe(
+    client: &HttpClient,
+    method: &http::Method,
+    url: &str,
+    timeout: Duration,
+) -> Result<StatusCode, Error> {
+    let result = tokio::time::timeout(timeout, async move {
+        let req = Request::builder()
+            .method(method)
+            .uri(url)
+            .body(Body::empty())?;
 
-    let req = Request::builder()
-        .method(method)
-        .uri(endpoint)
-        .body(Body::empty())?;
+        let resp = client.send(req).await?;
 
-    let resp = client.send(req).await?;
+        Ok(resp.status())
+    })
+    .await;
 
-    Ok(resp.status().as_u16())
+    match result {
+        Ok(result) => result,
+        Err(err) => Err(err.into()),
+    }
 }
 
 #[cfg(test)]
@@ -180,7 +184,8 @@ mod tests {
     use std::convert::Infallible;
 
     use event::MetricValue;
-    use http::Response;
+    use framework::config::ProxyConfig;
+    use http::{Method, Response};
     use hyper::service::{make_service_fn, service_fn};
     use hyper::Server;
     use testify::collect_ready;
@@ -235,14 +240,17 @@ mod tests {
         ] {
             let (output, receiver) = Pipeline::new_test();
             let shutdown = ShutdownSignal::noop();
-            let config = Config {
-                endpoint: Url::parse(&format!("{endpoint}/{code}")).unwrap(),
-                method: Default::default(),
-                interval: default_interval(),
-                timeout: Duration::from_secs(100),
-            };
+            let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 
-            let task = tokio::spawn(run(config, ProxyConfig::default(), output, shutdown));
+            let task = tokio::spawn(run(
+                client,
+                Method::GET,
+                Url::parse(&format!("{endpoint}/{code}")).unwrap(),
+                default_interval(),
+                default_timeout(),
+                output,
+                shutdown,
+            ));
             tokio::time::sleep(Duration::from_secs(1)).await;
             let events = collect_ready(receiver).await;
             task.abort();
