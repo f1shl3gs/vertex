@@ -197,7 +197,7 @@ where
                 };
 
                 if service_ready {
-                    trace!(message = "Service ready; sending batch",);
+                    trace!(message = "Service ready; sending batch");
 
                     let batch = this.partitions.remove(partition).unwrap();
                     this.lingers.remove(partition);
@@ -326,6 +326,7 @@ where
             message = "Submitting service request",
             inflight = self.inflight.len()
         );
+
         self.service
             .call(items)
             .err_into()
@@ -398,18 +399,18 @@ fn result_status<R: Response + Send>(result: crate::Result<R>) -> EventStatus {
     match result {
         Ok(resp) => {
             if resp.is_successful() {
-                trace!(message = "Response successful.", ?resp);
+                trace!(message = "Response successful", ?resp);
                 EventStatus::Delivered
             } else if resp.is_transient() {
-                error!(message = "Response wasn't successful.", ?resp);
+                error!(message = "Response wasn't successful", ?resp);
                 EventStatus::Errored
             } else {
-                error!(message = "Response failed.", ?resp);
+                error!(message = "Response failed", ?resp);
                 EventStatus::Rejected
             }
         }
         Err(error) => {
-            error!(message = "Request failed.", %error);
+            error!(message = "Request failed", %error);
             EventStatus::Errored
         }
     }

@@ -246,7 +246,7 @@ impl Checkpointer {
         // location, so warn more aggressively if something goes wrong.
         match self.read_checkpoints_file(&self.stable_file_path) {
             Ok(state) => {
-                info!(message = "Loaded checkpoint data",);
+                info!(message = "Loaded checkpoint data");
 
                 self.checkpoints.set_state(state, ignore_before);
             }

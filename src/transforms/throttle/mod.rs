@@ -132,7 +132,8 @@ impl TaskTransform for Throttle {
                                     if allow {
                                         output.push_one(event);
                                     } else {
-                                        debug!(message = "Rate limit exceeded",
+                                        debug!(
+                                            message = "Rate limit exceeded",
                                             key = &key,
                                             internal_log_rate_limit = true
                                         );

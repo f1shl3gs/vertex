@@ -71,7 +71,7 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let data_dir = cx.globals.make_subdir(cx.key.id()).map_err(|err| {
-            warn!("create sub dir failed {:?}", err);
+            warn!(message = "create sub dir failed", ?err);
             err
         })?;
 
@@ -158,9 +158,9 @@ impl JournaldSource {
         let mut on_stop = None;
         let run = Box::pin(self.run(&mut checkpointer, &mut cursor, &mut on_stop, start));
 
-        info!("start selecting");
+        info!(message = "start selecting");
         futures::future::select(run, shutdown).await;
-        info!("stopping journal");
+        info!(message = "stopping journal");
         if let Some(stop) = on_stop {
             stop();
         }
@@ -178,7 +178,8 @@ impl JournaldSource {
         start: StartJournalctlFn,
     ) {
         loop {
-            info!("starting journalctl");
+            info!(message = "starting journalctl");
+
             match start(&*cursor) {
                 Ok((stream, stop)) => {
                     *on_stop = Some(stop);
@@ -220,7 +221,7 @@ impl JournaldSource {
             for _ in 0..self.batch_size {
                 let mut entry = match stream.next().await {
                     None => {
-                        warn!("journalctl process stopped");
+                        warn!(message = "journalctl process stopped");
                         return true;
                     }
                     Some(Ok(entry)) => entry,

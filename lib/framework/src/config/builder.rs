@@ -55,7 +55,7 @@ impl Builder {
         let (config, warnings) = self.build_with_warnings()?;
 
         for warning in warnings {
-            warn!("{}", warning);
+            warn!(message = warning);
         }
 
         Ok(config)
@@ -352,7 +352,12 @@ fn expand_globs_inner(inputs: &mut Vec<String>, id: &str, candidates: &IndexSet<
         let matcher = glob::Pattern::new(&raw_input)
             .map(InputMatcher::Pattern)
             .unwrap_or_else(|err| {
-                warn!(message = "Invalid glob pattern for input.", component_id = %id, %err);
+                warn!(
+                    message = "Invalid glob pattern for input",
+                    component_id = %id,
+                    %err,
+                );
+
                 InputMatcher::String(raw_input.to_string())
             });
         let mut matched = false;

@@ -84,7 +84,7 @@ async fn handle_errors(
         .map_err(|_| ())
         .and_then(|res| res)
         .map_err(|_| {
-            error!("An error occurred that couldn't be handled.");
+            error!(message = "An error occurred that couldn't be handled");
             let _ = abort_tx.send(());
         })
 }
@@ -98,7 +98,7 @@ pub async fn build_or_log_errors(
         Err(errors) => {
             for err in errors {
                 error!(
-                    message = "Configuration error.",
+                    message = "Configuration error",
                     %err
                 );
             }

@@ -23,7 +23,6 @@ const fn default_bind() -> SocketAddr {
 
 /// This source checks the drift of that node's clock against a given NTP server or servers.
 #[configurable_component(source, name = "ntp")]
-#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// SocketAddr which UdpSocket is going to bind.

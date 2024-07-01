@@ -214,7 +214,7 @@ where
                             }
                         };
 
-                        let peer_addr = socket.peer_addr();
+                        let peer = socket.peer_addr();
                         let tripwire = tripwire
                             .map(move |_| {
                                 info!(
@@ -224,8 +224,9 @@ where
                             })
                             .boxed();
 
-                        debug!(message = "Accepted a new connection",
-                            peer = %peer_addr
+                        debug!(
+                            message = "Accepted a new connection",
+                            peer = %peer
                         );
 
                         let fut = handle_stream(
@@ -235,7 +236,7 @@ where
                             receive_buffer_bytes,
                             source,
                             tripwire,
-                            peer_addr.ip(),
+                            peer.ip(),
                             output,
                             acknowledgements,
                         );
@@ -315,18 +316,18 @@ async fn handle_stream<T>(
         tokio::select! {
             _ = &mut tripwire => break,
             _ = &mut shutdown_signal => {
-                debug!(message = "Start graceful shutdown.");
+                debug!(message = "Start graceful shutdown");
                 // Close our write part of TCP socket to signal the other side
                 // that it should stop writing and close the channel.
                 let socket = reader.get_ref().get_ref();
                 if let Some(stream) = socket.get_ref() {
                     let socket = SockRef::from(stream);
                     if let Err(err) = socket.shutdown(std::net::Shutdown::Write) {
-                        warn!(message = "Failed in signalling to the other side to close the TCP channel.", %err);
+                        warn!(message = "Failed in signalling to the other side to close the TCP channel", %err);
                     }
                 } else {
                     // Connection hasn't yet been established so we are done here.
-                    debug!(message = "Closing connection that hasn't yet been fully established.");
+                    debug!(message = "Closing connection that hasn't yet been fully established");
                     break;
                 }
             },
@@ -403,7 +404,7 @@ async fn handle_stream<T>(
                     }
 
                     None => {
-                        debug!("Connection closed");
+                        debug!(message = "Connection closed");
                         break
                     },
                 }

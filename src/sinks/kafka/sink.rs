@@ -78,7 +78,7 @@ impl KafkaSink {
 }
 
 pub async fn health_check(config: Config) -> crate::Result<()> {
-    trace!(message = "Health check started",);
+    trace!(message = "Health check started");
 
     let client = ClientBuilder::new(config.bootstrap_servers)
         .client_id("vertex")

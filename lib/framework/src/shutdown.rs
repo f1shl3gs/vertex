@@ -200,14 +200,14 @@ impl ShutdownCoordinator {
             .map(|tripwire| tripwire.boxed());
 
         future::join_all(futs)
-            .map(|_| info!("All sources have finished"))
+            .map(|_| info!(message = "All sources have finished"))
             .boxed()
     }
 
     fn shutdown_source_complete(
         complete_tripwire: Tripwire,
         force_trigger: Trigger,
-        name: ComponentKey,
+        source: ComponentKey,
         deadline: Instant,
     ) -> impl Future<Output = bool> {
         async move {
@@ -216,8 +216,8 @@ impl ShutdownCoordinator {
                 true
             } else {
                 error!(
-                    "Some '{}' failed to shutdown before deadline. Forcing shutdown",
-                    name
+                    message = "Failed to shutdown before deadline, forcing shutdown",
+                    ?source
                 );
 
                 force_trigger.cancel();

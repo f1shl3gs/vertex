@@ -317,7 +317,7 @@ fn enrich_syslog_event(event: &mut Event, host_key: &OwnedValuePath, default_hos
     log.insert(log_schema().timestamp_key(), timestamp);
 
     trace!(
-        message = "Processing one event.",
+        message = "Processing one event",
         event = ?event
     );
 }

@@ -70,7 +70,7 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
         total_read += used;
 
         if !discarding && buf.len() > max_size {
-            warn!("Found line that exceeds max_line_bytes; discarding");
+            warn!(message = "Found line that exceeds max_line_bytes; discarding");
             discarding = true;
         }
 

@@ -481,8 +481,9 @@ where
         // read path?  Technically all that's needed is a handle to the ledger and the data file
         // path, so as long as the logic is still right, we can notify writers out-of-band.
         debug!(
+            message = "Deleting completed data file",
             data_file_path = data_file_path.to_string_lossy().as_ref(),
-            bytes_read, "Deleting completed data file."
+            bytes_read,
         );
 
         // Grab the size of the data file before we delete it, which gives us a chance to fix up the
@@ -510,9 +511,9 @@ where
                 let size_delta = metadata.len() - bytes_read;
                 if size_delta > 0 {
                     debug!(
+                        message = "Data file was only partially read. Adjusting buffer size to compensate",
                         actual_file_size = metadata.len(),
                         bytes_read,
-                        "Data file was only partially read. Adjusting buffer size to compensate.",
                     );
                 }
 
@@ -534,7 +535,7 @@ where
         self.ledger.increment_acked_reader_file_id();
         self.ledger.flush()?;
 
-        debug!("Flushed after deleting data file, notifying writers and continuing.");
+        debug!(message = "Flushed after deleting data file, notifying writers and continuing.");
 
         // Notify any waiting writers that we've deleted a data file, which they may be waiting on
         // because they're looking to reuse the file ID of the file we just finished reading.
@@ -623,8 +624,8 @@ where
             // If any events were skipped, do our logging/metrics for that.
             if events_skipped > 0 {
                 error!(
+                    message = "Detected missing/dropped events.  Buffer data loss has occurred",
                     dropped_events = events_skipped,
-                    "Detected missing/dropped events.  Buffer data loss has occurred."
                 );
 
                 // TODO: We probably need to make this actually decrement the buffer events gauge directly.
@@ -672,13 +673,13 @@ where
 
             if self.ready_to_read {
                 trace!(
+                    message = "Finished handling acknowledgements",
                     current_buffer_size = self.ledger.get_total_buffer_size(),
                     records_acknowledged,
                     events_acknowledged,
                     events_skipped,
                     bytes_acknowledged,
                     data_files_deleted,
-                    "Finished handling acknowledgements."
                 );
             }
         }
@@ -710,13 +711,13 @@ where
         let bytes_read = self.bytes_read;
 
         debug!(
+            message = "Marking data file for deletion",
             data_file_path = data_file_path.to_string_lossy().as_ref(),
             first_record_id = data_file_start_record_id,
             last_record_id = self.last_reader_record_id,
             record_count = data_file_record_count,
             event_count = data_file_event_count,
             bytes_read,
-            "Marking data file for deletion."
         );
 
         let data_file_marker_id = self.data_file_marked_record_count;
@@ -735,7 +736,7 @@ where
         self.reset();
         self.ledger.increment_unacked_reader_file_id();
 
-        debug!("Rolling to next data file.");
+        debug!(message = "Rolling to next data file.");
     }
 
     /// Ensures this reader is ready to attempt reading the next record.
@@ -763,8 +764,9 @@ where
                     ErrorKind::NotFound => {
                         if reader_file_id == writer_file_id {
                             debug!(
+                                message =
+                                    "Data file does not yet exist. Waiting for writer to create",
                                 data_file_path = data_file_path.to_string_lossy().as_ref(),
-                                "Data file does not yet exist. Waiting for writer to create."
                             );
                             self.ledger.wait_for_writer().await;
                         } else {
@@ -778,8 +780,8 @@ where
             };
 
             debug!(
+                message = "Opened data file for reading",
                 data_file_path = data_file_path.to_string_lossy().as_ref(),
-                "Opened data file for reading."
             );
 
             self.reader = Some(RecordReader::new(data_file));
@@ -804,7 +806,7 @@ where
     pub(super) async fn seek_to_next_record(&mut self) -> Result<(), ReaderError<T>> {
         // We don't try seeking again once we're all caught up.
         if self.ready_to_read {
-            warn!("Reader already initialized.");
+            warn!(message = "Reader already initialized.");
             return Ok(());
         }
 
@@ -814,8 +816,8 @@ where
         // get to the one we left off with last time.
         let ledger_last = self.ledger.state().get_last_reader_record_id();
         debug!(
+            message = "Seeking to last acknowledged record for reader",
             last_acknowledged_record_id = ledger_last,
-            "Seeking to last acknowledged record for reader."
         );
 
         // We may end up in a situation where a data file hasn't yet been deleted but we've moved on
@@ -905,8 +907,8 @@ where
         }
 
         debug!(
+            message = "Synchronized with ledger. Reader ready",
             last_record_id_read = self.last_reader_record_id,
-            "Synchronized with ledger. Reader ready."
         );
 
         self.ready_to_read = true;
@@ -1030,8 +1032,8 @@ where
             if self.ready_to_read {
                 if reader_file_id != writer_file_id {
                     debug!(
-                        reader_file_id,
-                        writer_file_id, "Reached the end of current data file."
+                        message = "Reached the end of current data file",
+                        reader_file_id, writer_file_id,
                     );
 
                     self.roll_to_next_data_file();
@@ -1042,8 +1044,8 @@ where
                 self.ledger.wait_for_writer().await;
             } else {
                 debug!(
+                    message = "Current data file has no more data",
                     bytes_read = self.bytes_read,
-                    "Current data file has no more data."
                 );
 
                 if reader_file_id == writer_file_id {
@@ -1082,11 +1084,11 @@ where
 
         if self.ready_to_read {
             trace!(
+                message = "Read record",
                 record_id,
                 record_events,
                 record_bytes,
                 data_file_id = self.ledger.get_current_reader_file_id(),
-                "Read record."
             );
         }
 

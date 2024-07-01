@@ -46,7 +46,7 @@ impl ExtensionConfig for Config {
             if let Err(err) = Server::bind(&addr)
                 .serve(service)
                 .with_graceful_shutdown(shutdown.map(|_token| {
-                    info!("zpages done");
+                    info!(message = "zpages done");
                 }))
                 .await
             {

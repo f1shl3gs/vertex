@@ -332,7 +332,7 @@ impl Auth {
             }
             Auth::Bearer { token } => match Authorization::bearer(token) {
                 Ok(auth) => map.typed_insert(auth),
-                Err(err) => error!(message = "Invalid bearer token.", token = %token, %err),
+                Err(err) => error!(message = "Invalid bearer token", token = %token, %err),
             },
         }
     }

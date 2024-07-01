@@ -106,7 +106,10 @@ impl Fanout {
     ///
     /// This method should not be used if there is an active `SendGroup` being processed.
     fn apply_control_message(&mut self, message: ControlMessage) {
-        trace!("Processing control message outside of send: {:?}", message);
+        trace!(
+            message = "Processing control message outside of send",
+            control = ?message,
+        );
 
         match message {
             ControlMessage::Add(id, sink) => self.add(id, sink),
@@ -158,7 +161,7 @@ impl Fanout {
 
         // Nothing to send if we have no sender
         if self.senders.is_empty() {
-            trace!("No senders present.");
+            trace!(message = "no senders present");
             return;
         }
 
@@ -183,7 +186,10 @@ impl Fanout {
                 biased;
 
                 maybe_msg = self.control_channel.recv(), if control_channel_open => {
-                    trace!("Processing control message inside of send: {:?}", maybe_msg);
+                    trace!(
+                        message = "Processing control message inside of send",
+                        ?maybe_msg,
+                    );
 
                     // During a send operation, control messages must be applied via
                     // the `SendGroup`, since it has exclusive access to the senders.
@@ -211,7 +217,7 @@ impl Fanout {
                     // All in-flight sends have complected, so return sinks to the base collection.
                     // We extend instead of assign here because other sinks could have been added
                     // while the send was inflight.
-                    trace!("Sent item to fanout");
+                    trace!(message = "Sent item to fanout");
 
                     break;
                 }

@@ -98,7 +98,7 @@ where
                     }
                 }
 
-                info!("Finished sending");
+                info!(message = "Finished sending");
 
                 let socket: &mut UnixStream = stream.get_mut().get_mut();
                 if let Err(err) = socket.shutdown().await {

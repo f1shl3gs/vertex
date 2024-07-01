@@ -309,9 +309,9 @@ where
     pub(super) fn increment_total_buffer_size(&self, amount: u64) {
         let last_total_buffer_size = self.total_buffer_size.fetch_add(amount, Ordering::AcqRel);
         trace!(
+            message = "Updated buffer size",
             previous_buffer_size = last_total_buffer_size,
             new_buffer_size = last_total_buffer_size + amount,
-            "Updated buffer size.",
         );
     }
 
@@ -319,9 +319,9 @@ where
     pub(super) fn decrement_total_buffer_size(&self, amount: u64) {
         let last_total_buffer_size = self.total_buffer_size.fetch_sub(amount, Ordering::AcqRel);
         trace!(
+            message = "Updated buffer size",
             previous_buffer_size = last_total_buffer_size,
             new_buffer_size = last_total_buffer_size - amount,
-            "Updated buffer size.",
         );
     }
 
@@ -458,9 +458,10 @@ where
         let last_unacked_reader_file_id_offset = self
             .unacked_reader_file_id_offset
             .fetch_add(1, Ordering::AcqRel);
+
         trace!(
+            message = "Incremented unacknowledged reader file ID",
             unacked_reader_file_id_offset = last_unacked_reader_file_id_offset + 1,
-            "Incremented unacknowledged reader file ID."
         );
     }
 
@@ -504,9 +505,9 @@ where
         );
 
         trace!(
+            message = "Incremented acknowledged reader file ID offset with corresponding unacknowledged decrement",
             unacked_reader_file_id_offset = result.map(|n| n - 1).unwrap_or(0),
             acked_reader_file_id_offset = new_reader_file_id,
-            "Incremented acknowledged reader file ID offset with corresponding unacknowledged decrement."
         );
     }
 
@@ -602,7 +603,7 @@ where
         let ledger_metadata = ledger_handle.metadata().await?;
         let ledger_len = ledger_metadata.len();
         if ledger_len == 0 {
-            debug!("Ledger file empty. Initializing with default ledger state.");
+            debug!(message = "Ledger file empty. Initializing with default ledger state");
 
             // Serialize our value so we can shove it into the backing.
             let buf = LedgerState::default().serialize();
@@ -678,10 +679,10 @@ where
                     total_buffer_size += metadata.len();
 
                     debug!(
+                        message = "Found existing data file",
                         data_file = file_name,
                         file_size = metadata.len(),
                         total_buffer_size,
-                        "Found existing data file."
                     );
                 }
             }

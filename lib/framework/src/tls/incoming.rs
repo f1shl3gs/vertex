@@ -209,7 +209,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
         let stream = self.get_ref().ok_or_else(|| {
             io::Error::new(
                 io::ErrorKind::NotConnected,
-                "Can't set keepalive on connection that has not been accepted yet.",
+                "Can't set keepalive on connection that has not been accepted yet",
             )
         })?;
 
@@ -227,7 +227,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
         let stream = self.get_ref().ok_or_else(|| {
             io::Error::new(
                 io::ErrorKind::NotConnected,
-                "Can't set receive buffer size on connection that has not been accepted yet.",
+                "Can't set receive buffer size on connection that has not been accepted yet",
             )
         })?;
 

@@ -44,11 +44,6 @@ impl State {
                     count = self.events_total,
                     bytes = self.event_bytes,
                 );
-                trace!(
-                    message = "Bytes sent",
-                    proto = self.socket_mode.as_str(),
-                    bytes = self.bytes_total
-                );
             }
 
             self.events_total = 0;
