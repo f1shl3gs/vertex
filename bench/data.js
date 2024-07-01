@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1719847928363,
+  "lastUpdate": 1719857801368,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "65b58d0048f312ced9a17cc79a15f2361a58e571",
-          "message": "simplify resolve (#1692)",
-          "timestamp": "2024-04-03T20:19:55+08:00",
-          "tree_id": "254ed32c8b332abda61915d02bf5fe3ff540fe37",
-          "url": "https://github.com/f1shl3gs/vertex/commit/65b58d0048f312ced9a17cc79a15f2361a58e571"
-        },
-        "date": 1712146948454,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536580,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 542230,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "efafd0755e92cebdee058aef1607e9cd0f9da095",
+          "message": "chore(deps): bump serde_json from 1.0.119 to 1.0.120 (#1805)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.119 to 1.0.120.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.119...v1.0.120)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-02T02:14:29+08:00",
+          "tree_id": "416b7ab2ecfb4cd9f653649c48a9ce666b2446c6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/efafd0755e92cebdee058aef1607e9cd0f9da095"
+        },
+        "date": 1719857786054,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 525390,
             "unit": "ns/op"
           }
         ]
