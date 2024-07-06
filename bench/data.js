@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720237333234,
+  "lastUpdate": 1720310271339,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cd6f66a9d76dc6f68d9059c2bcdbf87c22bb8af3",
-          "message": "replace chrono feature clock with now (#1695)",
-          "timestamp": "2024-04-04T04:56:42+08:00",
-          "tree_id": "f8caff8e250ce7a60db3b69ebec91b0e6ce4293f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cd6f66a9d76dc6f68d9059c2bcdbf87c22bb8af3"
-        },
-        "date": 1712177930547,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536350,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531160,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bf0e76ccf2d812dfa2f00d5e1c43bed7b43c0d1",
+          "message": "chore(deps): bump serde from 1.0.203 to 1.0.204 (#1807)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.203 to 1.0.204.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.203...v1.0.204)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-07T07:55:34+08:00",
+          "tree_id": "40ee18382dbf1f09f46118f01669b04b584c7ce0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bf0e76ccf2d812dfa2f00d5e1c43bed7b43c0d1"
+        },
+        "date": 1720310256033,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534700,
             "unit": "ns/op"
           }
         ]
