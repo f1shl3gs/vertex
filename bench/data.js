@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720310286382,
+  "lastUpdate": 1720310307403,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cf7b8e3a814b53f93d2fcac18e9a50dbadffb932",
-          "message": "chore(deps): bump dyn-clone from 1.0.16 to 1.0.17 (#1620)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.16 to 1.0.17.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.16...1.0.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-02-26T16:20:55+08:00",
-          "tree_id": "13262b60dc4f3f635a67e6588a13a814892105a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf7b8e3a814b53f93d2fcac18e9a50dbadffb932"
-        },
-        "date": 1708935810987,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.941,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 155.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 339.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 683.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6d7b0becbf7f9082d724e67a0f4fd27d9eefd727",
           "message": "chore(deps): bump ahash from 0.8.9 to 0.8.10 (#1623)\n\nBumps [ahash](https://github.com/tkaitchuck/ahash) from 0.8.9 to 0.8.10.\r\n- [Release notes](https://github.com/tkaitchuck/ahash/releases)\r\n- [Commits](https://github.com/tkaitchuck/ahash/compare/v0.8.9...v0.8.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ahash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-02-28T19:16:25+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 654.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bf0e76ccf2d812dfa2f00d5e1c43bed7b43c0d1",
+          "message": "chore(deps): bump serde from 1.0.203 to 1.0.204 (#1807)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.203 to 1.0.204.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.203...v1.0.204)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-07T07:55:34+08:00",
+          "tree_id": "40ee18382dbf1f09f46118f01669b04b584c7ce0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bf0e76ccf2d812dfa2f00d5e1c43bed7b43c0d1"
+        },
+        "date": 1720310291929,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.934,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 157.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 682.35,
             "unit": "ns/op"
           }
         ]
