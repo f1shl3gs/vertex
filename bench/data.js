@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720316352905,
+  "lastUpdate": 1720316361132,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "36965fa454eff0fa336043174f35ef54275a51d6",
-          "message": "cleanup (#1691)",
-          "timestamp": "2024-04-03T17:10:33+08:00",
-          "tree_id": "8e38d8f6344aaf211cca5f97dd929b11b633ac9c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/36965fa454eff0fa336043174f35ef54275a51d6"
-        },
-        "date": 1712136115312,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 591,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37730.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "65b58d0048f312ced9a17cc79a15f2361a58e571",
           "message": "simplify resolve (#1692)",
           "timestamp": "2024-04-03T20:19:55+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37589.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc0daefa4fc479b1264dcec4550c84e594f66fd4",
+          "message": "chore(deps): bump syn from 2.0.68 to 2.0.69 (#1809)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.68 to 2.0.69.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.68...2.0.69)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-07T09:28:33+08:00",
+          "tree_id": "f2acde59f92f80954bd308a267826240922c9aa1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cc0daefa4fc479b1264dcec4550c84e594f66fd4"
+        },
+        "date": 1720316343634,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 542,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37580.4,
             "unit": "KiB"
           }
         ]
