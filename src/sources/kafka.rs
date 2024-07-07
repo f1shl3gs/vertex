@@ -8,7 +8,7 @@ use chrono::Utc;
 use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::{Decoder, DecodingConfig};
 use configurable::{configurable_component, Configurable};
-use event::log::{parse_value_path, OwnedValuePath, TargetPath};
+use event::log::{OwnedValuePath, TargetPath};
 use event::{log::Value, LogRecord};
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
@@ -25,6 +25,7 @@ use rskafka::record::RecordAndOffset;
 use rskafka::topic::Topic;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;
+use value::owned_value_path;
 
 use super::{default_decoding, default_framing_message_based};
 
@@ -41,23 +42,23 @@ const fn default_commit_interval() -> Duration {
 }
 
 fn default_key_field() -> OwnedValuePath {
-    parse_value_path("message_key").unwrap()
+    owned_value_path!("message_key")
 }
 
 fn default_topic_key() -> OwnedValuePath {
-    parse_value_path("topic").unwrap()
+    owned_value_path!("topic")
 }
 
 fn default_partition_key() -> OwnedValuePath {
-    parse_value_path("partition").unwrap()
+    owned_value_path!("partition")
 }
 
 fn default_offset_key() -> OwnedValuePath {
-    parse_value_path("offset").unwrap()
+    owned_value_path!("offset")
 }
 
 fn default_headers_key() -> OwnedValuePath {
-    parse_value_path("headers").unwrap()
+    owned_value_path!("headers")
 }
 
 #[derive(Debug, Default, Deserialize, Serialize, Configurable)]
@@ -94,8 +95,9 @@ struct Config {
     #[configurable(required, format = "ip-address", example = "10.14.22.123:9092")]
     bootstrap_brokers: Vec<String>,
 
-    /// The Kafka topics names to read events from. Regex is supported if
-    /// the topic begins with `^`.
+    /// The Kafka topics names to read events from.
+    ///
+    /// Regex is supported if the topic begins with `^`.
     #[configurable(required)]
     topics: Vec<String>,
 
@@ -168,6 +170,7 @@ impl SourceConfig for Config {
                 self.topics.clone(),
                 self.auto_offset_reset.start_offset(),
                 self.fetch_wait_max.as_millis() as i32,
+                self.commit_interval,
                 keys,
                 decoder,
                 cx.output,
@@ -213,6 +216,7 @@ async fn run(
     want_topics: Vec<String>,
     offset_at: OffsetAt,
     fetch_max_wait_ms: i32,
+    commit_interval: Duration,
     keys: Arc<Keys>,
     decoder: Decoder,
     output: Pipeline,
@@ -221,13 +225,30 @@ async fn run(
     let client = Arc::new(client);
 
     loop {
-        // list topics
+        // list topics and find what we want
         let topics = client
             .list_topics()
             .await?
             .into_iter()
             .filter(|t| want_topics.contains(&t.name))
             .collect::<Vec<_>>();
+
+        if topics.is_empty() {
+            info!(message = "no match topics, retrying in 5 seconds");
+
+            tokio::select! {
+                _ = tokio::time::sleep(Duration::from_secs(5)) => continue,
+                _ = &mut shutdown => return Ok(())
+            }
+        } else {
+            for topic in &topics {
+                debug!(
+                    message = "find topic",
+                    name = topic.name,
+                    partitions = topic.partitions.len()
+                );
+            }
+        }
 
         let consumer = client.consumer_group(group.clone(), &topics).await?;
         let consumer = Arc::new(consumer);
@@ -406,7 +427,7 @@ async fn run(
         let signal = Arc::clone(&notify);
         let cc = Arc::clone(&consumer);
         tokio::spawn(async move {
-            let mut ticker = tokio::time::interval(Duration::from_secs(5));
+            let mut ticker = tokio::time::interval(commit_interval);
 
             loop {
                 tokio::select! {

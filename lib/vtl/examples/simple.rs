@@ -1,6 +1,6 @@
 #![allow(clippy::print_stdout)]
 
-use value::{value, Value};
+use value::value;
 use vtl::{compile, Diagnostic, TargetValue};
 
 fn main() {
@@ -83,6 +83,8 @@ fn main() {
         log("array index:", index)
     }
 
+    log("metadata: ", %partition, %offset)
+
     "#;
 
     let diagnostic = Diagnostic::new(script.to_string());
@@ -98,7 +100,10 @@ fn main() {
 
     // build your own target
     let mut target = TargetValue {
-        metadata: Value::Object(Default::default()),
+        metadata: value!({
+            "partition": 1,
+            "offset": 123,
+        }),
         value: value!({
             "msg": "{\"foo\": \"bar\"}",
             "index": 5,
