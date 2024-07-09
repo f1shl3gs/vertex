@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720492672665,
+  "lastUpdate": 1720492687840,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b",
-          "message": "chore(deps): bump pem from 3.0.3 to 3.0.4 (#1700)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.3 to 3.0.4.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.3...v3.0.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-10T01:57:40+08:00",
-          "tree_id": "e0112da000d9b31a2eaba10d5f68692daf165356",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b"
-        },
-        "date": 1712685583564,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536870,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532590,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e23ab318709411d932bcf44deee9393173185d5b",
+          "message": "chore(deps): bump quick-xml from 0.35.0 to 0.36.0 (#1814)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.35.0 to 0.36.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.35.0...v0.36.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-09T10:35:51+08:00",
+          "tree_id": "a5bc8ecba9d708cd7f4433f633ad5a433e098ef5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e23ab318709411d932bcf44deee9393173185d5b"
+        },
+        "date": 1720492672194,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534910,
             "unit": "ns/op"
           }
         ]
