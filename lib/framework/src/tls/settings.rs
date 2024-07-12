@@ -1,16 +1,16 @@
 use std::path::PathBuf;
 use std::sync::Arc;
-use std::time::SystemTime;
 use std::{fs, io};
 
 use configurable::Configurable;
-use rustls::client::{ServerCertVerified, ServerCertVerifier};
-use rustls::server::{AllowAnyAnonymousOrAuthenticatedClient, NoClientAuth};
-use rustls::{Certificate, ClientConfig, Error, PrivateKey};
-use rustls::{RootCertStore, ServerConfig, ServerName};
+use rustls::client::danger::{HandshakeSignatureValid, ServerCertVerified, ServerCertVerifier};
+use rustls::pki_types::{CertificateDer, PrivateKeyDer, ServerName, UnixTime};
+use rustls::server::WebPkiClientVerifier;
+use rustls::{ClientConfig, DigitallySignedStruct, Error, SignatureScheme};
+use rustls::{RootCertStore, ServerConfig};
 use serde::{Deserialize, Serialize};
 
-use super::{Result, TlsError};
+use super::TlsError;
 use crate::config::default_true;
 
 /// Configures the TLS options for incoming/outgoing connections.
@@ -84,25 +84,21 @@ impl TlsConfig {
         }
     }
 
-    pub fn client_config(&self) -> Result<ClientConfig> {
-        let builder = ClientConfig::builder().with_safe_defaults();
-
+    pub fn client_config(&self) -> Result<ClientConfig, TlsError> {
         let mut root_store = RootCertStore::empty();
         let certs = rustls_native_certs::load_native_certs().map_err(TlsError::NativeCerts)?;
         for cert in certs {
-            root_store
-                .add(&Certificate(cert.0))
-                .map_err(TlsError::AddCertToStore)?;
+            root_store.add(cert).map_err(TlsError::AddCertToStore)?;
         }
 
         if let Some(ca_file) = &self.ca {
             let certs = load_certs(ca_file)?;
-            for cert in &certs {
+            for cert in certs {
                 root_store.add(cert).map_err(TlsError::AddCertToStore)?;
             }
         }
 
-        let builder = builder.with_root_certificates(root_store);
+        let builder = ClientConfig::builder().with_root_certificates(root_store);
 
         let mut config = match (&self.cert, &self.key) {
             (Some(cert_file), Some(key_file)) => {
@@ -127,22 +123,21 @@ impl TlsConfig {
         Ok(config)
     }
 
-    pub fn server_config(&self) -> Result<ServerConfig> {
-        let client_auth = if let Some(ca_file) = &self.ca {
+    pub fn server_config(&self) -> Result<ServerConfig, TlsError> {
+        let builder = if let Some(ca_file) = &self.ca {
             let certs = load_certs(ca_file)?;
             let mut store = RootCertStore::empty();
             for cert in certs {
-                store.add(&cert).map_err(TlsError::AddCertToStore)?;
+                store.add(cert).map_err(TlsError::AddCertToStore)?;
             }
 
-            AllowAnyAnonymousOrAuthenticatedClient::new(store).boxed()
+            let client_auth = WebPkiClientVerifier::builder(Arc::new(store))
+                .build()
+                .map_err(TlsError::VerifierBuild)?;
+            ServerConfig::builder().with_client_cert_verifier(client_auth)
         } else {
-            NoClientAuth::boxed()
+            ServerConfig::builder().with_no_client_auth()
         };
-
-        let builder = ServerConfig::builder()
-            .with_safe_defaults()
-            .with_client_cert_verifier(client_auth);
 
         let config = match (&self.cert, &self.key) {
             (Some(cert_file), Some(key_file)) => {
@@ -162,23 +157,61 @@ impl TlsConfig {
     }
 }
 
+#[derive(Debug)]
 struct NoServerCertVerifier;
 
 impl ServerCertVerifier for NoServerCertVerifier {
     fn verify_server_cert(
         &self,
-        _end_entity: &Certificate,
-        _intermediates: &[Certificate],
-        _server_name: &ServerName,
-        _scts: &mut dyn Iterator<Item = &[u8]>,
+        _end_entity: &CertificateDer<'_>,
+        _intermediates: &[CertificateDer<'_>],
+        _server_name: &ServerName<'_>,
         _ocsp_response: &[u8],
-        _now: SystemTime,
-    ) -> std::result::Result<ServerCertVerified, Error> {
+        _now: UnixTime,
+    ) -> Result<ServerCertVerified, Error> {
         Ok(ServerCertVerified::assertion())
+    }
+
+    fn verify_tls12_signature(
+        &self,
+        _message: &[u8],
+        _cert: &CertificateDer<'_>,
+        _dss: &DigitallySignedStruct,
+    ) -> Result<HandshakeSignatureValid, Error> {
+        Ok(HandshakeSignatureValid::assertion())
+    }
+
+    fn verify_tls13_signature(
+        &self,
+        _message: &[u8],
+        _cert: &CertificateDer<'_>,
+        _dss: &DigitallySignedStruct,
+    ) -> Result<HandshakeSignatureValid, Error> {
+        Ok(HandshakeSignatureValid::assertion())
+    }
+
+    fn supported_verify_schemes(&self) -> Vec<SignatureScheme> {
+        use rustls::SignatureScheme;
+
+        vec![
+            SignatureScheme::RSA_PKCS1_SHA1,
+            SignatureScheme::ECDSA_SHA1_Legacy,
+            SignatureScheme::RSA_PKCS1_SHA256,
+            SignatureScheme::ECDSA_NISTP256_SHA256,
+            SignatureScheme::RSA_PKCS1_SHA384,
+            SignatureScheme::ECDSA_NISTP384_SHA384,
+            SignatureScheme::RSA_PKCS1_SHA512,
+            SignatureScheme::ECDSA_NISTP521_SHA512,
+            SignatureScheme::RSA_PSS_SHA256,
+            SignatureScheme::RSA_PSS_SHA384,
+            SignatureScheme::RSA_PSS_SHA512,
+            SignatureScheme::ED25519,
+            SignatureScheme::ED448,
+        ]
     }
 }
 
-fn load_certs(filename: &PathBuf) -> Result<Vec<Certificate>> {
+fn load_certs(filename: &PathBuf) -> Result<Vec<CertificateDer<'static>>, TlsError> {
     let content = fs::read(filename).map_err(|err| TlsError::FileReadFailed {
         note: "Read cert file",
         filename: filename.clone(),
@@ -191,13 +224,16 @@ fn load_certs(filename: &PathBuf) -> Result<Vec<Certificate>> {
             err: io::Error::new(io::ErrorKind::InvalidData, err),
         })?
         .into_iter()
-        .map(|s| Certificate(s.into_contents()))
+        .map(|s| CertificateDer::from(s.into_contents()))
         .collect::<Vec<_>>();
 
     Ok(certs)
 }
 
-fn load_private_key(filename: &PathBuf, password: Option<&str>) -> Result<PrivateKey> {
+fn load_private_key(
+    filename: &PathBuf,
+    password: Option<&str>,
+) -> Result<PrivateKeyDer<'static>, TlsError> {
     use pkcs8::der::Decode;
 
     let expected_tag = match password {
@@ -237,9 +273,17 @@ fn load_private_key(filename: &PathBuf, password: Option<&str>) -> Result<Privat
                             err: io::Error::new(io::ErrorKind::InvalidData, err),
                         })?;
 
-                PrivateKey(decrypted.as_bytes().to_owned())
+                PrivateKeyDer::try_from(decrypted.as_bytes().to_owned()).map_err(|err| {
+                    TlsError::PrivateKeyParse {
+                        filename: filename.clone(),
+                        err: io::Error::new(io::ErrorKind::InvalidData, err),
+                    }
+                })?
             }
-            None => PrivateKey(key),
+            None => PrivateKeyDer::try_from(key).map_err(|err| TlsError::PrivateKeyParse {
+                filename: filename.clone(),
+                err: io::Error::new(io::ErrorKind::InvalidData, err),
+            })?,
         },
         None => {
             return Err(TlsError::PrivateKeyParse {

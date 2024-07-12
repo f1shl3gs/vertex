@@ -4,13 +4,15 @@ use std::time::Duration;
 
 use async_stream::stream;
 use backoff::ExponentialBackoff;
-use bytes::Buf;
+use bytes::{Buf, Bytes};
 use chunk::ChunkedDecoder;
 use configurable::{configurable_component, Configurable};
-use futures::{Stream, StreamExt, TryStreamExt};
+use futures::{Stream, StreamExt};
+use futures_util::TryStreamExt;
 use http::header::{ACCEPT, TRANSFER_ENCODING};
 use http::{Request, Response};
-use hyper::Body;
+use http_body_util::{BodyExt, BodyStream, Empty};
+use hyper::body::Incoming;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use tokio::time::timeout;
@@ -93,21 +95,21 @@ async fn http_request(
     headers: &IndexMap<String, String>,
     tls_config: &Option<TlsConfig>,
     proxy: &ProxyConfig,
-) -> Result<Response<Body>, crate::Error> {
+) -> Result<Response<Incoming>, crate::Error> {
     let client = HttpClient::new(tls_config, proxy)?;
     let mut builder = Request::get(url.as_str()).header(ACCEPT, "application/yaml");
     for (key, value) in headers {
         builder = builder.header(key, value);
     }
-    let req = builder.body(Body::empty())?;
+    let req = builder.body(Empty::<Bytes>::default())?;
 
     client.send(req).await.map_err(Into::into)
 }
 
-fn watchable_response(resp: &Response<Body>) -> bool {
+fn watchable_response(headers: &http::header::HeaderMap) -> bool {
     const CHUNKED: &str = "chunked";
 
-    match resp.headers().get(TRANSFER_ENCODING) {
+    match headers.get(TRANSFER_ENCODING) {
         Some(value) => match value.to_str() {
             Ok(value) => value.contains(CHUNKED),
             Err(_err) => false,
@@ -131,7 +133,7 @@ fn poll_http(
 
             // Retry loop to fetch config
             let mut backoff = ExponentialBackoff::from_secs(10).max_delay(5 * interval);
-            let resp = loop {
+            let (parts, incoming) = loop {
                 let resp = match http_request(&url, &headers, &tls_config, &proxy).await {
                     Ok(resp) => resp,
                     Err(err) => {
@@ -152,27 +154,13 @@ fn poll_http(
                     continue;
                 }
 
-                break resp
+                break resp.into_parts();
             };
 
-            if !watchable_response(&resp) {
-                let result = hyper::body::to_bytes(resp.into_body())
-                    .await
-                    .map_err(|err| {
-                        let message = "Error interpreting response";
-                        let cause = err.into_cause();
-
-                        error!(
-                            message,
-                            err = ?cause
-                        );
-
-                        message
-                    });
-
-                match result {
+            if !watchable_response(&parts.headers) {
+                match incoming.collect().await {
                     Ok(data) => {
-                        let builder = match config::load(data.chunk(), None) {
+                        let builder = match config::load(data.to_bytes().chunk(), None) {
                             Ok((builder, warnings)) => {
                                 for warning in warnings.into_iter() {
                                     warn!(message = warning)
@@ -193,18 +181,14 @@ fn poll_http(
                         yield builder;
 
                         tokio::time::sleep(interval).await;
-                    },
+                    }
 
                     Err(err) => {
-                        warn!(
-                            message = "load config failed",
-                            ?err,
-                            ?url
-                        );
+                        warn!(message = "load config failed", ?err, ?url);
 
                         backoff.wait().await;
 
-                        continue
+                        continue;
                     }
                 }
 
@@ -212,22 +196,25 @@ fn poll_http(
             }
 
             let mut frames = FramedRead::new(
-                StreamReader::new(resp.into_body().map_err(|err| {
-                    // Client timeout. This will be ignored.
-                    if err.is_timeout() {
-                        return std::io::Error::new(std::io::ErrorKind::TimedOut, err);
-                    }
+                StreamReader::new(Box::pin(BodyStream::new(incoming).try_filter_map(|frame| async { Ok(frame.into_data().ok()) }))
+                    .map_err(|err| {
+                        // Client timeout. This will be ignored.
+                        if err.is_timeout() {
+                            return std::io::Error::new(std::io::ErrorKind::TimedOut, err);
+                        }
 
-                    // Unexpected EOF from chunked decoder.
-                    // Tends to happen when watching for 300+s. This will be ignored.
-                    if err.to_string().contains("unexpected EOF during chunk") {
-                        return std::io::Error::new(std::io::ErrorKind::UnexpectedEof, err);
-                    }
+                        // Unexpected EOF from chunked decoder.
+                        // Tends to happen when watching for 300+s. This will be ignored.
+                        if err.to_string().contains("unexpected EOF during chunk") {
+                            return std::io::Error::new(std::io::ErrorKind::UnexpectedEof, err);
+                        }
 
-                    std::io::Error::new(std::io::ErrorKind::Other, err)
-                })),
+                        std::io::Error::new(std::io::ErrorKind::Other, err)
+                    })
+                ),
                 ChunkedDecoder::default(),
             );
+
 
             while let Some(result) = frames.next().await {
                 match result {

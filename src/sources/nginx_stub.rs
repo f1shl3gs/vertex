@@ -11,7 +11,8 @@ use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use framework::Source;
-use hyper::{Body, StatusCode, Uri};
+use http_body_util::{BodyExt, Full};
+use hyper::{StatusCode, Uri};
 use thiserror::Error;
 
 #[configurable_component(source, name = "nginx_stub")]
@@ -226,17 +227,19 @@ async fn get_stub_status(
     uri: &str,
     auth: Option<&Auth>,
 ) -> Result<NginxStubStatus, NginxError> {
-    let mut req = http::Request::get(uri).body(Body::empty())?;
+    let mut req = http::Request::get(uri).body(Full::default())?;
     if let Some(auth) = auth {
         auth.apply(&mut req);
     }
 
     let resp = cli.send(req).await?;
-    let (parts, body) = resp.into_parts();
+    let (parts, incoming) = resp.into_parts();
     let body: Bytes = match parts.status {
-        StatusCode::OK => hyper::body::to_bytes(body)
+        StatusCode::OK => incoming
+            .collect()
             .await
-            .map_err(|err| NginxError::Request(HttpError::from(err)))?,
+            .map_err(|err| NginxError::Request(HttpError::from(err)))?
+            .to_bytes(),
         status => return Err(NginxError::InvalidResponseStatus(status)),
     };
 

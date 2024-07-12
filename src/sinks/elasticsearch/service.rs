@@ -44,10 +44,7 @@ pub struct ElasticsearchService {
 }
 
 impl ElasticsearchService {
-    pub fn new(
-        client: HttpClient<hyper::Body>,
-        request_builder: HttpRequestBuilder,
-    ) -> ElasticsearchService {
+    pub fn new(client: HttpClient, request_builder: HttpRequestBuilder) -> ElasticsearchService {
         let builder = Arc::new(request_builder);
         let batch_service = HttpBatchService::new(client, move |req| {
             let builder = Arc::clone(&builder);

@@ -1,14 +1,14 @@
-use std::time::Duration;
-
-use crate::testing::{ContainerBuilder, WaitFor};
+use bytes::Bytes;
 use event::Event;
 use framework::config::{ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 use testify::random::random_string;
 
 use super::config::Config;
+use crate::testing::{ContainerBuilder, WaitFor};
 
 const LOKI_PORT: u16 = 3100;
 
@@ -51,8 +51,8 @@ labels:
 
     // 3. Query label values
     let endpoint = format!("http://{}/loki/api/v1/label/foo/values", address);
-    let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
-    let req = http::Request::get(endpoint).body(Body::empty()).unwrap();
+    let client: HttpClient<Full<Bytes>> = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+    let req = http::Request::get(endpoint).body(Full::default()).unwrap();
     let resp = client.send(req).await.unwrap();
 
     // 4. Assert
@@ -62,9 +62,9 @@ labels:
         data: Vec<String>,
     }
 
-    let (parts, body) = resp.into_parts();
+    let (parts, incoming) = resp.into_parts();
     assert!(parts.status.is_success());
-    let body = hyper::body::to_bytes(body).await.unwrap();
+    let body = incoming.collect().await.unwrap().to_bytes();
     let qr: QueryResp = serde_json::from_slice(body.as_ref()).unwrap();
     assert_eq!(qr.status, "success".to_string());
     assert_eq!(qr.data.len(), 1);

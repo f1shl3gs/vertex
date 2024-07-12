@@ -12,8 +12,6 @@ pub use outgoing::MaybeTlsStream;
 pub use settings::TlsConfig;
 use thiserror::Error;
 
-pub type Result<T> = std::result::Result<T, TlsError>;
-
 #[derive(Debug, Error)]
 pub enum TlsError {
     #[error("Could not open {note} file {filename:?}: {err}")]
@@ -76,6 +74,8 @@ pub enum TlsError {
     AddCertToStore(rustls::Error),
     #[error("Error setting up the verification certificate: {0}")]
     SetVerifyCert(io::Error),
+    #[error("{0}")]
+    VerifierBuild(rustls::client::VerifierBuilderError),
     #[error("PKCS#12 parse failed: {0}")]
     ParsePkcs12(io::Error),
     #[error("TCP bind failed: {0}")]

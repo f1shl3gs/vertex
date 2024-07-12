@@ -20,7 +20,7 @@ use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{future::BoxFuture, stream, FutureExt, SinkExt};
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{StatusCode, Uri};
-use hyper::{body, Body};
+use http_body_util::{BodyExt, Full};
 use prost::Message;
 use tower::{Service, ServiceBuilder};
 
@@ -125,7 +125,7 @@ struct PartitionKey {
 }
 
 async fn healthcheck(endpoint: Uri, client: HttpClient) -> crate::Result<()> {
-    let req = http::Request::get(endpoint).body(Body::empty())?;
+    let req = http::Request::get(endpoint).body(Full::<Bytes>::default())?;
 
     let resp = client.send(req).await?;
 
@@ -187,9 +187,9 @@ impl Service<PartitionInnerBuffer<Vec<Metric>, PartitionKey>> for RemoteWriteSer
 
         Box::pin(async move {
             let resp = client.send(req).await?;
-            let (parts, body) = resp.into_parts();
-            let body = body::to_bytes(body).await?;
-            Ok(hyper::Response::from_parts(parts, body))
+            let (parts, incoming) = resp.into_parts();
+            let data = incoming.collect().await?.to_bytes();
+            Ok(hyper::Response::from_parts(parts, data))
         })
     }
 }
@@ -371,10 +371,11 @@ mod tests {
 mod integration_tests {
     use std::time::Duration;
 
+    use bytes::Bytes;
     use event::Metric;
     use framework::config::{ProxyConfig, SinkConfig, SinkContext};
     use framework::http::HttpClient;
-    use hyper::Body;
+    use http_body_util::{BodyExt, Full};
     use serde::{Deserialize, Serialize};
 
     use super::Config;
@@ -408,12 +409,14 @@ mod integration_tests {
         let endpoint = format!("http://{}/prometheus/api/v1/label/__name__/values", address);
         let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 
-        let req = http::Request::get(endpoint).body(Body::empty()).unwrap();
+        let req = http::Request::get(endpoint)
+            .body(Full::<Bytes>::default())
+            .unwrap();
 
         let resp = client.send(req).await.unwrap();
 
         // 4. Assert response
-        let (parts, body) = resp.into_parts();
+        let (parts, incoming) = resp.into_parts();
         assert!(parts.status.is_success());
 
         #[derive(Debug, Deserialize, Serialize)]
@@ -422,7 +425,7 @@ mod integration_tests {
             data: Vec<String>,
         }
 
-        let body = hyper::body::to_bytes(body).await.unwrap();
+        let body = incoming.collect().await.unwrap().to_bytes();
         let qr: QueryResp = serde_json::from_slice(body.as_ref()).unwrap();
         assert_eq!(qr.status, "success".to_string());
         assert_eq!(qr.data.len(), 1);

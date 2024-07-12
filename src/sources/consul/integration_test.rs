@@ -2,7 +2,7 @@ use event::{tags, MetricValue};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use http::StatusCode;
-use hyper::Body;
+use http_body_util::Full;
 use serde::{Deserialize, Serialize};
 
 use super::{gather, Client, ConsulError};
@@ -80,11 +80,13 @@ async fn register_service(
 ) -> Result<(), ConsulError> {
     let path = format!("{}/v1/agent/service/register", endpoint);
     let body = serde_json::to_vec(svc).unwrap();
-    let req = http::Request::put(path).body(Body::from(body)).unwrap();
+    let req = http::Request::put(path)
+        .body(Full::new(body.into()))
+        .unwrap();
 
     match client.send(req).await {
         Ok(resp) => {
-            let (parts, _body) = resp.into_parts();
+            let (parts, _incoming) = resp.into_parts();
             match parts.status {
                 StatusCode::OK => Ok(()),
                 status => Err(ConsulError::UnexpectedStatusCode(status.as_u16())),

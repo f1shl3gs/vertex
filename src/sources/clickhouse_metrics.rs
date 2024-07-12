@@ -11,7 +11,7 @@ use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
 use http::{Method, Request};
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use tokio::task::JoinError;
 use url::Url;
 
@@ -244,20 +244,24 @@ impl Collector {
         let mut req = Request::builder()
             .method(Method::GET)
             .uri(uri)
-            .body(Body::empty())?;
+            .body(Full::<Bytes>::default())?;
 
         if let Some(auth) = &self.auth {
             auth.apply(&mut req);
         }
 
         let resp = self.client.send(req).await?;
-        let (parts, body) = resp.into_parts();
+        let (parts, incoming) = resp.into_parts();
 
         if !parts.status.is_success() {
             return Err(format!("unexpected status code {}", parts.status).into());
         }
 
-        hyper::body::to_bytes(body).await.map_err(Into::into)
+        incoming
+            .collect()
+            .await
+            .map(|data| data.to_bytes())
+            .map_err(Into::into)
     }
 
     async fn fetch_metrics(&self, uri: &str) -> crate::Result<Vec<(String, f64)>> {

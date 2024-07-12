@@ -12,7 +12,7 @@ use framework::{Healthcheck, HealthcheckError, Sink};
 use futures_util::{FutureExt, SinkExt};
 use http::header::CONTENT_TYPE;
 use http::Request;
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use serde::{Deserialize, Serialize};
 
 /// Forward traces to jaeger collector's HTTP API.
@@ -103,16 +103,16 @@ struct HealthcheckResponse {
 ///
 /// See https://www.jaegertracing.io/docs/1.6/deployment/#collectors
 pub async fn healthcheck(client: HttpClient, endpoint: String) -> framework::Result<()> {
-    let req = Request::get(endpoint).body(Body::empty())?;
+    let req = Request::get(endpoint).body(Full::default())?;
 
     let resp = client.send(req).await?;
-    let (parts, body) = resp.into_parts();
+    let (parts, incoming) = resp.into_parts();
     let status = parts.status;
     if !status.is_success() {
         return Err(HealthcheckError::UnexpectedStatus(status).into());
     }
 
-    let data = hyper::body::to_bytes(body).await?;
+    let data = incoming.collect().await?.to_bytes();
     let resp: HealthcheckResponse = serde_json::from_slice(&data)?;
     if resp.status != "Server available" {
         return Err(format!("unexpected status {}", resp.status).into());

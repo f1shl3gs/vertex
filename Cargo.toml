@@ -151,13 +151,13 @@ sources-demo_logs = []
 sources-exec = ["tokio/process"]
 sources-clickhouse_metrics = []
 sources-elasticsearch = []
-sources-grpc_check = ["dep:tonic", "dep:tonic-health"]
+sources-grpc_check = ["tonic/channel", "dep:tonic-health"]
 sources-haproxy = []
 sources-http_check = []
 sources-internal_logs = []
 sources-internal_metrics = []
 sources-internal_traces = []
-sources-jaeger = ["dep:jaeger", "dep:tonic"]
+sources-jaeger = ["dep:jaeger", "tonic/server"]
 sources-journald = []
 sources-kafka = ["dep:rskafka", "dep:async-stream"]
 sources-kafka_metrics = ["dep:rskafka"]
@@ -308,7 +308,7 @@ harness = false
 path = "benches/haproxy.rs"
 
 [build-dependencies]
-prost-build = { version = "0.12.6", default-features = false }
+prost-build = { version = "0.13.1", default-features = false }
 
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
@@ -319,6 +319,7 @@ pretty_assertions = { version = "1.4.0", default-features = false, features = ["
 serde_path_to_error = { version = "0.1.16", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.38.0", default-features = false, features = ["test-util", "time"] }
+tonic = { version = "0.12.0", default-features = false, features = ["server"]}
 
 [dependencies]
 # Workspaces
@@ -361,8 +362,10 @@ tokio-util = { version = "0.7.11", default-features = false, features = ["codec"
 tracing = { version = "0.1.40", default-features = false }
 
 # HTTP
-hyper = { version = "0.14.29", default-features = false, features = ["full"] }
-http = { version = "0.2.12", default-features = false }
+hyper = { version = "1.4.1", default-features = false, features = ["server"] }
+hyper-util = { version = "0.1.6", default-features = false, features = ["client"] }
+http = { version = "1.1.0", default-features = false }
+http-body-util = { version = "0.1.2", default-features = false }
 
 # Tower
 tower = { version = "0.4.13", default-features = false }
@@ -373,8 +376,8 @@ serde_yaml = { version = "0.9.34", default-features = false }
 serde_json = { version = "1.0.120", default-features = false }
 
 # Protobuf
-prost = { version = "0.12.6", default-features = false, features = ["std"] }
-prost-types = { version = "0.12.6", default-features = false }
+prost = { version = "0.13.1", default-features = false, features = ["std"] }
+prost-types = { version = "0.13.1", default-features = false }
 
 # Profile
 pprof = { version = "0.13.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
@@ -395,7 +398,7 @@ glob = { version = "0.3.1" }
 indexmap = { version = "2.2.6", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.15", default-features = false }
 k8s-openapi = { version = "0.22.0", default-features = false, optional = true, features = ["v1_24"] }
-kube = { version = "0.91.0", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
+kube = { version = "0.92.1", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
 libc = { version = "0.2.155", default-features = false, optional = true }
 lru = { version = "0.12.3", default-features = false, optional = true }
 maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d1861cfe7313589c0e0281ddbb660a88962", optional = true, features = ["mmap", "unsafe-str"] }
@@ -412,9 +415,9 @@ rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "d48e59787305614f
 smallvec = { version = "1.13.2", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 sqlx = { version = "0.7.4", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
-thiserror = { version = "1.0.61" }
-tonic = { version = "0.11.0", default-features = false, features = ["transport"], optional = true }
-tonic-health = { version = "0.11.0", default-features = false, optional = true }
+thiserror = { version = "1.0.62", default-features = false }
+tonic = { version = "0.12.0", default-features = false, optional = true }
+tonic-health = { version = "0.12.0", default-features = false, optional = true }
 typetag = { version = "0.2.16" }
 url = { version = "2.5.2", features = ["serde"] }
-uuid = { version = "1.9.1", default-features = false, features = ["v4"], optional = true }
+uuid = { version = "1.10.0", default-features = false, features = ["v4"], optional = true }

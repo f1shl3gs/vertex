@@ -5,6 +5,7 @@ use std::borrow::Cow;
 use std::fmt;
 use std::task::{Context, Poll};
 
+use bytes::Bytes;
 use configurable::Configurable;
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
@@ -12,15 +13,17 @@ use http::header::{
     ACCEPT_ENCODING, AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION, SET_COOKIE, USER_AGENT,
 };
 use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
-use hyper::body::{Body, HttpBody};
-use hyper::client::{self, Client, HttpConnector};
+use http_body_util::Full;
+use hyper::body::{Body, Incoming};
 use hyper_rustls::HttpsConnector;
+use hyper_util::client::legacy::connect::HttpConnector;
+use hyper_util::client::legacy::Client;
+use hyper_util::rt::TokioExecutor;
 use metrics::{exponential_buckets, Attributes};
 use proxy::ProxyConnector;
 use rustls::{ClientConfig, RootCertStore};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tower::Service;
 use tracing_futures::Instrument;
 use tracing_internal::SpanExt;
 
@@ -38,20 +41,20 @@ pub enum HttpError {
     MakeProxyConnector(#[from] InvalidUri),
     #[error("Failed to make HTTP(S) request: {0}")]
     CallRequest(#[from] hyper::Error),
+    #[error("Failed to read response body: {0}")]
+    ReadBody(#[from] hyper_util::client::legacy::Error),
     #[error("Failed to build HTTP request: {0}")]
     BuildRequest(http::Error),
 }
 
-pub type HttpClientFuture = <HttpClient as Service<Request<Body>>>::Future;
-
-pub struct HttpClient<B = Body> {
+pub struct HttpClient<B = Full<Bytes>> {
     client: Client<ProxyConnector<HttpsConnector<HttpConnector<Resolver>>>, B>,
     user_agent: HeaderValue,
 }
 
 impl<B> HttpClient<B>
 where
-    B: fmt::Debug + HttpBody + Send + 'static,
+    B: fmt::Debug + Body + Send + Unpin + 'static,
     B::Data: Send,
     B::Error: Into<crate::Error>,
 {
@@ -59,13 +62,37 @@ where
         tls_config: &Option<TlsConfig>,
         proxy_config: &ProxyConfig,
     ) -> Result<HttpClient<B>, HttpError> {
-        HttpClient::new_with_custom_client(tls_config, proxy_config, &mut Client::builder())
+        HttpClient::new_with_custom_client(
+            tls_config,
+            proxy_config,
+            &mut Client::builder(TokioExecutor::new()),
+        )
+    }
+
+    pub fn new_with_tls_config(
+        tls: ClientConfig,
+        proxy: &ProxyConfig,
+    ) -> Result<HttpClient<B>, HttpError> {
+        let mut http = HttpConnector::new_with_resolver(Resolver::new());
+        http.enforce_http(false);
+
+        let https = hyper_rustls::HttpsConnector::from((http, tls));
+
+        let mut proxy_connector = ProxyConnector::new(https).unwrap();
+        proxy.configure(&mut proxy_connector)?;
+
+        let client = hyper_util::client::legacy::Builder::new(TokioExecutor::default())
+            .build(proxy_connector);
+        let user_agent = HeaderValue::from_str(&format!("Vertex/{}", crate::get_version()))
+            .expect("Invalid header value for version!");
+
+        Ok(HttpClient { client, user_agent })
     }
 
     pub fn new_with_custom_client(
         tls_config: &Option<TlsConfig>,
         proxy_config: &ProxyConfig,
-        client_builder: &mut client::Builder,
+        client_builder: &mut hyper_util::client::legacy::Builder,
     ) -> Result<HttpClient<B>, HttpError> {
         let mut http = HttpConnector::new_with_resolver(Resolver::new());
         http.enforce_http(false);
@@ -77,13 +104,10 @@ where
                     rustls_native_certs::load_native_certs().map_err(TlsError::NativeCerts)?;
                 let mut store = RootCertStore::empty();
                 for cert in certs {
-                    store
-                        .add(&rustls::Certificate(cert.0))
-                        .map_err(TlsError::AddCertToStore)?;
+                    store.add(cert).map_err(TlsError::AddCertToStore)?;
                 }
 
                 ClientConfig::builder()
-                    .with_safe_defaults()
                     .with_root_certificates(store)
                     .with_no_client_auth()
             }
@@ -91,7 +115,7 @@ where
 
         let https = hyper_rustls::HttpsConnector::from((http, config));
 
-        let mut proxy = proxy::ProxyConnector::new(https).unwrap();
+        let mut proxy = ProxyConnector::new(https).unwrap();
         proxy_config.configure(&mut proxy)?;
         let client = client_builder.build(proxy);
 
@@ -104,7 +128,7 @@ where
     pub fn send(
         &self,
         mut req: Request<B>,
-    ) -> BoxFuture<'static, Result<http::Response<Body>, HttpError>> {
+    ) -> BoxFuture<'static, Result<http::Response<Incoming>, HttpError>> {
         let span = tracing::info_span!("http", uri = ?req.uri());
         let _enter = span.enter();
 
@@ -129,11 +153,6 @@ where
 
             // Handle the errors and extract the response.
             let resp = resp_result.map_err(|err| {
-                debug!(
-                    message = "HTTP error",
-                    %err,
-                );
-
                 metrics::register_counter(
                     "http_client_request_errors_total",
                     "The total number of HTTP request errors for this component.",
@@ -199,7 +218,7 @@ fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue
 /// Newtype placeholder to provide a formatter for the request and response body.
 struct FormatBody<'a, B>(&'a B);
 
-impl<'a, B: HttpBody> fmt::Display for FormatBody<'a, B> {
+impl<'a, B: Body> fmt::Display for FormatBody<'a, B> {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         let size = self.0.size_hint();
         match (size.lower(), size.upper()) {
@@ -226,13 +245,13 @@ fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> 
     headers
 }
 
-impl<B> Service<Request<B>> for HttpClient<B>
+impl<B> tower::Service<Request<B>> for HttpClient<B>
 where
-    B: fmt::Debug + HttpBody + Send + 'static,
+    B: fmt::Debug + Body + Send + Unpin + 'static,
     B::Data: Send,
     B::Error: Into<crate::Error> + Send,
 {
-    type Response = http::Response<Body>;
+    type Response = http::Response<Incoming>;
     type Error = HttpError;
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
@@ -240,8 +259,8 @@ where
         Poll::Ready(Ok(()))
     }
 
-    fn call(&mut self, request: Request<B>) -> Self::Future {
-        self.send(request)
+    fn call(&mut self, req: Request<B>) -> Self::Future {
+        self.send(req)
     }
 }
 
@@ -340,15 +359,19 @@ impl Auth {
 
 #[cfg(test)]
 mod tests {
-    use std::convert::Infallible;
+    use super::*;
+
     use std::time::Duration;
 
+    use bytes::Bytes;
     use http::header::USER_AGENT;
     use http::{Method, Response};
-    use hyper::service::{make_service_fn, service_fn};
-    use hyper::Server;
+    use http_body_util::{Empty, Full};
+    use hyper::server::conn::http1;
+    use hyper::service::service_fn;
+    use hyper_util::rt::TokioIo;
+    use tokio::net::TcpListener;
 
-    use super::*;
     use crate::tls::MaybeTlsListener;
 
     #[test]
@@ -381,8 +404,8 @@ mod tests {
         );
     }
 
-    async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-        Ok(Response::new(Body::from("Hello World")))
+    async fn handle(_req: Request<Incoming>) -> Result<Response<Full<Bytes>>, hyper::Error> {
+        Ok(Response::new(Full::from("hello world")))
     }
 
     #[tokio::test]
@@ -395,16 +418,17 @@ mod tests {
 
         let addr = testify::next_addr();
         tokio::spawn(async move {
-            // And a MakeService to handle each connection...
-            let make_service =
-                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+            let listener = TcpListener::bind(addr).await.unwrap();
 
-            // Then bind and serve...
-            let server = Server::bind(&addr).serve(make_service);
+            loop {
+                let (conn, _peer) = listener.accept().await.unwrap();
 
-            // And run forever...
-            if let Err(e) = server.await {
-                panic!("server error: {}", e);
+                tokio::spawn(async move {
+                    http1::Builder::new()
+                        .serve_connection(TokioIo::new(conn), service_fn(handle))
+                        .await
+                        .unwrap()
+                });
             }
         });
 
@@ -415,7 +439,7 @@ mod tests {
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!("http://{}", addr))
-            .body(Body::empty())
+            .body(Empty::<Bytes>::default())
             .unwrap();
 
         let resp = client.send(req).await.unwrap();
@@ -426,7 +450,7 @@ mod tests {
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!("http://{}", addr))
-            .body(Body::empty())
+            .body(Empty::<Bytes>::default())
             .unwrap();
 
         let resp = client.send(req).await.unwrap();
@@ -442,21 +466,17 @@ mod tests {
         });
 
         let addr = testify::next_addr();
-        let listener = MaybeTlsListener::bind(&addr, &tls).await.unwrap();
+        let mut listener = MaybeTlsListener::bind(&addr, &tls).await.unwrap();
 
         tokio::spawn(async move {
-            // And a MakeService to handle each connection...
-            let service =
-                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+            loop {
+                let conn = listener.accept().await.unwrap();
 
-            // build server
-            let server =
-                Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
-                    .serve(service);
-
-            // And run forever...
-            if let Err(err) = server.await {
-                panic!("server error: {}", err);
+                // no need to spawn
+                http1::Builder::new()
+                    .serve_connection(TokioIo::new(conn), service_fn(handle))
+                    .await
+                    .unwrap();
             }
         });
 
@@ -470,7 +490,7 @@ mod tests {
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!("https://localhost:{}", addr.port()))
-            .body(Body::empty())
+            .body(Empty::<Bytes>::new())
             .unwrap();
 
         let resp = client.send(req).await.unwrap();

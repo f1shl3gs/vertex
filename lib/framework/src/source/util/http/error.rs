@@ -1,5 +1,6 @@
+use bytes::Bytes;
 use http::{Response, StatusCode};
-use hyper::Body;
+use http_body_util::Full;
 use serde::ser::SerializeStruct;
 use serde::{Serialize, Serializer};
 
@@ -31,11 +32,11 @@ impl ErrorMessage {
     }
 }
 
-impl From<ErrorMessage> for Response<Body> {
+impl From<ErrorMessage> for Response<Full<Bytes>> {
     fn from(err: ErrorMessage) -> Self {
         Response::builder()
             .status(err.code)
-            .body(Body::from(err.message))
+            .body(Full::new(Bytes::from(err.message)))
             .unwrap()
     }
 }

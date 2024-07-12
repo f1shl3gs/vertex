@@ -159,7 +159,7 @@ impl TcpConnector {
             Some(config) => {
                 let domain = self
                     .host
-                    .as_str()
+                    .clone() // todo: try to avoid allocation
                     .try_into()
                     .map_err(|_err| TcpError::Connect(TlsError::InvalidServerName))?;
 

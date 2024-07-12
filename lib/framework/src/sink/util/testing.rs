@@ -2,13 +2,15 @@ use std::net::SocketAddr;
 
 use bytes::Bytes;
 use futures::channel::mpsc;
-use futures_util::{SinkExt, TryFutureExt};
+use futures_util::SinkExt;
 use http::{Request, Response, StatusCode};
-use hyper::body::HttpBody;
-use hyper::service::make_service_fn;
-use hyper::{Body, Server};
+use http_body_util::{BodyExt, Empty};
+use hyper::body::{Body, Incoming};
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper_util::rt::TokioIo;
 use serde::Deserialize;
-use tower::service_fn;
+use tokio::net::TcpListener;
 use tripwire::{Trigger, Tripwire};
 
 use crate::config::{SinkConfig, SinkContext};
@@ -30,7 +32,7 @@ pub fn build_test_server(
     Trigger,
     impl std::future::Future<Output = Result<(), ()>>,
 ) {
-    build_test_server_generic(addr, || Response::new(Body::empty()))
+    build_test_server_generic(addr, || Response::new(Empty::<Bytes>::new()))
 }
 
 pub fn build_test_server_status(
@@ -44,7 +46,7 @@ pub fn build_test_server_status(
     build_test_server_generic(addr, move || {
         Response::builder()
             .status(status)
-            .body(Body::empty())
+            .body(Empty::<Bytes>::new())
             .unwrap_or_else(|_| unreachable!())
     })
 }
@@ -58,42 +60,60 @@ pub fn build_test_server_generic<B>(
     impl std::future::Future<Output = Result<(), ()>>,
 )
 where
-    B: HttpBody + Send + Sync + 'static,
-    <B as HttpBody>::Data: Send + Sync,
-    <B as HttpBody>::Error: std::error::Error + Send + Sync,
+    B: Body + Send + Sync + 'static,
+    <B as Body>::Data: Send + Sync,
+    <B as Body>::Error: std::error::Error + Send + Sync,
 {
     let (tx, rx) = mpsc::channel(100);
-    let service = make_service_fn(move |_| {
-        let responder = responder.clone();
-        let tx = tx.clone();
+    let (trigger, mut tripwire) = Tripwire::new();
 
-        async move {
+    let server = async move {
+        let listener = TcpListener::bind(addr).await.unwrap();
+
+        loop {
+            let conn = tokio::select! {
+                _ = &mut tripwire => return Ok(()),
+                result = listener.accept() => match result {
+                    Ok((conn, _addr)) => TokioIo::new(conn),
+                    Err(err) => {
+                        warn!(
+                            message = "accept connection failed",
+                            ?err
+                        );
+
+                        continue;
+                    }
+                }
+            };
+
             let responder = responder.clone();
-            Ok::<_, crate::Error>(service_fn(move |req: Request<Body>| {
+            let tx = tx.clone();
+            let service = service_fn(move |req: Request<Incoming>| {
                 let responder = responder.clone();
                 let mut tx = tx.clone();
 
                 async move {
-                    let (parts, body) = req.into_parts();
+                    let (parts, incoming) = req.into_parts();
                     let resp = responder();
                     if resp.status().is_success() {
                         tokio::spawn(async move {
-                            let bytes = hyper::body::to_bytes(body).await.unwrap();
-                            tx.send((parts, bytes)).await.unwrap();
+                            let data = incoming.collect().await.unwrap().to_bytes();
+                            tx.send((parts, data)).await.unwrap();
                         });
                     }
 
-                    Ok::<_, crate::Error>(resp)
+                    Ok::<Response<B>, B::Error>(resp)
                 }
-            }))
-        }
-    });
+            });
 
-    let (trigger, tripwire) = Tripwire::new();
-    let server = Server::bind(&addr)
-        .serve(service)
-        .with_graceful_shutdown(tripwire)
-        .map_err(|err| panic!("Server error: {}", err));
+            tokio::spawn(async move {
+                http1::Builder::new()
+                    .serve_connection(conn, service)
+                    .await
+                    .unwrap();
+            });
+        }
+    };
 
     (rx, trigger, server)
 }

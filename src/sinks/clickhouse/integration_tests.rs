@@ -10,6 +10,7 @@ use framework::sink::util::Compression;
 use futures_util::future::ready;
 use futures_util::stream;
 use http::{Method, Request};
+use http_body_util::BodyExt;
 use hyper::Body;
 use serde::Deserialize;
 use serde_json::Value;
@@ -68,10 +69,10 @@ impl ClickhouseClient {
             .unwrap();
 
         let resp = self.client.send(req).await.unwrap();
-        let (parts, body) = resp.into_parts();
+        let (parts, incoming) = resp.into_parts();
 
         if !parts.status.is_success() {
-            let reader = hyper::body::aggregate(body).await.unwrap().reader();
+            let reader = incoming.collect().await.unwrap().aggregate();
             let body = read_to_string(reader).unwrap();
             panic!("create table failed, {}", body)
         }
@@ -85,8 +86,8 @@ impl ClickhouseClient {
             .unwrap();
 
         let resp = self.client.send(req).await.unwrap();
-        let (parts, body) = resp.into_parts();
-        let reader = hyper::body::aggregate(body).await.unwrap().reader();
+        let (parts, incoming) = resp.into_parts();
+        let reader = incoming.collect().await.unwrap().aggregate();
         let body = read_to_string(reader).unwrap();
 
         if !parts.status.is_success() {

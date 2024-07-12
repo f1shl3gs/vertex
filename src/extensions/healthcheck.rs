@@ -1,14 +1,16 @@
-use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::sync::atomic::{AtomicBool, Ordering};
 
+use bytes::Bytes;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::Extension;
-use futures_util::FutureExt;
 use http::{Request, Response, StatusCode};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Server};
+use http_body_util::Full;
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use tokio::net::TcpListener;
 
 static READINESS: AtomicBool = AtomicBool::new(false);
 
@@ -33,21 +35,46 @@ pub struct Config {
 #[typetag::serde(name = "healthcheck")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        info!(
-            message = "start healthcheck server",
-            endpoint = ?self.endpoint
-        );
-
-        let shutdown = cx.shutdown;
-        let service = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
-        let server = Server::bind(&self.endpoint)
-            .serve(service)
-            .with_graceful_shutdown(shutdown.map(|_| ()));
+        let mut shutdown = cx.shutdown;
+        let listener = TcpListener::bind(self.endpoint).await?;
 
         Ok(Box::pin(async move {
-            if let Err(err) = server.await {
-                error!(message = "Error serving", ?err);
-                return Err(());
+            info!(
+                message = "start healthcheck server",
+                listen = ?listener.local_addr().unwrap()
+            );
+
+            loop {
+                let conn = tokio::select! {
+                    _ = &mut shutdown => break,
+                    result = listener.accept() => match result {
+                        Ok((conn, peer)) => {
+                            debug!(
+                                message = "accept new connection",
+                                ?peer
+                            );
+
+                            hyper_util::rt::TokioIo::new(conn)
+                        },
+                        Err(err) => {
+                            error!(
+                                message = "accept connection failed",
+                                ?err
+                            );
+
+                            continue
+                        }
+                    }
+                };
+
+                tokio::spawn(async move {
+                    if let Err(err) = http1::Builder::new()
+                        .serve_connection(conn, service_fn(handle))
+                        .await
+                    {
+                        error!(message = "handle http connection failed", ?err);
+                    }
+                });
             }
 
             Ok(())
@@ -55,11 +82,11 @@ impl ExtensionConfig for Config {
     }
 }
 
-async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+async fn handle(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, hyper::Error> {
     if req.method() != http::Method::GET {
         return Ok(Response::builder()
             .status(StatusCode::METHOD_NOT_ALLOWED)
-            .body(Body::empty())
+            .body(Full::default())
             .expect("should build not allowed response"));
     }
 
@@ -80,7 +107,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
     Ok(Response::builder()
         .status(status)
-        .body(Body::from(body))
+        .body(Full::new(Bytes::from_static(body.as_bytes())))
         .expect("should build response"))
 }
 

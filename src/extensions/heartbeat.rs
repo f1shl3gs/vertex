@@ -5,6 +5,7 @@ use std::ops::Deref;
 use std::time::Duration;
 
 use async_trait::async_trait;
+use bytes::Bytes;
 use chrono::SecondsFormat;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext, ProxyConfig, UriSerde};
@@ -12,7 +13,7 @@ use framework::http::HttpClient;
 use framework::tls::TlsConfig;
 use framework::{Extension, ShutdownSignal};
 use http::Request;
-use hyper::Body;
+use http_body_util::Full;
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use serde::Serialize;
@@ -155,11 +156,11 @@ async fn run(
             _ = ticker.tick() => {}
         }
 
-        let body = serde_json::to_string(STATUS.lock().deref())
+        let data = serde_json::to_vec(STATUS.lock().deref())
             .expect("status serialize should always success");
 
         let req = Request::post(&endpoint.uri)
-            .body(Body::from(body))
+            .body(Full::<Bytes>::new(data.into()))
             .expect("should build POST request");
 
         match client.send(req).await {

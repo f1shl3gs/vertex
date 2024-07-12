@@ -1373,26 +1373,36 @@ fn filesystem_io_metrics(mut tags: Tags, stats: FsIoStatsDevice) -> Vec<Metric> 
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::testing::trace_init;
+    use std::sync::Arc;
+    use std::time::Duration;
+
     use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine};
+    use bytes::Bytes;
     use framework::config::ProxyConfig;
     use framework::http::Auth;
     use http::header::AUTHORIZATION;
     use http::{Method, Request, Response};
-    use hyper::service::{make_service_fn, service_fn};
-    use hyper::Body;
-    use std::sync::Arc;
-    use std::time::Duration;
+    use http_body_util::Full;
+    use hyper::body::Incoming;
+    use hyper::server::conn::http1;
+    use hyper::service::service_fn;
+    use hyper_util::rt::TokioIo;
     use testify::http::{file_send, not_found, unauthorized};
-    use testify::pick_unused_local_port;
+    use testify::next_addr;
+    use tokio::net::TcpListener;
+
+    use super::*;
+    use crate::testing::trace_init;
 
     struct Context {
         version: &'static str,
         auth: Option<(&'static str, &'static str)>,
     }
 
-    async fn handle(req: Request<Body>, cx: Arc<Context>) -> hyper::Result<Response<Body>> {
+    async fn handle(
+        req: Request<Incoming>,
+        cx: Arc<Context>,
+    ) -> hyper::Result<Response<Full<Bytes>>> {
         if req.method() != Method::GET {
             return Ok(not_found());
         }
@@ -1429,27 +1439,27 @@ mod tests {
         let auth = cx
             .auth
             .map(|(user, password)| Auth::basic(user.into(), password.into()));
-        let port = pick_unused_local_port();
-        let endpoint = format!("127.0.0.1:{}", port);
-        let service = make_service_fn(move |_conn| {
-            let cx = Arc::clone(&cx);
+        let addr = next_addr();
 
-            async move {
-                let cx = Arc::clone(&cx);
-
-                Ok::<_, hyper::Error>(service_fn(move |req| {
-                    let cx = Arc::clone(&cx);
-
-                    async move { handle(req, cx).await }
-                }))
-            }
-        });
-        let addr = endpoint.parse().unwrap();
-        let server = hyper::Server::bind(&addr).serve(service);
-
+        let listener = TcpListener::bind(addr).await.unwrap();
         tokio::spawn(async move {
-            if let Err(err) = server.await {
-                error!(message = "server error", ?err);
+            loop {
+                let (conn, _peer) = listener.accept().await.unwrap();
+
+                let cx = Arc::clone(&cx);
+                let service = service_fn(move |req| {
+                    let cx = Arc::clone(&cx);
+                    async move { handle(req, cx).await }
+                });
+
+                tokio::spawn(async move {
+                    if let Err(err) = http1::Builder::new()
+                        .serve_connection(TokioIo::new(conn), service)
+                        .await
+                    {
+                        panic!("handle http connection failed, {err}")
+                    }
+                });
             }
         });
 
@@ -1458,7 +1468,7 @@ mod tests {
 
         let http_client = framework::http::HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let es = Elasticsearch {
-            endpoint: format!("http://{}", endpoint),
+            endpoint: format!("http://{}", addr),
             http_client,
             auth,
             slm: false,

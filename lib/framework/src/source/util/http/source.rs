@@ -4,11 +4,13 @@ use std::sync::Arc;
 use bytes::Bytes;
 use event::{BatchNotifier, BatchStatus, BatchStatusReceiver, Event};
 use futures::TryFutureExt;
-use futures_util::FutureExt;
 use http::header::AUTHORIZATION;
 use http::{HeaderMap, Method, Request, Response, StatusCode, Uri};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Server};
+use http_body_util::{BodyExt, Full};
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper_util::rt::TokioIo;
 
 use super::auth::HttpSourceAuth;
 use super::error::ErrorMessage;
@@ -35,83 +37,82 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         auth: &Option<HttpSourceAuthConfig>,
         cx: SourceContext,
     ) -> crate::Result<Source> {
-        let path = path.to_owned();
         let auth = HttpSourceAuth::try_from(auth.as_ref())?;
-        let listener = MaybeTlsListener::bind(&address, tls).await?;
+        let mut listener = MaybeTlsListener::bind(&address, tls).await?;
         let acknowledgements = cx.acknowledgements();
-        let shutdown = cx.shutdown;
+        let mut shutdown = cx.shutdown;
         let output = cx.output;
+        let builder = self.clone();
         let inner = Arc::new(Inner {
             method,
             path: path.to_string(),
             auth,
-            output,
-        });
-
-        // TODO: metrics
-
-        // TODO: nested closure is pretty tricky, re-work is needed
-        let service = make_service_fn(move |_conn| {
-            let inner = Arc::clone(&inner);
-            let builder = self.clone();
-
-            async move {
-                Ok::<_, crate::Error>(service_fn(move |req: Request<Body>| {
-                    let inner = Arc::clone(&inner);
-                    let mut output = inner.output.clone();
-                    let builder = builder.clone();
-
-                    async move {
-                        let (parts, body) = req.into_parts();
-                        let uri = &parts.uri;
-                        let method = parts.method;
-
-                        if method != inner.method {
-                            let resp = Response::builder()
-                                .status(StatusCode::METHOD_NOT_ALLOWED)
-                                .body(Body::empty())
-                                .unwrap();
-                            return Ok::<_, crate::Error>(resp);
-                        }
-
-                        if uri.path() != inner.path {
-                            let resp = Response::builder()
-                                .status(StatusCode::NOT_FOUND)
-                                .body(Body::empty())
-                                .unwrap();
-                            return Ok::<_, crate::Error>(resp);
-                        }
-
-                        // authorization
-                        let headers = &parts.headers;
-                        if !inner.auth.validate(headers.get(AUTHORIZATION)) {
-                            let resp = Response::builder()
-                                .status(StatusCode::UNAUTHORIZED)
-                                .body(Body::empty())
-                                .unwrap();
-                            return Ok::<_, crate::Error>(resp);
-                        }
-
-                        let body = hyper::body::to_bytes(body).await?;
-                        let events = builder.build_events(uri, headers, body);
-                        let resp = handle_request(events, acknowledgements, &mut output).await;
-
-                        Ok::<_, crate::Error>(resp)
-                    }
-                }))
-            }
         });
 
         Ok(Box::pin(async move {
-            if let Err(err) =
-                Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
-                    .serve(service)
-                    .with_graceful_shutdown(shutdown.map(|_| ()))
-                    .await
-            {
-                error!(message = "Http source server start failed", ?err);
+            loop {
+                let conn = tokio::select! {
+                    _ = &mut shutdown => break,
+                    result = listener.accept() => match result {
+                        Ok(conn) => TokioIo::new(conn),
+                        Err(err) => {
+                            warn!(
+                                message = "accept connection failed",
+                                %err
+                            );
 
-                return Err(());
+                            continue
+                        }
+                    }
+                };
+
+                let inner = inner.clone();
+                let builder = builder.clone();
+                let output = output.clone();
+                let service = service_fn(move |req: Request<Incoming>| {
+                    let (parts, incoming) = req.into_parts();
+                    let builder = builder.clone();
+                    let inner = inner.clone();
+                    let mut output = output.clone();
+
+                    async move {
+                        if !inner.auth.validate(parts.headers.get(AUTHORIZATION)) {
+                            let resp = Response::builder()
+                                .status(StatusCode::UNAUTHORIZED)
+                                .body(Full::default())
+                                .unwrap();
+                            return Ok(resp);
+                        }
+
+                        if inner.method != parts.method {
+                            let resp = Response::builder()
+                                .status(StatusCode::METHOD_NOT_ALLOWED)
+                                .body(Full::default())
+                                .unwrap();
+                            return Ok(resp);
+                        }
+
+                        if inner.path != parts.uri.path() {
+                            let resp = Response::builder()
+                                .status(StatusCode::NOT_FOUND)
+                                .body(Full::default())
+                                .unwrap();
+                            return Ok(resp);
+                        }
+
+                        let body = incoming.collect().await?.to_bytes();
+                        let data = builder.build_events(&parts.uri, &parts.headers, body);
+                        let resp = handle_request(data, acknowledgements, &mut output).await;
+
+                        Ok::<Response<Full<Bytes>>, hyper::Error>(resp)
+                    }
+                });
+
+                tokio::spawn(async move {
+                    if let Err(err) = http1::Builder::new().serve_connection(conn, service).await {
+                        warn!(message = "handle http connection failed", ?err);
+                    }
+                });
             }
 
             Ok(())
@@ -123,14 +124,13 @@ struct Inner {
     method: Method,
     path: String,
     auth: HttpSourceAuth,
-    output: Pipeline,
 }
 
 async fn handle_request(
     events: Result<Vec<Event>, ErrorMessage>,
     acknowledgements: bool,
     output: &mut Pipeline,
-) -> Response<Body> {
+) -> Response<Full<Bytes>> {
     match events {
         Ok(mut events) => {
             let receiver = BatchNotifier::maybe_apply_to(acknowledgements, &mut events);
@@ -164,11 +164,11 @@ async fn handle_request(
 
 async fn handle_batch_status(
     receiver: Option<BatchStatusReceiver>,
-) -> Result<Response<Body>, ErrorMessage> {
+) -> Result<Response<Full<Bytes>>, ErrorMessage> {
     match receiver {
-        None => Ok(ok_resp(None)),
+        None => Ok(ok_resp()),
         Some(receiver) => match receiver.await {
-            BatchStatus::Delivered => Ok(ok_resp(None)),
+            BatchStatus::Delivered => Ok(ok_resp()),
             BatchStatus::Errored => Err(ErrorMessage {
                 code: StatusCode::INTERNAL_SERVER_ERROR,
                 message: "Error delivering contents to sink".to_string(),
@@ -181,11 +181,9 @@ async fn handle_batch_status(
     }
 }
 
-fn ok_resp(body: Option<String>) -> Response<Body> {
-    let body = body.map_or(Body::empty(), Body::from);
-
+fn ok_resp() -> Response<Full<Bytes>> {
     Response::builder()
         .status(StatusCode::OK)
-        .body(body)
+        .body(Full::default())
         .unwrap()
 }

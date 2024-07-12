@@ -55,7 +55,7 @@ where
 {
     fn apply(&mut self, event: &watcher::Event<K>) {
         match event {
-            watcher::Event::Applied(obj) => {
+            watcher::Event::Apply(obj) => {
                 if let Some(key) = &obj.meta().uid {
                     self.cache
                         .write()
@@ -63,23 +63,24 @@ where
                 }
             }
 
-            watcher::Event::Deleted(obj) => {
+            watcher::Event::Delete(obj) => {
                 if let Some(key) = &obj.meta().uid {
                     self.cache.write().remove(key);
                 }
             }
 
-            watcher::Event::Restarted(objs) => {
-                let objs = objs
-                    .iter()
-                    .map(|obj| {
-                        (
-                            obj.meta().uid.as_ref().unwrap().clone(),
-                            Arc::new(obj.clone()),
-                        )
-                    })
-                    .collect::<AHashMap<_, _>>();
-                *self.cache.write() = objs;
+            watcher::Event::Init => {
+                self.cache.write().clear();
+            }
+            watcher::Event::InitApply(obj) => {
+                if let Some(key) = &obj.meta().uid {
+                    self.cache
+                        .write()
+                        .insert(key.to_string(), Arc::new(obj.clone()));
+                }
+            }
+            watcher::Event::InitDone => {
+                // do nothing
             }
         }
     }

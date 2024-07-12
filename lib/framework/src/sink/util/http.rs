@@ -6,13 +6,13 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
-use bytes::{Buf, Bytes};
+use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use event::{Event, EventFinalizers, EventStatus, Finalizable};
 use futures::ready;
 use futures_util::future::BoxFuture;
 use http::{Request, Response, StatusCode};
-use hyper::{body, Body};
+use http_body_util::{BodyExt, Full};
 use pin_project_lite::pin_project;
 use tower::Service;
 
@@ -236,7 +236,7 @@ where
 }
 
 pub struct HttpBatchService<F, B = Bytes> {
-    inner: HttpClient<Body>,
+    inner: HttpClient,
     request_builder: Arc<dyn Fn(B) -> F + Send + Sync>,
 }
 
@@ -257,7 +257,7 @@ where
     F: Future<Output = crate::Result<Request<Bytes>>> + Send + 'static,
     B: ByteSizeOf + Send + 'static,
 {
-    type Response = http::Response<Bytes>;
+    type Response = Response<Bytes>;
     type Error = crate::Error;
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
@@ -270,22 +270,12 @@ where
         let mut http_client = self.inner.clone();
 
         Box::pin(async move {
-            let request = builder(body).await?;
-            // let byte_size = request.body().len();
-            let request = request.map(Body::from);
-            // let (protocol, endpoint) = protocol_endpoint(request.uri().clone());
-            let response = http_client.call(request).await?;
+            let req = builder(body).await?;
+            let resp = http_client.call(req.map(Full::new)).await?;
+            let (parts, incoming) = resp.into_parts();
+            let data = incoming.collect().await?.to_bytes();
 
-            if response.status().is_success() {
-                // TODO: metric
-            }
-
-            let (parts, body) = response.into_parts();
-            let mut body = body::aggregate(body).await?;
-            Ok(Response::from_parts(
-                parts,
-                body.copy_to_bytes(body.remaining()),
-            ))
+            Ok(Response::from_parts(parts, data))
         })
     }
 }
@@ -392,7 +382,7 @@ pub trait HttpRequestBuilder<T: Send> {
 /// Generic 'Service' implementation for HTTP stream sink.
 #[derive(Clone)]
 pub struct HttpService<B> {
-    client: HttpClient<Body>,
+    client: HttpClient,
     request_builder: Arc<B>,
 }
 
@@ -426,14 +416,14 @@ where
 
         Box::pin(async move {
             let (event_count, events_byte_size) = req.count_and_bytes();
-            let req = builder.build(req)?.map(Body::from);
+            let req = builder.build(req)?.map(Full::new);
 
             let resp = client.send(req).await?;
-            let (parts, body) = resp.into_parts();
-            let body = hyper::body::to_bytes(body).await?;
+            let (parts, incoming) = resp.into_parts();
+            let data = incoming.collect().await?.to_bytes();
 
             Ok(HttpResponse {
-                http_resp: Response::from_parts(parts, body),
+                http_resp: Response::from_parts(parts, data),
                 event_count,
                 events_byte_size,
             })

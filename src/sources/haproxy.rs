@@ -10,6 +10,7 @@ use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Error, Source};
 use http::{StatusCode, Uri};
+use http_body_util::{BodyExt, Full};
 use thiserror::Error;
 
 // HAProxy 1.4
@@ -125,18 +126,18 @@ impl SourceConfig for Config {
 }
 
 async fn scrap(client: &HttpClient, uri: &Uri, auth: Option<Auth>) -> Result<Vec<Metric>, Error> {
-    let mut req = http::Request::get(uri).body(hyper::Body::empty())?;
+    let mut req = http::Request::get(uri).body(Full::default())?;
 
     if let Some(auth) = &auth {
         auth.apply(&mut req);
     }
 
     let resp = client.send(req).await?;
-    let (parts, body) = resp.into_parts();
+    let (parts, incoming) = resp.into_parts();
 
     let metrics = match parts.status {
         StatusCode::OK => {
-            let b = hyper::body::to_bytes(body).await?;
+            let b = incoming.collect().await?.to_bytes();
 
             match parse_csv(b.reader()) {
                 Ok(metrics) => metrics,

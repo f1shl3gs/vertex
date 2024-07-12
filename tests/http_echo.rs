@@ -1,31 +1,36 @@
 #![allow(clippy::print_stdout)] // tests
 
+use bytes::Bytes;
 use http::{Request, Response, StatusCode};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Server};
+use http_body_util::{BodyExt, Full};
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper_util::rt::TokioIo;
+use std::net::SocketAddr;
+use tokio::net::TcpListener;
 
-async fn dump_request(mut req: Request<Body>) -> hyper::Result<Response<Body>> {
+async fn dump_request(req: Request<Incoming>) -> hyper::Result<Response<Full<Bytes>>> {
     println!("{:?} {} {}", req.version(), req.method(), req.uri());
     for (k, v) in req.headers() {
         println!("{}: {:?}", k, v);
     }
 
     println!();
-    let body = hyper::body::to_bytes(req.body_mut()).await.unwrap();
-    let data = body.to_vec();
+    let data = req.into_body().collect().await.unwrap().to_bytes();
 
     // First two bytes is the magic header of gzip content
     // http://www33146ue.sakura.ne.jp/staff/iz/formats/gzip.html
     if data[0] == 0x1f && data[1] == 0x8b {
         println!("gzip content received")
     } else {
-        let body = String::from_utf8(data).unwrap();
+        let body = String::from_utf8_lossy(&data);
         println!("{}\n", body);
     }
 
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .body(Body::empty())
+        .body(Full::default())
         .unwrap())
 }
 
@@ -38,9 +43,22 @@ async fn start_echo_server() {
         _ => {}
     }
 
-    let addr = "127.0.0.1:9010".parse().unwrap();
-    let service = make_service_fn(|_| async { Ok::<_, hyper::Error>(service_fn(dump_request)) });
+    let addr: SocketAddr = "127.0.0.1:9010".parse().unwrap();
+    let service = service_fn(dump_request);
 
     println!("Listening on http://{}", addr);
-    Server::bind(&addr).serve(service).await.unwrap();
+    let listener = TcpListener::bind(addr).await.unwrap();
+
+    loop {
+        let (conn, _peer) = listener.accept().await.unwrap();
+
+        tokio::spawn(async move {
+            if let Err(err) = http1::Builder::new()
+                .serve_connection(TokioIo::new(conn), service)
+                .await
+            {
+                panic!("handle http connection failed, {err}")
+            }
+        });
+    }
 }
