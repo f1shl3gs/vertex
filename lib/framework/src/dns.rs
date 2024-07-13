@@ -8,7 +8,7 @@ use hickory_resolver::proto::op::Query;
 use hickory_resolver::proto::rr::rdata::A;
 use hickory_resolver::proto::rr::RData;
 use hickory_resolver::{system_conf, TokioAsyncResolver};
-use hyper::client::connect::dns::Name;
+use hyper_util::client::legacy::connect::dns::Name;
 use thiserror::Error;
 use tower::Service;
 
@@ -66,7 +66,7 @@ impl Service<Name> for Resolver {
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Ok(()).into()
+        Poll::Ready(Ok(()))
     }
 
     fn call(&mut self, name: Name) -> Self::Future {

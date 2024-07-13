@@ -113,6 +113,9 @@ auth:
     let (rx, _trigger, server) = build_test_server(addr);
     tokio::spawn(server);
 
+    // make sure the server is started
+    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+
     let proxy = ProxyConfig::default();
     let client = HttpClient::new(&config.tls, &proxy).expect("Could not create http client");
 

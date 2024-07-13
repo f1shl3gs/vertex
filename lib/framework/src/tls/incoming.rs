@@ -26,7 +26,7 @@ pub struct MaybeTlsListener {
 }
 
 impl MaybeTlsListener {
-    pub async fn bind(addr: &SocketAddr, tls: &Option<TlsConfig>) -> crate::tls::Result<Self> {
+    pub async fn bind(addr: &SocketAddr, tls: &Option<TlsConfig>) -> Result<Self, TlsError> {
         let listener = TcpListener::bind(addr).await.map_err(TlsError::TcpBind)?;
 
         let acceptor = match tls {
@@ -48,7 +48,7 @@ impl MaybeTlsListener {
         Ok(acceptor)
     }
 
-    pub async fn accept(&mut self) -> crate::tls::Result<MaybeTlsIncomingStream<TcpStream>> {
+    pub async fn accept(&mut self) -> Result<MaybeTlsIncomingStream<TcpStream>, TlsError> {
         self.listener
             .accept()
             .await
@@ -58,16 +58,14 @@ impl MaybeTlsListener {
             .map_err(TlsError::IncomingListener)
     }
 
-    async fn into_accept(
-        mut self,
-    ) -> (crate::tls::Result<MaybeTlsIncomingStream<TcpStream>>, Self) {
+    async fn into_accept(mut self) -> (Result<MaybeTlsIncomingStream<TcpStream>, TlsError>, Self) {
         (self.accept().await, self)
     }
 
     #[allow(unused)]
     pub fn accept_stream(
         self,
-    ) -> impl Stream<Item = crate::tls::Result<MaybeTlsIncomingStream<TcpStream>>> {
+    ) -> impl Stream<Item = Result<MaybeTlsIncomingStream<TcpStream>, TlsError>> {
         let mut accept = Box::pin(self.into_accept());
         stream::poll_fn(move |context| match accept.as_mut().poll(context) {
             Poll::Ready((item, this)) => {
@@ -84,7 +82,7 @@ impl MaybeTlsListener {
         max_connections: Option<u32>,
     ) -> impl Stream<
         Item = (
-            crate::tls::Result<MaybeTlsIncomingStream<TcpStream>>,
+            Result<MaybeTlsIncomingStream<TcpStream>, TlsError>,
             Option<OwnedSemaphorePermit>,
         ),
     > {
@@ -195,7 +193,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
 
     // Explicit handshake method
     #[cfg(feature = "listenfd")]
-    pub async fn handshake(&mut self) -> crate::tls::Result<()> {
+    pub async fn handshake(&mut self) -> Result<(), TlsError> {
         if let StreamState::Accepting(fut) = &mut self.state {
             let stream = fut.await?;
             self.state = StreamState::Accepted(MaybeTlsStream::Tls { tls: stream });

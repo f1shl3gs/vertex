@@ -8,7 +8,7 @@ use framework::http::HttpClient;
 use framework::tls::TlsConfig;
 use framework::{Error, Pipeline, ShutdownSignal, Source};
 use http::{Request, StatusCode};
-use hyper::Body;
+use http_body_util::Full;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -165,7 +165,7 @@ async fn probe(
         let req = Request::builder()
             .method(method)
             .uri(url)
-            .body(Body::empty())?;
+            .body(Full::default())?;
 
         let resp = client.send(req).await?;
 
@@ -181,14 +181,15 @@ async fn probe(
 
 #[cfg(test)]
 mod tests {
-    use std::convert::Infallible;
-
+    use bytes::Bytes;
     use event::MetricValue;
     use framework::config::ProxyConfig;
     use http::{Method, Response};
-    use hyper::service::{make_service_fn, service_fn};
-    use hyper::Server;
+    use hyper::body::Incoming;
+    use hyper::service::service_fn;
+    use hyper_util::rt::TokioIo;
     use testify::collect_ready;
+    use tokio::net::TcpListener;
 
     use super::*;
     use crate::testing::trace_init;
@@ -198,14 +199,14 @@ mod tests {
         crate::testing::test_generate_config::<Config>()
     }
 
-    async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-        let text = req.uri().path().strip_prefix('/').unwrap();
+    async fn handle(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, hyper::Error> {
+        let text = req.uri().path().strip_prefix('/').unwrap().to_string();
 
         let status = text.parse::<u16>().unwrap();
 
         let resp = Response::builder()
             .status(status)
-            .body(Body::from(text.to_string()))
+            .body(Full::new(Bytes::from(text)))
             .expect("build response success");
 
         Ok(resp)
@@ -213,17 +214,28 @@ mod tests {
 
     #[tokio::test]
     async fn check() {
+        use hyper::server::conn::http1;
+
         trace_init();
 
         let addr = testify::next_addr();
         let endpoint = format!("http://{}", addr);
+        let listener = TcpListener::bind(addr).await.unwrap();
 
         // start http server
         tokio::spawn(async move {
-            let service =
-                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+            loop {
+                let (conn, _peer) = listener.accept().await.unwrap();
 
-            Server::bind(&addr).serve(service).await
+                tokio::spawn(async move {
+                    if let Err(err) = http1::Builder::new()
+                        .serve_connection(TokioIo::new(conn), service_fn(handle))
+                        .await
+                    {
+                        panic!("handle http connection failed, {err}")
+                    }
+                });
+            }
         });
 
         for (code, class) in [

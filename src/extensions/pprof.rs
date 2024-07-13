@@ -2,18 +2,19 @@ use std::fmt::Debug;
 use std::net::SocketAddr;
 use std::num::ParseIntError;
 
-use bytes::{BufMut, BytesMut};
+use bytes::{BufMut, Bytes, BytesMut};
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
-use futures::FutureExt;
 use http::StatusCode;
-use hyper::{
-    service::{make_service_fn, service_fn},
-    Body, Request, Response, Server,
-};
+use http_body_util::Full;
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::{service::service_fn, Request, Response};
+use hyper_util::rt::TokioIo;
 use pprof::protos::Message;
+use tokio::net::TcpListener;
 
 const DEFAULT_PROFILE_SECONDS: u64 = 30;
 const DEFAULT_FREQUENCY: u32 = 1000;
@@ -30,39 +31,50 @@ pub struct Config {
 #[typetag::serde(name = "pprof")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        Ok(Box::pin(run(self.listen, cx.shutdown)))
+        let listener = TcpListener::bind(self.listen).await?;
+
+        Ok(Box::pin(run(listener, cx.shutdown)))
     }
 }
 
-async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
-    let service = make_service_fn(|_conn| async {
-        use std::convert::Infallible;
-
-        Ok::<_, Infallible>(service_fn(|req: Request<Body>| async {
-            let resp = match handle(req).await {
-                Ok(resp) => resp,
-                Err(err) => {
-                    let (code, msg) = match err {
-                        Error::Seconds(_) | Error::Frequency(_) => (400, err.to_string()),
-                        err => (500, err.to_string()),
-                    };
-
-                    Response::builder()
-                        .status(code)
-                        .body(Body::from(msg))
-                        .unwrap()
-                }
+async fn run(listener: TcpListener, mut shutdown: ShutdownSignal) -> Result<(), ()> {
+    let service = service_fn(move |req: Request<Incoming>| async {
+        let resp = handle(req).await.unwrap_or_else(|err| {
+            let (code, msg) = match err {
+                Error::Seconds(_) | Error::Frequency(_) => (400, err.to_string()),
+                err => (500, err.to_string()),
             };
 
-            Ok::<_, Infallible>(resp)
-        }))
+            Response::builder()
+                .status(code)
+                .body(Full::<Bytes>::new(msg.into()))
+                .unwrap()
+        });
+
+        Ok::<_, hyper::Error>(resp)
     });
 
-    let server = Server::bind(&addr)
-        .serve(service)
-        .with_graceful_shutdown(shutdown.map(|_| ()));
-    if let Err(e) = server.await {
-        error!("pprof serve failed: {}", e)
+    loop {
+        let conn = tokio::select! {
+            _ = &mut shutdown => break,
+            result = listener.accept() => match result {
+                Ok((conn, _peer)) => TokioIo::new(conn),
+                Err(err) => {
+                    error!(
+                        message = "accept new connection failed",
+                        ?err
+                    );
+
+                    continue
+                }
+            }
+        };
+
+        tokio::spawn(async move {
+            if let Err(err) = http1::Builder::new().serve_connection(conn, service).await {
+                error!(message = "handle http connection failed", ?err);
+            }
+        });
     }
 
     Ok(())
@@ -82,7 +94,7 @@ enum Error {
     Protobuf(String),
 }
 
-async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
+async fn handle(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error> {
     let mut seconds = DEFAULT_PROFILE_SECONDS;
     let mut frequency = DEFAULT_FREQUENCY;
     let mut flamegraph = false;
@@ -112,7 +124,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
 
     match guard.report().build() {
         Ok(report) => {
-            let buf = if flamegraph {
+            let data = if flamegraph {
                 let mut buf = BytesMut::new().writer();
                 report.flamegraph(&mut buf)?;
 
@@ -132,7 +144,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
                 buf.freeze()
             };
 
-            Ok(Response::new(Body::from(buf)))
+            Ok(Response::new(Full::new(data)))
         }
 
         Err(err) => {
@@ -140,7 +152,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
 
             let resp = Response::builder()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .body(Body::empty())
+                .body(Full::default())
                 .expect("should build 500 response");
 
             Ok(resp)

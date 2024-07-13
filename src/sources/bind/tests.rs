@@ -1,12 +1,17 @@
 use std::future::Future;
 use std::time::Duration;
 
+use bytes::Bytes;
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use http::{Method, Request, Response};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Server};
-use testify::{http::file_send, http::not_found, pick_unused_local_port};
+use http_body_util::Full;
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper_util::rt::TokioIo;
+use testify::{http::file_send, http::not_found};
+use tokio::net::TcpListener;
 
 use super::{client, statistics_to_metrics, Config};
 
@@ -15,8 +20,8 @@ fn generate_config() {
     crate::testing::test_generate_config::<Config>()
 }
 
-async fn v3_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
-    info!(
+async fn v3_handle(req: Request<Incoming>) -> hyper::Result<Response<Full<Bytes>>> {
+    debug!(
         message = "serve http request",
         path = req.uri().path(),
         handler = "v3"
@@ -41,8 +46,8 @@ async fn v3_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
     Ok(not_found())
 }
 
-async fn v2_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
-    info!(
+async fn v2_handle(req: Request<Incoming>) -> hyper::Result<Response<Full<Bytes>>> {
+    debug!(
         message = "serve http request",
         path = req.uri().path(),
         handler = "v2",
@@ -61,26 +66,33 @@ async fn v2_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
 
 async fn start_server<H, S>(handle: H) -> String
 where
-    H: FnMut(Request<Body>) -> S + Copy + Send + Sync + 'static,
-    S: Future<Output = hyper::Result<Response<Body>>> + Send + 'static,
+    H: Fn(Request<Incoming>) -> S + Copy + Send + Sync + 'static,
+    S: Future<Output = hyper::Result<Response<Full<Bytes>>>> + Send + 'static,
 {
-    let port = pick_unused_local_port();
-    let endpoint = format!("127.0.0.1:{}", port);
-    let service =
-        make_service_fn(move |_conn| async move { Ok::<_, hyper::Error>(service_fn(handle)) });
-    let addr = endpoint.parse().unwrap();
-    let server = Server::bind(&addr).serve(service);
+    let addr = testify::next_addr();
+    let listener = TcpListener::bind(addr).await.unwrap();
 
     tokio::spawn(async move {
-        if let Err(err) = server.await {
-            error!(message = "server error", ?err);
+        loop {
+            let (conn, _peer) = listener.accept().await.unwrap();
+
+            let service = service_fn(handle);
+
+            tokio::spawn(async move {
+                if let Err(err) = http1::Builder::new()
+                    .serve_connection(TokioIo::new(conn), service)
+                    .await
+                {
+                    panic!("handle http connection failed, {err}");
+                }
+            });
         }
     });
 
     // sleep 1s to wait for the http server
     tokio::time::sleep(Duration::from_secs(1)).await;
 
-    format!("http://{}", endpoint)
+    format!("http://{}", addr)
 }
 
 fn assert_statistics(s: client::Statistics, want: Vec<&str>) {

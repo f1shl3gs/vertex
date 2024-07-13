@@ -6,7 +6,7 @@ use framework::config::default_true;
 use framework::http::HttpClient;
 use http::header::{CACHE_CONTROL, LOCATION};
 use http::StatusCode;
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -320,18 +320,20 @@ impl Client {
             None => http::Request::get(path),
         };
 
-        let req = builder.body(Body::empty())?;
+        let req = builder.body(Full::default())?;
 
         return match self.client.send(req).await {
             Ok(resp) => {
-                let (parts, body) = resp.into_parts();
+                let (parts, incoming) = resp.into_parts();
                 match parts.status {
                     StatusCode::OK => {
-                        let body = hyper::body::to_bytes(body)
+                        let data = incoming
+                            .collect()
                             .await
-                            .map_err(ConsulError::ReadBody)?;
+                            .map_err(ConsulError::ReadBody)?
+                            .to_bytes();
 
-                        let body = serde_json::from_slice::<T>(body.chunk())?;
+                        let body = serde_json::from_slice::<T>(data.chunk())?;
 
                         Ok(body)
                     }

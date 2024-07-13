@@ -1,5 +1,10 @@
 use std::collections::HashMap;
 
+use super::config::{Config, ElasticsearchAuth};
+use super::encoder::ElasticsearchEncoder;
+use super::request_builder::ElasticsearchRequestBuilder;
+use super::ElasticsearchCommonMode;
+use super::ParseError;
 use bytes::Bytes;
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient, MaybeAuth};
@@ -7,12 +12,7 @@ use framework::sink::util::service::RequestConfig;
 use framework::tls::TlsConfig;
 use framework::HealthcheckError;
 use http::{Request, StatusCode, Uri};
-
-use super::config::{Config, ElasticsearchAuth};
-use super::encoder::ElasticsearchEncoder;
-use super::request_builder::ElasticsearchRequestBuilder;
-use super::ElasticsearchCommonMode;
-use super::ParseError;
+use http_body_util::Full;
 
 #[derive(Clone, Debug)]
 pub struct ElasticsearchCommon {
@@ -101,7 +101,7 @@ impl ElasticsearchCommon {
         }
 
         let req = builder.body(Bytes::new())?;
-        let resp = client.send(req.map(hyper::Body::from)).await?;
+        let resp = client.send(req.map(Full::new)).await?;
 
         match resp.status() {
             StatusCode::OK => Ok(()),

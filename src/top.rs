@@ -3,12 +3,13 @@ use std::time::Instant;
 
 use argh::FromArgs;
 use bytes::Buf;
+use bytes::Bytes;
 use chrono::Local;
 use exitcode::ExitCode;
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use http::{Method, Request, StatusCode};
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use serde::Deserialize;
 use tokio::time::MissedTickBehavior;
 use tracing::warn;
@@ -121,15 +122,15 @@ async fn fetch(uri: &str) -> framework::Result<TopStats> {
     let req = Request::builder()
         .method(Method::GET)
         .uri(uri)
-        .body(Body::empty())?;
+        .body(Full::<Bytes>::default())?;
 
     let resp = client.send(req).await?;
-    let (parts, body) = resp.into_parts();
+    let (parts, incoming) = resp.into_parts();
     if parts.status != StatusCode::OK {
         return Err(format!("unexpected status code {}", parts.status).into());
     }
 
-    let body = hyper::body::aggregate(body).await?;
+    let body = incoming.collect().await?.to_bytes();
 
     let metrics: Vec<Metric> = serde_json::from_reader(body.reader())?;
     let mut top = BTreeMap::new();

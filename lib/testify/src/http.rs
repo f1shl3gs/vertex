@@ -1,27 +1,27 @@
-use hyper::{Body, Response, StatusCode};
 use std::path::Path;
 
-static NOTFOUND: &[u8] = b"Not Found";
+use http_body_util::Full;
+use hyper::body::Bytes;
+use hyper::{Response, StatusCode};
 
-pub fn unauthorized() -> Response<Body> {
+pub fn unauthorized() -> Response<Full<Bytes>> {
     Response::builder()
         .status(StatusCode::UNAUTHORIZED)
-        .body("401 Unauthorized\n".into())
+        .body(Full::new("401 Unauthorized\n".into()))
         .unwrap()
 }
 
 /// HTTP status code 404
-pub fn not_found() -> Response<Body> {
+pub fn not_found() -> Response<Full<Bytes>> {
     Response::builder()
         .status(StatusCode::NOT_FOUND)
-        .body(NOTFOUND.into())
+        .body(Full::new("Not Found".into()))
         .unwrap()
 }
 
-pub async fn file_send(filename: impl AsRef<Path>) -> hyper::Result<Response<Body>> {
-    if let Ok(contents) = tokio::fs::read(filename).await {
-        let body = contents.into();
-        return Ok(Response::new(body));
+pub async fn file_send(filename: impl AsRef<Path>) -> hyper::Result<Response<Full<Bytes>>> {
+    if let Ok(content) = tokio::fs::read(filename).await {
+        return Ok(Response::new(Full::new(content.into())));
     }
 
     Ok(not_found())

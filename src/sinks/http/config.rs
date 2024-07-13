@@ -12,7 +12,7 @@ use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{future, FutureExt};
 use http::{Method, Request, StatusCode, Uri};
-use hyper::Body;
+use http_body_util::Full;
 use tower::ServiceBuilder;
 
 use super::encoder::HttpEncoder;
@@ -114,7 +114,7 @@ impl SinkConfig for Config {
 }
 
 async fn healthcheck(uri: Uri, auth: Option<Auth>, client: HttpClient) -> crate::Result<()> {
-    let mut req = Request::head(uri).body(Body::empty())?;
+    let mut req = Request::head(uri).body(Full::default())?;
     if let Some(auth) = auth {
         auth.apply(&mut req);
     }

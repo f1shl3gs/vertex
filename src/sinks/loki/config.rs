@@ -12,6 +12,7 @@ use framework::tls::TlsConfig;
 use framework::Sink;
 use framework::{template::Template, Healthcheck};
 use futures_util::FutureExt;
+use http_body_util::Full;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -146,7 +147,7 @@ pub async fn healthcheck(
 ) -> crate::Result<()> {
     endpoint.set_path("ready");
     let mut req = http::Request::get(endpoint.as_str())
-        .body(hyper::Body::empty())
+        .body(Full::default())
         .expect("Building request never fails");
 
     if let Some(auth) = &auth {

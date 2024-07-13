@@ -7,6 +7,7 @@ mod snapshot;
 use std::time::Duration;
 
 use async_trait::async_trait;
+use bytes::Bytes;
 use configurable::configurable_component;
 use event::Metric;
 use framework::config::{default_interval, Output, SourceConfig, SourceContext};
@@ -14,7 +15,7 @@ use framework::http::{Auth, HttpClient};
 use framework::sink::util::sink::Response;
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use serde::Deserialize;
 use tokio::time::Interval;
 
@@ -131,14 +132,17 @@ impl Elasticsearch {
             builder = auth.apply_builder(builder);
         }
 
-        let resp = self.http_client.send(builder.body(Body::empty())?).await?;
+        let resp = self
+            .http_client
+            .send(builder.body(Full::<Bytes>::default())?)
+            .await?;
         if !resp.is_successful() {
             return Err("Unexpected status code".into());
         }
 
-        let body = hyper::body::to_bytes(resp.into_body()).await?;
+        let data = resp.into_body().collect().await?.to_bytes();
 
-        serde_json::from_slice(&body).map_err(Into::into)
+        serde_json::from_slice(&data).map_err(Into::into)
     }
 }
 

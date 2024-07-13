@@ -167,7 +167,7 @@ mod tests {
             use std::task::{Context, Poll};
 
             use http::Request;
-            use hyper::Body;
+            use tonic::body::BoxBody;
             use tonic::codegen::BoxFuture;
             use tonic::server::NamedService;
             use tower::Service;
@@ -179,8 +179,8 @@ mod tests {
                 const NAME: &'static str = "dummy";
             }
 
-            impl Service<Request<Body>> for DummyService {
-                type Response = http::Response<tonic::body::BoxBody>;
+            impl Service<Request<BoxBody>> for DummyService {
+                type Response = http::Response<BoxBody>;
                 type Error = std::convert::Infallible;
                 type Future = BoxFuture<Self::Response, Self::Error>;
 
@@ -188,7 +188,7 @@ mod tests {
                     Poll::Ready(Ok(()))
                 }
 
-                fn call(&mut self, _req: Request<Body>) -> Self::Future {
+                fn call(&mut self, _req: Request<BoxBody>) -> Self::Future {
                     todo!()
                 }
             }

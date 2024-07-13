@@ -7,7 +7,7 @@ use framework::sink::util::retries::{RetryAction, RetryLogic};
 use framework::HealthcheckError;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{Request, StatusCode, Uri};
-use hyper::Body;
+use http_body_util::Full;
 
 use super::config::Config;
 
@@ -66,7 +66,7 @@ impl HttpSink for Config {
 
 pub async fn healthcheck(client: HttpClient, config: Config) -> crate::Result<()> {
     let uri = format!("{}/?query=SELECT%201", config.endpoint);
-    let mut request = Request::get(uri).body(Body::empty())?;
+    let mut request = Request::get(uri).body(Full::<Bytes>::default())?;
 
     if let Some(auth) = &config.auth {
         auth.apply(&mut request);

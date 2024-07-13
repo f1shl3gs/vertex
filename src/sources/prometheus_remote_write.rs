@@ -194,7 +194,7 @@ mod tests {
     use framework::http::HttpClient;
     use framework::pipeline::Pipeline;
     use framework::tls::TlsConfig;
-    use hyper::Body;
+    use http_body_util::Full;
     use testify::{assert_event_data_eq, collect_ready};
 
     use super::*;
@@ -280,7 +280,7 @@ mod tests {
 
         let body = out.freeze();
 
-        let req = http::Request::post(&url).body(Body::from(body)).unwrap();
+        let req = http::Request::post(&url).body(Full::new(body)).unwrap();
 
         let resp = client.send(req).await.unwrap();
         assert!(resp.status().is_success());

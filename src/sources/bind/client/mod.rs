@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use framework::http::{HttpClient, HttpError};
 use framework::sink::util::sink::Response;
 use http::StatusCode;
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use serde::Deserialize;
 
 mod v2;
@@ -151,20 +151,20 @@ impl Client {
 
     async fn fetch<T: serde::de::DeserializeOwned>(&self, path: &str) -> Result<T, Error> {
         let url = format!("{}{}", self.endpoint, path);
-        let req = http::Request::get(url).body(Body::empty())?;
+        let req = http::Request::get(url).body(Full::default())?;
         let resp = self.http_client.send(req).await?;
-        let (header, body) = resp.into_parts();
+        let (header, incoming) = resp.into_parts();
         if !header.status.is_success() {
             return Err(Error::UnexpectedStatus(header.status));
         }
 
-        let body = hyper::body::to_bytes(body).await?;
+        let body = incoming.collect().await?.to_bytes();
         quick_xml::de::from_reader(body.reader()).map_err(Error::Decode)
     }
 
     async fn probe(&self) -> Result<Version, Error> {
         let url = format!("{}{}", self.endpoint, v3::STATUS_PATH);
-        let req = http::Request::get(url).body(Body::empty())?;
+        let req = http::Request::get(url).body(Full::default())?;
         let resp = self.http_client.send(req).await?;
 
         if resp.is_successful() {

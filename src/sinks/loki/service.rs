@@ -7,6 +7,7 @@ use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::StatusCode;
+use http_body_util::Full;
 use thiserror::Error;
 use tower::Service;
 use tracing::Instrument;
@@ -101,8 +102,7 @@ impl Service<LokiRequest> for LokiService {
             builder = builder.header("X-Scope-OrgID", tenant)
         }
 
-        let body = hyper::Body::from(request.payload);
-        let mut req = builder.body(body).unwrap();
+        let mut req = builder.body(Full::new(request.payload)).unwrap();
 
         if let Some(auth) = &self.auth {
             auth.apply(&mut req);

@@ -1,16 +1,17 @@
 use std::net::SocketAddr;
 use std::sync::Arc;
 
+use bytes::Bytes;
 use configurable::Configurable;
 use framework::tls::MaybeTlsListener;
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal};
-use futures_util::FutureExt;
 use http::{Method, Request, Response, StatusCode};
-use hyper::body::to_bytes;
-use hyper::server::accept::from_stream;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Server};
+use http_body_util::{BodyExt, Full};
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper_util::rt::TokioIo;
 use jaeger::agent::deserialize_binary_batch;
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
@@ -36,45 +37,56 @@ pub struct ThriftHttpConfig {
     tls: Option<TlsConfig>,
 }
 
+// https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
 pub async fn serve(
     config: ThriftHttpConfig,
-    shutdown: ShutdownSignal,
+    mut shutdown: ShutdownSignal,
     output: Pipeline,
 ) -> crate::Result<()> {
     let output = Arc::new(Mutex::new(output));
-    let listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
+    let mut listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
 
-    // https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
-    let service = make_service_fn(|_conn| {
+    loop {
+        let conn = tokio::select! {
+            _ = &mut shutdown => break,
+            result = listener.accept() => match result {
+                Ok(conn) => TokioIo::new(conn),
+                Err(err) => {
+                    error!(
+                        message = "accept new connection failed",
+                        ?err
+                    );
+
+                    continue
+                }
+            }
+        };
+
         let output = Arc::clone(&output);
+        let service = service_fn(move |req: Request<Incoming>| {
+            let output = Arc::clone(&output);
+            async move { handle(output, req).await }
+        });
 
-        let svc = service_fn(move |req| handle(Arc::clone(&output), req));
-
-        async move { Ok::<_, hyper::Error>(svc) }
-    });
-
-    if let Err(err) = Server::builder(from_stream(listener.accept_stream()))
-        .serve(service)
-        .with_graceful_shutdown(shutdown.map(|_| ()))
-        .await
-    {
-        error!(message = "Jaeger HTTP server exit", ?err);
-
-        Err(err.into())
-    } else {
-        Ok(())
+        tokio::spawn(async move {
+            if let Err(err) = http1::Builder::new().serve_connection(conn, service).await {
+                error!(message = "handle http connection failed", ?err)
+            }
+        });
     }
+
+    Ok(())
 }
 
 async fn handle(
     output: Arc<Mutex<Pipeline>>,
-    req: Request<Body>,
-) -> Result<Response<Body>, hyper::Error> {
+    req: Request<Incoming>,
+) -> Result<Response<Full<Bytes>>, hyper::Error> {
     if req.method() != Method::POST {
         return Ok::<_, hyper::Error>(
             Response::builder()
                 .status(StatusCode::METHOD_NOT_ALLOWED)
-                .body(Body::empty())
+                .body(Full::default())
                 .expect("build METHOD_NOT_ALLOWED should always success"),
         );
     }
@@ -82,26 +94,26 @@ async fn handle(
     if req.uri().path() != "/api/traces" {
         return Ok(Response::builder()
             .status(StatusCode::NOT_FOUND)
-            .body(Body::empty())
+            .body(Full::default())
             .expect("build NOT_FOUND should always success"));
     }
 
-    let buf = to_bytes(req.into_body()).await?;
-    match deserialize_binary_batch(buf.to_vec()) {
+    let data = req.into_body().collect().await?.to_bytes();
+    match deserialize_binary_batch(data.to_vec()) {
         Ok(batch) => {
             if let Err(err) = output.lock().await.send(batch).await {
                 error!(message = "Error sending batch", ?err);
                 Ok(Response::builder()
                     .status(StatusCode::SERVICE_UNAVAILABLE)
-                    .body(Body::empty())
+                    .body(Full::default())
                     .expect("build SERVER_UNAVAILABLE should always success"))
             } else {
-                Ok(Response::new(Body::empty()))
+                Ok(Response::new(Full::default()))
             }
         }
         Err(err) => Ok(Response::builder()
             .status(StatusCode::BAD_REQUEST)
-            .body(Body::from(err.to_string()))
+            .body(Full::new(err.to_string().into()))
             .expect("build BAD_REQUEST should always success")),
     }
 }

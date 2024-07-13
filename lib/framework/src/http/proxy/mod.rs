@@ -1,29 +1,32 @@
+mod rt;
+mod stream;
+mod tunnel;
+
 use std::env;
-use std::fmt::{Formatter, Write};
+use std::fmt::Formatter;
 use std::future::Future;
-use std::io::{self, Error, ErrorKind, IoSlice};
+use std::io::{Error, ErrorKind};
 use std::net::IpAddr;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use bytes::{Buf, BytesMut};
 use configurable::schema::{generate_array_schema, SchemaGenerator, SchemaObject};
 use configurable::{Configurable, GenerateError};
-use futures::pin_mut;
 use futures_util::TryFutureExt;
-use http::HeaderMap;
-use hyper::client::connect::{Connected, Connection};
-use hyper::{service::Service, Uri};
+use http::{HeaderMap, Uri};
+use hyper::rt::{Read, Write};
+use hyper_util::rt::TokioIo;
 use ipnet::IpNet;
+use rustls::pki_types::ServerName;
 use rustls::{ClientConfig, RootCertStore};
 use serde::de::{SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt, ReadBuf};
-use tokio_rustls::{client::TlsStream, rustls::ServerName, TlsConnector};
-
-type BoxError = Box<dyn std::error::Error + Send + Sync>;
+use stream::ProxyStream;
+use tokio_rustls::TlsConnector;
+use tower::Service;
+use tunnel::TunnelConnect;
 
 /// Represents a possible matching entry for an IP address
 #[derive(Clone, Debug, PartialEq)]
@@ -321,99 +324,6 @@ impl Proxy {
     }
 }
 
-/// A Proxy Stream wrapper
-#[allow(clippy::large_enum_variant)]
-pub enum ProxyStream<R> {
-    NoProxy(R),
-    Regular(R),
-    Secured(TlsStream<R>),
-}
-
-impl<R: AsyncRead + AsyncWrite + Unpin> AsyncRead for ProxyStream<R> {
-    fn poll_read(
-        self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        buf: &mut ReadBuf<'_>,
-    ) -> Poll<io::Result<()>> {
-        match self.get_mut() {
-            ProxyStream::NoProxy(r) => Pin::new(r).poll_read(cx, buf),
-            ProxyStream::Regular(r) => Pin::new(r).poll_read(cx, buf),
-            ProxyStream::Secured(r) => Pin::new(r).poll_read(cx, buf),
-        }
-    }
-}
-
-impl<R: AsyncRead + AsyncWrite + Unpin> AsyncWrite for ProxyStream<R> {
-    fn poll_write(
-        self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        buf: &[u8],
-    ) -> Poll<Result<usize, Error>> {
-        match self.get_mut() {
-            ProxyStream::NoProxy(r) => Pin::new(r).poll_write(cx, buf),
-            ProxyStream::Regular(r) => Pin::new(r).poll_write(cx, buf),
-            ProxyStream::Secured(r) => Pin::new(r).poll_write(cx, buf),
-        }
-    }
-
-    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Error>> {
-        match self.get_mut() {
-            ProxyStream::NoProxy(r) => Pin::new(r).poll_flush(cx),
-            ProxyStream::Regular(r) => Pin::new(r).poll_flush(cx),
-            ProxyStream::Secured(r) => Pin::new(r).poll_flush(cx),
-        }
-    }
-
-    fn poll_shutdown(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Error>> {
-        match self.get_mut() {
-            ProxyStream::NoProxy(r) => Pin::new(r).poll_shutdown(cx),
-            ProxyStream::Regular(r) => Pin::new(r).poll_shutdown(cx),
-            ProxyStream::Secured(r) => Pin::new(r).poll_shutdown(cx),
-        }
-    }
-
-    fn poll_write_vectored(
-        self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-        bufs: &[IoSlice<'_>],
-    ) -> Poll<Result<usize, Error>> {
-        match self.get_mut() {
-            ProxyStream::NoProxy(r) => Pin::new(r).poll_write_vectored(cx, bufs),
-            ProxyStream::Regular(r) => Pin::new(r).poll_write_vectored(cx, bufs),
-            ProxyStream::Secured(r) => Pin::new(r).poll_write_vectored(cx, bufs),
-        }
-    }
-
-    fn is_write_vectored(&self) -> bool {
-        match self {
-            ProxyStream::NoProxy(r) => r.is_write_vectored(),
-            ProxyStream::Regular(r) => r.is_write_vectored(),
-            ProxyStream::Secured(r) => r.is_write_vectored(),
-        }
-    }
-}
-
-impl<R: AsyncRead + AsyncWrite + Connection + Unpin> Connection for ProxyStream<R> {
-    fn connected(&self) -> Connected {
-        let mut is_h2 = false;
-        let connected = match self {
-            ProxyStream::NoProxy(r) => r.connected(),
-            ProxyStream::Regular(r) => r.connected().proxy(true),
-            ProxyStream::Secured(r) => {
-                let (underlying, tls) = r.get_ref();
-                is_h2 = tls.alpn_protocol() == Some(b"h2");
-                underlying.connected().proxy(true)
-            }
-        };
-
-        if is_h2 {
-            connected.negotiated_h2()
-        } else {
-            connected
-        }
-    }
-}
-
 /// A wrapper around `Proxy`s with a connector.
 #[derive(Clone)]
 pub struct ProxyConnector<C> {
@@ -431,20 +341,18 @@ impl<C> ProxyConnector<C> {
         let mut store = RootCertStore::empty();
         for cert in certs {
             store
-                .add(&rustls::Certificate(cert.0))
+                .add(cert)
                 .map_err(|err| Error::new(ErrorKind::InvalidData, err))?;
         }
 
         let config = ClientConfig::builder()
-            .with_safe_defaults()
             .with_root_certificates(store)
             .with_no_client_auth();
-        let tls = TlsConnector::from(Arc::new(config));
 
         Ok(ProxyConnector {
             connector,
             proxies: vec![],
-            tls: Some(tls),
+            tls: Some(TlsConnector::from(Arc::new(config))),
         })
     }
 
@@ -461,9 +369,9 @@ impl<C> ProxyConnector<C> {
 impl<C> Service<Uri> for ProxyConnector<C>
 where
     C: Service<Uri>,
-    C::Response: AsyncRead + AsyncWrite + Send + Unpin + 'static,
+    C::Response: Read + Write + Send + Unpin + 'static,
     C::Future: Send + 'static,
-    C::Error: Into<BoxError>,
+    C::Error: Into<Box<dyn std::error::Error + Send + Sync>>,
 {
     type Response = ProxyStream<C::Response>;
     type Error = Error;
@@ -514,14 +422,14 @@ where
 
                         break match tls {
                             Some(tls) => {
-                                let dnsref = match ServerName::try_from(&*host)
+                                let dns_ref = match ServerName::try_from(host)
                                     .map_err(|err| Error::new(ErrorKind::Other, err))
                                 {
                                     Ok(v) => v,
                                     Err(err) => break Err(err),
                                 };
                                 let secure_stream = match tls
-                                    .connect(dnsref, tunnel_stream)
+                                    .connect(dns_ref, TokioIo::new(tunnel_stream))
                                     .await
                                     .map_err(|err| Error::new(ErrorKind::Other, err))
                                 {
@@ -529,7 +437,7 @@ where
                                     Err(err) => break Err(err),
                                 };
 
-                                Ok(ProxyStream::Secured(secure_stream))
+                                Ok(ProxyStream::Secured(TokioIo::new(secure_stream)))
                             }
 
                             None => Ok(ProxyStream::Regular(tunnel_stream)),
@@ -558,7 +466,7 @@ where
     }
 }
 
-fn proxy_dst(dst: &Uri, proxy: &Uri) -> io::Result<Uri> {
+fn proxy_dst(dst: &Uri, proxy: &Uri) -> Result<Uri, Error> {
     Uri::builder()
         .scheme(proxy.scheme_str().ok_or_else(|| {
             Error::new(
@@ -580,184 +488,4 @@ fn proxy_dst(dst: &Uri, proxy: &Uri) -> io::Result<Uri> {
         .path_and_query(dst.path_and_query().unwrap().clone())
         .build()
         .map_err(|err| Error::new(ErrorKind::Other, format!("other error: {}", err)))
-}
-
-struct TunnelConnect {
-    buf: BytesMut,
-}
-
-impl TunnelConnect {
-    /// Creates a new tunnel through proxy
-    fn new(host: &str, port: u16, headers: &HeaderMap) -> Self {
-        let mut buf = BytesMut::new();
-        write!(
-            buf,
-            "CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n"
-        )
-        .expect("should success");
-        for (key, value) in headers {
-            let value = value.to_str().unwrap_or_default();
-            write!(buf, "{}: {}\r\n", key.as_str(), value).expect("should success");
-        }
-
-        write!(buf, "\r\n").expect("should success");
-
-        Self { buf }
-    }
-
-    fn with_stream<S>(self, stream: S) -> Tunnel<S> {
-        Tunnel {
-            buf: self.buf,
-            stream: Some(stream),
-            state: TunnelState::Writing,
-        }
-    }
-}
-
-enum TunnelState {
-    Writing,
-    Reading,
-}
-
-struct Tunnel<S> {
-    buf: BytesMut,
-    stream: Option<S>,
-    state: TunnelState,
-}
-
-impl<S: AsyncRead + AsyncWrite + Unpin> Future for Tunnel<S> {
-    type Output = Result<S, Error>;
-
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        if self.stream.is_none() {
-            panic!("must not poll after future is complete");
-        }
-
-        let this = self.get_mut();
-        loop {
-            if let TunnelState::Writing = &this.state {
-                let fut = this.stream.as_mut().unwrap().write_buf(&mut this.buf);
-                pin_mut!(fut);
-                let n = match fut.poll(cx) {
-                    Poll::Ready(Ok(n)) => n,
-                    Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),
-                    Poll::Pending => return Poll::Pending,
-                };
-
-                if !this.buf.has_remaining() {
-                    this.state = TunnelState::Reading;
-                    this.buf.truncate(0);
-                } else if n == 0 {
-                    return Poll::Ready(Err(Error::new(
-                        ErrorKind::Other,
-                        "unexpected EOF while tunnel writing",
-                    )));
-                }
-            } else {
-                let fut = this.stream.as_mut().unwrap().read_buf(&mut this.buf);
-                pin_mut!(fut);
-                match fut.poll(cx) {
-                    Poll::Ready(Ok(n)) => {
-                        if n == 0 {
-                            return Poll::Ready(Err(Error::new(
-                                ErrorKind::Other,
-                                "unexpected EOF while tunnel reading",
-                            )));
-                        }
-                    }
-                    Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),
-                    Poll::Pending => return Poll::Pending,
-                };
-
-                let read = &this.buf[..];
-                if read.len() > 12 {
-                    if read.starts_with(b"HTTP/1.1 200") || read.starts_with(b"HTTP/1.0 200") {
-                        if read.ends_with(b"\r\n\r\n") {
-                            return Poll::Ready(Ok(this.stream.take().unwrap()));
-                        }
-                        // else read more
-                    } else {
-                        let len = read.len().min(16);
-                        return Poll::Ready(Err(Error::new(
-                            ErrorKind::Other,
-                            format!(
-                                "unsuccessful tunnel ({})",
-                                String::from_utf8_lossy(&read[0..len])
-                            ),
-                        )));
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::net::SocketAddr;
-    use tokio::net::{TcpListener, TcpStream};
-
-    fn tunnel<S>(conn: S, host: String, port: u16) -> Tunnel<S> {
-        TunnelConnect::new(&host, port, &HeaderMap::new()).with_stream(conn)
-    }
-
-    async fn mock_tunnel(status_line: Option<&str>) -> SocketAddr {
-        let status_line = status_line.unwrap_or("HTTP/1.1 200 OK\r\n\r\n").to_string();
-        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
-        let addr = listener.local_addr().unwrap();
-        let connect_expected = format!(
-            "CONNECT {0}:{1} HTTP/1.1\r\nHost: {0}:{1}\r\n\r\n",
-            addr.ip(),
-            addr.port()
-        )
-        .into_bytes();
-
-        tokio::spawn(async move {
-            let (mut sock, _) = listener.accept().await.unwrap();
-            let mut buf = [0u8; 4096];
-            let n = sock.read(&mut buf).await.unwrap();
-            assert_eq!(&connect_expected[..], &buf[..n]);
-
-            sock.write_all(status_line.as_bytes()).await.unwrap();
-        });
-
-        addr
-    }
-
-    #[tokio::test]
-    async fn tunnel_ok() {
-        let addr = mock_tunnel(None).await;
-        let host = addr.ip().to_string();
-        let port = addr.port();
-
-        let _c = TcpStream::connect(addr)
-            .await
-            .map(|s| tunnel(s, host, port))
-            .unwrap();
-    }
-
-    #[tokio::test]
-    async fn tunnel_eof() {
-        let addr = mock_tunnel(Some("HTTP/1.1 200 OK")).await;
-        let host = addr.ip().to_string();
-        let port = addr.port();
-
-        let _c = TcpStream::connect(addr)
-            .await
-            .map(|s| tunnel(s, host, port))
-            .unwrap();
-    }
-
-    #[tokio::test]
-    async fn tunnel_bad_response() {
-        let addr = mock_tunnel(Some("foo bar baz hallo")).await;
-        let host = addr.ip().to_string();
-        let port = addr.port();
-
-        let _c = TcpStream::connect(addr)
-            .await
-            .map(|s| tunnel(s, host, port))
-            .unwrap();
-    }
 }

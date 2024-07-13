@@ -106,13 +106,13 @@ pub fn span_from_request<T>(req: &Request<T>) -> Result<SpanContext, ()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use hyper::Body;
+
     use tracing_internal::SpanExt;
 
     #[ignore]
     #[test]
     fn inject_and_extract() {
-        let mut req = Request::builder().uri("foo").body(Body::empty()).unwrap();
+        let mut req = Request::builder().uri("foo").body(()).unwrap();
 
         assert!(req.headers().is_empty());
 

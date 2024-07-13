@@ -1,7 +1,8 @@
+use bytes::Bytes;
 use framework::http::HttpClient;
 use framework::HealthcheckError;
 use http::{HeaderValue, Request, StatusCode};
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -17,7 +18,7 @@ struct HealthResponse {
 pub async fn healthcheck(client: HttpClient, endpoint: String, token: String) -> crate::Result<()> {
     // Authorization: Token INFLUX_API_TOKEN
     let uri = format!("{}/health", endpoint);
-    let mut req = Request::get(uri).body(Body::empty())?;
+    let mut req = Request::get(uri).body(Full::<Bytes>::default())?;
     req.headers_mut().insert(
         "Authorization",
         HeaderValue::from_str(&format!("Token {}", token)).unwrap(),
@@ -25,10 +26,10 @@ pub async fn healthcheck(client: HttpClient, endpoint: String, token: String) ->
 
     let resp = client.send(req).await?;
 
-    let (parts, body) = resp.into_parts();
+    let (parts, incoming) = resp.into_parts();
     match parts.status {
         StatusCode::OK => {
-            let data = hyper::body::to_bytes(body).await?;
+            let data = incoming.collect().await?.to_bytes();
             let resp: HealthResponse = serde_json::from_slice(&data)?;
             if resp.status == "pass" {
                 Ok(())

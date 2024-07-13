@@ -1,6 +1,5 @@
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
-use std::convert::Infallible;
 use std::fmt::Write;
 use std::hash::{Hash, Hasher};
 use std::io::Write as _;
@@ -10,7 +9,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
-use bytes::{BufMut, BytesMut};
+use bytes::{BufMut, Bytes, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
 use event::{EventStatus, Events, Finalizable, Metric, MetricValue};
@@ -19,8 +18,13 @@ use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Method, Request, Response, Server, StatusCode};
+use http::HeaderMap;
+use http_body_util::Full;
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper::{Method, Request, Response, StatusCode};
+use hyper_util::rt::TokioIo;
 use parking_lot::Mutex;
 use tripwire::Tripwire;
 
@@ -181,10 +185,10 @@ macro_rules! write_metric {
 }
 
 fn handle(
-    req: Request<Body>,
+    req: Request<Incoming>,
     metrics: Arc<Mutex<BTreeMap<String, Sets>>>,
     now: i64,
-) -> Response<Body> {
+) -> Response<Full<Bytes>> {
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/metrics") => {
             let mut buf = BytesMut::with_capacity(8 * 1024);
@@ -289,7 +293,7 @@ fn handle(
                 .header(http::header::CONTENT_TYPE, "text/plain; charset=utf-8")
                 .status(StatusCode::OK);
 
-            let body = if !should_compress(&req) {
+            let body = if !should_compress(req.headers()) {
                 buf.freeze()
             } else {
                 let mut encoder = flate2::write::GzEncoder::new(
@@ -304,18 +308,18 @@ fn handle(
             };
 
             builder
-                .body(Body::from(body))
+                .body(Full::new(body))
                 .expect("Response build failed") // error should never happened
         }
         _ => Response::builder()
             .status(StatusCode::NOT_FOUND)
-            .body(Body::empty())
+            .body(Full::default())
             .expect("Response build failed"),
     }
 }
 
-fn should_compress(req: &Request<Body>) -> bool {
-    match req.headers().get(http::header::ACCEPT_ENCODING) {
+fn should_compress(headers: &HeaderMap) -> bool {
+    match headers.get(http::header::ACCEPT_ENCODING) {
         Some(value) => match value.to_str() {
             Ok(value) => value.contains("gzip"),
             Err(_err) => false,
@@ -327,7 +331,7 @@ fn should_compress(req: &Request<Body>) -> bool {
 #[async_trait]
 impl StreamSink for PrometheusExporter {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let (_trigger, tripwire) = Tripwire::new();
+        let (_trigger, mut tripwire) = Tripwire::new();
         let metrics = Arc::clone(&self.metrics);
         let mut ticker = tokio::time::interval(self.ttl);
 
@@ -365,35 +369,52 @@ impl StreamSink for PrometheusExporter {
         });
 
         let metrics = Arc::clone(&self.metrics);
-        let service = make_service_fn(move |_| {
-            let metrics = Arc::clone(&metrics);
-
-            async move {
-                Ok::<_, Infallible>(service_fn(move |req| {
-                    let now = Utc::now().timestamp();
-                    let metrics = Arc::clone(&metrics);
-                    let resp = handle(req, metrics, now);
-
-                    futures::future::ok::<_, Infallible>(resp)
-                }))
-            }
-        });
 
         // HTTP server routine
         let address = self.endpoint;
         let tls = self.tls.clone();
         tokio::spawn(async move {
-            let listener = MaybeTlsListener::bind(&address, &tls)
+            let mut listener = MaybeTlsListener::bind(&address, &tls)
                 .await
                 .map_err(|err| error!(message = "Server TLS error", ?err))?;
 
             info!(message = "start http server", ?address);
 
-            Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
-                .serve(service)
-                .with_graceful_shutdown(tripwire)
-                .await
-                .map_err(|err| error!(message = "Server error", ?err))?;
+            loop {
+                let conn = tokio::select! {
+                    _ = &mut tripwire => break,
+                    result = listener.accept() => match result {
+                        Ok(conn) => TokioIo::new(conn),
+                        Err(err) => {
+                            error!(
+                                message = "accept new connection failed",
+                                ?err
+                            );
+
+                            continue
+                        }
+                    }
+                };
+
+                let metrics = Arc::clone(&metrics);
+                let service = service_fn(move |req: Request<Incoming>| {
+                    let metrics = Arc::clone(&metrics);
+
+                    async move {
+                        let now = Utc::now().timestamp();
+                        let metrics = Arc::clone(&metrics);
+                        let resp = handle(req, metrics, now);
+
+                        Ok::<_, hyper::Error>(resp)
+                    }
+                });
+
+                tokio::spawn(async move {
+                    if let Err(err) = http1::Builder::new().serve_connection(conn, service).await {
+                        error!(message = "handle http connection failed", ?err);
+                    }
+                });
+            }
 
             Ok::<(), ()>(())
         });

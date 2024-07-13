@@ -1,20 +1,22 @@
 mod statsz;
 
-use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::str::FromStr;
 
 use async_trait::async_trait;
+use bytes::Bytes;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::Extension;
-use futures_util::FutureExt;
 use http::header::CONTENT_TYPE;
 use http::{Method, Request, Response, StatusCode};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Server};
-
+use http_body_util::Full;
+use hyper::body::Incoming;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper_util::rt::TokioIo;
 pub use statsz::{Metric, Point, Statsz};
+use tokio::net::TcpListener;
 
 fn default_endpoint() -> SocketAddr {
     SocketAddr::from_str("127.0.0.1:56888").expect("default endpoint parse ok")
@@ -36,21 +38,34 @@ struct Config {
 #[typetag::serde(name = "zpages")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
-        let shutdown = cx.shutdown;
-        let addr = self.endpoint;
+        let mut shutdown = cx.shutdown;
+        let listener = TcpListener::bind(self.endpoint).await?;
 
         Ok(Box::pin(async move {
-            let service =
-                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(http_handle)) });
+            loop {
+                let conn = tokio::select! {
+                    _ = &mut shutdown => break,
+                    result = listener.accept() => match result {
+                        Ok((conn, _peer)) => TokioIo::new(conn),
+                        Err(err) => {
+                            error!(
+                                message = "accept new connection failed",
+                                ?err
+                            );
 
-            if let Err(err) = Server::bind(&addr)
-                .serve(service)
-                .with_graceful_shutdown(shutdown.map(|_token| {
-                    info!(message = "zpages done");
-                }))
-                .await
-            {
-                warn!(message = "http server error", ?err);
+                            continue
+                        }
+                    }
+                };
+
+                tokio::spawn(async move {
+                    if let Err(err) = http1::Builder::new()
+                        .serve_connection(conn, service_fn(http_handle))
+                        .await
+                    {
+                        error!(message = "handle http connection failed", ?err);
+                    }
+                });
             }
 
             Ok(())
@@ -58,11 +73,11 @@ impl ExtensionConfig for Config {
     }
 }
 
-async fn http_handle(req: Request<Body>) -> framework::Result<Response<Body>> {
+async fn http_handle(req: Request<Incoming>) -> framework::Result<Response<Full<Bytes>>> {
     if req.method() != Method::GET {
         let resp = Response::builder()
             .status(StatusCode::METHOD_NOT_ALLOWED)
-            .body(Body::empty())
+            .body(Full::default())
             .expect("build ok");
 
         return Ok(resp);
@@ -76,14 +91,14 @@ async fn http_handle(req: Request<Body>) -> framework::Result<Response<Body>> {
             let resp = Response::builder()
                 .header(CONTENT_TYPE, "application/json")
                 .status(StatusCode::OK)
-                .body(Body::from(data))?;
+                .body(Full::new(data.into()))?;
 
             Ok(resp)
         }
         _ => {
             let resp = Response::builder()
                 .status(StatusCode::NOT_FOUND)
-                .body(Body::empty())
+                .body(Full::default())
                 .expect("build ok");
 
             Ok(resp)

@@ -41,13 +41,15 @@ flate2 = { version = "1.0.30" }
 futures = { version = "0.3.30", default-features = false, features = ["async-await"] }
 futures-util = { version = "0.3.30", default-features = false }
 glob = { version = "0.3.1" }
-headers = { version = "0.3.9" }
+headers = { version = "0.4.0", default-features = false }
 hickory-resolver = { version = "0.24" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
 hostname = { path = "../hostname" }
-http = { version = "0.2.12", default-features = false }
-hyper = { version = "0.14.29", default-features = false, features = ["full"] }
-hyper-rustls = { version = "0.24.2", default-features = false }
+http = { version = "1.1.0", default-features = false }
+http-body-util = { version = "0.1.2", default-features = false }
+hyper = { version = "1.4.1", default-features = false, features = ["full"] }
+hyper-rustls = { version = "0.27.2", default-features = false }
+hyper-util = { version = "0.1.6", default-features = false, features = ["client"] }
 indexmap = { version = "2.2.6", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.15", default-features = false }
 ipnet = { version = "2.9.0", default-features = false, features = ["std"] }
@@ -63,17 +65,17 @@ percent-encoding = { version = "2.3.1", default-features = false }
 pin-project-lite = { version = "0.2.14", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 regex = { version = "1.10.5", default-features = false }
-rustls = { version = "0.21.12", default-features = false, features = ["dangerous_configuration"] }
-rustls-native-certs = { version = "0.6.3", default-features = false }
+rustls = { version = "0.23.11", default-features = false }
+rustls-native-certs = { version = "0.7.1", default-features = false }
 smallvec = { version = "1.13.2", default-features = false }
 serde = { version = "1.0.204", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.120", default-features = false }
 serde_yaml = { version = "0.9.34", default-features = false }
 snap = { version = "1.1.1", default-features = false }
 socket2 = { version = "0.5.7", default-features = false }
-thiserror = { version = "1.0.61" }
+thiserror = { version = "1.0.62", default-features = false }
 tokio = { version = "1.38.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
-tokio-rustls = { version = "0.24.1", default-features = false }
+tokio-rustls = { version = "0.26.0", default-features = false }
 tokio-stream = { version = "0.1.15", default-features = false, features = ["net", "sync"] }
 tokio-util = { version = "0.7.11", default-features = false, features = ["codec", "time", "net", "io"] }
 tower = { version = "0.4.13", default-features = false, features = ["limit", "retry", "timeout", "util"] }

@@ -12,6 +12,7 @@ use framework::shutdown::ShutdownSignal;
 use framework::tls::TlsConfig;
 use framework::Source;
 use http::{StatusCode, Uri};
+use http_body_util::{BodyExt, Full};
 use prometheus::{GroupKind, MetricGroup};
 use thiserror::Error;
 
@@ -215,7 +216,7 @@ async fn scrape_one(
     url: &Uri,
 ) -> Result<Vec<Metric>, ScrapeError> {
     let mut req = http::Request::get(url)
-        .body(hyper::body::Body::empty())
+        .body(Full::default())
         .map_err(HttpError::BuildRequest)?;
     if let Some(auth) = auth {
         auth.apply(&mut req);
@@ -223,14 +224,16 @@ async fn scrape_one(
 
     let resp = client.send(req).await.map_err(ScrapeError::Http)?;
 
-    let (header, body) = resp.into_parts();
+    let (header, incoming) = resp.into_parts();
     if header.status != StatusCode::OK {
         return Err(ScrapeError::UnexpectedStatusCode(header.status));
     }
 
-    let data = hyper::body::to_bytes(body)
+    let data = incoming
+        .collect()
         .await
-        .map_err(|err| ScrapeError::Http(HttpError::CallRequest(err)))?;
+        .map_err(|err| ScrapeError::Http(HttpError::ReadIncoming(err)))?
+        .to_bytes();
     let body = String::from_utf8_lossy(&data);
 
     let metrics = prometheus::parse_text(&body).map_err(ScrapeError::Parse)?;
