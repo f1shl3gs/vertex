@@ -89,28 +89,39 @@ where
             let responder = responder.clone();
             let tx = tx.clone();
             let service = service_fn(move |req: Request<Incoming>| {
-                let responder = responder.clone();
+                let (parts, incoming) = req.into_parts();
+                let resp = responder();
                 let mut tx = tx.clone();
-
-                async move {
-                    let (parts, incoming) = req.into_parts();
-                    let resp = responder();
-                    if resp.status().is_success() {
-                        tokio::spawn(async move {
-                            let data = incoming.collect().await.unwrap().to_bytes();
-                            tx.send((parts, data)).await.unwrap();
-                        });
-                    }
-
-                    Ok::<Response<B>, B::Error>(resp)
+                if resp.status().is_success() {
+                    tokio::spawn(async move {
+                        let data = incoming.collect().await.unwrap().to_bytes();
+                        tx.send((parts, data)).await.unwrap();
+                        info!(message = "send response success");
+                    });
                 }
+
+                async move { Ok::<Response<B>, B::Error>(resp) }
             });
 
+            let mut tripwire = tripwire.clone();
             tokio::spawn(async move {
-                http1::Builder::new()
-                    .serve_connection(conn, service)
-                    .await
-                    .unwrap();
+                let conn = http1::Builder::new().serve_connection(conn, service);
+                tokio::pin!(conn);
+
+                loop {
+                    tokio::select! {
+                        result = conn.as_mut() => {
+                            if let Err(err) = result {
+                                warn!(message = "failed to serve connection", ?err);
+                            }
+
+                            break;
+                        },
+                        _ = &mut tripwire => {
+                            conn.as_mut().graceful_shutdown();
+                        }
+                    }
+                }
             });
         }
     };

@@ -238,7 +238,7 @@ async fn get_stub_status(
         StatusCode::OK => incoming
             .collect()
             .await
-            .map_err(|err| NginxError::Request(HttpError::from(err)))?
+            .map_err(|err| NginxError::Request(HttpError::ReadIncoming(err)))?
             .to_bytes(),
         status => return Err(NginxError::InvalidResponseStatus(status)),
     };

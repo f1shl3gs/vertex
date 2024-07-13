@@ -232,7 +232,7 @@ async fn scrape_one(
     let data = incoming
         .collect()
         .await
-        .map_err(|err| ScrapeError::Http(HttpError::CallRequest(err)))?
+        .map_err(|err| ScrapeError::Http(HttpError::ReadIncoming(err)))?
         .to_bytes();
     let body = String::from_utf8_lossy(&data);
 

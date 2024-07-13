@@ -213,6 +213,7 @@ impl MetricNormalize for PrometheusMetricNormalize {
 mod tests {
     use super::*;
 
+    use crate::testing::trace_init;
     use chrono::Utc;
     use event::tags::Tags;
     use event::{tags, Metric};
@@ -275,10 +276,9 @@ mod tests {
                 .decompress_vec(&body)
                 .expect("Invalid snappy compressed data");
 
-            let request =
-                proto::WriteRequest::decode(Bytes::from(decoded)).expect("Invalid protobuf");
+            let req = proto::WriteRequest::decode(Bytes::from(decoded)).expect("Invalid protobuf");
 
-            (headers, request)
+            (headers, req)
         })
         .collect::<Vec<_>>()
         .await
@@ -314,6 +314,8 @@ mod tests {
 
     #[tokio::test]
     async fn sends_with_authenticated() {
+        trace_init();
+
         let outputs = send_request(
             "auth:\n  strategy: basic\n  user: user\n  password: password",
             vec![test_gauge("gauge_2", 32.0, tags!("foo" => "bar"))],

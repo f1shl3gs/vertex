@@ -40,9 +40,9 @@ pub enum HttpError {
     #[error("Failed to build Proxy connector: {0}")]
     MakeProxyConnector(#[from] InvalidUri),
     #[error("Failed to make HTTP(S) request: {0}")]
-    CallRequest(#[from] hyper::Error),
-    #[error("Failed to read response body: {0}")]
-    ReadBody(#[from] hyper_util::client::legacy::Error),
+    CallRequest(#[from] hyper_util::client::legacy::Error),
+    #[error("Failed to reading response: {0}")]
+    ReadIncoming(hyper::Error),
     #[error("Failed to build HTTP request: {0}")]
     BuildRequest(http::Error),
 }
