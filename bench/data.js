@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720855823524,
+  "lastUpdate": 1720856219989,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7a347162427ffb78a279881f73b546f66f9b5349",
-          "message": "chore(deps): bump kube from 0.89.0 to 0.90.0 (#1694)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.89.0 to 0.90.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.89.0...0.90.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-04T05:20:33+08:00",
-          "tree_id": "50b70284f1c84750599582029de25de1bc11e485",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7a347162427ffb78a279881f73b546f66f9b5349"
-        },
-        "date": 1712179947969,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 594,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37855,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cb794b3cb3b96e3d633970411044ba67d316fc7b",
           "message": "chore(deps): bump h2 from 0.3.25 to 0.3.26 (#1697)\n\nBumps [h2](https://github.com/hyperium/h2) from 0.3.25 to 0.3.26.\r\n- [Release notes](https://github.com/hyperium/h2/releases)\r\n- [Changelog](https://github.com/hyperium/h2/blob/v0.3.26/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/h2/compare/v0.3.25...v0.3.26)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: h2\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-04-06T04:04:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37580.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7f3b6dc7723a24fbeffbe24f5b2659b949c9828d",
+          "message": "deps: update hyper, http, and etc. (#1817)\n\n* update deps\r\n\r\n* fix tests",
+          "timestamp": "2024-07-13T15:26:25+08:00",
+          "tree_id": "d69a83f9264dac789debd22ad7309dcff6df6188",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7f3b6dc7723a24fbeffbe24f5b2659b949c9828d"
+        },
+        "date": 1720856204258,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36306.7,
             "unit": "KiB"
           }
         ]
