@@ -173,6 +173,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::encoding::format::json::JsonSerializerConfig;
     use crate::encoding::TimestampFormat;
     use event::log::parse_value_path;
 
@@ -188,7 +189,7 @@ except_fields:
   - ignore_me
 timestamp_format: unix
 "##,
-                SerializerConfig::Json,
+                SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
                 Transformer::new(
                     Some(vec![parse_value_path("a.b[0]").unwrap()]),
                     Some(vec![parse_value_path("ignore_me").unwrap()]),

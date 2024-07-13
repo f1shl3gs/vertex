@@ -31,6 +31,7 @@ pub use framing::{
 pub use transformer::{TimestampFormat, Transformer};
 
 use super::FramingError;
+pub use crate::encoding::format::json::JsonSerializerConfig;
 
 /// The error returned when serializing a structured event into bytes.
 #[derive(Debug)]
@@ -82,11 +83,14 @@ impl Display for SerializeError {
 #[serde(rename_all = "snake_case")]
 pub enum SerializerConfig {
     /// Configures the `JsonSerializer`
-    Json,
+    Json(JsonSerializerConfig),
+
     /// Configures the `LogfmtSerializer`
     Logfmt,
+
     /// Configures the `NativeJsonSerializer`
     NativeJson,
+
     /// Configures the `TextSerializer`
     Text,
 }
@@ -95,7 +99,7 @@ impl SerializerConfig {
     /// Build the `Serializer` with this configuration.
     pub fn build(&self) -> Serializer {
         match self {
-            SerializerConfig::Json => Serializer::Json(JsonSerializer::new()),
+            SerializerConfig::Json(config) => Serializer::Json(JsonSerializer::new(config.pretty)),
             SerializerConfig::Logfmt => Serializer::Logfmt(LogfmtSerializer::new()),
             SerializerConfig::NativeJson => Serializer::Native(NativeJsonSerializer::new()),
             SerializerConfig::Text => Serializer::Text(TextSerializer::new()),

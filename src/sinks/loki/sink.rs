@@ -424,7 +424,7 @@ mod tests {
     fn encoder_no_labels() {
         let mut encoder = EventEncoder {
             key_partitioner: KeyPartitioner::new(None),
-            encoder: Encoder::<()>::new(JsonSerializer::new().into()),
+            encoder: Encoder::<()>::new(JsonSerializer::new(false).into()),
             transformer: Transformer::default(),
             labels: HashMap::default(),
             remove_label_fields: false,
@@ -460,7 +460,7 @@ mod tests {
 
         let mut encoder = EventEncoder {
             key_partitioner: KeyPartitioner::new(None),
-            encoder: Encoder::<()>::new(JsonSerializer::new().into()),
+            encoder: Encoder::<()>::new(JsonSerializer::new(false).into()),
             transformer: Transformer::default(),
             labels,
             remove_label_fields: false,
@@ -485,7 +485,7 @@ mod tests {
     fn encoder_no_ts() {
         let mut encoder = EventEncoder {
             key_partitioner: KeyPartitioner::new(None),
-            encoder: Encoder::<()>::new(JsonSerializer::new().into()),
+            encoder: Encoder::<()>::new(JsonSerializer::new(false).into()),
             transformer: Transformer::default(),
             labels: HashMap::default(),
             remove_label_fields: false,
@@ -514,7 +514,7 @@ mod tests {
 
         let mut encoder = EventEncoder {
             key_partitioner: KeyPartitioner::new(None),
-            encoder: Encoder::<()>::new(JsonSerializer::new().into()),
+            encoder: Encoder::<()>::new(JsonSerializer::new(false).into()),
             transformer: Transformer::default(),
             labels,
             remove_label_fields: true,
@@ -533,7 +533,7 @@ mod tests {
     async fn filter_encoder_drop() {
         let mut encoder = EventEncoder {
             key_partitioner: KeyPartitioner::new(None),
-            encoder: Encoder::<()>::new(JsonSerializer::new().into()),
+            encoder: Encoder::<()>::new(JsonSerializer::new(false).into()),
             transformer: Transformer::default(),
             labels: HashMap::default(),
             remove_label_fields: false,
