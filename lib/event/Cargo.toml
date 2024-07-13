@@ -20,7 +20,7 @@ prost-build = { version = "0.13.1", default-features = false }
 criterion = { version = "0.5.1", default-features = false }
 
 [dependencies]
-bytes = { version = "1.6.0", default-features = false }
+bytes = { version = "1.6.1", default-features = false }
 chrono = { version = "0.4.38", default-features = false, features = ["now", "serde"] }
 finalize = { path = "../finalize" }
 futures = { version = "0.3.30", default-features = false, features = ["std"] }
