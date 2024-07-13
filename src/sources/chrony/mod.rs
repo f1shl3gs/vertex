@@ -105,12 +105,12 @@ async fn run(config: Config, mut output: Pipeline, mut shutdown: ShutdownSignal)
         match result {
             Ok(scraped) => metrics.extend(scraped),
             Err(err) => {
-                warn!(message = "scrape failed", ?err);
+                warn!(message = "scrape failed", %err);
             }
         }
 
         if let Err(err) = output.send(metrics).await {
-            warn!(message = "Send chrony metrics to closed output", ?err);
+            warn!(message = "Send chrony metrics to closed output", %err);
             break;
         }
     }

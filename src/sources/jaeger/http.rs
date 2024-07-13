@@ -54,7 +54,7 @@ pub async fn serve(
                 Err(err) => {
                     error!(
                         message = "accept new connection failed",
-                        ?err
+                        %err
                     );
 
                     continue
@@ -70,7 +70,7 @@ pub async fn serve(
 
         tokio::spawn(async move {
             if let Err(err) = http1::Builder::new().serve_connection(conn, service).await {
-                error!(message = "handle http connection failed", ?err)
+                error!(message = "handle http connection failed", %err)
             }
         });
     }

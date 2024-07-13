@@ -147,7 +147,7 @@ async fn run(
         }
 
         if let Err(err) = output.send(metrics).await {
-            warn!(message = "send metrics failed", ?err);
+            warn!(message = "send metrics failed", %err);
             break;
         }
     }

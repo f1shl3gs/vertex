@@ -421,7 +421,7 @@ async fn xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<Stats>, Error> {
                 }
             }
             Err(err) => {
-                warn!(message = "Iterate glob result failed", ?err);
+                warn!(message = "Iterate glob result failed", %err);
             }
         }
     }

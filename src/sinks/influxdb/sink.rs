@@ -57,7 +57,7 @@ where
             .filter_map(|req| async {
                 match req {
                     Err(err) => {
-                        error!(message = "build influxdb request failed", ?err);
+                        error!(message = "build influxdb request failed", %err);
                         None
                     }
                     Ok(req) => Some(req),

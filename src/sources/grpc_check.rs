@@ -76,7 +76,7 @@ async fn run(
         let metrics = scrape(service.clone(), endpoint.clone(), timeout).await;
 
         if let Err(err) = output.send(metrics).await {
-            warn!(message = "send metrics failed", ?err);
+            warn!(message = "send metrics failed", %err);
             break;
         }
     }
@@ -99,7 +99,7 @@ async fn scrape(service: String, endpoint: String, timeout: Duration) -> Vec<Met
     );
 
     let (code, serving_status) = result.unwrap_or_else(|err| {
-        warn!(message = "check gRPC service failed", ?err);
+        warn!(message = "check gRPC service failed", %err);
 
         (Code::Unknown, ServingStatus::Unknown)
     });

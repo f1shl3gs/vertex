@@ -78,7 +78,7 @@ where
                     Err(err) => {
                         warn!(
                             message = "accept connection failed",
-                            ?err
+                            %err
                         );
 
                         continue;
@@ -112,7 +112,7 @@ where
                     tokio::select! {
                         result = conn.as_mut() => {
                             if let Err(err) = result {
-                                warn!(message = "failed to serve connection", ?err);
+                                warn!(message = "failed to serve connection", %err);
                             }
 
                             break;

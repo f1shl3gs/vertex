@@ -144,7 +144,7 @@ async fn scrap(client: &HttpClient, uri: &Uri, auth: Option<Auth>) -> Result<Vec
                 Err(err) => {
                     warn!(
                         message = "Parse haproxy response csv failed",
-                        ?err,
+                        %err,
                         internal_log_rate_limit = true
                     );
                     vec![]
@@ -959,7 +959,7 @@ fn parse_row(row: Vec<&str>, infos: &[MetricInfo], tags: Tags) -> Vec<Metric> {
                     warn!(
                         message = "parse csv field to f64 failed",
                         field,
-                        ?err,
+                        %err,
                         internal_log_rate_limit = true,
                     );
                     continue;
@@ -971,7 +971,7 @@ fn parse_row(row: Vec<&str>, infos: &[MetricInfo], tags: Tags) -> Vec<Metric> {
                     warn!(
                         message = "parse csv field to i64 failed",
                         field,
-                        ?err,
+                        %err,
                         internal_log_rate_limit = true,
                     );
                     continue;

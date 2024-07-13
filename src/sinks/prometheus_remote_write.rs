@@ -89,7 +89,7 @@ impl SinkConfig for Config {
                             template
                                 .render_string(&event)
                                 .map_err(|err| {
-                                    error!(message = "Failed to render template", ?err);
+                                    error!(message = "Failed to render template", %err);
 
                                     // TODO: metrics
                                     // emit!(&TemplateRenderingFailed {

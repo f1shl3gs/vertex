@@ -100,7 +100,7 @@ async fn run(
         }
 
         if let Err(err) = output.send(metrics).await {
-            warn!(message = "send metrics failed", ?err);
+            warn!(message = "send metrics failed", %err);
             break;
         }
     }
@@ -169,7 +169,7 @@ async fn scrape(client: &Client, topic_filter: &Regex) -> framework::Result<Vec<
                     ))
                 }
                 Err(err) => {
-                    warn!(message = "create partition client failed", ?err)
+                    warn!(message = "create partition client failed", %err)
                 }
             }
 

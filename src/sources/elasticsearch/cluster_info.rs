@@ -48,7 +48,7 @@ impl Elasticsearch {
                 )]
             }
             Err(err) => {
-                error!(message = "Fetch elasticsearch cluster info failed", ?err);
+                error!(message = "Fetch elasticsearch cluster info failed", %err);
                 vec![]
             }
         }

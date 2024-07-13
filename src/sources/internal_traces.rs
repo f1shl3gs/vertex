@@ -55,7 +55,7 @@ impl SourceConfig for Config {
                 trace.insert_tag("version", version.clone());
 
                 if let Err(err) = output.send(trace).await {
-                    warn!(message = "Sending internal trace failed", ?err);
+                    warn!(message = "Sending internal trace failed", %err);
                 }
             }
 

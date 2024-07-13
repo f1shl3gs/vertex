@@ -104,7 +104,7 @@ pub(super) async fn serve(
                         match decode(payload.to_vec()) {
                             Ok(batch) => {
                                 if let Err(err) = output.send(batch).await {
-                                    error!(message = "Error sending trace", ?err);
+                                    error!(message = "Error sending trace", %err);
 
                                     return Err(err.into());
                                 }
@@ -112,7 +112,7 @@ pub(super) async fn serve(
                             Err(err) => {
                                 warn!(
                                     message = "Decoding batch failed",
-                                    ?err,
+                                    %err,
                                     internal_log_rate_limit = true
                                 );
                             }

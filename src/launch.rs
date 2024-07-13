@@ -203,7 +203,7 @@ impl RootCommand {
                     .map_err(|err| {
                         error!(
                             message = "Unable to start config watcher",
-                            ?err
+                            %err
                         );
 
                         exitcode::CONFIG
@@ -347,7 +347,7 @@ impl RootCommand {
 
 pub fn handle_config_errors(errors: Vec<String>) -> ExitCode {
     for err in errors {
-        error!(message = "configuration error", ?err);
+        error!(message = "configuration error", %err);
     }
 
     exitcode::CONFIG

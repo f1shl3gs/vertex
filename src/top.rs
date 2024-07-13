@@ -63,7 +63,7 @@ impl Top {
             .enable_all()
             .build()
             .map_err(|err| {
-                warn!(message = "build tokio runtime failed", ?err);
+                warn!(message = "build tokio runtime failed", %err);
                 exitcode::OSERR
             })?;
 

@@ -137,7 +137,7 @@ fn poll_http(
                 let resp = match http_request(&url, &headers, &tls_config, &proxy).await {
                     Ok(resp) => resp,
                     Err(err) => {
-                        warn!(message = "fetch request failed", ?err);
+                        warn!(message = "fetch request failed", %err);
                         backoff.wait().await;
                         continue;
                     }
@@ -184,7 +184,7 @@ fn poll_http(
                     }
 
                     Err(err) => {
-                        warn!(message = "load config failed", ?err, ?url);
+                        warn!(message = "load config failed", %err, %url);
 
                         backoff.wait().await;
 
@@ -239,7 +239,7 @@ fn poll_http(
                         yield builder
                     }
                     Err(err) => {
-                        error!(message = "read new frame failed", ?err);
+                        error!(message = "read new frame failed", %err);
 
                         break;
                     }

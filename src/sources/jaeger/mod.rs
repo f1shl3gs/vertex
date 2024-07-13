@@ -86,7 +86,7 @@ impl SourceConfig for Config {
                         return Err(());
                     }
                     Err(err) => {
-                        error!(message = "spawn jaeger server failed", ?err);
+                        error!(message = "spawn jaeger server failed", %err);
                         return Err(());
                     }
                 }

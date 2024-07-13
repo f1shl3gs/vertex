@@ -177,7 +177,7 @@ impl SourceConfig for Config {
                 cx.shutdown,
             )
             .map_err(|err| {
-                error!(message = "kafka source exit", ?err);
+                error!(message = "kafka source exit", %err);
             }),
         ))
     }
@@ -289,7 +289,7 @@ async fn run(
                         Err(err) => {
                             error!(
                                 message = "create partition client failed",
-                                ?err,
+                                %err,
                                 topic,
                                 partition,
                             );
@@ -306,7 +306,7 @@ async fn run(
                             let earliest = match pc.get_offset(OffsetAt::Earliest).await {
                                 Ok(o) => o,
                                 Err(err) => {
-                                    error!(message = "get earliest offset failed", ?err);
+                                    error!(message = "get earliest offset failed", %err);
                                     return;
                                 }
                             };
@@ -316,7 +316,7 @@ async fn run(
                         None => match pc.get_offset(offset_at).await {
                             Ok(o) => o,
                             Err(err) => {
-                                error!(message = "get start offset failed", ?err);
+                                error!(message = "get start offset failed", %err);
                                 return;
                             }
                         },
@@ -353,7 +353,7 @@ async fn run(
                                             .await
                                     {
                                         if let Err(err) = out.send(logs).await {
-                                            error!(message = "send logs failed", ?err);
+                                            error!(message = "send logs failed", %err);
                                             return;
                                         }
                                     }
@@ -364,7 +364,7 @@ async fn run(
                             Err(err) => {
                                 error!(
                                     message = "fetch records failed",
-                                    ?err,
+                                    %err,
                                     topic,
                                     partition,
                                     current_offset = start,

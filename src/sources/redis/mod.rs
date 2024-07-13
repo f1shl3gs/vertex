@@ -367,7 +367,7 @@ impl RedisSource {
         let mut db_count = match databases(&mut cli).await {
             Ok(n) => n,
             Err(err) => {
-                debug!(message = "redis config get failed", ?err);
+                debug!(message = "redis config get failed", %err);
                 0
             }
         };

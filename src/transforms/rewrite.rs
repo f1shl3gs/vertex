@@ -87,7 +87,7 @@ impl SyncTransform for Rewrite {
                             success.push(target.log);
                         }
                         Err(err) => {
-                            warn!(message = "", ?err, internal_log_rate_limit = true,);
+                            warn!(message = "run VTL script failed", %err, internal_log_rate_limit = true);
                             dropped.push(target.log);
                         }
                     }
@@ -111,7 +111,12 @@ impl SyncTransform for Rewrite {
                             success.push(target.metric);
                         }
                         Err(err) => {
-                            warn!(message = "", ?err, internal_log_rate_limit = true);
+                            warn!(
+                                message = "run VTL script failed",
+                                ?err,
+                                internal_log_rate_limit = true
+                            );
+
                             dropped.push(target.metric);
                         }
                     }

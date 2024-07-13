@@ -236,7 +236,7 @@ impl SourceConfig for Config {
                     match next {
                         Ok((events, _byte_size)) => {
                             if let Err(err) = output.send_batch(events.into_iter()).await {
-                                error!(message = "send demo log to output failed", ?err);
+                                error!(message = "send demo log to output failed", %err);
 
                                 break;
                             }

@@ -128,7 +128,7 @@ async fn gather(client: &Client, health_summary: bool, opts: &Option<QueryOption
             metrics
         }
         Err(err) => {
-            warn!(message = "Collect consul metrics failed", ?err);
+            warn!(message = "Collect consul metrics failed", %err);
 
             vec![Metric::gauge(
                 "consul_up",
