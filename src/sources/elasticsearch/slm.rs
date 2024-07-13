@@ -141,7 +141,7 @@ impl Elasticsearch {
                 metrics
             }
             Err(err) => {
-                warn!(message = "", ?err);
+                warn!(message = "get slm stats failed", %err);
 
                 vec![]
             }

@@ -145,7 +145,7 @@ impl Decoder {
         let frame = frame.map_err(|err| {
             warn!(
                 message = "Failed framing bytes",
-                ?err,
+                %err,
                 internal_log_rate_limit = true
             );
             DecodeError::Framing(err)

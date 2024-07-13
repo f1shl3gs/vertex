@@ -48,7 +48,7 @@ where
                 match res {
                     Ok(req) => Some(req),
                     Err(err) => {
-                        warn!(message = "build http request failed", ?err);
+                        warn!(message = "build http request failed", %err);
 
                         None
                     }

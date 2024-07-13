@@ -78,7 +78,7 @@ impl SourceConfig for Config {
                         });
 
                         if let Err(err) = output.send(metrics).await {
-                            error!(message = "Error sending metrics", ?err);
+                            error!(message = "Error sending metrics", %err);
                             return Err(());
                         }
                     }
@@ -307,7 +307,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
             Err(err) => {
                 warn!(
                     message = "Error parsing RTT",
-                    ?err,
+                    %err,
                     internal_log_rate_limit = true
                 );
             }

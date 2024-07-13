@@ -92,7 +92,7 @@ where
         self.serializer.encode(event, buf).map_err(|err| {
             warn!(
                 message = "Failed serializing frame",
-                ?err,
+                %err,
                 internal_log_rate_limit = true
             );
 
@@ -180,7 +180,7 @@ impl tokio_util::codec::Encoder<Event> for Encoder<Framer> {
         self.framer.encode((), &mut payload).map_err(|err| {
             warn!(
                 message = "Failed framing bytes",
-                ?err,
+                %err,
                 internal_log_rate_limit = true
             );
             EncodingError::Framing(err)

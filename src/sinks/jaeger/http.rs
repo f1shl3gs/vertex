@@ -49,7 +49,7 @@ impl HttpSinkConfig {
             client.clone(),
         )
         .sink_map_err(|err| {
-            error!(message = "Error sending spans", ?err);
+            error!(message = "Error sending spans", %err);
         });
 
         let healthcheck = healthcheck(client, self.endpoint.clone()).boxed();
@@ -67,7 +67,7 @@ impl HttpEventEncoder<BytesMut> for JaegerEventEncoder {
             .map_err(|err| {
                 warn!(
                     message = "Encode batch failed",
-                    ?err,
+                    %err,
                     internal_log_rate_limit = true
                 );
             })

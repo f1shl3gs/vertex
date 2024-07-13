@@ -22,7 +22,7 @@ impl Partitioner for KeyPartitioner {
                 .map_err(|err| {
                     error!(
                         message = "Failed to render template",
-                        ?err,
+                        %err,
                         field = "tenant_id",
                         drop_event = false
                     );

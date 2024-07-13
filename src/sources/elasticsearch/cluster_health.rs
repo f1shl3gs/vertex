@@ -132,7 +132,7 @@ impl Elasticsearch {
                 ]
             }
             Err(err) => {
-                warn!(message = "Fetch cluster health failed", ?err);
+                warn!(message = "Fetch cluster health failed", %err);
 
                 vec![]
             }

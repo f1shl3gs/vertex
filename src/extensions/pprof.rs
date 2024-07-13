@@ -62,7 +62,7 @@ async fn run(listener: TcpListener, mut shutdown: ShutdownSignal) -> Result<(), 
                 Err(err) => {
                     error!(
                         message = "accept new connection failed",
-                        ?err
+                        %err
                     );
 
                     continue

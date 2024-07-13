@@ -93,7 +93,7 @@ impl Elasticsearch {
                     if let Err(err) = output.send(metrics).await {
                         error!(
                             message = "Error sending metrics",
-                            ?err
+                            %err
                         );
 
                         return Err(())

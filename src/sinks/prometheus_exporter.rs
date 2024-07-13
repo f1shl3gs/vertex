@@ -376,7 +376,7 @@ impl StreamSink for PrometheusExporter {
         tokio::spawn(async move {
             let mut listener = MaybeTlsListener::bind(&address, &tls)
                 .await
-                .map_err(|err| error!(message = "Server TLS error", ?err))?;
+                .map_err(|err| error!(message = "Server TLS error", %err))?;
 
             info!(message = "start http server", ?address);
 
@@ -388,7 +388,7 @@ impl StreamSink for PrometheusExporter {
                         Err(err) => {
                             error!(
                                 message = "accept new connection failed",
-                                ?err
+                                %err
                             );
 
                             continue
@@ -411,7 +411,7 @@ impl StreamSink for PrometheusExporter {
 
                 tokio::spawn(async move {
                     if let Err(err) = http1::Builder::new().serve_connection(conn, service).await {
-                        error!(message = "handle http connection failed", ?err);
+                        error!(message = "handle http connection failed", %err);
                     }
                 });
             }

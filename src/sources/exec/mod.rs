@@ -216,14 +216,14 @@ async fn run_scheduled(
         match timeout {
             Ok(result) => {
                 if let Err(err) = result {
-                    error!(message = "Unable to exec", ?err,);
+                    error!(message = "Unable to exec", %err,);
                 }
             }
             Err(err) => {
                 error!(
                     message = "Timeout during exec",
                     timeout_sec = interval.as_secs(),
-                    ?err
+                    %err
                 );
             }
         }
@@ -294,7 +294,7 @@ async fn run_command(
                     error!(
                         message = "Failed to forward events, downstream is closed",
                         count = total_count - processed_count,
-                        ?err
+                        %err
                     );
 
                     break 'send;
@@ -312,7 +312,7 @@ async fn run_command(
         Ok(Some(exit_status)) => Ok(Some(exit_status)),
         Ok(None) => Ok(None),
         Err(err) => {
-            error!(message = "Unable to obtain exit status", ?err);
+            error!(message = "Unable to obtain exit status", %err);
 
             Ok(None)
         }
@@ -452,7 +452,7 @@ async fn run_streaming(
                         if let Err(err) = output {
                             error!(
                                 message = "Unable to exec",
-                                ?err
+                                %err
                             );
                         }
                     }
@@ -483,7 +483,7 @@ async fn run_streaming(
             )
             .await
             {
-                error!(message = "Unable to exec", ?err);
+                error!(message = "Unable to exec", %err);
             }
         }
     }

@@ -91,7 +91,7 @@ impl FunctionTransform for Filter {
                     Err(err) => {
                         warn!(
                             message = "filter script run failed",
-                            ?err,
+                            %err,
                             internal_log_rate_limit = true
                         )
                     }

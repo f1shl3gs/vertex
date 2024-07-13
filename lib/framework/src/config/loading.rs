@@ -213,7 +213,7 @@ pub fn process_paths(paths: &[ConfigPath]) -> Option<Vec<ConfigPath>> {
                 error!(
                     message = "Failed to read glob pattern",
                     path = ?pattern,
-                    ?err
+                    %err
                 );
 
                 return None;

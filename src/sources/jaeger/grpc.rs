@@ -63,7 +63,7 @@ pub(super) async fn serve(
         .serve_with_shutdown(config.endpoint, shutdown.map(|_| ()))
         .await
         .map_err(|err| {
-            warn!(message = "Grpc server exit", ?err);
+            warn!(message = "Grpc server exit", %err);
             err.into()
         })
 }

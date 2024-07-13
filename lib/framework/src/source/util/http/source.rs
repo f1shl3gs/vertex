@@ -110,7 +110,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
 
                 tokio::spawn(async move {
                     if let Err(err) = http1::Builder::new().serve_connection(conn, service).await {
-                        warn!(message = "handle http connection failed", ?err);
+                        warn!(message = "handle http connection failed", %err);
                     }
                 });
             }
@@ -141,7 +141,7 @@ async fn handle_request(
                     // shutting down, probably not gracefully.
                     error!(
                         message = "Failed to forward events, downstream is closed",
-                        ?err
+                        %err
                     );
 
                     ErrorMessage::new(

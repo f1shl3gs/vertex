@@ -158,7 +158,7 @@ fn scrape(
                                 (metrics, true)
                             }
                             Err(err) => {
-                                warn!(message = "scrape metrics failed", ?err, ?instance);
+                                warn!(message = "scrape metrics failed", %err, instance);
 
                                 (vec![], false)
                             }

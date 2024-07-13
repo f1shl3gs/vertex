@@ -104,7 +104,7 @@ impl Collector {
         let metrics = match self.fetch_metrics(&self.metric_uri).await {
             Ok(ms) => ms,
             Err(err) => {
-                warn!(message = "fetch metrics field", ?err);
+                warn!(message = "fetch metrics field", %err);
                 vec![]
             }
         };
@@ -128,7 +128,7 @@ impl Collector {
         let metrics = match self.fetch_metrics(&self.async_metric_uri).await {
             Ok(ms) => ms,
             Err(err) => {
-                warn!(message = "fetch async metrics failed", ?err);
+                warn!(message = "fetch async metrics failed", %err);
                 vec![]
             }
         };
@@ -152,7 +152,7 @@ impl Collector {
         let metrics = match self.fetch_metrics(&self.events_uri).await {
             Ok(ms) => ms,
             Err(err) => {
-                warn!(message = "fetch events metrics failed", ?err);
+                warn!(message = "fetch events metrics failed", %err);
                 vec![]
             }
         };
@@ -176,7 +176,7 @@ impl Collector {
         let body = match self.fetch(&self.parts_uri).await {
             Ok(body) => body,
             Err(err) => {
-                warn!(message = "fetch parts metrics failed", ?err);
+                warn!(message = "fetch parts metrics failed", %err);
 
                 return vec![];
             }
@@ -328,13 +328,13 @@ async fn run(
                     .send(metrics.into_iter().flatten().collect::<Vec<_>>())
                     .await
                 {
-                    warn!(message = "send metrics failed", ?err);
+                    warn!(message = "send metrics failed", %err);
 
                     return Ok(());
                 }
             }
             Err(err) => {
-                error!(message = "spawn tasks failed", ?err);
+                error!(message = "spawn tasks failed", %err);
             }
         }
     }

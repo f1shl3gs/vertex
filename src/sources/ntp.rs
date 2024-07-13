@@ -185,7 +185,7 @@ impl Ntp {
                     ]
                 }
                 Ok(Err(err)) => {
-                    warn!(message = "ntp query failed", server = addr, ?err);
+                    warn!(message = "ntp query failed", server = addr, %err);
 
                     vec![
                         Metric::gauge("ntp_up", "NTP query health", 0),

@@ -418,7 +418,7 @@ macro_rules! record_gather {
                 debug!(
                     message = "gather metrics failed",
                     collector = $name,
-                    ?err,
+                    %err,
                 );
 
                 (vec![], 0.0)

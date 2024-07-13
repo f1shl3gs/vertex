@@ -139,7 +139,7 @@ impl EventEncoder {
                 Err(err) => {
                     warn!(
                         message = "failed to render template for label key",
-                        ?err,
+                        %err,
                         template = key_template.to_string(),
                         internal_log_rate_limit = true
                     );
@@ -152,7 +152,7 @@ impl EventEncoder {
                 Err(err) => {
                     warn!(
                         message = "failed to render template for label value",
-                        ?err,
+                        %err,
                         template = value_template.to_string(),
                         internal_log_rate_limit = true,
                     );
@@ -192,7 +192,7 @@ impl EventEncoder {
                         }
                     }
                     Err(err) => {
-                        warn!(message = "failed to expand dynamic label", ?err, value);
+                        warn!(message = "failed to expand dynamic label", %err, value);
                         continue;
                     }
                 }

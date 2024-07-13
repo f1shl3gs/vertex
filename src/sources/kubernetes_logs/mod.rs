@@ -148,7 +148,7 @@ impl SourceConfig for Config {
         };
 
         Ok(Box::pin(log_source.run(cx.output, cx.shutdown).map_err(
-            |err| error!(message = "Kubernetes log source failed", ?err),
+            |err| error!(message = "Kubernetes log source failed", %err),
         )))
     }
 

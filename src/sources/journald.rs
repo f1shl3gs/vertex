@@ -71,7 +71,7 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let data_dir = cx.globals.make_subdir(cx.key.id()).map_err(|err| {
-            warn!(message = "create sub dir failed", ?err);
+            warn!(message = "create sub dir failed", %err);
             err
         })?;
 

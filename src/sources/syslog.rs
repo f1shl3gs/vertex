@@ -253,7 +253,7 @@ fn udp(
                     Err(err) => {
                         warn!(
                             message = "Error reading datagram",
-                            ?err,
+                            %err,
                             internal_log_rate_limit = true
                         );
 

@@ -112,7 +112,7 @@ where
                     Err(err) => {
                         error!(
                             message = "Write event to output failed, stopping sink",
-                            ?err
+                            %err
                         );
 
                         finalizers.update_status(EventStatus::Errored);

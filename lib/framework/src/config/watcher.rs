@@ -253,7 +253,7 @@ pub fn watch_configs<'a>(
                         raise_sighup();
                     }
                     Err(err) => {
-                        error!(message = "read inotify failed, retrying watch", ?err);
+                        error!(message = "read inotify failed, retrying watch", %err);
 
                         // error occurs, sleep a while and retry
                         tokio::time::sleep(RETRY_TIMEOUT).await;
@@ -286,7 +286,7 @@ fn raise_sighup() {
         let err = std::io::Error::last_os_error();
         error!(
             message = "Unable to reload configuration file. Restart Vertex to reload it",
-            ?err
+            %err
         );
     }
 }

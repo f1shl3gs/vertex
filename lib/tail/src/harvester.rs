@@ -93,7 +93,7 @@ where
             match Fingerprint::try_from(&path) {
                 Ok(fp) => existing.push((path, fp)),
                 Err(err) => {
-                    warn!(message = "Convert fingerprint from file failed", ?err);
+                    warn!(message = "Convert fingerprint from file failed", %err);
 
                     continue;
                 }
@@ -258,7 +258,7 @@ where
                         .expect("checkpoint task has panicked");
 
                     if let Err(err) = checkpointer.write_checkpoints() {
-                        error!(message = "Error writing checkpoints before shutdown", ?err);
+                        error!(message = "Error writing checkpoints before shutdown", %err);
                     }
 
                     return Ok(Shutdown);

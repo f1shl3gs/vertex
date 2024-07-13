@@ -59,7 +59,7 @@ impl ExtensionConfig for Config {
                         Err(err) => {
                             error!(
                                 message = "accept connection failed",
-                                ?err
+                                %err
                             );
 
                             continue

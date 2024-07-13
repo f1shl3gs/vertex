@@ -35,11 +35,11 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Ok(result) => match result {
                 Ok(partial) => metrics.extend(partial),
                 Err(err) => {
-                    warn!(message = "gather metrics failed", ?err);
+                    warn!(message = "gather metrics failed", %err);
                 }
             },
             Err(err) => {
-                warn!(message = "spawn task failed", ?err);
+                warn!(message = "spawn task failed", %err);
             }
         }
     }

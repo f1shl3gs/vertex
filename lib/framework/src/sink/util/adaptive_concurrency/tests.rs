@@ -534,7 +534,7 @@ mod mock {
                 .collect::<Vec<_>>();
 
             if let Err(err) = output.send(logs).await {
-                error!(message = "Error sending logs", ?err);
+                error!(message = "Error sending logs", %err);
                 return Err(());
             }
         }
