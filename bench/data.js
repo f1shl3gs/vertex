@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720953106522,
+  "lastUpdate": 1720960384684,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "81ee9b330c43ad0ad2ff6bea475f8341e1793fb9",
-          "message": "chore(deps): bump syn from 2.0.58 to 2.0.59 (#1709)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.58 to 2.0.59.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.58...2.0.59)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-16T01:02:59+08:00",
-          "tree_id": "39626b7003bbaacd216cc3059e17078f8d5ae07e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/81ee9b330c43ad0ad2ff6bea475f8341e1793fb9"
-        },
-        "date": 1713200707882,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 545430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529360,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "17b6357c5461f80eb177c4d285dc543835c0621e",
+          "message": "remove rustls-native-certs (#1823)",
+          "timestamp": "2024-07-14T20:30:45+08:00",
+          "tree_id": "5fe104c2c8d7be9782c2809ebc34e821809185fd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/17b6357c5461f80eb177c4d285dc543835c0621e"
+        },
+        "date": 1720960369203,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 524350,
             "unit": "ns/op"
           }
         ]
