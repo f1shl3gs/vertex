@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720916148613,
+  "lastUpdate": 1720916571885,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a2b3845b63433e9e151d85f768b027ef025aed19",
-          "message": "chore(deps): bump mio from 0.8.9 to 0.8.11 (#1632)\n\nBumps [mio](https://github.com/tokio-rs/mio) from 0.8.9 to 0.8.11.\r\n- [Release notes](https://github.com/tokio-rs/mio/releases)\r\n- [Changelog](https://github.com/tokio-rs/mio/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/mio/compare/v0.8.9...v0.8.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mio\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-05T17:46:22+08:00",
-          "tree_id": "ff40c69f1224e2d9b4638378660cbb769d39bda9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a2b3845b63433e9e151d85f768b027ef025aed19"
-        },
-        "date": 1709632657050,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 20193000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 446660,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.802,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.026,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee38d04236df17d7626159ab7b24a151820c1032",
+          "message": "chore(deps): bump bytes from 1.6.0 to 1.6.1 (#1822)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.6.0 to 1.6.1.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.6.0...v1.6.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-14T08:12:01+08:00",
+          "tree_id": "d3571971c49e946f4f5c4a5c660e164e1f95e7e6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee38d04236df17d7626159ab7b24a151820c1032"
+        },
+        "date": 1720916555487,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28144000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 685710,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 43.446,
             "unit": "ns/op"
           }
         ]
