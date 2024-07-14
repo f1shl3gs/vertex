@@ -5,12 +5,14 @@ use serde::{Deserialize, Serialize};
 use tokio_util::codec::Encoder;
 
 use super::SerializeError;
+use crate::serde::skip_serializing_if_default;
 
 /// Config used to build a `JsonSerializer`
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+#[cfg_attr(test, derive(PartialEq))]
 pub struct JsonSerializerConfig {
     /// Whether to use pretty JSON formatting.
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     pub pretty: bool,
 }
 

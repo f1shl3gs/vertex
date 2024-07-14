@@ -18,20 +18,17 @@ use serde::{Deserialize, Serialize};
 
 pub use config::{EncodingConfig, EncodingConfigWithFraming, FramingConfig, SinkType};
 pub use encoder::{Encoder, EncodingError};
-pub use format::{
-    json::JsonSerializer, logfmt::LogfmtSerializer, native_json::NativeJsonSerializer,
-    text::TextSerializer,
-};
-pub use framing::{
-    bytes::BytesEncoder,
-    character::{CharacterDelimitedEncoder, CharacterDelimitedFramerConfig},
-    length_delimited::LengthDelimitedEncoder,
-    newline::NewlineDelimitedEncoder,
-};
+pub use format::json::{JsonSerializer, JsonSerializerConfig};
+pub use format::logfmt::LogfmtSerializer;
+pub use format::native_json::NativeJsonSerializer;
+pub use format::text::TextSerializer;
+pub use framing::bytes::BytesEncoder;
+pub use framing::character::{CharacterDelimitedEncoder, CharacterDelimitedFramerConfig};
+pub use framing::length_delimited::LengthDelimitedEncoder;
+pub use framing::newline::NewlineDelimitedEncoder;
 pub use transformer::{TimestampFormat, Transformer};
 
 use super::FramingError;
-pub use crate::encoding::format::json::JsonSerializerConfig;
 
 /// The error returned when serializing a structured event into bytes.
 #[derive(Debug)]
@@ -80,7 +77,8 @@ impl Display for SerializeError {
 
 /// Configuration for building a `Serializer`
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(tag = "codec", rename_all = "snake_case")]
+#[cfg_attr(test, derive(PartialEq))]
 pub enum SerializerConfig {
     /// Configures the `JsonSerializer`
     Json(JsonSerializerConfig),
@@ -112,10 +110,13 @@ impl SerializerConfig {
 pub enum Serializer {
     /// Uses a `JsonSerializer` for serialization.
     Json(JsonSerializer),
+
     /// Uses a `LogfmtSerializer` for serialization.
     Logfmt(LogfmtSerializer),
+
     /// Uses a `NativeJsonSerializer` for serialization.
     Native(NativeJsonSerializer),
+
     /// Uses a `TextSerializer` for serialization.
     Text(TextSerializer),
 }
@@ -180,5 +181,26 @@ impl tokio_util::codec::Encoder<()> for Framer {
             Framer::LengthDelimited(f) => f.encode((), buf),
             Framer::NewlineDelimited(f) => f.encode((), buf),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn config_json() {
+        let config = SerializerConfig::Json(JsonSerializerConfig { pretty: false });
+        let json = serde_json::to_string_pretty(&config).unwrap();
+        let got = serde_json::from_str::<SerializerConfig>(&json).unwrap();
+        assert_eq!(config, got);
+    }
+
+    #[test]
+    fn config_yaml() {
+        let config = SerializerConfig::Json(JsonSerializerConfig { pretty: false });
+        let json = serde_yaml::to_string(&config).unwrap();
+        let got = serde_yaml::from_str::<SerializerConfig>(&json).unwrap();
+        assert_eq!(config, got);
     }
 }
