@@ -15,13 +15,13 @@ use http::header::{
 use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
 use http_body_util::Full;
 use hyper::body::{Body, Incoming};
-use hyper_rustls::HttpsConnector;
+use hyper_rustls::{ConfigBuilderExt, HttpsConnector};
 use hyper_util::client::legacy::connect::HttpConnector;
 use hyper_util::client::legacy::Client;
 use hyper_util::rt::TokioExecutor;
 use metrics::{exponential_buckets, Attributes};
 use proxy::ProxyConnector;
-use rustls::{ClientConfig, RootCertStore};
+use rustls::ClientConfig;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing_futures::Instrument;
@@ -99,18 +99,10 @@ where
 
         let config = match tls_config {
             Some(config) => config.client_config()?,
-            None => {
-                let certs =
-                    rustls_native_certs::load_native_certs().map_err(TlsError::NativeCerts)?;
-                let mut store = RootCertStore::empty();
-                for cert in certs {
-                    store.add(cert).map_err(TlsError::AddCertToStore)?;
-                }
-
-                ClientConfig::builder()
-                    .with_root_certificates(store)
-                    .with_no_client_auth()
-            }
+            None => ClientConfig::builder()
+                .with_native_roots()
+                .map_err(TlsError::NativeCerts)?
+                .with_no_client_auth(),
         };
 
         let https = hyper_rustls::HttpsConnector::from((http, config));

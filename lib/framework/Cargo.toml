@@ -49,7 +49,7 @@ http = { version = "1.1.0", default-features = false }
 http-body-util = { version = "0.1.2", default-features = false }
 hyper = { version = "1.4.1", default-features = false, features = ["full"] }
 hyper-rustls = { version = "0.27.2", default-features = false }
-hyper-util = { version = "0.1.6", default-features = false, features = ["client"] }
+hyper-util = { version = "0.1.6", default-features = false, features = ["client", "http1", "http2"] }
 indexmap = { version = "2.2.6", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.15", default-features = false }
 ipnet = { version = "2.9.0", default-features = false, features = ["std"] }
@@ -66,7 +66,6 @@ pin-project-lite = { version = "0.2.14", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 regex = { version = "1.10.5", default-features = false }
 rustls = { version = "0.23.11", default-features = false }
-rustls-native-certs = { version = "0.7.1", default-features = false }
 smallvec = { version = "1.13.2", default-features = false }
 serde = { version = "1.0.204", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.120", default-features = false }

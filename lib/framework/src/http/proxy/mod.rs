@@ -16,10 +16,11 @@ use configurable::{Configurable, GenerateError};
 use futures_util::TryFutureExt;
 use http::{HeaderMap, Uri};
 use hyper::rt::{Read, Write};
+use hyper_rustls::ConfigBuilderExt;
 use hyper_util::rt::TokioIo;
 use ipnet::IpNet;
 use rustls::pki_types::ServerName;
-use rustls::{ClientConfig, RootCertStore};
+use rustls::ClientConfig;
 use serde::de::{SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -336,17 +337,8 @@ pub struct ProxyConnector<C> {
 impl<C> ProxyConnector<C> {
     /// Create a new secured Proxies
     pub fn new(connector: C) -> Result<Self, Error> {
-        let certs = rustls_native_certs::load_native_certs()
-            .map_err(|err| Error::new(ErrorKind::InvalidData, err))?;
-        let mut store = RootCertStore::empty();
-        for cert in certs {
-            store
-                .add(cert)
-                .map_err(|err| Error::new(ErrorKind::InvalidData, err))?;
-        }
-
         let config = ClientConfig::builder()
-            .with_root_certificates(store)
+            .with_native_roots()?
             .with_no_client_auth();
 
         Ok(ProxyConnector {

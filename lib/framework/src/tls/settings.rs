@@ -3,6 +3,7 @@ use std::sync::Arc;
 use std::{fs, io};
 
 use configurable::Configurable;
+use hyper_rustls::ConfigBuilderExt;
 use rustls::client::danger::{HandshakeSignatureValid, ServerCertVerified, ServerCertVerifier};
 use rustls::pki_types::{CertificateDer, PrivateKeyDer, ServerName, UnixTime};
 use rustls::server::WebPkiClientVerifier;
@@ -85,20 +86,19 @@ impl TlsConfig {
     }
 
     pub fn client_config(&self) -> Result<ClientConfig, TlsError> {
-        let mut root_store = RootCertStore::empty();
-        let certs = rustls_native_certs::load_native_certs().map_err(TlsError::NativeCerts)?;
-        for cert in certs {
-            root_store.add(cert).map_err(TlsError::AddCertToStore)?;
-        }
-
-        if let Some(ca_file) = &self.ca {
+        let builder = if let Some(ca_file) = &self.ca {
+            let mut root_store = RootCertStore::empty();
             let certs = load_certs(ca_file)?;
             for cert in certs {
                 root_store.add(cert).map_err(TlsError::AddCertToStore)?;
             }
-        }
 
-        let builder = ClientConfig::builder().with_root_certificates(root_store);
+            ClientConfig::builder().with_root_certificates(root_store)
+        } else {
+            ClientConfig::builder()
+                .with_native_roots()
+                .map_err(TlsError::NativeCerts)?
+        };
 
         let mut config = match (&self.cert, &self.key) {
             (Some(cert_file), Some(key_file)) => {
