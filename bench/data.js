@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720953088856,
+  "lastUpdate": 1720953106522,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "64ae894c99bb7a356acc9eb12834319a0a560d3e",
-          "message": "chore(deps): bump chrono-tz from 0.8.6 to 0.9.0 (#1699)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.8.6 to 0.9.0.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Changelog](https://github.com/chronotope/chrono-tz/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono-tz/compare/v0.8.6...v0.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-06T04:08:34+08:00",
-          "tree_id": "f50b0ce658d9211d2fcf438b626c5a4d05628f7b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/64ae894c99bb7a356acc9eb12834319a0a560d3e"
-        },
-        "date": 1712348390440,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 588,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37836.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b",
           "message": "chore(deps): bump pem from 3.0.3 to 3.0.4 (#1700)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.3 to 3.0.4.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.3...v3.0.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-04-10T01:57:40+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36307.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d594013e14d86fd39930f29e67dadebf74434c50",
+          "message": "lib/codecs: add pretty option to JsonSerializerConfig (#1821)\n\n* add pretty option to JsonSerializerConfig",
+          "timestamp": "2024-07-14T18:21:11+08:00",
+          "tree_id": "7565ccb29b99a13027e0e6b21af6a6ec8f82804a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d594013e14d86fd39930f29e67dadebf74434c50"
+        },
+        "date": 1720953090939,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 528,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36325.8,
             "unit": "KiB"
           }
         ]
