@@ -48,10 +48,9 @@ impl FramingConfig {
 
 /// Encoding configuration
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
 pub struct EncodingConfig {
     /// The encoding codec used to serialize the events before outputting.
-    #[configurable(required)]
+    #[serde(flatten)]
     codec: SerializerConfig,
 
     #[serde(flatten)]
@@ -172,9 +171,38 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::encoding::TimestampFormat;
     use event::log::parse_value_path;
+
+    use super::*;
+    use crate::encoding::format::json::JsonSerializerConfig;
+    use crate::encoding::TimestampFormat;
+
+    #[test]
+    fn json() {
+        for (input, want) in [
+            (
+                r#"codec: json"#,
+                SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
+            ),
+            (
+                r#"
+                codec: json
+                pretty: false
+                "#,
+                SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
+            ),
+            (
+                r#"
+                codec: json
+                pretty: true
+                "#,
+                SerializerConfig::Json(JsonSerializerConfig { pretty: true }),
+            ),
+        ] {
+            let got = serde_yaml::from_str::<SerializerConfig>(input).unwrap();
+            assert_eq!(got, want);
+        }
+    }
 
     #[test]
     fn deserialize() {
@@ -188,7 +216,7 @@ except_fields:
   - ignore_me
 timestamp_format: unix
 "##,
-                SerializerConfig::Json,
+                SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
                 Transformer::new(
                     Some(vec![parse_value_path("a.b[0]").unwrap()]),
                     Some(vec![parse_value_path("ignore_me").unwrap()]),
@@ -241,7 +269,7 @@ encoding:
     only_fields: [ "a.b.c" ]
 "#,
                 Some(FramingConfig::NewlineDelimited),
-                SerializerConfig::Json,
+                SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
                 Transformer::new(Some(vec![parse_value_path("a.b.c").unwrap()]), None, None)
                     .unwrap(),
             ),
@@ -252,7 +280,7 @@ encoding:
     only_fields: [ "a.b.c" ]
 "#,
                 None,
-                SerializerConfig::Json,
+                SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
                 Transformer::new(Some(vec![parse_value_path("a.b.c").unwrap()]), None, None)
                     .unwrap(),
             ),

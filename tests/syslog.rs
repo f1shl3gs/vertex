@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
 
-use codecs::encoding::{FramingConfig, SerializerConfig};
+use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
 use codecs::EncodingConfigWithFraming;
 use framework::sink::util::tcp::TcpSinkConfig;
 use framework::testing::CountReceiver;
@@ -165,7 +165,7 @@ fn tcp_json_sink(address: String) -> Config {
         socket::Mode::Tcp(TcpSinkConfig::from_address(address)),
         EncodingConfigWithFraming::new(
             Some(FramingConfig::NewlineDelimited),
-            SerializerConfig::Json,
+            SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
             Default::default(),
         ),
     )
