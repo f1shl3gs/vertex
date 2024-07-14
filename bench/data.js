@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720960384684,
+  "lastUpdate": 1720960897736,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b",
-          "message": "chore(deps): bump pem from 3.0.3 to 3.0.4 (#1700)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.3 to 3.0.4.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.3...v3.0.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-10T01:57:40+08:00",
-          "tree_id": "e0112da000d9b31a2eaba10d5f68692daf165356",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9053f5c03dfb6e71cadfb4e30ecfbd65b39cae0b"
-        },
-        "date": 1712686134717,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 590,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37832.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2747bc039d77033fcdca92c4b0837e3e5aff2132",
           "message": "chore(deps): bump quote from 1.0.35 to 1.0.36 (#1701)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.35 to 1.0.36.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.35...1.0.36)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-04-11T06:58:47+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36325.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "17b6357c5461f80eb177c4d285dc543835c0621e",
+          "message": "remove rustls-native-certs (#1823)",
+          "timestamp": "2024-07-14T20:30:45+08:00",
+          "tree_id": "5fe104c2c8d7be9782c2809ebc34e821809185fd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/17b6357c5461f80eb177c4d285dc543835c0621e"
+        },
+        "date": 1720960882055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 525,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36305.5,
             "unit": "KiB"
           }
         ]
