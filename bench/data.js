@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1720916592326,
+  "lastUpdate": 1720952618071,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "66c1fbfd68c50aa670402f239ddfb28f60bfdd5f",
-          "message": "reduce usage of async_trait (#1689)",
-          "timestamp": "2024-04-03T16:15:22+08:00",
-          "tree_id": "70ca6b6ab4e96d3b5b234fd222b70f0ab4dabfb4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/66c1fbfd68c50aa670402f239ddfb28f60bfdd5f"
-        },
-        "date": 1712132253289,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.963,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.168,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 195.83,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 194.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d594013e14d86fd39930f29e67dadebf74434c50",
+          "message": "lib/codecs: add pretty option to JsonSerializerConfig (#1821)\n\n* add pretty option to JsonSerializerConfig",
+          "timestamp": "2024-07-14T18:21:11+08:00",
+          "tree_id": "7565ccb29b99a13027e0e6b21af6a6ec8f82804a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d594013e14d86fd39930f29e67dadebf74434c50"
+        },
+        "date": 1720952602518,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.285,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.525,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 193.38,
             "unit": "ns/op"
           }
         ]
