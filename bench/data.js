@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721042421330,
+  "lastUpdate": 1721042903431,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2747bc039d77033fcdca92c4b0837e3e5aff2132",
-          "message": "chore(deps): bump quote from 1.0.35 to 1.0.36 (#1701)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.35 to 1.0.36.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.35...1.0.36)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-11T06:58:47+08:00",
-          "tree_id": "1df2bca400f03cf7ded6ffb48ba12eeef7fb2147",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2747bc039d77033fcdca92c4b0837e3e5aff2132"
-        },
-        "date": 1712790601826,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37826.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e823db9fc4991efc6b0a2040d19f9b17e2ba78bb",
           "message": "chore(deps): bump encoding_rs from 0.8.33 to 0.8.34 (#1702)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.33 to 0.8.34.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.33...v0.8.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-04-11T06:59:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 525,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36305.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "02ef091fadb840dfd9e24bb9b589d7002034fd8b",
+          "message": "update tikv-jemallocator to 0.6.0 (#1824)",
+          "timestamp": "2024-07-15T19:17:41+08:00",
+          "tree_id": "15090782930ac2289a3708c79dac2b3d7ef36cc6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/02ef091fadb840dfd9e24bb9b589d7002034fd8b"
+        },
+        "date": 1721042887951,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 532,
             "unit": "s"
           },
           {
