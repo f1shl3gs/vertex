@@ -72,6 +72,10 @@ impl TransformConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
+
+    fn enable_concurrency(&self) -> bool {
+        true
+    }
 }
 
 // MaxMind GeoIP database files have a type field we can use to recognize specific

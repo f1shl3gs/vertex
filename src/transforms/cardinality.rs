@@ -118,6 +118,10 @@ impl TransformConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::metrics()]
     }
+
+    fn enable_concurrency(&self) -> bool {
+        true
+    }
 }
 
 /// Container for storing the set of accepted values for a given tag key.

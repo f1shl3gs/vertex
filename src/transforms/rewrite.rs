@@ -63,6 +63,10 @@ impl TransformConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::new(DataType::Log | DataType::Metric)]
     }
+
+    fn enable_concurrency(&self) -> bool {
+        true
+    }
 }
 
 const DROPPED: &str = "dropped";

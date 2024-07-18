@@ -77,6 +77,10 @@ impl TransformConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
+
+    fn enable_concurrency(&self) -> bool {
+        true
+    }
 }
 
 type TypeId = u8;
