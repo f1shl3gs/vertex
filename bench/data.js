@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721321406659,
+  "lastUpdate": 1721321409064,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0bbcc0b7a7b4f10cca00496b2997863a2e21ff32",
-          "message": "chore(deps): bump netlink-sys from 0.8.5 to 0.8.6 (#1693)\n\nBumps [netlink-sys](https://github.com/rust-netlink/netlink-sys) from 0.8.5 to 0.8.6.\r\n- [Release notes](https://github.com/rust-netlink/netlink-sys/releases)\r\n- [Changelog](https://github.com/rust-netlink/netlink-sys/blob/main/CHANGELOG)\r\n- [Commits](https://github.com/rust-netlink/netlink-sys/compare/v0.8.5...v0.8.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: netlink-sys\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-03T22:42:49+08:00",
-          "tree_id": "2da214b5f0d0a5ca1415d76e9355f3d6bff14761",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0bbcc0b7a7b4f10cca00496b2997863a2e21ff32"
-        },
-        "date": 1712155514544,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.948,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.062,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.99,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.89,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5983871ffa7f8be84800664b1f56a61cb071ae23",
+          "message": "enable concurrency (#1830)",
+          "timestamp": "2024-07-19T00:47:41+08:00",
+          "tree_id": "05e37d97a5949fb2c1ac44f1e51b9810d463d030",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5983871ffa7f8be84800664b1f56a61cb071ae23"
+        },
+        "date": 1721321393541,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.123,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.241,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 182.66,
             "unit": "ns/op"
           }
         ]
