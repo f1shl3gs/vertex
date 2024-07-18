@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721309950108,
+  "lastUpdate": 1721321406659,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5b3b5953ca464494895522afabe2414445d0207b",
-          "message": "chore(deps): bump hickory-resolver from 0.24.0 to 0.24.1 (#1715)\n\nBumps [hickory-resolver](https://github.com/hickory-dns/hickory-dns) from 0.24.0 to 0.24.1.\r\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\r\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.0...v0.24.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hickory-resolver\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-19T10:43:50+08:00",
-          "tree_id": "940cd90c18b450a3d60e14c0b6c334114fa25c39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5b3b5953ca464494895522afabe2414445d0207b"
-        },
-        "date": 1713494753815,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 524770,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 544980,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5983871ffa7f8be84800664b1f56a61cb071ae23",
+          "message": "enable concurrency (#1830)",
+          "timestamp": "2024-07-19T00:47:41+08:00",
+          "tree_id": "05e37d97a5949fb2c1ac44f1e51b9810d463d030",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5983871ffa7f8be84800664b1f56a61cb071ae23"
+        },
+        "date": 1721321390368,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546550,
             "unit": "ns/op"
           }
         ]
