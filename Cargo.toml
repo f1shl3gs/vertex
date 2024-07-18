@@ -319,7 +319,7 @@ pretty_assertions = { version = "1.4.0", default-features = false, features = ["
 serde_path_to_error = { version = "0.1.16", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.38.1", default-features = false, features = ["test-util", "time"] }
-tonic = { version = "0.12.0", default-features = false, features = ["server"]}
+tonic = { version = "0.12.1", default-features = false, features = ["server"]}
 
 [dependencies]
 # Workspaces
@@ -416,8 +416,8 @@ smallvec = { version = "1.13.2", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 sqlx = { version = "0.7.4", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.62", default-features = false }
-tonic = { version = "0.12.0", default-features = false, optional = true }
-tonic-health = { version = "0.12.0", default-features = false, optional = true }
+tonic = { version = "0.12.1", default-features = false, optional = true }
+tonic-health = { version = "0.12.1", default-features = false, optional = true }
 typetag = { version = "0.2.16" }
 url = { version = "2.5.2", features = ["serde"] }
 uuid = { version = "1.10.0", default-features = false, features = ["v4"], optional = true }
