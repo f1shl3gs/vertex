@@ -12,9 +12,8 @@ use http::header::CONTENT_TYPE;
 use http::{Method, Request, Response, StatusCode};
 use http_body_util::Full;
 use hyper::body::Incoming;
-use hyper::server::conn::http1;
 use hyper::service::service_fn;
-use hyper_util::rt::TokioIo;
+use hyper_util::rt::{TokioExecutor, TokioIo};
 pub use statsz::{Metric, Point, Statsz};
 use tokio::net::TcpListener;
 
@@ -58,12 +57,27 @@ impl ExtensionConfig for Config {
                     }
                 };
 
+                let mut shutdown = shutdown.clone();
                 tokio::spawn(async move {
-                    if let Err(err) = http1::Builder::new()
-                        .serve_connection(conn, service_fn(http_handle))
-                        .await
-                    {
-                        error!(message = "handle http connection failed", ?err);
+                    let builder =
+                        hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
+                    let conn =
+                        builder.serve_connection_with_upgrades(conn, service_fn(http_handle));
+                    tokio::pin!(conn);
+
+                    loop {
+                        tokio::select! {
+                            result = conn.as_mut() => {
+                                if let Err(err) = result {
+                                    error!(message = "handle http connection failed", %err);
+                                }
+
+                                break
+                            },
+                            _ = &mut shutdown => {
+                                conn.as_mut().graceful_shutdown();
+                            }
+                        }
                     }
                 });
             }

@@ -47,6 +47,7 @@ pub enum HttpError {
     BuildRequest(http::Error),
 }
 
+#[derive(Clone)]
 pub struct HttpClient<B = Full<Bytes>> {
     client: Client<ProxyConnector<HttpsConnector<HttpConnector<Resolver>>>, B>,
     user_agent: HeaderValue,
@@ -253,15 +254,6 @@ where
 
     fn call(&mut self, req: Request<B>) -> Self::Future {
         self.send(req)
-    }
-}
-
-impl<B> Clone for HttpClient<B> {
-    fn clone(&self) -> Self {
-        Self {
-            client: self.client.clone(),
-            user_agent: self.user_agent.clone(),
-        }
     }
 }
 
