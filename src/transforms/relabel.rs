@@ -131,6 +131,10 @@ impl TransformConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::metrics(), Output::traces()]
     }
+
+    fn enable_concurrency(&self) -> bool {
+        true
+    }
 }
 
 #[derive(Clone)]
