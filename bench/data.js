@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721271046058,
+  "lastUpdate": 1721271098999,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6b05248298fe95288c46f818e21793e3ab223ae7",
-          "message": "chore(deps): bump proc-macro2 from 1.0.80 to 1.0.81 (#1713)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.80 to 1.0.81.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.80...1.0.81)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-17T12:52:09+08:00",
-          "tree_id": "2797bbd103af0e1af0e95b702347ee738e7f6610",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6b05248298fe95288c46f818e21793e3ab223ae7"
-        },
-        "date": 1713329653199,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 537160,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 544330,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "33136d29c88682974b2e89d295cc5ac982d37fec",
+          "message": "chore(deps): bump thiserror from 1.0.62 to 1.0.63 (#1828)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.62 to 1.0.63.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.62...1.0.63)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-18T10:49:04+08:00",
+          "tree_id": "da3ea776e1466f97a88f49ed7a6b7eb494c2304d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/33136d29c88682974b2e89d295cc5ac982d37fec"
+        },
+        "date": 1721271082677,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546370,
             "unit": "ns/op"
           }
         ]
