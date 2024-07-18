@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721271595475,
+  "lastUpdate": 1721309464835,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e2175755eaba4014873140d2eb4c06b17c2c9977",
-          "message": "chore(deps): bump syn from 2.0.59 to 2.0.60 (#1714)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.59 to 2.0.60.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.59...2.0.60)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-18T10:32:37+08:00",
-          "tree_id": "cf831e39cb846edbff70f12df1c939aebfe861b2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e2175755eaba4014873140d2eb4c06b17c2c9977"
-        },
-        "date": 1713407685568,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 535090,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546370,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1e2c5c4180257dc28d861e88ea85c63bbae434c",
+          "message": "build http server with graceful shutdown and http2 (#1829)",
+          "timestamp": "2024-07-18T21:28:33+08:00",
+          "tree_id": "5465d5a6428f51192f13dd877b57ae83e68d2af4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1e2c5c4180257dc28d861e88ea85c63bbae434c"
+        },
+        "date": 1721309448556,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 544980,
             "unit": "ns/op"
           }
         ]
