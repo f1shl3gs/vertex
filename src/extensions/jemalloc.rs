@@ -7,15 +7,19 @@ use std::num::ParseIntError;
 use std::sync::OnceLock;
 use std::time::Duration;
 
+use bytes::Bytes;
 use chrono::Utc;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
-use futures::FutureExt;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Method, Request, Response, Server, StatusCode};
+use http_body_util::Full;
+use hyper::body::Incoming;
+use hyper::service::service_fn;
+use hyper::{Method, Request, Response, StatusCode};
+use hyper_util::rt::{TokioExecutor, TokioIo};
 use tikv_jemalloc_ctl::stats;
+use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 
 const DEFAULT_PROFILE_SECONDS: u64 = 30;
@@ -58,22 +62,50 @@ impl ExtensionConfig for Config {
             Err(_err) => return Err("MALLOC_CONF is not set".into()),
         }
 
-        Ok(Box::pin(run(self.listen, ctx.shutdown)))
+        let listener = TcpListener::bind(self.listen).await?;
+
+        Ok(Box::pin(run(listener, ctx.shutdown)))
     }
 }
 
-async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
-    let service = make_service_fn(|_conn| async { Ok::<_, Error>(service_fn(handler)) });
-    let server = Server::bind(&addr)
-        .serve(service)
-        .with_graceful_shutdown(shutdown.map(|_| ()));
+async fn run(listener: TcpListener, mut shutdown: ShutdownSignal) -> Result<(), ()> {
+    loop {
+        let conn = tokio::select! {
+            _ = &mut shutdown => break,
+            result = listener.accept() => match result {
+                Ok((conn, _peer)) => TokioIo::new(conn),
+                Err(err) => {
+                    error!(
+                        message = "accept new connection failed",
+                        %err
+                    );
 
-    info!(message = "start http server", ?addr);
-    if let Err(err) = server.await {
-        warn!(
-            message = "jemalloc profile server running failed",
-            %err
-        );
+                    continue
+                }
+            }
+        };
+
+        let mut shutdown = shutdown.clone();
+        tokio::spawn(async move {
+            let builder = hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
+            let conn = builder.serve_connection_with_upgrades(conn, service_fn(handler));
+            tokio::pin!(conn);
+
+            loop {
+                tokio::select! {
+                    result = conn.as_mut() => {
+                        if let Err(err) = result {
+                            error!(message = "handle http connection failed", %err);
+                        }
+
+                        break
+                    },
+                    _ = &mut shutdown => {
+                        conn.as_mut().graceful_shutdown();
+                    }
+                }
+            }
+        });
     }
 
     Ok(())
@@ -89,7 +121,7 @@ enum Error {
     ReadProfile(#[from] std::io::Error),
 }
 
-async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
+async fn handler(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error> {
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/stats") => {
             let allocated = stats::allocated::read()?;
@@ -98,12 +130,12 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
             let resident = stats::resident::read()?;
             let mapped = stats::mapped::read()?;
             let retained = stats::retained::read()?;
-
             let body = format!(
                 "allocated: {}\nactive: {}\nmetadata: {}\nresident: {}\nmapped: {}\nretained: {}\n",
                 allocated, active, metadata, resident, mapped, retained
             );
-            Ok(Response::new(Body::from(body)))
+
+            Ok(Response::new(Full::new(Bytes::from(body))))
         }
 
         (&Method::GET, "/profile") => {
@@ -111,7 +143,7 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
             match mutex.try_lock() {
                 Ok(_guard) => profiling(req).await,
                 Err(_err) => {
-                    let mut resp = Response::new(Body::from("Already in Profiling"));
+                    let mut resp = Response::new(Bytes::from("Already in Profiling").into());
                     *resp.status_mut() = StatusCode::TOO_MANY_REQUESTS;
                     Ok(resp)
                 }
@@ -119,14 +151,14 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
         }
 
         _ => {
-            let mut resp = Response::new(Body::empty());
+            let mut resp = Response::new(Full::default());
             *resp.status_mut() = StatusCode::NOT_FOUND;
             Ok(resp)
         }
     }
 }
 
-async fn profiling(req: Request<Body>) -> Result<Response<Body>, Error> {
+async fn profiling(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error> {
     let seconds = match req.uri().query() {
         Some(value) => url::form_urlencoded::parse(value.as_ref())
             .into_iter()
@@ -142,7 +174,7 @@ async fn profiling(req: Request<Body>) -> Result<Response<Body>, Error> {
     tokio::time::sleep(Duration::from_secs(seconds)).await;
     set_prof_active(false)?;
 
-    dump_profile().map(|data| Response::new(Body::from(data)))
+    dump_profile().map(|data| Response::new(Full::from(data)))
 }
 
 fn set_prof_active(active: bool) -> Result<(), Error> {
