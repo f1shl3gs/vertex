@@ -137,9 +137,9 @@ async fn scrap(client: &HttpClient, uri: &Uri, auth: Option<Auth>) -> Result<Vec
 
     let metrics = match parts.status {
         StatusCode::OK => {
-            let b = incoming.collect().await?.to_bytes();
+            let body = incoming.collect().await?.to_bytes();
 
-            match parse_csv(b.reader()) {
+            match parse_csv(body.reader()) {
                 Ok(metrics) => metrics,
                 Err(err) => {
                     warn!(
