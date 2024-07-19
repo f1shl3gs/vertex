@@ -298,11 +298,12 @@ mod tests {
 
     use super::*;
 
-    async fn test(file: &mut File, timeout: Duration) -> bool {
+    async fn test(mut file: File, timeout: Duration) -> bool {
         let mut signal = signal(SignalKind::hangup()).expect("Signal handlers should not panic");
 
         file.write_all(&[0]).unwrap();
         file.sync_all().unwrap();
+        drop(file);
 
         tokio::time::timeout(timeout, signal.recv()).await.is_ok()
     }
@@ -312,22 +313,22 @@ mod tests {
         let delay = Duration::from_secs(2);
         let directory = temp_dir();
         let filepath = directory.join("test.txt");
-        let mut file = File::create(&filepath).unwrap();
+        let file = File::create(&filepath).unwrap();
 
         watch_configs(&[directory]).unwrap();
 
-        assert!(test(&mut file, delay * 5).await)
+        assert!(test(file, delay * 5).await)
     }
 
     #[tokio::test]
     async fn file_update() {
         let delay = Duration::from_secs(3);
         let filepath = temp_file();
-        let mut file = File::create(&filepath).unwrap();
+        let file = File::create(&filepath).unwrap();
 
         watch_configs(&[filepath]).unwrap();
 
-        assert!(test(&mut file, delay * 5).await)
+        assert!(test(file, delay * 5).await)
     }
 
     #[tokio::test]
@@ -335,11 +336,11 @@ mod tests {
         let delay = Duration::from_secs(3);
         let filepath = temp_file();
         let sym_file = temp_file();
-        let mut file = File::create(&filepath).unwrap();
+        let file = File::create(&filepath).unwrap();
         std::os::unix::fs::symlink(&filepath, &sym_file).unwrap();
 
         watch_configs(&[filepath]).unwrap();
 
-        assert!(test(&mut file, delay * 5).await);
+        assert!(test(file, delay * 5).await);
     }
 }
