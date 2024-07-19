@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721389748578,
+  "lastUpdate": 1721389750268,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cb794b3cb3b96e3d633970411044ba67d316fc7b",
-          "message": "chore(deps): bump h2 from 0.3.25 to 0.3.26 (#1697)\n\nBumps [h2](https://github.com/hyperium/h2) from 0.3.25 to 0.3.26.\r\n- [Release notes](https://github.com/hyperium/h2/releases)\r\n- [Changelog](https://github.com/hyperium/h2/blob/v0.3.26/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/h2/compare/v0.3.25...v0.3.26)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: h2\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-06T04:04:25+08:00",
-          "tree_id": "9304747482c1e6466f91fe459f1bff90fbd93892",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cb794b3cb3b96e3d633970411044ba67d316fc7b"
-        },
-        "date": 1712347591747,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.161,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.336,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 187.5,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.86,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45bb1f591f69a9c461c1dfc7c8fb073d9ddc00bf",
+          "message": "fix vertex benchmark (#1832)",
+          "timestamp": "2024-07-19T19:46:43+08:00",
+          "tree_id": "c2c93265cb700bcd9e063989ddfe94a5ba3f2c30",
+          "url": "https://github.com/f1shl3gs/vertex/commit/45bb1f591f69a9c461c1dfc7c8fb073d9ddc00bf"
+        },
+        "date": 1721389734551,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.302,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.021,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 182.6,
             "unit": "ns/op"
           }
         ]
