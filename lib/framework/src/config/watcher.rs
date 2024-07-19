@@ -49,11 +49,7 @@ mod inotify {
                 let ret = libc::inotify_add_watch(
                     self.fd.as_raw_fd(),
                     path.as_ptr() as *const _,
-                    libc::IN_CLOSE_WRITE
-                        | libc::IN_MOVE
-                        | libc::IN_MOVED_TO
-                        | libc::IN_MODIFY
-                        | libc::IN_CREATE,
+                    libc::IN_CLOSE_WRITE | libc::IN_MOVE | libc::IN_MOVED_TO | libc::IN_CREATE,
                 );
                 if ret == -1 {
                     return Err(io::Error::last_os_error());
