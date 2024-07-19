@@ -345,7 +345,7 @@ impl StreamSink for PrometheusExporter {
                 .with_graceful_shutdown(http_shutdown)
                 .await;
 
-            info!(message = "http server shutdown successful");
+            debug!(message = "http server shutdown successful");
         });
 
         // GC routine
@@ -381,7 +381,7 @@ impl StreamSink for PrometheusExporter {
                 debug!(message = "GC finished", cleaned);
             }
 
-            info!(message = "gc routine shutdown success");
+            debug!(message = "gc routine shutdown success");
         });
 
         // Handle input metrics
