@@ -12,6 +12,7 @@ use chrono::Utc;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::shutdown::ShutdownSignal;
+use framework::tls::MaybeTlsListener;
 use framework::Extension;
 use http_body_util::Full;
 use hyper::body::Incoming;
@@ -52,7 +53,7 @@ struct Config {
 #[async_trait::async_trait]
 #[typetag::serde(name = "jemalloc")]
 impl ExtensionConfig for Config {
-    async fn build(&self, ctx: ExtensionContext) -> crate::Result<Extension> {
+    async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         match std::env::var("MALLOC_CONF") {
             Ok(value) => {
                 if !value.contains("prof:true") {
@@ -63,52 +64,15 @@ impl ExtensionConfig for Config {
         }
 
         let listener = TcpListener::bind(self.listen).await?;
+        let shutdown = cx.shutdown;
 
-        Ok(Box::pin(run(listener, ctx.shutdown)))
+        Ok(Box::pin(
+            framework::http::serve(listener.into(), service_fn(handler))
+                .with_graceful_shutdown(shutdown)
+                .await
+                .map_err(|_err| ()),
+        ))
     }
-}
-
-async fn run(listener: TcpListener, mut shutdown: ShutdownSignal) -> Result<(), ()> {
-    loop {
-        let conn = tokio::select! {
-            _ = &mut shutdown => break,
-            result = listener.accept() => match result {
-                Ok((conn, _peer)) => TokioIo::new(conn),
-                Err(err) => {
-                    error!(
-                        message = "accept new connection failed",
-                        %err
-                    );
-
-                    continue
-                }
-            }
-        };
-
-        let mut shutdown = shutdown.clone();
-        tokio::spawn(async move {
-            let builder = hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
-            let conn = builder.serve_connection_with_upgrades(conn, service_fn(handler));
-            tokio::pin!(conn);
-
-            loop {
-                tokio::select! {
-                    result = conn.as_mut() => {
-                        if let Err(err) = result {
-                            error!(message = "handle http connection failed", %err);
-                        }
-
-                        break
-                    },
-                    _ = &mut shutdown => {
-                        conn.as_mut().graceful_shutdown();
-                    }
-                }
-            }
-        });
-    }
-
-    Ok(())
 }
 
 #[derive(Debug, thiserror::Error)]

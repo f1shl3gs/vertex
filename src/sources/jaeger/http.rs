@@ -10,7 +10,6 @@ use http::{Method, Request, Response, StatusCode};
 use http_body_util::{BodyExt, Full};
 use hyper::body::Incoming;
 use hyper::service::service_fn;
-use hyper_util::rt::{TokioExecutor, TokioIo};
 use jaeger::agent::deserialize_binary_batch;
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
@@ -39,58 +38,19 @@ pub struct ThriftHttpConfig {
 // https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
 pub async fn serve(
     config: ThriftHttpConfig,
-    mut shutdown: ShutdownSignal,
+    shutdown: ShutdownSignal,
     output: Pipeline,
 ) -> crate::Result<()> {
     let output = Arc::new(Mutex::new(output));
-    let mut listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
-
-    loop {
-        let conn = tokio::select! {
-            _ = &mut shutdown => break,
-            result = listener.accept() => match result {
-                Ok(conn) => TokioIo::new(conn),
-                Err(err) => {
-                    error!(
-                        message = "accept new connection failed",
-                        %err
-                    );
-
-                    continue
-                }
-            }
-        };
-
+    let listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
+    let service = service_fn(move |req: Request<Incoming>| {
         let output = Arc::clone(&output);
-        let service = service_fn(move |req: Request<Incoming>| {
-            let output = Arc::clone(&output);
-            async move { handle(output, req).await }
-        });
+        async move { handle(output, req).await }
+    });
 
-        let mut shutdown = shutdown.clone();
-        tokio::spawn(async move {
-            let builder = hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
-            let conn = builder.serve_connection_with_upgrades(conn, service);
-            tokio::pin!(conn);
-
-            loop {
-                tokio::select! {
-                    result = conn.as_mut() => {
-                        if let Err(err) = result {
-                            error!(message = "handle http connection failed", %err);
-                        }
-
-                        break
-                    },
-                    _ = &mut shutdown => {
-                        conn.as_mut().graceful_shutdown();
-                    }
-                }
-            }
-        });
-    }
-
-    Ok(())
+    framework::http::serve(listener, service)
+        .with_graceful_shutdown(shutdown)
+        .await
 }
 
 async fn handle(

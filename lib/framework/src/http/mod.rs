@@ -1,4 +1,5 @@
 pub(crate) mod proxy;
+mod serve;
 mod trace;
 
 use std::borrow::Cow;
@@ -30,6 +31,7 @@ use tracing_internal::SpanExt;
 use crate::config::ProxyConfig;
 use crate::dns::Resolver;
 use crate::tls::{TlsConfig, TlsError};
+pub use serve::{serve, Serve, WithGracefulShutdown};
 
 #[derive(Debug, Error)]
 pub enum HttpError {

@@ -4,13 +4,12 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use bytes::Bytes;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
+use framework::tls::MaybeTlsListener;
 use framework::Extension;
 use http::{Request, Response, StatusCode};
 use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
-use hyper_util::rt::TokioExecutor;
-use tokio::net::TcpListener;
 
 static READINESS: AtomicBool = AtomicBool::new(false);
 
@@ -35,8 +34,8 @@ pub struct Config {
 #[typetag::serde(name = "healthcheck")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let mut shutdown = cx.shutdown;
-        let listener = TcpListener::bind(self.endpoint).await?;
+        let shutdown = cx.shutdown;
+        let listener = MaybeTlsListener::bind(&self.endpoint, &None).await?;
 
         Ok(Box::pin(async move {
             info!(
@@ -44,54 +43,10 @@ impl ExtensionConfig for Config {
                 listen = ?listener.local_addr().unwrap()
             );
 
-            loop {
-                let conn = tokio::select! {
-                    _ = &mut shutdown => break,
-                    result = listener.accept() => match result {
-                        Ok((conn, peer)) => {
-                            debug!(
-                                message = "accept new connection",
-                                ?peer
-                            );
-
-                            hyper_util::rt::TokioIo::new(conn)
-                        },
-                        Err(err) => {
-                            error!(
-                                message = "accept connection failed",
-                                %err
-                            );
-
-                            continue
-                        }
-                    }
-                };
-
-                let mut shutdown = shutdown.clone();
-                tokio::spawn(async move {
-                    let builder =
-                        hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
-                    let conn = builder.serve_connection_with_upgrades(conn, service_fn(handle));
-                    tokio::pin!(conn);
-
-                    loop {
-                        tokio::select! {
-                            result = conn.as_mut() => {
-                                if let Err(err) = result {
-                                    error!(message = "handle http connection failed", %err);
-                                }
-
-                                break
-                            },
-                            _ = &mut shutdown => {
-                                conn.as_mut().graceful_shutdown();
-                            }
-                        }
-                    }
-                });
-            }
-
-            Ok(())
+            framework::http::serve(listener, service_fn(handle))
+                .with_graceful_shutdown(shutdown)
+                .await
+                .map_err(|_err| ())
         }))
     }
 }

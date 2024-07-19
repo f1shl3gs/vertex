@@ -11,7 +11,6 @@ use http::StatusCode;
 use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::{service::service_fn, Request, Response};
-use hyper_util::rt::{TokioExecutor, TokioIo};
 use pprof::protos::Message;
 use tokio::net::TcpListener;
 
@@ -36,7 +35,7 @@ impl ExtensionConfig for Config {
     }
 }
 
-async fn run(listener: TcpListener, mut shutdown: ShutdownSignal) -> Result<(), ()> {
+async fn run(listener: TcpListener, shutdown: ShutdownSignal) -> Result<(), ()> {
     let service = service_fn(move |req: Request<Incoming>| async {
         let resp = handle(req).await.unwrap_or_else(|err| {
             let (code, msg) = match err {
@@ -53,46 +52,10 @@ async fn run(listener: TcpListener, mut shutdown: ShutdownSignal) -> Result<(), 
         Ok::<_, hyper::Error>(resp)
     });
 
-    loop {
-        let conn = tokio::select! {
-            _ = &mut shutdown => break,
-            result = listener.accept() => match result {
-                Ok((conn, _peer)) => TokioIo::new(conn),
-                Err(err) => {
-                    error!(
-                        message = "accept new connection failed",
-                        %err
-                    );
-
-                    continue
-                }
-            }
-        };
-
-        let mut shutdown = shutdown.clone();
-        tokio::spawn(async move {
-            let builder = hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
-            let conn = builder.serve_connection_with_upgrades(conn, service);
-            tokio::pin!(conn);
-
-            loop {
-                tokio::select! {
-                    result = conn.as_mut() => {
-                        if let Err(err) = result {
-                            error!(message = "handle http connection failed", %err);
-                        }
-
-                        break
-                    },
-                    _ = &mut shutdown => {
-                        conn.as_mut().graceful_shutdown();
-                    }
-                }
-            }
-        });
-    }
-
-    Ok(())
+    framework::http::serve(listener.into(), service)
+        .with_graceful_shutdown(shutdown)
+        .await
+        .map_err(|_err| ())
 }
 
 #[derive(Debug, thiserror::Error)]
