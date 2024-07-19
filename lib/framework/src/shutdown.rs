@@ -300,7 +300,6 @@ impl ShutdownSignal {
         }
     }
 
-    #[cfg(any(test, feature = "test-util"))]
     pub fn new_wired() -> (Trigger, ShutdownSignal, Tripwire) {
         let (trigger_shutdown, tripwire) = Tripwire::new();
         let (trigger, shutdown_done) = Tripwire::new();
