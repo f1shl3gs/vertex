@@ -206,6 +206,7 @@ mod inotify {
 
             file.write_all(&[0]).unwrap();
             file.sync_all().unwrap();
+            drop(file);
 
             if let Some(Ok(_evs)) = stream.next().await {
                 // ok
