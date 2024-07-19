@@ -1,15 +1,14 @@
 use std::future::Future;
+use std::io::{self, Error, ErrorKind};
 use std::net::SocketAddr;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::{future::BoxFuture, stream, FutureExt, Stream};
+use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
+use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
-use tokio::{
-    io::{self, AsyncRead, AsyncWrite, ReadBuf},
-    net::{TcpListener, TcpStream},
-};
 use tokio_rustls::server::TlsStream;
 use tokio_rustls::TlsAcceptor;
 
@@ -115,7 +114,7 @@ impl MaybeTlsListener {
     }
 
     #[cfg(feature = "listenfd")]
-    pub fn local_addr(&self) -> Result<SocketAddr, io::Error> {
+    pub fn local_addr(&self) -> io::Result<SocketAddr> {
         self.listener.local_addr()
     }
 }
@@ -205,8 +204,8 @@ impl MaybeTlsIncomingStream<TcpStream> {
     #[cfg(feature = "sources-utils-tcp-keepalive")]
     pub fn set_keepalive(&mut self, keepalive: TcpKeepaliveConfig) -> io::Result<()> {
         let stream = self.get_ref().ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::NotConnected,
+            Error::new(
+                ErrorKind::NotConnected,
                 "Can't set keepalive on connection that has not been accepted yet",
             )
         })?;
@@ -223,8 +222,8 @@ impl MaybeTlsIncomingStream<TcpStream> {
     #[cfg(feature = "sources-utils-tcp-socket")]
     pub fn set_receive_buffer_bytes(&mut self, bytes: usize) -> io::Result<()> {
         let stream = self.get_ref().ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::NotConnected,
+            Error::new(
+                ErrorKind::NotConnected,
                 "Can't set receive buffer size on connection that has not been accepted yet",
             )
         })?;
@@ -246,15 +245,15 @@ impl MaybeTlsIncomingStream<TcpStream> {
                         continue;
                     }
                     Err(err) => {
-                        let err = io::Error::new(io::ErrorKind::Other, err);
+                        let err = Error::new(ErrorKind::Other, err);
                         this.state = StreamState::AcceptError(err.to_string());
                         Poll::Ready(Err(err))
                     }
                 },
                 StreamState::AcceptError(error) => {
-                    Poll::Ready(Err(io::Error::new(io::ErrorKind::Other, error.to_owned())))
+                    Poll::Ready(Err(Error::new(ErrorKind::Other, error.to_owned())))
                 }
-                StreamState::Closed => Poll::Ready(Err(io::ErrorKind::BrokenPipe.into())),
+                StreamState::Closed => Poll::Ready(Err(ErrorKind::BrokenPipe.into())),
             };
         }
     }
@@ -295,13 +294,13 @@ impl AsyncWrite for MaybeTlsIncomingStream<TcpStream> {
                     Poll::Pending
                 }
                 Err(err) => {
-                    let err = io::Error::new(io::ErrorKind::Other, err);
+                    let err = Error::new(ErrorKind::Other, err);
                     this.state = StreamState::AcceptError(err.to_string());
                     Poll::Ready(Err(err))
                 }
             },
             StreamState::AcceptError(error) => {
-                Poll::Ready(Err(io::Error::new(io::ErrorKind::Other, error.to_owned())))
+                Poll::Ready(Err(Error::new(ErrorKind::Other, error.to_owned())))
             }
             StreamState::Closed => Poll::Ready(Ok(())),
         }

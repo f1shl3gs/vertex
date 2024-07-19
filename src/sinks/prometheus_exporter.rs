@@ -15,7 +15,7 @@ use configurable::configurable_component;
 use event::{EventStatus, Events, Finalizable, Metric, MetricValue};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
 use framework::tls::{MaybeTlsListener, TlsConfig};
-use framework::{Healthcheck, Sink, StreamSink};
+use framework::{Healthcheck, ShutdownSignal, Sink, StreamSink};
 use futures::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
 use http::HeaderMap;
@@ -23,9 +23,7 @@ use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
 use hyper::{Method, Request, Response, StatusCode};
-use hyper_util::rt::{TokioExecutor, TokioIo};
 use parking_lot::Mutex;
-use tripwire::Tripwire;
 
 #[configurable_component(sink, name = "prometheus_exporter")]
 #[serde(deny_unknown_fields)]
@@ -56,7 +54,7 @@ const fn default_ttl() -> Duration {
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let sink = PrometheusExporter::new(self);
+        let sink = PrometheusExporter::new(self.endpoint, self.tls.clone(), self.ttl);
         let health_check = futures::future::ok(()).boxed();
 
         Ok((Sink::Stream(Box::new(sink)), health_check))
@@ -143,22 +141,14 @@ struct Sets {
 }
 
 struct PrometheusExporter {
-    ttl: Duration,
-    tls: Option<TlsConfig>,
     endpoint: SocketAddr,
-    // The key is metric name, Sets is a container of tags sets and its
-    // value, timestamp
-    metrics: Arc<Mutex<BTreeMap<String, Sets>>>,
+    tls: Option<TlsConfig>,
+    ttl: Duration,
 }
 
 impl PrometheusExporter {
-    fn new(config: &Config) -> Self {
-        Self {
-            endpoint: config.endpoint,
-            metrics: Arc::new(Mutex::new(BTreeMap::new())),
-            ttl: config.ttl,
-            tls: config.tls.clone(),
-        }
+    fn new(endpoint: SocketAddr, tls: Option<TlsConfig>, ttl: Duration) -> Self {
+        Self { endpoint, tls, ttl }
     }
 }
 
@@ -330,12 +320,38 @@ fn should_compress(headers: &HeaderMap) -> bool {
 #[async_trait]
 impl StreamSink for PrometheusExporter {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let (_trigger, mut shutdown) = Tripwire::new();
-        let metrics = Arc::clone(&self.metrics);
-        let mut ticker = tokio::time::interval(self.ttl);
+        // The key is metric name, Sets is a container of tags sets and its
+        // value, timestamp
+        let states = Arc::new(Mutex::new(BTreeMap::<String, Sets>::new()));
+        let (trigger_shutdown, shutdown, _shutdown_done) = ShutdownSignal::new_wired();
+
+        // HTTP server routine
+        let listener = MaybeTlsListener::bind(&self.endpoint, &self.tls)
+            .await
+            .map_err(|err| error!(message = "Server TLS error", %err))?;
+        let http_states = Arc::clone(&states);
+        let http_shutdown = shutdown.clone();
+        let service = service_fn(move |req: Request<Incoming>| {
+            let metrics = Arc::clone(&http_states);
+            async move {
+                let now = Utc::now().timestamp();
+                let resp = handle(req, metrics, now);
+
+                Ok::<_, hyper::Error>(resp)
+            }
+        });
+        tokio::spawn(async move {
+            let _ = framework::http::serve(listener, service)
+                .with_graceful_shutdown(http_shutdown)
+                .await;
+
+            info!(message = "http server shutdown successful");
+        });
 
         // GC routine
+        let mut ticker = tokio::time::interval(self.ttl);
         let mut gc_shutdown = shutdown.clone();
+        let gc_states = Arc::clone(&states);
         tokio::spawn(async move {
             loop {
                 tokio::select! {
@@ -346,8 +362,7 @@ impl StreamSink for PrometheusExporter {
                 }
 
                 let mut cleaned = 0;
-                let metrics = Arc::clone(&metrics);
-                let mut state = metrics.lock();
+                let mut state = gc_states.lock();
                 let now = Utc::now().timestamp();
 
                 for (_name, set) in state.iter_mut() {
@@ -365,80 +380,14 @@ impl StreamSink for PrometheusExporter {
 
                 debug!(message = "GC finished", cleaned);
             }
-        });
 
-        let metrics = Arc::clone(&self.metrics);
-
-        // HTTP server routine
-        let address = self.endpoint;
-        let tls = self.tls.clone();
-        tokio::spawn(async move {
-            let mut listener = MaybeTlsListener::bind(&address, &tls)
-                .await
-                .map_err(|err| error!(message = "Server TLS error", %err))?;
-
-            info!(message = "start http server", ?address);
-
-            loop {
-                let conn = tokio::select! {
-                    _ = &mut shutdown => break,
-                    result = listener.accept() => match result {
-                        Ok(conn) => TokioIo::new(conn),
-                        Err(err) => {
-                            error!(
-                                message = "accept new connection failed",
-                                %err
-                            );
-
-                            continue
-                        }
-                    }
-                };
-
-                let metrics = Arc::clone(&metrics);
-                let service = service_fn(move |req: Request<Incoming>| {
-                    let metrics = Arc::clone(&metrics);
-
-                    async move {
-                        let now = Utc::now().timestamp();
-                        let metrics = Arc::clone(&metrics);
-                        let resp = handle(req, metrics, now);
-
-                        Ok::<_, hyper::Error>(resp)
-                    }
-                });
-
-                let mut shutdown = shutdown.clone();
-                tokio::spawn(async move {
-                    let builder =
-                        hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
-                    let conn = builder.serve_connection_with_upgrades(conn, service);
-                    tokio::pin!(conn);
-
-                    loop {
-                        tokio::select! {
-                            result = conn.as_mut() => {
-                                if let Err(err) = result {
-                                    error!(message = "handle http connection failed", %err);
-                                }
-
-                                break
-                            },
-                            _ = &mut shutdown => {
-                                conn.as_mut().graceful_shutdown();
-                            }
-                        }
-                    }
-                });
-            }
-
-            Ok::<(), ()>(())
+            info!(message = "gc routine shutdown success");
         });
 
         // Handle input metrics
         while let Some(events) = input.next().await {
             if let Events::Metrics(metrics) = events {
-                let mut state = self.metrics.lock();
+                let mut state = states.lock();
                 let now = Utc::now();
 
                 metrics.into_iter().for_each(|mut metric| {
@@ -467,6 +416,11 @@ impl StreamSink for PrometheusExporter {
                 })
             }
         }
+
+        // shutdown background routines
+        //
+        // TODO: maybe we should wait for the background routines to exit
+        trigger_shutdown.cancel();
 
         Ok(())
     }

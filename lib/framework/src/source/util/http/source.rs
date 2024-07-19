@@ -9,7 +9,6 @@ use http::{HeaderMap, Method, Request, Response, StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
 use hyper::body::Incoming;
 use hyper::service::service_fn;
-use hyper_util::rt::{TokioExecutor, TokioIo};
 
 use super::auth::HttpSourceAuth;
 use super::error::ErrorMessage;
@@ -37,9 +36,9 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         cx: SourceContext,
     ) -> crate::Result<Source> {
         let auth = HttpSourceAuth::try_from(auth.as_ref())?;
-        let mut listener = MaybeTlsListener::bind(&address, tls).await?;
+        let listener = MaybeTlsListener::bind(&address, tls).await?;
         let acknowledgements = cx.acknowledgements();
-        let mut shutdown = cx.shutdown;
+        let shutdown = cx.shutdown;
         let output = cx.output;
         let builder = self.clone();
         let inner = Arc::new(Inner {
@@ -47,91 +46,50 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
             path: path.to_string(),
             auth,
         });
+        let service = service_fn(move |req: Request<Incoming>| {
+            let (parts, incoming) = req.into_parts();
+            let builder = builder.clone();
+            let inner = inner.clone();
+            let mut output = output.clone();
+
+            async move {
+                if !inner.auth.validate(parts.headers.get(AUTHORIZATION)) {
+                    let resp = Response::builder()
+                        .status(StatusCode::UNAUTHORIZED)
+                        .body(Full::default())
+                        .unwrap();
+                    return Ok(resp);
+                }
+
+                if inner.method != parts.method {
+                    let resp = Response::builder()
+                        .status(StatusCode::METHOD_NOT_ALLOWED)
+                        .body(Full::default())
+                        .unwrap();
+                    return Ok(resp);
+                }
+
+                if inner.path != parts.uri.path() {
+                    let resp = Response::builder()
+                        .status(StatusCode::NOT_FOUND)
+                        .body(Full::default())
+                        .unwrap();
+                    return Ok(resp);
+                }
+
+                let body = incoming.collect().await?.to_bytes();
+                let data = builder.build_events(&parts.uri, &parts.headers, body);
+                let resp = handle_request(data, acknowledgements, &mut output).await;
+
+                Ok::<Response<Full<Bytes>>, hyper::Error>(resp)
+            }
+        });
 
         Ok(Box::pin(async move {
-            loop {
-                let conn = tokio::select! {
-                    _ = &mut shutdown => break,
-                    result = listener.accept() => match result {
-                        Ok(conn) => TokioIo::new(conn),
-                        Err(err) => {
-                            warn!(
-                                message = "accept connection failed",
-                                %err
-                            );
-
-                            continue
-                        }
-                    }
-                };
-
-                let inner = inner.clone();
-                let builder = builder.clone();
-                let output = output.clone();
-                let service = service_fn(move |req: Request<Incoming>| {
-                    let (parts, incoming) = req.into_parts();
-                    let builder = builder.clone();
-                    let inner = inner.clone();
-                    let mut output = output.clone();
-
-                    async move {
-                        if !inner.auth.validate(parts.headers.get(AUTHORIZATION)) {
-                            let resp = Response::builder()
-                                .status(StatusCode::UNAUTHORIZED)
-                                .body(Full::default())
-                                .unwrap();
-                            return Ok(resp);
-                        }
-
-                        if inner.method != parts.method {
-                            let resp = Response::builder()
-                                .status(StatusCode::METHOD_NOT_ALLOWED)
-                                .body(Full::default())
-                                .unwrap();
-                            return Ok(resp);
-                        }
-
-                        if inner.path != parts.uri.path() {
-                            let resp = Response::builder()
-                                .status(StatusCode::NOT_FOUND)
-                                .body(Full::default())
-                                .unwrap();
-                            return Ok(resp);
-                        }
-
-                        let body = incoming.collect().await?.to_bytes();
-                        let data = builder.build_events(&parts.uri, &parts.headers, body);
-                        let resp = handle_request(data, acknowledgements, &mut output).await;
-
-                        Ok::<Response<Full<Bytes>>, hyper::Error>(resp)
-                    }
-                });
-
-                let mut shutdown = shutdown.clone();
-                tokio::spawn(async move {
-                    let builder =
-                        hyper_util::server::conn::auto::Builder::new(TokioExecutor::new());
-                    let conn = builder.serve_connection_with_upgrades(conn, service);
-                    tokio::pin!(conn);
-
-                    loop {
-                        tokio::select! {
-                            result = conn.as_mut() => {
-                                if let Err(err) = result {
-                                    error!(message = "handle http connection failed", %err);
-                                }
-
-                                break
-                            },
-                            _ = &mut shutdown => {
-                                conn.as_mut().graceful_shutdown();
-                            }
-                        }
-                    }
-                });
-            }
-
-            Ok(())
+            crate::http::serve(listener, service)
+                .with_graceful_shutdown(shutdown)
+                .await
+                .map_err(|_err| ())
         }))
     }
 }
