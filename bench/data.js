@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721418839172,
+  "lastUpdate": 1721418868536,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "40361a1ea15285426be81c8c75b5f30f059f78d7",
-          "message": "implement with HttpService (#1638)",
-          "timestamp": "2024-03-10T12:50:30+08:00",
-          "tree_id": "4f08d0b8ab15722e6d7ba84777ca043f26e691da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/40361a1ea15285426be81c8c75b5f30f059f78d7"
-        },
-        "date": 1710046382737,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.96,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 146.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 322.78,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 656.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c7f55b4983a0de7c6804c57c4b7ccb093ad601d1",
           "message": "compression: add snappy support (#1639)\n\n* add snappy support",
           "timestamp": "2024-03-10T15:58:59+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 712.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd1bfcf60350c0267cc7a1de17712ddc29fe0980",
+          "message": "chore: add http::serve (#1834)\n\n* add http::serve",
+          "timestamp": "2024-07-20T03:51:34+08:00",
+          "tree_id": "57a75269f59e4b870ed02903846fe0cd2f7a20a3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd1bfcf60350c0267cc7a1de17712ddc29fe0980"
+        },
+        "date": 1721418852759,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.987,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 157.97,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 352.62,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 682.48,
             "unit": "ns/op"
           }
         ]
