@@ -12,7 +12,7 @@ mod http;
 mod influxdb;
 #[cfg(feature = "sinks-jaeger")]
 mod jaeger;
-#[cfg(any(feature = "sinks-kafka", feature = "rskafka"))]
+#[cfg(feature = "sinks-kafka")]
 mod kafka;
 #[cfg(feature = "sinks-loki")]
 pub mod loki;
