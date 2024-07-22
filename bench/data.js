@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721419375580,
+  "lastUpdate": 1721618364903,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9267495c1cc044b473fd31bee50dde949b789148",
-          "message": "transforms/geoip: switch to our own maxminddb (#1720)\n\n* switch to our own maxminddb",
-          "timestamp": "2024-04-23T23:34:23+08:00",
-          "tree_id": "79bce7af9ddf9c459431bb513456dec2330094ba",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9267495c1cc044b473fd31bee50dde949b789148"
-        },
-        "date": 1713886586577,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 520830,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546160,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5fcf2b633607ea311c372ebfd64f0492c75ccd64",
+          "message": "chore(deps): bump syn from 2.0.71 to 2.0.72 (#1835)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.71 to 2.0.72.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.71...2.0.72)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-22T11:17:01+08:00",
+          "tree_id": "0d05ec24ad295c3d02b77940b1a088b2c64c08f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5fcf2b633607ea311c372ebfd64f0492c75ccd64"
+        },
+        "date": 1721618348619,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 550080,
             "unit": "ns/op"
           }
         ]
