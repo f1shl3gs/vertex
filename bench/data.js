@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721712818765,
+  "lastUpdate": 1721746919876,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a37501216743fc84e81f5768d2a694461572ea7a",
-          "message": "chore(deps): bump flate2 from 1.0.28 to 1.0.29 (#1723)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.28 to 1.0.29.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.28...1.0.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-26T17:46:38+08:00",
-          "tree_id": "b8fd77c316a4160c345f0ed3e6783223e21380f6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a37501216743fc84e81f5768d2a694461572ea7a"
-        },
-        "date": 1714124918863,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 528450,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 543590,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18f980956a8ac8b8842d517977e4cbdcedc44d83",
+          "message": "chore(deps): bump kube from 0.93.0 to 0.93.1 (#1838)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.93.0 to 0.93.1.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.93.0...0.93.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-23T22:59:35+08:00",
+          "tree_id": "86b112360d178b2059d40c1935aff01d2d7bd40f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18f980956a8ac8b8842d517977e4cbdcedc44d83"
+        },
+        "date": 1721746903921,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 544650,
             "unit": "ns/op"
           }
         ]
