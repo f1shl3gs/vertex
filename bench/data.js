@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721712299845,
+  "lastUpdate": 1721712311172,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e823db9fc4991efc6b0a2040d19f9b17e2ba78bb",
-          "message": "chore(deps): bump encoding_rs from 0.8.33 to 0.8.34 (#1702)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.33 to 0.8.34.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.33...v0.8.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-11T06:59:14+08:00",
-          "tree_id": "6e5c98610ac2debd9c1a3168b6aa320f005f1ffb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e823db9fc4991efc6b0a2040d19f9b17e2ba78bb"
-        },
-        "date": 1712790094709,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.202,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.816,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.79,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 194.55,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2843d3b400a2b4704f296401e2c37fb73396d1d0",
+          "message": "chore(deps): bump sqlx from 0.7.4 to 0.8.0 (#1837)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.4 to 0.8.0.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/compare/v0.7.4...v0.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-23T13:22:44+08:00",
+          "tree_id": "ca04b6b957bbe23f7612a9aeb2a01ff74ba477ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2843d3b400a2b4704f296401e2c37fb73396d1d0"
+        },
+        "date": 1721712295408,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.01,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 193.35,
             "unit": "ns/op"
           }
         ]
