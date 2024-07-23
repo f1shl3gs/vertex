@@ -5,9 +5,9 @@ edition = "2021"
 publish = false
 
 [dev-dependencies]
-tokio = { version = "1.38.1", default-features = false, features = ["net", "rt-multi-thread", "macros"] }
+tokio = { version = "1.39.0", default-features = false, features = ["net", "rt-multi-thread", "macros"] }
 
 [dependencies]
 chrono = { version = "0.4.38", default-features = false, features = ["now"] }
 rand = { version = "0.8.5", default-features = false, features = ["std_rng", "std"] }
-tokio = { version = "1.38.1", default-features = false, features = ["net"] }
+tokio = { version = "1.39.0", default-features = false, features = ["net"] }
