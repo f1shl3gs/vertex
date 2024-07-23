@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721746952370,
+  "lastUpdate": 1721746972764,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4fcc899e3d873436de0981ac685778276af05718",
-          "message": "sinks/console reuse EncodingConfigWithFraming (#1644)",
-          "timestamp": "2024-03-11T19:37:36+08:00",
-          "tree_id": "128b1f20144b8633d2350f874024a2aeaaca87d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4fcc899e3d873436de0981ac685778276af05718"
-        },
-        "date": 1710157208659,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.939,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 153.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 339.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 666.26,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7216632b5d7c4b450059391df8e77f82e849116a",
           "message": "sinks/blackhole implement rate (#1645)",
           "timestamp": "2024-03-11T21:05:03+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 768.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "baea8b3e875e6011ea5adee594a1da243f04a02d",
+          "message": "chore(deps): bump tokio from 1.38.1 to 1.39.0 (#1839)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.38.1 to 1.39.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.38.1...tokio-1.39.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-23T22:59:57+08:00",
+          "tree_id": "dede64ad2630c97dde68cc2ef70c1016947ee804",
+          "url": "https://github.com/f1shl3gs/vertex/commit/baea8b3e875e6011ea5adee594a1da243f04a02d"
+        },
+        "date": 1721746956888,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.904,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 159.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 342.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 753.13,
             "unit": "ns/op"
           }
         ]
