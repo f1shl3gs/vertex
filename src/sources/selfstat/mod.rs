@@ -1,6 +1,7 @@
 mod built_info;
 #[cfg(target_os = "linux")]
 mod linux;
+mod runtime;
 
 use std::fmt::Debug;
 use std::time::Duration;
@@ -86,6 +87,8 @@ async fn gather() -> Result<Vec<Metric>, std::io::Error> {
     let mut metrics = vec![];
 
     metrics.push(built_info::built_info());
+
+    metrics.extend(runtime::metrics());
 
     Ok(metrics)
 }
