@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721752216479,
+  "lastUpdate": 1721752299615,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5c13d0904d52fc87ada9db5cd362db1f67296419",
-          "message": "chore(deps): bump mimalloc from 0.1.40 to 0.1.41 (#1719)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.40 to 0.1.41.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.40...v0.1.41)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-23T20:30:37+08:00",
-          "tree_id": "d6a3f71e660f91b44ff6d730f03c2506d51c4f11",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5c13d0904d52fc87ada9db5cd362db1f67296419"
-        },
-        "date": 1713876138690,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 604,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37865.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 562,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36527.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "48c2397e2a208f08c5dd96c7c1acf0791ca8a958",
+          "message": "chore(deps): bump rustls from 0.23.11 to 0.23.12 (#1842)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.11 to 0.23.12.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.11...v/0.23.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-24T00:20:23+08:00",
+          "tree_id": "ccf0c29f2e732952cdf053ab78ba5530b619a4e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/48c2397e2a208f08c5dd96c7c1acf0791ca8a958"
+        },
+        "date": 1721752283746,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 557,
             "unit": "s"
           },
           {
