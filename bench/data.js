@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721746946392,
+  "lastUpdate": 1721746948873,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "60a423fb799ec404c41d071b5c2daac074523d18",
-          "message": "fix bytes and count in sink request (#1643)",
-          "timestamp": "2024-03-11T06:14:02+08:00",
-          "tree_id": "1c152d92b8e207c571aaa804d82a72a3a669e9ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/60a423fb799ec404c41d071b5c2daac074523d18"
-        },
-        "date": 1710109000940,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.83,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 149.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 326.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 637.42,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4fcc899e3d873436de0981ac685778276af05718",
           "message": "sinks/console reuse EncodingConfigWithFraming (#1644)",
           "timestamp": "2024-03-11T19:37:36+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 717.11,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18f980956a8ac8b8842d517977e4cbdcedc44d83",
+          "message": "chore(deps): bump kube from 0.93.0 to 0.93.1 (#1838)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.93.0 to 0.93.1.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.93.0...0.93.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-23T22:59:35+08:00",
+          "tree_id": "86b112360d178b2059d40c1935aff01d2d7bd40f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18f980956a8ac8b8842d517977e4cbdcedc44d83"
+        },
+        "date": 1721746932861,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.247,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 151.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 392.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 768.17,
             "unit": "ns/op"
           }
         ]
