@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721752299615,
+  "lastUpdate": 1721752302598,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "60a423fb799ec404c41d071b5c2daac074523d18",
-          "message": "fix bytes and count in sink request (#1643)",
-          "timestamp": "2024-03-11T06:14:02+08:00",
-          "tree_id": "1c152d92b8e207c571aaa804d82a72a3a669e9ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/60a423fb799ec404c41d071b5c2daac074523d18"
-        },
-        "date": 1710109518173,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 17414000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 452660,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.135,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4fcc899e3d873436de0981ac685778276af05718",
           "message": "sinks/console reuse EncodingConfigWithFraming (#1644)",
           "timestamp": "2024-03-11T19:37:36+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.657,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb6ceba0cc518d2d28d42c4f5cda0b6d394f5314",
+          "message": "chore(deps): bump quick-xml from 0.36.0 to 0.36.1 (#1841)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.36.0 to 0.36.1.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.36.0...v0.36.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-24T00:20:08+08:00",
+          "tree_id": "9c437364c40b216a54d033974d5b72735f2b8957",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb6ceba0cc518d2d28d42c4f5cda0b6d394f5314"
+        },
+        "date": 1721752286004,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28621000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 730460,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 43.015,
             "unit": "ns/op"
           }
         ]
