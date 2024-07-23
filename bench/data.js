@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721618900880,
+  "lastUpdate": 1721712260202,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e3da1ab28cedd34e2e0756054b8f0a0c74955449",
-          "message": "remove libc calls (#1721)",
-          "timestamp": "2024-04-24T18:32:07+08:00",
-          "tree_id": "007011d0f060e81ae368721fb1e45acef552eb8b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e3da1ab28cedd34e2e0756054b8f0a0c74955449"
-        },
-        "date": 1713954867051,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 554550,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 550080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "575970b20527c71e43d88aae9ffd8c7deac44f06",
+          "message": "chore(deps): bump kube from 0.92.1 to 0.93.0 (#1836)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.92.1 to 0.93.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.92.1...0.93.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-23T13:21:54+08:00",
+          "tree_id": "032ebc98cc9eaffd77fd2963d9f590f26abc311c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/575970b20527c71e43d88aae9ffd8c7deac44f06"
+        },
+        "date": 1721712244504,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 544230,
             "unit": "ns/op"
           }
         ]
