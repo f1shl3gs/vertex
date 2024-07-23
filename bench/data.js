@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721712801655,
+  "lastUpdate": 1721712818765,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5b3b5953ca464494895522afabe2414445d0207b",
-          "message": "chore(deps): bump hickory-resolver from 0.24.0 to 0.24.1 (#1715)\n\nBumps [hickory-resolver](https://github.com/hickory-dns/hickory-dns) from 0.24.0 to 0.24.1.\r\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\r\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.0...v0.24.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hickory-resolver\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-19T10:43:50+08:00",
-          "tree_id": "940cd90c18b450a3d60e14c0b6c334114fa25c39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5b3b5953ca464494895522afabe2414445d0207b"
-        },
-        "date": 1713495299164,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37860.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "931de852edfc4ed0b7b5a9e9fa18de821ace35f5",
           "message": "chore(deps): bump thiserror from 1.0.58 to 1.0.59 (#1716)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.58 to 1.0.59.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.58...1.0.59)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-04-21T13:50:46+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36518.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2843d3b400a2b4704f296401e2c37fb73396d1d0",
+          "message": "chore(deps): bump sqlx from 0.7.4 to 0.8.0 (#1837)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.4 to 0.8.0.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/compare/v0.7.4...v0.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-23T13:22:44+08:00",
+          "tree_id": "ca04b6b957bbe23f7612a9aeb2a01ff74ba477ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2843d3b400a2b4704f296401e2c37fb73396d1d0"
+        },
+        "date": 1721712803096,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 551,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36537.1,
             "unit": "KiB"
           }
         ]
