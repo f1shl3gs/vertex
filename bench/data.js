@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721752315773,
+  "lastUpdate": 1721793140848,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "da25c6867f1219622134d46a07d1dc7269761008",
-          "message": "chore(deps): bump libc from 0.2.153 to 0.2.154 (#1728)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.153 to 0.2.154.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.153...0.2.154)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-30T12:47:20+08:00",
-          "tree_id": "17e18ac8ba77f4e918b564180247057b4e34be9b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/da25c6867f1219622134d46a07d1dc7269761008"
-        },
-        "date": 1714452557078,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 544230,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3cc496ed80dc2dc7d81a4700a7d75e2b4cb826ee",
+          "message": "chore(deps): bump tokio from 1.39.0 to 1.39.1 (#1843)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.39.0 to 1.39.1.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.39.0...tokio-1.39.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-24T11:49:59+08:00",
+          "tree_id": "0377a7f701c3d51103d6e8caf1dee3aa3cd74225",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3cc496ed80dc2dc7d81a4700a7d75e2b4cb826ee"
+        },
+        "date": 1721793125017,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540330,
             "unit": "ns/op"
           }
         ]
