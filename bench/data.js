@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722089676316,
+  "lastUpdate": 1722091994739,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5b3b5953ca464494895522afabe2414445d0207b",
-          "message": "chore(deps): bump hickory-resolver from 0.24.0 to 0.24.1 (#1715)\n\nBumps [hickory-resolver](https://github.com/hickory-dns/hickory-dns) from 0.24.0 to 0.24.1.\r\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\r\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.0...v0.24.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hickory-resolver\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-19T10:43:50+08:00",
-          "tree_id": "940cd90c18b450a3d60e14c0b6c334114fa25c39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5b3b5953ca464494895522afabe2414445d0207b"
-        },
-        "date": 1713494766091,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.254,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 92.655,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 182.57,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2defc4aadeb3c64b7b829bbf71d0c5174d0accef",
+          "message": "cargo update (#1846)",
+          "timestamp": "2024-07-27T22:50:42+08:00",
+          "tree_id": "816ba8da35aaa822ca05eaaf350538a7de33e1a3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2defc4aadeb3c64b7b829bbf71d0c5174d0accef"
+        },
+        "date": 1722091979030,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.034,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.668,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 193.65,
             "unit": "ns/op"
           }
         ]
