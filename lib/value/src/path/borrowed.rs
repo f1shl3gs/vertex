@@ -73,7 +73,7 @@ impl<'a, 'b, const A: usize> ValuePath<'a> for &'b [BorrowedSegment<'a>; A] {
     }
 }
 
-#[cfg(any(test, feature = "arbitrary"))]
+#[cfg(test)]
 impl quickcheck::Arbitrary for BorrowedSegment<'static> {
     fn arbitrary(g: &mut quickcheck::Gen) -> Self {
         if bool::arbitrary(g) {

@@ -223,7 +223,7 @@ mod inotify {
 /// But, config and topology reload logic can handle:
 ///  - Invalid config, caused either by user or by data race.
 ///  - Frequent changes, caused by user/editor modifying/saving file in small chunk.
-/// so we can use smaller, more responsive delay.
+///    so we can use smaller, more responsive delay.
 const DEFAULT_WATCH_DELAY: Duration = Duration::from_secs(1);
 
 const RETRY_TIMEOUT: Duration = Duration::from_secs(10);

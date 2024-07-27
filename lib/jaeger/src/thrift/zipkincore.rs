@@ -4,7 +4,7 @@
 #![allow(clippy::unused_unit)]
 #![allow(unused_imports)]
 #![allow(unused_extern_crates)]
-#![cfg_attr(feature = "clippy", allow(clippy::too_many_arguments, clippy::type_complexity))]
+#![allow(clippy::too_many_arguments, clippy::type_complexity)]
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
 extern crate thrift;

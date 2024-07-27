@@ -48,7 +48,7 @@ unsafe impl Sync for Tags {}
 
 impl ByteSizeOf for Tags {
     fn allocated_bytes(&self) -> usize {
-        self.cap * std::mem::size_of::<Entry>()
+        self.cap * size_of::<Entry>()
     }
 }
 

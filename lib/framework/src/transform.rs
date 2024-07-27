@@ -49,7 +49,7 @@ where
 /// # Invariants
 ///
 /// * It is an illegal invariant to implement `FunctionTransform` for a
-/// `TaskTransform` or vice versa.
+///   `TaskTransform` or vice versa.
 pub trait TaskTransform: Send {
     fn transform(
         self: Box<Self>,
