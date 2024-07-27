@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1721793672107,
+  "lastUpdate": 1722055353116,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4b93b27837b37c46d59f65fc7eb13f10d5203d31",
-          "message": "chore(deps): bump base64 from 0.22.0 to 0.22.1 (#1729)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.22.0 to 0.22.1.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.22.0...v0.22.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-01T12:15:40+08:00",
-          "tree_id": "709c9def33be13b89f4672bcf19e1ac2ce0c192f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4b93b27837b37c46d59f65fc7eb13f10d5203d31"
-        },
-        "date": 1714537061322,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540920,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540330,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3158d65c45b9242645db4c4cfa9de9e402040d47",
+          "message": "bump rust to 1.80.0 (#1844)\n\n* bump rust to 1.80.0\r\n\r\n* remove_once_cell",
+          "timestamp": "2024-07-27T12:40:05+08:00",
+          "tree_id": "b8f5d5c8d9ebf4aad10c5a0b7c5bbd37436eaf99",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3158d65c45b9242645db4c4cfa9de9e402040d47"
+        },
+        "date": 1722055337358,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 528540,
             "unit": "ns/op"
           }
         ]
