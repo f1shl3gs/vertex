@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722089247920,
+  "lastUpdate": 1722089634562,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a37501216743fc84e81f5768d2a694461572ea7a",
-          "message": "chore(deps): bump flate2 from 1.0.28 to 1.0.29 (#1723)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.28 to 1.0.29.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.28...1.0.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-26T17:46:38+08:00",
-          "tree_id": "b8fd77c316a4160c345f0ed3e6783223e21380f6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a37501216743fc84e81f5768d2a694461572ea7a"
-        },
-        "date": 1714125480592,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 596,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37801.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1aed7e0f602546cb4fc594e80081b279de552054",
           "message": "chore(deps): bump serde from 1.0.198 to 1.0.199 (#1724)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.198 to 1.0.199.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.198...v1.0.199)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-04-27T15:08:36+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34693.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6fc2fd810e3aa375c544118d7aeb1e8d52402ae",
+          "message": "chore(deps): bump tokio from 1.39.1 to 1.39.2 (#1845)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.39.1 to 1.39.2.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.39.1...tokio-1.39.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-27T22:03:21+08:00",
+          "tree_id": "7238100836801331694384b1f51b067c9d41af2d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e6fc2fd810e3aa375c544118d7aeb1e8d52402ae"
+        },
+        "date": 1722089618702,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 522,
             "unit": "s"
           },
           {
