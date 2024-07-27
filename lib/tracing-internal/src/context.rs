@@ -5,16 +5,15 @@ use std::error::Error;
 use std::fmt::{Debug, Formatter};
 use std::hash::{BuildHasherDefault, Hasher};
 use std::marker::PhantomData;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, LazyLock, Mutex};
 
 use event::trace::{KeyValue, Span, SpanContext};
-use once_cell::sync::Lazy;
 use tracing::span;
 use tracing_core::Dispatch;
 
-use crate::tracer::{PreSampledTracer, TraceData};
+use super::{PreSampledTracer, TraceData};
 
-static NOOP_SPAN: Lazy<SynchronizedSpan> = Lazy::new(|| SynchronizedSpan {
+static NOOP_SPAN: LazyLock<SynchronizedSpan> = LazyLock::new(|| SynchronizedSpan {
     span_context: SpanContext::empty_context(),
     inner: None,
 });

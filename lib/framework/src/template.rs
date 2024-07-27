@@ -1,6 +1,7 @@
 use std::borrow::Cow;
 use std::fmt;
 use std::fmt::Formatter;
+use std::sync::LazyLock;
 
 use bytes::Bytes;
 use chrono::format::{Item, StrftimeItems};
@@ -10,12 +11,11 @@ use configurable::{Configurable, ConfigurableString, GenerateError};
 use event::log::path::parse_target_path;
 use event::{log::Value, EventRef, Metric};
 use log_schema::log_schema;
-use once_cell::sync::Lazy;
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use thiserror::Error;
 
-static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap());
+static RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap());
 
 /// Errors raised whilst parsing a Template field.
 #[cfg_attr(test, derive(Eq, PartialEq))]

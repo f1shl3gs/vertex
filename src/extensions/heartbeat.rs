@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 use std::fmt::Debug;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 use std::ops::Deref;
+use std::sync::LazyLock;
 use std::time::Duration;
 
 use async_trait::async_trait;
@@ -14,11 +15,10 @@ use framework::tls::TlsConfig;
 use framework::{Extension, ShutdownSignal};
 use http::Request;
 use http_body_util::Full;
-use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use serde::Serialize;
 
-static UUID: Lazy<String> = Lazy::new(|| uuid::Uuid::new_v4().to_string());
+static UUID: LazyLock<String> = LazyLock::new(|| uuid::Uuid::new_v4().to_string());
 
 const fn default_interval() -> Duration {
     Duration::from_secs(60)
@@ -95,7 +95,7 @@ struct Status {
     resources: Vec<Resource>,
 }
 
-static STATUS: Lazy<Mutex<Status>> = Lazy::new(Default::default);
+static STATUS: LazyLock<Mutex<Status>> = LazyLock::new(Default::default);
 
 pub fn report_config(config: &framework::config::Config) {
     let mut resources = vec![];

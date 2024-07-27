@@ -59,7 +59,6 @@ log_schema = { path = "../log_schema" }
 bytesize = { path = "../bytesize" }
 memchr = { version = "2.7.4", default-features = false }
 metrics = { path = "../metrics" }
-once_cell = { version = "1.19.0", default-features = false }
 pem = { version = "3.0.4", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.1", default-features = false }
 pin-project-lite = { version = "0.2.14", default-features = false }
