@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722055431677,
+  "lastUpdate": 1722055864668,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cdd1e5f97a1bd5b641544c82fb8c712ccb805a50",
-          "message": "chore(deps): bump parking_lot from 0.12.1 to 0.12.2 (#1722)\n\nBumps [parking_lot](https://github.com/Amanieu/parking_lot) from 0.12.1 to 0.12.2.\r\n- [Changelog](https://github.com/Amanieu/parking_lot/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Amanieu/parking_lot/compare/0.12.1...0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: parking_lot\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-26T10:17:32+08:00",
-          "tree_id": "7d0462292775e4d4fc506fc9335f06b0b1fb6f27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cdd1e5f97a1bd5b641544c82fb8c712ccb805a50"
-        },
-        "date": 1714098534363,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 596,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37801.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a37501216743fc84e81f5768d2a694461572ea7a",
           "message": "chore(deps): bump flate2 from 1.0.28 to 1.0.29 (#1723)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.28 to 1.0.29.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.28...1.0.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-04-26T17:46:38+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36527.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3158d65c45b9242645db4c4cfa9de9e402040d47",
+          "message": "bump rust to 1.80.0 (#1844)\n\n* bump rust to 1.80.0\r\n\r\n* remove_once_cell",
+          "timestamp": "2024-07-27T12:40:05+08:00",
+          "tree_id": "b8f5d5c8d9ebf4aad10c5a0b7c5bbd37436eaf99",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3158d65c45b9242645db4c4cfa9de9e402040d47"
+        },
+        "date": 1722055847881,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34693.9,
             "unit": "KiB"
           }
         ]
