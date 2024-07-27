@@ -1,13 +1,13 @@
 use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
+use std::sync::LazyLock;
 
 use event::{tags, Metric};
-use once_cell::sync::Lazy;
 use sqlx::MySqlPool;
 
 use super::{valid_name, MysqlError};
 
-static GLOBAL_VARIABLES_DESC: Lazy<BTreeMap<&str, &str>> = Lazy::new(|| {
+static GLOBAL_VARIABLES_DESC: LazyLock<BTreeMap<&str, &str>> = LazyLock::new(|| {
     let mut map = BTreeMap::new();
     // https://github.com/facebook/mysql-5.6/wiki/New-MySQL-RocksDB-Server-Variables
     map.insert("rocksdb_access_hint_on_compaction_start", "File access pattern once a compaction is started, applied to all input files of a compaction.");

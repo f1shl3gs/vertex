@@ -396,7 +396,6 @@ dependencies = [
  "memmap2",
  "metrics",
  "num-traits",
- "once_cell",
  "parking_lot",
  "proptest",
  "prost 0.13.1",
@@ -1108,7 +1107,6 @@ dependencies = [
  "log_schema",
  "memchr",
  "metrics",
- "once_cell",
  "pem",
  "percent-encoding",
  "pin-project-lite",
@@ -4208,7 +4206,6 @@ name = "tracing-internal"
 version = "0.1.0"
 dependencies = [
  "event",
- "once_cell",
  "tokio",
  "tracing",
  "tracing-core",
@@ -4498,7 +4495,6 @@ dependencies = [
  "mimalloc",
  "multiline",
  "ntp",
- "once_cell",
  "parking_lot",
  "percent-encoding",
  "pprof",

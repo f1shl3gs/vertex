@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
+use std::sync::LazyLock;
 
 use chrono::NaiveDateTime;
 use event::{tags, Metric};
-use once_cell::sync::Lazy;
 use regex::Regex;
 use sqlx::mysql::MySqlRow;
 use sqlx::{Column, FromRow, MySqlPool, Row, ValueRef};
@@ -129,7 +129,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     }
 }
 
-static LOG_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r".+\.(\d+)$").unwrap());
+static LOG_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r".+\.(\d+)$").unwrap());
 
 fn parse_status(val: &str) -> Option<f64> {
     let text = val.to_lowercase();

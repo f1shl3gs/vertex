@@ -246,7 +246,7 @@ impl Event {
 impl Event {
     /// Returns the in-memory size of this type
     pub fn size_of(&self) -> usize {
-        std::mem::size_of_val(self) + self.allocated_bytes()
+        size_of_val(self) + self.allocated_bytes()
     }
 
     /// Returns the allocated bytes of this type

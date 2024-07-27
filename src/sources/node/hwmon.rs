@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
 use std::fs::{canonicalize, read_link};
 use std::path::{Path, PathBuf};
+use std::sync::LazyLock;
 
 use event::{tags, Metric};
 use futures::stream::{FuturesUnordered, StreamExt};
-use once_cell::sync::Lazy;
 use regex::Regex;
 
 use super::{read_to_string, Error};
@@ -530,7 +530,8 @@ fn is_hwmon_sensor(s: &str) -> bool {
     .contains(&s)
 }
 
-static HWMON_INVALID_METRIC_CHARS: Lazy<Regex> = Lazy::new(|| Regex::new("[^a-z0-9:_]").unwrap());
+static HWMON_INVALID_METRIC_CHARS: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new("[^a-z0-9:_]").unwrap());
 
 fn sanitized(s: &str) -> String {
     let s = s.trim();

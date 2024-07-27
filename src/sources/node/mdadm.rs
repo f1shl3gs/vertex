@@ -1,9 +1,9 @@
 //! Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
 
 use std::path::{Path, PathBuf};
+use std::sync::LazyLock;
 
 use event::{tags, tags::Key, Metric};
-use once_cell::sync::Lazy;
 use regex::Regex;
 
 use super::{read_to_string, Error};
@@ -181,8 +181,8 @@ fn eval_component_devices(fields: Vec<&str>) -> Vec<String> {
         .collect::<Vec<_>>()
 }
 
-static STATUS_LINE_RE: Lazy<Regex> =
-    Lazy::new(|| Regex::new(r"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]").unwrap());
+static STATUS_LINE_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]").unwrap());
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
     let size_str = status_line.split_ascii_whitespace().next().unwrap();

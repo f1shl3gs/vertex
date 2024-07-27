@@ -13,10 +13,10 @@ const MAX_LENGTH: usize = 128;
 const INLINE_CAP: usize = 23;
 
 /// 1. String memory layout
-///   pointer(8b) + capacity(8b) + len(8b)
+///    pointer(8b) + capacity(8b) + len(8b)
 ///
 /// 2. Static string
-///   pointer(8b) + len(8b)
+///    pointer(8b) + len(8b)
 #[repr(C)]
 pub struct Key {
     cap: usize,

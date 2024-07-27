@@ -7,7 +7,7 @@
 //! - Reading the files under /sys/class/powercap/intel-rapl/intel-rapl:0 using the powercap interface. This requires no special permissions, and was introduced in Linux 3.13
 //! - Using the perf_event interface with Linux 3.14 or newer. This requires root or a paranoid less than 1 (as do all system wide measurements with -a) sudo perf stat -a -e "power/energy-cores/" /bin/ls Available events can be found via perf list or under /sys/bus/event_source/devices/power/events/
 //! - Using raw-access to the underlying MSRs under /dev/msr. This requires root.
-//! Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
+//!   Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
 
 use std::collections::BTreeMap;
 use std::path::PathBuf;

@@ -2,6 +2,7 @@ mod client;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::BufRead;
+use std::sync::LazyLock;
 use std::time::Duration;
 
 use bytes::{Buf, Bytes};
@@ -13,10 +14,9 @@ use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
-use once_cell::sync::Lazy;
 use thiserror::Error;
 
-static GAUGE_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|| {
+static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock::new(|| {
     let mut m = BTreeMap::new();
     // # Server
     m.insert("uptime_in_seconds", "uptime_in_seconds");
@@ -178,7 +178,7 @@ static GAUGE_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|| 
     m
 });
 
-static COUNTER_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|| {
+static COUNTER_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock::new(|| {
     let mut m = BTreeMap::new();
 
     m.insert("total_connections_received", "connections_received_total");

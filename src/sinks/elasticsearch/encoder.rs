@@ -56,6 +56,7 @@ impl Encoder<Vec<ProcessedEvent>> for ElasticsearchEncoder {
             written +=
                 as_tracked_write::<_, _, io::Error>(writer, log.value(), |mut writer, log| {
                     writer.write_all(&[b'\n'])?;
+                    #[allow(clippy::needless_borrows_for_generic_args)]
                     serde_json::to_writer(&mut writer, log)?;
                     writer.write_all(&[b'\n'])?;
                     Ok(())

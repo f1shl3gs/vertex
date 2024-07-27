@@ -2,12 +2,12 @@
 
 use std::env;
 use std::future::Future;
+use std::sync::LazyLock;
 
 use event::{Events, Metric, MetricValue};
 use framework::Sink;
 use futures::Stream;
 use futures::StreamExt;
-use once_cell::sync::Lazy;
 
 use crate::testing::metrics::capture_metrics;
 
@@ -15,7 +15,7 @@ use crate::testing::metrics::capture_metrics;
 pub const HTTP_SINK_TAGS: [&str; 2] = ["endpoint", "protocol"];
 
 /// The component test specification for sinks that are push-based.
-pub static SINK_TESTS: Lazy<ComponentTests> = Lazy::new(|| {
+pub static SINK_TESTS: LazyLock<ComponentTests> = LazyLock::new(|| {
     ComponentTests {
         events: &["BytesSent", "EventsSent"], // EventsReceived is emitted in the topology
         tagged_counters: &["component_sent_bytes_total"],

@@ -194,15 +194,15 @@ impl NoProxy {
     ///
     /// The rules are as follows:
     /// * The environment variable `NO_PROXY` is checked, if it is not set, `no_proxy`
-    /// is checked.
+    ///   is checked.
     /// * If neither environment variable is set, `None` is returned.
     /// * Entries are expected to be comma-separated (whitespace between entries is ignored)
     /// * IP addresses (both IPv4 and IPv6) are allowed, as are optional subnet masks (by
-    /// adding /size, for example "`192.168.1.0/24`").
+    ///   adding /size, for example "`192.168.1.0/24`").
     /// * An entry "`*`" matches all hostnames (this is the only wildcard allowed)
     /// * Any other entry is considered a domain name (and may contain a leading dot, for
-    /// example `google.com` and `.google.com` are equivalent) and would match both that
-    /// domain and all subdomains.
+    ///   example `google.com` and `.google.com` are equivalent) and would match both that
+    ///   domain and all subdomains.
     ///
     /// For example, if `"NO_PROXY=google.com, 192.168.1.0/24"` was set, all of the
     /// following would match (and therefore would bypass the proxy):
