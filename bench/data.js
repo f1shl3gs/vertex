@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722223612041,
+  "lastUpdate": 1722223617405,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "58ef39255f8bb71e01490adc18caed8f1660688c",
-          "message": "chore(deps): bump num-traits from 0.2.18 to 0.2.19 (#1734)\n\nBumps [num-traits](https://github.com/rust-num/num-traits) from 0.2.18 to 0.2.19.\r\n- [Changelog](https://github.com/rust-num/num-traits/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/rust-num/num-traits/compare/num-traits-0.2.18...num-traits-0.2.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: num-traits\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-04T10:23:06+08:00",
-          "tree_id": "ebcc8f2afc6db38ce67dda7f15624651b0ebf081",
-          "url": "https://github.com/f1shl3gs/vertex/commit/58ef39255f8bb71e01490adc18caed8f1660688c"
-        },
-        "date": 1714789523066,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 522140,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 523550,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5011e477708abcd97ddea6d2b99273ee2d1c8081",
+          "message": "chore(deps): bump typetag from 0.2.16 to 0.2.17 (#1848)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.16 to 0.2.17.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.16...0.2.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-29T11:24:31+08:00",
+          "tree_id": "b243203138044f1e94c2dccd378ca023043bb82d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5011e477708abcd97ddea6d2b99273ee2d1c8081"
+        },
+        "date": 1722223601502,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 519890,
             "unit": "ns/op"
           }
         ]
