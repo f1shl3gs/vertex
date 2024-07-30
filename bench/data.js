@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722325574598,
+  "lastUpdate": 1722325603669,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "332f872a8b0d22ddd520b2524b14f4de8c5a7e96",
-          "message": "chore(deps): bump syn from 2.0.52 to 2.0.53 (#1653)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.52 to 2.0.53.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.52...2.0.53)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-17T09:33:51+08:00",
-          "tree_id": "b9b16a23457dcda72000078dcdd87be5a3e63d28",
-          "url": "https://github.com/f1shl3gs/vertex/commit/332f872a8b0d22ddd520b2524b14f4de8c5a7e96"
-        },
-        "date": 1710639379495,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.795,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 148.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 357.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 693.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fb84520ab08844b083c2894040007ade5ab7509f",
           "message": "chore(deps): bump serde_yaml from 0.9.32 to 0.9.33 (#1654)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.32 to 0.9.33.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.32...0.9.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-03-17T14:40:04+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 703.49,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4f5a4d501e7df7f5d5f4a09e8ca0c94e5a52773",
+          "message": "chore(deps): bump console-subscriber from 0.3.0 to 0.4.0 (#1849)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.3.0 to 0.4.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Changelog](https://github.com/tokio-rs/console/blob/main/release-plz.toml)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.3.0...console-subscriber-v0.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-30T15:43:34+08:00",
+          "tree_id": "aac7c57b390702c2eeff95159bdf4012fc216fb9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4f5a4d501e7df7f5d5f4a09e8ca0c94e5a52773"
+        },
+        "date": 1722325586839,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.431,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 163.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 336.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 682.29,
             "unit": "ns/op"
           }
         ]
