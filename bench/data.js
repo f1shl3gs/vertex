@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722413365434,
+  "lastUpdate": 1722446821536,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cdd1e5f97a1bd5b641544c82fb8c712ccb805a50",
-          "message": "chore(deps): bump parking_lot from 0.12.1 to 0.12.2 (#1722)\n\nBumps [parking_lot](https://github.com/Amanieu/parking_lot) from 0.12.1 to 0.12.2.\r\n- [Changelog](https://github.com/Amanieu/parking_lot/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Amanieu/parking_lot/compare/0.12.1...0.12.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: parking_lot\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-04-26T10:17:32+08:00",
-          "tree_id": "7d0462292775e4d4fc506fc9335f06b0b1fb6f27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cdd1e5f97a1bd5b641544c82fb8c712ccb805a50"
-        },
-        "date": 1714097984326,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.172,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.5,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 191.06,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aa4447d328d72dae45393011fcedc996c129d251",
+          "message": "chore(deps): bump bytes from 1.6.1 to 1.7.0 (#1851)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.6.1 to 1.7.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.6.1...v1.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-01T01:24:24+08:00",
+          "tree_id": "943c2f478d29ea93698d38bf635805a21c98d56f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aa4447d328d72dae45393011fcedc996c129d251"
+        },
+        "date": 1722446805296,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.408,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.725,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 188.55,
             "unit": "ns/op"
           }
         ]
