@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722326098916,
+  "lastUpdate": 1722412860145,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c912bb95a5ec0b2f54121a6b648d1637b168cd90",
-          "message": "chore(deps): bump k8s-openapi from 0.21.1 to 0.22.0 (#1735)\n\n* chore(deps): bump k8s-openapi from 0.21.1 to 0.22.0\r\n\r\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.21.1 to 0.22.0.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.21.1...v0.22.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update kube to 0.91.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2024-05-07T11:01:28+08:00",
-          "tree_id": "359d383c133a7df3777d601d68aede8f4327cd80",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c912bb95a5ec0b2f54121a6b648d1637b168cd90"
-        },
-        "date": 1715051012830,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 521100,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 520210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15a4e0d75eaeb242fa0bd4bd3782a283390c5501",
+          "message": "chore(deps): bump lru from 0.12.3 to 0.12.4 (#1850)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.3 to 0.12.4.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.3...0.12.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-07-31T15:58:27+08:00",
+          "tree_id": "b5f0d6470b0631c955fa161542a731ae41fde015",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15a4e0d75eaeb242fa0bd4bd3782a283390c5501"
+        },
+        "date": 1722412844068,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 521950,
             "unit": "ns/op"
           }
         ]
