@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722550646936,
+  "lastUpdate": 1722550651687,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "644794575e5271ec290a539e544d16b2ff12f4c5",
-          "message": "chore: cleanup unused & fmt (#1657)\n\n* cleanup unused & fmt",
-          "timestamp": "2024-03-18T13:44:37+08:00",
-          "tree_id": "46eac472028219ebc1dffc64c51ef14c58380ba8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/644794575e5271ec290a539e544d16b2ff12f4c5"
-        },
-        "date": 1710740849156,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.895,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 149.78,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 345.01,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 715.25,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0dbeb499846ed940bb4c043fcc9b3ef64e2c71f5",
           "message": "add lossy to decoding config (#1659)",
           "timestamp": "2024-03-18T20:25:01+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 745.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f64d75820eb6b868503c9a6934c6dd6507a8bb1",
+          "message": "chore(deps): bump bytes from 1.7.0 to 1.7.1 (#1853)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.7.0 to 1.7.1.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.7.0...v1.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-02T06:14:39+08:00",
+          "tree_id": "a413cc7a29e0d639f0eeddf565bd9bf73be191bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f64d75820eb6b868503c9a6934c6dd6507a8bb1"
+        },
+        "date": 1722550635273,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.441,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 148.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 337.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 669.5,
             "unit": "ns/op"
           }
         ]
