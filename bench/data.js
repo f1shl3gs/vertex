@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722551104696,
+  "lastUpdate": 1722551111554,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13217,40 +13217,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8dd861974dd36a2d9b803b04c17ec1e98be12a04",
-          "message": "bump maxminddb to latest commit (#1731)",
-          "timestamp": "2024-05-02T10:08:40+08:00",
-          "tree_id": "a512b83550e25f50f650f26d8be775333d2d0c90",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8dd861974dd36a2d9b803b04c17ec1e98be12a04"
-        },
-        "date": 1714616394050,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 588,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37793.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 34715.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f64d75820eb6b868503c9a6934c6dd6507a8bb1",
+          "message": "chore(deps): bump bytes from 1.7.0 to 1.7.1 (#1853)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.7.0 to 1.7.1.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.7.0...v1.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-02T06:14:39+08:00",
+          "tree_id": "a413cc7a29e0d639f0eeddf565bd9bf73be191bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f64d75820eb6b868503c9a6934c6dd6507a8bb1"
+        },
+        "date": 1722551095597,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34715.8,
             "unit": "KiB"
           }
         ]
