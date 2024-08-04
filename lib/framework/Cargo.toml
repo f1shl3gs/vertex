@@ -37,7 +37,7 @@ dyn-clone = { version = "1.0.17", default-features = false }
 event = { path = "../event" }
 # TODO: framework should not exit if any error happened
 exitcode = { version = "1.1.2" }
-flate2 = { version = "1.0.30" }
+flate2 = { version = "1.0.31" }
 futures = { version = "0.3.30", default-features = false, features = ["async-await"] }
 futures-util = { version = "0.3.30", default-features = false }
 glob = { version = "0.3.1" }
