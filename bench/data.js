@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722747488056,
+  "lastUpdate": 1722747898736,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "644794575e5271ec290a539e544d16b2ff12f4c5",
-          "message": "chore: cleanup unused & fmt (#1657)\n\n* cleanup unused & fmt",
-          "timestamp": "2024-03-18T13:44:37+08:00",
-          "tree_id": "46eac472028219ebc1dffc64c51ef14c58380ba8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/644794575e5271ec290a539e544d16b2ff12f4c5"
-        },
-        "date": 1710741378436,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 17639000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 474820,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.685,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0dbeb499846ed940bb4c043fcc9b3ef64e2c71f5",
           "message": "add lossy to decoding config (#1659)",
           "timestamp": "2024-03-18T20:25:01+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8caf2a9608d7219ebfae95834e9214e015393466",
+          "message": "chore(deps): bump flate2 from 1.0.30 to 1.0.31 (#1856)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.30 to 1.0.31.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-04T12:54:24+08:00",
+          "tree_id": "d5e3b0bc241be6232c5d7ec71c50296a33063fe3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8caf2a9608d7219ebfae95834e9214e015393466"
+        },
+        "date": 1722747881331,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27944000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 693740,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.058,
             "unit": "ns/op"
           }
         ]
