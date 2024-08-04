@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1722747898736,
+  "lastUpdate": 1722747929481,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1c31a677630376bf55ff9ff6bfc19619822c6f34",
-          "message": "fix resource type (#1745)",
-          "timestamp": "2024-05-11T14:26:54+08:00",
-          "tree_id": "a3a85550a7b258760255709dd5e6fc6f3e425486",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1c31a677630376bf55ff9ff6bfc19619822c6f34"
-        },
-        "date": 1715409449069,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 544,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37889.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 527,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34715.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8caf2a9608d7219ebfae95834e9214e015393466",
+          "message": "chore(deps): bump flate2 from 1.0.30 to 1.0.31 (#1856)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.30 to 1.0.31.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-04T12:54:24+08:00",
+          "tree_id": "d5e3b0bc241be6232c5d7ec71c50296a33063fe3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8caf2a9608d7219ebfae95834e9214e015393466"
+        },
+        "date": 1722747912569,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 554,
             "unit": "s"
           },
           {
