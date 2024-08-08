@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723090148586,
+  "lastUpdate": 1723090157397,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7c27c66861acdda75f43f3dfc111b594fb0e36d5",
-          "message": "bump toolchain to 1.78.0 (#1732)\n\n* bump toolchain to 1.78.0",
-          "timestamp": "2024-05-03T09:36:25+08:00",
-          "tree_id": "8955bd90b32c49426739f5d484e842e6e7eca121",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c27c66861acdda75f43f3dfc111b594fb0e36d5"
-        },
-        "date": 1714700313766,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.826,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 106.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 186.38,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 192.94,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5155819740d07fa03a7bc3caa56d111a1cb1c285",
+          "message": "chore(deps): bump serde from 1.0.204 to 1.0.205 (#1858)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.204 to 1.0.205.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.204...v1.0.205)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-08T12:06:49+08:00",
+          "tree_id": "0e572d51f3d5cfccea70364557d9f68efaad8adb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5155819740d07fa03a7bc3caa56d111a1cb1c285"
+        },
+        "date": 1723090141133,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 18.974,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.515,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 192.96,
             "unit": "ns/op"
           }
         ]
