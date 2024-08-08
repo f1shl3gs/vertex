@@ -66,7 +66,7 @@ pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "st
 regex = { version = "1.10.6", default-features = false }
 rustls = { version = "0.23.12", default-features = false }
 smallvec = { version = "1.13.2", default-features = false }
-serde = { version = "1.0.204", default-features = false, features = ["derive", "std"] }
+serde = { version = "1.0.205", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.122", default-features = false }
 serde_yaml = { version = "0.9.34", default-features = false }
 snap = { version = "1.1.1", default-features = false }
