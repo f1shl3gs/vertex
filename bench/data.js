@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723351139777,
+  "lastUpdate": 1723351147489,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a251a3d4f7e8cce2ae455731e87e9fd202937b6b",
-          "message": "add bytes information (#1664)",
-          "timestamp": "2024-03-22T00:46:58+08:00",
-          "tree_id": "f2cca874ab895eae9d8fe6b9111f6c17e3108c24",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a251a3d4f7e8cce2ae455731e87e9fd202937b6b"
-        },
-        "date": 1711039785247,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.878,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 156.88,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 346.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 682.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ec477eedbf1542530d32d9227e156d5bb259a7dc",
           "message": "update (#1665)",
           "timestamp": "2024-03-22T16:19:25+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 709.09,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ba068a0ab75283b8a4d7ec0655c6319370ab86ba",
+          "message": "chore(deps): bump typetag from 0.2.17 to 0.2.18 (#1859)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.17 to 0.2.18.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.17...0.2.18)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-11T12:36:05+08:00",
+          "tree_id": "b9e3f1fa7be7476b5d49daa828b69089f12737f8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ba068a0ab75283b8a4d7ec0655c6319370ab86ba"
+        },
+        "date": 1723351130827,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.234,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 159.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 354.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 728.53,
             "unit": "ns/op"
           }
         ]
