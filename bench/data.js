@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723368056344,
+  "lastUpdate": 1723368448164,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c1fc213711b6294058e8d9918a9c39d404deeafb",
-          "message": "chore(deps): bump the prost group with 3 updates (#1749)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.4 to 0.12.6\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.4...v0.12.6)\r\n\r\nUpdates `prost-types` from 0.12.4 to 0.12.6\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.4...v0.12.6)\r\n\r\nUpdates `prost-build` from 0.12.4 to 0.12.6\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.4...v0.12.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-18T08:38:23+08:00",
-          "tree_id": "8c841253d18ce644dce1d1abbb6d50276006b9bb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1fc213711b6294058e8d9918a9c39d404deeafb"
-        },
-        "date": 1715993342468,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37885.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aaf928266a72ca36881d45c97485534484603982",
           "message": "chore(deps): bump thiserror from 1.0.60 to 1.0.61 (#1750)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.60 to 1.0.61.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.60...1.0.61)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-05-18T08:38:34+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 34725.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "02d1081c9d9e19908e3cfe03ea5d747976e63856",
+          "message": "chore(deps): bump serde from 1.0.205 to 1.0.206 (#1860)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.205 to 1.0.206.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.205...v1.0.206)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-11T17:16:50+08:00",
+          "tree_id": "f2c0880f34800f1050edafcbd9e3b0ebcc56e81b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/02d1081c9d9e19908e3cfe03ea5d747976e63856"
+        },
+        "date": 1723368431616,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34726,
             "unit": "KiB"
           }
         ]
