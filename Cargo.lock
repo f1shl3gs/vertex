@@ -569,7 +569,7 @@ dependencies = [
  "event",
  "http",
  "humanize",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "inventory",
  "regex",
  "serde",
@@ -1055,7 +1055,7 @@ dependencies = [
  "hyper",
  "hyper-rustls",
  "hyper-util",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "inventory",
  "ipnet",
  "libc",
@@ -1248,7 +1248,7 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "http",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "slab",
  "tokio",
  "tokio-util",
@@ -1649,9 +1649,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.3.0"
+version = "2.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de3fc2e30ba82dd1b3911c8de1ffc143c74a914a14e99514d7637e3099df5ea0"
+checksum = "93ead53efc7ea8ed3cfb0c79fc8023fbb782a5432b52830b6518941cebe6505c"
 dependencies = [
  "equivalent",
  "hashbrown 0.14.5",
@@ -1665,7 +1665,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c77a3ae7d4761b9c64d2c030f70746ceb8cfba32dce0325a56792e0a4816c31"
 dependencies = [
  "ahash",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "is-terminal",
  "itoa",
  "log",
@@ -2460,7 +2460,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4c5cc86750666a3ed20bdaf5ca2a0344f9c67674cae0515bec2da16fbaa47db"
 dependencies = [
  "fixedbitset",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
 ]
 
 [[package]]
@@ -2642,7 +2642,7 @@ name = "prometheus"
 version = "0.1.0"
 dependencies = [
  "criterion",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "prost 0.13.1",
  "prost-build 0.13.1",
 ]
@@ -3278,7 +3278,7 @@ version = "0.9.34+deprecated"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a8b1a1a2ebf674015cc02edccce75287f1a0130d394307b36743c2f5d504b47"
 dependencies = [
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "itoa",
  "ryu",
  "serde",
@@ -3430,7 +3430,7 @@ dependencies = [
  "hashbrown 0.14.5",
  "hashlink",
  "hex",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "log",
  "memchr",
  "once_cell",
@@ -4324,7 +4324,7 @@ dependencies = [
  "humanize",
  "hyper",
  "hyper-util",
- "indexmap 2.3.0",
+ "indexmap 2.4.0",
  "inventory",
  "jaeger",
  "k8s-openapi",
