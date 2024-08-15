@@ -43,9 +43,8 @@ pub struct FixedRetryPolicy<L> {
     logic: L,
 }
 
-pub struct RetryPolicyFuture<L: RetryLogic> {
+pub struct RetryPolicyFuture {
     delay: Pin<Box<Sleep>>,
-    policy: FixedRetryPolicy<L>,
 }
 
 impl<L: RetryLogic> FixedRetryPolicy<L> {
@@ -64,28 +63,24 @@ impl<L: RetryLogic> FixedRetryPolicy<L> {
         }
     }
 
-    fn advance(&self) -> FixedRetryPolicy<L> {
-        let next_duration: Duration = self.previous_duration + self.current_duration;
+    fn advance(&mut self) {
+        let next_duration = self.previous_duration + self.current_duration;
 
-        FixedRetryPolicy {
-            remaining_attempts: self.remaining_attempts - 1,
-            previous_duration: self.current_duration,
-            current_duration: cmp::min(next_duration, self.max_duration),
-            max_duration: self.max_duration,
-            logic: self.logic.clone(),
-        }
+        self.remaining_attempts -= 1;
+        self.previous_duration = self.current_duration;
+        self.current_duration = cmp::min(next_duration, self.max_duration);
     }
 
     fn backoff(&self) -> Duration {
         self.current_duration
     }
 
-    fn build_retry(&self) -> RetryPolicyFuture<L> {
-        let policy = self.advance();
+    fn build_retry(&mut self) -> RetryPolicyFuture {
+        self.advance();
         let delay = Box::pin(sleep(self.backoff()));
 
         debug!(message = "Retrying request", delay_ms = %self.backoff().as_millis());
-        RetryPolicyFuture { delay, policy }
+        RetryPolicyFuture { delay }
     }
 }
 
@@ -94,9 +89,9 @@ where
     Req: Clone,
     L: RetryLogic<Response = Res>,
 {
-    type Future = RetryPolicyFuture<L>;
+    type Future = RetryPolicyFuture;
 
-    fn retry(&self, _: &Req, result: Result<&Res, &Error>) -> Option<Self::Future> {
+    fn retry(&mut self, _: &mut Req, result: &mut Result<Res, Error>) -> Option<Self::Future> {
         match result {
             Ok(response) => match self.logic.should_retry_resp(response) {
                 RetryAction::Retry(reason) => {
@@ -152,21 +147,21 @@ where
         }
     }
 
-    fn clone_request(&self, request: &Req) -> Option<Req> {
+    fn clone_request(&mut self, request: &Req) -> Option<Req> {
         Some(request.clone())
     }
 }
 
 // Safety: `L` is never pinned and we use no unsafe pin projections
 // therefore this safe.
-impl<L: RetryLogic> Unpin for RetryPolicyFuture<L> {}
+impl Unpin for RetryPolicyFuture {}
 
-impl<L: RetryLogic> Future for RetryPolicyFuture<L> {
-    type Output = FixedRetryPolicy<L>;
+impl Future for RetryPolicyFuture {
+    type Output = ();
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         futures::ready!(self.delay.poll_unpin(cx));
-        Poll::Ready(self.policy.clone())
+        Poll::Ready(())
     }
 }
 
@@ -284,25 +279,25 @@ mod tests {
         );
         assert_eq!(Duration::from_secs(1), policy.backoff());
 
-        policy = policy.advance();
+        policy.advance();
         assert_eq!(Duration::from_secs(1), policy.backoff());
 
-        policy = policy.advance();
+        policy.advance();
         assert_eq!(Duration::from_secs(2), policy.backoff());
 
-        policy = policy.advance();
+        policy.advance();
         assert_eq!(Duration::from_secs(3), policy.backoff());
 
-        policy = policy.advance();
+        policy.advance();
         assert_eq!(Duration::from_secs(5), policy.backoff());
 
-        policy = policy.advance();
+        policy.advance();
         assert_eq!(Duration::from_secs(8), policy.backoff());
 
-        policy = policy.advance();
+        policy.advance();
         assert_eq!(Duration::from_secs(10), policy.backoff());
 
-        policy = policy.advance();
+        policy.advance();
         assert_eq!(Duration::from_secs(10), policy.backoff());
     }
 
