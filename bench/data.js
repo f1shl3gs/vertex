@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723702155407,
+  "lastUpdate": 1723702171526,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "313b34d763913d52f0cf961032c2aae8ecbb2d08",
-          "message": "style (#1673)",
-          "timestamp": "2024-03-24T17:52:11+08:00",
-          "tree_id": "8c9a511ae5f25d82e9a03f3dfa5346f5e4a15c15",
-          "url": "https://github.com/f1shl3gs/vertex/commit/313b34d763913d52f0cf961032c2aae8ecbb2d08"
-        },
-        "date": 1711274087993,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.78,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 144.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 318.59,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 698.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0f469ed1a3b5e35b7546d86f2c8bb84315ba45f6",
           "message": "chore: default false for acknowledgement (#1658)\n\n* default false for acknowledgement",
           "timestamp": "2024-03-24T18:33:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 662.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf33046b73aa4497ad3665665a4ed4bdc02a0da9",
+          "message": "remove \"util\" feature of tower (#1867)",
+          "timestamp": "2024-08-15T14:06:35+08:00",
+          "tree_id": "7a58ea517ed7f73569b96da281d613dd2aab066d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf33046b73aa4497ad3665665a4ed4bdc02a0da9"
+        },
+        "date": 1723702155409,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 151.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 701.76,
             "unit": "ns/op"
           }
         ]
