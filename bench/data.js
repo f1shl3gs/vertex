@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723607251522,
+  "lastUpdate": 1723698735915,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "64e104f0f14a1ee761293c8469aed6535d356417",
-          "message": "chore(deps): bump syn from 2.0.64 to 2.0.65 (#1756)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.64 to 2.0.65.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.64...2.0.65)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-20T19:21:47+08:00",
-          "tree_id": "a30f579c35b5c2e7f6d0f9dc7f7c38b17a3b70dc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/64e104f0f14a1ee761293c8469aed6535d356417"
-        },
-        "date": 1716204227170,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 526450,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f58d444d5e19ebe5fdcea603303880244155dd07",
+          "message": "chore(deps): bump tower from 0.4.13 to 0.5.0 (#1865)\n\n* chore(deps): bump tower from 0.4.13 to 0.5.0\r\n\r\nBumps [tower](https://github.com/tower-rs/tower) from 0.4.13 to 0.5.0.\r\n- [Release notes](https://github.com/tower-rs/tower/releases)\r\n- [Commits](https://github.com/tower-rs/tower/compare/tower-0.4.13...tower-0.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tower\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update tower-layer to 0.3.3\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-08-15T13:09:55+08:00",
+          "tree_id": "f1fe48dec99e761edac4007a1838790ac1d6818c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f58d444d5e19ebe5fdcea603303880244155dd07"
+        },
+        "date": 1723698719983,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 535320,
             "unit": "ns/op"
           }
         ]
