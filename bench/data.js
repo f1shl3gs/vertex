@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723698747414,
+  "lastUpdate": 1723698805451,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "01ef4733120934ac2c37e37b6786e3ea709c5026",
-          "message": "chore(deps): bump async-trait from 0.1.78 to 0.1.79 (#1672)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.78 to 0.1.79.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.78...0.1.79)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-24T11:27:04+08:00",
-          "tree_id": "3857f22e0689d1e335188013628605ae1300af97",
-          "url": "https://github.com/f1shl3gs/vertex/commit/01ef4733120934ac2c37e37b6786e3ea709c5026"
-        },
-        "date": 1711250984401,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.676,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 142.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 308.09,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 700.08,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 704.45,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f58d444d5e19ebe5fdcea603303880244155dd07",
+          "message": "chore(deps): bump tower from 0.4.13 to 0.5.0 (#1865)\n\n* chore(deps): bump tower from 0.4.13 to 0.5.0\r\n\r\nBumps [tower](https://github.com/tower-rs/tower) from 0.4.13 to 0.5.0.\r\n- [Release notes](https://github.com/tower-rs/tower/releases)\r\n- [Commits](https://github.com/tower-rs/tower/compare/tower-0.4.13...tower-0.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tower\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update tower-layer to 0.3.3\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-08-15T13:09:55+08:00",
+          "tree_id": "f1fe48dec99e761edac4007a1838790ac1d6818c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f58d444d5e19ebe5fdcea603303880244155dd07"
+        },
+        "date": 1723698788400,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.423,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 159.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 662.71,
             "unit": "ns/op"
           }
         ]
