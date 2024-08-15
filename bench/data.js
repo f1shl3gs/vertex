@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723702141452,
+  "lastUpdate": 1723702155407,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1c31a677630376bf55ff9ff6bfc19619822c6f34",
-          "message": "fix resource type (#1745)",
-          "timestamp": "2024-05-11T14:26:54+08:00",
-          "tree_id": "a3a85550a7b258760255709dd5e6fc6f3e425486",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1c31a677630376bf55ff9ff6bfc19619822c6f34"
-        },
-        "date": 1715408948113,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.085,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.57,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf33046b73aa4497ad3665665a4ed4bdc02a0da9",
+          "message": "remove \"util\" feature of tower (#1867)",
+          "timestamp": "2024-08-15T14:06:35+08:00",
+          "tree_id": "7a58ea517ed7f73569b96da281d613dd2aab066d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf33046b73aa4497ad3665665a4ed4bdc02a0da9"
+        },
+        "date": 1723702138896,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.216,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.295,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 181.41,
             "unit": "ns/op"
           }
         ]
