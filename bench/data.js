@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723777148870,
+  "lastUpdate": 1723777150854,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b3d59b93dd8337677b4e7af393c16ba5cf54768f",
-          "message": "chore(deps): bump mimalloc from 0.1.41 to 0.1.42 (#1754)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.41 to 0.1.42.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.41...v0.1.42)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-20T19:22:41+08:00",
-          "tree_id": "924edee5024f83079cb0ac67917d7099b42795a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b3d59b93dd8337677b4e7af393c16ba5cf54768f"
-        },
-        "date": 1716204346844,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 520820,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 523750,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b86e596b658095f2034dd8f1db244bd28cdd7d31",
+          "message": "chore(deps): bump libc from 0.2.155 to 0.2.156 (#1869)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.155 to 0.2.156.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.156/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.155...0.2.156)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-16T10:56:47+08:00",
+          "tree_id": "58928582a4368f0f331da3a106000b2a072e018d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b86e596b658095f2034dd8f1db244bd28cdd7d31"
+        },
+        "date": 1723777134127,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534320,
             "unit": "ns/op"
           }
         ]
