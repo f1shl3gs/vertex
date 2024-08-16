@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723777247923,
+  "lastUpdate": 1723777628947,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "01ef4733120934ac2c37e37b6786e3ea709c5026",
-          "message": "chore(deps): bump async-trait from 0.1.78 to 0.1.79 (#1672)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.78 to 0.1.79.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.78...0.1.79)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-24T11:27:04+08:00",
-          "tree_id": "3857f22e0689d1e335188013628605ae1300af97",
-          "url": "https://github.com/f1shl3gs/vertex/commit/01ef4733120934ac2c37e37b6786e3ea709c5026"
-        },
-        "date": 1711251544957,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 25756000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 501930,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.421,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 46.139,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b86e596b658095f2034dd8f1db244bd28cdd7d31",
+          "message": "chore(deps): bump libc from 0.2.155 to 0.2.156 (#1869)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.155 to 0.2.156.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.156/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.155...0.2.156)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-16T10:56:47+08:00",
+          "tree_id": "58928582a4368f0f331da3a106000b2a072e018d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b86e596b658095f2034dd8f1db244bd28cdd7d31"
+        },
+        "date": 1723777612173,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28013000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 733510,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.469,
             "unit": "ns/op"
           }
         ]
