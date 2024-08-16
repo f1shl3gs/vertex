@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723777644059,
+  "lastUpdate": 1723777654476,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dddc3ed241efeb20774d180c2d8c69eaf93a2fd6",
-          "message": "chore(deps): bump syn from 2.0.65 to 2.0.66 (#1759)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.65 to 2.0.66.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.65...2.0.66)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-24T10:01:38+08:00",
-          "tree_id": "ca4befa978c19a2269828178b05cf5827cad6e52",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dddc3ed241efeb20774d180c2d8c69eaf93a2fd6"
-        },
-        "date": 1716516741897,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37787.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 34729.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e574c43fbdc72dd7a8e3d79da625ca1494b77d5f",
+          "message": "chore(deps): bump serde from 1.0.207 to 1.0.208 (#1870)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.207 to 1.0.208.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.207...v1.0.208)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-16T10:57:07+08:00",
+          "tree_id": "d5bc840945beca8bc60524264d3134f0a5b0abb5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e574c43fbdc72dd7a8e3d79da625ca1494b77d5f"
+        },
+        "date": 1723777637517,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 527,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34725.9,
             "unit": "KiB"
           }
         ]
