@@ -27,7 +27,7 @@ prost = { version = "0.13.1", default-features = false }
 serde = { version = "1.0.208", default-features = false, features = ["derive"] }
 bytesize = { path = "../bytesize" }
 thiserror = { version = "1.0.63", default-features = false }
-tokio = { version = "1.39.2", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
+tokio = { version = "1.39.3", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-util = { version = "0.7.11", default-features = false }
 tracing = { version = "0.1.40", default-features = false, features = ["attributes"] }
 
