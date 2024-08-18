@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1723953467382,
+  "lastUpdate": 1723953499806,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dddc3ed241efeb20774d180c2d8c69eaf93a2fd6",
-          "message": "chore(deps): bump syn from 2.0.65 to 2.0.66 (#1759)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.65 to 2.0.66.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.65...2.0.66)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-24T10:01:38+08:00",
-          "tree_id": "ca4befa978c19a2269828178b05cf5827cad6e52",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dddc3ed241efeb20774d180c2d8c69eaf93a2fd6"
-        },
-        "date": 1716516212631,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 537750,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 539300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3c9f50a23bd067f03d8747697db263e5c9870bc5",
+          "message": "chore(deps): bump tokio from 1.39.2 to 1.39.3 (#1872)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.39.2 to 1.39.3.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.39.2...tokio-1.39.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-18T11:56:02+08:00",
+          "tree_id": "7378660aca189df3b9a9b7d498945706427e9d94",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3c9f50a23bd067f03d8747697db263e5c9870bc5"
+        },
+        "date": 1723953483892,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 544070,
             "unit": "ns/op"
           }
         ]
