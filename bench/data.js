@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724060595986,
+  "lastUpdate": 1724060642685,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "32d2070170b6e249e2b4e604d382684a7c97cd0c",
-          "message": "chore(deps): bump serde from 1.0.202 to 1.0.203 (#1763)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.202 to 1.0.203.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.202...v1.0.203)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-26T10:05:15+08:00",
-          "tree_id": "71f9b86ba155a10cb8bbc86a420e2e619907ae77",
-          "url": "https://github.com/f1shl3gs/vertex/commit/32d2070170b6e249e2b4e604d382684a7c97cd0c"
-        },
-        "date": 1716689759513,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 558,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37787.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 526,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34730.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ac0ed76de4f3acecb3d514acb8ae88f38f74313",
+          "message": "chore(deps): bump libc from 0.2.157 to 0.2.158 (#1874)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.157 to 0.2.158.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.158/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.157...0.2.158)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-19T17:32:42+08:00",
+          "tree_id": "d032290e8b51f59434572e3c38b7d8a7e4d2d85e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ac0ed76de4f3acecb3d514acb8ae88f38f74313"
+        },
+        "date": 1724060625675,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 553,
             "unit": "s"
           },
           {
