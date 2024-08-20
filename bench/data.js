@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724060642685,
+  "lastUpdate": 1724185866937,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "015228d196f14241c51b186e04f5bc58a8d84704",
-          "message": "chore(deps): bump proc-macro2 from 1.0.83 to 1.0.84 (#1764)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.83 to 1.0.84.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.83...1.0.84)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-05-26T10:05:26+08:00",
-          "tree_id": "545aaa9fc5186cc4add3ddaaf8c1ad8a73b7b522",
-          "url": "https://github.com/f1shl3gs/vertex/commit/015228d196f14241c51b186e04f5bc58a8d84704"
-        },
-        "date": 1716689243714,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 523250,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e65b0a7ea7ae550cc9631773c17275001256a70f",
+          "message": "chore(deps): bump flate2 from 1.0.31 to 1.0.32 (#1875)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.31 to 1.0.32.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.31...1.0.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-21T04:28:40+08:00",
+          "tree_id": "07a37c2f77be593cb2353e2fb27fe17622ef2b5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e65b0a7ea7ae550cc9631773c17275001256a70f"
+        },
+        "date": 1724185850599,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 518130,
             "unit": "ns/op"
           }
         ]
