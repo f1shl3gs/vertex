@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724392829975,
+  "lastUpdate": 1724392902430,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "56d485f17234fc956b6e1ed0cc890a0a94f50e46",
-          "message": "cargo update (#1765)",
-          "timestamp": "2024-05-26T12:34:00+08:00",
-          "tree_id": "9f83ff685aa1d8cff7ff33271f888992fd6c35b1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/56d485f17234fc956b6e1ed0cc890a0a94f50e46"
-        },
-        "date": 1716698162667,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 524440,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 518130,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2220442abe595f2c59349043acdf2fec4236287a",
+          "message": "chore(deps): bump quote from 1.0.36 to 1.0.37 (#1876)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.36 to 1.0.37.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.36...1.0.37)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-23T13:57:32+08:00",
+          "tree_id": "211e914f89c98b2235b51fb83f7ac86a39cec1d0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2220442abe595f2c59349043acdf2fec4236287a"
+        },
+        "date": 1724392885365,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 539660,
             "unit": "ns/op"
           }
         ]
