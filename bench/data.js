@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724492478091,
+  "lastUpdate": 1724492479945,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "096eaa5da7bdda3f656206a3333e55df1d54399d",
-          "message": "chore(deps): bump tracing-test from 0.2.4 to 0.2.5 (#1769)\n\nBumps [tracing-test](https://github.com/dbrgn/tracing-test) from 0.2.4 to 0.2.5.\r\n- [Changelog](https://github.com/dbrgn/tracing-test/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/dbrgn/tracing-test/compare/v0.2.4...v0.2.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-test\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-03T01:56:47+08:00",
-          "tree_id": "772625b4dd94eefa85750011aec6e4b390ef8099",
-          "url": "https://github.com/f1shl3gs/vertex/commit/096eaa5da7bdda3f656206a3333e55df1d54399d"
-        },
-        "date": 1717351123966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 520380,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0b0c2458b5cb122c3b56f21dbcf85971baa1cc3e",
+          "message": "chore(deps): bump sqlx from 0.8.0 to 0.8.1 (#1878)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.8.0 to 0.8.1.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/compare/v0.8.0...v0.8.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-24T17:38:34+08:00",
+          "tree_id": "b12dfa683e1e406a77c0982ada7bfe76c37395c3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0b0c2458b5cb122c3b56f21dbcf85971baa1cc3e"
+        },
+        "date": 1724492463093,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 532870,
             "unit": "ns/op"
           }
         ]
