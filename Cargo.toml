@@ -410,7 +410,7 @@ regex = { version = "1.10.6", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "d48e59787305614f62d112f185cd234601ac8955", optional = true, features = ["transport-tls"] }
 smallvec = { version = "1.13.2", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
-sqlx = { version = "0.8.0", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
+sqlx = { version = "0.8.1", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.63", default-features = false }
 tonic = { version = "0.12.1", default-features = false, optional = true }
 tonic-health = { version = "0.12.1", default-features = false, optional = true }
