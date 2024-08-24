@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724492946794,
+  "lastUpdate": 1724492947630,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a128ac7999c04174fc7ba93286919e4f4f649ae8",
-          "message": "support mqtt5 (#1770)",
-          "timestamp": "2024-06-03T06:41:30+08:00",
-          "tree_id": "0d5a2724e356ec6bf925ff8d7b37e42e90e0a85f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a128ac7999c04174fc7ba93286919e4f4f649ae8"
-        },
-        "date": 1717368715207,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37800.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e021e5d788b810f9d983ef41c179e8ae400cb86b",
           "message": "remove unused (#1771)",
           "timestamp": "2024-06-03T20:02:29+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 34615.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0b0c2458b5cb122c3b56f21dbcf85971baa1cc3e",
+          "message": "chore(deps): bump sqlx from 0.8.0 to 0.8.1 (#1878)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.8.0 to 0.8.1.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/compare/v0.8.0...v0.8.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-24T17:38:34+08:00",
+          "tree_id": "b12dfa683e1e406a77c0982ada7bfe76c37395c3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0b0c2458b5cb122c3b56f21dbcf85971baa1cc3e"
+        },
+        "date": 1724492930510,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34615.7,
             "unit": "KiB"
           }
         ]
