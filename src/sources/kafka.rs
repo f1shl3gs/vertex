@@ -20,7 +20,9 @@ use log_schema::log_schema;
 use rskafka::client::partition::{OffsetAt, UnknownTopicHandling};
 use rskafka::client::{Client, ClientBuilder};
 use rskafka::protocol::error::Error as ProtocolError;
-use rskafka::protocol::messages::PartitionAssignment;
+use rskafka::protocol::messages::{
+    OffsetCommitRequestTopic, OffsetCommitRequestTopicPartition, PartitionAssignment,
+};
 use rskafka::record::RecordAndOffset;
 use rskafka::topic::Topic;
 use serde::{Deserialize, Serialize};
@@ -250,28 +252,32 @@ async fn run(
             }
         }
 
-        let consumer = client.consumer_group(group.clone(), &topics).await?;
-        let consumer = Arc::new(consumer);
+        let consumer = client
+            .consumer_group(group.clone(), &topics)
+            .await
+            .map(Arc::new)?;
         let notify = Arc::new(tokio::sync::Notify::new());
         let committed_offsets = consumer.offsets().await?;
-        let mut offsets = Vec::new();
+        // topic -> partition index -> offsets
+        let mut offsets = BTreeMap::<String, BTreeMap<i32, Arc<AtomicI64>>>::new();
 
         // consume topics
         for PartitionAssignment { topic, partitions } in consumer.assignment() {
-            let topic_offsets = committed_offsets.iter().find(|t| &t.name == topic);
+            let topic_committed_offsets = committed_offsets.iter().find(|t| &t.name == topic);
 
+            let mut topic_offsets = BTreeMap::<i32, Arc<AtomicI64>>::new();
             for partition in partitions {
                 let topic = topic.to_string();
                 let partition = *partition;
                 let signal = Arc::clone(&notify);
-                let current_offset = Arc::new(AtomicI64::new(0));
                 let cli = Arc::clone(&client);
                 let dec = decoder.clone();
                 let keys = Arc::clone(&keys);
                 let mut out = output.clone();
-                offsets.push(Arc::clone(&current_offset));
+                let current_offset = Arc::new(AtomicI64::new(0));
+                topic_offsets.insert(partition, Arc::clone(&current_offset));
 
-                let committed_offset = match topic_offsets {
+                let committed_offset = match topic_committed_offsets {
                     Some(topic) => topic
                         .partitions
                         .iter()
@@ -378,6 +384,8 @@ async fn run(
                     // consumer exit
                 });
             }
+
+            offsets.insert(topic.to_string(), topic_offsets);
         }
 
         // heartbeat loop
@@ -435,21 +443,29 @@ async fn run(
                     _ = ticker.tick() => {}
                 }
 
-                let mut i = 0;
-                for PartitionAssignment { topic, partitions } in cc.assignment() {
-                    for partition in partitions {
-                        let offset = offsets[i].load(Ordering::Relaxed);
-                        i += 1;
+                let topics = offsets
+                    .iter()
+                    .map(|(topic, topic_offsets)| {
+                        let partitions = topic_offsets
+                            .iter()
+                            .map(|(partition, offset)| OffsetCommitRequestTopicPartition {
+                                partition_index: *partition,
+                                committed_offset: offset.load(Ordering::Relaxed),
+                                committed_timestamp: 0,
+                                committed_leader_epoch: 0,
+                                committed_metadata: None,
+                            })
+                            .collect::<Vec<_>>();
 
-                        if offset == 0 {
-                            // consume nothing till now
-                            continue;
+                        OffsetCommitRequestTopic {
+                            name: topic.to_string(),
+                            partitions,
                         }
+                    })
+                    .collect::<Vec<_>>();
 
-                        if let Err(err) = cc.commit(topic, *partition, offset).await {
-                            error!(message = "commit offset failed", ?err);
-                        }
-                    }
+                if let Err(err) = cc.commit(topics).await {
+                    error!(message = "commit offset failed", ?err);
                 }
             }
         });

@@ -59,21 +59,22 @@ impl KafkaSink {
 
     async fn run_inner(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         let service = ConcurrencyLimit::new(self.service, QUEUE_MIN_MESSAGES);
+        let partitioner = KeyPartitioner::new(Some(self.topic));
         let mut request_builder = KafkaRequestBuilder {
             key_field: self.key_field,
             headers_field: self.headers_field,
             transformer: self.transformer,
             encoder: self.encoder,
         };
-        let partitioner = KeyPartitioner::new(Some(self.topic));
 
-        let sink = input
+        input
             .flat_map(|events| futures::stream::iter(events.into_events()))
             .batched_partitioned(partitioner, self.batch_settings)
             .filter_map(|(topic, batch)| async { Some((topic?, batch)) })
             .map(|(topic, batch)| request_builder.build(topic, batch))
-            .into_driver(service);
-        sink.run().await
+            .into_driver(service)
+            .run()
+            .await
     }
 }
 
@@ -85,26 +86,21 @@ pub async fn health_check(config: Config) -> crate::Result<()> {
         .build()
         .await?;
 
-    let topic = match Template::parse(&config.topic)?.render_string(&Event::from("")) {
-        Ok(topic) => Some(topic),
+    match Template::parse(&config.topic)?.render_string(&Event::from("")) {
+        Ok(name) => {
+            let topics = client.list_topics().await?;
+
+            if !topics.iter().any(|topic| topic.name == name) {
+                return Err(format!("topic {name} not found in metadata").into());
+            }
+        }
         Err(err) => {
             warn!(
                 message = "Could not generate topic for health check",
                 %err
             );
-
-            None
         }
     };
-
-    match topic {
-        Some(topic) => {
-            client.fetch_metadata(&topic).await?;
-        }
-        None => {
-            client.list_topics().await?;
-        }
-    }
 
     trace!(message = "Health check completed");
 
