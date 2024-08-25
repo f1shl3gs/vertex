@@ -1088,7 +1088,7 @@ dependencies = [
  "testify",
  "thiserror",
  "tokio",
- "tokio-rustls 0.26.0",
+ "tokio-rustls",
  "tokio-stream",
  "tokio-test",
  "tokio-util",
@@ -1551,7 +1551,7 @@ dependencies = [
  "pin-project-lite",
  "rustls-native-certs",
  "tokio",
- "tokio-rustls 0.26.0",
+ "tokio-rustls",
  "tower-service",
 ]
 
@@ -1570,7 +1570,7 @@ dependencies = [
  "rustls-native-certs",
  "rustls-pki-types",
  "tokio",
- "tokio-rustls 0.26.0",
+ "tokio-rustls",
  "tower-service",
 ]
 
@@ -1713,12 +1713,6 @@ name = "integer-encoding"
 version = "3.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8bb03732005da905c88227371639bf1ad885cc712789c011c31c5fb3ab3ccf02"
-
-[[package]]
-name = "integer-encoding"
-version = "4.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d762194228a2f1c11063e46e32e5acb96e66e906382b9eb5441f2e0504bbd5a"
 
 [[package]]
 name = "inventory"
@@ -3004,25 +2998,22 @@ dependencies = [
 
 [[package]]
 name = "rskafka"
-version = "0.3.0"
-source = "git+https://github.com/f1shl3gs/rskafka?rev=d48e59787305614f62d112f185cd234601ac8955#d48e59787305614f62d112f185cd234601ac8955"
+version = "0.5.0"
+source = "git+https://github.com/f1shl3gs/rskafka?rev=3bd650d80bc2c06a8369c5876aea7df08a19dc26#3bd650d80bc2c06a8369c5876aea7df08a19dc26"
 dependencies = [
- "async-trait",
  "bytes",
  "chrono",
  "crc32c",
  "flate2",
  "futures",
- "integer-encoding 4.0.2",
  "lz4",
  "parking_lot",
- "pin-project-lite",
  "rand",
- "rustls 0.21.12",
+ "rustls 0.23.12",
  "snap",
  "thiserror",
  "tokio",
- "tokio-rustls 0.24.1",
+ "tokio-rustls",
  "tracing",
  "zstd",
 ]
@@ -3752,7 +3743,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7e54bc85fc7faa8bc175c4bab5b92ba8d9a3ce893d0e9f42cc455c8ab16a9e09"
 dependencies = [
  "byteorder",
- "integer-encoding 3.0.4",
+ "integer-encoding",
  "ordered-float",
 ]
 
@@ -3839,16 +3830,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.75",
-]
-
-[[package]]
-name = "tokio-rustls"
-version = "0.24.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c28327cf380ac148141087fbfb9de9d7bd4e84ab5d2c28fbc911d753de8a7081"
-dependencies = [
- "rustls 0.21.12",
- "tokio",
 ]
 
 [[package]]

@@ -9,6 +9,7 @@ use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
+use rskafka::client::error::{ProtocolError, RequestContext};
 use rskafka::client::partition::{Compression, PartitionClient, UnknownTopicHandling};
 use rskafka::client::producer::Error;
 use rskafka::client::Client;
@@ -66,11 +67,23 @@ impl PartitionedProducer {
             .as_mut()
             .reset(Instant::now() + REFRESH_METADATA_INTERVAL);
 
+        // TODO: This is dummy, refactor is needed
         let topic = self
             .client
-            .fetch_metadata(&self.name)
+            .list_topics()
             .await
-            .map_err(|err| Error::Client(Arc::new(err)))?;
+            .map_err(|err| Error::Client(Arc::new(err)))?
+            .into_iter()
+            .find(|t| t.name == self.name)
+            .ok_or(Error::Client(Arc::new(
+                rskafka::client::error::Error::ServerError {
+                    protocol_error: ProtocolError::UnknownTopicOrPartition,
+                    error_message: None,
+                    request: RequestContext::Topic(self.name.clone()),
+                    response: None,
+                    is_virtual: false,
+                },
+            )))?;
 
         let mut tasks =
             FuturesUnordered::from_iter(topic.partitions.keys().map(|partition| async {
@@ -153,7 +166,7 @@ impl KafkaService {
     fn send(&mut self, req: KafkaRequest) -> BoxFuture<'static, Result<KafkaResponse, Error>> {
         let svc = self.clone();
 
-        let fut = async move {
+        Box::pin(async move {
             let topic = &req.topic;
 
             svc.producers
@@ -171,9 +184,7 @@ impl KafkaService {
                 })
                 .send(req)
                 .await
-        };
-
-        Box::pin(fut)
+        })
     }
 }
 
