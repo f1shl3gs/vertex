@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724562287518,
+  "lastUpdate": 1724562301280,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b72b0ac455f77484394612d3e27fa53b488231a8",
-          "message": "chore(deps): bump serde_yaml from 0.9.33 to 0.9.34+deprecated (#1677)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.33 to 0.9.34+deprecated.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.33...0.9.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-30T20:36:21+08:00",
-          "tree_id": "0eda2d80e9e453e748802d6bc6055dab74aadaed",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b72b0ac455f77484394612d3e27fa53b488231a8"
-        },
-        "date": 1711802360279,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.784,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 154.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 351.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 709.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 711.39,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f2dadafd9a0c6e3398547a3b5035db41611937e4",
+          "message": "chore(deps): bump flate2 from 1.0.32 to 1.0.33 (#1882)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.32 to 1.0.33.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.32...1.0.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-25T13:02:10+08:00",
+          "tree_id": "5c319fd9a959241974a0a30f0e7d6efa2f5bf692",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f2dadafd9a0c6e3398547a3b5035db41611937e4"
+        },
+        "date": 1724562284452,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.046,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 160.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 352.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 693.73,
             "unit": "ns/op"
           }
         ]
