@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724673956116,
+  "lastUpdate": 1724673961280,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e021e5d788b810f9d983ef41c179e8ae400cb86b",
-          "message": "remove unused (#1771)",
-          "timestamp": "2024-06-03T20:02:29+08:00",
-          "tree_id": "e7a0b26182ea282bdd23d63f04e761838665e1ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e021e5d788b810f9d983ef41c179e8ae400cb86b"
-        },
-        "date": 1717416286988,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.032,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.978,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 188.84,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 193.75,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7f7c37ccb95993fab10e6c7fa8ddf6851128b9c5",
+          "message": "change config.topic to Template (#1886)",
+          "timestamp": "2024-08-26T20:03:36+08:00",
+          "tree_id": "8d079fcaa129b1adda5ce2145925992b23f4273b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7f7c37ccb95993fab10e6c7fa8ddf6851128b9c5"
+        },
+        "date": 1724673944732,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.035,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.255,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 193.85,
             "unit": "ns/op"
           }
         ]
