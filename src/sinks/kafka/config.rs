@@ -9,7 +9,7 @@ use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rskafka::client::partition::Compression;
 
-use super::sink::health_check;
+use super::sink::{health_check, KafkaSink};
 
 mod compression_serde {
     use std::borrow::Cow;
@@ -99,7 +99,7 @@ pub struct Config {
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let sink = super::sink::KafkaSink::new(self.clone()).await?;
+        let sink = KafkaSink::new(self.clone()).await?;
         let hc = health_check(self.clone()).boxed();
         Ok((Sink::Stream(Box::new(sink)), hc))
     }
