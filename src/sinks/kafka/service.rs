@@ -129,13 +129,14 @@ async fn update_topics(
     mut tripwire: Tripwire,
     producers: Arc<RwLock<BTreeMap<String, Arc<TopicProducer>>>>,
 ) {
-    info!(message = "Updating topic metadata...");
+    debug!(message = "start updating topic metadata...");
 
     let mut ticker = tokio::time::interval(REFRESH_METADATA_INTERVAL);
     loop {
         select! {
             _ = ticker.tick() => {},
             _ = &mut tripwire => {
+                debug!(message = "stop updating topic metadata...");
                 return
             }
         }
