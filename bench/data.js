@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724656281298,
+  "lastUpdate": 1724656314274,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "67c0163f065a83c5bd81f022828caa1db58d1fc7",
-          "message": "chore(deps): bump pin-project-lite from 0.2.13 to 0.2.14 (#1687)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.13 to 0.2.14.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.13...v0.2.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-03-30T12:57:25+08:00",
-          "tree_id": "8a70e7fde712b93989cffcf507f144293b0e8e0d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/67c0163f065a83c5bd81f022828caa1db58d1fc7"
-        },
-        "date": 1711775391052,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 25859000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 508240,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.502,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b72b0ac455f77484394612d3e27fa53b488231a8",
           "message": "chore(deps): bump serde_yaml from 0.9.33 to 0.9.34+deprecated (#1677)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.33 to 0.9.34+deprecated.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.33...0.9.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-03-30T20:36:21+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.091,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "167e0fdc89e805e51145d618a9bb5f0ab49e9fe1",
+          "message": "refactor kafka service (#1885)",
+          "timestamp": "2024-08-26T15:00:55+08:00",
+          "tree_id": "82eb8a046ed0801ae5f0c93831f6f58ec26b7e58",
+          "url": "https://github.com/f1shl3gs/vertex/commit/167e0fdc89e805e51145d618a9bb5f0ab49e9fe1"
+        },
+        "date": 1724656296264,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27871000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 661900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.371,
             "unit": "ns/op"
           }
         ]
