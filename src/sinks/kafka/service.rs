@@ -1,22 +1,20 @@
 use std::collections::BTreeMap;
-use std::pin::Pin;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::task::{Context, Poll};
+use std::time::Duration;
 
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
-use futures_util::stream::FuturesUnordered;
-use futures_util::StreamExt;
-use rskafka::client::error::{ProtocolError, RequestContext};
+use parking_lot::RwLock;
 use rskafka::client::partition::{Compression, PartitionClient, UnknownTopicHandling};
 use rskafka::client::producer::Error;
 use rskafka::client::Client;
 use rskafka::record::Record;
-use tokio::sync::Mutex;
-use tokio::time::{sleep_until, Duration, Instant, Sleep};
+use tokio::select;
 use tower::Service;
+use tripwire::{Trigger, Tripwire};
 
 /// Producer should update topic metadata every 10m
 const REFRESH_METADATA_INTERVAL: Duration = Duration::from_secs(10 * 60);
@@ -50,147 +48,139 @@ impl Finalizable for KafkaRequest {
         std::mem::take(&mut self.finalizers)
     }
 }
-
-struct PartitionedProducer {
-    name: String,
+struct TopicProducer {
     compression: Compression,
-
-    next: AtomicUsize,
-    client: Arc<Client>,
-    producers: Vec<PartitionClient>,
-    refresh: Pin<Box<Sleep>>,
+    count: AtomicUsize,
+    partitions: Vec<PartitionClient>,
 }
 
-impl PartitionedProducer {
-    async fn update_partitions(&mut self) -> Result<(), Error> {
-        self.refresh
-            .as_mut()
-            .reset(Instant::now() + REFRESH_METADATA_INTERVAL);
+impl TopicProducer {
+    async fn new(
+        client: Arc<Client>,
+        compression: Compression,
+        topic: String,
+        partition_num: usize,
+    ) -> Result<TopicProducer, Error> {
+        let mut partitions = Vec::with_capacity(partition_num);
 
-        // TODO: This is dummy, refactor is needed
-        let topic = self
-            .client
-            .list_topics()
-            .await
-            .map_err(|err| Error::Client(Arc::new(err)))?
-            .into_iter()
-            .find(|t| t.name == self.name)
-            .ok_or(Error::Client(Arc::new(
-                rskafka::client::error::Error::ServerError {
-                    protocol_error: ProtocolError::UnknownTopicOrPartition,
-                    error_message: None,
-                    request: RequestContext::Topic(self.name.clone()),
-                    response: None,
-                    is_virtual: false,
-                },
-            )))?;
+        for partition in 0..partition_num {
+            let pc = client
+                .partition_client(&topic, partition as i32, UnknownTopicHandling::Error)
+                .await
+                .map_err(|err| Error::Client(err.into()))?;
 
-        let mut tasks =
-            FuturesUnordered::from_iter(topic.partitions.keys().map(|partition| async {
-                let partition_client = self
-                    .client
-                    .partition_client(&self.name, *partition, UnknownTopicHandling::Error)
-                    .await
-                    .map_err(|err| Error::Client(Arc::new(err)))?;
-
-                Ok((*partition, partition_client))
-            }));
-
-        let mut producers = Vec::new();
-        while let Some(result) = tasks.next().await {
-            match result {
-                Err(err) => return Err(err),
-                Ok((_partition, batch_producer)) => {
-                    producers.push(batch_producer);
-                }
-            }
+            partitions.push(pc);
         }
 
-        debug!(
-            message = "update partitions success",
-            topic = &self.name,
-            partitions = producers.len()
-        );
-
-        self.producers = producers;
-
-        Ok(())
+        Ok(TopicProducer {
+            partitions,
+            compression,
+            count: AtomicUsize::new(0),
+        })
     }
 
-    async fn send(&mut self, req: KafkaRequest) -> Result<KafkaResponse, Error> {
-        match futures::poll!(Pin::new(&mut self.refresh)) {
-            Poll::Pending => {
-                // metadata is not outdated, so nothing need to be done
-            }
-            Poll::Ready(()) => {
-                self.update_partitions().await?;
-            }
-        }
+    async fn send(&self, req: KafkaRequest) -> Result<KafkaResponse, Error> {
+        let index = self.count.fetch_add(1, Ordering::Relaxed) % self.partitions.len();
+        let pc = &self.partitions[index];
 
-        if self.producers.is_empty() {
-            self.update_partitions().await?;
-        }
-
-        // load balance
-        let pick = self.next.fetch_add(1, Ordering::SeqCst) % self.producers.len();
-        let producer = self
-            .producers
-            .get(pick)
-            .expect("get producer shall never failed");
-
-        let _offset = producer
-            .produce(req.records, self.compression)
+        pc.produce(req.records, self.compression)
             .await
-            .map_err(Arc::new)?;
+            .map_err(|err| Error::Client(err.into()))?;
 
         Ok(KafkaResponse { event_byte_size: 0 })
     }
 }
 
-#[derive(Clone)]
 pub struct KafkaService {
     client: Arc<Client>,
     compression: Compression,
-    producers: Arc<Mutex<BTreeMap<String, PartitionedProducer>>>,
+    producers: Arc<RwLock<BTreeMap<String, Arc<TopicProducer>>>>,
+
+    // when this service dropped, the trigger dropped too,
+    // so the background task can receive a signal and
+    // return
+    #[allow(dead_code)]
+    trigger: Trigger,
 }
 
 impl KafkaService {
     pub fn new(client: Client, compression: Compression) -> Self {
-        Self {
-            client: Arc::new(client),
+        let producers = Arc::new(Default::default());
+        let (trigger, tripwire) = Tripwire::new();
+        let client = Arc::new(client);
+
+        tokio::spawn(update_topics(
+            Arc::clone(&client),
+            tripwire,
+            Arc::clone(&producers),
+        ));
+
+        KafkaService {
+            client,
             compression,
-            producers: Default::default(),
+            producers,
+            trigger,
         }
     }
+}
 
-    fn send(&mut self, req: KafkaRequest) -> BoxFuture<'static, Result<KafkaResponse, Error>> {
-        let svc = self.clone();
+async fn update_topics(
+    client: Arc<Client>,
+    mut tripwire: Tripwire,
+    producers: Arc<RwLock<BTreeMap<String, Arc<TopicProducer>>>>,
+) {
+    info!(message = "Updating topic metadata...");
 
-        Box::pin(async move {
-            let topic = &req.topic;
+    let mut ticker = tokio::time::interval(REFRESH_METADATA_INTERVAL);
+    loop {
+        select! {
+            _ = ticker.tick() => {},
+            _ = &mut tripwire => {
+                return
+            }
+        }
 
-            svc.producers
-                .lock()
-                .await
-                .entry(topic.to_string())
-                .or_insert_with(|| PartitionedProducer {
-                    name: topic.to_string(),
-                    compression: svc.compression,
-                    next: Default::default(),
-                    client: Arc::clone(&svc.client),
-                    producers: Default::default(),
-                    // set sleep_until to now, so our first
-                    refresh: Box::pin(sleep_until(Instant::now())),
-                })
-                .send(req)
-                .await
-        })
+        match client.list_topics().await {
+            Ok(topics) => {
+                producers.write().retain(|name, producer| {
+                    match topics.iter().find(|topic| &topic.name == name) {
+                        None => {
+                            // producer exists, but it not found in topics we just
+                            // received, which means the topic is removed.
+                            info!(
+                                message = "remove topic producer, cause it removed",
+                                topic = %name,
+                            );
+
+                            false
+                        }
+                        Some(topic) => {
+                            let keep = topic.partitions.len() == producer.partitions.len();
+                            if !keep {
+                                info!(
+                                    message = "topic partition number changed",
+                                    topic = %name,
+                                    old = producer.partitions.len(),
+                                    new = topic.partitions.len(),
+                                );
+                            }
+
+                            keep
+                        }
+                    }
+                });
+            }
+            Err(err) => {
+                warn!(message = "Failed to list Kafka topics", %err);
+                continue;
+            }
+        }
     }
 }
 
 impl Service<KafkaRequest> for KafkaService {
     type Response = KafkaResponse;
-    type Error = Error;
+    type Error = crate::Error;
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
@@ -198,6 +188,38 @@ impl Service<KafkaRequest> for KafkaService {
     }
 
     fn call(&mut self, req: KafkaRequest) -> Self::Future {
-        self.send(req)
+        if let Some(producer) = self.producers.read().get(&req.topic) {
+            let producer = Arc::clone(producer);
+            return Box::pin(async move { producer.send(req).await.map_err(Into::into) });
+        }
+
+        let client = Arc::clone(&self.client);
+        let compression = self.compression;
+        let producers = Arc::clone(&self.producers);
+
+        Box::pin(async move {
+            let topics = client.list_topics().await?;
+
+            let producer = match topics.into_iter().find(|t| t.name == req.topic) {
+                Some(topic) => {
+                    // create topic partition client
+                    let producer =
+                        TopicProducer::new(client, compression, topic.name, topic.partitions.len())
+                            .await
+                            .map(Arc::new)?;
+
+                    producers
+                        .write()
+                        .insert(req.topic.clone(), Arc::clone(&producer));
+
+                    producer
+                }
+                None => {
+                    return Err(format!("Topic {} not found", req.topic).into());
+                }
+            };
+
+            producer.send(req).await.map_err(Into::into)
+        })
     }
 }
