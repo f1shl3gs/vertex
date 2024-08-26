@@ -144,38 +144,9 @@ impl RootCommand {
             .build()
             .unwrap();
 
-        let levels =
-            std::env::var("VERTEX_LOG").unwrap_or_else(|_| match self.log_level.as_str() {
-                "off" => "off".to_owned(),
-                #[cfg(feature = "tokio-console")]
-                level => [
-                    format!("vertex={}", level),
-                    format!("framework={}", level),
-                    format!("tail={}", level),
-                    format!("codec={}", level),
-                    "runtime=trace".to_owned(),
-                    "tokio=trace".to_owned(),
-                    format!("rskafka={}", level),
-                    format!("buffers={}", level),
-                ]
-                .join(","),
-                #[cfg(not(feature = "tokio-console"))]
-                level => [
-                    format!("vertex={}", level),
-                    format!("framework={}", level),
-                    format!("tail={}", level),
-                    format!("codec={}", level),
-                    format!("rskafka={}", level),
-                    format!("buffers={}", level),
-                ]
-                .join(","),
-            });
-
-        #[cfg(unix)]
+        let log_level = std::env::var("VERTEX_LOG").unwrap_or(self.log_level.clone());
         let color = std::io::stdout().is_terminal();
-        #[cfg(not(unix))]
-        let color = false;
-        framework::trace::init(color, false, &levels, 10);
+        framework::trace::init(color, false, &log_level, 10);
 
         // Note: `block_on` will spawn another worker thread too. so actual running
         // threads is always >= threads + 1.
