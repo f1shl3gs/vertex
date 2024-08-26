@@ -51,7 +51,7 @@ impl KafkaSink {
             transformer,
             encoder,
             service: KafkaService::new(client, config.compression),
-            topic: Template::parse(&config.topic)?,
+            topic: config.topic,
             key_field: config.key_field.clone(),
             batch_settings,
         })
@@ -86,7 +86,7 @@ pub async fn health_check(config: Config) -> crate::Result<()> {
         .build()
         .await?;
 
-    match Template::parse(&config.topic)?.render_string(&Event::from("")) {
+    match config.topic.render_string(&Event::from("")) {
         Ok(name) => {
             let topics = client.list_topics().await?;
 

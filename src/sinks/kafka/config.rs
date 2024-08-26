@@ -5,6 +5,7 @@ use configurable::configurable_component;
 use event::log::OwnedTargetPath;
 use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::template::Template;
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rskafka::client::partition::Compression;
@@ -70,7 +71,7 @@ pub struct Config {
 
     /// The Kafka topic name to write events to
     #[configurable(required)]
-    pub topic: String,
+    pub topic: Template,
 
     /// The log field name or tags key to use for the topic key. If the field
     /// does not exist in the log or in tags, a blank value will be used. If
