@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724730323655,
+  "lastUpdate": 1724939158727,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "81d5767de5af2a6fe453ed8eaa9ea3ade3365bac",
-          "message": "chore(deps): bump console-subscriber from 0.2.0 to 0.3.0 (#1779)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.2.0 to 0.3.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Changelog](https://github.com/tokio-rs/console/blob/main/release-plz.toml)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.2.0...console-subscriber-v0.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-11T09:44:55+08:00",
-          "tree_id": "dd04ef69c7a99b175b2013cebd808b7064e5a44d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/81d5767de5af2a6fe453ed8eaa9ea3ade3365bac"
-        },
-        "date": 1718070410921,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 522630,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524330,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb4e8f6dd9b07cbcf3a38bf05a7cb39bc94e1173",
+          "message": "remove unnecessary `configurable` attribute for namespaces in Config (#1889)",
+          "timestamp": "2024-08-29T21:43:39+08:00",
+          "tree_id": "267e9df0913d3ac81d6d8e814bfdbb66000e826e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb4e8f6dd9b07cbcf3a38bf05a7cb39bc94e1173"
+        },
+        "date": 1724939142781,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540150,
             "unit": "ns/op"
           }
         ]
