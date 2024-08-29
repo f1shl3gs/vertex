@@ -22,7 +22,6 @@ struct Config {
     /// Namespaces to watch for, if this field is empty, all namespaces will
     /// be watched.
     #[serde(default)]
-    #[configurable(required)]
     namespaces: Vec<String>,
 }
 
