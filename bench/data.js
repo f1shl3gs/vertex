@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1724939675274,
+  "lastUpdate": 1725025403889,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "07290035c0ab672a2c1978941cd05cbf362bad4b",
-          "message": "chore(deps): bump quick-xml from 0.31.0 to 0.32.0 (#1781)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.31.0 to 0.32.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.31.0...v0.32.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-11T09:46:14+08:00",
-          "tree_id": "54ec1853fd42e91823ec30814485763f701aa5ef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/07290035c0ab672a2c1978941cd05cbf362bad4b"
-        },
-        "date": 1718070493424,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 523300,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a1489443539cf9b9911068ff852554d5c7389d63",
+          "message": "chore(deps): bump tokio from 1.39.3 to 1.40.0 (#1890)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.39.3 to 1.40.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.39.3...tokio-1.40.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-30T21:40:46+08:00",
+          "tree_id": "282a900fee435148d5ec1b2280a57af7020f6d8f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a1489443539cf9b9911068ff852554d5c7389d63"
+        },
+        "date": 1725025387100,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 532430,
             "unit": "ns/op"
           }
         ]
