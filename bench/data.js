@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725072648470,
+  "lastUpdate": 1725072710240,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c1741026fa6f0fd97e9326f294634e8eb27c0dc1",
-          "message": "chore(deps): bump memchr from 2.7.2 to 2.7.3 (#1783)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.7.2 to 2.7.3.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.7.2...2.7.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-14T08:28:45+08:00",
-          "tree_id": "e84f9f35c2d4af3cc6fc5d50206366d030407a55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1741026fa6f0fd97e9326f294634e8eb27c0dc1"
-        },
-        "date": 1718325051176,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539740,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531810,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4106cfe3d7342929b31c75e3f02f12665fb3d178",
+          "message": "chore(deps): bump indexmap from 2.4.0 to 2.5.0 (#1892)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.4.0 to 2.5.0.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.4.0...2.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-31T10:49:31+08:00",
+          "tree_id": "5f0d29d979edf1e3e19302f38f47a581e5ca587c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4106cfe3d7342929b31c75e3f02f12665fb3d178"
+        },
+        "date": 1725072693920,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 517480,
             "unit": "ns/op"
           }
         ]
