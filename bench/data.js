@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725073216628,
+  "lastUpdate": 1725073222410,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26",
-          "message": "chore(deps): bump memchr from 2.7.3 to 2.7.4 (#1785)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.7.3 to 2.7.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.7.3...2.7.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-15T03:30:05+08:00",
-          "tree_id": "d06fe38fab6f6fe7a16f729b8eeb9175e792b551",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26"
-        },
-        "date": 1718394032882,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 543,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37721.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2f4cf616bb03d772ae2ffa5bd3b49ead6b66f6cb",
           "message": "chore(ci): bump docker/build-push-action from 5 to 6 (#1786)\n\nBumps [docker/build-push-action](https://github.com/docker/build-push-action) from 5 to 6.\r\n- [Release notes](https://github.com/docker/build-push-action/releases)\r\n- [Commits](https://github.com/docker/build-push-action/compare/v5...v6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: docker/build-push-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-18T13:46:21+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 34654.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "38f4d67fc6505c61d9fcd68745fc5d79e68e3ce2",
+          "message": "chore(deps): bump syn from 2.0.76 to 2.0.77 (#1893)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.76 to 2.0.77.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.76...2.0.77)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-08-31T10:49:46+08:00",
+          "tree_id": "958b219ab86d781e7a8fe8b9f8e696cdee25c99c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/38f4d67fc6505c61d9fcd68745fc5d79e68e3ce2"
+        },
+        "date": 1725073206308,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 535,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34651.2,
             "unit": "KiB"
           }
         ]
