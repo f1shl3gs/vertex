@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725505822279,
+  "lastUpdate": 1725505857895,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "94fefa862e4e2e84ba7e20a8ef935580b0eff72e",
-          "message": "chore(deps): bump regex from 1.10.4 to 1.10.5 (#1778)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.10.4 to 1.10.5.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.10.4...1.10.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-10T00:17:04+08:00",
-          "tree_id": "bf2a9694f18e79e1d39f8df2f62a90d3970cbe6c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/94fefa862e4e2e84ba7e20a8ef935580b0eff72e"
-        },
-        "date": 1717949975243,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.913,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 363.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 708.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "81d5767de5af2a6fe453ed8eaa9ea3ade3365bac",
           "message": "chore(deps): bump console-subscriber from 0.2.0 to 0.3.0 (#1779)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.2.0 to 0.3.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Changelog](https://github.com/tokio-rs/console/blob/main/release-plz.toml)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.2.0...console-subscriber-v0.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-11T09:44:55+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 718.05,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4a94a1e26067f7d39e20e8ab8167bf5f65472930",
+          "message": "chore(deps): bump hyper-rustls from 0.27.2 to 0.27.3 (#1896)\n\nBumps [hyper-rustls](https://github.com/rustls/hyper-rustls) from 0.27.2 to 0.27.3.\r\n- [Release notes](https://github.com/rustls/hyper-rustls/releases)\r\n- [Commits](https://github.com/rustls/hyper-rustls/compare/v/0.27.2...v/0.27.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-05T11:07:36+08:00",
+          "tree_id": "94bbed4fa46b2d8f2b9b6973d3f7d32720cba038",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4a94a1e26067f7d39e20e8ab8167bf5f65472930"
+        },
+        "date": 1725505840687,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.633,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 153.95,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 340.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 686.32,
             "unit": "ns/op"
           }
         ]
