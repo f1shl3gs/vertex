@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725508355448,
+  "lastUpdate": 1725508503675,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26",
-          "message": "chore(deps): bump memchr from 2.7.3 to 2.7.4 (#1785)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.7.3 to 2.7.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.7.3...2.7.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-15T03:30:05+08:00",
-          "tree_id": "d06fe38fab6f6fe7a16f729b8eeb9175e792b551",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26"
-        },
-        "date": 1718393535890,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 177.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58c6d047aaa2ee2c7b95206cadfdcfc4c507f4cf",
+          "message": "chore(deps): bump serde_json from 1.0.127 to 1.0.128 (#1897)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.127 to 1.0.128.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/1.0.127...1.0.128)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-05T11:52:36+08:00",
+          "tree_id": "7e4f58bb5aedce381c0f5e215434285034a1aa8f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/58c6d047aaa2ee2c7b95206cadfdcfc4c507f4cf"
+        },
+        "date": 1725508487652,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.047,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 182.25,
             "unit": "ns/op"
           }
         ]
