@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725505886617,
+  "lastUpdate": 1725506278895,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4d9f27c6b065a976240ca8beedfa50be830bdbf1",
-          "message": "remove notify (#1777)",
-          "timestamp": "2024-06-08T04:57:33+08:00",
-          "tree_id": "544b46c798c4f9f3588a81454da8159df83d0012",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4d9f27c6b065a976240ca8beedfa50be830bdbf1"
-        },
-        "date": 1717794529376,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 26294000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 434930,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.443,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.932,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4a94a1e26067f7d39e20e8ab8167bf5f65472930",
+          "message": "chore(deps): bump hyper-rustls from 0.27.2 to 0.27.3 (#1896)\n\nBumps [hyper-rustls](https://github.com/rustls/hyper-rustls) from 0.27.2 to 0.27.3.\r\n- [Release notes](https://github.com/rustls/hyper-rustls/releases)\r\n- [Commits](https://github.com/rustls/hyper-rustls/compare/v/0.27.2...v/0.27.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-05T11:07:36+08:00",
+          "tree_id": "94bbed4fa46b2d8f2b9b6973d3f7d32720cba038",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4a94a1e26067f7d39e20e8ab8167bf5f65472930"
+        },
+        "date": 1725506262105,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27705000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 714550,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.053,
             "unit": "ns/op"
           }
         ]
