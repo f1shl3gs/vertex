@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725599489839,
+  "lastUpdate": 1725618240071,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bff26087c0ab65625d595c4a81d928334603fe01",
-          "message": "chore(deps): bump uuid from 1.8.0 to 1.9.0 (#1796)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.8.0 to 1.9.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.8.0...1.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-24T14:04:14+08:00",
-          "tree_id": "807d560a4ea26985579e0852165ce06f8c9b4939",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bff26087c0ab65625d595c4a81d928334603fe01"
-        },
-        "date": 1719209176155,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 528680,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 527250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0fe2977e8d6429794276030eba026cb51e178d8f",
+          "message": "cargo update (#1903)",
+          "timestamp": "2024-09-06T18:21:32+08:00",
+          "tree_id": "08f14b7b03d70c75906952abbf8093afda641646",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0fe2977e8d6429794276030eba026cb51e178d8f"
+        },
+        "date": 1725618223895,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 524400,
             "unit": "ns/op"
           }
         ]
