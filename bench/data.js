@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725597778991,
+  "lastUpdate": 1725597780382,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "15a34a16ba8aedf1be35c79b23c52c882cad6477",
-          "message": "chore(deps): bump mimalloc from 0.1.42 to 0.1.43 (#1794)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.42 to 0.1.43.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.42...v0.1.43)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-23T22:02:21+08:00",
-          "tree_id": "abe1cb33aef2ef2b613df8e642cfe9312e7c1275",
-          "url": "https://github.com/f1shl3gs/vertex/commit/15a34a16ba8aedf1be35c79b23c52c882cad6477"
-        },
-        "date": 1719151953663,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 530,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37577.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bff26087c0ab65625d595c4a81d928334603fe01",
           "message": "chore(deps): bump uuid from 1.8.0 to 1.9.0 (#1796)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.8.0 to 1.9.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.8.0...1.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-24T14:04:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 556,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34677.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c80321c0e67088f9a17d1749e481358343daa77a",
+          "message": "chore(deps): bump dashmap from 6.0.1 to 6.1.0 (#1901)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 6.0.1 to 6.1.0.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v6.0.1...v6.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-06T12:31:59+08:00",
+          "tree_id": "89258c0ce44c9eeb913aaff0c581bd283807b8f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c80321c0e67088f9a17d1749e481358343daa77a"
+        },
+        "date": 1725597760630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
             "unit": "s"
           },
           {
