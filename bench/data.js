@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725597368388,
+  "lastUpdate": 1725597730729,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6480ab78d9dc4be349d7900fb68b101a527844c8",
-          "message": "chore(deps): bump quick-xml from 0.32.0 to 0.33.0 (#1792)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.32.0 to 0.33.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.32.0...v0.33.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-22T10:42:41+08:00",
-          "tree_id": "9d601dc68642ba7ec60fcc87e99974525e3bfb38",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6480ab78d9dc4be349d7900fb68b101a527844c8"
-        },
-        "date": 1719024778651,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 535,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37577.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cf3c8546758be4eb2036c3493eed18dec5230ce1",
           "message": "chore(deps): bump proptest from 1.4.0 to 1.5.0 (#1793)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-23T12:37:18+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 34681.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5900e04fef016a52ef90cfe0642a66c8a7494f50",
+          "message": "bump to 1.80.1 (#1899)",
+          "timestamp": "2024-09-06T12:31:24+08:00",
+          "tree_id": "87ac47fa5da54a8843b7dbd9c66de90e035a1adc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5900e04fef016a52ef90cfe0642a66c8a7494f50"
+        },
+        "date": 1725597713803,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 537,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34677,
             "unit": "KiB"
           }
         ]
