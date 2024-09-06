@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725597281580,
+  "lastUpdate": 1725597290705,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cf3c8546758be4eb2036c3493eed18dec5230ce1",
-          "message": "chore(deps): bump proptest from 1.4.0 to 1.5.0 (#1793)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-23T12:37:18+08:00",
-          "tree_id": "3ceb36cb4c038a85e9a9b27605cee376a7519cbd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf3c8546758be4eb2036c3493eed18dec5230ce1"
-        },
-        "date": 1719117564654,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 535580,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 543170,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c80321c0e67088f9a17d1749e481358343daa77a",
+          "message": "chore(deps): bump dashmap from 6.0.1 to 6.1.0 (#1901)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 6.0.1 to 6.1.0.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v6.0.1...v6.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-06T12:31:59+08:00",
+          "tree_id": "89258c0ce44c9eeb913aaff0c581bd283807b8f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c80321c0e67088f9a17d1749e481358343daa77a"
+        },
+        "date": 1725597273560,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537060,
             "unit": "ns/op"
           }
         ]
