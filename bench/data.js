@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725597322140,
+  "lastUpdate": 1725597333493,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "07290035c0ab672a2c1978941cd05cbf362bad4b",
-          "message": "chore(deps): bump quick-xml from 0.31.0 to 0.32.0 (#1781)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.31.0 to 0.32.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.31.0...v0.32.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-11T09:46:14+08:00",
-          "tree_id": "54ec1853fd42e91823ec30814485763f701aa5ef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/07290035c0ab672a2c1978941cd05cbf362bad4b"
-        },
-        "date": 1718070570998,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 248.86,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 25256,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 124520,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 250840,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 155.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 15527,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 77557,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 155110,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a4e33794757b262ad84ed0dec3f20354193d2ef8",
           "message": "chore(deps): bump url from 2.5.0 to 2.5.1 (#1780)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.0 to 2.5.1.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.0...v2.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-11T09:46:47+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 128590,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8767852fee7f26a2ea725fd69754b47ca75ef6c6",
+          "message": "chore(deps): bump tokio-stream from 0.1.15 to 0.1.16 (#1900)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.15 to 0.1.16.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.15...tokio-stream-0.1.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-06T12:31:41+08:00",
+          "tree_id": "42f1671bd168b660bb1a78347b4d2beeb9510056",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8767852fee7f26a2ea725fd69754b47ca75ef6c6"
+        },
+        "date": 1725597316497,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 195.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 19380,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 97991,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 193320,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 129.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12964,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 64647,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 128980,
             "unit": "ns/op"
           }
         ]
