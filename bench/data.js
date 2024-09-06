@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725597780382,
+  "lastUpdate": 1725598977032,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "15a34a16ba8aedf1be35c79b23c52c882cad6477",
-          "message": "chore(deps): bump mimalloc from 0.1.42 to 0.1.43 (#1794)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.42 to 0.1.43.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.42...v0.1.43)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-23T22:02:21+08:00",
-          "tree_id": "abe1cb33aef2ef2b613df8e642cfe9312e7c1275",
-          "url": "https://github.com/f1shl3gs/vertex/commit/15a34a16ba8aedf1be35c79b23c52c882cad6477"
-        },
-        "date": 1719151455384,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536780,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537060,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a658166a59cde6b52fd4fd220dc2cadbd81a66f",
+          "message": "bump to 1.81.0 (#1902)",
+          "timestamp": "2024-09-06T13:00:32+08:00",
+          "tree_id": "dab4af2d5985724cefa029b05ad983a1683c1028",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a658166a59cde6b52fd4fd220dc2cadbd81a66f"
+        },
+        "date": 1725598960280,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527250,
             "unit": "ns/op"
           }
         ]
