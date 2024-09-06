@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725618264496,
+  "lastUpdate": 1725618269932,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26",
-          "message": "chore(deps): bump memchr from 2.7.3 to 2.7.4 (#1785)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.7.3 to 2.7.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.7.3...2.7.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-15T03:30:05+08:00",
-          "tree_id": "d06fe38fab6f6fe7a16f729b8eeb9175e792b551",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bcdd78c13ed4f62e7f74a0c7e31941371d2c5c26"
-        },
-        "date": 1718393559410,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.381,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 143.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 321.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 663.51,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "668a50bf7ff7686d3cc0503ccae936118633dafb",
           "message": "chore(deps): bump url from 2.5.1 to 2.5.2 (#1788)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.1 to 2.5.2.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.1...v2.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-19T19:46:35+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 698.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0fe2977e8d6429794276030eba026cb51e178d8f",
+          "message": "cargo update (#1903)",
+          "timestamp": "2024-09-06T18:21:32+08:00",
+          "tree_id": "08f14b7b03d70c75906952abbf8093afda641646",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0fe2977e8d6429794276030eba026cb51e178d8f"
+        },
+        "date": 1725618253157,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 145.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 347.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 697.94,
             "unit": "ns/op"
           }
         ]
