@@ -31,7 +31,7 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
                 write!(writer, ",{key}={value}")?;
             }
 
-            writer.write_all(&[b' '])?;
+            writer.write_all(b" ")?;
 
             match &metric.value {
                 MetricValue::Sum(value) => {
@@ -47,7 +47,7 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
                 } => {
                     for (index, bucket) in buckets.iter().enumerate() {
                         if index != 0 {
-                            writer.write_all(&[b','])?;
+                            writer.write_all(b",")?;
                         }
 
                         if bucket.upper == f64::MAX {
