@@ -147,7 +147,7 @@ where
             let roundtrip = before.elapsed();
 
             // Handle the errors and extract the response.
-            let resp = resp_result.map_err(|err| {
+            let resp = resp_result.inspect_err(|err| {
                 metrics::register_counter(
                     "http_client_request_errors_total",
                     "The total number of HTTP request errors for this component.",
@@ -161,8 +161,6 @@ where
                 )
                 .recorder(&[("status", "none")])
                 .record(roundtrip.as_secs_f64());
-
-                err
             })?;
 
             debug!(

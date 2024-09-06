@@ -505,7 +505,7 @@ impl Compiler<'_> {
                 }
                 Token::PathField(path) => {
                     // ".", ".foo", "%" or "%foo"
-                    if path.starts_with(|c| c == '.' || c == '%') {
+                    if path.starts_with(['.', '%']) {
                         let path = if path == "." {
                             OwnedTargetPath::event_root()
                         } else if path == "%" {
@@ -519,7 +519,7 @@ impl Compiler<'_> {
                     }
 
                     // "foo" or "foo.bar"
-                    match path.split_once(|c| c == '.' || c == '[') {
+                    match path.split_once(['.', '[']) {
                         Some((name, path)) => {
                             let index = self.type_state.push(name);
                             let path = parse_value_path(path)
@@ -774,7 +774,7 @@ impl Compiler<'_> {
                 Token::FunctionCall(_name) => self.parse_function_call(),
                 Token::PathField(path) => {
                     // ".", ".foo", "%" or "%foo"
-                    let query = if path.starts_with(|c| c == '.' || c == '%') {
+                    let query = if path.starts_with(['.', '%']) {
                         let path = parse_target_path(path)
                             .map_err(|err| SyntaxError::InvalidPath { err, span })?;
 
@@ -783,7 +783,7 @@ impl Compiler<'_> {
                         Query::External(path)
                     } else {
                         // "foo", "foo.bar" or "foo[1]"
-                        match path.find(|c| c == '.' || c == '[') {
+                        match path.find(['.', '[']) {
                             Some(index) => {
                                 let (name, path) = path.split_at(index);
 
