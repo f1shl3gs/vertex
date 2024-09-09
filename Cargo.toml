@@ -362,7 +362,7 @@ tracing = { version = "0.1.40", default-features = false }
 
 # HTTP
 hyper = { version = "1.4.1", default-features = false, features = ["server"] }
-hyper-util = { version = "0.1.7", default-features = false, features = ["client"] }
+hyper-util = { version = "0.1.8", default-features = false, features = ["client"] }
 http = { version = "1.1.0", default-features = false }
 http-body-util = { version = "0.1.2", default-features = false }
 
