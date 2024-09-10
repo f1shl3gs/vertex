@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725937876018,
+  "lastUpdate": 1725937897105,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cf3c8546758be4eb2036c3493eed18dec5230ce1",
-          "message": "chore(deps): bump proptest from 1.4.0 to 1.5.0 (#1793)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-23T12:37:18+08:00",
-          "tree_id": "3ceb36cb4c038a85e9a9b27605cee376a7519cbd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf3c8546758be4eb2036c3493eed18dec5230ce1"
-        },
-        "date": 1719117597267,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.994,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 152.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 340.09,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 706.14,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "15a34a16ba8aedf1be35c79b23c52c882cad6477",
           "message": "chore(deps): bump mimalloc from 0.1.42 to 0.1.43 (#1794)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.42 to 0.1.43.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.42...v0.1.43)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-23T22:02:21+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 708.49,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "187017842576cbf00c8a588104818eb6a0a92947",
+          "message": "chore(deps): bump ipnet from 2.9.0 to 2.10.0 (#1905)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.9.0 to 2.10.0.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/compare/2.9.0...2.10.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-10T11:08:39+08:00",
+          "tree_id": "eb7d2e38d756a4760563646fe15836b123701aed",
+          "url": "https://github.com/f1shl3gs/vertex/commit/187017842576cbf00c8a588104818eb6a0a92947"
+        },
+        "date": 1725937880029,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.365,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 154.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 331.67,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 717.74,
             "unit": "ns/op"
           }
         ]
