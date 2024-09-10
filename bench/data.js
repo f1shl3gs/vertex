@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1725935951177,
+  "lastUpdate": 1725935965804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "497f75715783e8944faf50da69d7b6c76fb0d5b5",
-          "message": "chore(deps): bump uuid from 1.9.0 to 1.9.1 (#1799)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.9.0 to 1.9.1.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.9.0...1.9.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-25T12:15:02+08:00",
-          "tree_id": "d15f33b0d5f1a85b19cafca2284b123398ea6f0f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/497f75715783e8944faf50da69d7b6c76fb0d5b5"
-        },
-        "date": 1719289543981,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 552,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37573.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2d7460505971eb0fc4aea320c125b2797e1158c6",
           "message": "chore(deps): bump serde_json from 1.0.117 to 1.0.118 (#1800)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.117 to 1.0.118.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.117...v1.0.118)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-25T20:12:27+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35000,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9265611e62735e2ac5874c2fb9ec5995778141cf",
+          "message": "chore(deps): bump hyper-util from 0.1.7 to 0.1.8 (#1907)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.7 to 0.1.8.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.7...v0.1.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-10T10:28:40+08:00",
+          "tree_id": "81f11ab8c4443a6b4b902f70df787f75ce0e1f60",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9265611e62735e2ac5874c2fb9ec5995778141cf"
+        },
+        "date": 1725935949705,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 523,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35001.3,
             "unit": "KiB"
           }
         ]
