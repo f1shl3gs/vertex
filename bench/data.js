@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726277566499,
+  "lastUpdate": 1726277581574,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bff26087c0ab65625d595c4a81d928334603fe01",
-          "message": "chore(deps): bump uuid from 1.8.0 to 1.9.0 (#1796)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.8.0 to 1.9.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.8.0...1.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-24T14:04:14+08:00",
-          "tree_id": "807d560a4ea26985579e0852165ce06f8c9b4939",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bff26087c0ab65625d595c4a81d928334603fe01"
-        },
-        "date": 1719209204905,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.976,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 148.77,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 334.35,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 682.79,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0daf0691018a0416c5ad8fd92ff6ba1e4f540ca5",
           "message": "chore(deps): bump syn from 2.0.67 to 2.0.68 (#1795)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.67 to 2.0.68.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.67...2.0.68)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-24T14:04:27+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 701.64,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef426e38281413958a1a71c2d7e5291e2176d04b",
+          "message": "chore(deps): bump kube from 0.94.1 to 0.94.2 (#1912)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.94.1 to 0.94.2.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.94.1...0.94.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-14T09:30:07+08:00",
+          "tree_id": "aa17a880ee54955f67ee23cfc1982ff8a2e45c64",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef426e38281413958a1a71c2d7e5291e2176d04b"
+        },
+        "date": 1726277564004,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 141.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 333.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 687.93,
             "unit": "ns/op"
           }
         ]
