@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726277581574,
+  "lastUpdate": 1726277583653,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2d7460505971eb0fc4aea320c125b2797e1158c6",
-          "message": "chore(deps): bump serde_json from 1.0.117 to 1.0.118 (#1800)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.117 to 1.0.118.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.117...v1.0.118)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-25T20:12:27+08:00",
-          "tree_id": "95507f0b792dd13aa3f161e560160936bd9d2a6c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2d7460505971eb0fc4aea320c125b2797e1158c6"
-        },
-        "date": 1719317679600,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.053,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.621,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 197.89,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 189.69,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fad956751d38ce39bbe1b3c37507b204930f3278",
+          "message": "chore(deps): bump memmap2 from 0.9.4 to 0.9.5 (#1911)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.9.4 to 0.9.5.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.9.4...v0.9.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-14T09:30:24+08:00",
+          "tree_id": "b8d5266b53a91cf37f766cf005a68677b3870e5c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fad956751d38ce39bbe1b3c37507b204930f3278"
+        },
+        "date": 1726277567385,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.121,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.559,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 189.38,
             "unit": "ns/op"
           }
         ]
