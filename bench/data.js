@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726277638239,
+  "lastUpdate": 1726278037566,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8457364bf5d28bb4ff68c1a1502d0bdef1ab6c3a",
-          "message": "chore: reformat tracing's macro usage (#1804)\n\n* reformat tracing's macro usage\r\n\r\n* fix test\r\n\r\n* remove unnecessary Clone implement for Config",
-          "timestamp": "2024-07-01T23:20:01+08:00",
-          "tree_id": "b52812ace2f36847e7d7b1c465cb303ce714c0a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8457364bf5d28bb4ff68c1a1502d0bdef1ab6c3a"
-        },
-        "date": 1719847834047,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 541,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37583.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 536,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 34977.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef426e38281413958a1a71c2d7e5291e2176d04b",
+          "message": "chore(deps): bump kube from 0.94.1 to 0.94.2 (#1912)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.94.1 to 0.94.2.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.94.1...0.94.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-14T09:30:07+08:00",
+          "tree_id": "aa17a880ee54955f67ee23cfc1982ff8a2e45c64",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef426e38281413958a1a71c2d7e5291e2176d04b"
+        },
+        "date": 1726278021465,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 518,
             "unit": "s"
           },
           {
