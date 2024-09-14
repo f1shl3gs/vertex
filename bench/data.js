@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726277561706,
+  "lastUpdate": 1726277566499,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8457364bf5d28bb4ff68c1a1502d0bdef1ab6c3a",
-          "message": "chore: reformat tracing's macro usage (#1804)\n\n* reformat tracing's macro usage\r\n\r\n* fix test\r\n\r\n* remove unnecessary Clone implement for Config",
-          "timestamp": "2024-07-01T23:20:01+08:00",
-          "tree_id": "b52812ace2f36847e7d7b1c465cb303ce714c0a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8457364bf5d28bb4ff68c1a1502d0bdef1ab6c3a"
-        },
-        "date": 1719847327152,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542230,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 527580,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fad956751d38ce39bbe1b3c37507b204930f3278",
+          "message": "chore(deps): bump memmap2 from 0.9.4 to 0.9.5 (#1911)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.9.4 to 0.9.5.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.9.4...v0.9.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-14T09:30:24+08:00",
+          "tree_id": "b8d5266b53a91cf37f766cf005a68677b3870e5c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fad956751d38ce39bbe1b3c37507b204930f3278"
+        },
+        "date": 1726277549646,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 526630,
             "unit": "ns/op"
           }
         ]
