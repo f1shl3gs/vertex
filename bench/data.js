@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726449939831,
+  "lastUpdate": 1726449958255,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b130f88a7710764ea841eabd89d87ea7ffa86c4c",
-          "message": "chore(deps): bump dashmap from 6.0.0 to 6.0.1 (#1798)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 6.0.0 to 6.0.1.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v6.0.0...v6.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-25T12:04:47+08:00",
-          "tree_id": "2fbf48f509969d32d162091193cce39e8567ca97",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b130f88a7710764ea841eabd89d87ea7ffa86c4c"
-        },
-        "date": 1719288431663,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.029,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 149.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 341.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 702.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "12efbe9142bcdf88a3b205581c8d3268e2560f64",
           "message": "chore(deps): bump quick-xml from 0.33.0 to 0.34.0 (#1797)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.33.0 to 0.34.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.33.0...v0.34.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-06-25T12:05:24+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 674.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b8255060423957571244f0f68cc008be15bbe91",
+          "message": "chore(deps): bump pretty_assertions from 1.4.0 to 1.4.1 (#1913)\n\nBumps [pretty_assertions](https://github.com/rust-pretty-assertions/rust-pretty-assertions) from 1.4.0 to 1.4.1.\r\n- [Release notes](https://github.com/rust-pretty-assertions/rust-pretty-assertions/releases)\r\n- [Changelog](https://github.com/rust-pretty-assertions/rust-pretty-assertions/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-pretty-assertions/rust-pretty-assertions/compare/v1.4.0...v1.4.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pretty_assertions\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-16T09:23:07+08:00",
+          "tree_id": "7a47b0f58642a149f8941381465ddbad4b3f2341",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6b8255060423957571244f0f68cc008be15bbe91"
+        },
+        "date": 1726449941455,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.811,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 141.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 328.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 692.43,
             "unit": "ns/op"
           }
         ]
