@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726278093430,
+  "lastUpdate": 1726449928101,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "efafd0755e92cebdee058aef1607e9cd0f9da095",
-          "message": "chore(deps): bump serde_json from 1.0.119 to 1.0.120 (#1805)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.119 to 1.0.120.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.119...v1.0.120)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-02T02:14:29+08:00",
-          "tree_id": "416b7ab2ecfb4cd9f653649c48a9ce666b2446c6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/efafd0755e92cebdee058aef1607e9cd0f9da095"
-        },
-        "date": 1719857786054,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 525390,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 526630,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b8255060423957571244f0f68cc008be15bbe91",
+          "message": "chore(deps): bump pretty_assertions from 1.4.0 to 1.4.1 (#1913)\n\nBumps [pretty_assertions](https://github.com/rust-pretty-assertions/rust-pretty-assertions) from 1.4.0 to 1.4.1.\r\n- [Release notes](https://github.com/rust-pretty-assertions/rust-pretty-assertions/releases)\r\n- [Changelog](https://github.com/rust-pretty-assertions/rust-pretty-assertions/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-pretty-assertions/rust-pretty-assertions/compare/v1.4.0...v1.4.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pretty_assertions\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-16T09:23:07+08:00",
+          "tree_id": "7a47b0f58642a149f8941381465ddbad4b3f2341",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6b8255060423957571244f0f68cc008be15bbe91"
+        },
+        "date": 1726449911952,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 532900,
             "unit": "ns/op"
           }
         ]
