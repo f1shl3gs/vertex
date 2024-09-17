@@ -204,10 +204,8 @@ fn annotate_from_pod_status(log: &mut LogRecord, fields_spec: &FieldsSpec, pod_s
     }
 
     if let Some(pod_ips) = &pod_status.pod_ips {
-        let value: Vec<String> = pod_ips
-            .iter()
-            .filter_map(|v| v.ip.clone())
-            .collect::<Vec<String>>();
+        let value: Vec<String> = pod_ips.iter().map(|v| v.ip.clone()).collect();
+
         log.insert_metadata(&fields_spec.pod_ips, value);
     }
 }
@@ -432,7 +430,7 @@ mod tests {
                 FieldsSpec::default(),
                 PodStatus {
                     pod_ips: Some(vec![PodIP {
-                        ip: Some("192.168.1.2".to_owned()),
+                        ip: "192.168.1.2".to_owned(),
                     }]),
                     ..Default::default()
                 },
@@ -453,10 +451,10 @@ mod tests {
                     pod_ip: Some("192.168.1.2".to_owned()),
                     pod_ips: Some(vec![
                         PodIP {
-                            ip: Some("192.168.1.2".to_owned()),
+                            ip: "192.168.1.2".to_owned(),
                         },
                         PodIP {
-                            ip: Some("192.168.1.3".to_owned()),
+                            ip: "192.168.1.3".to_owned(),
                         },
                     ]),
                     ..Default::default()
@@ -478,10 +476,10 @@ mod tests {
                     pod_ip: Some("192.168.1.2".to_owned()),
                     pod_ips: Some(vec![
                         PodIP {
-                            ip: Some("192.168.1.2".to_owned()),
+                            ip: "192.168.1.2".to_owned(),
                         },
                         PodIP {
-                            ip: Some("192.168.1.3".to_owned()),
+                            ip: "192.168.1.3".to_owned(),
                         },
                     ]),
                     ..Default::default()
