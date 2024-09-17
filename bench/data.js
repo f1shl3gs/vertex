@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726450439808,
+  "lastUpdate": 1726549257128,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "575bc64b8d15553b82e3b968597c06060fc0b3e2",
-          "message": "chore(deps): bump zstd from 0.13.1 to 0.13.2 (#1806)\n\nBumps [zstd](https://github.com/gyscos/zstd-rs) from 0.13.1 to 0.13.2.\r\n- [Release notes](https://github.com/gyscos/zstd-rs/releases)\r\n- [Commits](https://github.com/gyscos/zstd-rs/compare/v0.13.1...v0.13.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zstd\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-06T11:30:33+08:00",
-          "tree_id": "d9fc135764eec139173b96acec7b9098d24b1803",
-          "url": "https://github.com/f1shl3gs/vertex/commit/575bc64b8d15553b82e3b968597c06060fc0b3e2"
-        },
-        "date": 1720236758059,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 531160,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "277288fa02a1518b6228ee0180781f21b88ae9e7",
+          "message": "chore(deps): bump kube from 0.94.2 to 0.95.0 (#1914)\n\n* chore(deps): bump kube from 0.94.2 to 0.95.0\r\n\r\nBumps [kube](https://github.com/kube-rs/kube) from 0.94.2 to 0.95.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.94.2...0.95.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* bump k8s-openapi to 0.23.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-09-17T12:58:21+08:00",
+          "tree_id": "f040246f13828c8c293d34adf56212d422e1626a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/277288fa02a1518b6228ee0180781f21b88ae9e7"
+        },
+        "date": 1726549239076,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 525880,
             "unit": "ns/op"
           }
         ]
