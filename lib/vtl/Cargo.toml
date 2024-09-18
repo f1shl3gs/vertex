@@ -7,7 +7,7 @@ edition = "2021"
 glob = { version = "0.3.1" }
 
 [dependencies]
-bytes = { version = "1.7.1", default-features = false }
+bytes = { version = "1.7.2", default-features = false }
 chrono = { version = "0.4.38", default-features = false, features = ["now"] }
 dyn-clone = { version = "1.0.17", default-features = false }
 hostname = { path = "../hostname" }
