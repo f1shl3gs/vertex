@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726549772575,
+  "lastUpdate": 1726737534083,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9bf0e76ccf2d812dfa2f00d5e1c43bed7b43c0d1",
-          "message": "chore(deps): bump serde from 1.0.203 to 1.0.204 (#1807)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.203 to 1.0.204.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.203...v1.0.204)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-07T07:55:34+08:00",
-          "tree_id": "40ee18382dbf1f09f46118f01669b04b584c7ce0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9bf0e76ccf2d812dfa2f00d5e1c43bed7b43c0d1"
-        },
-        "date": 1720310256033,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534700,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525880,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69e91f4e09d29b6da168e6ba66ddf357d85e638d",
+          "message": "chore(deps): bump bytes from 1.7.1 to 1.7.2 (#1915)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.7.1 to 1.7.2.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.7.1...v1.7.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-19T17:16:18+08:00",
+          "tree_id": "2f62b1c1cdce76046517c675d9a70ba04f2481ca",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69e91f4e09d29b6da168e6ba66ddf357d85e638d"
+        },
+        "date": 1726737517611,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 551240,
             "unit": "ns/op"
           }
         ]
