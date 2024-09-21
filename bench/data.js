@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726886484082,
+  "lastUpdate": 1726886499426,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8457364bf5d28bb4ff68c1a1502d0bdef1ab6c3a",
-          "message": "chore: reformat tracing's macro usage (#1804)\n\n* reformat tracing's macro usage\r\n\r\n* fix test\r\n\r\n* remove unnecessary Clone implement for Config",
-          "timestamp": "2024-07-01T23:20:01+08:00",
-          "tree_id": "b52812ace2f36847e7d7b1c465cb303ce714c0a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8457364bf5d28bb4ff68c1a1502d0bdef1ab6c3a"
-        },
-        "date": 1719847341410,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.083,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.601,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 194.49,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 189.35,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "91dfc0f45f3b2e095c4328e3215cc04196728f53",
+          "message": "chore(deps): bump quick-xml from 0.36.1 to 0.36.2 (#1916)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.36.1 to 0.36.2.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.36.1...v0.36.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-21T10:39:04+08:00",
+          "tree_id": "fc71f458cbf233e532fbb9555a47b9ba2dad261a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/91dfc0f45f3b2e095c4328e3215cc04196728f53"
+        },
+        "date": 1726886482120,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.061,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 189.59,
             "unit": "ns/op"
           }
         ]
