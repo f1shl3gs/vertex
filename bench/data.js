@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726933367334,
+  "lastUpdate": 1726933388034,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "68dc8bbdbab5e69766285df9093eea207a56bfac",
-          "message": "chore(deps): bump quick-xml from 0.34.0 to 0.35.0 (#1801)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.34.0 to 0.35.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.34.0...v0.35.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-30T14:16:18+08:00",
-          "tree_id": "ca8aaf614d97644533b6af646a82b61d0a7f0080",
-          "url": "https://github.com/f1shl3gs/vertex/commit/68dc8bbdbab5e69766285df9093eea207a56bfac"
-        },
-        "date": 1719728332475,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.408,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 153.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 352.01,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 687.15,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a1217b75f3cdad68dc0c070074e1c2479ec650a",
           "message": "chore(deps): bump serde_json from 1.0.118 to 1.0.119 (#1802)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.118 to 1.0.119.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.118...v1.0.119)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-01T15:01:01+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 675.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fc72e7bbb895dd8af5b59234ee75d0e451261e82",
+          "message": "chore(deps): bump the prost group with 3 updates (#1917)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\nUpdates `prost-types` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\nUpdates `prost-build` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-21T23:40:03+08:00",
+          "tree_id": "9a94a855d077ff408d51b93fee59f84f1d29f973",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fc72e7bbb895dd8af5b59234ee75d0e451261e82"
+        },
+        "date": 1726933370422,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 146.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 333.13,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 669.41,
             "unit": "ns/op"
           }
         ]
