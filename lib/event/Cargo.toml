@@ -14,7 +14,7 @@ default = []
 string_path = ["value/string_path"]
 
 [build-dependencies]
-prost-build = { version = "0.13.2", default-features = false }
+prost-build = { version = "0.13.3", default-features = false }
 
 [dev-dependencies]
 criterion = { version = "0.5.1", default-features = false }
@@ -25,8 +25,8 @@ chrono = { version = "0.4.38", default-features = false, features = ["now", "ser
 finalize = { path = "../finalize" }
 futures = { version = "0.3.30", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
-prost = { version = "0.13.2", default-features = false, features = ["std"] }
-prost-types = { version = "0.13.2", default-features = false }
+prost = { version = "0.13.3", default-features = false, features = ["std"] }
+prost-types = { version = "0.13.3", default-features = false }
 rand = { version = "0.8.5" }
 serde = { version = "1.0.210", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.128", default-features = false }

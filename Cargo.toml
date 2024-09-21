@@ -307,7 +307,7 @@ harness = false
 path = "benches/haproxy.rs"
 
 [build-dependencies]
-prost-build = { version = "0.13.2", default-features = false }
+prost-build = { version = "0.13.3", default-features = false }
 
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
@@ -375,8 +375,8 @@ serde_yaml = { version = "0.9.34", default-features = false }
 serde_json = { version = "1.0.128", default-features = false }
 
 # Protobuf
-prost = { version = "0.13.2", default-features = false, features = ["std"] }
-prost-types = { version = "0.13.2", default-features = false }
+prost = { version = "0.13.3", default-features = false, features = ["std"] }
+prost-types = { version = "0.13.3", default-features = false }
 
 # Profile
 pprof = { version = "0.13.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
