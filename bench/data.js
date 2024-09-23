@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727067231699,
+  "lastUpdate": 1727067659222,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "42ce24617e01bfd2761ed95c7fc734a05c0a2838",
-          "message": "chore(deps): bump syn from 2.0.69 to 2.0.70 (#1813)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.69 to 2.0.70.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.69...2.0.70)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-09T10:35:24+08:00",
-          "tree_id": "ff03b493fb6b703198e0ba246c0d1dea5a701cbd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/42ce24617e01bfd2761ed95c7fc734a05c0a2838"
-        },
-        "date": 1720493190442,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37580,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e23ab318709411d932bcf44deee9393173185d5b",
           "message": "chore(deps): bump quick-xml from 0.35.0 to 0.36.0 (#1814)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.35.0 to 0.36.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.35.0...v0.36.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-09T10:35:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35019.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8093dbf23c1468a6a5a4f64d7b0502884f33b500",
+          "message": "chore(deps): bump thiserror from 1.0.63 to 1.0.64 (#1918)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.63 to 1.0.64.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.63...1.0.64)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-23T12:50:10+08:00",
+          "tree_id": "207054251d7ce5e8f4f102c97601df8c779bfa47",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8093dbf23c1468a6a5a4f64d7b0502884f33b500"
+        },
+        "date": 1727067641691,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 535,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35020.1,
             "unit": "KiB"
           }
         ]
