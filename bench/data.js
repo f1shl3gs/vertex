@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727067659222,
+  "lastUpdate": 1727067662221,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "68dc8bbdbab5e69766285df9093eea207a56bfac",
-          "message": "chore(deps): bump quick-xml from 0.34.0 to 0.35.0 (#1801)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.34.0 to 0.35.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.34.0...v0.35.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-06-30T14:16:18+08:00",
-          "tree_id": "ca8aaf614d97644533b6af646a82b61d0a7f0080",
-          "url": "https://github.com/f1shl3gs/vertex/commit/68dc8bbdbab5e69766285df9093eea207a56bfac"
-        },
-        "date": 1719728854877,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 26613000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 499080,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.772,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a1217b75f3cdad68dc0c070074e1c2479ec650a",
           "message": "chore(deps): bump serde_json from 1.0.118 to 1.0.119 (#1802)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.118 to 1.0.119.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.118...v1.0.119)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-01T15:01:01+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.071,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8093dbf23c1468a6a5a4f64d7b0502884f33b500",
+          "message": "chore(deps): bump thiserror from 1.0.63 to 1.0.64 (#1918)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.63 to 1.0.64.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.63...1.0.64)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-23T12:50:10+08:00",
+          "tree_id": "207054251d7ce5e8f4f102c97601df8c779bfa47",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8093dbf23c1468a6a5a4f64d7b0502884f33b500"
+        },
+        "date": 1727067644371,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29203000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 673580,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 46.017,
             "unit": "ns/op"
           }
         ]
