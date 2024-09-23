@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1726933841117,
+  "lastUpdate": 1727067153004,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a25b44321c22be0bb32561bbc891dfed0a9c2226",
-          "message": "chore(deps): bump async-trait from 0.1.80 to 0.1.81 (#1810)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.80 to 0.1.81.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.80...0.1.81)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-08T21:56:22+08:00",
-          "tree_id": "f4adce8565b26efbbaeef7b2f422f93e336a302b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a25b44321c22be0bb32561bbc891dfed0a9c2226"
-        },
-        "date": 1720447107267,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536750,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535690,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8093dbf23c1468a6a5a4f64d7b0502884f33b500",
+          "message": "chore(deps): bump thiserror from 1.0.63 to 1.0.64 (#1918)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.63 to 1.0.64.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.63...1.0.64)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-23T12:50:10+08:00",
+          "tree_id": "207054251d7ce5e8f4f102c97601df8c779bfa47",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8093dbf23c1468a6a5a4f64d7b0502884f33b500"
+        },
+        "date": 1727067136701,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 541270,
             "unit": "ns/op"
           }
         ]
