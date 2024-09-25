@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727231801301,
+  "lastUpdate": 1727231823729,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b1e2c0195d293b9dfc85c814ab2c507730deebff",
-          "message": "support TLS config (#1803)",
-          "timestamp": "2024-07-01T20:11:34+08:00",
-          "tree_id": "6b5064b9e608ac158e2933e0a30a942525a4fe96",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b1e2c0195d293b9dfc85c814ab2c507730deebff"
-        },
-        "date": 1719836584752,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 26770000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 440890,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.289,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8457364bf5d28bb4ff68c1a1502d0bdef1ab6c3a",
           "message": "chore: reformat tracing's macro usage (#1804)\n\n* reformat tracing's macro usage\r\n\r\n* fix test\r\n\r\n* remove unnecessary Clone implement for Config",
           "timestamp": "2024-07-01T23:20:01+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.728,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2440cdb826a81cbe00d141511fa53a5a095310d",
+          "message": "chore(deps): bump libc from 0.2.158 to 0.2.159 (#1921)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.158 to 0.2.159.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.159/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.158...0.2.159)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-25T10:26:06+08:00",
+          "tree_id": "701dfd2af41d027368df66dbe9591a6ee18b1948",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2440cdb826a81cbe00d141511fa53a5a095310d"
+        },
+        "date": 1727231807122,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27781000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 746740,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.266,
             "unit": "ns/op"
           }
         ]
