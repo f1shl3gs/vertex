@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727231541650,
+  "lastUpdate": 1727231563746,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e23ab318709411d932bcf44deee9393173185d5b",
-          "message": "chore(deps): bump quick-xml from 0.35.0 to 0.36.0 (#1814)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.35.0 to 0.36.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.35.0...v0.36.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-09T10:35:51+08:00",
-          "tree_id": "a5bc8ecba9d708cd7f4433f633ad5a433e098ef5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e23ab318709411d932bcf44deee9393173185d5b"
-        },
-        "date": 1720493218980,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 569,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37580.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35020.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c0813332c6237de6d3a3e9298b414eb5a23b2e4f",
+          "message": "chore(deps): bump async-trait from 0.1.82 to 0.1.83 (#1919)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.82 to 0.1.83.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.82...0.1.83)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-25T10:21:36+08:00",
+          "tree_id": "e8b69552ef83670db8db9f611f81331927a33102",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c0813332c6237de6d3a3e9298b414eb5a23b2e4f"
+        },
+        "date": 1727231546623,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 554,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35020.2,
             "unit": "KiB"
           }
         ]
