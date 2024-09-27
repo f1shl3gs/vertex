@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727417196365,
+  "lastUpdate": 1727417623467,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d594013e14d86fd39930f29e67dadebf74434c50",
-          "message": "lib/codecs: add pretty option to JsonSerializerConfig (#1821)\n\n* add pretty option to JsonSerializerConfig",
-          "timestamp": "2024-07-14T18:21:11+08:00",
-          "tree_id": "7565ccb29b99a13027e0e6b21af6a6ec8f82804a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d594013e14d86fd39930f29e67dadebf74434c50"
-        },
-        "date": 1720953090939,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 528,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36325.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "17b6357c5461f80eb177c4d285dc543835c0621e",
           "message": "remove rustls-native-certs (#1823)",
           "timestamp": "2024-07-14T20:30:45+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35024.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6c532c648841c524cf9bbd4fdc1cfa7778886487",
+          "message": "chore(deps): bump the tonic group with 3 updates (#1922)\n\n* chore(deps): bump the tonic group with 3 updates\r\n\r\nBumps the tonic group with 3 updates: [tonic](https://github.com/hyperium/tonic), [tonic-health](https://github.com/hyperium/tonic) and [tonic-build](https://github.com/hyperium/tonic).\r\n\r\n\r\nUpdates `tonic` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.12.2...v0.12.3)\r\n\r\nUpdates `tonic-health` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.12.2...v0.12.3)\r\n\r\nUpdates `tonic-build` from 0.12.2 to 0.12.3\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.12.2...v0.12.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: tonic\r\n- dependency-name: tonic-health\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: tonic\r\n- dependency-name: tonic-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: tonic\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecated method\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-09-27T14:02:48+08:00",
+          "tree_id": "d8cf0da48336eec5d7f919f8ceea422e1dcfbdaf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6c532c648841c524cf9bbd4fdc1cfa7778886487"
+        },
+        "date": 1727417607046,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35020.4,
             "unit": "KiB"
           }
         ]
