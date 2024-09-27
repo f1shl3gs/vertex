@@ -5,6 +5,6 @@ fn main() {
     tonic_build::configure()
         .build_server(true)
         .build_client(true)
-        .compile(&["proto/collector.proto", "proto/model.proto"], &["proto"])
+        .compile_protos(&["proto/collector.proto", "proto/model.proto"], &["proto"])
         .unwrap()
 }
