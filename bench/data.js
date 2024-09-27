@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727410801685,
+  "lastUpdate": 1727410829500,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "575bc64b8d15553b82e3b968597c06060fc0b3e2",
-          "message": "chore(deps): bump zstd from 0.13.1 to 0.13.2 (#1806)\n\nBumps [zstd](https://github.com/gyscos/zstd-rs) from 0.13.1 to 0.13.2.\r\n- [Release notes](https://github.com/gyscos/zstd-rs/releases)\r\n- [Commits](https://github.com/gyscos/zstd-rs/compare/v0.13.1...v0.13.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: zstd\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-06T11:30:33+08:00",
-          "tree_id": "d9fc135764eec139173b96acec7b9098d24b1803",
-          "url": "https://github.com/f1shl3gs/vertex/commit/575bc64b8d15553b82e3b968597c06060fc0b3e2"
-        },
-        "date": 1720236784120,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.926,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 148.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.7,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 654.03,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9bf0e76ccf2d812dfa2f00d5e1c43bed7b43c0d1",
           "message": "chore(deps): bump serde from 1.0.203 to 1.0.204 (#1807)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.203 to 1.0.204.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.203...v1.0.204)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-07T07:55:34+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 686.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e3861a0659d6038751180d3bb332636b8f1960fd",
+          "message": "chore(deps): bump flate2 from 1.0.33 to 1.0.34 (#1923)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.33 to 1.0.34.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.33...1.0.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-27T12:17:32+08:00",
+          "tree_id": "a39a206ba5ed8623987d1263e5921246ad5582b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e3861a0659d6038751180d3bb332636b8f1960fd"
+        },
+        "date": 1727410812020,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.927,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 143.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 327.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 694.93,
             "unit": "ns/op"
           }
         ]
