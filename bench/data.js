@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727512560652,
+  "lastUpdate": 1727512964835,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "17b6357c5461f80eb177c4d285dc543835c0621e",
-          "message": "remove rustls-native-certs (#1823)",
-          "timestamp": "2024-07-14T20:30:45+08:00",
-          "tree_id": "5fe104c2c8d7be9782c2809ebc34e821809185fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/17b6357c5461f80eb177c4d285dc543835c0621e"
-        },
-        "date": 1720960882055,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 525,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36305.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "02ef091fadb840dfd9e24bb9b589d7002034fd8b",
           "message": "update tikv-jemallocator to 0.6.0 (#1824)",
           "timestamp": "2024-07-15T19:17:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35020.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8e1fc259b8ee496c50c51ad1ffe19166a99523bf",
+          "message": "chore(deps): bump syn from 2.0.77 to 2.0.79 (#1924)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.77 to 2.0.79.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.77...2.0.79)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-09-28T16:32:11+08:00",
+          "tree_id": "71ad01efd158ecdfb286b5cfebd49a76a712131a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8e1fc259b8ee496c50c51ad1ffe19166a99523bf"
+        },
+        "date": 1727512948645,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 525,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35023.8,
             "unit": "KiB"
           }
         ]
