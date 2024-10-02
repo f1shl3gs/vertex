@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727840791341,
+  "lastUpdate": 1727840811615,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "08645f59e2dcc5de8e007a3b5e95bd89b12951b2",
-          "message": "tracing: prefer Display to Debug (#1820)",
-          "timestamp": "2024-07-13T16:52:26+08:00",
-          "tree_id": "332e1c643a4eb96a6d47faba6159837393a663ca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/08645f59e2dcc5de8e007a3b5e95bd89b12951b2"
-        },
-        "date": 1720860883922,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.057,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 101.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 197.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.52,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "54b0d150c50be4577805aacceb0df55d9cf017a9",
+          "message": "chore(deps): bump async-stream from 0.3.5 to 0.3.6 (#1926)\n\nBumps [async-stream](https://github.com/tokio-rs/async-stream) from 0.3.5 to 0.3.6.\r\n- [Release notes](https://github.com/tokio-rs/async-stream/releases)\r\n- [Commits](https://github.com/tokio-rs/async-stream/compare/v0.3.5...v0.3.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-02T11:44:04+08:00",
+          "tree_id": "dcc7b815b35dd4bab36e4e33088fddbe412ce9e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/54b0d150c50be4577805aacceb0df55d9cf017a9"
+        },
+        "date": 1727840792903,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.468,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.319,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 242.62,
             "unit": "ns/op"
           }
         ]
