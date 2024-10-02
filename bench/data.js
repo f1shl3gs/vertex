@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727841946342,
+  "lastUpdate": 1727869735244,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d594013e14d86fd39930f29e67dadebf74434c50",
-          "message": "lib/codecs: add pretty option to JsonSerializerConfig (#1821)\n\n* add pretty option to JsonSerializerConfig",
-          "timestamp": "2024-07-14T18:21:11+08:00",
-          "tree_id": "7565ccb29b99a13027e0e6b21af6a6ec8f82804a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d594013e14d86fd39930f29e67dadebf74434c50"
-        },
-        "date": 1720952602518,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.285,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.525,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 193.38,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.65,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "90ac2fd868b50e3626d7268916b6a2ddb54d1f1b",
+          "message": "cargo update (#1928)",
+          "timestamp": "2024-10-02T19:46:23+08:00",
+          "tree_id": "83ebc26f1ff5f33634ccb08e10527274056375fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/90ac2fd868b50e3626d7268916b6a2ddb54d1f1b"
+        },
+        "date": 1727869718823,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.966,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.048,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 189.17,
             "unit": "ns/op"
           }
         ]
