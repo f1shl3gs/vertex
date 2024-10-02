@@ -50,7 +50,7 @@ http-body-util = { version = "0.1.2", default-features = false }
 hyper = { version = "1.4.1", default-features = false, features = ["full"] }
 hyper-rustls = { version = "0.27.3", default-features = false, features = ["rustls-native-certs"] }
 hyper-util = { version = "0.1.9", default-features = false, features = ["client", "http1", "http2", "server"] }
-indexmap = { version = "2.5.0", default-features = false, features = ["serde"] }
+indexmap = { version = "2.6.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.15", default-features = false }
 ipnet = { version = "2.10.0", default-features = false, features = ["std"] }
 listenfd = { version = "1.0.1", default-features = false, optional = true }
