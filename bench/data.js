@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1727869742294,
+  "lastUpdate": 1727869761387,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e23ab318709411d932bcf44deee9393173185d5b",
-          "message": "chore(deps): bump quick-xml from 0.35.0 to 0.36.0 (#1814)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.35.0 to 0.36.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.35.0...v0.36.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-09T10:35:51+08:00",
-          "tree_id": "a5bc8ecba9d708cd7f4433f633ad5a433e098ef5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e23ab318709411d932bcf44deee9393173185d5b"
-        },
-        "date": 1720492703324,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.537,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 152.52,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 347.02,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 710.16,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 720.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "90ac2fd868b50e3626d7268916b6a2ddb54d1f1b",
+          "message": "cargo update (#1928)",
+          "timestamp": "2024-10-02T19:46:23+08:00",
+          "tree_id": "83ebc26f1ff5f33634ccb08e10527274056375fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/90ac2fd868b50e3626d7268916b6a2ddb54d1f1b"
+        },
+        "date": 1727869744875,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.059,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 349.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 736.96,
             "unit": "ns/op"
           }
         ]
