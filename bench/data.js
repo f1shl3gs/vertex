@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728011512243,
+  "lastUpdate": 1728011517897,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2316c00528a5a49aa0a9dec1e034b275d44e7b3e",
-          "message": "chore(deps): bump tokio from 1.38.0 to 1.38.1 (#1826)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.38.0 to 1.38.1.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.38.0...tokio-1.38.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-17T11:56:17+08:00",
-          "tree_id": "f1fd0fef677c0c3da92d7eefb697abc4bc49f998",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2316c00528a5a49aa0a9dec1e034b275d44e7b3e"
-        },
-        "date": 1721188722105,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.998,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.958,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.34,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 189.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dc8086757c294e69f32b172976789e3b2de373b0",
+          "message": "chore(deps): bump ipnet from 2.10.0 to 2.10.1 (#1929)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.10.0 to 2.10.1.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-04T11:09:26+08:00",
+          "tree_id": "72f8c281402145e8d64e80cf5849f190b91d3c40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dc8086757c294e69f32b172976789e3b2de373b0"
+        },
+        "date": 1728011501703,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.294,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 188.33,
             "unit": "ns/op"
           }
         ]
