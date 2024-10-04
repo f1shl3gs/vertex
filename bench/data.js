@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728011591171,
+  "lastUpdate": 1728012007195,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33136d29c88682974b2e89d295cc5ac982d37fec",
-          "message": "chore(deps): bump thiserror from 1.0.62 to 1.0.63 (#1828)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.62 to 1.0.63.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.62...1.0.63)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-18T10:49:04+08:00",
-          "tree_id": "da3ea776e1466f97a88f49ed7a6b7eb494c2304d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33136d29c88682974b2e89d295cc5ac982d37fec"
-        },
-        "date": 1721271579295,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 537,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36304.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 534,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35413.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dc8086757c294e69f32b172976789e3b2de373b0",
+          "message": "chore(deps): bump ipnet from 2.10.0 to 2.10.1 (#1929)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.10.0 to 2.10.1.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-04T11:09:26+08:00",
+          "tree_id": "72f8c281402145e8d64e80cf5849f190b91d3c40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dc8086757c294e69f32b172976789e3b2de373b0"
+        },
+        "date": 1728011990561,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
             "unit": "s"
           },
           {
