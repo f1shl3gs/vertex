@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728011517897,
+  "lastUpdate": 1728011544028,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7f3b6dc7723a24fbeffbe24f5b2659b949c9828d",
-          "message": "deps: update hyper, http, and etc. (#1817)\n\n* update deps\r\n\r\n* fix tests",
-          "timestamp": "2024-07-13T15:26:25+08:00",
-          "tree_id": "d69a83f9264dac789debd22ad7309dcff6df6188",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7f3b6dc7723a24fbeffbe24f5b2659b949c9828d"
-        },
-        "date": 1720855749389,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.445,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 153.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 333.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 684.86,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "08645f59e2dcc5de8e007a3b5e95bd89b12951b2",
           "message": "tracing: prefer Display to Debug (#1820)",
           "timestamp": "2024-07-13T16:52:26+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 736.96,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dc8086757c294e69f32b172976789e3b2de373b0",
+          "message": "chore(deps): bump ipnet from 2.10.0 to 2.10.1 (#1929)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.10.0 to 2.10.1.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-04T11:09:26+08:00",
+          "tree_id": "72f8c281402145e8d64e80cf5849f190b91d3c40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dc8086757c294e69f32b172976789e3b2de373b0"
+        },
+        "date": 1728011527579,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.119,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 152.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 333.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 702.61,
             "unit": "ns/op"
           }
         ]
