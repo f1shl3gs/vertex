@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728273101426,
+  "lastUpdate": 1728282013863,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5983871ffa7f8be84800664b1f56a61cb071ae23",
-          "message": "enable concurrency (#1830)",
-          "timestamp": "2024-07-19T00:47:41+08:00",
-          "tree_id": "05e37d97a5949fb2c1ac44f1e51b9810d463d030",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5983871ffa7f8be84800664b1f56a61cb071ae23"
-        },
-        "date": 1721321393541,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.123,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.241,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 189.35,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ab2990e322992241cd97fe98469c3732f01af71d",
+          "message": "chore(deps): bump futures from 0.3.30 to 0.3.31 (#1932)\n\nBumps [futures](https://github.com/rust-lang/futures-rs) from 0.3.30 to 0.3.31.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.30...0.3.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-07T14:17:30+08:00",
+          "tree_id": "44c66069f598f2e86f94d140dca9f5ed2723ecec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ab2990e322992241cd97fe98469c3732f01af71d"
+        },
+        "date": 1728281997141,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.007,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.332,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 189.26,
             "unit": "ns/op"
           }
         ]
