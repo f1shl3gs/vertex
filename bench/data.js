@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728272675187,
+  "lastUpdate": 1728273094101,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5983871ffa7f8be84800664b1f56a61cb071ae23",
-          "message": "enable concurrency (#1830)",
-          "timestamp": "2024-07-19T00:47:41+08:00",
-          "tree_id": "05e37d97a5949fb2c1ac44f1e51b9810d463d030",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5983871ffa7f8be84800664b1f56a61cb071ae23"
-        },
-        "date": 1721321886831,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 534,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36580.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b3aba0447bbe33f80330e0c251737f966573ceb",
           "message": "fix http server (#1831)",
           "timestamp": "2024-07-19T01:08:33+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35406,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4458aaeea317ae4777c1a3f2844ee0659e900e57",
+          "message": "chore(deps): bump futures-util from 0.3.30 to 0.3.31 (#1931)\n\nBumps [futures-util](https://github.com/rust-lang/futures-rs) from 0.3.30 to 0.3.31.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.30...0.3.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-07T11:40:55+08:00",
+          "tree_id": "275948adff2c99c7ba72d782eb3783b9f40e20c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4458aaeea317ae4777c1a3f2844ee0659e900e57"
+        },
+        "date": 1728273077650,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35313.2,
             "unit": "KiB"
           }
         ]
