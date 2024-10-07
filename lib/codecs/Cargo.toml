@@ -20,7 +20,7 @@ bytes = { version = "1.7.2", default-features = false }
 chrono = { version = "0.4.38", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
-futures = { version = "0.3.30", default-features = false }
+futures = { version = "0.3.31", default-features = false }
 futures-util = { version = "0.3.31", default-features = false }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.7.4", default-features = false }

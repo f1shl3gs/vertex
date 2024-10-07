@@ -23,7 +23,7 @@ criterion = { version = "0.5.1", default-features = false }
 bytes = { version = "1.7.2", default-features = false }
 chrono = { version = "0.4.38", default-features = false, features = ["now", "serde"] }
 finalize = { path = "../finalize" }
-futures = { version = "0.3.30", default-features = false, features = ["std"] }
+futures = { version = "0.3.31", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 prost = { version = "0.13.3", default-features = false, features = ["std"] }
 prost-types = { version = "0.13.3", default-features = false }
