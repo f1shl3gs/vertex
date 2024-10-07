@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728098916939,
+  "lastUpdate": 1728272602103,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c1e2c5c4180257dc28d861e88ea85c63bbae434c",
-          "message": "build http server with graceful shutdown and http2 (#1829)",
-          "timestamp": "2024-07-18T21:28:33+08:00",
-          "tree_id": "5465d5a6428f51192f13dd877b57ae83e68d2af4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1e2c5c4180257dc28d861e88ea85c63bbae434c"
-        },
-        "date": 1721309448556,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 544980,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 538640,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4458aaeea317ae4777c1a3f2844ee0659e900e57",
+          "message": "chore(deps): bump futures-util from 0.3.30 to 0.3.31 (#1931)\n\nBumps [futures-util](https://github.com/rust-lang/futures-rs) from 0.3.30 to 0.3.31.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.30...0.3.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-07T11:40:55+08:00",
+          "tree_id": "275948adff2c99c7ba72d782eb3783b9f40e20c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4458aaeea317ae4777c1a3f2844ee0659e900e57"
+        },
+        "date": 1728272585531,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537400,
             "unit": "ns/op"
           }
         ]
