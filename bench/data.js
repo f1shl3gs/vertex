@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728363887550,
+  "lastUpdate": 1728364285285,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d594013e14d86fd39930f29e67dadebf74434c50",
-          "message": "lib/codecs: add pretty option to JsonSerializerConfig (#1821)\n\n* add pretty option to JsonSerializerConfig",
-          "timestamp": "2024-07-14T18:21:11+08:00",
-          "tree_id": "7565ccb29b99a13027e0e6b21af6a6ec8f82804a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d594013e14d86fd39930f29e67dadebf74434c50"
-        },
-        "date": 1720953072822,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27892000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 691260,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.659,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "45bb1f591f69a9c461c1dfc7c8fb073d9ddc00bf",
           "message": "fix vertex benchmark (#1832)",
           "timestamp": "2024-07-19T19:46:43+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.241,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8aa7972f575f63ae51573ac7d469afce5341c54f",
+          "message": "chore(deps): bump lru from 0.12.4 to 0.12.5 (#1934)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.4 to 0.12.5.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.4...0.12.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-08T13:00:52+08:00",
+          "tree_id": "273833a8ffb632ecee22253e964a77da14a70bd5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8aa7972f575f63ae51573ac7d469afce5341c54f"
+        },
+        "date": 1728364268286,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28520000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 643580,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.43,
             "unit": "ns/op"
           }
         ]
