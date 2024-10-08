@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728363824502,
+  "lastUpdate": 1728363834189,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2316c00528a5a49aa0a9dec1e034b275d44e7b3e",
-          "message": "chore(deps): bump tokio from 1.38.0 to 1.38.1 (#1826)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.38.0 to 1.38.1.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.38.0...tokio-1.38.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-17T11:56:17+08:00",
-          "tree_id": "f1fd0fef677c0c3da92d7eefb697abc4bc49f998",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2316c00528a5a49aa0a9dec1e034b275d44e7b3e"
-        },
-        "date": 1721188737884,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.905,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 149.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 674.01,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 719.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8aa7972f575f63ae51573ac7d469afce5341c54f",
+          "message": "chore(deps): bump lru from 0.12.4 to 0.12.5 (#1934)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.4 to 0.12.5.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.4...0.12.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-08T13:00:52+08:00",
+          "tree_id": "273833a8ffb632ecee22253e964a77da14a70bd5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8aa7972f575f63ae51573ac7d469afce5341c54f"
+        },
+        "date": 1728363815398,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.245,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 156.08,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 354.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 694.51,
             "unit": "ns/op"
           }
         ]
