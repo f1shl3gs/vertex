@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728364319701,
+  "lastUpdate": 1728364322024,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "05263f2ab921df2a540bce76fdf1a6b1e913f6d9",
-          "message": "remove unnecessary feature flag (#1833)",
-          "timestamp": "2024-07-19T20:59:57+08:00",
-          "tree_id": "e3cf2426f8cc35ce2f5cb136385e3ff618795c3f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/05263f2ab921df2a540bce76fdf1a6b1e913f6d9"
-        },
-        "date": 1721394612705,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 526,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36580.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cd1bfcf60350c0267cc7a1de17712ddc29fe0980",
           "message": "chore: add http::serve (#1834)\n\n* add http::serve",
           "timestamp": "2024-07-20T03:51:34+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35379.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8aa7972f575f63ae51573ac7d469afce5341c54f",
+          "message": "chore(deps): bump lru from 0.12.4 to 0.12.5 (#1934)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.4 to 0.12.5.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.4...0.12.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-08T13:00:52+08:00",
+          "tree_id": "273833a8ffb632ecee22253e964a77da14a70bd5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8aa7972f575f63ae51573ac7d469afce5341c54f"
+        },
+        "date": 1728364305399,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 561,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35379.3,
             "unit": "KiB"
           }
         ]
