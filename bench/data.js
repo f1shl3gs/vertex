@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1728529843179,
+  "lastUpdate": 1728529846027,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "05263f2ab921df2a540bce76fdf1a6b1e913f6d9",
-          "message": "remove unnecessary feature flag (#1833)",
-          "timestamp": "2024-07-19T20:59:57+08:00",
-          "tree_id": "e3cf2426f8cc35ce2f5cb136385e3ff618795c3f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/05263f2ab921df2a540bce76fdf1a6b1e913f6d9"
-        },
-        "date": 1721394636567,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28728000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 738170,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.398,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cd1bfcf60350c0267cc7a1de17712ddc29fe0980",
           "message": "chore: add http::serve (#1834)\n\n* add http::serve",
           "timestamp": "2024-07-20T03:51:34+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.109,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c933082cd80bbb2f73c96b7f32119995485fc66f",
+          "message": "chore(deps): bump kube from 0.95.0 to 0.96.0 (#1935)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.95.0 to 0.96.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.95.0...0.96.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-10T11:00:01+08:00",
+          "tree_id": "448ac9b5ad266ec1a1adc2f7e9af96410a47d6a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c933082cd80bbb2f73c96b7f32119995485fc66f"
+        },
+        "date": 1728529829247,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28576000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 759480,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.001,
             "unit": "ns/op"
           }
         ]
