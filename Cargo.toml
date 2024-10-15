@@ -361,7 +361,7 @@ tokio-util = { version = "0.7.12", default-features = false, features = ["codec"
 tracing = { version = "0.1.40", default-features = false }
 
 # HTTP
-hyper = { version = "1.4.1", default-features = false, features = ["server"] }
+hyper = { version = "1.5.0", default-features = false, features = ["server"] }
 hyper-util = { version = "0.1.9", default-features = false, features = ["client"] }
 http = { version = "1.1.0", default-features = false }
 http-body-util = { version = "0.1.2", default-features = false }
