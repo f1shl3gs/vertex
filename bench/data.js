@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729215761175,
+  "lastUpdate": 1729215773275,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "baea8b3e875e6011ea5adee594a1da243f04a02d",
-          "message": "chore(deps): bump tokio from 1.38.1 to 1.39.0 (#1839)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.38.1 to 1.39.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.38.1...tokio-1.39.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-23T22:59:57+08:00",
-          "tree_id": "dede64ad2630c97dde68cc2ef70c1016947ee804",
-          "url": "https://github.com/f1shl3gs/vertex/commit/baea8b3e875e6011ea5adee594a1da243f04a02d"
-        },
-        "date": 1721746956888,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.904,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 159.88,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 342.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 753.13,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 699.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b06292b0dc417d7291a14ff20a8feb038e082f4c",
+          "message": "chore(deps): bump libc from 0.2.159 to 0.2.161 (#1940)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.159 to 0.2.161.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.161/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.159...0.2.161)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-18T09:39:39+08:00",
+          "tree_id": "136477c8e8679cb20bc0d0f2d3cb18db993f11bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b06292b0dc417d7291a14ff20a8feb038e082f4c"
+        },
+        "date": 1729215755410,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.227,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 154.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 348.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 673.94,
             "unit": "ns/op"
           }
         ]
