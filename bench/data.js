@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729216228218,
+  "lastUpdate": 1729216646792,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "48c2397e2a208f08c5dd96c7c1acf0791ca8a958",
-          "message": "chore(deps): bump rustls from 0.23.11 to 0.23.12 (#1842)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.11 to 0.23.12.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.11...v/0.23.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-24T00:20:23+08:00",
-          "tree_id": "ccf0c29f2e732952cdf053ab78ba5530b619a4e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/48c2397e2a208f08c5dd96c7c1acf0791ca8a958"
-        },
-        "date": 1721752283746,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36527.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fb6ceba0cc518d2d28d42c4f5cda0b6d394f5314",
           "message": "chore(deps): bump quick-xml from 0.36.0 to 0.36.1 (#1841)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.36.0 to 0.36.1.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.36.0...v0.36.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-24T00:20:08+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35425.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "04b23e4429712a0486ed178598f274007d1086d5",
+          "message": "bump to 1.82.0 (#1942)",
+          "timestamp": "2024-10-18T09:47:07+08:00",
+          "tree_id": "a8b4bbc074d6bb6027a4c054096f1fb6447ecae6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/04b23e4429712a0486ed178598f274007d1086d5"
+        },
+        "date": 1729216630418,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 511,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35486.3,
             "unit": "KiB"
           }
         ]
