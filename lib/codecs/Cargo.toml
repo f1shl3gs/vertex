@@ -24,7 +24,7 @@ futures = { version = "0.3.31", default-features = false }
 futures-util = { version = "0.3.31", default-features = false }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.7.4", default-features = false }
-serde_json = { version = "1.0.129", default-features = false, features = ["std"] }
+serde_json = { version = "1.0.130", default-features = false, features = ["std"] }
 tokio = { version = "1.40.0", default-features = false }
 tokio-util = { version = "0.7.12", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.40", default-features = false }
