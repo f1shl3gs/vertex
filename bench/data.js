@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729377098605,
+  "lastUpdate": 1729377121395,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e6fc2fd810e3aa375c544118d7aeb1e8d52402ae",
-          "message": "chore(deps): bump tokio from 1.39.1 to 1.39.2 (#1845)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.39.1 to 1.39.2.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.39.1...tokio-1.39.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-27T22:03:21+08:00",
-          "tree_id": "7238100836801331694384b1f51b067c9d41af2d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e6fc2fd810e3aa375c544118d7aeb1e8d52402ae"
-        },
-        "date": 1722089618702,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 522,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34693.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35486.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43d4a3ec6f37e4a0d00826569d26a9d21b1853eb",
+          "message": "chore(deps): bump serde_json from 1.0.130 to 1.0.132 (#1946)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.130 to 1.0.132.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/1.0.130...1.0.132)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-20T06:21:32+08:00",
+          "tree_id": "c12e31e4d42f86e0de8187253898f6ea19715005",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43d4a3ec6f37e4a0d00826569d26a9d21b1853eb"
+        },
+        "date": 1729377104674,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 513,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35402.6,
             "unit": "KiB"
           }
         ]
