@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729376102161,
+  "lastUpdate": 1729376133942,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "48c2397e2a208f08c5dd96c7c1acf0791ca8a958",
-          "message": "chore(deps): bump rustls from 0.23.11 to 0.23.12 (#1842)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.11 to 0.23.12.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.11...v/0.23.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-24T00:20:23+08:00",
-          "tree_id": "ccf0c29f2e732952cdf053ab78ba5530b619a4e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/48c2397e2a208f08c5dd96c7c1acf0791ca8a958"
-        },
-        "date": 1721751828071,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 285.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 28159,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 140680,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 282570,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 126.45,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 12626,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 62999,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 126100,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fb6ceba0cc518d2d28d42c4f5cda0b6d394f5314",
           "message": "chore(deps): bump quick-xml from 0.36.0 to 0.36.1 (#1841)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.36.0 to 0.36.1.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.36.0...v0.36.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-24T00:20:08+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 124260,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a1f7302f329d11a96467b4b894aec03508533f53",
+          "message": "chore(deps): bump twox-hash from 1.6.3 to 2.0.0 (#1943)\n\n* chore(deps): bump twox-hash from 1.6.3 to 2.0.0\r\n\r\nBumps [twox-hash](https://github.com/shepmaster/twox-hash) from 1.6.3 to 2.0.0.\r\n- [Changelog](https://github.com/shepmaster/twox-hash/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/shepmaster/twox-hash/compare/v1.6.3...v2.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: twox-hash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix compatible errors\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2024-10-20T06:11:51+08:00",
+          "tree_id": "b052d5680872c25ea6dfd0b75b49c037c012a17f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a1f7302f329d11a96467b4b894aec03508533f53"
+        },
+        "date": 1729376117150,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 194.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 19640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 96375,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 194780,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 126.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12630,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 62691,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 124650,
             "unit": "ns/op"
           }
         ]
