@@ -10,7 +10,7 @@ serde_json = { version = "1.0.132", default-features = false }
 serde_yaml = { version = "0.9.34", default-features = false }
 
 [dependencies]
-bytes = { version = "1.7.2", default-features = false }
+bytes = { version = "1.8.0", default-features = false }
 futures = { version = "0.3.31", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
 pin-project-lite = { version = "0.2.14" }
