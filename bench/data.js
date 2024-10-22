@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729566854262,
+  "lastUpdate": 1729566999683,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c87b65c8c73ba792b6ea611758f9206ca7943aa2",
-          "message": "chore(deps): bump serde_json from 1.0.120 to 1.0.121 (#1847)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.120 to 1.0.121.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.120...v1.0.121)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-29T11:24:20+08:00",
-          "tree_id": "ed0264bc5d4c971bb3bded1e6e68227ce3143c05",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c87b65c8c73ba792b6ea611758f9206ca7943aa2"
-        },
-        "date": 1722224098857,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 527,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34701.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4f5a4d501e7df7f5d5f4a09e8ca0c94e5a52773",
           "message": "chore(deps): bump console-subscriber from 0.3.0 to 0.4.0 (#1849)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.3.0 to 0.4.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Changelog](https://github.com/tokio-rs/console/blob/main/release-plz.toml)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.3.0...console-subscriber-v0.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-30T15:43:34+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35403.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49237baf81766ad5e19ad96fc07af55b0dfebc74",
+          "message": "chore(deps): bump bytes from 1.7.2 to 1.8.0 (#1949)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.7.2 to 1.8.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.7.2...v1.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-22T11:03:54+08:00",
+          "tree_id": "004271c1f81fbb5d22e68af3135927d8869218d7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49237baf81766ad5e19ad96fc07af55b0dfebc74"
+        },
+        "date": 1729566982954,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 505,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35403.2,
             "unit": "KiB"
           }
         ]
