@@ -387,7 +387,7 @@ argh = { version = "0.1.12" }
 # External libs
 ahash = { version = "0.8.11", default-features = false, optional = true }
 bloomy = { version = "1.2.0", default-features = false, optional = true }
-bytes = { version = "1.7.2", default-features = false }
+bytes = { version = "1.8.0", default-features = false }
 chrono = { version = "0.4.38", default-features = false }
 encoding_rs = { version = "0.8.34", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
