@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729647462409,
+  "lastUpdate": 1729647464703,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c4f5a4d501e7df7f5d5f4a09e8ca0c94e5a52773",
-          "message": "chore(deps): bump console-subscriber from 0.3.0 to 0.4.0 (#1849)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.3.0 to 0.4.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Changelog](https://github.com/tokio-rs/console/blob/main/release-plz.toml)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.3.0...console-subscriber-v0.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-07-30T15:43:34+08:00",
-          "tree_id": "aac7c57b390702c2eeff95159bdf4012fc216fb9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c4f5a4d501e7df7f5d5f4a09e8ca0c94e5a52773"
-        },
-        "date": 1722326081859,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29015000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 779680,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.461,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "15a4e0d75eaeb242fa0bd4bd3782a283390c5501",
           "message": "chore(deps): bump lru from 0.12.3 to 0.12.4 (#1850)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.3 to 0.12.4.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.3...0.12.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-07-31T15:58:27+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.213,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "88a4621efa6f17f31a16f7f4fbdb7a2d04acb1c9",
+          "message": "chore(deps): bump proc-macro2 from 1.0.88 to 1.0.89 (#1952)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.88 to 1.0.89.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.88...1.0.89)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-23T09:27:09+08:00",
+          "tree_id": "6c32652304003ddb10890a13c2327027f3108273",
+          "url": "https://github.com/f1shl3gs/vertex/commit/88a4621efa6f17f31a16f7f4fbdb7a2d04acb1c9"
+        },
+        "date": 1729647446839,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28768000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 684680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 43.763,
             "unit": "ns/op"
           }
         ]
