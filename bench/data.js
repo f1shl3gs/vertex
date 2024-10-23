@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729648013202,
+  "lastUpdate": 1729648017039,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "aa4447d328d72dae45393011fcedc996c129d251",
-          "message": "chore(deps): bump bytes from 1.6.1 to 1.7.0 (#1851)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.6.1 to 1.7.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.6.1...v1.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-01T01:24:24+08:00",
-          "tree_id": "943c2f478d29ea93698d38bf635805a21c98d56f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aa4447d328d72dae45393011fcedc996c129d251"
-        },
-        "date": 1722446829984,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.013,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 161.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 349.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 742.12,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1ef456cb8d9daaf94f922b0724bfce27d84dbc2d",
           "message": "chore(deps): bump indexmap from 2.2.6 to 2.3.0 (#1852)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.2.6 to 2.3.0.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.2.6...2.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-08-01T11:37:24+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 628.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0fc9c14212437ab9d99433f1a3f739d855c1792",
+          "message": "add global_queue_depth (#1954)",
+          "timestamp": "2024-10-23T09:43:38+08:00",
+          "tree_id": "e136be84dc59bd7dd82e98e4cbe04c62bcb9d534",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0fc9c14212437ab9d99433f1a3f739d855c1792"
+        },
+        "date": 1729647999819,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 149.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 302.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 634.93,
             "unit": "ns/op"
           }
         ]
