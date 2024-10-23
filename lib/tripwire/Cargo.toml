@@ -6,7 +6,7 @@ publish = false
 
 [dev-dependencies]
 futures = { version = "0.3.31", default-features = false, features = ["async-await"] }
-tokio = { version = "1.40.0", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
+tokio = { version = "1.41.0", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
 tokio-stream = { version = "0.1.16", default-features = false }
 
 [dependencies]
