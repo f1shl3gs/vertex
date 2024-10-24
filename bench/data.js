@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729743676752,
+  "lastUpdate": 1729743956647,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "74cb2cef81907e505761c5841f69829bef72aeec",
-          "message": "chore(deps): bump serde_json from 1.0.121 to 1.0.122 (#1854)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.121 to 1.0.122.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.121...v1.0.122)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-02T07:25:28+08:00",
-          "tree_id": "7598e6cb868f6462363b316ca3ea11fe77cdd772",
-          "url": "https://github.com/f1shl3gs/vertex/commit/74cb2cef81907e505761c5841f69829bef72aeec"
-        },
-        "date": 1722555349109,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 526,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34714.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c1c84fddc5086d7133832ee7a1aeb203832b774a",
           "message": "chore(deps): bump regex from 1.10.5 to 1.10.6 (#1855)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.10.5 to 1.10.6.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.10.5...1.10.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-08-03T04:32:03+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35334.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5213085b9ed87db9b803093f1cfc0ba14b94840d",
+          "message": "update (#1955)",
+          "timestamp": "2024-10-24T12:15:46+08:00",
+          "tree_id": "2d9fd0febbb2847f57d852fb3f4f770a71c1de2b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5213085b9ed87db9b803093f1cfc0ba14b94840d"
+        },
+        "date": 1729743940004,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 500,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35326.3,
             "unit": "KiB"
           }
         ]
