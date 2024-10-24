@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729743559284,
+  "lastUpdate": 1729743603831,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1f64d75820eb6b868503c9a6934c6dd6507a8bb1",
-          "message": "chore(deps): bump bytes from 1.7.0 to 1.7.1 (#1853)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.7.0 to 1.7.1.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.7.0...v1.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-02T06:14:39+08:00",
-          "tree_id": "a413cc7a29e0d639f0eeddf565bd9bf73be191bf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1f64d75820eb6b868503c9a6934c6dd6507a8bb1"
-        },
-        "date": 1722550610908,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539600,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524830,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8f84005c9e67cc5e01949d48919c31dd7780d8ce",
+          "message": "chore(deps): bump syn from 2.0.82 to 2.0.83 (#1956)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.82 to 2.0.83.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.82...2.0.83)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-24T12:17:25+08:00",
+          "tree_id": "e2ee6e6a55e17072ab5cd0637382c6988a12db4c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8f84005c9e67cc5e01949d48919c31dd7780d8ce"
+        },
+        "date": 1729743586063,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 531170,
             "unit": "ns/op"
           }
         ]
