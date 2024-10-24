@@ -9,6 +9,6 @@ async-stream = { version = "0.3.6" }
 crossbeam-utils = { version = "0.8.20", default-features = false }
 futures = { version = "0.3.31", default-features = false }
 bytesize = { path = "../bytesize" }
-pin-project-lite = { version = "0.2.14" }
+pin-project-lite = { version = "0.2.15" }
 tokio = { version = "1.41.0", default-features = false, features = ["sync", "macros"] }
 tracing = { version = "0.1.40", default-features = false }
