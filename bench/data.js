@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729823349564,
+  "lastUpdate": 1729823352075,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e5d6cf16954e61ac9a5225c8e754a24c6900c047",
-          "message": "chore(deps): bump hyper-util from 0.1.6 to 0.1.7 (#1857)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.6 to 0.1.7.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.6...v0.1.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-07T13:39:37+08:00",
-          "tree_id": "1af9a6116a2c4df63fe2a32eaf1226b8c4a248d4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e5d6cf16954e61ac9a5225c8e754a24c6900c047"
-        },
-        "date": 1723009342256,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.741,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 348.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 717.58,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5155819740d07fa03a7bc3caa56d111a1cb1c285",
           "message": "chore(deps): bump serde from 1.0.204 to 1.0.205 (#1858)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.204 to 1.0.205.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.204...v1.0.205)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-08-08T12:06:49+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 606.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e9bb7ee120b823291f2ee40a11b9aca395e6b73d",
+          "message": "chore(deps): bump encoding_rs from 0.8.34 to 0.8.35 (#1959)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.34 to 0.8.35.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.34...v0.8.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-25T10:25:57+08:00",
+          "tree_id": "c10091d6841ee45201b1a2a12a4e113f86d495f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e9bb7ee120b823291f2ee40a11b9aca395e6b73d"
+        },
+        "date": 1729823334243,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.577,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 131.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 296.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 625.2,
             "unit": "ns/op"
           }
         ]
