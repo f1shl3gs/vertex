@@ -17,7 +17,7 @@ serde_json = { version = "1.0.132", default-features = false }
 
 # externals
 chrono-tz = { version = "0.10.0", default-features = false }
-encoding_rs = { version = "0.8.34", default-features = false }
+encoding_rs = { version = "0.8.35", default-features = false }
 event = { path = "../event" }
 http = { version = "1.1.0", default-features = false }
 regex = { version = "1.11.0", default-features = false }
