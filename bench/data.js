@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729823782630,
+  "lastUpdate": 1729824128753,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5155819740d07fa03a7bc3caa56d111a1cb1c285",
-          "message": "chore(deps): bump serde from 1.0.204 to 1.0.205 (#1858)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.204 to 1.0.205.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.204...v1.0.205)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-08T12:06:49+08:00",
-          "tree_id": "0e572d51f3d5cfccea70364557d9f68efaad8adb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5155819740d07fa03a7bc3caa56d111a1cb1c285"
-        },
-        "date": 1723090132386,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 522850,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 518480,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58b8747e48b50df3e86774f7e1b3d96540380a04",
+          "message": "chore(deps): bump regex from 1.11.0 to 1.11.1 (#1960)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.11.0 to 1.11.1.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.11.0...1.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-25T10:39:58+08:00",
+          "tree_id": "d959239619ebf7b2e60fece577bd5f7241cc3bf9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/58b8747e48b50df3e86774f7e1b3d96540380a04"
+        },
+        "date": 1729824112007,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527590,
             "unit": "ns/op"
           }
         ]
