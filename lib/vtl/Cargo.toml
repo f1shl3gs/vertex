@@ -12,7 +12,7 @@ chrono = { version = "0.4.38", default-features = false, features = ["now"] }
 dyn-clone = { version = "1.0.17", default-features = false }
 hostname = { path = "../hostname" }
 regex = { version = "1.11.1", default-features = false, features = ["unicode"] }
-serde = { version = "1.0.213", default-features = false }
+serde = { version = "1.0.214", default-features = false }
 serde_json = { version = "1.0.132", default-features = false }
 twox-hash = { version = "2.0.0", default-features = false, features = ["xxhash3_64"] }
 url = { version = "2.5.2", default-features = false }
