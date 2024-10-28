@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1729843032112,
+  "lastUpdate": 1730103619706,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "02d1081c9d9e19908e3cfe03ea5d747976e63856",
-          "message": "chore(deps): bump serde from 1.0.205 to 1.0.206 (#1860)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.205 to 1.0.206.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.205...v1.0.206)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-11T17:16:50+08:00",
-          "tree_id": "f2c0880f34800f1050edafcbd9e3b0ebcc56e81b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/02d1081c9d9e19908e3cfe03ea5d747976e63856"
-        },
-        "date": 1723367948130,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.102,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.399,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 182.93,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "33189d2ff267732d3c8227fa721d47683b6e9d58",
+          "message": "chore(deps): bump quick-xml from 0.36.2 to 0.37.0 (#1963)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.36.2 to 0.37.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.36.2...v0.37.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-28T16:17:29+08:00",
+          "tree_id": "a2128a19939fe9d6f4219f2e4bcc94715034efc8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/33189d2ff267732d3c8227fa721d47683b6e9d58"
+        },
+        "date": 1730103602764,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.293,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.92,
             "unit": "ns/op"
           }
         ]
