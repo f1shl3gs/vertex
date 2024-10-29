@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730169589477,
+  "lastUpdate": 1730169593337,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2915f85fd1dacd40db08e2ae606934b7b994830e",
-          "message": "chore(deps): bump syn from 2.0.73 to 2.0.74 (#1863)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.73 to 2.0.74.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.73...2.0.74)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-12T12:10:36+08:00",
-          "tree_id": "3dbd451e58d027d3d41f6c58eaeea0c93a155605",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2915f85fd1dacd40db08e2ae606934b7b994830e"
-        },
-        "date": 1723435977495,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.762,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.51,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1650095375811b4c6aaf3a8d7f9588f58a9fcd7a",
+          "message": "chore(deps): bump hyper-util from 0.1.9 to 0.1.10 (#1965)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.9 to 0.1.10.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.9...v0.1.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-10-29T10:37:14+08:00",
+          "tree_id": "f93c74c79651c4c93454d7aefa71328d017f713b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1650095375811b4c6aaf3a8d7f9588f58a9fcd7a"
+        },
+        "date": 1730169575655,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.211,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.948,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 182.66,
             "unit": "ns/op"
           }
         ]
