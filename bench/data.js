@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730427062717,
+  "lastUpdate": 1730427079253,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cf33046b73aa4497ad3665665a4ed4bdc02a0da9",
-          "message": "remove \"util\" feature of tower (#1867)",
-          "timestamp": "2024-08-15T14:06:35+08:00",
-          "tree_id": "7a58ea517ed7f73569b96da281d613dd2aab066d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf33046b73aa4497ad3665665a4ed4bdc02a0da9"
-        },
-        "date": 1723702625024,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 543,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34788.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35295.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d27fd619f6e42f0fc9505daf31b685bf55e5cac1",
+          "message": "chore(deps): bump thiserror from 1.0.65 to 1.0.66 (#1967)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.65 to 1.0.66.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.65...1.0.66)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-01T10:00:51+08:00",
+          "tree_id": "29a5dbc1dbbdbb6b07ed1af073962fffad17fd98",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d27fd619f6e42f0fc9505daf31b685bf55e5cac1"
+        },
+        "date": 1730427061861,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 512,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35295.5,
             "unit": "KiB"
           }
         ]
