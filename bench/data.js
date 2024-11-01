@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730427054324,
+  "lastUpdate": 1730427062717,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a44cdc9e2f47e214ca24593363e0035684491f00",
-          "message": "chore(deps): bump indexmap from 2.3.0 to 2.4.0 (#1866)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.3.0 to 2.4.0.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.3.0...2.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-14T11:35:34+08:00",
-          "tree_id": "49d8fb34a3de79e40eaf1d661ec10d4b09871498",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a44cdc9e2f47e214ca24593363e0035684491f00"
-        },
-        "date": 1723607234160,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29291000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 695690,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.403,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f58d444d5e19ebe5fdcea603303880244155dd07",
           "message": "chore(deps): bump tower from 0.4.13 to 0.5.0 (#1865)\n\n* chore(deps): bump tower from 0.4.13 to 0.5.0\r\n\r\nBumps [tower](https://github.com/tower-rs/tower) from 0.4.13 to 0.5.0.\r\n- [Release notes](https://github.com/tower-rs/tower/releases)\r\n- [Commits](https://github.com/tower-rs/tower/compare/tower-0.4.13...tower-0.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tower\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update tower-layer to 0.3.3\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2024-08-15T13:09:55+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.107,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b659e3aeadeaeba8e83c93873c82c619fff706d",
+          "message": "chore(deps): bump syn from 2.0.85 to 2.0.86 (#1968)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.85 to 2.0.86.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.85...2.0.86)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-01T10:00:35+08:00",
+          "tree_id": "12696541daaee22050d744bfd319b5f1196c4e08",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b659e3aeadeaeba8e83c93873c82c619fff706d"
+        },
+        "date": 1730427045317,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28032000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 670550,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.267,
             "unit": "ns/op"
           }
         ]
