@@ -86,5 +86,5 @@ tracing-subscriber = { version = "0.3.18", default-features = false, features = 
 tripwire = { path = "../tripwire" }
 twox-hash = { version = "2.0.1", default-features = false, features = ["xxhash64"] }
 typetag = { version = "0.2.18" }
-url = { version = "2.5.2", features = ["serde"] }
+url = { version = "2.5.3", features = ["serde"] }
 zstd = { version = "0.13.2", default-features = false }
