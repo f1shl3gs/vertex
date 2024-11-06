@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730775079832,
+  "lastUpdate": 1730872261775,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f51df01478f958635c5999faa04837fe9f1903c0",
-          "message": "chore(deps): bump libc from 0.2.156 to 0.2.157 (#1871)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.156 to 0.2.157.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.157/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.156...0.2.157)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-18T11:54:55+08:00",
-          "tree_id": "80441f924516b477ba8943ebfc7bdc0b505263b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f51df01478f958635c5999faa04837fe9f1903c0"
-        },
-        "date": 1723953426966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539300,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 542420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b53ce1e02143c9e20e5feb8867ce08f61deae13c",
+          "message": "chore(deps): bump thiserror from 1.0.68 to 2.0.0 (#1974)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.68 to 2.0.0.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.68...2.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-06T13:48:23+08:00",
+          "tree_id": "9315e26f41fd559aea978c44dc629d2c06148f28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b53ce1e02143c9e20e5feb8867ce08f61deae13c"
+        },
+        "date": 1730872244361,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546870,
             "unit": "ns/op"
           }
         ]
