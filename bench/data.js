@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1730872318913,
+  "lastUpdate": 1730872714651,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ffcf91089c386d9729836fec9b8420d9e54dc07b",
-          "message": "chore(deps): bump syn from 2.0.74 to 2.0.75 (#1873)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.74 to 2.0.75.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.74...2.0.75)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-18T13:04:32+08:00",
-          "tree_id": "acbf39fef3b7d452b7ed15d4a9f5baa2784ff37f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ffcf91089c386d9729836fec9b8420d9e54dc07b"
-        },
-        "date": 1723958084834,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 526,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34730.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5ac0ed76de4f3acecb3d514acb8ae88f38f74313",
           "message": "chore(deps): bump libc from 0.2.157 to 0.2.158 (#1874)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.157 to 0.2.158.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.158/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.157...0.2.158)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-08-19T17:32:42+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 517,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35435.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b53ce1e02143c9e20e5feb8867ce08f61deae13c",
+          "message": "chore(deps): bump thiserror from 1.0.68 to 2.0.0 (#1974)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.68 to 2.0.0.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.68...2.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-06T13:48:23+08:00",
+          "tree_id": "9315e26f41fd559aea978c44dc629d2c06148f28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b53ce1e02143c9e20e5feb8867ce08f61deae13c"
+        },
+        "date": 1730872697840,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 510,
             "unit": "s"
           },
           {
