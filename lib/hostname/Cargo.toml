@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [target.'cfg(unix)'.dependencies]
-libc = { version = "0.2.161", default-features = false }
+libc = { version = "0.2.162", default-features = false }
 
 # [target.'cfg(windows)'.dependencies]
 # windows-targets = "0.48"
