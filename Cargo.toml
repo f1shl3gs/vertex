@@ -379,7 +379,7 @@ prost = { version = "0.13.3", default-features = false, features = ["std"] }
 prost-types = { version = "0.13.3", default-features = false }
 
 # Profile
-pprof = { version = "0.13.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
+pprof = { version = "0.14.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
 
 # Cli
 argh = { version = "0.1.12" }
