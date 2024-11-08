@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731040940193,
+  "lastUpdate": 1731041319137,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5ac0ed76de4f3acecb3d514acb8ae88f38f74313",
-          "message": "chore(deps): bump libc from 0.2.157 to 0.2.158 (#1874)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.157 to 0.2.158.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.158/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.157...0.2.158)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-19T17:32:42+08:00",
-          "tree_id": "d032290e8b51f59434572e3c38b7d8a7e4d2d85e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5ac0ed76de4f3acecb3d514acb8ae88f38f74313"
-        },
-        "date": 1724060625675,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 553,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34730.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e65b0a7ea7ae550cc9631773c17275001256a70f",
           "message": "chore(deps): bump flate2 from 1.0.31 to 1.0.32 (#1875)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.31 to 1.0.32.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.31...1.0.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-08-21T04:28:40+08:00",
@@ -16595,6 +16561,40 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/f1shl3gs/vertex/commit/b53ce1e02143c9e20e5feb8867ce08f61deae13c"
         },
         "date": 1730872697840,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 510,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35435.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0250c8f3b52457b3cc1f7e70de73037223169d79",
+          "message": "chore(deps): bump libc from 0.2.161 to 0.2.162 (#1975)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.161 to 0.2.162.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.162/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.161...0.2.162)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-08T12:38:25+08:00",
+          "tree_id": "4729303fa1d2ec2543cf20ed3e8b46c1fd4c6739",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0250c8f3b52457b3cc1f7e70de73037223169d79"
+        },
+        "date": 1731041302102,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
