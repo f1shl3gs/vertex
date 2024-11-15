@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731388169402,
+  "lastUpdate": 1731653506344,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7fa7b7c2f02d186dcae7b95145e97a7305058948",
-          "message": "chore(deps): bump syn from 2.0.75 to 2.0.76 (#1881)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.75 to 2.0.76.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.75...2.0.76)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-24T17:38:47+08:00",
-          "tree_id": "610fa085445d295fe367ee9d3d6c8620608240c1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7fa7b7c2f02d186dcae7b95145e97a7305058948"
-        },
-        "date": 1724492456089,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 531900,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 528020,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e18d81b2d18e8bec0d1b0823391d922aced5e5b6",
+          "message": "chore(deps): bump flate2 from 1.0.34 to 1.0.35 (#1981)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.34 to 1.0.35.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.34...1.0.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-15T14:49:19+08:00",
+          "tree_id": "4235a025f17555477d8385597c11b392cea9fedc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e18d81b2d18e8bec0d1b0823391d922aced5e5b6"
+        },
+        "date": 1731653488045,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527780,
             "unit": "ns/op"
           }
         ]
