@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731845760448,
+  "lastUpdate": 1731845785797,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5f100ac2407d94211b5d227827ef4c4f49c02f18",
-          "message": "cargo update (#1884)",
-          "timestamp": "2024-08-25T14:28:18+08:00",
-          "tree_id": "a4a545050037448dbb95bbaa8e5e2b2a2ed5c78f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f100ac2407d94211b5d227827ef4c4f49c02f18"
-        },
-        "date": 1724567461125,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.019,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 344,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 680.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "167e0fdc89e805e51145d618a9bb5f0ab49e9fe1",
           "message": "refactor kafka service (#1885)",
           "timestamp": "2024-08-26T15:00:55+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 618.85,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3c1e824cf30190adc6d110b696120dd8288cf2af",
+          "message": "remove unnecessary implements (#1986)",
+          "timestamp": "2024-11-17T20:13:36+08:00",
+          "tree_id": "72697c1f2afe871107762afe419024e06aaae6c0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3c1e824cf30190adc6d110b696120dd8288cf2af"
+        },
+        "date": 1731845768592,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.747,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 143.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 302.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 599.39,
             "unit": "ns/op"
           }
         ]
