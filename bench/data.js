@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731834763519,
+  "lastUpdate": 1731834783844,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "167e0fdc89e805e51145d618a9bb5f0ab49e9fe1",
-          "message": "refactor kafka service (#1885)",
-          "timestamp": "2024-08-26T15:00:55+08:00",
-          "tree_id": "82eb8a046ed0801ae5f0c93831f6f58ec26b7e58",
-          "url": "https://github.com/f1shl3gs/vertex/commit/167e0fdc89e805e51145d618a9bb5f0ab49e9fe1"
-        },
-        "date": 1724656264640,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 527,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34714.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7f7c37ccb95993fab10e6c7fa8ddf6851128b9c5",
           "message": "change config.topic to Template (#1886)",
           "timestamp": "2024-08-26T20:03:36+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 519,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35447.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58d6fef228813ff146b93a8094a6fd5b16f484a9",
+          "message": "remove unnecessary serializer implement (#1985)",
+          "timestamp": "2024-11-17T17:02:44+08:00",
+          "tree_id": "3d62775a77c81e4c5a6fae43a095bc09d64a5ce2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/58d6fef228813ff146b93a8094a6fd5b16f484a9"
+        },
+        "date": 1731834766943,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 513,
             "unit": "s"
           },
           {
