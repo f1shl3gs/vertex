@@ -6,12 +6,13 @@ use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::Output;
-use framework::{
-    config::{default_interval, SourceConfig, SourceContext},
-    Error, Source,
-};
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use framework::{Error, Source};
+use serde::{Deserialize, Deserializer};
+
+fn default_smi_path() -> PathBuf {
+    "/usr/bin/nvidia-smi".into()
+}
 
 /// Collect metrics of NVIDIA GPU, `nvidia_smi` is install automatically
 /// when you install NVIDIA GPU driver.
@@ -25,10 +26,6 @@ struct Config {
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
-}
-
-fn default_smi_path() -> PathBuf {
-    "/usr/bin/nvidia-smi".into()
 }
 
 #[async_trait::async_trait]
@@ -280,6 +277,7 @@ impl Display for Unit {
 
 struct Value {
     value: f64,
+    #[allow(dead_code)]
     unit: Unit,
 }
 
@@ -309,20 +307,9 @@ impl<'de> Deserialize<'de> for Value {
     }
 }
 
-impl Serialize for Value {
-    // helper require this implement, but it shall not call forever
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let raw = format!("{} {}", self.value, self.unit);
-        serializer.serialize_str(&raw)
-    }
-}
-
 // MemoryStats defines the structure of the memory portions in the smi output.
 // The value looks like: "8116 MiB"
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct MemoryStats {
     total: Value,
     used: Value,
@@ -330,13 +317,13 @@ struct MemoryStats {
 }
 
 // TempStats defines the structure of the temperature portion of the smi output.
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct TempStats {
     gpu_temp: Value,
 }
 
 // UtilizationStats defines the structure of the utilization portion of the smi output.
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct UtilizationStats {
     gpu_util: Value,
     memory_util: Value,
@@ -345,18 +332,18 @@ struct UtilizationStats {
 }
 
 // PowerReadings defines the structure of the power_readings portion of the smi output.
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct PowerReadings {
     power_draw: Value,
 }
 
 // PCI defines the structure of the pci portion of the smi output
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct PcieGen {
     current_link_gen: i32,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct LinkWidth {
     current_link_width: String,
 }
@@ -369,19 +356,19 @@ impl LinkWidth {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct LinkInfo {
     pcie_gen: PcieGen,
     link_widths: LinkWidth,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct Pci {
     pci_gpu_link_info: LinkInfo,
 }
 
 // EncoderStats defines the structure of the encoder_stats portion of the smi output
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct EncoderStats {
     session_count: i32,
     average_fps: i32,
@@ -389,7 +376,7 @@ struct EncoderStats {
 }
 
 // FBCStats defines the structure of the fbc_stats portion of the smi output
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct FBCStats {
     session_count: i32,
     average_fps: i32,
@@ -397,7 +384,7 @@ struct FBCStats {
 }
 
 // ClockStats defines the structure of the clocks portion of the smi output
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct ClockStats {
     graphics_clock: Value,
     sm_clock: Value,
@@ -406,7 +393,7 @@ struct ClockStats {
 }
 
 // Gpu defines the structure of the GPU portion of the smi output.
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct Gpu {
     fan_speed: Value,
     fb_memory_usage: MemoryStats,
@@ -435,7 +422,7 @@ impl Gpu {
 }
 
 // Smi defines the structure for the output of "nvidia-smi -q -x".
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 struct Smi {
     #[serde(rename = "gpu")]
     gpus: Vec<Gpu>,
