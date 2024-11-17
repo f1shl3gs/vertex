@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1731834301987,
+  "lastUpdate": 1731834321514,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f2dadafd9a0c6e3398547a3b5035db41611937e4",
-          "message": "chore(deps): bump flate2 from 1.0.32 to 1.0.33 (#1882)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.32 to 1.0.33.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.32...1.0.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-25T13:02:10+08:00",
-          "tree_id": "5c319fd9a959241974a0a30f0e7d6efa2f5bf692",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f2dadafd9a0c6e3398547a3b5035db41611937e4"
-        },
-        "date": 1724562270484,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.036,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 113.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 208.54,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58d6fef228813ff146b93a8094a6fd5b16f484a9",
+          "message": "remove unnecessary serializer implement (#1985)",
+          "timestamp": "2024-11-17T17:02:44+08:00",
+          "tree_id": "3d62775a77c81e4c5a6fae43a095bc09d64a5ce2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/58d6fef228813ff146b93a8094a6fd5b16f484a9"
+        },
+        "date": 1731834302785,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.277,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.977,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.14,
             "unit": "ns/op"
           }
         ]
