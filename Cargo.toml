@@ -372,7 +372,7 @@ tower = { version = "0.5.1", default-features = false }
 # Serde
 serde = { version = "1.0.215", default-features = false, features = ["derive"] }
 serde_yaml = { version = "0.9.34", default-features = false }
-serde_json = { version = "1.0.132", default-features = false }
+serde_json = { version = "1.0.133", default-features = false }
 
 # Protobuf
 prost = { version = "0.13.3", default-features = false, features = ["std"] }
