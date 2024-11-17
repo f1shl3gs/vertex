@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 use bytes::Buf;
 use configurable::Configurable;
@@ -32,7 +32,8 @@ pub enum ConsulError {
 }
 
 // Not all field included, only the field we need
-#[derive(Debug, Deserialize, Serialize)]
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Node {
     #[serde(rename = "ID")]
@@ -42,7 +43,8 @@ pub struct Node {
 }
 
 // Not all field included, only the field we need
-#[derive(Debug, Deserialize, Serialize)]
+#[allow(dead_code)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct AgentMember {
     pub name: String,
@@ -51,7 +53,7 @@ pub struct AgentMember {
 }
 
 // Not all field included, only the field we need
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct HealthCheck {
     pub name: String,
@@ -64,7 +66,7 @@ pub struct HealthCheck {
     pub node: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Service {
     #[serde(rename = "ID")]
@@ -73,7 +75,7 @@ pub struct Service {
     pub service: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ServiceEntry {
     pub node: Node,
@@ -155,7 +157,7 @@ pub struct QueryOptions {
     /// NodeMeta is used to filter results by nodes with the given
     /// metadata key/value pairs. Currently, only one key/value pair can
     /// be provided for filtering.
-    pub node_meta: HashMap<String, String>,
+    pub node_meta: BTreeMap<String, String>,
 
     /// RelayFactor is used in keyring operations to cause responses to be
     /// relayed back to the sender through N other random nodes. Must be
