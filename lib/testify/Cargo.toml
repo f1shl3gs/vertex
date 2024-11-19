@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 event = { path = "../event" }
-hyper = { version = "1.5.0", default-features = false, features = ["full"] }
+hyper = { version = "1.5.1", default-features = false, features = ["full"] }
 http-body-util = { version = "0.1.2", default-features = false }
 futures = { version = "0.3.31", default-features = false }
 futures-util = { version = "0.3.31", default-features = false }
