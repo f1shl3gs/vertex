@@ -64,7 +64,7 @@ percent-encoding = { version = "2.3.1", default-features = false }
 pin-project-lite = { version = "0.2.15", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 regex = { version = "1.11.1", default-features = false }
-rustls = { version = "0.23.17", default-features = false }
+rustls = { version = "0.23.18", default-features = false }
 smallvec = { version = "1.13.2", default-features = false }
 serde = { version = "1.0.215", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.133", default-features = false }
