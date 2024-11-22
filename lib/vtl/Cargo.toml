@@ -15,5 +15,5 @@ regex = { version = "1.11.1", default-features = false, features = ["unicode"] }
 serde = { version = "1.0.215", default-features = false }
 serde_json = { version = "1.0.133", default-features = false }
 twox-hash = { version = "2.0.1", default-features = false, features = ["xxhash3_64"] }
-url = { version = "2.5.3", default-features = false }
+url = { version = "2.5.4", default-features = false }
 value = { path = "../value" }
