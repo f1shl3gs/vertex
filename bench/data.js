@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732189351045,
+  "lastUpdate": 1732248636490,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a1489443539cf9b9911068ff852554d5c7389d63",
-          "message": "chore(deps): bump tokio from 1.39.3 to 1.40.0 (#1890)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.39.3 to 1.40.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.39.3...tokio-1.40.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-08-30T21:40:46+08:00",
-          "tree_id": "282a900fee435148d5ec1b2280a57af7020f6d8f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a1489443539cf9b9911068ff852554d5c7389d63"
-        },
-        "date": 1725025387100,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 515510,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6523f17676cb5933c6465ddb50a07db7eaf1be0c",
+          "message": "chore(deps): bump proc-macro2 from 1.0.91 to 1.0.92 (#1992)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.91 to 1.0.92.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.91...1.0.92)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-22T12:08:10+08:00",
+          "tree_id": "45340fb75378e82a11e28adecbd05d668ffc705f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6523f17676cb5933c6465ddb50a07db7eaf1be0c"
+        },
+        "date": 1732248619207,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 551400,
             "unit": "ns/op"
           }
         ]
