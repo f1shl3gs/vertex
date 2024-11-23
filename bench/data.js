@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732353280228,
+  "lastUpdate": 1732353282064,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4a94a1e26067f7d39e20e8ab8167bf5f65472930",
-          "message": "chore(deps): bump hyper-rustls from 0.27.2 to 0.27.3 (#1896)\n\nBumps [hyper-rustls](https://github.com/rustls/hyper-rustls) from 0.27.2 to 0.27.3.\r\n- [Release notes](https://github.com/rustls/hyper-rustls/releases)\r\n- [Commits](https://github.com/rustls/hyper-rustls/compare/v/0.27.2...v/0.27.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-05T11:07:36+08:00",
-          "tree_id": "94bbed4fa46b2d8f2b9b6973d3f7d32720cba038",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a94a1e26067f7d39e20e8ab8167bf5f65472930"
-        },
-        "date": 1725506284856,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 532,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34677.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3a934779ed0218e8bbd8c4a47dca71da38b273be",
           "message": "chore(deps): bump tokio-util from 0.7.11 to 0.7.12 (#1898)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.11 to 0.7.12.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.11...tokio-util-0.7.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-05T11:41:53+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35624.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "604bd9e98affe184d93b4cd8b25f7cb9fc8af708",
+          "message": "cargo update (#1996)",
+          "timestamp": "2024-11-23T17:04:11+08:00",
+          "tree_id": "4aa75b6b64ccf251ff2d5e68549226612acd99b0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/604bd9e98affe184d93b4cd8b25f7cb9fc8af708"
+        },
+        "date": 1732353265154,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 517,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35630.2,
             "unit": "KiB"
           }
         ]
