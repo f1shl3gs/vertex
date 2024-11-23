@@ -1,7 +1,8 @@
+use std::collections::{BTreeMap, BTreeSet};
+
 use event::tags::{Key, Tags, Value};
 use event::{Bucket, MetricValue, Quantile};
 use indexmap::indexmap;
-use std::collections::{BTreeMap, BTreeSet};
 
 use crate::schema::{
     generate_array_schema, generate_map_schema, generate_number_schema, generate_one_of_schema,
