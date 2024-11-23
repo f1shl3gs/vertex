@@ -3,33 +3,44 @@
 use std::env;
 use std::future::Future;
 use std::sync::LazyLock;
+use std::time::Duration;
 
-use event::{Events, Metric, MetricValue};
-use framework::Sink;
+use event::{Event, Events, Metric, MetricValue};
+use framework::config::{SourceConfig, SourceContext};
+use framework::{Pipeline, Sink};
 use futures::Stream;
 use futures::StreamExt;
+use tokio::time::sleep;
+use tokio::{pin, select};
 
-use crate::testing::metrics::capture_metrics;
+use super::metrics::capture_metrics;
 
 /// The standard set of tags for all `HttpSink`-based sinks.
 pub const HTTP_SINK_TAGS: [&str; 2] = ["endpoint", "protocol"];
 
+/// The most basic set of tags for sources, regardless of whether or not they pull data or have it pushed in.
+pub const SOURCE_TAGS: [&str; 1] = ["output"];
+
+/// The component test specification for all sources.
+pub static SOURCE_TESTS: LazyLock<ComponentTests> = LazyLock::new(|| ComponentTests {
+    tagged_counters: &[
+        "component_sent_events_total",
+        "component_sent_event_bytes_total",
+    ],
+    untagged_counters: &[],
+});
+
 /// The component test specification for sinks that are push-based.
-pub static SINK_TESTS: LazyLock<ComponentTests> = LazyLock::new(|| {
-    ComponentTests {
-        events: &["BytesSent", "EventsSent"], // EventsReceived is emitted in the topology
-        tagged_counters: &["component_sent_bytes_total"],
-        untagged_counters: &[
-            "component_sent_events_total",
-            "component_sent_event_bytes_total",
-        ],
-    }
+pub static SINK_TESTS: LazyLock<ComponentTests> = LazyLock::new(|| ComponentTests {
+    tagged_counters: &["component_sent_bytes_total"],
+    untagged_counters: &[
+        "component_sent_events_total",
+        "component_sent_event_bytes_total",
+    ],
 });
 
 /// This struct is used to describe a set of component tests.
 pub struct ComponentTests {
-    /// The list of event (suffixes) that must be emitted by the component
-    events: &'static [&'static str],
     /// The list of counter metrics (with given tags) that must be incremented
     tagged_counters: &'static [&'static str],
     /// The list of counter metrics (with no particular tags) that must be incremented
@@ -41,9 +52,9 @@ impl ComponentTests {
     #[track_caller]
     pub fn assert(&self, tags: &[&str]) {
         let mut test = ComponentTester::new();
-        test.emitted_all_events(self.events);
         test.emitted_all_counters(self.tagged_counters, tags);
         test.emitted_all_counters(self.untagged_counters, &[]);
+
         if !test.errors.is_empty() {
             panic!(
                 "Failed to assert compliance, errors:\n{}\n",
@@ -62,16 +73,15 @@ struct ComponentTester {
 impl ComponentTester {
     #[allow(clippy::print_stdout)]
     fn new() -> Self {
-        let mut metrics = capture_metrics();
+        let metrics = capture_metrics();
+        let errors = Vec::new();
 
         if env::var("DEBUG_COMPONENT_COMPLIANCE").is_ok() {
-            metrics.sort_by(|a, b| a.name().cmp(b.name()));
             for metric in &metrics {
-                println!("{}", metric);
+                println!("capture metric: {}", metric);
             }
         }
 
-        let errors = Vec::new();
         Self { metrics, errors }
     }
 
@@ -115,14 +125,6 @@ impl ComponentTester {
             }
         }
     }
-
-    fn emitted_all_events(&mut self, _names: &[&str]) {
-        /*        for name in names {
-            if let Err(err_msg) = event_test_util::contains_name_once(name) {
-                self.errors.push(format!("  - {}", err_msg));
-            }
-        }*/
-    }
 }
 
 /// Tests if the given metric contains all the given tag names
@@ -165,4 +167,101 @@ where
         sink.run(events).await.expect("Running sink failed")
     })
     .await;
+}
+
+/// Runs source tests with timeout and asserts happy path compliance.
+pub async fn run_and_assert_source_compliance<SC>(
+    source: SC,
+    timeout: Duration,
+    tags: &[&str],
+) -> Vec<Event>
+where
+    SC: SourceConfig,
+{
+    run_and_assert_source_advanced(source, |_| {}, Some(timeout), None, &SOURCE_TESTS, tags).await
+}
+
+/// Runs and asserts source test specifications with configurations.
+pub async fn run_and_assert_source_advanced<SC>(
+    source: SC,
+    setup: impl FnOnce(&mut SourceContext),
+    timeout: Option<Duration>,
+    event_count: Option<usize>,
+    tests: &LazyLock<ComponentTests>,
+    tags: &[&str],
+) -> Vec<Event>
+where
+    SC: SourceConfig,
+{
+    assert_source(tests, tags, async move {
+        // Build the source and set ourselves up to both drive it to completion
+        // as well as collect all the events it sends out.
+        let (tx, mut rx) = Pipeline::new_test();
+        let mut context = SourceContext::new_test(tx);
+
+        setup(&mut context);
+
+        let mut source = source
+            .build(context)
+            .await
+            .expect("source should not fail to build");
+
+        // If a timeout was given, use that, otherwise, use an infinitely long one.
+        let source_timeout = sleep(timeout.unwrap_or_else(|| Duration::from_nanos(u64::MAX)));
+        pin!(source_timeout);
+
+        let mut events = Vec::new();
+
+        // Try and drive both our timeout and the source itself, while collecting any events that the source sends out in
+        // the meantime.  We store these locally and return them all at the end.
+        loop {
+            // If an event count was given, and we've hit it, break out of the loop.
+            if let Some(count) = event_count {
+                if events.len() == count {
+                    break;
+                }
+            }
+
+            select! {
+                _ = &mut source_timeout => break,
+                Some(event) = rx.next() => events.push(event),
+                _ = &mut source => break,
+            }
+        }
+
+        drop(source);
+
+        // Drain any remaining events that we didn't get to before our timeout.
+        //
+        // If an event count was given, break out if we've reached the limit. Otherwise, just drain the remaining events
+        // until no more are left, which avoids timing issues with missing events that came in right when the timeout
+        // fired.
+        while let Some(event) = rx.next().await {
+            if let Some(count) = event_count {
+                if events.len() == count {
+                    break;
+                }
+            }
+
+            events.push(event);
+        }
+
+        events
+    })
+    .await
+}
+
+/// Runs and returns a future and asserts that the provided test specification passes.
+pub async fn assert_source<T>(
+    tests: &LazyLock<ComponentTests>,
+    tags: &[&str],
+    f: impl Future<Output = T>,
+) -> T {
+    init_test();
+
+    let result = f.await;
+
+    tests.assert(tags);
+
+    result
 }

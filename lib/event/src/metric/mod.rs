@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter, Write};
 
 use bytesize::ByteSizeOf;
 use chrono::{DateTime, Utc};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use super::metadata::EventMetadata;
 use super::tags::{Key, Tags, Value};
@@ -37,19 +37,19 @@ pub enum Kind {
     Summary,
 }
 
-#[derive(Clone, Copy, Debug, Serialize, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
 pub struct Bucket {
     pub upper: f64,
     pub count: u64,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Quantile {
     pub quantile: f64,
     pub value: f64,
 }
 
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum MetricValue {
     Sum(f64),
