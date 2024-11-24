@@ -9,13 +9,21 @@ use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use serde::{Deserialize, Serialize};
 
+/// Configuration for each static metric
 #[derive(Clone, Debug, Deserialize, Serialize, Configurable)]
 struct StaticMetricConfig {
+    /// Name of the static metric
     name: String,
+
+    /// Description of this static metric
     #[serde(default)]
     description: Option<String>,
+
+    /// Key-value pairs representing tags and their values to add to the metric.
     #[serde(skip_serializing_if = "Tags::is_empty")]
     tags: Tags,
+
+    /// "Observed" value of the static metric
     value: MetricValue,
 }
 
@@ -23,9 +31,11 @@ struct StaticMetricConfig {
 #[configurable_component(source, name = "static_metrics")]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// The interval between metric emitting
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 
+    /// Metrics to produce
     #[serde(default)]
     metrics: Vec<StaticMetricConfig>,
 }
