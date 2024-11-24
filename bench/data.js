@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732445424340,
+  "lastUpdate": 1732445441175,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4a94a1e26067f7d39e20e8ab8167bf5f65472930",
-          "message": "chore(deps): bump hyper-rustls from 0.27.2 to 0.27.3 (#1896)\n\nBumps [hyper-rustls](https://github.com/rustls/hyper-rustls) from 0.27.2 to 0.27.3.\r\n- [Release notes](https://github.com/rustls/hyper-rustls/releases)\r\n- [Commits](https://github.com/rustls/hyper-rustls/compare/v/0.27.2...v/0.27.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-05T11:07:36+08:00",
-          "tree_id": "94bbed4fa46b2d8f2b9b6973d3f7d32720cba038",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a94a1e26067f7d39e20e8ab8167bf5f65472930"
-        },
-        "date": 1725505805413,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532320,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 521130,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d88518743884c9e1a987174cfe2b19787442555",
+          "message": "remove unnecessary allocations (#1998)",
+          "timestamp": "2024-11-24T18:46:38+08:00",
+          "tree_id": "6db76cf7febad2c8b780867f4c9e3deb664787e5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d88518743884c9e1a987174cfe2b19787442555"
+        },
+        "date": 1732445423991,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 520990,
             "unit": "ns/op"
           }
         ]
