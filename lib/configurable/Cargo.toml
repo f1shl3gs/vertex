@@ -19,7 +19,7 @@ serde_json = { version = "1.0.133", default-features = false }
 chrono-tz = { version = "0.10.0", default-features = false }
 encoding_rs = { version = "0.8.35", default-features = false }
 event = { path = "../event" }
-http = { version = "1.1.0", default-features = false }
+http = { version = "1.1.0", default-features = false, features = ["std"] }
 regex = { version = "1.11.1", default-features = false }
 url = { version = "2.5.4", default-features = false }
 value = { path = "../value" }

@@ -59,17 +59,21 @@ impl Configurable for TimeZone {
     fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         let mut local_schema = generate_const_string_schema("local".to_string());
         let metadata = local_schema.metadata();
-        metadata.description = Some("System local timezone.".to_string());
+        metadata.description = Some("System local timezone.");
 
         let mut tz_schema = get_or_generate_schema::<Tz>(gen)?;
         let metadata = tz_schema.metadata();
-        metadata.title = Some("A named timezone".to_string());
-        metadata.description = Some(r#"Must be a valid name in the [TZ database]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"#.to_string());
+        metadata.title = Some("A named timezone");
+        metadata.description = Some(
+            r#"Must be a valid name in the [TZ database]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"#,
+        );
 
         let mut schema = generate_one_of_schema(&[local_schema, tz_schema]);
         let metadata = schema.metadata();
-        metadata.title = Some("Timezone reference.".to_string());
-        metadata.description = Some(r#"This can refer to any valid timezone as defined in the [TZ database]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones, or "local" which refers to the system local timezone."#.to_string());
+        metadata.title = Some("Timezone reference.");
+        metadata.description = Some(
+            r#"This can refer to any valid timezone as defined in the [TZ database]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones, or "local" which refers to the system local timezone."#,
+        );
 
         Ok(schema)
     }

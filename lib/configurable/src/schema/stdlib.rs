@@ -166,7 +166,7 @@ impl Configurable for PathBuf {
         let mut schema = generate_string_schema();
         let metadata = schema.metadata();
 
-        metadata.description = Some("file path".to_string());
+        metadata.description = Some("file path");
 
         Ok(generate_string_schema())
     }
@@ -180,9 +180,9 @@ impl Configurable for SocketAddr {
         // is well-known and can be easily codified.
         let mut schema = generate_string_schema();
         let metadata = schema.metadata();
-        metadata.description = Some("An internet socket address, either IPv4 or IPv6.".to_string());
+        metadata.description = Some("An internet socket address, either IPv4 or IPv6.");
         metadata.examples = vec![Value::String("127.0.0.1:8080".to_owned())];
-        schema.format = Some("ip-address".to_string());
+        schema.format = Some("ip-address");
 
         Ok(schema)
     }

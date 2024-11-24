@@ -92,7 +92,7 @@ impl Examplar {
         self.buf.into_inner().data
     }
 
-    fn write_comment(&self, desc: Option<&String>, required: bool) {
+    fn write_comment(&self, desc: Option<&str>, required: bool) {
         if let Some(desc) = desc {
             let mut buf = self.buf.borrow_mut();
             desc.lines().for_each(|line| {
@@ -172,7 +172,7 @@ impl Examplar {
                     continue;
                 }
 
-                meta.description.as_ref()
+                meta.description
             } else {
                 None
             };
@@ -183,7 +183,7 @@ impl Examplar {
                         Some(Schema::Object(so)) => {
                             if let Some(meta) = so.metadata.as_ref() {
                                 if desc.is_none() {
-                                    desc = meta.description.as_ref();
+                                    desc = meta.description;
                                 }
                             }
 
@@ -297,7 +297,7 @@ impl Examplar {
         }
     }
 
-    fn get_referenced(&self, key: &String) -> Option<&Schema> {
+    fn get_referenced(&self, key: &str) -> Option<&Schema> {
         if let Some(stripped) = key.strip_prefix("#/definitions/") {
             self.root.definitions.get(stripped)
         } else {

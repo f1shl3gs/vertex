@@ -24,8 +24,8 @@ pub type Map<K, V> = IndexMap<K, V>;
 pub type Set<V> = BTreeSet<V>;
 
 pub fn generate_struct_schema(
-    properties: IndexMap<String, SchemaObject>,
-    required: BTreeSet<String>,
+    properties: IndexMap<&'static str, SchemaObject>,
+    required: BTreeSet<&'static str>,
     additional_properties: Option<Box<Schema>>,
 ) -> SchemaObject {
     let properties = properties
@@ -75,13 +75,11 @@ where
     let schema = match T::reference() {
         Some(name) => {
             if !gen.definitions().contains_key(name) {
-                gen.definitions_mut()
-                    .insert(name.to_string(), Schema::Bool(false));
+                gen.definitions_mut().insert(name, Schema::Bool(false));
 
                 let schema = generate_baseline_schema::<T>(gen)?;
 
-                gen.definitions_mut()
-                    .insert(name.to_string(), Schema::Object(schema));
+                gen.definitions_mut().insert(name, Schema::Object(schema));
             }
 
             get_schema_ref(gen, name)
@@ -324,11 +322,11 @@ where
 }
 
 pub fn generate_internal_tagged_variant_schema(
-    tag: String,
+    tag: &'static str,
     value_schema: SchemaObject,
 ) -> SchemaObject {
     let mut properties = IndexMap::new();
-    properties.insert(tag.clone(), value_schema);
+    properties.insert(tag, value_schema);
 
     let mut required = BTreeSet::new();
     required.insert(tag);

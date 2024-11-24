@@ -12,8 +12,7 @@ impl Configurable for &'static encoding_rs::Encoding {
         let mut schema = generate_string_schema();
         let metadata = schema.metadata();
         metadata.description = Some(
-            "An encoding as defined in the [Encoding Standard](https://encoding.spec.whatwg.org/)."
-                .to_string(),
+            "An encoding as defined in the [Encoding Standard](https://encoding.spec.whatwg.org/).",
         );
 
         Ok(schema)
