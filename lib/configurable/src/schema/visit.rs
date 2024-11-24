@@ -77,7 +77,7 @@ fn visit_vec<V: Visitor + ?Sized>(v: &mut V, target: &mut Option<Vec<Schema>>) {
     }
 }
 
-fn visit_map_values<V: Visitor + ?Sized>(v: &mut V, target: &mut Map<String, Schema>) {
+fn visit_map_values<V: Visitor + ?Sized>(v: &mut V, target: &mut Map<&'static str, Schema>) {
     for s in target.values_mut() {
         v.visit_schema(s)
     }

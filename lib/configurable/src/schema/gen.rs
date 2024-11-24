@@ -59,7 +59,7 @@ impl SchemaSettings {
 #[derive(Debug, Default)]
 pub struct SchemaGenerator {
     settings: SchemaSettings,
-    definitions: Map<String, Schema>,
+    definitions: Map<&'static str, Schema>,
 }
 
 impl From<SchemaSettings> for SchemaGenerator {
@@ -87,7 +87,7 @@ impl SchemaGenerator {
     ///
     /// The keys of the returned `Map` are the [schema names](JsonSchema::schema_name), and the
     /// values are the schemas themselves.
-    pub fn definitions(&self) -> &Map<String, Schema> {
+    pub fn definitions(&self) -> &Map<&'static str, Schema> {
         &self.definitions
     }
 
@@ -96,7 +96,7 @@ impl SchemaGenerator {
     ///
     /// The keys of the returned `Map` are the [schema names](JsonSchema::schema_name), and the
     /// values are the schemas themselves.
-    pub fn definitions_mut(&mut self) -> &mut Map<String, Schema> {
+    pub fn definitions_mut(&mut self) -> &mut Map<&'static str, Schema> {
         &mut self.definitions
     }
 

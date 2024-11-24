@@ -74,7 +74,7 @@ fn impl_from_struct(
     let maybe_description = type_attrs
         .description
         .as_ref()
-        .map(|desc| quote!( schema.metadata().description = Some(#desc.to_string()); ));
+        .map(|desc| quote!( schema.metadata().description = Some(#desc); ));
 
     let mut any_flatten = false;
     let mut mapped_fields = Vec::with_capacity(fields.named.len());
@@ -158,16 +158,16 @@ fn generate_named_struct_field(field: &syn::Field, field_attrs: FieldAttrs) -> T
     let insert_fields = if field_attrs.flatten {
         quote!( flattened_subschemas.push(subschema); )
     } else {
-        quote!( properties.insert(#field_key.to_string(), subschema); )
+        quote!( properties.insert(#field_key, subschema); )
     };
 
     let maybe_required = field_attrs
         .required
-        .then(|| quote!( required.insert(#field_key.to_string()); ));
+        .then(|| quote!( required.insert(#field_key); ));
 
     let maybe_description = field_attrs
         .description
-        .map(|desc| quote!( subschema.metadata().description = Some(#desc.to_string()); ));
+        .map(|desc| quote!( subschema.metadata().description = Some(#desc); ));
 
     let maybe_deprecated = field_attrs
         .deprecated
@@ -175,7 +175,7 @@ fn generate_named_struct_field(field: &syn::Field, field_attrs: FieldAttrs) -> T
 
     let maybe_format = field_attrs
         .format
-        .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
+        .map(|ls| quote!( subschema.format = Some(#ls); ));
     let maybe_example = field_attrs.example.map(
         |example| quote!( subschema.metadata().examples = vec![ ::serde_json::Value::from( #example ) ]; ),
     );
@@ -211,7 +211,7 @@ fn impl_from_enum(
     let maybe_description = type_attrs
         .description
         .as_ref()
-        .map(|desc| quote!( schema.metadata().description = Some(#desc.to_string()); ));
+        .map(|desc| quote!( schema.metadata().description = Some(#desc); ));
 
     Ok(quote!(
         fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
@@ -278,9 +278,8 @@ fn generate_enum_struct_named_variant_schema(
                 parse_attr_doc(attr, &mut description)?;
             }
 
-            let maybe_tag_description = description.map(
-                |description| quote!(tag_metadata.description = Some( #description.to_string() );),
-            );
+            let maybe_tag_description = description
+                .map(|description| quote!(tag_metadata.description = Some( #description );));
 
             quote! ({
                 let mut tag_schema = ::configurable::schema::generate_const_string_schema( #ident.to_string() );
@@ -288,8 +287,8 @@ fn generate_enum_struct_named_variant_schema(
 
                 #maybe_tag_description
 
-                properties.insert(#tag.to_string(), tag_schema);
-                required.insert(#tag.to_string());
+                properties.insert(#tag, tag_schema);
+                required.insert(#tag);
             })
         }
         None => quote!(),
@@ -368,8 +367,8 @@ fn generate_enum_unamed_variant_schema(
             let mut properties = ::configurable::IndexMap::new();
             let mut required = ::std::collections::BTreeSet::new();
             let subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
-            properties.insert(#variant_name.to_string(), subschema);
-            required.insert(#variant_name.to_string());
+            properties.insert(#variant_name, subschema);
+            required.insert(#variant_name);
             ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
@@ -388,7 +387,7 @@ fn generate_enum_unamed_variant_schema(
 
             quote! {
                 let tag_schema = ::configurable::schema::generate_internal_tagged_variant_schema(
-                    #tag_name.to_string(),
+                    #tag_name,
                     ::configurable::schema::generate_const_string_schema(#tag.to_string())
                 );
 
@@ -441,13 +440,13 @@ fn generate_named_enum_field(field: &syn::Field) -> Result<TokenStream> {
     let maybe_default = field_attrs.maybe_default(field_typ);
     let maybe_required = field_attrs
         .required
-        .then(|| quote!( required.insert(#field_key.to_string()); ));
+        .then(|| quote!( required.insert(#field_key); ));
     let maybe_description = field_attrs
         .description
-        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
+        .map(|desc| quote!( metadata.description = Some(#desc); ));
     let maybe_format = field_attrs
         .format
-        .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
+        .map(|ls| quote!( subschema.format = Some(#ls); ));
     let maybe_deprecated = field_attrs
         .deprecated
         .then(|| quote!( metadata.deprecated = true; ));
@@ -463,7 +462,7 @@ fn generate_named_enum_field(field: &syn::Field) -> Result<TokenStream> {
         #maybe_format
         #maybe_deprecated
 
-        properties.insert(#field_key.to_string(), subschema);
+        properties.insert(#field_key, subschema);
     }))
 }
 
@@ -480,7 +479,7 @@ fn generate_enum_variant_subschema(
     }
 
     let maybe_description =
-        desc.map(|desc| quote!( subschema.metadata().description = Some( #desc.to_string() ); ));
+        desc.map(|desc| quote!( subschema.metadata().description = Some( #desc ); ));
 
     Ok(quote! ({
         let mut subschema = { #variant_schema };

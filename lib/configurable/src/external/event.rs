@@ -45,10 +45,10 @@ impl Configurable for Tags {
 impl Configurable for Bucket {
     fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         let properties = indexmap! {
-            "upper".to_string() => generate_number_schema::<f64>(),
-            "count".to_string() => generate_number_schema::<u64>(),
+            "upper" => generate_number_schema::<f64>(),
+            "count" => generate_number_schema::<u64>(),
         };
-        let requirement = BTreeSet::from(["upper".to_string(), "count".to_string()]);
+        let requirement = BTreeSet::from(["upper", "count"]);
 
         Ok(generate_struct_schema(properties, requirement, None))
     }
@@ -57,10 +57,10 @@ impl Configurable for Bucket {
 impl Configurable for Quantile {
     fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         let properties = indexmap! {
-            "quantile".to_string() => generate_number_schema::<f64>(),
-            "value".to_string() => generate_number_schema::<f64>(),
+            "quantile" => generate_number_schema::<f64>(),
+            "value" => generate_number_schema::<f64>(),
         };
-        let requirement = BTreeSet::from(["quantile".to_string(), "value".to_string()]);
+        let requirement = BTreeSet::from(["quantile", "value"]);
 
         Ok(generate_struct_schema(properties, requirement, None))
     }
@@ -69,26 +69,18 @@ impl Configurable for Quantile {
 impl Configurable for MetricValue {
     fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         let histogram_properties = indexmap! {
-            "count".to_string() => generate_number_schema::<u64>(),
-            "sum".to_string() => generate_number_schema::<f64>(),
-            "buckets".to_string() => generate_array_schema::<Bucket>(gen)?,
+            "count" => generate_number_schema::<u64>(),
+            "sum" => generate_number_schema::<f64>(),
+            "buckets" => generate_array_schema::<Bucket>(gen)?,
         };
-        let histogram_requirement = BTreeSet::from([
-            "count".to_string(),
-            "sum".to_string(),
-            "buckets".to_string(),
-        ]);
+        let histogram_requirement = BTreeSet::from(["count", "sum", "buckets"]);
 
         let summary_properties = indexmap! {
-            "count".to_string() => generate_number_schema::<u64>(),
-            "sum".to_string() => generate_number_schema::<f64>(),
-            "quantiles".to_string() => generate_array_schema::<Quantile>(gen)?,
+            "count" => generate_number_schema::<u64>(),
+            "sum" => generate_number_schema::<f64>(),
+            "quantiles" => generate_array_schema::<Quantile>(gen)?,
         };
-        let summary_requirement = BTreeSet::from([
-            "count".to_string(),
-            "sum".to_string(),
-            "quantiles".to_string(),
-        ]);
+        let summary_requirement = BTreeSet::from(["count", "sum", "quantiles"]);
 
         Ok(generate_one_of_schema(&[
             generate_number_schema::<f64>(),
