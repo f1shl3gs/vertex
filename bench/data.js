@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732434813220,
+  "lastUpdate": 1732434822473,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ec3493ff446704a75c5b1e88445054352fbb77bc",
-          "message": "chore(deps): bump sqlx from 0.8.1 to 0.8.2 (#1895)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.8.1 to 0.8.2.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/compare/v0.8.1...v0.8.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-04T12:16:07+08:00",
-          "tree_id": "326eb38ca5102783509e5f99f99dbc02abd62663",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ec3493ff446704a75c5b1e88445054352fbb77bc"
-        },
-        "date": 1725423528027,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532790,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 521490,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9864e9b17a5fd7b89fc9df386eb765d6bda5062e",
+          "message": "add comment (#1997)",
+          "timestamp": "2024-11-24T15:50:39+08:00",
+          "tree_id": "794c1938b3b3cda9f02bc8968e7eb6ab0d8876ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9864e9b17a5fd7b89fc9df386eb765d6bda5062e"
+        },
+        "date": 1732434805517,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 521130,
             "unit": "ns/op"
           }
         ]
