@@ -11,11 +11,10 @@ test = false
 
 [dev-dependencies]
 chrono = { version = "0.4.38", default-features = false, features = ["now", "serde"] }
+criterion = { version = "0.5.1", default-features = false }
 quickcheck = { version = "1.0.3", default-features = false }
 tokio = { version = "1.41.1", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
 testify = { path = "../testify" }
-criterion = { version = "0.5.1", default-features = false }
-tracing-test = { version = "0.2.5" }
 
 [dependencies]
 serde = { version = "1.0.215", default-features = false, features = ["derive"] }
