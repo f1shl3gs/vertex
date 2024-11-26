@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732597272655,
+  "lastUpdate": 1732597289628,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "58c6d047aaa2ee2c7b95206cadfdcfc4c507f4cf",
-          "message": "chore(deps): bump serde_json from 1.0.127 to 1.0.128 (#1897)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.127 to 1.0.128.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/1.0.127...1.0.128)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-05T11:52:36+08:00",
-          "tree_id": "7e4f58bb5aedce381c0f5e215434285034a1aa8f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/58c6d047aaa2ee2c7b95206cadfdcfc4c507f4cf"
-        },
-        "date": 1725508487652,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.047,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.25,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 195.04,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "62ad9516c629119a5d1597e8b16131fb2aa10c45",
+          "message": "chore(deps): bump libc from 0.2.164 to 0.2.165 (#2000)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.164 to 0.2.165.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.165/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.164...0.2.165)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-26T12:58:43+08:00",
+          "tree_id": "a7fa6046faf4a7e6c43d330744b82de6f96c1836",
+          "url": "https://github.com/f1shl3gs/vertex/commit/62ad9516c629119a5d1597e8b16131fb2aa10c45"
+        },
+        "date": 1732597271961,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 191.32,
             "unit": "ns/op"
           }
         ]
