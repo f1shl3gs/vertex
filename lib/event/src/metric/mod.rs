@@ -11,24 +11,6 @@ use super::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finaliz
 pub const INSTANCE_KEY: Key = Key::from_static("instance");
 pub const EXPORTED_INSTANCE_KEY: Key = Key::from_static("exported_instance");
 
-#[macro_export]
-macro_rules! buckets {
-    ( $( $limit:expr => $count:expr),* ) => {
-        vec![
-            $( event::Bucket { upper: $limit, count: $count}, )*
-        ]
-    };
-}
-
-#[macro_export]
-macro_rules! quantiles {
-    ( $( $q:expr => $value:expr),* ) => {
-        vec![
-            $( event::Quantile { quantile: $q, value: $value }, )*
-        ]
-    };
-}
-
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
     Gauge,
@@ -275,18 +257,6 @@ impl EventDataEq for Metric {
 pub trait IntoF64 {
     fn into_f64(self) -> f64;
 }
-
-/*
-    ($($ty:ty),+) => {
-        $(
-            impl ToF64 for $ty {
-                fn to_f64(&self) -> Option<f64> {
-                    Some(*self as f64)
-                }
-            }
-        )+
-    }
-*/
 
 macro_rules! impl_intof64 {
     ($($typ:ty),+) => {
