@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732625286551,
+  "lastUpdate": 1732625447639,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2a658166a59cde6b52fd4fd220dc2cadbd81a66f",
-          "message": "bump to 1.81.0 (#1902)",
-          "timestamp": "2024-09-06T13:00:32+08:00",
-          "tree_id": "dab4af2d5985724cefa029b05ad983a1683c1028",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2a658166a59cde6b52fd4fd220dc2cadbd81a66f"
-        },
-        "date": 1725599460788,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 541,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34937.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0fe2977e8d6429794276030eba026cb51e178d8f",
           "message": "cargo update (#1903)",
           "timestamp": "2024-09-06T18:21:32+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 527,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35504.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23f54f20f282ec3b18c764f1f6ce8bcfd3fa37b8",
+          "message": "remove unnecessary macro (#2002)",
+          "timestamp": "2024-11-26T20:38:20+08:00",
+          "tree_id": "f2fa0843aab18543b44c7e0e46fc967371bab6fd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/23f54f20f282ec3b18c764f1f6ce8bcfd3fa37b8"
+        },
+        "date": 1732625430334,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
             "unit": "s"
           },
           {
