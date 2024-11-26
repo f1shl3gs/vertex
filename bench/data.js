@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732597264201,
+  "lastUpdate": 1732597272655,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8767852fee7f26a2ea725fd69754b47ca75ef6c6",
-          "message": "chore(deps): bump tokio-stream from 0.1.15 to 0.1.16 (#1900)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.15 to 0.1.16.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.15...tokio-stream-0.1.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-06T12:31:41+08:00",
-          "tree_id": "42f1671bd168b660bb1a78347b4d2beeb9510056",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8767852fee7f26a2ea725fd69754b47ca75ef6c6"
-        },
-        "date": 1725597238494,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 543170,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 545000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43245e9010ddd3eecb57603783f03a0b99826c56",
+          "message": "chore(deps): bump tracing-core from 0.1.32 to 0.1.33 (#2001)\n\nBumps [tracing-core](https://github.com/tokio-rs/tracing) from 0.1.32 to 0.1.33.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-core-0.1.32...tracing-core-0.1.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-core\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-26T12:58:52+08:00",
+          "tree_id": "a87caed6e79dac292dca601b59830110559d41a4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43245e9010ddd3eecb57603783f03a0b99826c56"
+        },
+        "date": 1732597255450,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 543500,
             "unit": "ns/op"
           }
         ]
