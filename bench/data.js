@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732445897256,
+  "lastUpdate": 1732595625795,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3a934779ed0218e8bbd8c4a47dca71da38b273be",
-          "message": "chore(deps): bump tokio-util from 0.7.11 to 0.7.12 (#1898)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.11 to 0.7.12.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.11...tokio-util-0.7.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-05T11:41:53+08:00",
-          "tree_id": "b8227b19e9e79b95b4d96470003bec6209e68beb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3a934779ed0218e8bbd8c4a47dca71da38b273be"
-        },
-        "date": 1725507840525,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532550,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 520990,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7c1e2f82a6a05a135b02657b4a11e828ad9bbfbc",
+          "message": "remove tracing-test of lib/tail (#1999)",
+          "timestamp": "2024-11-26T12:31:07+08:00",
+          "tree_id": "8232ddf04b2bbfbf14bb3221f81a7c2d4b1d6385",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c1e2f82a6a05a135b02657b4a11e828ad9bbfbc"
+        },
+        "date": 1732595609004,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 519730,
             "unit": "ns/op"
           }
         ]
