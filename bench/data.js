@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732596127392,
+  "lastUpdate": 1732596140663,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5900e04fef016a52ef90cfe0642a66c8a7494f50",
-          "message": "bump to 1.80.1 (#1899)",
-          "timestamp": "2024-09-06T12:31:24+08:00",
-          "tree_id": "87ac47fa5da54a8843b7dbd9c66de90e035a1adc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5900e04fef016a52ef90cfe0642a66c8a7494f50"
-        },
-        "date": 1725597713803,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 537,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34677,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 547,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35512.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7c1e2f82a6a05a135b02657b4a11e828ad9bbfbc",
+          "message": "remove tracing-test of lib/tail (#1999)",
+          "timestamp": "2024-11-26T12:31:07+08:00",
+          "tree_id": "8232ddf04b2bbfbf14bb3221f81a7c2d4b1d6385",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c1e2f82a6a05a135b02657b4a11e828ad9bbfbc"
+        },
+        "date": 1732596123177,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 539,
             "unit": "s"
           },
           {
