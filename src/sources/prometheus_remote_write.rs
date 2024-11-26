@@ -189,7 +189,7 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
 mod tests {
     use bytes::BytesMut;
     use chrono::{SubsecRound, Utc};
-    use event::{buckets, quantiles, tags, EventStatus, Metric};
+    use event::{tags, EventStatus, Metric};
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
     use framework::pipeline::Pipeline;
@@ -218,21 +218,36 @@ mod tests {
                 tags!("type" => "histogram"),
                 96_u64,
                 156.2,
-                buckets!(
-                    2.3 => 11,
-                    4.2 => 85
-                ),
+                vec![
+                    Bucket {
+                        upper: 2.3,
+                        count: 11,
+                    },
+                    Bucket {
+                        upper: 4.2,
+                        count: 85,
+                    },
+                ],
             ),
             Metric::summary(
                 "summary_4",
                 "",
                 23_u64,
                 8.6,
-                quantiles!(
-                    0.1 => 1.2,
-                    0.5 => 3.6,
-                    0.9 => 5.2
-                ),
+                vec![
+                    Quantile {
+                        quantile: 0.1,
+                        value: 1.2,
+                    },
+                    Quantile {
+                        quantile: 0.5,
+                        value: 3.6,
+                    },
+                    Quantile {
+                        quantile: 0.9,
+                        value: 5.2,
+                    },
+                ],
             )
             .with_tags(tags!("type" => "summary")),
         ];
