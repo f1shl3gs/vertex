@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732721175868,
+  "lastUpdate": 1732721183656,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "af87fe8261ca1523557fbcecd8c7c971e93916fd",
-          "message": "chore(deps): bump kube from 0.93.1 to 0.94.1 (#1908)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.93.1 to 0.94.1.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.93.1...0.94.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-10T10:28:26+08:00",
-          "tree_id": "bcbe2c6fd6595dad1a3af9b40f12fa82eea9d787",
-          "url": "https://github.com/f1shl3gs/vertex/commit/af87fe8261ca1523557fbcecd8c7c971e93916fd"
-        },
-        "date": 1725935934587,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 535,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35000,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9265611e62735e2ac5874c2fb9ec5995778141cf",
           "message": "chore(deps): bump hyper-util from 0.1.7 to 0.1.8 (#1907)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.7 to 0.1.8.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.7...v0.1.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-10T10:28:40+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 524,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35509.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b4671b097be0a9afacf2a23fe8e81c5f9d2e65b0",
+          "message": "chore(deps): bump rustls from 0.23.18 to 0.23.19 (#2005)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.18 to 0.23.19.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.18...v/0.23.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-27T23:15:49+08:00",
+          "tree_id": "1f71bfb9f87ba3074eea4face539cfbb64be79ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b4671b097be0a9afacf2a23fe8e81c5f9d2e65b0"
+        },
+        "date": 1732721166267,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 525,
             "unit": "s"
           },
           {
