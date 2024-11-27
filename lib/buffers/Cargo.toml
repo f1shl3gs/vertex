@@ -29,7 +29,7 @@ bytesize = { path = "../bytesize" }
 thiserror = { version = "2.0.3", default-features = false }
 tokio = { version = "1.41.1", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-util = { version = "0.7.12", default-features = false }
-tracing = { version = "0.1.40", default-features = false, features = ["attributes"] }
+tracing = { version = "0.1.41", default-features = false, features = ["attributes"] }
 
 [dev-dependencies]
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }

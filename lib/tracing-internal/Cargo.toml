@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 event = { path = "../event" }
-tracing = { version = "0.1.40", default-features = false, features = ["attributes", "std"] }
+tracing = { version = "0.1.41", default-features = false, features = ["attributes", "std"] }
 tracing-subscriber = { version = "0.3.18", default-features = false }
 tracing-core = { version = "0.1.33", default-features = false }
 
