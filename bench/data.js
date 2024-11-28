@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732791063563,
+  "lastUpdate": 1732791066728,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5c7b298d26115817d6b6a4a97a837d8557619d95",
-          "message": "chore(deps): bump chrono-tz from 0.9.0 to 0.10.0 (#1906)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.9.0 to 0.10.0.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Commits](https://github.com/chronotope/chrono-tz/compare/v0.9.0...v0.10.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-10T10:29:05+08:00",
-          "tree_id": "e0e778a362a5d76e34689a94e7206b9c7b45a6ce",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5c7b298d26115817d6b6a4a97a837d8557619d95"
-        },
-        "date": 1725935971341,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 532,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35001.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4eb53ff817f3a837d8f5d139b807ef95e8217cff",
           "message": "chore(deps): bump serde from 1.0.209 to 1.0.210 (#1904)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.209 to 1.0.210.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.209...v1.0.210)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-10T10:29:39+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 509,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35509.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c9d6431ab87f63e23025da72c772a0f758c43d87",
+          "message": "chore(deps): bump socket2 from 0.5.7 to 0.5.8 (#2007)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.7 to 0.5.8.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-28T18:40:38+08:00",
+          "tree_id": "856a534240ee3da53d60803a3d1cf8a63121f084",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c9d6431ab87f63e23025da72c772a0f758c43d87"
+        },
+        "date": 1732791049383,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 520,
             "unit": "s"
           },
           {
