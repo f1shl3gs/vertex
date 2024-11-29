@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732884139022,
+  "lastUpdate": 1732884141049,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "187017842576cbf00c8a588104818eb6a0a92947",
-          "message": "chore(deps): bump ipnet from 2.9.0 to 2.10.0 (#1905)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.9.0 to 2.10.0.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/compare/2.9.0...2.10.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-10T11:08:39+08:00",
-          "tree_id": "eb7d2e38d756a4760563646fe15836b123701aed",
-          "url": "https://github.com/f1shl3gs/vertex/commit/187017842576cbf00c8a588104818eb6a0a92947"
-        },
-        "date": 1725937856041,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529330,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546570,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9faf70fb563304884da2731d856944f6223561ed",
+          "message": "chore(deps): bump libc from 0.2.166 to 0.2.167 (#2010)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.166 to 0.2.167.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.167/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.166...0.2.167)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-29T20:39:41+08:00",
+          "tree_id": "18834caac658c8bf4f44f79addd413cfdcce6786",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9faf70fb563304884da2731d856944f6223561ed"
+        },
+        "date": 1732884123777,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 545430,
             "unit": "ns/op"
           }
         ]
