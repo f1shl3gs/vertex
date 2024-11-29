@@ -18,7 +18,7 @@ use crate::variants::disk::record::ArchivedRecord;
 use crate::{
     assert_buffer_size, assert_enough_bytes_written, assert_file_does_not_exist_async,
     assert_file_exists_async, assert_reader_writer_file_positions, await_timeout,
-    encoding::{AsMetadata, Encodable},
+    encoding::Encodable,
     test::{acknowledge, install_tracing_helpers, with_temp_dir, SizedRecord, UndecodableRecord},
     variants::disk::ReaderError,
     EventCount,
@@ -690,20 +690,6 @@ async fn writer_detects_when_last_record_was_flushed_but_id_wasnt_incremented() 
 async fn reader_throws_error_when_record_is_undecodable_via_metadata() {
     static GET_METADATA_VALUE: AtomicU32 = AtomicU32::new(0);
     static CAN_DECODE_VALUE: AtomicU32 = AtomicU32::new(0);
-
-    impl AsMetadata for u32 {
-        fn into_u32(self) -> u32 {
-            self
-        }
-
-        fn from_u32(value: u32) -> Option<Self> {
-            if value < 32 {
-                Some(value)
-            } else {
-                None
-            }
-        }
-    }
 
     #[derive(Debug)]
     struct ControllableRecord(u8);

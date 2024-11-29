@@ -310,7 +310,7 @@ impl<'a> Opaque<'a> {
     }
 }
 
-impl<'a> Deref for Opaque<'a> {
+impl Deref for Opaque<'_> {
     type Target = [u8];
     fn deref(&self) -> &[u8] {
         self.0.deref()

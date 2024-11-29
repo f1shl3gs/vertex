@@ -327,9 +327,7 @@ fn now() -> i64 {
 
 struct SpanAttributeVisitor<'a>(&'a mut Span);
 
-impl<'a> SpanAttributeVisitor<'a> {}
-
-impl<'a> tracing::field::Visit for SpanAttributeVisitor<'a> {
+impl tracing::field::Visit for SpanAttributeVisitor<'_> {
     fn record_f64(&mut self, field: &Field, value: f64) {
         self.0.tags.insert(field.name(), value)
     }
@@ -353,7 +351,7 @@ impl<'a> tracing::field::Visit for SpanAttributeVisitor<'a> {
 
 struct SpanEventVisitor<'a>(&'a mut event::trace::Event);
 
-impl<'a> tracing::field::Visit for SpanEventVisitor<'a> {
+impl tracing::field::Visit for SpanEventVisitor<'_> {
     fn record_f64(&mut self, field: &Field, value: f64) {
         self.0.attributes.insert(field.name(), value)
     }

@@ -7,7 +7,6 @@ use super::Error;
 
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/net/udp6`
-
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
     if let Ok(v4) = net_udp_summary(proc_path.clone()).await {

@@ -27,7 +27,7 @@ impl<'de> Deserialize<'de> for LimitExceededAction {
     {
         struct Action;
 
-        impl<'de> Visitor<'de> for Action {
+        impl Visitor<'_> for Action {
             type Value = LimitExceededAction;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {

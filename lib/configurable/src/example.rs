@@ -305,7 +305,7 @@ impl Examplar {
         }
     }
 
-    fn extract<'a>(&'a self, obj: &'a SchemaObject) -> &ObjectValidation {
+    fn extract<'a>(&'a self, obj: &'a SchemaObject) -> &'a ObjectValidation {
         match &obj.object {
             Some(obj) => obj,
             None => {

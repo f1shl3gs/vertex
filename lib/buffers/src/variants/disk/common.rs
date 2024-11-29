@@ -48,7 +48,7 @@ pub(crate) const fn align16(amount: usize) -> usize {
         "`amount` must be less than `MAX_ALIGNABLE_AMOUNT`"
     );
 
-    ((amount + SERIALIZER_ALIGNMENT - 1) / SERIALIZER_ALIGNMENT) * SERIALIZER_ALIGNMENT
+    amount.div_ceil(SERIALIZER_ALIGNMENT)
 }
 
 // We specifically limit ourselves to 0-31 for file IDs in test, because it lets us more quickly

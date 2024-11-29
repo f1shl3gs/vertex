@@ -93,7 +93,7 @@ where
 
 struct Visitor<'a>(MutexGuard<'a, String>);
 
-impl<'a> field::Visit for Visitor<'a> {
+impl field::Visit for Visitor<'_> {
     fn record_debug(&mut self, _field: &field::Field, value: &dyn fmt::Debug) {
         use std::fmt::Write;
         let _ = write!(&mut *self.0, "{:?}", value);

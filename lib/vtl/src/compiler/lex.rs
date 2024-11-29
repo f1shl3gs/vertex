@@ -166,7 +166,7 @@ impl<'input> Lexer<'input> {
             return None;
         }
 
-        return match self.text[self.pos] {
+        match self.text[self.pos] {
             b'(' => {
                 let start = self.pos;
                 self.pos += 1;
@@ -338,13 +338,13 @@ impl<'input> Lexer<'input> {
                     )));
                 }
 
-                return Some(Ok((
+                Some(Ok((
                     Token::GreatThan,
                     Span {
                         start,
                         end: self.pos,
                     },
-                )));
+                )))
             }
 
             b'<' => {
@@ -361,13 +361,13 @@ impl<'input> Lexer<'input> {
                     )));
                 }
 
-                return Some(Ok((
+                Some(Ok((
                     Token::LessThan,
                     Span {
                         start,
                         end: self.pos,
                     },
-                )));
+                )))
             }
 
             // "&&"
@@ -387,13 +387,13 @@ impl<'input> Lexer<'input> {
                     )));
                 }
 
-                return Some(Err(LexError::UnexpectedChar {
+                Some(Err(LexError::UnexpectedChar {
                     ch: '&',
                     span: Span {
                         start,
                         end: self.pos,
                     },
-                }));
+                }))
             }
 
             // "||"
@@ -413,13 +413,13 @@ impl<'input> Lexer<'input> {
                     )));
                 }
 
-                return Some(Err(LexError::UnexpectedChar {
+                Some(Err(LexError::UnexpectedChar {
                     ch: '|',
                     span: Span {
                         start,
                         end: self.pos,
                     },
-                }));
+                }))
             }
 
             // Comment
@@ -487,13 +487,13 @@ impl<'input> Lexer<'input> {
                     }
                 };
 
-                return Some(Ok((
+                Some(Ok((
                     token,
                     Span {
                         start,
                         end: self.pos,
                     },
-                )));
+                )))
             }
 
             // Numbers
@@ -503,10 +503,10 @@ impl<'input> Lexer<'input> {
             b'"' => Some(self.quota_string()),
 
             // Path identifier
-            b'.' => return Some(self.path_identifier()),
+            b'.' => Some(self.path_identifier()),
 
             // metadata path
-            b'%' => return Some(self.path_identifier()),
+            b'%' => Some(self.path_identifier()),
 
             b'=' => {
                 let start = self.pos;
@@ -523,13 +523,13 @@ impl<'input> Lexer<'input> {
                     )));
                 }
 
-                return Some(Ok((
+                Some(Ok((
                     Token::Assign,
                     Span {
                         start,
                         end: self.pos,
                     },
-                )));
+                )))
             }
 
             b'!' => {
@@ -547,13 +547,13 @@ impl<'input> Lexer<'input> {
                     )));
                 }
 
-                return Some(Ok((
+                Some(Ok((
                     Token::Not,
                     Span {
                         start,
                         end: self.pos,
                     },
-                )));
+                )))
             }
 
             // Unknown char
@@ -564,7 +564,7 @@ impl<'input> Lexer<'input> {
                     end: self.pos + 1,
                 },
             })),
-        };
+        }
     }
 
     #[inline]

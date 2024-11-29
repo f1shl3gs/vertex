@@ -119,7 +119,7 @@ impl PartialOrd for ComponentKey {
 
 struct ComponentKeyVisitor;
 
-impl<'de> Visitor<'de> for ComponentKeyVisitor {
+impl Visitor<'_> for ComponentKeyVisitor {
     type Value = ComponentKey;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
