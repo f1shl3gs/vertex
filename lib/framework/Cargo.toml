@@ -82,7 +82,7 @@ tracing-core = { version = "0.1.33", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["std-future"] }
 tracing-limit = { path = "../tracing-limit" }
-tracing-subscriber = { version = "0.3.18", default-features = false, features = ["env-filter", "json", "fmt", "ansi"] }
+tracing-subscriber = { version = "0.3.19", default-features = false, features = ["env-filter", "json", "fmt", "ansi"] }
 tripwire = { path = "../tripwire" }
 twox-hash = { version = "2.0.1", default-features = false, features = ["xxhash64"] }
 typetag = { version = "0.2.18" }
