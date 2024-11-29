@@ -211,7 +211,7 @@ fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue
 /// Newtype placeholder to provide a formatter for the request and response body.
 struct FormatBody<'a, B>(&'a B);
 
-impl<'a, B: Body> fmt::Display for FormatBody<'a, B> {
+impl<B: Body> fmt::Display for FormatBody<'_, B> {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> Result<(), fmt::Error> {
         let size = self.0.size_hint();
         match (size.lower(), size.upper()) {

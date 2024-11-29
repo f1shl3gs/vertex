@@ -472,7 +472,7 @@ fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
     // +1 to skip '='
     pos += 1;
 
-    return match key.as_ref() {
+    match key.as_ref() {
         "PRIORITY" => {
             let value = match (buf[length - 1] - b'0') as i32 {
                 0 => "EMERG",
@@ -511,7 +511,7 @@ fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
                 Ok((key, value.into()))
             }
         }
-    };
+    }
 }
 
 impl Decoder for EntryCodec {

@@ -25,6 +25,21 @@ impl AsMetadata for () {
     }
 }
 
+#[cfg(test)]
+impl AsMetadata for u32 {
+    fn into_u32(self) -> u32 {
+        self
+    }
+
+    fn from_u32(value: u32) -> Option<Self> {
+        if value < 32 {
+            Some(value)
+        } else {
+            None
+        }
+    }
+}
+
 /// An object that can encode and decode itself to and from a buffer.
 ///
 /// # Metadata

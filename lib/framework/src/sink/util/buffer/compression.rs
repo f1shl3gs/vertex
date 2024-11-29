@@ -27,7 +27,7 @@ impl<'de> de::Deserialize<'de> for CompressionLevel {
     {
         struct NumberOrString;
 
-        impl<'de> de::Visitor<'de> for NumberOrString {
+        impl de::Visitor<'_> for NumberOrString {
             type Value = CompressionLevel;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {

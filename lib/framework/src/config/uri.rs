@@ -119,7 +119,7 @@ impl Display for UriSerde {
 
 struct UriVisitor;
 
-impl<'a> Visitor<'a> for UriVisitor {
+impl Visitor<'_> for UriVisitor {
     type Value = UriSerde;
 
     fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {

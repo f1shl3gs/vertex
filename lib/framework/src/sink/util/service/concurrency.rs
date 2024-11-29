@@ -57,7 +57,7 @@ impl<'de> Deserialize<'de> for Concurrency {
     {
         struct UsizeOrAdaptive;
 
-        impl<'de> Visitor<'de> for UsizeOrAdaptive {
+        impl Visitor<'_> for UsizeOrAdaptive {
             type Value = Concurrency;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {

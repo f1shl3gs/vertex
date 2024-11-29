@@ -210,7 +210,7 @@ impl<'de> Deserialize<'de> for Template {
     {
         struct TemplateVisitor;
 
-        impl<'de> serde::de::Visitor<'de> for TemplateVisitor {
+        impl serde::de::Visitor<'_> for TemplateVisitor {
             type Value = Template;
 
             fn expecting(&self, formatter: &mut Formatter<'_>) -> fmt::Result {

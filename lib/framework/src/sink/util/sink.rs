@@ -429,7 +429,7 @@ pub trait Response: Debug {
 
 impl Response for () {}
 
-impl<'a> Response for &'a str {}
+impl Response for &str {}
 
 pin_project! {
     /// A `Sink` interface that wraps a `Service` and a `Batch`.

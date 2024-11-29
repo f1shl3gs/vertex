@@ -251,7 +251,7 @@ mod serde {
         {
             struct KeyVisitor;
 
-            impl<'de> Visitor<'de> for KeyVisitor {
+            impl Visitor<'_> for KeyVisitor {
                 type Value = Key;
 
                 fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {

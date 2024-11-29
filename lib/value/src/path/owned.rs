@@ -192,7 +192,7 @@ impl<'de> Deserialize<'de> for OwnedValuePath {
         D: Deserializer<'de>,
     {
         struct PathVisitor;
-        impl<'de> serde::de::Visitor<'de> for PathVisitor {
+        impl serde::de::Visitor<'_> for PathVisitor {
             type Value = OwnedValuePath;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {

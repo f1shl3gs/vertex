@@ -103,7 +103,7 @@ pub struct Context<'a> {
     // TODO: add timezone
 }
 
-impl<'a> Context<'a> {
+impl Context<'_> {
     #[inline(always)]
     pub fn get(&self, index: usize) -> &Value {
         unsafe {

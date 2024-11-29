@@ -95,7 +95,7 @@ struct Escaped<'a, const N: usize> {
     special_characters: [char; N],
 }
 
-impl<'a, const N: usize> fmt::Display for Escaped<'a, N> {
+impl<const N: usize> fmt::Display for Escaped<'_, N> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for ch in self.src.chars() {
             if self.special_characters.contains(&ch) || ch == '\\' {

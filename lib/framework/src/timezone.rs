@@ -88,7 +88,7 @@ pub mod ser_de {
 
     struct TimeZoneVisitor;
 
-    impl<'de> de::Visitor<'de> for TimeZoneVisitor {
+    impl de::Visitor<'_> for TimeZoneVisitor {
         type Value = TimeZone;
 
         fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {

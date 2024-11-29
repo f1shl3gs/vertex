@@ -214,7 +214,7 @@ where
 fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
     let length = line.len();
 
-    return if line.starts_with(' ') {
+    if line.starts_with(' ') {
         // no labels
         let mut parts = line.split_whitespace();
         let value = parts.next().ok_or(Error::MissingValue)?.parse::<f64>()?;
@@ -316,7 +316,7 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
         Ok((GroupKey { timestamp, labels }, value))
     } else {
         Err(Error::InvalidMetric(line.into()))
-    };
+    }
 }
 
 fn parse_metric(line: &str) -> Result<(&str, GroupKey, f64), Error> {
