@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732855218530,
+  "lastUpdate": 1732855233067,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4eb53ff817f3a837d8f5d139b807ef95e8217cff",
-          "message": "chore(deps): bump serde from 1.0.209 to 1.0.210 (#1904)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.209 to 1.0.210.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.209...v1.0.210)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-10T10:29:39+08:00",
-          "tree_id": "53ff3573e0f6cfd4f0ab4e8fc1fc8644e29fa93c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4eb53ff817f3a837d8f5d139b807ef95e8217cff"
-        },
-        "date": 1725935628554,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 545930,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 530160,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8db6afc7a547cfcc373e0ae9556a167dff050eed",
+          "message": "update rust to 1.83.0 (#2009)",
+          "timestamp": "2024-11-29T12:37:45+08:00",
+          "tree_id": "bd795c3b0061cddd17137e13534b77cf7b326574",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8db6afc7a547cfcc373e0ae9556a167dff050eed"
+        },
+        "date": 1732855215672,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546570,
             "unit": "ns/op"
           }
         ]
