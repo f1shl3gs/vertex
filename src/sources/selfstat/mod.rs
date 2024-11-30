@@ -1,3 +1,5 @@
+#[cfg(feature = "jemalloc")]
+mod allocator;
 mod built_info;
 #[cfg(target_os = "linux")]
 mod linux;
@@ -25,11 +27,7 @@ struct Config {
 #[typetag::serde(name = "selfstat")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let ss = SelfStat {
-            interval: self.interval,
-        };
-
-        Ok(Box::pin(ss.run(cx.shutdown, cx.output)))
+        Ok(Box::pin(run(self.interval, cx.shutdown, cx.output)))
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -37,47 +35,45 @@ impl SourceConfig for Config {
     }
 }
 
-struct SelfStat {
+async fn run(
     interval: Duration,
-}
+    mut shutdown: ShutdownSignal,
+    mut output: Pipeline,
+) -> Result<(), ()> {
+    let mut ticker = tokio::time::interval(interval);
 
-impl SelfStat {
-    async fn run(self, mut shutdown: ShutdownSignal, mut output: Pipeline) -> Result<(), ()> {
-        let mut ticker = tokio::time::interval(self.interval);
+    loop {
+        tokio::select! {
+            biased;
 
-        loop {
-            tokio::select! {
-                biased;
-
-                _ = &mut shutdown => break,
-                _ = ticker.tick() => {}
-            }
-
-            match gather().await {
-                Ok(mut metrics) => {
-                    let now = Some(chrono::Utc::now());
-                    metrics.iter_mut().for_each(|m| m.timestamp = now);
-
-                    if let Err(err) = output.send(metrics).await {
-                        error!(
-                            message = "Error sending selfstat metrics",
-                            %err
-                        );
-
-                        return Err(());
-                    }
-                }
-                Err(err) => {
-                    warn!(
-                        message = "gather selfstat failed",
-                        %err
-                    );
-                }
-            }
+            _ = &mut shutdown => break,
+            _ = ticker.tick() => {}
         }
 
-        Ok(())
+        match gather().await {
+            Ok(mut metrics) => {
+                let now = Some(chrono::Utc::now());
+                metrics.iter_mut().for_each(|m| m.timestamp = now);
+
+                if let Err(err) = output.send(metrics).await {
+                    error!(
+                        message = "Error sending selfstat metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
+            }
+            Err(err) => {
+                warn!(
+                    message = "gather selfstat failed",
+                    %err
+                );
+            }
+        }
     }
+
+    Ok(())
 }
 
 async fn gather() -> Result<Vec<Metric>, std::io::Error> {
@@ -89,6 +85,9 @@ async fn gather() -> Result<Vec<Metric>, std::io::Error> {
     metrics.push(built_info::built_info());
 
     metrics.extend(runtime::metrics());
+
+    #[cfg(feature = "jemalloc")]
+    metrics.extend(allocator::alloc_metrics());
 
     Ok(metrics)
 }

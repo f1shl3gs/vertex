@@ -281,7 +281,7 @@ tokio-console = ["framework/tokio-console", "tokio/tracing"]
 # Allocator
 # mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
 # need to declare it again.
-jemalloc = ["dep:tikv-jemallocator"]
+jemalloc = ["dep:tikv-jemallocator", "tikv-jemalloc-ctl/stats"]
 
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.
