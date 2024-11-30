@@ -38,4 +38,4 @@ quickcheck = { version = "1.0.3", default-features = false }
 testify = { path = "../testify" }
 tokio-test = { version = "0.4.4" }
 tracing-fluent-assertions = { version = "0.3.0" }
-tracing-subscriber = { version = "0.3.18", default-features = false, features = ["ansi", "fmt", "registry"] }
+tracing-subscriber = { version = "0.3.19", default-features = false, features = ["ansi", "fmt", "registry"] }
