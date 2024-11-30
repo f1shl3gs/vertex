@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1732937942871,
+  "lastUpdate": 1732937968608,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b611c836bb206704bb579b12f0154443cb4b3434",
-          "message": "chore(deps): bump rustls from 0.23.12 to 0.23.13 (#1910)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.12 to 0.23.13.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.12...v/0.23.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-11T10:44:39+08:00",
-          "tree_id": "345312cd5ec1f8194a6d0a24722f96d9353ef0a6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b611c836bb206704bb579b12f0154443cb4b3434"
-        },
-        "date": 1726022847065,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.504,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 155.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 338.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 701.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ef426e38281413958a1a71c2d7e5291e2176d04b",
           "message": "chore(deps): bump kube from 0.94.1 to 0.94.2 (#1912)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.94.1 to 0.94.2.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.94.1...0.94.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-14T09:30:07+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 617.33,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "df85f075ec1740c68dc88f93862a0aeb5ae19d66",
+          "message": "chore(deps): bump tracing-subscriber from 0.3.18 to 0.3.19 (#2011)\n\nBumps [tracing-subscriber](https://github.com/tokio-rs/tracing) from 0.3.18 to 0.3.19.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-subscriber-0.3.18...tracing-subscriber-0.3.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-11-30T11:36:32+08:00",
+          "tree_id": "129fb664be7403c163dd0693dcdf12c624302797",
+          "url": "https://github.com/f1shl3gs/vertex/commit/df85f075ec1740c68dc88f93862a0aeb5ae19d66"
+        },
+        "date": 1732937951421,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.407,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 145.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 324,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 623.9,
             "unit": "ns/op"
           }
         ]
