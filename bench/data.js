@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733070884026,
+  "lastUpdate": 1733071271043,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "69e91f4e09d29b6da168e6ba66ddf357d85e638d",
-          "message": "chore(deps): bump bytes from 1.7.1 to 1.7.2 (#1915)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.7.1 to 1.7.2.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.7.1...v1.7.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-19T17:16:18+08:00",
-          "tree_id": "2f62b1c1cdce76046517c675d9a70ba04f2481ca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69e91f4e09d29b6da168e6ba66ddf357d85e638d"
-        },
-        "date": 1726738041744,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 564,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35023.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "91dfc0f45f3b2e095c4328e3215cc04196728f53",
           "message": "chore(deps): bump quick-xml from 0.36.1 to 0.36.2 (#1916)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.36.1 to 0.36.2.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.36.1...v0.36.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-21T10:39:04+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 520,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35533,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4",
+          "message": "add more jemalloc metrics",
+          "timestamp": "2024-12-02T00:30:50+08:00",
+          "tree_id": "88544fbb36362e4c7db20c714a3d86d3a47a8577",
+          "url": "https://github.com/f1shl3gs/vertex/commit/38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4"
+        },
+        "date": 1733071254053,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 505,
             "unit": "s"
           },
           {
