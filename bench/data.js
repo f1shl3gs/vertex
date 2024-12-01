@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733070810690,
+  "lastUpdate": 1733070835246,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "277288fa02a1518b6228ee0180781f21b88ae9e7",
-          "message": "chore(deps): bump kube from 0.94.2 to 0.95.0 (#1914)\n\n* chore(deps): bump kube from 0.94.2 to 0.95.0\r\n\r\nBumps [kube](https://github.com/kube-rs/kube) from 0.94.2 to 0.95.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.94.2...0.95.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* bump k8s-openapi to 0.23.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2024-09-17T12:58:21+08:00",
-          "tree_id": "f040246f13828c8c293d34adf56212d422e1626a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/277288fa02a1518b6228ee0180781f21b88ae9e7"
-        },
-        "date": 1726549267574,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.629,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 148.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 327.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 693.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "69e91f4e09d29b6da168e6ba66ddf357d85e638d",
           "message": "chore(deps): bump bytes from 1.7.1 to 1.7.2 (#1915)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.7.1 to 1.7.2.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.7.1...v1.7.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-19T17:16:18+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 659.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4",
+          "message": "add more jemalloc metrics",
+          "timestamp": "2024-12-02T00:30:50+08:00",
+          "tree_id": "88544fbb36362e4c7db20c714a3d86d3a47a8577",
+          "url": "https://github.com/f1shl3gs/vertex/commit/38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4"
+        },
+        "date": 1733070817939,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.654,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 142.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 311.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 652.86,
             "unit": "ns/op"
           }
         ]
