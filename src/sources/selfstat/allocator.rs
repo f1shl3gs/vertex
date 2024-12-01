@@ -1,4 +1,4 @@
-use event::Metric;
+use event::{tags, Metric};
 use tikv_jemalloc_ctl::stats;
 
 pub fn alloc_metrics() -> Vec<Metric> {
@@ -8,6 +8,12 @@ pub fn alloc_metrics() -> Vec<Metric> {
     let resident = stats::resident::read().unwrap();
     let mapped = stats::mapped::read().unwrap();
     let retained = stats::retained::read().unwrap();
+
+    let version = tikv_jemalloc_ctl::version::read().unwrap()
+        .trim_end_matches('\0');
+    let background_thread = tikv_jemalloc_ctl::background_thread::read().unwrap();
+    let max_background_threads = tikv_jemalloc_ctl::max_background_threads::read().unwrap();
+    let epoch = tikv_jemalloc_ctl::epoch::read().unwrap();
 
     vec![
         Metric::sum(
@@ -40,5 +46,28 @@ pub fn alloc_metrics() -> Vec<Metric> {
             "Total number of bytes in virtual memory mappings that were retained rather than being returned to the operating system",
             retained as f64
         ),
+        Metric::gauge_with_tags(
+            "jemalloc_version",
+            "Jemalloc version",
+            1,
+            tags!(
+                "version" => version
+            )
+        ),
+        Metric::gauge(
+            "jemalloc_background_thread_total",
+            "State of internal background worker threads",
+            background_thread
+        ),
+        Metric::gauge(
+            "jemalloc_max_background_threads",
+            "Maximum number of background threads that will be created",
+            max_background_threads
+        ),
+        Metric::gauge(
+            "jemalloc_epoch",
+            "Many of the statistics tracked by `jemalloc` are cached. The epoch control when they are refreshed",
+            epoch
+        )
     ]
 }
