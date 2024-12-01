@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733021335714,
+  "lastUpdate": 1733021387153,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6b8255060423957571244f0f68cc008be15bbe91",
-          "message": "chore(deps): bump pretty_assertions from 1.4.0 to 1.4.1 (#1913)\n\nBumps [pretty_assertions](https://github.com/rust-pretty-assertions/rust-pretty-assertions) from 1.4.0 to 1.4.1.\r\n- [Release notes](https://github.com/rust-pretty-assertions/rust-pretty-assertions/releases)\r\n- [Changelog](https://github.com/rust-pretty-assertions/rust-pretty-assertions/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-pretty-assertions/rust-pretty-assertions/compare/v1.4.0...v1.4.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pretty_assertions\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-16T09:23:07+08:00",
-          "tree_id": "7a47b0f58642a149f8941381465ddbad4b3f2341",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6b8255060423957571244f0f68cc008be15bbe91"
-        },
-        "date": 1726450421912,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 535,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 34977.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "277288fa02a1518b6228ee0180781f21b88ae9e7",
           "message": "chore(deps): bump kube from 0.94.2 to 0.95.0 (#1914)\n\n* chore(deps): bump kube from 0.94.2 to 0.95.0\r\n\r\nBumps [kube](https://github.com/kube-rs/kube) from 0.94.2 to 0.95.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.94.2...0.95.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* bump k8s-openapi to 0.23.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2024-09-17T12:58:21+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35537.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "836c33f0ed3dbe44e5109011a55fbb8552f54a47",
+          "message": "add jemalloc metrics (#2013)",
+          "timestamp": "2024-12-01T10:38:51+08:00",
+          "tree_id": "96f551db3ec1da1b2951265f67f25daeb0f77e0e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/836c33f0ed3dbe44e5109011a55fbb8552f54a47"
+        },
+        "date": 1733021369902,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35537,
             "unit": "KiB"
           }
         ]
