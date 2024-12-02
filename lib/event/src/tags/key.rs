@@ -77,18 +77,22 @@ impl Key {
 
     #[inline]
     pub fn as_str(&self) -> &str {
+        let slice = self.as_bytes();
+
+        unsafe { std::str::from_utf8_unchecked(slice) }
+    }
+
+    #[inline]
+    pub fn as_bytes(&self) -> &[u8] {
         let (ptr, len) = if self.last == 0 || self.last & TYPE_MASK == TYPE_MASK {
-            // String or &'static str
+            // String or &' static str
             (self.data.as_ptr().cast_const(), self.len as usize)
         } else {
             // inline
             ((self as *const Self).cast::<u8>(), self.last as usize)
         };
 
-        unsafe {
-            let slice = from_raw_parts(ptr, len);
-            std::str::from_utf8_unchecked(slice)
-        }
+        unsafe { from_raw_parts(ptr, len) }
     }
 }
 

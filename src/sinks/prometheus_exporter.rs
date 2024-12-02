@@ -12,7 +12,8 @@ use async_trait::async_trait;
 use bytes::{BufMut, Bytes, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
-use event::{EventStatus, Events, Finalizable, Metric, MetricValue};
+use event::tags::Tags;
+use event::{Bucket, EventStatus, Events, Finalizable, Metric, MetricValue, Quantile};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
 use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, ShutdownSignal, Sink, StreamSink};
@@ -152,25 +153,130 @@ impl PrometheusExporter {
     }
 }
 
-macro_rules! write_metric {
-    ($dst:expr, $name:expr, $tags:expr, $value:expr) => {
-        if $tags.is_empty() {
-            writeln!(&mut $dst, "{} {}", $name.to_owned(), $value).unwrap();
+#[inline]
+fn write_tags(buf: &mut BytesMut, tags: &Tags) {
+    if tags.is_empty() {
+        buf.put_slice(b" ");
+        return;
+    }
+
+    let mut first = true;
+    for (key, value) in tags {
+        if first {
+            first = false;
+            buf.put_u8(b'{');
         } else {
-            writeln!(
-                &mut $dst,
-                "{}{{{}}} {}",
-                $name,
-                $tags
-                    .iter()
-                    .map(|(k, v)| format!("{}=\"{}\"", k, v))
-                    .collect::<Vec<String>>()
-                    .join(","),
-                $value
-            )
-            .unwrap();
+            buf.put_u8(b',');
         }
-    };
+
+        buf.put_slice(key.as_bytes());
+        buf.put("=\"".as_bytes());
+        buf.put(value.to_string_lossy().as_ref().as_bytes());
+        buf.put("\"".as_bytes());
+    }
+
+    buf.put_slice(b"} ");
+}
+
+#[inline]
+fn write_simple_metric(buf: &mut BytesMut, name: &str, tags: &Tags, value: f64) {
+    buf.put_slice(name.as_bytes());
+    write_tags(buf, tags);
+    buf.put_slice(value.to_string().as_bytes());
+    buf.put_slice(b"\n");
+}
+
+fn write_summary_metric(
+    buf: &mut BytesMut,
+    name: &str,
+    tags: &Tags,
+    quantiles: &[Quantile],
+    sum: f64,
+    count: u64,
+) {
+    // write quantiles
+    for quantile in quantiles {
+        buf.put(name.as_bytes());
+
+        buf.put_slice(b"{quantile=\"");
+        buf.put(quantile.quantile.to_string().as_bytes());
+        buf.put_slice(b"\"");
+        // handle other tags
+        for (key, value) in tags {
+            buf.put_slice(b",");
+            buf.put(key.as_bytes());
+            buf.put_slice(b"=\"");
+            buf.put(value.to_string_lossy().as_bytes());
+            buf.put_slice(b"\"");
+        }
+        buf.put_slice(b"} ");
+
+        buf.put(quantile.value.to_string().as_bytes());
+        buf.put_slice(b"\n");
+    }
+
+    // write sum
+    buf.put(name.as_bytes());
+    buf.put_slice(b"_sum");
+    write_tags(buf, tags);
+    buf.put(sum.to_string().as_bytes());
+    buf.put_slice(b"\n");
+
+    // write count
+    buf.put(name.as_bytes());
+    buf.put_slice(b"_count");
+    write_tags(buf, tags);
+    buf.put(count.to_string().as_bytes());
+    buf.put_slice(b"\n");
+}
+
+fn write_histogram_metric(
+    buf: &mut BytesMut,
+    name: &str,
+    tags: &Tags,
+    buckets: &[Bucket],
+    sum: f64,
+    count: u64,
+) {
+    // write buckets
+    for bucket in buckets {
+        buf.put(name.as_bytes());
+
+        buf.put_slice(b"_bucket{le=\"");
+        if bucket.upper == f64::MAX {
+            buf.put_slice(b"+Inf\"");
+        } else {
+            buf.put(bucket.upper.to_string().as_bytes());
+            buf.put_slice(b"\"");
+        }
+
+        // handle other tags
+        for (key, value) in tags {
+            buf.put_slice(b",");
+            buf.put(key.as_bytes());
+            buf.put_slice(b"=\"");
+            buf.put(value.to_string_lossy().as_bytes());
+            buf.put_slice(b"\"");
+        }
+        buf.put_slice(b"} ");
+
+        buf.put(bucket.count.to_string().as_bytes());
+        buf.put_slice(b"\n");
+    }
+
+    // write sum
+    buf.put(name.as_bytes());
+    buf.put_slice(b"_sum");
+    write_tags(buf, tags);
+    buf.put(sum.to_string().as_bytes());
+    buf.put_slice(b"\n");
+
+    // write count
+    buf.put(name.as_bytes());
+    buf.put_slice(b"_count");
+    write_tags(buf, tags);
+    buf.put(count.to_string().as_bytes());
+    buf.put_slice(b"\n");
 }
 
 fn handle(
@@ -182,12 +288,15 @@ fn handle(
         (&Method::GET, "/metrics") => {
             let mut buf = BytesMut::with_capacity(8 * 1024);
 
-            metrics
-                .lock()
-                .iter()
-                .filter_map(|(name, sets)| match sets.metrics.iter().next() {
-                    None => None,
-                    Some(entry) => {
+            metrics.lock().iter().for_each(|(name, sets)| {
+                let mut header = false;
+                for entry in &sets.metrics {
+                    let ExpiringEntry { metric, expired_at } = entry;
+                    if *expired_at < now {
+                        continue;
+                    }
+
+                    if !header {
                         let kind = match entry.value {
                             MetricValue::Gauge(_) => "gauge",
                             MetricValue::Sum(_) => "counter",
@@ -195,88 +304,53 @@ fn handle(
                             MetricValue::Summary { .. } => "summary",
                         };
 
-                        Some((name, kind, &sets.description, &sets.metrics))
+                        writeln!(
+                            &mut buf,
+                            "# HELP {} {}\n# TYPE {} {}",
+                            name, sets.description, name, kind
+                        )
+                        .unwrap();
+                        header = true;
                     }
-                })
-                .for_each(|(name, kind, description, metrics)| {
-                    let mut header = false;
 
-                    for entry in metrics {
-                        let ExpiringEntry { metric, expired_at } = entry;
-                        if *expired_at < now {
-                            continue;
+                    match &metric.value {
+                        MetricValue::Sum(value) => {
+                            write_simple_metric(&mut buf, name, metric.tags(), *value);
                         }
-
-                        if !header {
-                            writeln!(
+                        MetricValue::Gauge(value) => {
+                            write_simple_metric(&mut buf, name, metric.tags(), *value);
+                        }
+                        MetricValue::Histogram {
+                            count,
+                            sum,
+                            buckets,
+                        } => {
+                            write_histogram_metric(
                                 &mut buf,
-                                "# HELP {} {}\n# TYPE {} {}",
-                                name, description, name, kind
-                            )
-                            .unwrap();
-                            header = true;
+                                name,
+                                metric.tags(),
+                                buckets,
+                                *sum,
+                                *count,
+                            );
                         }
-
-                        match &metric.value {
-                            MetricValue::Gauge(v) | MetricValue::Sum(v) => {
-                                write_metric!(buf, metric.name(), metric.tags(), *v);
-                            }
-                            MetricValue::Summary {
-                                ref quantiles,
-                                sum,
-                                count,
-                            } => {
-                                for q in quantiles {
-                                    let mut tags = metric.tags().clone();
-                                    tags.insert("quantile".to_string(), q.quantile.to_string());
-                                    write_metric!(buf, metric.name(), tags, q.value)
-                                }
-
-                                write_metric!(
-                                    buf,
-                                    format!("{}_sum", metric.name()),
-                                    metric.tags(),
-                                    sum
-                                );
-                                write_metric!(
-                                    buf,
-                                    format!("{}_count", metric.name()),
-                                    metric.tags(),
-                                    count
-                                );
-                            }
-                            MetricValue::Histogram {
-                                ref buckets,
-                                sum,
-                                count,
-                            } => {
-                                for b in buckets {
-                                    let mut tags = metric.tags().clone();
-                                    if b.upper == f64::MAX {
-                                        tags.insert("le".to_string(), "+Inf");
-                                    } else {
-                                        tags.insert("le".to_string(), b.upper.to_string());
-                                    }
-
-                                    write_metric!(buf, metric.name(), tags, b.count);
-                                }
-
-                                write_metric!(
-                                    buf,
-                                    format!("{}_sum", metric.name()),
-                                    metric.tags(),
-                                    sum
-                                );
-                                write_metric!(
-                                    buf,
-                                    format!("{}_count", metric.name()),
-                                    metric.tags(),
-                                    count
-                                );
-                            }
+                        MetricValue::Summary {
+                            count,
+                            sum,
+                            quantiles,
+                        } => {
+                            write_summary_metric(
+                                &mut buf,
+                                name,
+                                metric.tags(),
+                                quantiles,
+                                *sum,
+                                *count,
+                            );
                         }
                     }
-                });
+                }
+            });
 
             let mut builder = Response::builder()
                 .header(http::header::CONTENT_TYPE, "text/plain; charset=utf-8")
@@ -402,12 +476,8 @@ impl StreamSink for PrometheusExporter {
                         }),
                     };
 
-                    let timestamp = match metric.timestamp {
-                        Some(ts) => ts,
-                        None => now,
-                    };
-
-                    // `insert` will not update the entry, but `replace` will.
+                    // `insert` does not update the entry, but `replace` does.
+                    let timestamp = metric.timestamp.unwrap_or(now);
                     sets.metrics.replace(ExpiringEntry {
                         metric,
                         expired_at: timestamp.timestamp() + self.ttl.as_secs() as i64,
@@ -429,6 +499,7 @@ impl StreamSink for PrometheusExporter {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use event::tags;
 
     #[test]
     fn generate_config() {
@@ -436,7 +507,7 @@ mod tests {
     }
 
     #[test]
-    fn test_metrics_insert() {
+    fn metrics_insert() {
         #[allow(clippy::mutable_key_type)]
         let mut set = BTreeSet::new();
         let m1 = Metric::gauge("foo", "", 0.1);
@@ -462,5 +533,148 @@ mod tests {
 
         assert_eq!(set.len(), 1);
         assert_eq!(set.first().unwrap().expired_at, now + 60);
+    }
+
+    #[test]
+    fn summary() {
+        let quantiles = &[
+            Quantile {
+                quantile: 0.01,
+                value: 3102.0,
+            },
+            Quantile {
+                quantile: 0.05,
+                value: 3272.0,
+            },
+            Quantile {
+                quantile: 0.5,
+                value: 4773.0,
+            },
+            Quantile {
+                quantile: 0.9,
+                value: 9001.0,
+            },
+            Quantile {
+                quantile: 0.99,
+                value: 76656.0,
+            },
+        ];
+        let sum = 17560473.0;
+        let count = 2693;
+
+        // no tags
+        let mut buf = BytesMut::new();
+        write_summary_metric(
+            &mut buf,
+            "rpc_duration_seconds",
+            &tags!(),
+            quantiles,
+            sum,
+            count,
+        );
+
+        write_summary_metric(
+            &mut buf,
+            "rpc_duration_seconds",
+            &tags!("foo" => "bar"),
+            quantiles,
+            sum,
+            count,
+        );
+
+        assert_eq!(
+            r#"rpc_duration_seconds{quantile="0.01"} 3102
+rpc_duration_seconds{quantile="0.05"} 3272
+rpc_duration_seconds{quantile="0.5"} 4773
+rpc_duration_seconds{quantile="0.9"} 9001
+rpc_duration_seconds{quantile="0.99"} 76656
+rpc_duration_seconds_sum 17560473
+rpc_duration_seconds_count 2693
+rpc_duration_seconds{quantile="0.01",foo="bar"} 3102
+rpc_duration_seconds{quantile="0.05",foo="bar"} 3272
+rpc_duration_seconds{quantile="0.5",foo="bar"} 4773
+rpc_duration_seconds{quantile="0.9",foo="bar"} 9001
+rpc_duration_seconds{quantile="0.99",foo="bar"} 76656
+rpc_duration_seconds_sum{foo="bar"} 17560473
+rpc_duration_seconds_count{foo="bar"} 2693
+"#,
+            std::str::from_utf8(&buf).unwrap()
+        );
+    }
+
+    #[test]
+    fn histogram() {
+        let sum = 53423.0;
+        let count = 144320;
+        let buckets = &[
+            Bucket {
+                upper: 0.05,
+                count: 24054,
+            },
+            Bucket {
+                upper: 0.1,
+                count: 33444,
+            },
+            Bucket {
+                upper: 0.2,
+                count: 100392,
+            },
+            Bucket {
+                upper: 0.5,
+                count: 129389,
+            },
+            Bucket {
+                upper: 1.0,
+                count: 133988,
+            },
+            Bucket {
+                upper: f64::MAX,
+                count: 144320,
+            },
+        ];
+
+        // no tags
+        let mut buf = BytesMut::new();
+        write_histogram_metric(
+            &mut buf,
+            "http_request_duration_seconds",
+            &tags!(),
+            buckets,
+            sum,
+            count,
+        );
+
+        // with tags
+        write_histogram_metric(
+            &mut buf,
+            "http_request_duration_seconds",
+            &tags!(
+                "foo" => "bar",
+            ),
+            buckets,
+            sum,
+            count,
+        );
+
+        assert_eq!(
+            r#"http_request_duration_seconds_bucket{le="0.05"} 24054
+http_request_duration_seconds_bucket{le="0.1"} 33444
+http_request_duration_seconds_bucket{le="0.2"} 100392
+http_request_duration_seconds_bucket{le="0.5"} 129389
+http_request_duration_seconds_bucket{le="1"} 133988
+http_request_duration_seconds_bucket{le="+Inf"} 144320
+http_request_duration_seconds_sum 53423
+http_request_duration_seconds_count 144320
+http_request_duration_seconds_bucket{le="0.05",foo="bar"} 24054
+http_request_duration_seconds_bucket{le="0.1",foo="bar"} 33444
+http_request_duration_seconds_bucket{le="0.2",foo="bar"} 100392
+http_request_duration_seconds_bucket{le="0.5",foo="bar"} 129389
+http_request_duration_seconds_bucket{le="1",foo="bar"} 133988
+http_request_duration_seconds_bucket{le="+Inf",foo="bar"} 144320
+http_request_duration_seconds_sum{foo="bar"} 53423
+http_request_duration_seconds_count{foo="bar"} 144320
+"#,
+            std::str::from_utf8(&buf).unwrap()
+        );
     }
 }
