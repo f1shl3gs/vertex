@@ -9,7 +9,8 @@ pub fn alloc_metrics() -> Vec<Metric> {
     let mapped = stats::mapped::read().unwrap();
     let retained = stats::retained::read().unwrap();
 
-    let version = tikv_jemalloc_ctl::version::read().unwrap()
+    let version = tikv_jemalloc_ctl::version::read()
+        .unwrap()
         .trim_end_matches('\0');
     let background_thread = tikv_jemalloc_ctl::background_thread::read().unwrap();
     let max_background_threads = tikv_jemalloc_ctl::max_background_threads::read().unwrap();
