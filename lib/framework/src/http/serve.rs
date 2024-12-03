@@ -1,4 +1,5 @@
 use std::future::IntoFuture;
+use std::net::SocketAddr;
 
 use futures_util::future::BoxFuture;
 use http::{Request, Response};
@@ -80,7 +81,10 @@ where
                 };
 
                 let mut shutdown = shutdown.clone();
-                let service = service.clone();
+                let service = ConnectInfo {
+                    peer_addr: conn.inner().peer_addr(),
+                    inner: service.clone(),
+                };
                 tokio::spawn(async move {
                     let builder = Builder::new(TokioExecutor::new());
                     let conn = builder.serve_connection_with_upgrades(conn, service);
@@ -108,5 +112,24 @@ where
 
             Ok(())
         })
+    }
+}
+
+struct ConnectInfo<S> {
+    peer_addr: SocketAddr,
+    inner: S,
+}
+
+impl<B, S> Service<Request<B>> for ConnectInfo<S>
+where
+    S: Service<Request<B>>,
+{
+    type Response = S::Response;
+    type Error = S::Error;
+    type Future = S::Future;
+
+    fn call(&self, mut req: Request<B>) -> Self::Future {
+        req.extensions_mut().insert(self.peer_addr);
+        self.inner.call(req)
     }
 }

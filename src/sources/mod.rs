@@ -54,6 +54,8 @@ pub mod node;
 mod ntp;
 #[cfg(feature = "sources-nvidia_smi")]
 mod nvidia_smi;
+#[cfg(feature = "sources-prometheus_pushgateway")]
+mod prometheus_pushgateway;
 #[cfg(feature = "sources-prometheus_remote_write")]
 mod prometheus_remote_write;
 #[cfg(feature = "sources-prometheus_scrape")]

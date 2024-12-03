@@ -34,16 +34,15 @@ impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let source = RemoteWriteSource;
 
-        source
-            .run(
-                self.address,
-                Method::POST,
-                "/write",
-                &self.tls,
-                &self.auth,
-                cx,
-            )
-            .await
+        source.run(
+            self.address,
+            Method::POST,
+            "/write",
+            true,
+            &self.tls,
+            &self.auth,
+            cx,
+        )
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -83,6 +82,7 @@ impl HttpSource for RemoteWriteSource {
         &self,
         _uri: &Uri,
         headers: &HeaderMap,
+        _peer_addr: &SocketAddr,
         mut body: Bytes,
     ) -> Result<Vec<Event>, ErrorMessage> {
         if headers

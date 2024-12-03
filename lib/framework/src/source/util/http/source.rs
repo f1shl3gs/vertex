@@ -23,24 +23,26 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         &self,
         uri: &Uri,
         headers: &HeaderMap,
+        peer_addr: &SocketAddr,
         body: Bytes,
     ) -> Result<Vec<Event>, ErrorMessage>;
 
-    async fn run(
+    fn run(
         self,
         address: SocketAddr,
         method: Method,
         path: &str,
+        strict_path: bool,
         tls: &Option<TlsConfig>,
         auth: &Option<HttpSourceAuthConfig>,
         cx: SourceContext,
     ) -> crate::Result<Source> {
         let auth = HttpSourceAuth::try_from(auth.as_ref())?;
-        let listener = MaybeTlsListener::bind(&address, tls).await?;
         let acknowledgements = cx.acknowledgements();
         let shutdown = cx.shutdown;
         let output = cx.output;
         let builder = self.clone();
+        let tls = tls.clone();
         let inner = Arc::new(Inner {
             method,
             path: path.to_string(),
@@ -69,16 +71,30 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
                     return Ok(resp);
                 }
 
-                if inner.path != parts.uri.path() {
+                if strict_path && inner.path != parts.uri.path() {
                     let resp = Response::builder()
                         .status(StatusCode::NOT_FOUND)
                         .body(Full::default())
                         .unwrap();
                     return Ok(resp);
+                } else if !parts.uri.path().starts_with(inner.path.as_str()) {
+                    let resp = Response::builder()
+                        .status(StatusCode::NOT_FOUND)
+                        .body(Full::from(format!(
+                            "Path must begin with '{}', but got '{}'",
+                            inner.path,
+                            parts.uri.path()
+                        )))
+                        .unwrap();
+                    return Ok(resp);
                 }
 
+                let peer_addr = parts
+                    .extensions
+                    .get::<SocketAddr>()
+                    .expect("hyper service ConnectInfo is already applied");
                 let body = incoming.collect().await?.to_bytes();
-                let data = builder.build_events(&parts.uri, &parts.headers, body);
+                let data = builder.build_events(&parts.uri, &parts.headers, peer_addr, body);
                 let resp = handle_request(data, acknowledgements, &mut output).await;
 
                 Ok::<Response<Full<Bytes>>, hyper::Error>(resp)
@@ -86,6 +102,16 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         });
 
         Ok(Box::pin(async move {
+            let listener = MaybeTlsListener::bind(&address, &tls)
+                .await
+                .map_err(|err| {
+                    error!(
+                        message = "Unable to bind tcp listener",
+                        %address,
+                        %err,
+                    );
+                })?;
+
             crate::http::serve(listener, service)
                 .with_graceful_shutdown(shutdown)
                 .await
@@ -143,14 +169,14 @@ async fn handle_batch_status(
         None => Ok(ok_resp()),
         Some(receiver) => match receiver.await {
             BatchStatus::Delivered => Ok(ok_resp()),
-            BatchStatus::Errored => Err(ErrorMessage {
-                code: StatusCode::INTERNAL_SERVER_ERROR,
-                message: "Error delivering contents to sink".to_string(),
-            }),
-            BatchStatus::Failed => Err(ErrorMessage {
-                code: StatusCode::BAD_REQUEST,
-                message: "Contents failed to deliver to sink".to_string(),
-            }),
+            BatchStatus::Errored => Err(ErrorMessage::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Error delivering contents to sink",
+            )),
+            BatchStatus::Failed => Err(ErrorMessage::new(
+                StatusCode::BAD_REQUEST,
+                "Contents failed to deliver to sink",
+            )),
         },
     }
 }
