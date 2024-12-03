@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733211280080,
+  "lastUpdate": 1733211285077,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fc72e7bbb895dd8af5b59234ee75d0e451261e82",
-          "message": "chore(deps): bump the prost group with 3 updates (#1917)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\nUpdates `prost-types` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\nUpdates `prost-build` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-21T23:40:03+08:00",
-          "tree_id": "9a94a855d077ff408d51b93fee59f84f1d29f973",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fc72e7bbb895dd8af5b59234ee75d0e451261e82"
-        },
-        "date": 1726933350138,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.076,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.545,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 191.12,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 179.31,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "32019bbb9453388df193e5494addc9487ebc53fc",
+          "message": "add sources/prometheus_pushgateway (#2017)",
+          "timestamp": "2024-12-03T15:32:15+08:00",
+          "tree_id": "95f344edb84050dd4d0367da8145dcebc3c474dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/32019bbb9453388df193e5494addc9487ebc53fc"
+        },
+        "date": 1733211267645,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.221,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.835,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.56,
             "unit": "ns/op"
           }
         ]
