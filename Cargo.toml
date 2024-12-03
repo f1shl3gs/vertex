@@ -172,6 +172,7 @@ sources-nginx_stub = []
 sources-node_metrics = ["dep:libc"]
 sources-ntp = ["dep:ntp"]
 sources-nvidia_smi = ["dep:quick-xml"]
+sources-prometheus_pushgateway = ["dep:base64"]
 sources-prometheus_scrape = ["dep:prometheus"]
 sources-prometheus_remote_write = ["dep:snap"]
 sources-redis = []
@@ -211,6 +212,7 @@ sources = [
     "sources-node_metrics",
     "sources-ntp",
     "sources-nvidia_smi",
+    "sources-prometheus_pushgateway",
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",
     "sources-redis",
@@ -388,6 +390,7 @@ argh = { version = "0.1.12" }
 
 # External libs
 ahash = { version = "0.8.11", default-features = false, optional = true }
+base64 = { version = "0.22.1", default-features = false, optional = true }
 bloomy = { version = "1.2.0", default-features = false, optional = true }
 bytes = { version = "1.9.0", default-features = false }
 chrono = { version = "0.4.38", default-features = false }

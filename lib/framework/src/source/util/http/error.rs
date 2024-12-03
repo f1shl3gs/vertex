@@ -5,9 +5,10 @@ use serde::ser::SerializeStruct;
 use serde::{Serialize, Serializer};
 
 #[derive(Debug)]
+#[non_exhaustive]
 pub struct ErrorMessage {
-    pub code: StatusCode,
-    pub message: String,
+    code: StatusCode,
+    message: String,
 }
 
 impl Serialize for ErrorMessage {
@@ -29,6 +30,10 @@ impl ErrorMessage {
             code,
             message: message.into(),
         }
+    }
+
+    pub fn message(&self) -> &str {
+        &self.message
     }
 }
 

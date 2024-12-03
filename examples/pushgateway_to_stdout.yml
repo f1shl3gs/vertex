@@ -1,0 +1,12 @@
+sources:
+  prometheus:
+    type: prometheus_pushgateway
+    address: 127.0.0.1:9092
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - prometheus
+    encoding:
+      codec: text
