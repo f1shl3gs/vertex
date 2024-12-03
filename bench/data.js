@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733211383709,
+  "lastUpdate": 1733211777523,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fc72e7bbb895dd8af5b59234ee75d0e451261e82",
-          "message": "chore(deps): bump the prost group with 3 updates (#1917)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\nUpdates `prost-types` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\nUpdates `prost-build` from 0.13.2 to 0.13.3\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.2...v0.13.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-21T23:40:03+08:00",
-          "tree_id": "9a94a855d077ff408d51b93fee59f84f1d29f973",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fc72e7bbb895dd8af5b59234ee75d0e451261e82"
-        },
-        "date": 1726933822995,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28663000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 683380,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.071,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8093dbf23c1468a6a5a4f64d7b0502884f33b500",
           "message": "chore(deps): bump thiserror from 1.0.63 to 1.0.64 (#1918)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.63 to 1.0.64.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.63...1.0.64)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-23T12:50:10+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.979,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "32019bbb9453388df193e5494addc9487ebc53fc",
+          "message": "add sources/prometheus_pushgateway (#2017)",
+          "timestamp": "2024-12-03T15:32:15+08:00",
+          "tree_id": "95f344edb84050dd4d0367da8145dcebc3c474dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/32019bbb9453388df193e5494addc9487ebc53fc"
+        },
+        "date": 1733211759742,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28391000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 777820,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.006,
             "unit": "ns/op"
           }
         ]
