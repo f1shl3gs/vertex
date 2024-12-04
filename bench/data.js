@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733286569944,
+  "lastUpdate": 1733286571846,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e8df617652881840193fbcca31a4134b490f9d42",
-          "message": "chore(deps): bump hyper-util from 0.1.8 to 0.1.9 (#1920)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.8 to 0.1.9.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.8...v0.1.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-25T10:25:38+08:00",
-          "tree_id": "c1dbd96b93ce8ad32694386d40d22a8a59568030",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e8df617652881840193fbcca31a4134b490f9d42"
-        },
-        "date": 1727231757624,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 532,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35020.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d2440cdb826a81cbe00d141511fa53a5a095310d",
           "message": "chore(deps): bump libc from 0.2.158 to 0.2.159 (#1921)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.158 to 0.2.159.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.159/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.158...0.2.159)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-09-25T10:26:06+08:00",
@@ -16595,6 +16561,40 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/f1shl3gs/vertex/commit/1b574e7626cafa16875555da9b090373eeb9af69"
         },
         "date": 1733285619143,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 521,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35632.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f920a20e5aaaa1781fdd13eb7fd0b704f2484013",
+          "message": "chore(deps): bump http from 1.1.0 to 1.2.0 (#2020)\n\nBumps [http](https://github.com/hyperium/http) from 1.1.0 to 1.2.0.\r\n- [Release notes](https://github.com/hyperium/http/releases)\r\n- [Changelog](https://github.com/hyperium/http/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/http/compare/v1.1.0...v1.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: http\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-04T12:19:03+08:00",
+          "tree_id": "5ae08593f55b2c25fd515223e18006fee1e78926",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f920a20e5aaaa1781fdd13eb7fd0b704f2484013"
+        },
+        "date": 1733286554470,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
