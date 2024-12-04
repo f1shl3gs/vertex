@@ -1,6 +1,6 @@
-#[cfg(feature = "jemalloc")]
-mod allocator;
 mod built_info;
+#[cfg(feature = "jemalloc")]
+mod jemalloc;
 #[cfg(target_os = "linux")]
 mod linux;
 mod runtime;
@@ -87,7 +87,7 @@ async fn gather() -> Result<Vec<Metric>, std::io::Error> {
     metrics.extend(runtime::metrics());
 
     #[cfg(feature = "jemalloc")]
-    metrics.extend(allocator::alloc_metrics());
+    metrics.extend(jemalloc::alloc_metrics());
 
     Ok(metrics)
 }
