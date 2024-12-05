@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733384079583,
+  "lastUpdate": 1733388606454,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "53fd0c3ef358a68401342de3bf53d9f9e62d1787",
-          "message": "chore(deps): bump regex from 1.10.6 to 1.11.0 (#1925)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.10.6 to 1.11.0.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.10.6...1.11.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-30T00:29:22+08:00",
-          "tree_id": "a65741c537fad149a68e249786fda0bfeaac0657",
-          "url": "https://github.com/f1shl3gs/vertex/commit/53fd0c3ef358a68401342de3bf53d9f9e62d1787"
-        },
-        "date": 1727627492681,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 518680,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531190,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "450485e81749df31174a7f863c9d793579ca7800",
+          "message": "fix https tests (#2025)\n\n* add https tests",
+          "timestamp": "2024-12-05T16:47:44+08:00",
+          "tree_id": "b6e09abbd16fb170878fa37011ef196a8b62a785",
+          "url": "https://github.com/f1shl3gs/vertex/commit/450485e81749df31174a7f863c9d793579ca7800"
+        },
+        "date": 1733388589152,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 533530,
             "unit": "ns/op"
           }
         ]
