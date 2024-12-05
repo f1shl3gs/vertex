@@ -78,8 +78,8 @@ impl TlsConfig {
     #[cfg(any(test, feature = "test-util"))]
     pub fn test_server_config() -> Self {
         TlsConfig {
-            cert: Some("tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into()),
-            key: Some("tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into()),
+            cert: Some("tests/ca/intermediate/certs/localhost.cert.pem".into()),
+            key: Some("tests/ca/intermediate/private/localhost.nopass.key.pem".into()),
             ..TlsConfig::default()
         }
     }
@@ -87,7 +87,7 @@ impl TlsConfig {
     #[cfg(any(test, feature = "test-util"))]
     pub fn test_client_config() -> Self {
         TlsConfig {
-            ca: Some("tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into()),
+            ca: Some("tests/ca/intermediate/certs/ca-chain.cert.pem".into()),
             ..TlsConfig::default()
         }
     }
@@ -314,14 +314,14 @@ mod tests {
 
     #[test]
     fn private_key_with_password() {
-        let path = "tests/fixtures/ca/intermediate/private/localhost.key.pem".into();
+        let path = "tests/ca/intermediate/private/localhost.key.pem".into();
         load_private_key(&path, Some(PASSWORD)).unwrap();
         load_private_key(&path, None).unwrap_err();
     }
 
     #[test]
     fn private_key_without_password() {
-        let path = "tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into();
+        let path = "tests/ca/intermediate/private/localhost.nopass.key.pem".into();
         load_private_key(&path, None).unwrap();
         load_private_key(&path, Some(PASSWORD)).unwrap_err();
     }
