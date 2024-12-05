@@ -187,6 +187,8 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
 
 #[cfg(test)]
 mod tests {
+    use std::time::Duration;
+
     use bytes::BytesMut;
     use chrono::{SubsecRound, Utc};
     use event::{tags, EventStatus, Metric};
@@ -261,8 +263,9 @@ mod tests {
             .collect::<Vec<_>>()
     }
 
-    async fn receives_metrics(tls: Option<TlsConfig>) {
+    async fn run_and_receive(tls: Option<TlsConfig>) {
         components::init_test();
+
         let address = testify::next_addr();
         let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
 
@@ -275,7 +278,14 @@ mod tests {
         let source = source.build(SourceContext::new_test(tx)).await.unwrap();
         tokio::spawn(source);
 
-        let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
+        // wait for source start
+        tokio::time::sleep(Duration::from_secs(1)).await;
+
+        let client = HttpClient::new(
+            &Some(TlsConfig::test_client_config()),
+            &ProxyConfig::default(),
+        )
+        .unwrap();
         let url = format!(
             "{}://localhost:{}/write",
             if tls.is_some() { "https" } else { "http" },
@@ -306,7 +316,12 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn receives_metrics_over_http() {
-        receives_metrics(None).await;
+    async fn receive_over_http() {
+        run_and_receive(None).await;
+    }
+
+    #[tokio::test]
+    async fn receive_over_https() {
+        run_and_receive(Some(TlsConfig::test_server_config())).await;
     }
 }
