@@ -44,6 +44,7 @@ has already been ported.
 | node                    | Collect hardware and OS metrics, just like node_exporter          | &check; | &cross; | &cross; |
 | ntp                     | Collect offset, stratum, rtt and other metrics                    | &check; | &cross; | &cross; |
 | nvidia_smi              | Collect Nvidia GPU status from `nvidia-smi`                       | &check; | &cross; | &cross; |
+| prometheus_pushgateway  | Receive prometheus metrics                                        | &check; | &cross; | &cross; |
 | prometheus_remote_write | Start a HTTP server to receive prometheus metrics                 | &check; | &cross; | &cross; |
 | prometheus_scrape       | Scrape prometheus metrics from exporters                          | &check; | &cross; | &cross; |
 | redis                   | Scrape metrics from Redis                                         | &check; | &cross; | &cross; |
