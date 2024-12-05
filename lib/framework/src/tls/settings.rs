@@ -314,14 +314,14 @@ mod tests {
 
     #[test]
     fn private_key_with_password() {
-        let path = "tests/fixtures/ca/intermediate/private/localhost.key.pem".into();
+        let path = "tests/ca/intermediate/private/localhost.key.pem".into();
         load_private_key(&path, Some(PASSWORD)).unwrap();
         load_private_key(&path, None).unwrap_err();
     }
 
     #[test]
     fn private_key_without_password() {
-        let path = "tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into();
+        let path = "tests/ca/intermediate/private/localhost.nopass.key.pem".into();
         load_private_key(&path, None).unwrap();
         load_private_key(&path, Some(PASSWORD)).unwrap_err();
     }
