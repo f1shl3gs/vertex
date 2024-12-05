@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733383647647,
+  "lastUpdate": 1733384057443,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "53fd0c3ef358a68401342de3bf53d9f9e62d1787",
-          "message": "chore(deps): bump regex from 1.10.6 to 1.11.0 (#1925)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.10.6 to 1.11.0.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.10.6...1.11.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-30T00:29:22+08:00",
-          "tree_id": "a65741c537fad149a68e249786fda0bfeaac0657",
-          "url": "https://github.com/f1shl3gs/vertex/commit/53fd0c3ef358a68401342de3bf53d9f9e62d1787"
-        },
-        "date": 1727627982739,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 532,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35444.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "54b0d150c50be4577805aacceb0df55d9cf017a9",
           "message": "chore(deps): bump async-stream from 0.3.5 to 0.3.6 (#1926)\n\nBumps [async-stream](https://github.com/tokio-rs/async-stream) from 0.3.5 to 0.3.6.\r\n- [Release notes](https://github.com/tokio-rs/async-stream/releases)\r\n- [Commits](https://github.com/tokio-rs/async-stream/compare/v0.3.5...v0.3.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-02T11:44:04+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 523,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35632.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a9221ff175b5d1a2a9a466c33991eeddf9fa051",
+          "message": "remove unnecessary tokio-util features (#2024)",
+          "timestamp": "2024-12-05T15:23:53+08:00",
+          "tree_id": "6f08c2a1ad9a942160a9f55a85867168b3cf8b38",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a9221ff175b5d1a2a9a466c33991eeddf9fa051"
+        },
+        "date": 1733384038716,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 521,
             "unit": "s"
           },
           {
