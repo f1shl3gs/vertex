@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733300267189,
+  "lastUpdate": 1733369967452,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e3861a0659d6038751180d3bb332636b8f1960fd",
-          "message": "chore(deps): bump flate2 from 1.0.33 to 1.0.34 (#1923)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.33 to 1.0.34.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.33...1.0.34)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-09-27T12:17:32+08:00",
-          "tree_id": "a39a206ba5ed8623987d1263e5921246ad5582b1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e3861a0659d6038751180d3bb332636b8f1960fd"
-        },
-        "date": 1727410779409,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529190,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 534170,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a1d98000f06a2ca6a7686fa51b3dceadf6c4dcf7",
+          "message": "chore(deps): bump tokio-util from 0.7.12 to 0.7.13 (#2022)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.12 to 0.7.13.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.12...tokio-util-0.7.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-05T11:37:11+08:00",
+          "tree_id": "bc67ffa359da41df6a059a0d58491a78e8f3eea5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a1d98000f06a2ca6a7686fa51b3dceadf6c4dcf7"
+        },
+        "date": 1733369950178,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536030,
             "unit": "ns/op"
           }
         ]
