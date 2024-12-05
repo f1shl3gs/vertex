@@ -276,9 +276,9 @@ mod tests {
     use event::{tags, EventStatus};
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
+    use framework::Pipeline;
     use http::Request;
     use http_body_util::{BodyExt, Full};
-    use framework::Pipeline;
     use testify::collect_ready;
 
     use super::*;
@@ -413,7 +413,7 @@ jobs_summary_count{type="a"} 1.0 1612411506789
             &Some(TlsConfig::test_client_config()),
             &ProxyConfig::default(),
         )
-            .unwrap();
+        .unwrap();
         let url = format!(
             "{}://localhost:{}/metrics/job/foo",
             if tls.is_some() { "https" } else { "http" },
