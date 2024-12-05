@@ -75,7 +75,7 @@ thiserror = { version = "2.0.4", default-features = false }
 tokio = { version = "1.42.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
 tokio-rustls = { version = "0.26.0", default-features = false }
 tokio-stream = { version = "0.1.16", default-features = false, features = ["net", "sync"] }
-tokio-util = { version = "0.7.12", default-features = false, features = ["codec", "time", "net", "io"] }
+tokio-util = { version = "0.7.13", default-features = false, features = ["codec", "time", "net", "io"] }
 tower = { version = "0.5.1", default-features = false, features = ["limit", "retry", "timeout"] }
 tracing = { version = "0.1.41", default-features = false }
 tracing-core = { version = "0.1.33", default-features = false }
