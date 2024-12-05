@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733388680767,
+  "lastUpdate": 1733389117973,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "54b0d150c50be4577805aacceb0df55d9cf017a9",
-          "message": "chore(deps): bump async-stream from 0.3.5 to 0.3.6 (#1926)\n\nBumps [async-stream](https://github.com/tokio-rs/async-stream) from 0.3.5 to 0.3.6.\r\n- [Release notes](https://github.com/tokio-rs/async-stream/releases)\r\n- [Commits](https://github.com/tokio-rs/async-stream/compare/v0.3.5...v0.3.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-02T11:44:04+08:00",
-          "tree_id": "dcc7b815b35dd4bab36e4e33088fddbe412ce9e9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/54b0d150c50be4577805aacceb0df55d9cf017a9"
-        },
-        "date": 1727841281416,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 536,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35377.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d3e87490507411e48c05bb5823b3400b2809e43a",
           "message": "chore(deps): bump indexmap from 2.5.0 to 2.6.0 (#1927)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.5.0 to 2.6.0.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.5.0...2.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-02T11:55:12+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 521,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35632.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "450485e81749df31174a7f863c9d793579ca7800",
+          "message": "fix https tests (#2025)\n\n* add https tests",
+          "timestamp": "2024-12-05T16:47:44+08:00",
+          "tree_id": "b6e09abbd16fb170878fa37011ef196a8b62a785",
+          "url": "https://github.com/f1shl3gs/vertex/commit/450485e81749df31174a7f863c9d793579ca7800"
+        },
+        "date": 1733389100641,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 520,
             "unit": "s"
           },
           {
