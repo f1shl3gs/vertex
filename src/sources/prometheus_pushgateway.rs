@@ -273,14 +273,15 @@ mod tests {
     use std::time::Duration;
 
     use chrono::{TimeZone, Timelike};
-    use event::tags;
+    use event::{tags, EventStatus};
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
+    use framework::Pipeline;
     use http::Request;
     use http_body_util::{BodyExt, Full};
+    use testify::collect_ready;
 
     use super::*;
-    use crate::testing::components::run_and_assert_source_compliance;
 
     #[test]
     fn config() {
@@ -394,40 +395,44 @@ jobs_summary_count{type="a"} 1.0 1612411506789
 
         // start server
         let address = testify::next_addr();
-        let config = Config {
+        let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
+        let source = Config {
             address,
             tls: tls.clone(),
             auth: None,
         };
-        let source_task = tokio::spawn(run_and_assert_source_compliance(
-            config,
-            Duration::from_secs(10),
-            &["output"],
-        ));
+
+        let source = source.build(SourceContext::new_test(tx)).await.unwrap();
+        tokio::spawn(source);
+
+        // wait for source start http server
+        tokio::time::sleep(Duration::from_secs(1)).await;
 
         // post metrics
-        let resp = tokio::spawn(async move {
-            tokio::time::sleep(Duration::from_secs(1)).await;
-
-            let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
-            let req = Request::builder()
-                .uri(format!("http://{}/metrics/job/foo", address))
-                .method(Method::POST)
-                .body(Full::new(Bytes::from(push_body)))
-                .unwrap();
-
-            client.send(req).await.unwrap()
-        })
-        .await
+        let client = HttpClient::new(
+            &Some(TlsConfig::test_client_config()),
+            &ProxyConfig::default(),
+        )
         .unwrap();
+        let url = format!(
+            "{}://localhost:{}/metrics/job/foo",
+            if tls.is_some() { "https" } else { "http" },
+            address.port()
+        );
+        let req = Request::builder()
+            .uri(url)
+            .method(Method::POST)
+            .body(Full::new(Bytes::from(push_body)))
+            .unwrap();
 
+        let resp = client.send(req).await.unwrap();
         let (parts, incoming) = resp.into_parts();
         let body = incoming.collect().await.unwrap().to_bytes();
         let body = std::str::from_utf8(&body).unwrap();
         println!("{}", body);
         assert_eq!(parts.status, StatusCode::OK);
 
-        let got = source_task.await.unwrap();
+        let got = collect_ready(rx).await;
 
         let timestamp = Utc
             .with_ymd_and_hms(2021, 2, 4, 4, 5, 6)
@@ -440,11 +445,11 @@ jobs_summary_count{type="a"} 1.0 1612411506789
             vec![
                 Metric::sum("jobs_total", "", 1.0)
                     .with_timestamp(Some(timestamp))
-                    .with_tags(tags!("type" => "a", "job" => "foo"))
+                    .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo"))
                     .into(),
                 Metric::gauge("jobs_current", "", 5.0)
                     .with_timestamp(Some(timestamp))
-                    .with_tags(tags!("type" => "a", "job" => "foo"))
+                    .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo"))
                     .into(),
                 Metric::histogram(
                     "jobs_distribution",
@@ -475,18 +480,23 @@ jobs_summary_count{type="a"} 1.0 1612411506789
                     ]
                 )
                 .with_timestamp(Some(timestamp))
-                .with_tags(tags!("job" => "foo", "type" => "a"))
+                .with_tags(tags!("instance" => "127.0.0.1", "job" => "foo", "type" => "a"))
                 .into(),
                 Metric::summary("jobs_summary", "", 1u64, 8.0, vec![])
                     .with_timestamp(Some(timestamp))
-                    .with_tags(tags!("job" => "foo", "type" => "a"))
+                    .with_tags(tags!("instance" => "127.0.0.1", "job" => "foo", "type" => "a"))
                     .into()
             ]
         )
     }
 
     #[tokio::test]
-    async fn http() {
+    async fn receive_over_http() {
         assert_compliance(None).await;
+    }
+
+    #[tokio::test]
+    async fn receive_over_https() {
+        assert_compliance(Some(TlsConfig::test_server_config())).await;
     }
 }

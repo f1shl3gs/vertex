@@ -394,12 +394,6 @@ mod tests {
 
     #[tokio::test]
     async fn http_server() {
-        let tls = TlsConfig {
-            cert: Some("tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into()),
-            key: Some("tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into()),
-            ..TlsConfig::default()
-        };
-
         let addr = testify::next_addr();
         tokio::spawn(async move {
             let listener = TcpListener::bind(addr).await.unwrap();
@@ -419,7 +413,11 @@ mod tests {
         tokio::time::sleep(Duration::from_secs(1)).await;
 
         // HTTPS client
-        let client = HttpClient::new(&Some(tls), &ProxyConfig::default()).unwrap();
+        let tls = Some(TlsConfig {
+            ca: Some("tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into()),
+            ..TlsConfig::default()
+        });
+        let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!("http://{}", addr))
