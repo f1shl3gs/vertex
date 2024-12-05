@@ -129,11 +129,11 @@ mod tests {
 
     #[tokio::test]
     async fn server() {
-        let ca_path = "tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into();
-        let cert_path: PathBuf = "tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into();
-        let key_path = "tests/fixtures/ca/intermediate/private/localhost.key.pem".into();
+        let ca_path = "tests/ca/intermediate/certs/ca-chain.cert.pem".into();
+        let cert_path: PathBuf = "tests/ca/intermediate/certs/localhost.cert.pem".into();
+        let key_path = "tests/ca/intermediate/private/localhost.key.pem".into();
         let nopass_key_path =
-            "tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into();
+            "tests/ca/intermediate/private/localhost.nopass.key.pem".into();
 
         let cc = TlsConfig {
             ca: Some(ca_path),
