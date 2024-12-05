@@ -78,8 +78,8 @@ impl TlsConfig {
     #[cfg(any(test, feature = "test-util"))]
     pub fn test_server_config() -> Self {
         TlsConfig {
-            cert: Some("tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into()),
-            key: Some("tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into()),
+            cert: Some("tests/ca/intermediate/certs/localhost.cert.pem".into()),
+            key: Some("tests/ca/intermediate/private/localhost.nopass.key.pem".into()),
             ..TlsConfig::default()
         }
     }
@@ -87,7 +87,7 @@ impl TlsConfig {
     #[cfg(any(test, feature = "test-util"))]
     pub fn test_client_config() -> Self {
         TlsConfig {
-            ca: Some("tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into()),
+            ca: Some("tests/ca/intermediate/certs/ca-chain.cert.pem".into()),
             ..TlsConfig::default()
         }
     }

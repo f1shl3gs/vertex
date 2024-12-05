@@ -414,7 +414,7 @@ mod tests {
 
         // HTTPS client
         let tls = Some(TlsConfig {
-            ca: Some("tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into()),
+            ca: Some("tests/ca/intermediate/certs/ca-chain.cert.pem".into()),
             ..TlsConfig::default()
         });
         let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
@@ -442,8 +442,8 @@ mod tests {
     #[tokio::test]
     async fn https_server() {
         let tls = Some(TlsConfig {
-            cert: Some("tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into()),
-            key: Some("tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into()),
+            cert: Some("tests/ca/intermediate/certs/localhost.cert.pem".into()),
+            key: Some("tests/ca/intermediate/private/localhost.nopass.key.pem".into()),
             ..TlsConfig::default()
         });
 
@@ -465,7 +465,7 @@ mod tests {
         tokio::time::sleep(Duration::from_secs(1)).await;
 
         let tls = Some(TlsConfig {
-            ca: Some("tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into()),
+            ca: Some("tests/ca/intermediate/certs/ca-chain.cert.pem".into()),
             ..TlsConfig::default()
         });
         let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
