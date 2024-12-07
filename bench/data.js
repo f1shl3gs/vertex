@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733546653316,
+  "lastUpdate": 1733546701577,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "90ac2fd868b50e3626d7268916b6a2ddb54d1f1b",
-          "message": "cargo update (#1928)",
-          "timestamp": "2024-10-02T19:46:23+08:00",
-          "tree_id": "83ebc26f1ff5f33634ccb08e10527274056375fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/90ac2fd868b50e3626d7268916b6a2ddb54d1f1b"
-        },
-        "date": 1727870210054,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 534,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35413.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35632.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "98aebd612a2d40308259cb6dbeb80ea572edcd62",
+          "message": "chore(deps): bump tokio-rustls from 0.26.0 to 0.26.1 (#2027)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.26.0 to 0.26.1.\r\n- [Release notes](https://github.com/rustls/tokio-rustls/releases)\r\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-07T12:34:43+08:00",
+          "tree_id": "788e2d1135a53aeff6db54e7d1e26dd43a90a0bb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/98aebd612a2d40308259cb6dbeb80ea572edcd62"
+        },
+        "date": 1733546683727,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 515,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35628.3,
             "unit": "KiB"
           }
         ]
