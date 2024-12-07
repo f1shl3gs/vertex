@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733548221870,
+  "lastUpdate": 1733548244857,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "90ac2fd868b50e3626d7268916b6a2ddb54d1f1b",
-          "message": "cargo update (#1928)",
-          "timestamp": "2024-10-02T19:46:23+08:00",
-          "tree_id": "83ebc26f1ff5f33634ccb08e10527274056375fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/90ac2fd868b50e3626d7268916b6a2ddb54d1f1b"
-        },
-        "date": 1727869744875,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.059,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.17,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 349.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 736.96,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 603.96,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "de560ab4b03bad108d41d9cd2580902f2aff1fea",
+          "message": "chore(deps): bump tokio-stream from 0.1.16 to 0.1.17 (#2029)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.16 to 0.1.17.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.16...tokio-stream-0.1.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-07T13:07:51+08:00",
+          "tree_id": "3fe3b04b217ec9c860ee4eda34135d8dd67e0ee7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/de560ab4b03bad108d41d9cd2580902f2aff1fea"
+        },
+        "date": 1733548226873,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.426,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 137.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 325.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 663.85,
             "unit": "ns/op"
           }
         ]
