@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733546708650,
+  "lastUpdate": 1733546769767,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dc8086757c294e69f32b172976789e3b2de373b0",
-          "message": "chore(deps): bump ipnet from 2.10.0 to 2.10.1 (#1929)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.10.0 to 2.10.1.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-04T11:09:26+08:00",
-          "tree_id": "72f8c281402145e8d64e80cf5849f190b91d3c40",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dc8086757c294e69f32b172976789e3b2de373b0"
-        },
-        "date": 1728011990561,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 524,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35413.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "faf783c9d5fc7ab2739f0a004fbfd627dab6d510",
           "message": "chore(deps): bump rustls from 0.23.13 to 0.23.14 (#1930)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.13 to 0.23.14.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.13...v/0.23.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-05T11:18:05+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35628.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10d086b0170d98ef4b811875d707dbabeac37cb0",
+          "message": "chore(deps): bump the prost group with 3 updates (#2028)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.13.3 to 0.13.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.3...v0.13.4)\r\n\r\nUpdates `prost-types` from 0.13.3 to 0.13.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.3...v0.13.4)\r\n\r\nUpdates `prost-build` from 0.13.3 to 0.13.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.3...v0.13.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-07T12:35:49+08:00",
+          "tree_id": "524324412a824857e442918c7d76a360a954077a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10d086b0170d98ef4b811875d707dbabeac37cb0"
+        },
+        "date": 1733546752584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 511,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35628.1,
             "unit": "KiB"
           }
         ]
