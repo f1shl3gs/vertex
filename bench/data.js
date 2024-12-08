@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733640877487,
+  "lastUpdate": 1733640879482,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dc8086757c294e69f32b172976789e3b2de373b0",
-          "message": "chore(deps): bump ipnet from 2.10.0 to 2.10.1 (#1929)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.10.0 to 2.10.1.\r\n- [Release notes](https://github.com/krisprice/ipnet/releases)\r\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/krisprice/ipnet/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: ipnet\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-04T11:09:26+08:00",
-          "tree_id": "72f8c281402145e8d64e80cf5849f190b91d3c40",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dc8086757c294e69f32b172976789e3b2de373b0"
-        },
-        "date": 1728011501703,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.294,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 188.33,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 179.42,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "df8ac9b28b7bf7b141494fec7d26413e5ca05e71",
+          "message": "chore(deps): bump thiserror from 2.0.4 to 2.0.5 (#2030)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.4 to 2.0.5.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.4...2.0.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-08T14:52:14+08:00",
+          "tree_id": "147e62d0624a1efc56aa79741f5260501e449755",
+          "url": "https://github.com/f1shl3gs/vertex/commit/df8ac9b28b7bf7b141494fec7d26413e5ca05e71"
+        },
+        "date": 1733640862031,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.379,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.613,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.19,
             "unit": "ns/op"
           }
         ]
