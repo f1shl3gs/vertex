@@ -1,0 +1,12 @@
+sources:
+  sflow:
+    type: sflow
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - sflow
+    encoding:
+      codec: json
+      pretty: true

@@ -10,7 +10,7 @@ harness = false
 path = "benches/tags.rs"
 
 [features]
-default = []
+default = ["string_path"]
 string_path = ["value/string_path"]
 
 [build-dependencies]

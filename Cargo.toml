@@ -177,6 +177,7 @@ sources-prometheus_scrape = ["dep:prometheus"]
 sources-prometheus_remote_write = ["dep:snap"]
 sources-redis = []
 sources-selfstat = ["dep:libc"]
+sources-sflow = []
 sources-static_metrics = []
 sources-syslog = ["codecs/syslog", "dep:smallvec"]
 sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
@@ -217,6 +218,7 @@ sources = [
     "sources-prometheus_remote_write",
     "sources-redis",
     "sources-selfstat",
+    "sources-sflow",
     "sources-static_metrics",
     "sources-syslog",
     "sources-tail",
