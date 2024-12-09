@@ -17,7 +17,7 @@ tokio = { version = "1.42.0", default-features = false, features = ["test-util",
 
 [dependencies]
 bytes = { version = "1.9.0", default-features = false }
-chrono = { version = "0.4.38", default-features = false }
+chrono = { version = "0.4.39", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
 futures = { version = "0.3.31", default-features = false }
