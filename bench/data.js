@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733736014198,
+  "lastUpdate": 1733736435952,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4458aaeea317ae4777c1a3f2844ee0659e900e57",
-          "message": "chore(deps): bump futures-util from 0.3.30 to 0.3.31 (#1931)\n\nBumps [futures-util](https://github.com/rust-lang/futures-rs) from 0.3.30 to 0.3.31.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.30...0.3.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-07T11:40:55+08:00",
-          "tree_id": "275948adff2c99c7ba72d782eb3783b9f40e20c5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4458aaeea317ae4777c1a3f2844ee0659e900e57"
-        },
-        "date": 1728273084099,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29197000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 676330,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.792,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ab2990e322992241cd97fe98469c3732f01af71d",
           "message": "chore(deps): bump futures from 0.3.30 to 0.3.31 (#1932)\n\nBumps [futures](https://github.com/rust-lang/futures-rs) from 0.3.30 to 0.3.31.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.30...0.3.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-07T14:17:30+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.983,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f171479c3d5af5ad3bfea9c93b22d8e2a767ea6",
+          "message": "sources/sflow: init (#2032)\n\nadd sources/sflow",
+          "timestamp": "2024-12-09T17:16:26+08:00",
+          "tree_id": "8aaf375697139c0cd911802574b223b7f2dc2590",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f171479c3d5af5ad3bfea9c93b22d8e2a767ea6"
+        },
+        "date": 1733736418118,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28547000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 685060,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 43.764,
             "unit": "ns/op"
           }
         ]
