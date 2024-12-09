@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733735269957,
+  "lastUpdate": 1733735289339,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ab2990e322992241cd97fe98469c3732f01af71d",
-          "message": "chore(deps): bump futures from 0.3.30 to 0.3.31 (#1932)\n\nBumps [futures](https://github.com/rust-lang/futures-rs) from 0.3.30 to 0.3.31.\r\n- [Release notes](https://github.com/rust-lang/futures-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/futures-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/futures-rs/compare/0.3.30...0.3.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: futures\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-07T14:17:30+08:00",
-          "tree_id": "44c66069f598f2e86f94d140dca9f5ed2723ecec",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ab2990e322992241cd97fe98469c3732f01af71d"
-        },
-        "date": 1728282488840,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35379.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6a49459752f8d0f9edb19009ff0b422374cb6798",
           "message": "chore(deps): bump proc-macro2 from 1.0.86 to 1.0.87 (#1933)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.86 to 1.0.87.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.86...1.0.87)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-08T13:01:02+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 516,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35628.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8904cbaba8a3a04711bc959728ac56dbe3e4e299",
+          "message": "chore(deps): bump thiserror from 2.0.5 to 2.0.6 (#2031)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.5 to 2.0.6.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.5...2.0.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-09T16:57:27+08:00",
+          "tree_id": "6ac91f116aa9cf89d3a09b34e778e427bc8f4754",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8904cbaba8a3a04711bc959728ac56dbe3e4e299"
+        },
+        "date": 1733735271778,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 534,
             "unit": "s"
           },
           {
