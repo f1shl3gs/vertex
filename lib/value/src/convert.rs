@@ -47,6 +47,12 @@ impl From<u64> for Value {
     }
 }
 
+impl From<f32> for Value {
+    fn from(value: f32) -> Self {
+        Value::Float(value as f64)
+    }
+}
+
 impl From<f64> for Value {
     fn from(value: f64) -> Self {
         Self::Float(value)
