@@ -64,6 +64,8 @@ mod prometheus_scrape;
 mod redis;
 #[cfg(feature = "sources-selfstat")]
 mod selfstat;
+#[cfg(feature = "sources-sflow")]
+mod sflow;
 #[cfg(feature = "sources-static_metrics")]
 mod static_metrics;
 #[cfg(feature = "sources-syslog")]
