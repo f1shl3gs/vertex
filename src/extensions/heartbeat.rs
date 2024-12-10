@@ -48,7 +48,13 @@ impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
         let mut status = STATUS.lock();
 
-        status.uuid.clone_from(&UUID);
+        status.uuid = match std::fs::read_to_string("/etc/machine-id") {
+            Ok(mut content) => {
+                content.truncate(content.len() - 1);
+                content
+            }
+            Err(_err) => UUID.clone(),
+        };
         status.uptime = chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, false);
         status.hostname = hostname::get().expect("get hostname failed");
         status.version = crate::get_version();
