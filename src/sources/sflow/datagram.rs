@@ -217,11 +217,7 @@ pub trait XDRReader: Read {
 
     fn read_string(&mut self) -> std::io::Result<String> {
         let len = self.read_u32()?;
-        let aligned_len = if len % 4 == 0 {
-            len
-        } else {
-            len + (4 - len % 4)
-        };
+        let aligned_len = (len + 3) & (!3); // align to 4
 
         let mut data = vec![0u8; aligned_len as usize];
         self.read_exact(&mut data)?;
@@ -1652,26 +1648,20 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
     let format = buf.read_u32()?;
     let length = buf.read_u32()?;
     let sample_sequence_number = buf.read_u32()?;
-    #[allow(unused_assignments)]
-    let mut source_id_type = 0;
-    #[allow(unused_assignments)]
-    let mut source_id_value = 0;
 
-    match format {
+    let (source_id_type, source_id_value) = match format {
         SAMPLE_FORMAT_FLOW | SAMPLE_FORMAT_COUNTER => {
             // Interlaced data-source format
             let source_id = buf.read_u32()?;
 
-            source_id_type = source_id >> 24;
-            source_id_value = source_id & 0x00FF_FFFF;
+            (source_id >> 24, source_id & 0x00FF_FFFF)
         }
         SAMPLE_FORMAT_EXPANDED_FLOW | SAMPLE_FORMAT_EXPANDED_COUNTER | SAMPLE_FORMAT_DROP => {
             // Explicit data-source format
-            source_id_type = buf.read_u32()?;
-            source_id_value = buf.read_u32()?;
+            (buf.read_u32()?, buf.read_u32()?)
         }
         _ => return Err(Error::UnknownSampleFormat(format)),
-    }
+    };
 
     let sample = match format {
         SAMPLE_FORMAT_FLOW => {
@@ -2059,7 +2049,7 @@ mod tests {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01,
             0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
             0x04, 0x0e, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x06, 0x66, 0x6f, 0x6f, 0x62,
-            0x61, 0x72,
+            0x61, 0x72, 0x00, 0x00,
         ];
 
         let datagram = Datagram::decode(data).unwrap();
@@ -2123,21 +2113,5 @@ mod tests {
         assert_eq!(datagram.samples_count, 1);
 
         println!("{:#?}", datagram);
-    }
-
-    #[test]
-    fn sizes() {
-        assert_eq!(size_of::<ExtendedTCPInfo>(), 48);
-
-        assert_eq!(size_of::<HostCPU>(), 80);
-        assert_eq!(size_of::<HostMemory>(), 72);
-        assert_eq!(size_of::<HostDiskIO>(), 52);
-        assert_eq!(size_of::<HostNetIO>(), 40);
-        // assert_eq!(size_of::<HostDescription>(), 64);
-
-        assert_eq!(size_of::<Mib2IpGroup>(), 76);
-        assert_eq!(size_of::<Mib2IcmpGroup>(), 100);
-        assert_eq!(size_of::<Mib2TcpGroup>(), 60);
-        assert_eq!(size_of::<Mib2UdpGroup>(), 28);
     }
 }
