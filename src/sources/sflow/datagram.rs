@@ -1,16 +1,200 @@
+//!
+//! # sFlow
+//! sFlow is a robust, extensible protocol for reporting performance and system counters, as well as network flows. From the [InMon Corporation website](http://www.inmon.com/technology/):
+//!
+//! > Originally developed by InMon, sFlow is the leading, multi-vendor, standard for monitoring high-speed switched and routed networks. sFlow technology is built into network equipment and gives complete visibility into network activity, enabling effective management and control of network resources. InMon is a founding member of the sFlow.org industry consortium.
+//!
+//! See the InMon [Network Equipment page](http://www.sflow.org/products/network.php) for a list of platforms and devices that support sFlow.
+//!
+//! By bringing together both flow data and performance counter data, it's possible to get a wider and more holistic view of overall network and system performance. It's important to understand how the sFlow protocol and its structures work so you can effectively ingest and parse sFlow data.
+//!
+//! 1. [Structures](#structures)
+//! 2. [Samples](#samples)
+//! 1. [Flow Sample](#flow-sample)
+//! 2. [Counter Sample](#counter-sample)
+//! 3. [Expanded Flow Sample](#expanded-flow-sample)
+//! 4. [Expanded Counter Sample](#expanded-counter-sample)
+//! 3. [Flow Data](#flow-data)
+//! 4. [Counter Data](#counter-data)
+//! 5. [Attributions](#attributions)
+//!
+//! # Structures
+//! sFlow structures define specific data sets that follow a defined standard. The Flow Analyzer currently supports most of the standard sFlow-defined structures. Vendors and open source developers are free to define and use their own structures, but support for those structures (especially proprietary, vendor-specific structures) is limited in this project.
+//!
+//! A list of the standard, sFlow-defined structures can be found [on the sFlow.org website](http://www.sflow.org/developers/structures.php).
+//!
+//! # Samples
+//! The top four structures help define the layout and type of the structures beneat them. Each of these samples tells the collector what type of records are contained inside, as well as the sFlow Agent's IP address, Agent ID, the sequence number, and more. This gives us the "lay of the land" while parsing through the records at a lower level.
+//!
+//! The four top sample types are as follows:
+//! Type | Enterprise | Format | Structure Name | Link |
+//! --          | - | -  | --                           | -- |
+//! Sample      | 0 | 1  | Flow Sample                  | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Sample      | 0 | 2  | Counter Sample               | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Sample      | 0 | 3  | Expanded Flow Sample         | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Sample      | 0 | 4  | Expanded Counter Sample      | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//!
+//! The **Enterprise** number defines the vendor or developer whose product is exporting information. sFlow protocol developer inMon Corporation is enterprise number zero (0). Broadcom is enterprise number 4413 and Nvidia is enterprise number 5703, just to give two other examples.
+//!
+//! The **Format** number defines specific data structures used by the vendor. For example, [ _Enterprise, Format_ ] numbers [_0, 1006_] are defined as the "Extended MPLS" structure by inMon Corporation. Another example would be [ _0, 2101_ ] which is defined as the "Virtual CPU Counter" structure.
+//!
+//! When the Enterprise and Format numbers are combined we know what data structure has been sent, and by referencing that defined structure we can parse out the data.
+//!
+//! ## Flow Sample
+//! Flow Samples [ _0, 1_ ] are pretty much what you'd think they would be if you're familiar with Netflow or IPFIX. This mirrors a lot of the same functionality of Netflow v5, Netflow v9, and IPFIX (aka Netflow v10). Flow samples can include source and destination IP addresses, port numbers, protocols, and packet headers.
+//!
+//! The sFlow protocol then goes quite a bit beyond the typical network flow protocols by reporting application information such as HTTP transactions, NFS storage transactions, NAT, Fibre Channel, and more. This makes sFlow a good protocol for monitoring network flows, and also marrying that information with application-level flows.
+//!
+//! ## Counter Sample
+//! Counter Samples [ _0, 2_ ] provide numeric information about systems and system performance. Examples of counter information include:
+//! - Overall CPU count
+//! - Free memory
+//! - Dropped packets
+//! - Bytes out
+//! - Packets out
+//! - Errors
+//!
+//! By combining counter information with flow data we can present a wider, more holistic picture of an organization's systems and their performance over time.
+//!
+//! ## Expanded Flow Sample
+//! The Expanded Flow Sample does what [Flow Samples](#flow-samples) do, but they allow for the use of ifIndex numeric values over 2^24. From the sFlow v5 definition:
+//!
+//! > The expanded encodings are provided to support the maximum possible values for ifIndex, even though large ifIndex values are not encouraged.
+//! >
+//! > --<cite>[SFLOW-DATAGRAM5 Documentation File](http://sflow.org/SFLOW-DATAGRAM5.txt)</cite>
+//!
+//! ## Expanded Counter Sample
+//! The Expanded Counter Sample does for [Counter Samples](#counter-samples) what [Expanded Flow Samples](#expanded-flow-samples) do for regular [Flow Samples](#flow-samples). As networks and systems become larger and faster it's important that protocols can handle very large values.
+//!
+//! # Flow Data
+//! The default structures for flow data are shown below:
+//!
+//! Type | Enterprise | Format | Name | Supported | Link |
+//! ---     | --- | --- | ---                               | ---           | --- |
+//! Flow    | 0 | 1     | Raw Packet Header                 | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 2     | Ethernet Frame Data               | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 3     | Packet IPv4 Data                  | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 4     | Packet IPv6 Data                  | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1001  | Extended Switch                   | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1002  | Extended Router                   | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1003  | Extended Gateway                  | In Progress   | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1004  | Extended User                     | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1005  | Extended URL (deprecated)         | N/A           | N/A |
+//! Flow    | 0 | 1006  | Extended MPLS                     | In Progress   | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1007  | Extended NAT                      | In Progress   | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1008  | Extended MPLS Tunnel              | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1009  | Extended MPLS VC                  | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1010  | Extended MPLS FTN                 | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1011  | Extended MPLS LDP FEC             | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1012  | Extended VLAN Tunnel              | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Flow    | 0 | 1013  | Extended 802.11 Payload           | In Progress   | [sFlow 802.11 Structures](http://www.sflow.org/sflow_80211.txt) |
+//! Flow    | 0 | 1014  | Extended 802.11 RX                | Yes           | [sFlow 802.11 Structures](http://www.sflow.org/sflow_80211.txt) |
+//! Flow    | 0 | 1015  | Extended 802.11 TX                | Yes           | [sFlow 802.11 Structures](http://www.sflow.org/sflow_80211.txt) |
+//! Flow    | 0 | 1016  | Extended 802.11 Aggregation       | In Progress   | [sFlow 802.11 Structures](http://www.sflow.org/sflow_80211.txt) |
+//! Flow    | 0 | 1017  | Extended OpenFlow v1 (deprecated) | N/A           | N/A |
+//! Flow    | 0 | 1018  | Extended Fibre Channel            | In Progress   | [sFlow, CEE and FCoE](http://sflow.org/discussion/sflow-discussion/0244.html) |
+//! Flow    | 0 | 1019  | Extended Queue Length             | In Progress   | [sFlow for queue length monitoring](https://groups.google.com/forum/#!topic/sflow/dz0nsXqBYAw) |
+//! Flow    | 0 | 1020  | Extended NAT Port                 | In Progress   | [sFlow Port NAT Structure](http://www.sflow.org/sflow_pnat.txt) |
+//! Flow    | 0 | 1021  | Extended L2 Tunnel Egress         | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1022  | Extended L2 Tunnel Ingress        | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1023  | Extended IPv4 Tunnel Egress       | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1024  | Extended IPv4 Tunnel Ingress      | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1025  | Extended IPv6 Tunnel Egress       | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1026  | Extended IPv6 Tunnel Ingress      | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1027  | Extended Decapsulate Egress       | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1028  | Extended Decapsulate Ingress      | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1029  | Extended VNI Egress               | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1030  | Extended VNI Ingress              | In Progress   | [sFlow Tunnel Structure](http://www.sflow.org/sflow_tunnels.txt) |
+//! Flow    | 0 | 1031  | Extended InfiniBand LRH           | Yes           | [sFlow InfiniBand Structures](http://sflow.org/draft_sflow_infiniband_2.txt) |
+//! Flow    | 0 | 1032  | Extended InfiniBand GRH           | In Progress   | [sFlow InfiniBand Structures](http://sflow.org/draft_sflow_infiniband_2.txt) |
+//! Flow    | 0 | 1033  | Extended InfiniBand BRH           | Yes           | [sFlow InfiniBand Structures](http://sflow.org/draft_sflow_infiniband_2.txt) |
+//! Flow    | 0 | 2000  | Transaction                       | Yes           | [Host Performance Statistics Thread, Peter Phaal](http://www.sflow.org/discussion/sflow-discussion/0282.html) |
+//! Flow    | 0 | 2001  | Extended NFS Storage Transaction  | Yes           | [Host Performance Statistics Thread, Peter Phaal](http://www.sflow.org/discussion/sflow-discussion/0282.html) |
+//! Flow    | 0 | 2002  | Extended SCSI Storage Transaction | Yes           | [Host Performance Statistics Thread, Peter Phaal](http://www.sflow.org/discussion/sflow-discussion/0282.html) |
+//! Flow    | 0 | 2003  | Extended Web Transaction          | Yes           | [Host Performance Statistics Thread, Peter Phaal](http://www.sflow.org/discussion/sflow-discussion/0282.html) |
+//! Flow    | 0 | 2100  | Extended Socket IPv4              | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Flow    | 0 | 2101  | Extended Socket IPv6              | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Flow    | 0 | 2102  | Extended Proxy Socket IPv4        | In Progress   | [sFlow HTTP Structures](http://www.sflow.org/sflow_http.txt) |
+//! Flow    | 0 | 2103  | Extended Proxy Socket IPv6        | In Progress   | [sFlow HTTP Structures](http://www.sflow.org/sflow_http.txt) |
+//! Flow    | 0 | 2200  | Memcached Operation               | In Progress   | [sFlow Memcache Structures](http://www.sflow.org/sflow_memcache.txt) |
+//! Flow    | 0 | 2201  | HTTP Request (deprecated)         | N/A           | N/A |
+//! Flow    | 0 | 2202  | App Operation                     | In Progress   | [sFlow Application Structures](http://www.sflow.org/sflow_application.txt) |
+//! Flow    | 0 | 2203  | App Parent Context                | In Progress   | [sFlow Application Structures](http://www.sflow.org/sflow_application.txt) |
+//! Flow    | 0 | 2204  | App Initiator                     | In Progress   | [sFlow Application Structures](http://www.sflow.org/sflow_application.txt) |
+//! Flow    | 0 | 2205  | App Target                        | In Progress   | [sFlow Application Structures](http://www.sflow.org/sflow_application.txt) |
+//! Flow    | 0 | 2206  | HTTP Request                      | Yes           | [sFlow HTTP Structures](http://www.sflow.org/sflow_http.txt) |
+//! Flow    | 0 | 2207  | Extended Proxy Request            | In Progress   | [sFlow HTTP Structures](http://www.sflow.org/sflow_http.txt) |
+//! Flow    | 0 | 2208  | Extended Nav Timing               | Yes           | [Navigation Timing Thread](https://groups.google.com/forum/?fromgroups#!topic/sflow/FKzkvig32Tk) |
+//! Flow    | 0 | 2209  | Extended TCP Info                 | Yes           | [sFlow Google Group, Peter Phaal](https://groups.google.com/forum/#!topic/sflow/JCG9iwacLZA) |
+//!
+//! # Counter Data
+//! The default structures for counter data are shown below:
+//!
+//! Type        | Enterprise | Format | Name                                        | Supported     | Link |
+//! ---         | ---   | ---   | ---                                               | ---           | --- |
+//! Counter     | 0     | 1     | Generic Interface Counters                        | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Counter     | 0     | 2     | Ethernet Interface Counters                       | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Counter     | 0     | 3     | Token Ring Counters                               | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Counter     | 0     | 4     | 100 BaseVG Interface Counters                     | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Counter     | 0     | 5     | VLAN Counters                                     | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Counter     | 0     | 6     | 802.11 Counters                                   | Yes           | [sFlow 802.11 Structures](http://www.sflow.org/sflow_80211.txt) |
+//! Counter     | 0     | 7     | LAG Port Statistics                               | Yes           | [sFlow LAG Port Statistics](http://www.sflow.org/sflow_lag.txt) |
+//! Counter     | 0     | 8     | Slow Path Counts                                  | Yes           | [Slow Path Counters](https://groups.google.com/forum/#!topic/sflow/4JM1_Mmoz7w) |
+//! Counter     | 0     | 9     | InfiniBand Counters                               | Yes           | [sFlow InfiniBand Structures](http://sflow.org/draft_sflow_infiniband_2.txt) |
+//! Counter     | 0     | 10    | Optical SFP / QSFP Counters                       | Yes           | [sFlow Optical Interface Structures](http://www.sflow.org/sflow_optics.txt) |
+//! Counter     | 0     | 1001  | Processor                                         | Yes           | [sFlow Version 5](http://sflow.org/sflow_version_5.txt) |
+//! Counter     | 0     | 1002  | Radio Utilization                                 | Yes           | [sFlow 802.11 Structures](http://www.sflow.org/sflow_80211.txt) |
+//! Counter     | 0     | 1003  | Queue Length                                      | In Progress   | [sFlow Queue Length Histogram Counters](https://groups.google.com/forum/#!searchin/sflow/format$20$3D/sflow/dz0nsXqBYAw/rFOuMcLYjmkJ) |
+//! Counter     | 0     | 1004  | OpenFlow Port                                     | In Progress   | [sFlow OpenFlow Structures](http://www.sflow.org/sflow_openflow.txt) |
+//! Counter     | 0     | 1005  | OpenFlow Port Name                                | In Progress   | [sFlow OpenFlow Structures](http://www.sflow.org/sflow_openflow.txt) |
+//! Counter     | 0     | 2000  | Host Description                                  | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2001  | Host Adapters                                     | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2002  | Host Parent                                       | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2003  | Host CPU                                          | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2004  | Host Memory                                       | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2005  | Host Disk I/O                                     | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2006  | Host Network I/O                                  | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2007  | MIB2 IP Group                                     | Yes           | [sFlow Host TCP/IP Counters](http://www.sflow.org/sflow_host_ip.txt) |
+//! Counter     | 0     | 2008  | MIB2 ICMP Group                                   | Yes           | [sFlow Host TCP/IP Counters](http://www.sflow.org/sflow_host_ip.txt) |
+//! Counter     | 0     | 2009  | MIB2 TCP Group                                    | Yes           | [sFlow Host TCP/IP Counters](http://www.sflow.org/sflow_host_ip.txt) |
+//! Counter     | 0     | 2010  | MIB2 UDP Group                                    | Yes           | [sFlow Host TCP/IP Counters](http://www.sflow.org/sflow_host_ip.txt) |
+//! Counter     | 0     | 2100  | Virtual Node                                      | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2101  | Virtual CPU                                       | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2102  | Virtual Memory                                    | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2103  | Virtual Disk I/O                                  | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2104  | Virtual Network I/O                               | Yes           | [sFlow Host Structures](http://www.sflow.org/sflow_host.txt) |
+//! Counter     | 0     | 2105  | JMX Runtime                                       | Yes           | [sFlow Java Virtual Machine Structures](http://www.sflow.org/sflow_jvm.txt) |
+//! Counter     | 0     | 2106  | JMX Statistics                                    | Yes           | [sFlow Java Virtual Machine Structures](http://www.sflow.org/sflow_jvm.txt) |
+//! Counter     | 0     | 2200  | Memcached Counters (deprecated)                   | N/A           | N/A |
+//! Counter     | 0     | 2201  | HTTP Counters                                     | In Progress   | [sFlow HTTP Structures](http://www.sflow.org/sflow_http.txt) |
+//! Counter     | 0     | 2202  | App Operations                                    | In Progress   | [sFlow Application Structures](http://www.sflow.org/sflow_application.txt) |
+//! Counter     | 0     | 2203  | App Resources                                     | In Progress   | [sFlow Application Structures](http://www.sflow.org/sflow_application.txt) |
+//! Counter     | 0     | 2204  | Memcache Counters                                 | In Progress   | [sFlow Memcache Structures](http://www.sflow.org/sflow_memcache.txt) |
+//! Counter     | 0     | 2206  | App Workers                                       | In Progress   | [sFlow Application Structures](http://www.sflow.org/sflow_application.txt) |
+//! Counter     | 0     | 2207  | OVS DP Statistics                                 | In Progress   | -- |
+//! Counter     | 0     | 3000  | Energy                                            | Yes           | [Energy Management Thread](https://groups.google.com/forum/#!topic/sflow/gN3nxSi2SBs) |
+//! Counter     | 0     | 3001  | Temperature                                       | Yes           | [Energy Management Thread](https://groups.google.com/forum/#!topic/sflow/gN3nxSi2SBs) |
+//! Counter     | 0     | 3002  | Humidity                                          | Yes           | [Energy Management Thread](https://groups.google.com/forum/#!topic/sflow/gN3nxSi2SBs) |
+//! Counter     | 0     | 3003  | Fans                                              | Yes           | [Energy Management Thread](https://groups.google.com/forum/#!topic/sflow/gN3nxSi2SBs) |
+//! Counter     | 4413  | 1     | Broadcom Switch Device Buffer Utilization         | Yes           | [sFlow Broadcom Switch ASIC Table Utilization Structures](http://www.sflow.org/sflow_broadcom_tables.txt) |
+//! Counter     | 4413  | 2     | Broadcom Switch Port Level Buffer Utilization     | Yes           | [sFlow Broadcom Switch ASIC Table Utilization Structures](http://www.sflow.org/sflow_broadcom_tables.txt) |
+//! Counter     | 4413  | 3     | Broadcom Switch ASIC Hardware Table Utilization   | Yes           | [sFlow Broadcom Switch ASIC Table Utilization Structures](http://www.sflow.org/sflow_broadcom_tables.txt) |
+//! Counter     | 5703  | 1     | NVIDIA GPU Statistics                             | Yes           | [sFlow NVML GPU Structure](http://www.sflow.org/sflow_nvml.txt) |
+//!
+
 #![allow(dead_code)]
 
 use std::io::{Cursor, Read};
-use std::net::{IpAddr, Ipv4Addr};
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 use bytes::Buf;
 
 /// A simple helper for decode
-pub trait ReadExt: Read {
-    fn read_u16(&mut self) -> std::io::Result<u16> {
-        let mut buf = [0; 2];
+pub trait XDRReader: Read {
+    fn read_i32(&mut self) -> std::io::Result<i32> {
+        let mut buf = [0; 4];
         self.read_exact(&mut buf)?;
-        Ok(u16::from_be_bytes(buf))
+        Ok(i32::from_be_bytes(buf))
     }
 
     fn read_u32(&mut self) -> std::io::Result<u32> {
@@ -24,9 +208,41 @@ pub trait ReadExt: Read {
         self.read_exact(&mut buf)?;
         Ok(u64::from_be_bytes(buf))
     }
+
+    fn read_f32(&mut self) -> std::io::Result<f32> {
+        let mut buf = [0; 4];
+        self.read_exact(&mut buf)?;
+        Ok(f32::from_be_bytes(buf))
+    }
+
+    fn read_string(&mut self) -> std::io::Result<String> {
+        let len = self.read_u32()?;
+        let aligned_len = (len + 3) & (!3); // align to 4
+
+        let mut data = vec![0u8; aligned_len as usize];
+        self.read_exact(&mut data)?;
+        data.truncate(len as usize);
+
+        Ok(unsafe { String::from_utf8_unchecked(data) })
+    }
+
+    fn read_array<T>(
+        &mut self,
+        item_dec: impl Fn(&mut Self) -> std::io::Result<T>,
+    ) -> std::io::Result<Vec<T>> {
+        let len = self.read_u32()?;
+        let mut array = Vec::with_capacity(len as usize);
+
+        for _ in 0..len {
+            let item = item_dec(self)?;
+            array.push(item);
+        }
+
+        Ok(array)
+    }
 }
 
-impl ReadExt for Cursor<&[u8]> {}
+impl<T> XDRReader for T where T: Read {}
 
 // Opaque sample_data types according to https://sflow.org/SFLOW-DATAGRAM5.txt
 const SAMPLE_FORMAT_FLOW: u32 = 1;
@@ -57,17 +273,25 @@ const FLOW_TYPE_EXT_VLAN_TUNNEL: u32 = 1012;
 const FLOW_TYPE_EGRESS_QUEUE: u32 = 1036;
 const FLOW_TYPE_EXT_ACL: u32 = 1037;
 const FLOW_TYPE_EXT_FUNCTION: u32 = 1038;
+const FLOW_TYPE_EXT_LINUX_REASON: u32 = 1042;
+const FLOW_TYPE_EXT_TCP_INFO: u32 = 2209;
 
 // Opaque counter_data types according to https://sflow.org/SFLOW-STRUCTS5.txt
-const COUNTER_TYPE_IF: u32 = 1;
-const COUNTER_TYPE_ETH: u32 = 2;
-const COUNTER_TYPE_TOKENRING: u32 = 3;
+const COUNTER_TYPE_INTERFACE: u32 = 1;
+const COUNTER_TYPE_ETHERNET: u32 = 2;
+const COUNTER_TYPE_TOKEN_RING: u32 = 3;
 const COUNTER_TYPE_VG: u32 = 4;
 const COUNTER_TYPE_VLAN: u32 = 5;
-const COUNTER_TYPE_CPU: u32 = 1001;
-
+const COUNTER_TYPE_80211: u32 = 6;
+const COUNTER_TYPE_LACP: u32 = 7;
+const COUNTER_TYPE_SLOW_PATH: u32 = 8;
+const COUNTER_TYPE_INFINIBAND: u32 = 9;
+const COUNTER_TYPE_SFP: u32 = 10;
+const COUNTER_TYPE_PROCESSOR: u32 = 1001;
+const COUNTER_TYPE_PORT_NAME: u32 = 1005;
 const COUNTER_TYPE_HOST_DESCRIPTION: u32 = 2000;
 const COUNTER_TYPE_HOST_ADAPTERS: u32 = 2001;
+const COUNTER_TYPE_HOST_PARENT: u32 = 2002;
 const COUNTER_TYPE_HOST_CPU: u32 = 2003;
 const COUNTER_TYPE_HOST_MEMORY: u32 = 2004;
 const COUNTER_TYPE_HOST_DISK_IO: u32 = 2005;
@@ -76,6 +300,10 @@ const COUNTER_TYPE_MIB2_IP_GROUP: u32 = 2007;
 const COUNTER_TYPE_MIB2_ICMP_GROUP: u32 = 2008;
 const COUNTER_TYPE_MIB2_TCP_GROUP: u32 = 2009;
 const COUNTER_TYPE_MIB2_UDP_GROUP: u32 = 2010;
+const COUNTER_TYPE_ENERGY: u32 = 3000;
+const COUNTER_TYPE_TEMPERATURE: u32 = 3001;
+const COUNTER_TYPE_HUMIDITY: u32 = 3002;
+const COUNTER_TYPE_FANS: u32 = 3003;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -111,12 +339,12 @@ impl From<std::io::Error> for Error {
 
 #[derive(Debug)]
 pub struct SampleHeader {
-    format: u32,
-    length: u32,
+    pub format: u32,
+    pub length: u32,
 
-    sample_sequence_number: u32,
-    source_id_type: u32,
-    source_id_value: u32,
+    pub sample_sequence_number: u32,
+    pub source_id_type: u32,
+    pub source_id_value: u32,
 }
 
 #[derive(Debug)]
@@ -131,7 +359,7 @@ pub struct FlowRecordRaw {
     pub frame_length: u32,
     pub stripped: u32,
     pub original_length: u32,
-    pub header_data: Vec<u8>,
+    pub header_bytes: Vec<u8>,
 }
 
 #[derive(Debug)]
@@ -159,8 +387,8 @@ pub struct SampledIpv4 {
 pub struct SampledIpv6 {
     pub length: u32,
     pub protocol: u32,
-    pub src_ip: Ipv4Addr,
-    pub dst_ip: Ipv4Addr,
+    pub src_ip: Ipv6Addr,
+    pub dst_ip: Ipv6Addr,
     pub src_port: u32,
     pub dst_port: u32,
     pub tcp_flags: u32,
@@ -178,7 +406,6 @@ pub struct ExtendedSwitch {
 
 #[derive(Debug)]
 pub struct ExtendedRouter {
-    pub next_hop_ip_version: u32,
     pub next_hop: IpAddr,
     pub src_mask_len: u32,
     pub dst_mask_len: u32,
@@ -186,7 +413,6 @@ pub struct ExtendedRouter {
 
 #[derive(Debug)]
 pub struct ExtendedGateway {
-    pub next_hop_ip_version: u32,
     pub next_hop: IpAddr,
     pub r#as: u32,
     pub src_as: u32,
@@ -218,6 +444,34 @@ pub struct ExtendedFunction {
 }
 
 #[derive(Debug)]
+pub struct ExtendedTCPInfo {
+    pub direction: u32,  /* Sampled packet direction */
+    pub snd_mss: u32,    /* Cached effective mss, not including SACKS */
+    pub rcv_mss: u32,    /* Max. recv. segment size */
+    pub unacked: u32,    /* Packets which are "in flight" */
+    pub lost: u32,       /* Lost packets */
+    pub retrans: u32,    /* Retransmitted packets */
+    pub pmtu: u32,       /* Last pmtu seen by socket */
+    pub rtt: u32,        /* smoothed RTT (microseconds) */
+    pub rttvar: u32,     /* RTT variance (microseconds) */
+    pub snd_cwnd: u32,   /* Sending congestion window */
+    pub reordering: u32, /* Reordering */
+    pub min_rtt: u32,    /* Minimum RTT (microseconds) */
+}
+
+// Linux drop_monitor reason
+// opaque = flow_data; enterprise = 0; format = 1042
+// https://github.com/torvalds/linux/blob/master/include/net/dropreason.h
+// XDR spec:
+//  struct extended_linux_drop_reason {
+//    string reason<>; /* NET_DM_ATTR_REASON */
+//  }
+#[derive(Debug)]
+pub struct ExtendedLinuxReason {
+    pub reason: String,
+}
+
+#[derive(Debug)]
 pub enum FlowRecord {
     Raw(FlowRecordRaw),
     SampledEthernet(FlowRecordSampleEthernet),
@@ -229,6 +483,8 @@ pub enum FlowRecord {
     EgressQueue(EgressQueue),
     ExtendedACL(ExtendedACL),
     ExtendedFunction(ExtendedFunction),
+    ExtendedTCPInfo(ExtendedTCPInfo),
+    ExtendedLinuxReason(ExtendedLinuxReason),
 }
 
 #[derive(Debug)]
@@ -256,19 +512,84 @@ pub struct IfCounters {
 
 #[derive(Debug)]
 pub struct EthernetCounters {
-    pub dot3stats_alignment_errors: u32,
-    pub dot3stats_fcserrors: u32,
-    pub dot3stats_single_collision_frames: u32,
-    pub dot3stats_multiple_collision_frames: u32,
-    pub dot3stats_sqetest_errors: u32,
-    pub dot3stats_deferred_transmissions: u32,
-    pub dot3stats_late_collisions: u32,
-    pub dot3stats_excessive_collisions: u32,
-    pub dot3stats_internal_mac_transmit_errors: u32,
-    pub dot3stats_carrier_sense_errors: u32,
-    pub dot3stats_frame_too_longs: u32,
-    pub dot3stats_internal_mac_receive_errors: u32,
-    pub dot3stats_symbol_errors: u32,
+    pub dot3_stats_alignment_errors: u32,
+    pub dot3_stats_fcs_errors: u32,
+    pub dot3_stats_single_collision_frames: u32,
+    pub dot3_stats_multiple_collision_frames: u32,
+    pub dot3_stats_sqe_test_errors: u32,
+    pub dot3_stats_deferred_transmissions: u32,
+    pub dot3_stats_late_collisions: u32,
+    pub dot3_stats_excessive_collisions: u32,
+    pub dot3_stats_internal_mac_transmit_errors: u32,
+    pub dot3_stats_carrier_sense_errors: u32,
+    pub dot3_stats_frame_too_longs: u32,
+    pub dot3_stats_internal_mac_receive_errors: u32,
+    pub dot3_stats_symbol_errors: u32,
+}
+
+#[derive(Debug)]
+pub struct VgCounters {
+    pub dot12_in_high_priority_frames: u32,
+    pub dot12_in_high_priority_octets: u64,
+    pub dot12_in_norm_priority_frames: u32,
+    pub dot12_in_norm_priority_octets: u64,
+    pub dot12_in_ipm_errors: u32,
+    pub dot12_in_oversize_frame_errors: u32,
+    pub dot12_in_data_errors: u32,
+    pub dot12_in_null_addressed_frames: u32,
+    pub dot12_out_high_priority_frames: u32,
+    pub dot12_out_high_priority_octets: u64,
+    pub dot12_transition_into_trainings: u32,
+    pub dot12_hc_in_high_priority_octets: u64,
+    pub dot12_hc_in_norm_priority_octets: u64,
+    pub dot12_hc_out_high_priority_octets: u64,
+}
+
+#[derive(Debug)]
+pub struct Vlan {
+    pub vlan_id: u32,
+    pub octets: u64,
+    pub ucast_pkts: u32,
+    pub multicast_pkts: u32,
+    pub broadcast_pkts: u32,
+    pub discards: u32,
+}
+
+#[derive(Debug)]
+pub struct Lane {
+    pub lane_index: u32,      /* index of lane in module - starting from 1 */
+    pub tx_bias_current: u32, /* microamps */
+    pub tx_power: u32,        /* microwatts */
+    pub tx_power_min: u32,    /* microwatts */
+    pub tx_power_max: u32,    /* microwatts */
+    pub tx_wavelength: u32,   /* nanometers */
+    pub rx_power: u32,        /* microwatts */
+    pub rx_power_min: u32,    /* microwatts */
+    pub rx_power_max: u32,    /* microwatts */
+    pub rx_wavelength: u32,   /* nanometers */
+}
+
+#[derive(Debug)]
+pub struct Sfp {
+    pub module_id: u32,
+    pub module_total_lanes: u32,    /* total lanes in module */
+    pub module_supply_voltage: u32, /* millivolts */
+    pub module_temperature: i32,    /* signed - in oC / 1000 */
+    pub lanes: Vec<Lane>,
+}
+
+#[derive(Debug)]
+pub struct Processor {
+    pub five_sec_cpu: u32, /* 5 second average CPU utilization */
+    pub one_min_cpu: u32,  /* 1 minute average CPU utilization */
+    pub five_min_cpu: u32, /* 5 minute average CPU utilization */
+    pub total_memory: u64, /* total memory (in bytes) */
+    pub free_memory: u64,  /* free memory (in bytes) */
+}
+
+#[derive(Debug)]
+pub struct PortName {
+    pub name: String,
 }
 
 #[derive(Debug)]
@@ -281,6 +602,12 @@ pub struct HostAdapter {
 pub struct HostAdapters {
     pub length: u32,
     pub adapters: Vec<HostAdapter>,
+}
+
+#[derive(Debug)]
+pub struct HostParent {
+    pub container_type: u32,
+    pub container_index: u32,
 }
 
 #[derive(Debug)]
@@ -335,7 +662,6 @@ pub struct HostMemory {
 }
 
 #[derive(Debug)]
-#[repr(C, packed)]
 pub struct HostDiskIO {
     pub disk_total: u64,    /* total disk size in bytes */
     pub disk_free: u64,     /* total disk free in bytes */
@@ -353,7 +679,7 @@ pub struct HostDiskIO {
 #[derive(Debug)]
 pub struct HostNetIO {
     pub bytes_in: u64,    /* total bytes in */
-    pub pkts_in: u32,     /* total packets in */
+    pub packets_in: u32,  /* total packets in */
     pub errs_in: u32,     /* total errors in */
     pub drops_in: u32,    /* total drops in */
     pub bytes_out: u64,   /* total bytes out */
@@ -446,10 +772,13 @@ pub struct Mib2UdpGroup {
 
 #[derive(Debug)]
 pub enum CounterRecordData {
-    IfCounters(IfCounters),
-    EthernetCounters(EthernetCounters),
+    Interface(IfCounters),
+    Ethernet(EthernetCounters),
+    VgCounters(VgCounters),
+    Vlan(Vlan),
     HostDescription(HostDescription),
     HostAdapters(HostAdapters),
+    HostParent(HostParent),
     HostCPU(HostCPU),
     HostDiskIO(HostDiskIO),
     HostNetIO(HostNetIO),
@@ -458,7 +787,11 @@ pub enum CounterRecordData {
     Mib2IcmpGroup(Mib2IcmpGroup),
     Mib2TcpGroup(Mib2TcpGroup),
     Mib2UdpGroup(Mib2UdpGroup),
-    Raw(Vec<u8>),
+    PortName(PortName),
+    Sfp(Sfp),
+    Processor(Processor),
+
+    Raw(u32, Vec<u8>),
 }
 
 #[derive(Debug)]
@@ -514,7 +847,6 @@ pub enum Sample {
 #[derive(Debug)]
 pub struct Datagram {
     pub version: u32,
-    pub ip_version: u32,
     pub agent_ip: IpAddr,
     pub sub_agent_id: u32,
     pub sequence_number: u32,
@@ -524,19 +856,21 @@ pub struct Datagram {
     pub samples: Vec<Sample>,
 }
 
-fn decode_string(buf: &mut Cursor<&[u8]>) -> Result<String, Error> {
-    let len = buf.read_u32()?;
-    let aligned_len = if len % 4 == 0 {
-        len
+fn decode_ipaddr(buf: &mut Cursor<&[u8]>) -> Result<IpAddr, Error> {
+    let version = buf.read_u32()?;
+    let ip_addr = if version == 1 {
+        let mut octets = [0u8; 4];
+        buf.read_exact(&mut octets)?;
+        IpAddr::from(octets)
+    } else if version == 2 {
+        let mut octets = [0u8; 16];
+        buf.read_exact(&mut octets)?;
+        IpAddr::from(octets)
     } else {
-        len + (4 - len % 4)
+        return Err(Error::UnknownIpVersion(version));
     };
 
-    let mut data = vec![0u8; aligned_len as usize];
-    buf.read_exact(&mut data)?;
-    data.truncate(len as usize);
-
-    Ok(unsafe { String::from_utf8_unchecked(data) })
+    Ok(ip_addr)
 }
 
 #[inline]
@@ -555,30 +889,243 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
     let length = buf.read_u32()?;
 
     let data = match data_format {
-        COUNTER_TYPE_IF => {
-            let mut data = [0u8; size_of::<IfCounters>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::IfCounters(unsafe {
-                std::mem::transmute::<[u8; size_of::<IfCounters>()], IfCounters>(data)
+        COUNTER_TYPE_INTERFACE => {
+            let if_index = buf.read_u32()?;
+            let if_type = buf.read_u32()?;
+            let if_speed = buf.read_u64()?;
+            let if_direction = buf.read_u32()?;
+            let if_status = buf.read_u32()?;
+            let if_in_octets = buf.read_u64()?;
+            let if_in_ucast_pkts = buf.read_u32()?;
+            let if_in_multicast_pkts = buf.read_u32()?;
+            let if_in_broadcast_pkts = buf.read_u32()?;
+            let if_in_discards = buf.read_u32()?;
+            let if_in_errors = buf.read_u32()?;
+            let if_in_unknown_protos = buf.read_u32()?;
+            let if_out_octets = buf.read_u64()?;
+            let if_out_ucast_pkts = buf.read_u32()?;
+            let if_out_multicast_pkts = buf.read_u32()?;
+            let if_out_broadcast_pkts = buf.read_u32()?;
+            let if_out_discards = buf.read_u32()?;
+            let if_out_errors = buf.read_u32()?;
+            let if_promiscuous_mode = buf.read_u32()?;
+
+            CounterRecordData::Interface(IfCounters {
+                if_index,
+                if_type,
+                if_speed,
+                if_direction,
+                if_status,
+                if_in_octets,
+                if_in_ucast_pkts,
+                if_in_multicast_pkts,
+                if_in_broadcast_pkts,
+                if_in_discards,
+                if_in_errors,
+                if_in_unknown_protos,
+                if_out_octets,
+                if_out_ucast_pkts,
+                if_out_multicast_pkts,
+                if_out_broadcast_pkts,
+                if_out_discards,
+                if_out_errors,
+                if_promiscuous_mode,
             })
         }
-        COUNTER_TYPE_ETH => {
-            let mut data = [0u8; size_of::<EthernetCounters>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::EthernetCounters(unsafe {
-                std::mem::transmute::<[u8; size_of::<EthernetCounters>()], EthernetCounters>(data)
+        COUNTER_TYPE_ETHERNET => {
+            let dot3_stats_alignment_errors = buf.read_u32()?;
+            let dot3_stats_fcs_errors = buf.read_u32()?;
+            let dot3_stats_single_collision_frames = buf.read_u32()?;
+            let dot3_stats_multiple_collision_frames = buf.read_u32()?;
+            let dot3_stats_sqe_test_errors = buf.read_u32()?;
+            let dot3_stats_deferred_transmissions = buf.read_u32()?;
+            let dot3_stats_late_collisions = buf.read_u32()?;
+            let dot3_stats_excessive_collisions = buf.read_u32()?;
+            let dot3_stats_internal_mac_transmit_errors = buf.read_u32()?;
+            let dot3_stats_carrier_sense_errors = buf.read_u32()?;
+            let dot3_stats_frame_too_longs = buf.read_u32()?;
+            let dot3_stats_internal_mac_receive_errors = buf.read_u32()?;
+            let dot3_stats_symbol_errors = buf.read_u32()?;
+
+            CounterRecordData::Ethernet(EthernetCounters {
+                dot3_stats_alignment_errors,
+                dot3_stats_fcs_errors,
+                dot3_stats_single_collision_frames,
+                dot3_stats_multiple_collision_frames,
+                dot3_stats_sqe_test_errors,
+                dot3_stats_deferred_transmissions,
+                dot3_stats_late_collisions,
+                dot3_stats_excessive_collisions,
+                dot3_stats_internal_mac_transmit_errors,
+                dot3_stats_carrier_sense_errors,
+                dot3_stats_frame_too_longs,
+                dot3_stats_internal_mac_receive_errors,
+                dot3_stats_symbol_errors,
+            })
+        }
+        COUNTER_TYPE_VG => {
+            let dot12_in_high_priority_frames = buf.read_u32()?;
+            let dot12_in_high_priority_octets = buf.read_u64()?;
+            let dot12_in_norm_priority_frames = buf.read_u32()?;
+            let dot12_in_norm_priority_octets = buf.read_u64()?;
+            let dot12_in_ipm_errors = buf.read_u32()?;
+            let dot12_in_oversize_frame_errors = buf.read_u32()?;
+            let dot12_in_data_errors = buf.read_u32()?;
+            let dot12_in_null_addressed_frames = buf.read_u32()?;
+            let dot12_out_high_priority_frames = buf.read_u32()?;
+            let dot12_out_high_priority_octets = buf.read_u64()?;
+            let dot12_transition_into_trainings = buf.read_u32()?;
+            let dot12_hc_in_high_priority_octets = buf.read_u64()?;
+            let dot12_hc_in_norm_priority_octets = buf.read_u64()?;
+            let dot12_hc_out_high_priority_octets = buf.read_u64()?;
+
+            CounterRecordData::VgCounters(VgCounters {
+                dot12_in_high_priority_frames,
+                dot12_in_high_priority_octets,
+                dot12_in_norm_priority_frames,
+                dot12_in_norm_priority_octets,
+                dot12_in_ipm_errors,
+                dot12_in_oversize_frame_errors,
+                dot12_in_data_errors,
+                dot12_in_null_addressed_frames,
+                dot12_out_high_priority_frames,
+                dot12_out_high_priority_octets,
+                dot12_transition_into_trainings,
+                dot12_hc_in_high_priority_octets,
+                dot12_hc_in_norm_priority_octets,
+                dot12_hc_out_high_priority_octets,
+            })
+        }
+
+        COUNTER_TYPE_VLAN => {
+            let vlan_id = buf.read_u32()?;
+            let octets = buf.read_u64()?;
+            let ucast_pkts = buf.read_u32()?;
+            let multicast_pkts = buf.read_u32()?;
+            let broadcast_pkts = buf.read_u32()?;
+            let discards = buf.read_u32()?;
+
+            CounterRecordData::Vlan(Vlan {
+                vlan_id,
+                octets,
+                ucast_pkts,
+                multicast_pkts,
+                broadcast_pkts,
+                discards,
+            })
+        }
+
+        COUNTER_TYPE_SFP => {
+            let module_id = buf.read_u32()?;
+            let module_total_lanes = buf.read_u32()?;
+            let module_supply_voltage = buf.read_u32()?;
+            let module_temperature = buf.read_i32()?;
+            let length = buf.read_u32()?;
+            let mut lanes = Vec::with_capacity(length as usize);
+            for _ in 0..length {
+                let lane_index = buf.read_u32()?;
+                let tx_bias_current = buf.read_u32()?;
+                let tx_power = buf.read_u32()?;
+                let tx_power_min = buf.read_u32()?;
+                let tx_power_max = buf.read_u32()?;
+                let tx_wavelength = buf.read_u32()?;
+                let rx_power = buf.read_u32()?;
+                let rx_power_min = buf.read_u32()?;
+                let rx_power_max = buf.read_u32()?;
+                let rx_wavelength = buf.read_u32()?;
+
+                lanes.push(Lane {
+                    lane_index,
+                    tx_bias_current,
+                    tx_power,
+                    tx_power_min,
+                    tx_power_max,
+                    tx_wavelength,
+                    rx_power,
+                    rx_power_min,
+                    rx_power_max,
+                    rx_wavelength,
+                })
+            }
+
+            CounterRecordData::Sfp(Sfp {
+                module_id,
+                module_total_lanes,
+                module_supply_voltage,
+                module_temperature,
+                lanes,
             })
         }
 
         COUNTER_TYPE_HOST_CPU => {
-            let mut data = [0u8; size_of::<HostCPU>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::HostCPU(unsafe {
-                std::mem::transmute::<[u8; size_of::<HostCPU>()], HostCPU>(data)
+            let load_one = buf.read_f32()?;
+            let load_five = buf.read_f32()?;
+            let load_fifteen = buf.read_f32()?;
+
+            let proc_run = buf.read_u32()?;
+            let proc_total = buf.read_u32()?;
+            let cpu_num = buf.read_u32()?;
+            let cpu_speed = buf.read_u32()?;
+            let uptime = buf.read_u32()?;
+            let cpu_user = buf.read_u32()?;
+            let cpu_nice = buf.read_u32()?;
+            let cpu_system = buf.read_u32()?;
+            let cpu_idle = buf.read_u32()?;
+            let cpu_wio = buf.read_u32()?;
+            let cpu_intr = buf.read_u32()?;
+            let cpu_sintr = buf.read_u32()?;
+            let interrupts = buf.read_u32()?;
+            let contexts = buf.read_u32()?;
+
+            let cpu_steal = buf.read_u32()?;
+            let cpu_guest = buf.read_u32()?;
+            let cpu_guest_nice = buf.read_u32()?;
+
+            CounterRecordData::HostCPU(HostCPU {
+                load_one,
+                load_five,
+                load_fifteen,
+                proc_run,
+                proc_total,
+                cpu_num,
+                cpu_speed,
+                uptime,
+                cpu_user,
+                cpu_nice,
+                cpu_system,
+                cpu_idle,
+                cpu_wio,
+                cpu_intr,
+                cpu_sintr,
+                interrupts,
+                contexts,
+                cpu_steal,
+                cpu_guest,
+                cpu_guest_nice,
             })
         }
+        COUNTER_TYPE_PROCESSOR => {
+            let five_sec_cpu = buf.read_u32()?;
+            let one_min_cpu = buf.read_u32()?;
+            let five_min_cpu = buf.read_u32()?;
+            let total_memory = buf.read_u64()?;
+            let free_memory = buf.read_u64()?;
+
+            CounterRecordData::Processor(Processor {
+                five_sec_cpu,
+                one_min_cpu,
+                five_min_cpu,
+                total_memory,
+                free_memory,
+            })
+        }
+
+        COUNTER_TYPE_PORT_NAME => {
+            let name = buf.read_string()?;
+            CounterRecordData::PortName(PortName { name })
+        }
         COUNTER_TYPE_HOST_DESCRIPTION => {
-            let host = decode_string(buf)?;
+            let host = buf.read_string()?;
 
             let mut uuid = [0u8; 16];
             buf.read_exact(&mut uuid)?;
@@ -586,7 +1133,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let machine_type = buf.read_u32()?;
             let os_name = buf.read_u32()?;
 
-            let os_release = decode_string(buf)?;
+            let os_release = buf.read_string()?;
 
             CounterRecordData::HostDescription(HostDescription {
                 host,
@@ -616,60 +1163,244 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
 
             CounterRecordData::HostAdapters(HostAdapters { length, adapters })
         }
+        COUNTER_TYPE_HOST_PARENT => {
+            let container_type = buf.read_u32()?;
+            let container_index = buf.read_u32()?;
+
+            CounterRecordData::HostParent(HostParent {
+                container_type,
+                container_index,
+            })
+        }
         COUNTER_TYPE_HOST_MEMORY => {
-            let mut data = [0u8; size_of::<HostMemory>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::HostMemory(unsafe {
-                std::mem::transmute::<[u8; size_of::<HostMemory>()], HostMemory>(data)
+            let mem_total = buf.read_u64()?;
+            let mem_free = buf.read_u64()?;
+            let mem_shared = buf.read_u64()?;
+            let mem_buffers = buf.read_u64()?;
+            let mem_cached = buf.read_u64()?;
+            let swap_total = buf.read_u64()?;
+            let swap_free = buf.read_u64()?;
+            let page_in = buf.read_u32()?;
+            let page_out = buf.read_u32()?;
+            let swap_in = buf.read_u32()?;
+            let swap_out = buf.read_u32()?;
+
+            CounterRecordData::HostMemory(HostMemory {
+                mem_total,
+                mem_free,
+                mem_shared,
+                mem_buffers,
+                mem_cached,
+                swap_total,
+                swap_free,
+                page_in,
+                page_out,
+                swap_in,
+                swap_out,
             })
         }
         COUNTER_TYPE_HOST_DISK_IO => {
-            let mut data = [0u8; size_of::<HostDiskIO>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::HostDiskIO(unsafe {
-                std::mem::transmute::<[u8; size_of::<HostDiskIO>()], HostDiskIO>(data)
+            let disk_total = buf.read_u64()?;
+            let disk_free = buf.read_u64()?;
+            let part_max_used = buf.read_u32()?;
+            let reads = buf.read_u32()?;
+            let bytes_read = buf.read_u64()?;
+            let read_time = buf.read_u32()?;
+            let writes = buf.read_u32()?;
+            let bytes_written = buf.read_u64()?;
+            let write_time = buf.read_u32()?;
+
+            CounterRecordData::HostDiskIO(HostDiskIO {
+                disk_total,
+                disk_free,
+                part_max_used,
+                reads,
+                bytes_read,
+                read_time,
+                writes,
+                bytes_written,
+                write_time,
             })
         }
         COUNTER_TYPE_HOST_NET_IO => {
-            let mut data = [0u8; size_of::<HostNetIO>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::HostNetIO(unsafe {
-                std::mem::transmute::<[u8; size_of::<HostNetIO>()], HostNetIO>(data)
+            let bytes_in = buf.read_u64()?;
+            let packets_in = buf.read_u32()?;
+            let errs_in = buf.read_u32()?;
+            let drops_in = buf.read_u32()?;
+            let bytes_out = buf.read_u64()?;
+            let packets_out = buf.read_u32()?;
+            let errs_out = buf.read_u32()?;
+            let drops_out = buf.read_u32()?;
+
+            CounterRecordData::HostNetIO(HostNetIO {
+                bytes_in,
+                packets_in,
+                errs_in,
+                drops_in,
+                bytes_out,
+                packets_out,
+                errs_out,
+                drops_out,
             })
         }
 
         COUNTER_TYPE_MIB2_IP_GROUP => {
-            let mut data = [0u8; size_of::<Mib2IpGroup>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::Mib2IpGroup(unsafe {
-                std::mem::transmute::<[u8; size_of::<Mib2IpGroup>()], Mib2IpGroup>(data)
+            let ip_forwarding = buf.read_u32()?;
+            let ip_default_ttl = buf.read_u32()?;
+            let ip_in_receives = buf.read_u32()?;
+            let ip_in_hdr_errors = buf.read_u32()?;
+            let ip_in_addr_errors = buf.read_u32()?;
+            let ip_forw_datagrams = buf.read_u32()?;
+            let ip_in_unknown_protos = buf.read_u32()?;
+            let ip_in_discards = buf.read_u32()?;
+            let ip_in_delivers = buf.read_u32()?;
+            let ip_out_requests = buf.read_u32()?;
+            let ip_out_discards = buf.read_u32()?;
+            let ip_out_no_routes = buf.read_u32()?;
+            let ip_reasm_timeout = buf.read_u32()?;
+            let ip_reasm_reqds = buf.read_u32()?;
+            let ip_reasm_oks = buf.read_u32()?;
+            let ip_reasm_fails = buf.read_u32()?;
+            let ip_frag_oks = buf.read_u32()?;
+            let ip_frag_fails = buf.read_u32()?;
+            let ip_frag_creates = buf.read_u32()?;
+
+            CounterRecordData::Mib2IpGroup(Mib2IpGroup {
+                ip_forwarding,
+                ip_default_ttl,
+                ip_in_receives,
+                ip_in_hdr_errors,
+                ip_in_addr_errors,
+                ip_forw_datagrams,
+                ip_in_unknown_protos,
+                ip_in_discards,
+                ip_in_delivers,
+                ip_out_requests,
+                ip_out_discards,
+                ip_out_no_routes,
+                ip_reasm_timeout,
+                ip_reasm_reqds,
+                ip_reasm_oks,
+                ip_reasm_fails,
+                ip_frag_oks,
+                ip_frag_fails,
+                ip_frag_creates,
             })
         }
         COUNTER_TYPE_MIB2_ICMP_GROUP => {
-            let mut data = [0u8; size_of::<Mib2IcmpGroup>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::Mib2IcmpGroup(unsafe {
-                std::mem::transmute::<[u8; size_of::<Mib2IcmpGroup>()], Mib2IcmpGroup>(data)
+            let icmp_in_msgs = buf.read_u32()?;
+            let icmp_in_errors = buf.read_u32()?;
+            let icmp_in_dest_unreachs = buf.read_u32()?;
+            let icmp_in_time_excds = buf.read_u32()?;
+            let icmp_in_param_probs = buf.read_u32()?;
+            let icmp_in_src_quenchs = buf.read_u32()?;
+            let icmp_in_redirects = buf.read_u32()?;
+            let icmp_in_echos = buf.read_u32()?;
+            let icmp_in_echo_reps = buf.read_u32()?;
+            let icmp_in_timestamps = buf.read_u32()?;
+            let icmp_in_addr_masks = buf.read_u32()?;
+            let icmp_in_addr_mask_reps = buf.read_u32()?;
+            let icmp_out_msgs = buf.read_u32()?;
+            let icmp_out_errors = buf.read_u32()?;
+            let icmp_out_dest_unreachs = buf.read_u32()?;
+            let icmp_out_time_excds = buf.read_u32()?;
+            let icmp_out_param_probs = buf.read_u32()?;
+            let icmp_out_src_quenchs = buf.read_u32()?;
+            let icmp_out_redirects = buf.read_u32()?;
+            let icmp_out_echos = buf.read_u32()?;
+            let icmp_out_echo_reps = buf.read_u32()?;
+            let icmp_out_timestamps = buf.read_u32()?;
+            let icmp_out_timestamp_reps = buf.read_u32()?;
+            let icmp_out_addr_masks = buf.read_u32()?;
+            let icmp_out_addr_mask_reps = buf.read_u32()?;
+
+            CounterRecordData::Mib2IcmpGroup(Mib2IcmpGroup {
+                icmp_in_msgs,
+                icmp_in_errors,
+                icmp_in_dest_unreachs,
+                icmp_in_time_excds,
+                icmp_in_param_probs,
+                icmp_in_src_quenchs,
+                icmp_in_redirects,
+                icmp_in_echos,
+                icmp_in_echo_reps,
+                icmp_in_timestamps,
+                icmp_in_addr_masks,
+                icmp_in_addr_mask_reps,
+                icmp_out_msgs,
+                icmp_out_errors,
+                icmp_out_dest_unreachs,
+                icmp_out_time_excds,
+                icmp_out_param_probs,
+                icmp_out_src_quenchs,
+                icmp_out_redirects,
+                icmp_out_echos,
+                icmp_out_echo_reps,
+                icmp_out_timestamps,
+                icmp_out_timestamp_reps,
+                icmp_out_addr_masks,
+                icmp_out_addr_mask_reps,
             })
         }
         COUNTER_TYPE_MIB2_TCP_GROUP => {
-            let mut data = [0u8; size_of::<Mib2TcpGroup>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::Mib2TcpGroup(unsafe {
-                std::mem::transmute::<[u8; size_of::<Mib2TcpGroup>()], Mib2TcpGroup>(data)
+            let tcp_rto_algorithm = buf.read_u32()?;
+            let tcp_rto_min = buf.read_u32()?;
+            let tcp_rto_max = buf.read_u32()?;
+            let tcp_max_conn = buf.read_u32()?;
+            let tcp_active_opens = buf.read_u32()?;
+            let tcp_passive_opens = buf.read_u32()?;
+            let tcp_attempt_fails = buf.read_u32()?;
+            let tcp_estab_resets = buf.read_u32()?;
+            let tcp_curr_estab = buf.read_u32()?;
+            let tcp_in_segs = buf.read_u32()?;
+            let tcp_out_segs = buf.read_u32()?;
+            let tcp_retrans_segs = buf.read_u32()?;
+            let tcp_in_errs = buf.read_u32()?;
+            let tcp_out_rsts = buf.read_u32()?;
+            let tcp_in_csum_errs = buf.read_u32()?;
+
+            CounterRecordData::Mib2TcpGroup(Mib2TcpGroup {
+                tcp_rto_algorithm,
+                tcp_rto_min,
+                tcp_rto_max,
+                tcp_max_conn,
+                tcp_active_opens,
+                tcp_passive_opens,
+                tcp_attempt_fails,
+                tcp_estab_resets,
+                tcp_curr_estab,
+                tcp_in_segs,
+                tcp_out_segs,
+                tcp_retrans_segs,
+                tcp_in_errs,
+                tcp_out_rsts,
+                tcp_in_csum_errs,
             })
         }
         COUNTER_TYPE_MIB2_UDP_GROUP => {
-            let mut data = [0u8; size_of::<Mib2UdpGroup>()];
-            buf.read_exact(&mut data)?;
-            CounterRecordData::Mib2UdpGroup(unsafe {
-                std::mem::transmute::<[u8; size_of::<Mib2UdpGroup>()], Mib2UdpGroup>(data)
+            let udp_in_datagrams = buf.read_u32()?;
+            let udp_no_ports = buf.read_u32()?;
+            let udp_in_errors = buf.read_u32()?;
+            let udp_out_datagrams = buf.read_u32()?;
+            let udp_rcvbuf_errors = buf.read_u32()?;
+            let udp_sndbuf_errors = buf.read_u32()?;
+            let udp_in_csum_errors = buf.read_u32()?;
+
+            CounterRecordData::Mib2UdpGroup(Mib2UdpGroup {
+                udp_in_datagrams,
+                udp_no_ports,
+                udp_in_errors,
+                udp_out_datagrams,
+                udp_rcvbuf_errors,
+                udp_sndbuf_errors,
+                udp_in_csum_errors,
             })
         }
+
         _ => {
             let mut data = vec![0u8; length as usize];
             buf.read_exact(&mut data)?;
-            CounterRecordData::Raw(data)
+            CounterRecordData::Raw(data_format, data)
         }
     };
 
@@ -694,86 +1425,112 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             let stripped = buf.read_u32()?;
             let original_length = buf.read_u32()?;
 
-            let mut header_data = vec![0; length as usize - 4 * 4];
-            buf.read_exact(&mut header_data)?;
+            let mut header_bytes = vec![0; length as usize - 4 * 4];
+            buf.read_exact(&mut header_bytes)?;
 
             FlowRecord::Raw(FlowRecordRaw {
                 protocol,
                 frame_length,
                 stripped,
                 original_length,
-                header_data,
+                header_bytes,
             })
         }
+        FLOW_TYPE_EXT_LINUX_REASON => {
+            let reason = buf.read_string()?;
+            FlowRecord::ExtendedLinuxReason(ExtendedLinuxReason { reason })
+        }
         FLOW_TYPE_ETH => {
-            let mut data = [0u8; size_of::<FlowRecordSampleEthernet>()];
-            buf.read_exact(&mut data)?;
-            FlowRecord::SampledEthernet(unsafe {
-                std::mem::transmute::<
-                    [u8; size_of::<FlowRecordSampleEthernet>()],
-                    FlowRecordSampleEthernet,
-                >(data)
+            let length = buf.read_u32()?;
+            let mut src_mac = [0u8; 6];
+            buf.read_exact(&mut src_mac)?;
+            let mut dst_mac = [0u8; 6];
+            buf.read_exact(&mut dst_mac)?;
+            let eth_type = buf.read_u32()?;
+
+            FlowRecord::SampledEthernet(FlowRecordSampleEthernet {
+                length,
+                src_mac,
+                dst_mac,
+                eth_type,
             })
         }
         FLOW_TYPE_IPV4 => {
-            let mut data = [0u8; size_of::<SampledIpv4>()];
+            let length = buf.read_u32()?;
+            let protocol = buf.read_u32()?;
+            let mut data = [0u8; 4];
             buf.read_exact(&mut data)?;
-            FlowRecord::SampledIpv4(unsafe {
-                std::mem::transmute::<[u8; size_of::<SampledIpv4>()], SampledIpv4>(data)
+            let src_ip = Ipv4Addr::from(data);
+            let mut data = [0u8; 4];
+            buf.read_exact(&mut data)?;
+            let dst_ip = Ipv4Addr::from(data);
+            let src_port = buf.read_u32()?;
+            let dst_port = buf.read_u32()?;
+            let tcp_flags = buf.read_u32()?;
+            let tos = buf.read_u32()?;
+
+            FlowRecord::SampledIpv4(SampledIpv4 {
+                length,
+                protocol,
+                src_ip,
+                dst_ip,
+                src_port,
+                dst_port,
+                tcp_flags,
+                tos,
             })
         }
         FLOW_TYPE_IPV6 => {
-            let mut data = [0u8; size_of::<SampledIpv6>()];
+            let length = buf.read_u32()?;
+            let protocol = buf.read_u32()?;
+            let mut data = [0u8; 16];
             buf.read_exact(&mut data)?;
-            FlowRecord::SampledIpv6(unsafe {
-                std::mem::transmute::<[u8; size_of::<SampledIpv6>()], SampledIpv6>(data)
+            let src_ip = Ipv6Addr::from(data);
+            let mut data = [0u8; 16];
+            buf.read_exact(&mut data)?;
+            let dst_ip = Ipv6Addr::from(data);
+            let src_port = buf.read_u32()?;
+            let dst_port = buf.read_u32()?;
+            let tcp_flags = buf.read_u32()?;
+            let priority = buf.read_u32()?;
+
+            FlowRecord::SampledIpv6(SampledIpv6 {
+                length,
+                protocol,
+                src_ip,
+                dst_ip,
+                src_port,
+                dst_port,
+                tcp_flags,
+                priority,
             })
         }
         FLOW_TYPE_EXT_SWITCH => {
-            let mut data = [0u8; size_of::<ExtendedSwitch>()];
-            buf.read_exact(&mut data)?;
-            FlowRecord::ExtendedSwitch(unsafe {
-                std::mem::transmute::<[u8; size_of::<ExtendedSwitch>()], ExtendedSwitch>(data)
+            let src_vlan = buf.read_u32()?;
+            let src_priority = buf.read_u32()?;
+            let dst_vlan = buf.read_u32()?;
+            let dst_priority = buf.read_u32()?;
+
+            FlowRecord::ExtendedSwitch(ExtendedSwitch {
+                src_vlan,
+                src_priority,
+                dst_vlan,
+                dst_priority,
             })
         }
         FLOW_TYPE_EXT_ROUTER => {
-            let ip_version = buf.read_u32()?;
-            let next_hop = if ip_version == 1 {
-                let mut octets = [0u8; 4];
-                buf.read_exact(&mut octets)?;
-                IpAddr::from(octets)
-            } else if ip_version == 2 {
-                let mut octets = [0u8; 16];
-                buf.read_exact(&mut octets)?;
-                IpAddr::from(octets)
-            } else {
-                return Err(Error::UnknownIpVersion(ip_version));
-            };
-
+            let next_hop = decode_ipaddr(buf)?;
             let src_mask_len = buf.read_u32()?;
             let dst_mask_len = buf.read_u32()?;
 
             FlowRecord::ExtendedRouter(ExtendedRouter {
-                next_hop_ip_version: ip_version,
                 next_hop,
                 src_mask_len,
                 dst_mask_len,
             })
         }
         FLOW_TYPE_EXT_GATEWAY => {
-            let ip_version = buf.read_u32()?;
-            let next_hop = if ip_version == 1 {
-                let mut octets = [0u8; 4];
-                buf.read_exact(&mut octets)?;
-                IpAddr::from(octets)
-            } else if ip_version == 2 {
-                let mut octets = [0u8; 16];
-                buf.read_exact(&mut octets)?;
-                IpAddr::from(octets)
-            } else {
-                return Err(Error::UnknownIpVersion(ip_version));
-            };
-
+            let next_hop = decode_ipaddr(buf)?;
             let r#as = buf.read_u32()?;
             let src_as = buf.read_u32()?;
             let src_peer_as = buf.read_u32()?;
@@ -816,7 +1573,6 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             let local_pref = buf.read_u32()?;
 
             FlowRecord::ExtendedGateway(ExtendedGateway {
-                next_hop_ip_version: ip_version,
                 next_hop,
                 r#as,
                 src_as,
@@ -835,7 +1591,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
         }),
         FLOW_TYPE_EXT_ACL => {
             let number = buf.read_u32()?;
-            let name = decode_string(buf)?;
+            let name = buf.read_string()?;
             let direction = buf.read_u32()?;
 
             FlowRecord::ExtendedACL(ExtendedACL {
@@ -845,9 +1601,38 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_EXT_FUNCTION => {
-            let symbol = decode_string(buf)?;
+            let symbol = buf.read_string()?;
 
             FlowRecord::ExtendedFunction(ExtendedFunction { symbol })
+        }
+        FLOW_TYPE_EXT_TCP_INFO => {
+            let direction = buf.read_u32()?;
+            let snd_mss = buf.read_u32()?;
+            let rcv_mss = buf.read_u32()?;
+            let unacked = buf.read_u32()?;
+            let lost = buf.read_u32()?;
+            let retrans = buf.read_u32()?;
+            let pmtu = buf.read_u32()?;
+            let rtt = buf.read_u32()?;
+            let rttvar = buf.read_u32()?;
+            let snd_cwnd = buf.read_u32()?;
+            let reordering = buf.read_u32()?;
+            let min_rtt = buf.read_u32()?;
+
+            FlowRecord::ExtendedTCPInfo(ExtendedTCPInfo {
+                direction,
+                snd_mss,
+                rcv_mss,
+                unacked,
+                lost,
+                retrans,
+                pmtu,
+                rtt,
+                rttvar,
+                snd_cwnd,
+                reordering,
+                min_rtt,
+            })
         }
         _ => {
             // not support yet
@@ -863,26 +1648,20 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
     let format = buf.read_u32()?;
     let length = buf.read_u32()?;
     let sample_sequence_number = buf.read_u32()?;
-    #[allow(unused_assignments)]
-    let mut source_id_type = 0;
-    #[allow(unused_assignments)]
-    let mut source_id_value = 0;
 
-    match format {
+    let (source_id_type, source_id_value) = match format {
         SAMPLE_FORMAT_FLOW | SAMPLE_FORMAT_COUNTER => {
             // Interlaced data-source format
             let source_id = buf.read_u32()?;
 
-            source_id_type = source_id >> 24;
-            source_id_value = source_id & 0x00FF_FFFF;
+            (source_id >> 24, source_id & 0x00FF_FFFF)
         }
         SAMPLE_FORMAT_EXPANDED_FLOW | SAMPLE_FORMAT_EXPANDED_COUNTER | SAMPLE_FORMAT_DROP => {
             // Explicit data-source format
-            source_id_type = buf.read_u32()?;
-            source_id_value = buf.read_u32()?;
+            (buf.read_u32()?, buf.read_u32()?)
         }
         _ => return Err(Error::UnknownSampleFormat(format)),
-    }
+    };
 
     let sample = match format {
         SAMPLE_FORMAT_FLOW => {
@@ -1028,24 +1807,12 @@ impl Datagram {
             return Err(Error::IncompatibleVersion);
         }
 
-        let ip_version = buf.read_u32()?;
-        let agent_ip = if ip_version == 1 {
-            let mut octets = [0u8; 4];
-            buf.read_exact(&mut octets)?;
-            IpAddr::from(octets)
-        } else if ip_version == 2 {
-            let mut octets = [0u8; 16];
-            buf.read_exact(&mut octets)?;
-            IpAddr::from(octets)
-        } else {
-            return Err(Error::UnknownIpVersion(ip_version));
-        };
-
+        let agent_ip = decode_ipaddr(&mut buf)?;
         let sub_agent_id = buf.read_u32()?;
         let sequence_number = buf.read_u32()?;
         let uptime = buf.read_u32()?;
-        let samples_count = buf.read_u32()?;
 
+        let samples_count = buf.read_u32()?;
         if samples_count > 1000 {
             return Err(Error::TooManySamples);
         }
@@ -1057,7 +1824,6 @@ impl Datagram {
 
         Ok(Datagram {
             version,
-            ip_version,
             agent_ip,
             sub_agent_id,
             sequence_number,
@@ -1283,7 +2049,7 @@ mod tests {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01,
             0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
             0x04, 0x0e, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x06, 0x66, 0x6f, 0x6f, 0x62,
-            0x61, 0x72,
+            0x61, 0x72, 0x00, 0x00,
         ];
 
         let datagram = Datagram::decode(data).unwrap();
@@ -1347,19 +2113,5 @@ mod tests {
         assert_eq!(datagram.samples_count, 1);
 
         println!("{:#?}", datagram);
-    }
-
-    #[test]
-    fn sizes() {
-        assert_eq!(size_of::<HostCPU>(), 80);
-        assert_eq!(size_of::<HostMemory>(), 72);
-        assert_eq!(size_of::<HostDiskIO>(), 52);
-        assert_eq!(size_of::<HostNetIO>(), 40);
-        // assert_eq!(size_of::<HostDescription>(), 64);
-
-        assert_eq!(size_of::<Mib2IpGroup>(), 76);
-        assert_eq!(size_of::<Mib2IcmpGroup>(), 100);
-        assert_eq!(size_of::<Mib2TcpGroup>(), 60);
-        assert_eq!(size_of::<Mib2UdpGroup>(), 28);
     }
 }

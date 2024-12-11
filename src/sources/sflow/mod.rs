@@ -6,10 +6,11 @@ use chrono::Utc;
 use configurable::configurable_component;
 use datagram::{
     CounterRecord, CounterRecordData, Datagram, EgressQueue, EthernetCounters, ExtendedACL,
-    ExtendedFunction, ExtendedGateway, ExtendedRouter, ExtendedSwitch, FlowRecord, FlowRecordRaw,
-    FlowRecordSampleEthernet, HostAdapters, HostCPU, HostDescription, HostDiskIO, HostMemory,
-    HostNetIO, IfCounters, Mib2IcmpGroup, Mib2IpGroup, Mib2TcpGroup, Mib2UdpGroup, Sample,
-    SampledIpv4, SampledIpv6,
+    ExtendedFunction, ExtendedGateway, ExtendedLinuxReason, ExtendedRouter, ExtendedSwitch,
+    ExtendedTCPInfo, FlowRecord, FlowRecordRaw, FlowRecordSampleEthernet, HostAdapters, HostCPU,
+    HostDescription, HostDiskIO, HostMemory, HostNetIO, HostParent, IfCounters, Lane,
+    Mib2IcmpGroup, Mib2IpGroup, Mib2TcpGroup, Mib2UdpGroup, PortName, Processor, Sample,
+    SampleHeader, SampledIpv4, SampledIpv6, Sfp, VgCounters, Vlan,
 };
 use event::Event;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
@@ -89,6 +90,13 @@ fn convert_sample(sample: Sample) -> Value {
 
     match sample {
         Sample::Flow {
+            header:
+                SampleHeader {
+                    sample_sequence_number,
+                    source_id_type,
+                    source_id_value,
+                    ..
+                },
             sampling_rate,
             sample_pool,
             drops,
@@ -96,8 +104,12 @@ fn convert_sample(sample: Sample) -> Value {
             output,
             flow_records_count,
             records,
-            ..
         } => {
+            // header
+            value.insert("sample_sequence_number", sample_sequence_number);
+            value.insert("source_id_type", source_id_type);
+            value.insert("source_id_value", source_id_value);
+
             value.insert("sampling_rate", sampling_rate);
             value.insert("sample_pool", sample_pool);
             value.insert("drops", drops);
@@ -111,10 +123,22 @@ fn convert_sample(sample: Sample) -> Value {
             value.insert("records", array);
         }
         Sample::Counter {
+            header:
+                SampleHeader {
+                    sample_sequence_number,
+                    source_id_type,
+                    source_id_value,
+                    ..
+                },
             counter_records_count,
             records,
             ..
         } => {
+            // header
+            value.insert("sample_sequence_number", sample_sequence_number);
+            value.insert("source_id_type", source_id_type);
+            value.insert("source_id_value", source_id_value);
+
             let mut array = Vec::with_capacity(counter_records_count as usize);
             for record in records {
                 array.push(convert_counter_record(record));
@@ -122,6 +146,13 @@ fn convert_sample(sample: Sample) -> Value {
             value.insert("records", array);
         }
         Sample::ExpandedFlow {
+            header:
+                SampleHeader {
+                    sample_sequence_number,
+                    source_id_type,
+                    source_id_value,
+                    ..
+                },
             sampling_rate,
             sample_pool,
             drops,
@@ -133,6 +164,11 @@ fn convert_sample(sample: Sample) -> Value {
             records,
             ..
         } => {
+            // header
+            value.insert("sample_sequence_number", sample_sequence_number);
+            value.insert("source_id_type", source_id_type);
+            value.insert("source_id_value", source_id_value);
+
             value.insert("sampling_rate", sampling_rate);
             value.insert("sample_pool", sample_pool);
             value.insert("drops", drops);
@@ -148,6 +184,13 @@ fn convert_sample(sample: Sample) -> Value {
             value.insert("records", array);
         }
         Sample::Drop {
+            header:
+                SampleHeader {
+                    sample_sequence_number,
+                    source_id_type,
+                    source_id_value,
+                    ..
+                },
             drops,
             input,
             output,
@@ -156,6 +199,11 @@ fn convert_sample(sample: Sample) -> Value {
             records,
             ..
         } => {
+            // header
+            value.insert("sample_sequence_number", sample_sequence_number);
+            value.insert("source_id_type", source_id_type);
+            value.insert("source_id_value", source_id_value);
+
             value.insert("drops", drops);
             value.insert("input", input);
             value.insert("output", output);
@@ -189,13 +237,16 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             frame_length,
             stripped,
             original_length,
-            header_data,
+            header_bytes,
         }) => {
             value.insert("protocol", protocol);
             value.insert("frame_length", frame_length);
             value.insert("stripped", stripped);
             value.insert("original_length", original_length);
-            value.insert("header_data", header_data);
+            value.insert("header_bytes", header_bytes);
+        }
+        FlowRecord::ExtendedLinuxReason(ExtendedLinuxReason { reason }) => {
+            value.insert("reason", reason);
         }
         FlowRecord::SampledEthernet(FlowRecordSampleEthernet {
             length,
@@ -302,6 +353,33 @@ fn convert_flow_record(record: FlowRecord) -> Value {
         FlowRecord::ExtendedFunction(ExtendedFunction { symbol }) => {
             value.insert("symbol", symbol);
         }
+        FlowRecord::ExtendedTCPInfo(ExtendedTCPInfo {
+            direction,
+            snd_mss,
+            rcv_mss,
+            unacked,
+            lost,
+            retrans,
+            pmtu,
+            rtt,
+            rttvar,
+            snd_cwnd,
+            reordering,
+            min_rtt,
+        }) => {
+            value.insert("direction", direction);
+            value.insert("snd_mss", snd_mss);
+            value.insert("rcv_mss", rcv_mss);
+            value.insert("unacked", unacked);
+            value.insert("lost", lost);
+            value.insert("retrans", retrans);
+            value.insert("pmtu", pmtu);
+            value.insert("rtt", rtt);
+            value.insert("rttvar", rttvar);
+            value.insert("snd_cwnd", snd_cwnd);
+            value.insert("reordering", reordering);
+            value.insert("min_rtt", min_rtt);
+        }
     }
 
     value
@@ -311,7 +389,7 @@ fn convert_counter_record(record: CounterRecord) -> Value {
     let mut value = Value::Object(Default::default());
 
     match record.data {
-        CounterRecordData::IfCounters(IfCounters {
+        CounterRecordData::Interface(IfCounters {
             if_index,
             if_type,
             if_speed,
@@ -352,55 +430,137 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             value.insert("if_out_errors", if_out_errors);
             value.insert("if_promiscuous_mode", if_promiscuous_mode);
         }
-        CounterRecordData::EthernetCounters(EthernetCounters {
-            dot3stats_alignment_errors,
-            dot3stats_fcserrors,
-            dot3stats_single_collision_frames,
-            dot3stats_multiple_collision_frames,
-            dot3stats_sqetest_errors,
-            dot3stats_deferred_transmissions,
-            dot3stats_late_collisions,
-            dot3stats_excessive_collisions,
-            dot3stats_internal_mac_transmit_errors,
-            dot3stats_carrier_sense_errors,
-            dot3stats_frame_too_longs,
-            dot3stats_internal_mac_receive_errors,
-            dot3stats_symbol_errors,
+        CounterRecordData::Ethernet(EthernetCounters {
+            dot3_stats_alignment_errors,
+            dot3_stats_fcs_errors,
+            dot3_stats_single_collision_frames,
+            dot3_stats_multiple_collision_frames,
+            dot3_stats_sqe_test_errors,
+            dot3_stats_deferred_transmissions,
+            dot3_stats_late_collisions,
+            dot3_stats_excessive_collisions,
+            dot3_stats_internal_mac_transmit_errors,
+            dot3_stats_carrier_sense_errors,
+            dot3_stats_frame_too_longs,
+            dot3_stats_internal_mac_receive_errors,
+            dot3_stats_symbol_errors,
         }) => {
-            value.insert("dot3stats_alignment_errors", dot3stats_alignment_errors);
-            value.insert("dot3stats_fcserrors", dot3stats_fcserrors);
+            value.insert("dot3_stats_alignment_errors", dot3_stats_alignment_errors);
+            value.insert("dot3_stats_fcs_errors", dot3_stats_fcs_errors);
             value.insert(
-                "dot3stats_single_collision_frames",
-                dot3stats_single_collision_frames,
+                "dot3_stats_single_collision_frames",
+                dot3_stats_single_collision_frames,
             );
             value.insert(
-                "dot3stats_multiple_collision_frames",
-                dot3stats_multiple_collision_frames,
+                "dot3_stats_multiple_collision_frames",
+                dot3_stats_multiple_collision_frames,
             );
-            value.insert("dot3stats_sqetest_errors", dot3stats_sqetest_errors);
+            value.insert("dot3_stats_sqe_test_errors", dot3_stats_sqe_test_errors);
             value.insert(
-                "dot3stats_deferred_transmissions",
-                dot3stats_deferred_transmissions,
+                "dot3_stats_deferred_transmissions",
+                dot3_stats_deferred_transmissions,
             );
-            value.insert("dot3stats_late_collisions", dot3stats_late_collisions);
+            value.insert("dot3_stats_late_collisions", dot3_stats_late_collisions);
             value.insert(
-                "dot3stats_excessive_collisions",
-                dot3stats_excessive_collisions,
-            );
-            value.insert(
-                "dot3stats_internal_mac_transmit_errors",
-                dot3stats_internal_mac_transmit_errors,
+                "dot3_stats_excessive_collisions",
+                dot3_stats_excessive_collisions,
             );
             value.insert(
-                "dot3stats_carrier_sense_errors",
-                dot3stats_carrier_sense_errors,
+                "dot3_stats_internal_mac_transmit_errors",
+                dot3_stats_internal_mac_transmit_errors,
             );
-            value.insert("dot3stats_frame_too_longs", dot3stats_frame_too_longs);
             value.insert(
-                "dot3stats_internal_mac_receive_errors",
-                dot3stats_internal_mac_receive_errors,
+                "dot3_stats_carrier_sense_errors",
+                dot3_stats_carrier_sense_errors,
             );
-            value.insert("dot3stats_symbol_errors", dot3stats_symbol_errors);
+            value.insert("dot3_stats_frame_too_longs", dot3_stats_frame_too_longs);
+            value.insert(
+                "dot3_stats_internal_mac_receive_errors",
+                dot3_stats_internal_mac_receive_errors,
+            );
+            value.insert("dot3_stats_symbol_errors", dot3_stats_symbol_errors);
+        }
+        CounterRecordData::VgCounters(VgCounters {
+            dot12_in_high_priority_frames,
+            dot12_in_high_priority_octets,
+            dot12_in_norm_priority_frames,
+            dot12_in_norm_priority_octets,
+            dot12_in_ipm_errors,
+            dot12_in_oversize_frame_errors,
+            dot12_in_data_errors,
+            dot12_in_null_addressed_frames,
+            dot12_out_high_priority_frames,
+            dot12_out_high_priority_octets,
+            dot12_transition_into_trainings,
+            dot12_hc_in_high_priority_octets,
+            dot12_hc_in_norm_priority_octets,
+            dot12_hc_out_high_priority_octets,
+        }) => {
+            value.insert(
+                "dot12_in_high_priority_frames",
+                dot12_in_high_priority_frames,
+            );
+            value.insert(
+                "dot12_in_high_priority_octets",
+                dot12_in_high_priority_octets,
+            );
+            value.insert(
+                "dot12_in_norm_priority_frames",
+                dot12_in_norm_priority_frames,
+            );
+            value.insert(
+                "dot12_in_norm_priority_octets",
+                dot12_in_norm_priority_octets,
+            );
+            value.insert("dot12_in_ipm_errors", dot12_in_ipm_errors);
+            value.insert(
+                "dot12_in_oversize_frame_errors",
+                dot12_in_oversize_frame_errors,
+            );
+            value.insert("dot12_in_data_errors", dot12_in_data_errors);
+            value.insert(
+                "dot12_in_null_addressed_frames",
+                dot12_in_null_addressed_frames,
+            );
+            value.insert(
+                "dot12_out_high_priority_frames",
+                dot12_out_high_priority_frames,
+            );
+            value.insert(
+                "dot12_out_high_priority_octets",
+                dot12_out_high_priority_octets,
+            );
+            value.insert(
+                "dot12_transition_into_trainings",
+                dot12_transition_into_trainings,
+            );
+            value.insert(
+                "dot12_hc_in_high_priority_octets",
+                dot12_hc_in_high_priority_octets,
+            );
+            value.insert(
+                "dot12_hc_in_norm_priority_octets",
+                dot12_hc_in_norm_priority_octets,
+            );
+            value.insert(
+                "dot12_hc_out_high_priority_octets",
+                dot12_hc_out_high_priority_octets,
+            );
+        }
+        CounterRecordData::Vlan(Vlan {
+            vlan_id,
+            octets,
+            ucast_pkts,
+            multicast_pkts,
+            broadcast_pkts,
+            discards,
+        }) => {
+            value.insert("vlan_id", vlan_id);
+            value.insert("octets", octets);
+            value.insert("ucast_pkts", ucast_pkts);
+            value.insert("multicast_pkts", multicast_pkts);
+            value.insert("broadcast_pkts", broadcast_pkts);
+            value.insert("discards", discards);
         }
         CounterRecordData::HostCPU(HostCPU {
             load_one,
@@ -445,6 +605,19 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             value.insert("cpu_steal", cpu_steal);
             value.insert("cpu_guest", cpu_guest);
             value.insert("cpu_guest_nice", cpu_guest_nice);
+        }
+        CounterRecordData::Processor(Processor {
+            five_sec_cpu,
+            one_min_cpu,
+            five_min_cpu,
+            total_memory,
+            free_memory,
+        }) => {
+            value.insert("five_sec_cpu", five_sec_cpu);
+            value.insert("one_min_cpu", one_min_cpu);
+            value.insert("five_min_cpu", five_min_cpu);
+            value.insert("total_memory", total_memory);
+            value.insert("free_memory", free_memory);
         }
         CounterRecordData::HostAdapters(HostAdapters { length, adapters }) => {
             let mut array = Vec::with_capacity(length as usize);
@@ -503,7 +676,7 @@ fn convert_counter_record(record: CounterRecord) -> Value {
         }
         CounterRecordData::HostNetIO(HostNetIO {
             bytes_in,
-            pkts_in,
+            packets_in,
             errs_in,
             drops_in,
             bytes_out,
@@ -512,7 +685,7 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             drops_out,
         }) => {
             value.insert("bytes_in", bytes_in);
-            value.insert("pkts_in", pkts_in);
+            value.insert("packets_in", packets_in);
             value.insert("errs_in", errs_in);
             value.insert("drops_in", drops_in);
             value.insert("bytes_out", bytes_out);
@@ -685,8 +858,59 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             value.insert("udp_sndbuf_errors", udp_sndbuf_errors);
             value.insert("udp_in_csum_errors", udp_in_csum_errors);
         }
-        CounterRecordData::Raw(raw) => {
-            value.insert("raw", raw);
+        CounterRecordData::PortName(PortName { name }) => {
+            value.insert("port_name", name);
+        }
+        CounterRecordData::HostParent(HostParent {
+            container_type,
+            container_index,
+        }) => {
+            value.insert("container_type", container_type);
+            value.insert("container_index", container_index);
+        }
+        CounterRecordData::Sfp(Sfp {
+            module_id,
+            module_total_lanes,
+            module_supply_voltage,
+            module_temperature,
+            lanes,
+        }) => {
+            value.insert("module_id", module_id);
+            value.insert("module_total_lanes", module_total_lanes);
+            value.insert("module_supply_voltage", module_supply_voltage);
+            value.insert("module_temperature", module_temperature);
+            let mut array = Vec::with_capacity(lanes.len());
+            for Lane {
+                lane_index,
+                tx_bias_current,
+                tx_power,
+                tx_power_min,
+                tx_power_max,
+                tx_wavelength,
+                rx_power,
+                rx_power_min,
+                rx_power_max,
+                rx_wavelength,
+            } in lanes
+            {
+                let mut item = Value::Object(Default::default());
+                item.insert("lane_index", lane_index);
+                item.insert("tx_bias_current", tx_bias_current);
+                item.insert("tx_power", tx_power);
+                item.insert("tx_power_min", tx_power_min);
+                item.insert("tx_power_max", tx_power_max);
+                item.insert("tx_wavelength", tx_wavelength);
+                item.insert("rx_power", rx_power);
+                item.insert("rx_power_min", rx_power_min);
+                item.insert("rx_power_max", rx_power_max);
+                item.insert("rx_wavelength", rx_wavelength);
+
+                array.push(item);
+            }
+        }
+        CounterRecordData::Raw(format, data) => {
+            value.insert("format", format);
+            value.insert("data", data);
         }
     }
 
