@@ -76,7 +76,7 @@ tokio = { version = "1.42.0", default-features = false, features = ["time", "net
 tokio-rustls = { version = "0.26.1", default-features = false }
 tokio-stream = { version = "0.1.17", default-features = false, features = ["net", "sync"] }
 tokio-util = { version = "0.7.13", default-features = false, features = ["time"] }
-tower = { version = "0.5.1", default-features = false, features = ["limit", "retry", "timeout"] }
+tower = { version = "0.5.2", default-features = false, features = ["limit", "retry", "timeout"] }
 tracing = { version = "0.1.41", default-features = false }
 tracing-core = { version = "0.1.33", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
