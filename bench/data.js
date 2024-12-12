@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733992532749,
+  "lastUpdate": 1733992919889,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b06292b0dc417d7291a14ff20a8feb038e082f4c",
-          "message": "chore(deps): bump libc from 0.2.159 to 0.2.161 (#1940)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.159 to 0.2.161.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.161/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.159...0.2.161)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-18T09:39:39+08:00",
-          "tree_id": "136477c8e8679cb20bc0d0f2d3cb18db993f11bd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b06292b0dc417d7291a14ff20a8feb038e082f4c"
-        },
-        "date": 1729216197918,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 525,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35425.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35550.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "558b736a9dafbfefd909d72b7cd8847445249f55",
+          "message": "chore(deps): bump rustls from 0.23.19 to 0.23.20 (#2041)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.19 to 0.23.20.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.19...v/0.23.20)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-12T16:31:29+08:00",
+          "tree_id": "2d2e0a808bd03df83cfb0ff065b5c7ffaeac6b3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/558b736a9dafbfefd909d72b7cd8847445249f55"
+        },
+        "date": 1733992901941,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 520,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35546.6,
             "unit": "KiB"
           }
         ]
