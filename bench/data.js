@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733992460930,
+  "lastUpdate": 1733992471894,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d7e5cfb461edfef94a8725940f9552784542f6dd",
-          "message": "chore(deps): bump rustls from 0.23.14 to 0.23.15 (#1939)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.14 to 0.23.15.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.14...v/0.23.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-17T11:42:22+08:00",
-          "tree_id": "2e026ca37b0e6680c66ed8cd116aa891f3f24f2c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d7e5cfb461edfef94a8725940f9552784542f6dd"
-        },
-        "date": 1729136713597,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.259,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 155.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 343.91,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 686.55,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a10cfab19844de23040bc70b32f983917eafed0e",
           "message": "chore(deps): bump serde_json from 1.0.128 to 1.0.129 (#1941)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.128 to 1.0.129.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/1.0.128...1.0.129)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-18T09:39:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 605.86,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "558b736a9dafbfefd909d72b7cd8847445249f55",
+          "message": "chore(deps): bump rustls from 0.23.19 to 0.23.20 (#2041)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.19 to 0.23.20.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.19...v/0.23.20)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-12T16:31:29+08:00",
+          "tree_id": "2d2e0a808bd03df83cfb0ff065b5c7ffaeac6b3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/558b736a9dafbfefd909d72b7cd8847445249f55"
+        },
+        "date": 1733992454381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.672,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 146.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 319.62,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 643.9,
             "unit": "ns/op"
           }
         ]
