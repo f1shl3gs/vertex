@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1733992919889,
+  "lastUpdate": 1733992937500,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "04b23e4429712a0486ed178598f274007d1086d5",
-          "message": "bump to 1.82.0 (#1942)",
-          "timestamp": "2024-10-18T09:47:07+08:00",
-          "tree_id": "a8b4bbc074d6bb6027a4c054096f1fb6447ecae6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/04b23e4429712a0486ed178598f274007d1086d5"
-        },
-        "date": 1729216630418,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 511,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35486.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 520,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35546.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2bad8a696e7c43dbd3df8b2abea79fef64fd675b",
+          "message": "chore(deps): bump tower from 0.5.1 to 0.5.2 (#2042)\n\nBumps [tower](https://github.com/tower-rs/tower) from 0.5.1 to 0.5.2.\r\n- [Release notes](https://github.com/tower-rs/tower/releases)\r\n- [Commits](https://github.com/tower-rs/tower/compare/tower-0.5.1...tower-0.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tower\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-12T16:31:45+08:00",
+          "tree_id": "5562ca5c591a942e03f601e50270521e345f9044",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2bad8a696e7c43dbd3df8b2abea79fef64fd675b"
+        },
+        "date": 1733992920078,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 519,
             "unit": "s"
           },
           {
