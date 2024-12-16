@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734346397074,
+  "lastUpdate": 1734346412152,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a1f7302f329d11a96467b4b894aec03508533f53",
-          "message": "chore(deps): bump twox-hash from 1.6.3 to 2.0.0 (#1943)\n\n* chore(deps): bump twox-hash from 1.6.3 to 2.0.0\r\n\r\nBumps [twox-hash](https://github.com/shepmaster/twox-hash) from 1.6.3 to 2.0.0.\r\n- [Changelog](https://github.com/shepmaster/twox-hash/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/shepmaster/twox-hash/compare/v1.6.3...v2.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: twox-hash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix compatible errors\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2024-10-20T06:11:51+08:00",
-          "tree_id": "b052d5680872c25ea6dfd0b75b49c037c012a17f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a1f7302f329d11a96467b4b894aec03508533f53"
-        },
-        "date": 1729376519312,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 507,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35486.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e1419aff1c04f656d4707414d6cfd1fe9a3b380a",
           "message": "chore(deps): bump syn from 2.0.79 to 2.0.80 (#1945)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.79 to 2.0.80.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.79...2.0.80)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-20T06:17:07+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 526,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35546.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4bf4e7a195c5d5768a7d2a6d3b8675797afda12",
+          "message": "chore(deps): bump crossbeam-queue from 0.3.11 to 0.3.12 (#2047)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.11 to 0.3.12.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.11...crossbeam-queue-0.3.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-16T18:42:45+08:00",
+          "tree_id": "ee944bd6796a74186e07fd1eef33daa4a26cd527",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4bf4e7a195c5d5768a7d2a6d3b8675797afda12"
+        },
+        "date": 1734346393528,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 527,
             "unit": "s"
           },
           {
