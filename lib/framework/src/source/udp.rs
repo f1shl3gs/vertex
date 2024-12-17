@@ -44,7 +44,7 @@ pub trait UdpSource: Sized + Send + Sync + 'static {
                 }
             }
 
-            let mut buf = [0u8; 16 * 1024];
+            let mut buf = [0u8; u16::MAX as usize];
             loop {
                 let (size, peer) = tokio::select! {
                     _ = &mut shutdown => {

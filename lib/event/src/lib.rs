@@ -283,6 +283,12 @@ impl From<BTreeMap<String, log::Value>> for Event {
     }
 }
 
+impl From<value::Value> for Event {
+    fn from(value: value::Value) -> Self {
+        Event::Log(value.into())
+    }
+}
+
 impl From<String> for Event {
     fn from(s: String) -> Self {
         let mut fields: BTreeMap<String, log::Value> = BTreeMap::new();
