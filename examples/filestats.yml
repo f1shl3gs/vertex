@@ -1,0 +1,13 @@
+sources:
+  files:
+    type: filestats
+    include: /home/f1shl3gs/Workspaces/rustrover/vertex/examples/*.yml
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - files
+    encoding:
+      codec: text
+      # pretty: true
