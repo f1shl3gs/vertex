@@ -46,6 +46,8 @@ mod memcached;
 mod mqtt;
 #[cfg(feature = "sources-mysqld")]
 mod mysqld;
+#[cfg(feature = "sources-netflow")]
+mod netflow;
 #[cfg(feature = "sources-nginx_stub")]
 mod nginx_stub;
 #[cfg(all(target_os = "linux", feature = "sources-node_metrics"))]

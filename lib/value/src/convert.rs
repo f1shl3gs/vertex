@@ -77,6 +77,12 @@ impl From<&str> for Value {
     }
 }
 
+impl From<&[u8]> for Value {
+    fn from(value: &[u8]) -> Self {
+        Bytes::copy_from_slice(value).into()
+    }
+}
+
 impl From<Bytes> for Value {
     fn from(value: Bytes) -> Self {
         Self::Bytes(value)

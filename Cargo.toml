@@ -52,7 +52,8 @@ members = [
     "lib/tripwire",
     "lib/value",
     "lib/virt",
-    "lib/vtl"
+    "lib/vtl",
+    "lib/xdr"
 ]
 
 [features]
@@ -168,6 +169,7 @@ sources-memcached = []
 sources-mongodb = []
 sources-mqtt = []
 sources-mysqld = ["dep:sqlx"]
+sources-netflow = ["dep:xdr"]
 sources-nginx_stub = []
 sources-node_metrics = ["dep:libc"]
 sources-ntp = ["dep:ntp"]
@@ -209,6 +211,7 @@ sources = [
     "sources-mongodb",
     "sources-mqtt",
     "sources-mysqld",
+    "sources-netflow",
     "sources-nginx_stub",
     "sources-node_metrics",
     "sources-ntp",
@@ -348,6 +351,7 @@ tripwire = { path = "lib/tripwire" }
 value = { path = "lib/value" }
 virt = { path = "lib/virt", optional = true }
 vtl = { path = "lib/vtl" }
+xdr = { path = "lib/xdr", optional = true }
 
 # Allocators
 mimalloc = { version = "0.1.43", default-features = false, optional = true }

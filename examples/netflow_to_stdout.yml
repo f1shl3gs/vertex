@@ -1,0 +1,13 @@
+sources:
+  netflow:
+    type: netflow
+    listen: 0.0.0.0:2055
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - netflow
+    encoding:
+      codec: json
+      pretty: true
