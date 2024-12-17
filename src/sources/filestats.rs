@@ -15,7 +15,7 @@ struct Config {
     include: String,
 
     /// Duration between each sending.
-    #[serde(default = "default_interval")]
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 }
 
