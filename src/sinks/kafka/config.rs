@@ -66,11 +66,10 @@ pub struct Config {
     /// A comma-separated list of host and port pairs that are the addresses of
     /// the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client
     /// connects to initially ot bootstrap itself.
-    #[configurable(required, format = "ip-address", example = "127.0.0.1:9092")]
+    #[configurable(format = "ip-address", example = "127.0.0.1:9092")]
     pub bootstrap_servers: Vec<String>,
 
     /// The Kafka topic name to write events to
-    #[configurable(required)]
     pub topic: Template,
 
     /// The log field name or tags key to use for the topic key. If the field

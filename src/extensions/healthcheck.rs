@@ -26,7 +26,6 @@ fn default_endpoint() -> SocketAddr {
 pub struct Config {
     /// Which address to listen for.
     #[serde(default = "default_endpoint")]
-    #[configurable(required)]
     pub endpoint: SocketAddr,
 }
 

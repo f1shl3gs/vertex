@@ -32,7 +32,6 @@ pub enum UnixError {
 #[serde(deny_unknown_fields)]
 pub struct UnixSinkConfig {
     /// The unix socket path. This should be the absolute path.
-    #[configurable(required)]
     pub path: PathBuf,
 }
 

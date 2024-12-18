@@ -41,7 +41,7 @@ pub struct RequestConfig {
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The URL to download config
-    #[configurable(required, format = "uri", example = "https://exampel.com/config")]
+    #[configurable(format = "uri", example = "https://exampel.com/config")]
     url: Url,
 
     /// The interval between fetch config.

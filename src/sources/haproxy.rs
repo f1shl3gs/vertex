@@ -46,7 +46,6 @@ const SERVER_KEY: Key = Key::from_static("server");
 #[serde(deny_unknown_fields)]
 struct Config {
     /// HTTP/HTTPS endpoint to Consul server.
-    #[configurable(required)]
     endpoints: Vec<String>,
 
     /// Duration between each scrape.

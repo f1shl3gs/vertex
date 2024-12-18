@@ -45,13 +45,12 @@ enum MetricType {
 struct MetricConfig {
     /// Metric name, it's highly recommend to see
     /// https://prometheus.io/docs/practices/naming/
-    #[configurable(required)]
     name: String,
 
     /// Which field to extract values
     ///
     /// Path is support too, e.g. field: value.i64
-    #[configurable(required)]
+    ///
     field: OwnedTargetPath,
 
     /// Tags to set, this field is not required,

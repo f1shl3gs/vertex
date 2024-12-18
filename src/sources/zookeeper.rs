@@ -14,7 +14,6 @@ use tokio::net::TcpStream;
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The endpoints to connect to.
-    #[configurable(required)]
     endpoint: String,
 
     /// Duration between each scrape.

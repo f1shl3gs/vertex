@@ -39,10 +39,6 @@ impl Buf {
         self.ident -= 2;
     }
 
-    fn add_newline(&mut self) {
-        self.push('\n');
-    }
-
     fn push_value(&mut self, value: &Value) {
         match value {
             Value::String(s) => {
@@ -72,12 +68,6 @@ impl Buf {
         }
 
         self.push_str("\n");
-    }
-
-    fn write_key(&mut self, s: &str) {
-        self.append_ident();
-        self.push_str(s);
-        self.push_str(": ");
     }
 
     fn write_comment(&mut self, desc: Option<&str>, required: bool) {
@@ -240,9 +230,12 @@ impl Examplar {
                 None => sub_obj,
             };
 
-            buf.add_newline();
+            buf.push('\n');
             buf.write_comment(desc, required.contains(k));
-            buf.write_key(k);
+            buf.append_ident();
+            buf.push_str(k);
+            buf.push_str(": ");
+
             self.visit_schema_object(buf, sub_obj);
         }
     }
@@ -251,7 +244,7 @@ impl Examplar {
         if let Some(meta) = obj.metadata.as_ref() {
             if let Some(example) = meta.examples.first() {
                 // key already written
-                buf.add_newline();
+                buf.push('\n');
                 buf.push_array_item(example);
 
                 return;

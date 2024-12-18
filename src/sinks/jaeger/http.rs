@@ -22,7 +22,6 @@ use serde::{Deserialize, Serialize};
 #[serde(deny_unknown_fields)]
 pub struct HttpSinkConfig {
     /// The HTTP address to connect to.
-    #[configurable(required)]
     endpoint: String,
 
     #[serde(default)]

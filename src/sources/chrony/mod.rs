@@ -52,7 +52,6 @@ struct Config {
     ///
     /// Make sure vertex has the right permission to access this address.
     #[serde(default)]
-    #[configurable(required)]
     address: ServerAddr,
 
     /// How frequent this source should poll.

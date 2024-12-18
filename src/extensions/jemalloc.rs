@@ -46,7 +46,6 @@ fn default_listen() -> SocketAddr {
 #[serde(deny_unknown_fields)]
 struct Config {
     #[serde(default = "default_listen")]
-    #[configurable(required)]
     listen: SocketAddr,
 }
 

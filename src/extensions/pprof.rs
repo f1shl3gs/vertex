@@ -21,7 +21,6 @@ const DEFAULT_FREQUENCY: u32 = 1000;
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// Which address the pprof server will listen
-    #[configurable(required)]
     pub listen: SocketAddr,
 }
 

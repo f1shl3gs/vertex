@@ -28,7 +28,6 @@ fn default_thrift_http_endpoint() -> SocketAddr {
 #[serde(deny_unknown_fields)]
 pub struct ThriftHttpConfig {
     #[serde(default = "default_thrift_http_endpoint")]
-    #[configurable(required)]
     pub endpoint: SocketAddr,
 
     #[serde(default)]

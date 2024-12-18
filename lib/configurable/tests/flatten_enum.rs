@@ -67,10 +67,7 @@ fn flatten_enum() {
         /// allow metric events to pass through the transform even when they contain
         /// new tags that exceed the configured limit. The rate at which this happens
         /// can be controlled by changing the value of `cache_size_per_tag`
-        Probabilistic {
-            #[configurable(required)]
-            cache_size_per_tag: usize,
-        },
+        Probabilistic { cache_size_per_tag: usize },
     }
 
     #[derive(Configurable, Copy, Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
@@ -86,7 +83,6 @@ fn flatten_enum() {
     #[serde(deny_unknown_fields)]
     struct Config {
         /// How many distict values for any given key.
-        #[configurable(required)]
         limit: usize,
 
         /// The behavior of limit exceeded action.

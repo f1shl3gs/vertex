@@ -21,7 +21,7 @@ const INSTANCE_KEY: Key = Key::from_static("instance");
 #[configurable_component(source, name = "memcached")]
 struct Config {
     /// The endpoint to Memcached servers.
-    #[configurable(required, format = "ip-address", example = "127.0.0.1:3000")]
+    #[configurable(format = "ip-address", example = "127.0.0.1:3000")]
     endpoints: Vec<String>,
 
     /// Duration between each scrape.

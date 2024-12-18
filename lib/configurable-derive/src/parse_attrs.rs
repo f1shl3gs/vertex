@@ -1,7 +1,7 @@
 use proc_macro2::{Literal, TokenStream};
 use quote::{quote, ToTokens, TokenStreamExt};
 use syn::spanned::Spanned;
-use syn::{Attribute, Expr, Lit, LitBool, LitStr, Path, Token, Type};
+use syn::{Attribute, Expr, Lit, LitStr, Path, Token, Type};
 
 pub const DOC: &str = "doc";
 pub const SERDE: &str = "serde";
@@ -117,17 +117,6 @@ impl FieldAttrs {
 
                     match name.as_str() {
                         "skip" => this.skip = true,
-                        "required" => {
-                            if meta.input.peek(Token![=]) {
-                                // #[configurable(require = true)] or #[configurable(require = false)]
-                                let value = meta.value()?;
-                                let value: LitBool = value.parse()?;
-                                this.required = value.value;
-                            } else {
-                                // #[configurable(require = false)]
-                                this.required = true;
-                            }
-                        },
                         "example" => {
                             let value = meta.value()?;
                             let value: Lit = value.parse()?;
@@ -137,7 +126,7 @@ impl FieldAttrs {
                             let value = meta.value()?;
                             let content: LitStr = value.parse()?;
 
-                            this.description = Some(Description{
+                            this.description = Some(Description {
                                 explicit: true,
                                 content,
                             });
@@ -146,18 +135,20 @@ impl FieldAttrs {
                             let value = meta.value()?;
                             let value: LitStr = value.parse()?;
                             this.format = Some(value)
-                        },
+                        }
                         "default" => {
                             let value = meta.value()?;
                             let value: Lit = value.parse()?;
                             this.default = Some(value);
-                        },
+                        }
                         _ => {
                             return Err(syn::Error::new(
                                 meta.path.span(),
-                                format!("Invalid `configurable` attribute \"{}\"\n\
-                                Expected one of: `default`, `description`, `required`, `examples`, `skip`",
-                                        name),
+                                format!(
+                                    "Invalid `configurable` attribute \"{}\"\n\
+                                Expected one of: `default`, `description`, `examples`, `skip`",
+                                    name
+                                ),
                             ))
                         }
                     }

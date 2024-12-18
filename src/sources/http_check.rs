@@ -32,7 +32,7 @@ enum Method {
 #[configurable_component(source, name = "http_check")]
 struct Config {
     /// The URL of the endpoint to be monitored.
-    #[configurable(required, format = "uri", example = "http://localhost:80")]
+    #[configurable(format = "uri", example = "http://localhost:80")]
     endpoint: Url,
 
     /// TLS configuration

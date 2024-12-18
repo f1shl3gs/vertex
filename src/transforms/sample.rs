@@ -12,7 +12,6 @@ struct Config {
     /// The rate at which events will be forwarded, expressed as 1/N. For
     /// example, "10" means 1 out of every 10 events will be forwarded and
     /// rest will be dropped
-    #[configurable(required)]
     rate: u64,
 
     /// The name of the log field whose value will be hased to determine

@@ -55,15 +55,12 @@ struct Config {
     /// The organization to write data to.
     ///
     /// API Token cannot be used across organizations, so org do not need to be a `Template`.
-    #[configurable(required)]
     org: String,
 
     /// The bucket to write to.
-    #[configurable(required)]
     bucket: Template,
 
     /// API token for write authorization.
-    #[configurable(required)]
     token: String,
 }
 

@@ -30,7 +30,7 @@ struct Config {
     bind: SocketAddr,
 
     /// NTP servers to use.
-    #[configurable(required, format = "hostname", example = "pool.ntp.org")]
+    #[configurable(format = "hostname", example = "pool.ntp.org")]
     pools: Vec<String>,
 
     /// The NTP client query timeout

@@ -15,7 +15,7 @@ use crate::common::vtl::LogTarget;
 struct Config {
     /// The condition to be matched against every input event. Only messages that pass
     /// the condition are forwarded; messages that don’t pass are dropped.
-    #[configurable(required, example = ".meta.foo[0] contains bar")]
+    #[configurable(example = ".meta.foo[0] contains bar")]
     condition: String,
 }
 

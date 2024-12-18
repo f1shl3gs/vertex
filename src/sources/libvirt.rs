@@ -19,7 +19,6 @@ fn default_sock() -> String {
 struct Config {
     /// The socket path of libvirtd, read permission is required.
     #[serde(default = "default_sock")]
-    #[configurable(required)]
     sock: String,
 
     /// Duration between each scrape.

@@ -28,7 +28,6 @@ fn default_endpoint() -> SocketAddr {
 #[serde(deny_unknown_fields)]
 struct Config {
     #[serde(default = "default_endpoint")]
-    #[configurable(required)]
     endpoint: SocketAddr,
 }
 

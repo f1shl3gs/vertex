@@ -27,7 +27,7 @@ struct Config {
     /// A comma-separated list of host and port pairs that are the addresses of
     /// the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client
     /// connects to initially ot bootstrap itself.
-    #[configurable(required, format = "ip-address", example = "127.0.0.1:9092")]
+    #[configurable(format = "ip-address", example = "127.0.0.1:9092")]
     bootstrap_servers: Vec<String>,
 
     /// This sources collects metrics on an interval.
