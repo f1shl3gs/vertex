@@ -11,6 +11,7 @@ pub const CONFIGURABLE: &str = "configurable";
 ///
 /// Defaults to the docstring if one is present, or `#[configurable(description = "...")]`
 /// if one is provided.
+#[derive(Debug)]
 pub struct Description {
     /// Whether the description was an explicit annotation or whether it was a doc string.
     explicit: bool,
@@ -62,7 +63,7 @@ impl ToTokens for Description {
 }
 
 /// Attributes applied to a field of a `#[configurable(...)]` struct.
-#[derive(Default)]
+#[derive(Debug)]
 pub struct FieldAttrs {
     pub skip: bool,
     pub required: bool,
@@ -81,7 +82,19 @@ pub struct FieldAttrs {
 
 impl FieldAttrs {
     pub fn parse(field: &syn::Field) -> syn::Result<FieldAttrs> {
-        let mut this = Self::default();
+        let mut this = FieldAttrs {
+            skip: false,
+            required: true,
+            deprecated: false,
+            flatten: false,
+            rename: None,
+            default: None,
+            default_fn: None,
+            format: None,
+            serde_with: None,
+            description: None,
+            example: None,
+        };
 
         for attr in &field.attrs {
             if attr.path().is_ident(DOC) {
@@ -152,6 +165,12 @@ impl FieldAttrs {
                     Ok(())
                 })?;
             }
+        }
+
+        // #[configurable(default = 1)]
+        // #[serde(default = "default_fn")]
+        if this.default.is_some() || this.default_fn.is_some() {
+            this.required = false;
         }
 
         Ok(this)
