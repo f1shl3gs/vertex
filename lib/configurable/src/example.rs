@@ -221,21 +221,6 @@ impl Examplar {
         }
 
         self.push_value(&Value::Array(vec![]));
-
-        // let arr = obj.array.as_ref().unwrap();
-        // let item = match arr.items.as_ref().unwrap() {
-        //     SingleOrVec::Single(s) => match (*s).as_ref() {
-        //         Schema::Object(ref sm) => sm,
-        //         _ => return,
-        //     },
-        //
-        //     SingleOrVec::Vec(v) => match v.get(0).unwrap() {
-        //         Schema::Object(so) => so,
-        //         _ => return,
-        //     },
-        // };
-        //
-        // self.visit_schema_object(item);
     }
 
     fn visit_scalar(&self, obj: &SchemaObject) {
@@ -332,8 +317,33 @@ impl Examplar {
     // buf
     fn push_value(&self, value: &Value) {
         let mut buf = self.buf.borrow_mut();
-        let s = serde_json::to_string(value).unwrap();
-        buf.push_str(&s);
+        match value {
+            Value::String(s) => {
+                if s.is_empty() {
+                    buf.push_str(r#""""#);
+                } else {
+                    buf.push_str(s);
+                }
+            },
+            Value::Number(n) => {
+                buf.push_str(&n.to_string());
+            },
+            Value::Bool(b) => {
+                if *b {
+                    buf.push_str("true");
+                } else {
+                    buf.push_str("false");
+                }
+            },
+            Value::Null => {
+                buf.push_str("null");
+            },
+            _ => {
+                let s = serde_json::to_string(value).unwrap();
+                buf.push_str(&s);
+            }
+        }
+
         buf.push_str("\n");
     }
 
