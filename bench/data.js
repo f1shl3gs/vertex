@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734527215758,
+  "lastUpdate": 1734527654230,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "458ff3c9eac801b350116199bbb3ef1d8534cf4e",
-          "message": "chore(deps): bump tokio from 1.40.0 to 1.41.0 (#1951)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.40.0 to 1.41.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.40.0...tokio-1.41.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-23T09:27:19+08:00",
-          "tree_id": "a221b8739a243830702578567b09a3ec5815cc54",
-          "url": "https://github.com/f1shl3gs/vertex/commit/458ff3c9eac801b350116199bbb3ef1d8534cf4e"
-        },
-        "date": 1729647451157,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 510,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35330.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 534,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35730.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "de46cc1b0d91320bbd96e8dc7ec51da140982452",
+          "message": "reuse xdr library (#2058)",
+          "timestamp": "2024-12-18T21:03:24+08:00",
+          "tree_id": "97571203473c00ef04b87030c99d2dbf1b303db2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/de46cc1b0d91320bbd96e8dc7ec51da140982452"
+        },
+        "date": 1734527636337,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 536,
             "unit": "s"
           },
           {
