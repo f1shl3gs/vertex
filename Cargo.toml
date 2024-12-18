@@ -151,6 +151,7 @@ sources-demo_logs = []
 sources-exec = ["tokio/process"]
 sources-clickhouse_metrics = []
 sources-elasticsearch = []
+sources-filestats = []
 sources-grpc_check = ["tonic/channel", "dep:tonic-health"]
 sources-haproxy = []
 sources-http_check = []
@@ -194,6 +195,7 @@ sources = [
     "sources-elasticsearch",
     "sources-grpc_check",
     "sources-exec",
+    "sources-filestats",
     "sources-haproxy",
     "sources-http_check",
     "sources-internal_logs",
