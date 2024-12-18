@@ -188,61 +188,7 @@ use std::io::{Cursor, Read};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 use bytes::Buf;
-
-/// A simple helper for decode
-pub trait XDRReader: Read {
-    fn read_i32(&mut self) -> std::io::Result<i32> {
-        let mut buf = [0; 4];
-        self.read_exact(&mut buf)?;
-        Ok(i32::from_be_bytes(buf))
-    }
-
-    fn read_u32(&mut self) -> std::io::Result<u32> {
-        let mut buf = [0; 4];
-        self.read_exact(&mut buf)?;
-        Ok(u32::from_be_bytes(buf))
-    }
-
-    fn read_u64(&mut self) -> std::io::Result<u64> {
-        let mut buf = [0; 8];
-        self.read_exact(&mut buf)?;
-        Ok(u64::from_be_bytes(buf))
-    }
-
-    fn read_f32(&mut self) -> std::io::Result<f32> {
-        let mut buf = [0; 4];
-        self.read_exact(&mut buf)?;
-        Ok(f32::from_be_bytes(buf))
-    }
-
-    fn read_string(&mut self) -> std::io::Result<String> {
-        let len = self.read_u32()?;
-        let aligned_len = (len + 3) & (!3); // align to 4
-
-        let mut data = vec![0u8; aligned_len as usize];
-        self.read_exact(&mut data)?;
-        data.truncate(len as usize);
-
-        Ok(unsafe { String::from_utf8_unchecked(data) })
-    }
-
-    fn read_array<T>(
-        &mut self,
-        item_dec: impl Fn(&mut Self) -> std::io::Result<T>,
-    ) -> std::io::Result<Vec<T>> {
-        let len = self.read_u32()?;
-        let mut array = Vec::with_capacity(len as usize);
-
-        for _ in 0..len {
-            let item = item_dec(self)?;
-            array.push(item);
-        }
-
-        Ok(array)
-    }
-}
-
-impl<T> XDRReader for T where T: Read {}
+use xdr::XDRReader;
 
 // Opaque sample_data types according to https://sflow.org/SFLOW-DATAGRAM5.txt
 const SAMPLE_FORMAT_FLOW: u32 = 1;
