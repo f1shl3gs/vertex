@@ -19,7 +19,6 @@ use prost::Message;
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The address to accept connections on. The address must include a port
-    #[configurable(required)]
     address: SocketAddr,
 
     /// HTTP Server TLS config

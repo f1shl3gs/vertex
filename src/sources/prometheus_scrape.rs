@@ -21,7 +21,7 @@ use thiserror::Error;
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Endpoints to scrape metrics from.
-    #[configurable(required, format = "uri", example = "http://example.com/metrics")]
+    #[configurable(format = "uri", example = "http://example.com/metrics")]
     endpoints: Vec<String>,
 
     /// Duration between each scrape.

@@ -29,7 +29,6 @@ const fn default_interval() -> Duration {
 pub struct Config {
     /// POST some state of vertex to remote endpoint.
     /// then we can do much more, e.g. service discovery.
-    #[configurable(required)]
     endpoint: UriSerde,
 
     tls: Option<TlsConfig>,

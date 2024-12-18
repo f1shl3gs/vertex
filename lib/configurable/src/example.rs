@@ -1,5 +1,3 @@
-use std::cell::RefCell;
-
 use serde_json::{Map, Number, Value};
 
 use crate::schema::{
@@ -32,23 +30,85 @@ impl Buf {
             self.data.push(' ');
         }
     }
+
+    fn incr_ident(&mut self) {
+        self.ident += 2;
+    }
+
+    fn decr_ident(&mut self) {
+        self.ident -= 2;
+    }
+
+    fn push_value(&mut self, value: &Value) {
+        match value {
+            Value::String(s) => {
+                if s.is_empty() {
+                    self.push_str(r#""""#);
+                } else {
+                    self.push_str(s);
+                }
+            }
+            Value::Number(n) => {
+                self.push_str(&n.to_string());
+            }
+            Value::Bool(b) => {
+                if *b {
+                    self.push_str("true");
+                } else {
+                    self.push_str("false");
+                }
+            }
+            Value::Null => {
+                self.push_str("null");
+            }
+            _ => {
+                let s = serde_json::to_string(value).unwrap();
+                self.push_str(&s);
+            }
+        }
+
+        self.push_str("\n");
+    }
+
+    fn write_comment(&mut self, desc: Option<&str>, required: bool) {
+        if let Some(desc) = desc {
+            for line in desc.lines() {
+                self.append_ident();
+                self.push_str("#");
+                self.push_str(line);
+                self.push('\n');
+            }
+
+            self.append_ident();
+            self.push_str("#\n");
+            self.append_ident();
+            if required {
+                self.push_str("# Required\n");
+            } else {
+                self.push_str("# Optional\n");
+            }
+        }
+    }
+
+    fn push_array_item(&mut self, value: &Value) {
+        let s = serde_json::to_string(value).unwrap();
+
+        self.push_str("- ");
+        self.push_str(&s);
+    }
 }
 
 pub struct Examplar {
     root: RootSchema,
-    buf: RefCell<Buf>,
 }
 
 impl Examplar {
     pub fn new(root: RootSchema) -> Self {
-        Self {
-            root,
-            buf: Buf::new().into(),
-        }
+        Self { root }
     }
 
     pub fn generate(self) -> String {
-        let root = if let Some(reference) = self.root.schema.reference.as_ref() {
+        let root = if let Some(reference) = &self.root.schema.reference {
             if let Some(Schema::Object(root)) = self.get_referenced(reference) {
                 root
             } else {
@@ -58,15 +118,15 @@ impl Examplar {
             &self.root.schema
         };
 
+        let mut buf = Buf::new();
         // write comment for root
         if let Some(metadata) = &root.metadata {
             if let Some(desc) = &metadata.description {
-                let mut buf = self.buf.borrow_mut();
-                desc.lines().for_each(|line| {
+                for line in desc.lines() {
                     buf.push('#');
                     buf.push_str(line);
                     buf.push('\n');
-                })
+                }
             }
         }
 
@@ -74,53 +134,25 @@ impl Examplar {
         if let Some(subschemas) = &root.subschemas {
             if let Some(oneof) = &subschemas.one_of {
                 if let Some(Schema::Object(obj)) = oneof.first() {
-                    self.visit_obj(obj)
+                    self.visit_obj(&mut buf, obj)
                 } else {
                     panic!("one_of's first schema should be a SchemaObject")
                 }
             } else if let Some(allof) = &subschemas.all_of {
                 for schema in allof {
                     if let Schema::Object(obj) = schema {
-                        self.visit_obj(obj)
+                        self.visit_obj(&mut buf, obj)
                     }
                 }
             }
         } else {
-            self.visit_obj(root)
+            self.visit_obj(&mut buf, root)
         }
 
-        self.buf.into_inner().data
+        buf.data
     }
 
-    fn write_comment(&self, desc: Option<&str>, required: bool) {
-        if let Some(desc) = desc {
-            let mut buf = self.buf.borrow_mut();
-            desc.lines().for_each(|line| {
-                buf.append_ident();
-                buf.push_str("#");
-                buf.push_str(line);
-                buf.push('\n');
-            });
-
-            buf.append_ident();
-            buf.push_str("#\n");
-            buf.append_ident();
-            if required {
-                buf.push_str("# Required\n");
-            } else {
-                buf.push_str("# Optional\n");
-            }
-        }
-    }
-
-    fn write_key(&self, s: &str) {
-        let mut buf = self.buf.borrow_mut();
-        buf.append_ident();
-        buf.push_str(s);
-        buf.push_str(": ");
-    }
-
-    fn visit_obj(&self, obj: &SchemaObject) {
+    fn visit_obj(&self, buf: &mut Buf, obj: &SchemaObject) {
         let obj = match &obj.reference {
             Some(reference) => {
                 if let Some(Schema::Object(obj)) = self.get_referenced(reference) {
@@ -135,7 +167,7 @@ impl Examplar {
         if let Some(all_of) = is_all_of(obj) {
             all_of.iter().for_each(|schema| {
                 if let Schema::Object(obj) = schema {
-                    self.visit_obj(obj)
+                    self.visit_obj(buf, obj)
                 }
             });
 
@@ -145,7 +177,7 @@ impl Examplar {
         if let Some(one_of) = is_one_of(obj) {
             // always choose the first one
             if let Schema::Object(first) = one_of.first().expect("oneOf should not be empty") {
-                self.visit_obj(first);
+                self.visit_obj(buf, first);
             } else {
                 panic!("expect object schema")
             }
@@ -156,7 +188,7 @@ impl Examplar {
         let obj = self.extract(obj);
 
         if obj.properties.is_empty() {
-            self.push_value(&Value::Object(Map::new()));
+            buf.push_value(&Value::Object(Map::new()));
             return;
         }
 
@@ -198,49 +230,37 @@ impl Examplar {
                 None => sub_obj,
             };
 
-            self.add_newline();
-            self.write_comment(desc, required.contains(k));
-            self.write_key(k);
-            self.visit_schema_object(sub_obj);
+            buf.push('\n');
+            buf.write_comment(desc, required.contains(k));
+            buf.append_ident();
+            buf.push_str(k);
+            buf.push_str(": ");
+
+            self.visit_schema_object(buf, sub_obj);
         }
     }
 
-    fn visit_array(&self, obj: &SchemaObject) {
+    fn visit_array(&self, buf: &mut Buf, obj: &SchemaObject) {
         if let Some(meta) = obj.metadata.as_ref() {
             if let Some(example) = meta.examples.first() {
                 // key already written
-                self.add_newline();
-                self.push_array_item(example);
+                buf.push('\n');
+                buf.push_array_item(example);
 
                 return;
             }
 
-            self.push_value(&Value::Array(vec![]));
+            buf.push_value(&Value::Array(vec![]));
 
             return;
         }
 
-        self.push_value(&Value::Array(vec![]));
-
-        // let arr = obj.array.as_ref().unwrap();
-        // let item = match arr.items.as_ref().unwrap() {
-        //     SingleOrVec::Single(s) => match (*s).as_ref() {
-        //         Schema::Object(ref sm) => sm,
-        //         _ => return,
-        //     },
-        //
-        //     SingleOrVec::Vec(v) => match v.get(0).unwrap() {
-        //         Schema::Object(so) => so,
-        //         _ => return,
-        //     },
-        // };
-        //
-        // self.visit_schema_object(item);
+        buf.push_value(&Value::Array(vec![]));
     }
 
-    fn visit_scalar(&self, obj: &SchemaObject) {
+    fn visit_scalar(&self, buf: &mut Buf, obj: &SchemaObject) {
         if let Some(value) = get_default_or_example(obj) {
-            self.push_value(value);
+            buf.push_value(value);
             return;
         }
 
@@ -260,40 +280,40 @@ impl Examplar {
             Value::Null
         };
 
-        self.push_value(&value);
+        buf.push_value(&value);
     }
 
-    fn visit_schema_object(&self, obj: &SchemaObject) {
+    fn visit_schema_object(&self, buf: &mut Buf, obj: &SchemaObject) {
         if obj.has_type(InstanceType::Object) {
             // enum schema
             if let Some(subschema) = &obj.subschemas {
                 if let Some(oneof) = &subschema.one_of {
                     // always pick first one
                     if let Some(Schema::Object(first)) = oneof.first() {
-                        self.visit_schema_object(first);
+                        self.visit_schema_object(buf, first);
                     }
                 } else if let Some(allof) = &subschema.all_of {
-                    self.incr_ident();
+                    buf.incr_ident();
                     for schema in allof {
                         if let Schema::Object(obj) = schema {
-                            self.visit_obj(obj)
+                            self.visit_obj(buf, obj)
                         }
                     }
-                    self.decr_ident();
+                    buf.decr_ident();
 
                     return;
                 }
             } else if let Some(value) = &obj.const_value {
-                self.push_value(value)
+                buf.push_value(value)
             } else {
-                self.incr_ident();
-                self.visit_obj(obj);
-                self.decr_ident();
+                buf.incr_ident();
+                self.visit_obj(buf, obj);
+                buf.decr_ident();
             }
         } else if obj.has_type(InstanceType::Array) {
-            self.visit_array(obj)
+            self.visit_array(buf, obj)
         } else {
-            self.visit_scalar(obj)
+            self.visit_scalar(buf, obj)
         }
     }
 
@@ -327,37 +347,6 @@ impl Examplar {
                 }
             }
         }
-    }
-
-    // buf
-    fn push_value(&self, value: &Value) {
-        let mut buf = self.buf.borrow_mut();
-        let s = serde_json::to_string(value).unwrap();
-        buf.push_str(&s);
-        buf.push_str("\n");
-    }
-
-    fn push_array_item(&self, value: &Value) {
-        let mut buf = self.buf.borrow_mut();
-        let s = serde_json::to_string(value).unwrap();
-
-        buf.push_str("- ");
-        buf.push_str(&s);
-    }
-
-    fn incr_ident(&self) {
-        let mut buf = self.buf.borrow_mut();
-        buf.ident += 2;
-    }
-
-    fn decr_ident(&self) {
-        let mut buf = self.buf.borrow_mut();
-        buf.ident -= 2;
-    }
-
-    fn add_newline(&self) {
-        let mut buf = self.buf.borrow_mut();
-        buf.push('\n');
     }
 }
 

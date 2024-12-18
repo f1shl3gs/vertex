@@ -1,7 +1,7 @@
 use proc_macro2::{Literal, TokenStream};
 use quote::{quote, ToTokens, TokenStreamExt};
 use syn::spanned::Spanned;
-use syn::{Attribute, Expr, Lit, LitBool, LitStr, Path, Token, Type};
+use syn::{Attribute, Expr, Lit, LitStr, Path, Token, Type};
 
 pub const DOC: &str = "doc";
 pub const SERDE: &str = "serde";
@@ -11,6 +11,7 @@ pub const CONFIGURABLE: &str = "configurable";
 ///
 /// Defaults to the docstring if one is present, or `#[configurable(description = "...")]`
 /// if one is provided.
+#[derive(Debug)]
 pub struct Description {
     /// Whether the description was an explicit annotation or whether it was a doc string.
     explicit: bool,
@@ -62,7 +63,7 @@ impl ToTokens for Description {
 }
 
 /// Attributes applied to a field of a `#[configurable(...)]` struct.
-#[derive(Default)]
+#[derive(Debug)]
 pub struct FieldAttrs {
     pub skip: bool,
     pub required: bool,
@@ -81,7 +82,19 @@ pub struct FieldAttrs {
 
 impl FieldAttrs {
     pub fn parse(field: &syn::Field) -> syn::Result<FieldAttrs> {
-        let mut this = Self::default();
+        let mut this = FieldAttrs {
+            skip: false,
+            required: true,
+            deprecated: false,
+            flatten: false,
+            rename: None,
+            default: None,
+            default_fn: None,
+            format: None,
+            serde_with: None,
+            description: None,
+            example: None,
+        };
 
         for attr in &field.attrs {
             if attr.path().is_ident(DOC) {
@@ -104,17 +117,6 @@ impl FieldAttrs {
 
                     match name.as_str() {
                         "skip" => this.skip = true,
-                        "required" => {
-                            if meta.input.peek(Token![=]) {
-                                // #[configurable(require = true)] or #[configurable(require = false)]
-                                let value = meta.value()?;
-                                let value: LitBool = value.parse()?;
-                                this.required = value.value;
-                            } else {
-                                // #[configurable(require = false)]
-                                this.required = true;
-                            }
-                        },
                         "example" => {
                             let value = meta.value()?;
                             let value: Lit = value.parse()?;
@@ -124,7 +126,7 @@ impl FieldAttrs {
                             let value = meta.value()?;
                             let content: LitStr = value.parse()?;
 
-                            this.description = Some(Description{
+                            this.description = Some(Description {
                                 explicit: true,
                                 content,
                             });
@@ -133,18 +135,20 @@ impl FieldAttrs {
                             let value = meta.value()?;
                             let value: LitStr = value.parse()?;
                             this.format = Some(value)
-                        },
+                        }
                         "default" => {
                             let value = meta.value()?;
                             let value: Lit = value.parse()?;
                             this.default = Some(value);
-                        },
+                        }
                         _ => {
                             return Err(syn::Error::new(
                                 meta.path.span(),
-                                format!("Invalid `configurable` attribute \"{}\"\n\
-                                Expected one of: `default`, `description`, `required`, `examples`, `skip`",
-                                        name),
+                                format!(
+                                    "Invalid `configurable` attribute \"{}\"\n\
+                                Expected one of: `default`, `description`, `examples`, `skip`",
+                                    name
+                                ),
                             ))
                         }
                     }
@@ -152,6 +156,12 @@ impl FieldAttrs {
                     Ok(())
                 })?;
             }
+        }
+
+        // #[configurable(default = 1)]
+        // #[serde(default = "default_fn")]
+        if this.default.is_some() || this.default_fn.is_some() {
+            this.required = false;
         }
 
         Ok(this)

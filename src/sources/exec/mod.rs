@@ -51,7 +51,7 @@ struct ScheduledConfig {
     ///
     /// If the command takes longer than `exec_interval_secs` to run, it will be killed.
     #[serde(with = "humanize::duration::serde")]
-    #[configurable(required, example = "1m")]
+    #[configurable(example = "1m")]
     interval: Duration,
 }
 
@@ -94,11 +94,9 @@ enum Mode {
 #[configurable_component(source, name = "exec")]
 #[serde(deny_unknown_fields)]
 pub struct Config {
-    #[configurable(required)]
     mode: Mode,
 
     /// The command to be run, plus any arguments if needed.
-    #[configurable(required)]
     command: Vec<String>,
 
     /// The directory in which to run the command.

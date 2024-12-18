@@ -20,7 +20,7 @@ struct Config {
     /// HTTP/HTTPS endpoint to Nginx server.
     ///
     /// http://nginx.org/en/docs/http/ngx_http_stub_status_module.html
-    #[configurable(required, format = "uri", example = "http://127.0.0.1:8080/nginx_stub")]
+    #[configurable(format = "uri", example = "http://127.0.0.1:8080/nginx_stub")]
     endpoints: Vec<String>,
 
     /// Duration between each scrape.

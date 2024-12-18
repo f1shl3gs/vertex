@@ -19,7 +19,6 @@ struct Config {
     /// <transform_name>.<route_id>. If an event does not match any route, it will be sent to
     /// the <transform_name>._unmatched output. Note, _unmatched is a reserved output name and
     /// cannot be used as a route name. _default is also reserved for future use.
-    #[configurable(required)]
     route: IndexMap<String, String>,
 }
 

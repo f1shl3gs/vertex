@@ -247,7 +247,7 @@ impl From<std::num::ParseFloatError> for Error {
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Redis address
-    #[configurable(required, format = "ip-address")]
+    #[configurable(format = "ip-address")]
     endpoint: String,
 
     /// Duration between each scrape.

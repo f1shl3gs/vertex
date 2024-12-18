@@ -34,7 +34,7 @@ fn derive_gen() {
     /// blah blah
     #[derive(Serialize, Configurable)]
     struct Foo {
-        #[configurable(required, description = "number field", default = 12)]
+        #[configurable(description = "number field", default = 12)]
         field_num: u32,
         #[configurable(default = "aaaaa")]
         filed_str: String,
@@ -56,7 +56,7 @@ fn derive_gen() {
     enum Variant {
         None,
         Internal {
-            #[configurable(description = "first desc", required)]
+            #[configurable(description = "first desc")]
             first: String,
             #[configurable(default = 12)]
             second: u32,

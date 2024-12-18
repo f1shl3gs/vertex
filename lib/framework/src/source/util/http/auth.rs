@@ -7,11 +7,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct HttpSourceAuthConfig {
     /// The basic authentication user name.
-    #[configurable(required)]
     pub username: String,
 
     /// The basic authentication password.
-    #[configurable(required)]
     pub password: String,
 }
 

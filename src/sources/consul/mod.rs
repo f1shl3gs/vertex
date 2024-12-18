@@ -19,7 +19,7 @@ use client::{Client, ConsulError, QueryOptions};
 #[serde(deny_unknown_fields)]
 struct Config {
     /// HTTP/HTTPS endpoint to Consul server.
-    #[configurable(required, format = "uri", example = "http://localhost:8500")]
+    #[configurable(format = "uri", example = "http://localhost:8500")]
     endpoints: Vec<String>,
 
     /// Duration between each scrape.

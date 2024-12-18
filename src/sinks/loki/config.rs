@@ -48,7 +48,7 @@ pub enum OutOfOrderAction {
 #[derive(Clone)]
 pub struct Config {
     /// The base URL of the Loki instance
-    #[configurable(required, format = "uri", example = "http://example.com/ingest")]
+    #[configurable(format = "uri", example = "http://example.com/ingest")]
     pub endpoint: Url,
 
     pub auth: Option<Auth>,

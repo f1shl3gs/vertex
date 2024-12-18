@@ -26,7 +26,7 @@ use framework::Source;
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Endpoint for the BIND statistics api
-    #[configurable(required, format = "uri", example = "http://127.0.0.1:8053")]
+    #[configurable(format = "uri", example = "http://127.0.0.1:8053")]
     endpoint: String,
 
     /// Duration between each scrape.

@@ -20,7 +20,6 @@ fn default_grpc_endpoint() -> SocketAddr {
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct GrpcServerConfig {
-    #[configurable(required)]
     #[serde(default = "default_grpc_endpoint")]
     pub endpoint: SocketAddr,
 }

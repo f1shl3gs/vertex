@@ -8,7 +8,6 @@ fn test_generate() {
     #[configurable_component(sink, name = "some")]
     #[derive(Default)]
     pub struct SomeConfig {
-        #[configurable(required)]
         foo: String,
     }
 

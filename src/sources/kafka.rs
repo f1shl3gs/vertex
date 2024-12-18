@@ -94,17 +94,15 @@ struct Config {
     /// A comma-separated list of host and port pairs that are the address
     /// of the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka
     /// client connects to initially to bootstrap itself.
-    #[configurable(required, format = "ip-address", example = "10.14.22.123:9092")]
+    #[configurable(format = "ip-address", example = "10.14.22.123:9092")]
     bootstrap_brokers: Vec<String>,
 
     /// The Kafka topics names to read events from.
     ///
     /// Regex is supported if the topic begins with `^`.
-    #[configurable(required)]
     topics: Vec<String>,
 
     /// The consumer group name to be used to consume events from Kafka.
-    #[configurable(required)]
     group: String,
 
     /// If offsets for consumer group do not exist, set them using this
@@ -125,6 +123,7 @@ struct Config {
 
     /// Tell Kafka to wait until it has enough data to send before responding to the consumer.
     #[serde(default = "default_fetch_wait_max")]
+    #[serde(with = "humanize::duration::serde")]
     fetch_wait_max: Duration,
 
     /// The log field name to use for the Kafka message key.

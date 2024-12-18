@@ -30,7 +30,6 @@ fn default_thrift_binary_socketaddr() -> SocketAddr {
 #[serde(deny_unknown_fields)]
 pub struct ThriftCompactConfig {
     #[serde(default = "default_thrift_compact_socketaddr")]
-    #[configurable(required)]
     pub endpoint: SocketAddr,
 
     #[serde(default = "default_max_packet_size")]
@@ -48,7 +47,6 @@ pub struct ThriftCompactConfig {
 #[serde(deny_unknown_fields)]
 pub struct ThriftBinaryConfig {
     #[serde(default = "default_thrift_binary_socketaddr")]
-    #[configurable(required)]
     pub endpoint: SocketAddr,
 
     #[serde(default = "default_max_packet_size")]

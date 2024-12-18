@@ -19,7 +19,7 @@ use url::Url;
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The endpoint of the ClickHouse server.
-    #[configurable(required, format = "uri", example = "http://localhost:8123")]
+    #[configurable(format = "uri", example = "http://localhost:8123")]
     endpoint: Url,
 
     tls: Option<TlsConfig>,

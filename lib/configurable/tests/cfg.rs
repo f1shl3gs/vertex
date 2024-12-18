@@ -13,7 +13,7 @@ pub enum Mode {
         /// The address to listen for connections on, or systemd#N to use the Nth
         /// socket passed by systemd socket activation. If an address is used it
         /// must include a port.
-        #[configurable(required, format = "ip-address", example = "0.0.0.0:9000")]
+        #[configurable(format = "ip-address", example = "0.0.0.0:9000")]
         address: SocketAddr,
 
         /// Configures the receive buffer size using the "SO_RCVBUF" option on the socket.
@@ -27,7 +27,7 @@ pub enum Mode {
         /// The address to listen for connections on, or systemd#N to use the Nth
         /// socket passed by systemd socket activation. If an address is used it
         /// must include a port
-        #[configurable(required, format = "ip-address", example = "0.0.0.0:9000")]
+        #[configurable(format = "ip-address", example = "0.0.0.0:9000")]
         address: SocketAddr,
 
         /// Configures the recive buffer size using the "SO_RCVBUF" option on the socket.
@@ -37,7 +37,6 @@ pub enum Mode {
     #[cfg(unix)]
     Unix {
         /// Unix socket file path.
-        #[configurable(required)]
         path: PathBuf,
     },
 }
