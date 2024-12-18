@@ -26,6 +26,7 @@ has already been ported.
 | consul                  | Scrapes metrics from consul                                       | &check; | &cross; | &cross; |
 | demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
 | exec                    | Execute a command and capture stdout as logs                      | &cross; | &check; | &cross; |
+| filestats               | Monitor files and send metadata metrics                           | &check; | &cross; | &cross; |
 | grpc_check              | Check gRPC service                                                | &cross; | &cross; | &cross; |
 | haproxy                 | Scrapes metrics from haproxy                                      | &check; | &cross; | &cross; |
 | http_check              | Expose http endpoint health metrics                               | &check; | &cross; | &cross; |
@@ -40,6 +41,7 @@ has already been ported.
 | libvirt                 | Collect status from libvirt                                       | &check; | &cross; | &cross; |
 | memcached               | Collect memcached stats                                           | &check; | &cross; | &cross; |
 | mysqld                  | Collect various stat of mysql server                              | &check; | &cross; | &cross; |
+| netflow                 | Collect IPFIX & NetFlow v9                                        | &cross; | &check; | &cross; |
 | nginx_stub              | Collect metrics from nginx stub api                               | &check; | &cross; | &cross; |
 | node                    | Collect hardware and OS metrics, just like node_exporter          | &check; | &cross; | &cross; |
 | ntp                     | Collect offset, stratum, rtt and other metrics                    | &check; | &cross; | &cross; |
@@ -49,6 +51,7 @@ has already been ported.
 | prometheus_scrape       | Scrape prometheus metrics from exporters                          | &check; | &cross; | &cross; |
 | redis                   | Scrape metrics from Redis                                         | &check; | &cross; | &cross; |
 | selfstat                | Collect metrics of Vertex itself, e.g. cpu, memory usage and etc. | &check; | &cross; | &cross; |
+| sflow                   | Receive sflow packets and decode it to logs                       | &cross; | &check; | &cross; |
 | syslog                  | Start a TCP/UDP server to receive logs                            | &cross; | &check; | &cross; |
 | tail                    | Watch and collect log files                                       | &cross; | &check; | &cross; |
 | zookeeper               | Collect metrics from Zookeeper ( mntr )                           | &cross; | &check; | &cross; |
