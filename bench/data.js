@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734527676293,
+  "lastUpdate": 1734608518204,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "88a4621efa6f17f31a16f7f4fbdb7a2d04acb1c9",
-          "message": "chore(deps): bump proc-macro2 from 1.0.88 to 1.0.89 (#1952)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.88 to 1.0.89.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.88...1.0.89)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-23T09:27:09+08:00",
-          "tree_id": "6c32652304003ddb10890a13c2327027f3108273",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88a4621efa6f17f31a16f7f4fbdb7a2d04acb1c9"
-        },
-        "date": 1729646954388,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 545550,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535570,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "699ec34e91f29b81a5e6e74d9c6dbf8290c3b8a4",
+          "message": "chore(deps): bump hyper-rustls from 0.27.3 to 0.27.4 (#2060)\n\nBumps [hyper-rustls](https://github.com/rustls/hyper-rustls) from 0.27.3 to 0.27.4.\n- [Release notes](https://github.com/rustls/hyper-rustls/releases)\n- [Commits](https://github.com/rustls/hyper-rustls/compare/v/0.27.3...v/0.27.4)\n\n---\nupdated-dependencies:\n- dependency-name: hyper-rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-19T19:39:39+08:00",
+          "tree_id": "31131d504f6e7cabaa9f902005e35b0a9281c138",
+          "url": "https://github.com/f1shl3gs/vertex/commit/699ec34e91f29b81a5e6e74d9c6dbf8290c3b8a4"
+        },
+        "date": 1734608500545,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536830,
             "unit": "ns/op"
           }
         ]
