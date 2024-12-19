@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734626084044,
+  "lastUpdate": 1734626506188,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5213085b9ed87db9b803093f1cfc0ba14b94840d",
-          "message": "update (#1955)",
-          "timestamp": "2024-10-24T12:15:46+08:00",
-          "tree_id": "2d9fd0febbb2847f57d852fb3f4f770a71c1de2b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5213085b9ed87db9b803093f1cfc0ba14b94840d"
-        },
-        "date": 1729743940004,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 500,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35326.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 531,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35731.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cbed936e5238b163cff18526f0fc43d25191cc99",
+          "message": "deps: update GCRA (#2061)\n\n* update GCRA",
+          "timestamp": "2024-12-20T00:31:10+08:00",
+          "tree_id": "a585ae25f0989beac1334dde99dd91d2463a0c8d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cbed936e5238b163cff18526f0fc43d25191cc99"
+        },
+        "date": 1734626487977,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
             "unit": "s"
           },
           {
