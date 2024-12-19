@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734626506188,
+  "lastUpdate": 1734626564487,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d0fc9c14212437ab9d99433f1a3f739d855c1792",
-          "message": "add global_queue_depth (#1954)",
-          "timestamp": "2024-10-23T09:43:38+08:00",
-          "tree_id": "e136be84dc59bd7dd82e98e4cbe04c62bcb9d534",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d0fc9c14212437ab9d99433f1a3f739d855c1792"
-        },
-        "date": 1729648421373,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27741000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 667950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.608,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.766,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cbed936e5238b163cff18526f0fc43d25191cc99",
+          "message": "deps: update GCRA (#2061)\n\n* update GCRA",
+          "timestamp": "2024-12-20T00:31:10+08:00",
+          "tree_id": "a585ae25f0989beac1334dde99dd91d2463a0c8d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cbed936e5238b163cff18526f0fc43d25191cc99"
+        },
+        "date": 1734626546412,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29648000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 747970,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.533,
             "unit": "ns/op"
           }
         ]
