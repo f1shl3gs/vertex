@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 use std::time::Instant;
 
-use gcra::{GcraState, Quota};
+use gcra::{State, Quota};
 
 pub struct RateLimiter {
     quota: Quota,
-    state: GcraState,
+    state: State,
 }
 
 impl RateLimiter {
@@ -25,7 +25,7 @@ impl RateLimiter {
 /// want.
 pub struct KeyedRateLimiter {
     quota: Quota,
-    states: BTreeMap<String, GcraState>,
+    states: BTreeMap<String, State>,
 }
 
 impl KeyedRateLimiter {
