@@ -1,7 +1,6 @@
 mod statsz;
 
-use std::net::SocketAddr;
-use std::str::FromStr;
+use std::net::{Ipv4Addr, SocketAddr};
 
 use async_trait::async_trait;
 use bytes::Bytes;
@@ -17,7 +16,7 @@ use hyper::service::service_fn;
 use statsz::Statsz;
 
 fn default_endpoint() -> SocketAddr {
-    SocketAddr::from_str("127.0.0.1:56888").expect("default endpoint parse ok")
+    SocketAddr::from((Ipv4Addr::UNSPECIFIED, 56888))
 }
 
 /// Enables an extension that serves zPages, an HTTP endpoint that provides
