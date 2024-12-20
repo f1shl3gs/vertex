@@ -119,11 +119,17 @@ fn watchable_response(headers: &http::header::HeaderMap) -> bool {
     }
 }
 
-/// Polls the HTTP endpoint after/every `interval`, returning a stream of `ConfigBuilder`.
-///
 /// Hash value of the content is checked, and if the current_hash is same as the last_hash
 /// then nothing will be yield, so vertex will not reload config. Note that, the comment of
 /// the config(only in yaml) will be calculated too, so it will trigger the reload routine.
+#[inline]
+fn config_hash(data: &Bytes) -> u64 {
+    let mut hasher = DefaultHasher::new();
+    data.hash(&mut hasher);
+    hasher.finish()
+}
+
+/// Polls the HTTP endpoint after/every `interval`, returning a stream of `ConfigBuilder`.
 fn poll_http(
     interval: Duration,
     url: Url,
@@ -169,9 +175,7 @@ fn poll_http(
                 match incoming.collect().await {
                     Ok(data) => {
                         let data = data.to_bytes();
-                        let mut hasher = DefaultHasher::new();
-                        data.hash(&mut hasher);
-                        let hash = hasher.finish();
+                        let hash = config_hash(&data);
                         if hash == last_hash && last_hash != 0 {
                             debug!(
                                 message = "config is not changed yet",
@@ -241,13 +245,10 @@ fn poll_http(
                 ChunkedDecoder::default(),
             );
 
-
             while let Some(result) = frames.next().await {
                 match result {
                     Ok(data) => {
-                        let mut hasher = DefaultHasher::new();
-                        data.hash(&mut hasher);
-                        let hash = hasher.finish();
+                        let hash = config_hash(&data);
                         if hash == last_hash && last_hash != 0 {
                             debug!(
                                 message = "config is not changed yet",
@@ -266,7 +267,7 @@ fn poll_http(
                             }
                             Err(errs) => {
                                 for err in errs {
-                                    error!(message = err)
+                                    error!(message = "load config builder failed", err)
                                 }
 
                                 continue;
