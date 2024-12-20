@@ -19,7 +19,7 @@ use framework::{Error, Source};
 use value::Value;
 
 fn default_listen() -> SocketAddr {
-    SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 6343)
+    SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 6343)
 }
 
 #[configurable_component(source, name = "sflow")]

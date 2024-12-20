@@ -7,5 +7,5 @@ pub fn next_addr_for_ip(ip: IpAddr) -> SocketAddr {
 }
 
 pub fn next_addr() -> SocketAddr {
-    next_addr_for_ip(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)))
+    next_addr_for_ip(IpAddr::V4(Ipv4Addr::UNSPECIFIED))
 }
