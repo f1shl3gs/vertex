@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734708946848,
+  "lastUpdate": 1734708949032,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "23462a3e65a4412129d5927d6f8795d7ce6c4e6f",
-          "message": "chore(deps): bump console-subscriber from 0.4.0 to 0.4.1 (#1958)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.4.0 to 0.4.1.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Changelog](https://github.com/tokio-rs/console/blob/main/release-plz.toml)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.4.0...console-subscriber-v0.4.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-25T10:25:05+08:00",
-          "tree_id": "6ebc46f6dd492cf3816e2609c4e0e92731444a98",
-          "url": "https://github.com/f1shl3gs/vertex/commit/23462a3e65a4412129d5927d6f8795d7ce6c4e6f"
-        },
-        "date": 1729823709213,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 509,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35322.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fb1103bfac09e6896036c5e84fd82e9197e04954",
           "message": "chore(deps): bump pin-project-lite from 0.2.14 to 0.2.15 (#1961)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.14 to 0.2.15.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.14...v0.2.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-25T10:25:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35727.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd518dbbb02dab8f0cb913539953859d6267b24f",
+          "message": "use UNSPECIFIED ip address (#2065)",
+          "timestamp": "2024-12-20T23:25:00+08:00",
+          "tree_id": "60049a20103667c51fa03da54124f59f9788372e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd518dbbb02dab8f0cb913539953859d6267b24f"
+        },
+        "date": 1734708930160,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35723,
             "unit": "KiB"
           }
         ]
