@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734716615461,
+  "lastUpdate": 1734716616464,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0c2cd5edd8b4245a1ff0d1122430f8da7b86935a",
-          "message": "chore(deps): bump syn from 2.0.82 to 2.0.85 (#1957)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.82 to 2.0.85.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.82...2.0.85)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <26081140+f1shl3gs@users.noreply.github.com>",
-          "timestamp": "2024-10-24T12:39:01+08:00",
-          "tree_id": "e202260469e8fb02c0d2a82cc5876688fbc6652c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0c2cd5edd8b4245a1ff0d1122430f8da7b86935a"
-        },
-        "date": 1729744879197,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.109,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.936,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 185.85,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4140d1f34eb356fe6ee9c41565aa629624772076",
+          "message": "update hyper-rustls to 0.27.5 (#2066)",
+          "timestamp": "2024-12-21T01:40:46+08:00",
+          "tree_id": "7c5f43058ef63868440231aaad2ab2c6de3f99a0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4140d1f34eb356fe6ee9c41565aa629624772076"
+        },
+        "date": 1734716598423,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.222,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.187,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.94,
             "unit": "ns/op"
           }
         ]
