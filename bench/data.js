@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734626564487,
+  "lastUpdate": 1734677790783,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9d20600149bc9ceef0acedb5d2915a8fe54049fa",
-          "message": "chore(deps): bump thiserror from 1.0.64 to 1.0.65 (#1950)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.64 to 1.0.65.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.64...1.0.65)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-23T09:43:47+08:00",
-          "tree_id": "7620fc55bd06d85481c67eb6299033444cd08d37",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9d20600149bc9ceef0acedb5d2915a8fe54049fa"
-        },
-        "date": 1729647959042,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 547850,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56966fa9df62320686958c0793fc49d42530ab43",
+          "message": "bump inventory and typetag (#2063)",
+          "timestamp": "2024-12-20T14:54:08+08:00",
+          "tree_id": "98f8592cc79fe6b9fdb06cbad3a90adfad955ece",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56966fa9df62320686958c0793fc49d42530ab43"
+        },
+        "date": 1734677773187,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 545130,
             "unit": "ns/op"
           }
         ]
