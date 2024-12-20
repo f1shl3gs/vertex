@@ -394,7 +394,7 @@ prost-types = { version = "0.13.4", default-features = false }
 pprof = { version = "0.14.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
 
 # Cli
-argh = { version = "0.1.12" }
+argh = { version = "0.1.13" }
 
 # External libs
 ahash = { version = "0.8.11", default-features = false, optional = true }
