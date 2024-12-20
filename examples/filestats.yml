@@ -8,7 +8,6 @@ sinks:
     type: blackhole
     inputs:
       - files
-    acknowledgements: false
   # stdout:
   #   type: console
   #   inputs:
