@@ -408,7 +408,7 @@ flate2 = { version = "1.0.35", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
 glob = { version = "0.3.1" }
 indexmap = { version = "2.7.0", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.15", default-features = false }
+inventory = { version = "0.3.16", default-features = false }
 k8s-openapi = { version = "0.23.0", default-features = false, optional = true, features = ["v1_26"] }
 kube = { version = "0.97.0", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
 libc = { version = "0.2.169", default-features = false, optional = true }
@@ -427,6 +427,6 @@ sqlx = { version = "0.8.2", default-features = false, optional = true, features 
 thiserror = { version = "2.0.8", default-features = false }
 tonic = { version = "0.12.3", default-features = false, optional = true }
 tonic-health = { version = "0.12.3", default-features = false, optional = true }
-typetag = { version = "0.2.18" }
+typetag = { version = "0.2.19" }
 url = { version = "2.5.4", features = ["serde"] }
 uuid = { version = "1.11.0", default-features = false, features = ["v4"], optional = true }
