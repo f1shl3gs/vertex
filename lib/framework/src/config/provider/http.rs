@@ -203,8 +203,9 @@ fn poll_http(
                             }
                         };
 
-                        // save the hash
+                        // save the last hash
                         last_hash = hash;
+                        backoff.reset();
 
                         yield builder;
 
@@ -276,6 +277,7 @@ fn poll_http(
 
                         // save the last hash
                         last_hash = hash;
+                        backoff.reset();
 
                         yield builder
                     }
