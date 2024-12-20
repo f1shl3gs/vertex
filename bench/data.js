@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734692690182,
+  "lastUpdate": 1734693106651,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0c2cd5edd8b4245a1ff0d1122430f8da7b86935a",
-          "message": "chore(deps): bump syn from 2.0.82 to 2.0.85 (#1957)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.82 to 2.0.85.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.82...2.0.85)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <26081140+f1shl3gs@users.noreply.github.com>",
-          "timestamp": "2024-10-24T12:39:01+08:00",
-          "tree_id": "e202260469e8fb02c0d2a82cc5876688fbc6652c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0c2cd5edd8b4245a1ff0d1122430f8da7b86935a"
-        },
-        "date": 1729745332205,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 499,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35322.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "23462a3e65a4412129d5927d6f8795d7ce6c4e6f",
           "message": "chore(deps): bump console-subscriber from 0.4.0 to 0.4.1 (#1958)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.4.0 to 0.4.1.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Changelog](https://github.com/tokio-rs/console/blob/main/release-plz.toml)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.4.0...console-subscriber-v0.4.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-25T10:25:05+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35731.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da8da6cc0b19ee51d2cdb313033779428e5a714a",
+          "message": "simplify the example generation (#2064)",
+          "timestamp": "2024-12-20T19:01:14+08:00",
+          "tree_id": "ddf4816b766a6a7540ffc7fd4a132b81466db96d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da8da6cc0b19ee51d2cdb313033779428e5a714a"
+        },
+        "date": 1734693089151,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35727.2,
             "unit": "KiB"
           }
         ]
