@@ -141,7 +141,11 @@ fn poll_http(
                 let resp = match http_request(&url, &headers, &tls_config, &proxy).await {
                     Ok(resp) => resp,
                     Err(err) => {
-                        warn!(message = "fetch request failed", %err);
+                        warn!(
+                            message = "fetch request failed",
+                            %err,
+                        );
+
                         backoff.wait().await;
                         continue;
                     }
@@ -168,12 +172,12 @@ fn poll_http(
                         let mut hasher = DefaultHasher::new();
                         data.hash(&mut hasher);
                         let hash = hasher.finish();
-                        if hash == last_hash || last_hash != 0 {
+                        if hash == last_hash && last_hash != 0 {
                             debug!(
                                 message = "config is not changed yet",
                             );
 
-                            backoff.wait().await;
+                            tokio::time::sleep(interval).await;
                             continue;
                         }
 
@@ -244,7 +248,7 @@ fn poll_http(
                         let mut hasher = DefaultHasher::new();
                         data.hash(&mut hasher);
                         let hash = hasher.finish();
-                        if hash == last_hash || last_hash != 0 {
+                        if hash == last_hash && last_hash != 0 {
                             debug!(
                                 message = "config is not changed yet",
                             );
