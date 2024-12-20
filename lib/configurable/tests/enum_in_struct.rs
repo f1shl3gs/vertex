@@ -1,6 +1,5 @@
 use configurable::schema::generate_root_schema;
-use configurable::Examplar;
-use configurable::{configurable_component, Configurable};
+use configurable::{configurable_component, generate_config_with_schema, Configurable};
 use serde::{Deserialize, Serialize};
 
 #[derive(Configurable, Debug, Deserialize, Serialize, Default)]
@@ -55,7 +54,7 @@ fn enum_in_struct() {
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
-    let example = Examplar::new(root_schema).generate();
+    let example = generate_config_with_schema(root_schema);
     println!("{}", example);
 
     let _ = serde_yaml::from_str::<ConsoleSinkConfig>(&example).unwrap();

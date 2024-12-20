@@ -1,5 +1,5 @@
+use configurable::generate_config_with_schema;
 use configurable::schema::generate_root_schema;
-use configurable::Examplar;
 use configurable_derive::Configurable;
 use serde::{Deserialize, Serialize};
 
@@ -13,7 +13,7 @@ fn empty_struct() {
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
-    let example = Examplar::new(root_schema).generate();
+    let example = generate_config_with_schema(root_schema);
     println!("{}", example);
 
     let _ = serde_yaml::from_str::<Empty>(&example).unwrap();
