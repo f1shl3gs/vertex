@@ -15,7 +15,8 @@ use tracing::error;
 #[argh(
     subcommand,
     name = "validate",
-    description = "Validate target configs, then exit"
+    description = "Validate target configs, then exit",
+    help_triggers("-h", "--help")
 )]
 pub struct Validate {
     #[argh(

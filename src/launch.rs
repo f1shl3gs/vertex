@@ -44,7 +44,10 @@ fn default_max_blocking_threads() -> usize {
 }
 
 #[derive(FromArgs)]
-#[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
+#[argh(
+    description = "Vertex is an all-in-one collector for metrics, logs and traces",
+    help_triggers("-h", "--help")
+)]
 pub struct RootCommand {
     #[argh(switch, short = 'v', description = "show version")]
     version: bool,
@@ -325,35 +328,60 @@ pub fn handle_config_errors(errors: Vec<String>) -> ExitCode {
 }
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "sources", description = "List sources")]
+#[argh(
+    subcommand,
+    name = "sources",
+    description = "List sources",
+    help_triggers("-h", "--help")
+)]
 struct Sources {
     #[argh(positional, description = "source name")]
     name: Option<String>,
 }
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "transforms", description = "List transforms")]
+#[argh(
+    subcommand,
+    name = "transforms",
+    description = "List transforms",
+    help_triggers("-h", "--help")
+)]
 struct Transforms {
     #[argh(positional, description = "transform name")]
     name: Option<String>,
 }
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "sinks", description = "List sinks")]
+#[argh(
+    subcommand,
+    name = "sinks",
+    description = "List sinks",
+    help_triggers("-h", "--help")
+)]
 struct Sinks {
     #[argh(positional, description = "sink name")]
     name: Option<String>,
 }
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "extensions", description = "List extensions")]
+#[argh(
+    subcommand,
+    name = "extensions",
+    description = "List extensions",
+    help_triggers("-h", "--help")
+)]
 struct Extensions {
     #[argh(positional, description = "extension name")]
     name: Option<String>,
 }
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "providers", description = "List providers")]
+#[argh(
+    subcommand,
+    name = "providers",
+    description = "List providers",
+    help_triggers("-h", "--help")
+)]
 struct Providers {
     #[argh(positional, description = "provider name")]
     name: Option<String>,

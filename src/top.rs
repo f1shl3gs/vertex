@@ -39,7 +39,8 @@ fn default_uri() -> String {
 #[argh(
     subcommand,
     name = "top",
-    description = "Display vertex components stats"
+    description = "Display vertex components stats",
+    help_triggers("-h", "--help")
 )]
 pub struct Top {
     #[argh(
