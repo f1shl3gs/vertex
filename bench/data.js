@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734693128028,
+  "lastUpdate": 1734708452963,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8f84005c9e67cc5e01949d48919c31dd7780d8ce",
-          "message": "chore(deps): bump syn from 2.0.82 to 2.0.83 (#1956)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.82 to 2.0.83.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.82...2.0.83)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-24T12:17:25+08:00",
-          "tree_id": "e2ee6e6a55e17072ab5cd0637382c6988a12db4c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8f84005c9e67cc5e01949d48919c31dd7780d8ce"
-        },
-        "date": 1729743590331,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.353,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.988,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.22,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 186.01,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd518dbbb02dab8f0cb913539953859d6267b24f",
+          "message": "use UNSPECIFIED ip address (#2065)",
+          "timestamp": "2024-12-20T23:25:00+08:00",
+          "tree_id": "60049a20103667c51fa03da54124f59f9788372e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd518dbbb02dab8f0cb913539953859d6267b24f"
+        },
+        "date": 1734708435245,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.145,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.379,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.85,
             "unit": "ns/op"
           }
         ]
