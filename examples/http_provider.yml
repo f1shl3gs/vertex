@@ -1,21 +1,6 @@
 data_dir: ./temp
 
-health_checks:
-  enabled: false
-
 provider:
   type: http
-  url: http://localhost:8100/config
+  url: http://localhost:8100/filestats.yml
   interval: 10s
-
-sources:
-  internal:
-    type: internal_logs
-
-sinks:
-  stdout:
-    type: console
-    inputs:
-      - internal
-    encoding:
-      codec: json

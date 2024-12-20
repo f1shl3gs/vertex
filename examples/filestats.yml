@@ -1,13 +1,17 @@
 sources:
   files:
     type: filestats
-    include: /home/f1shl3gs/Workspaces/rustrover/vertex/examples/*.yml
+    include: ./examples/*.yml
 
 sinks:
-  stdout:
-    type: console
+  blackhole:
+    type: blackhole
     inputs:
       - files
-    encoding:
-      codec: text
+  # stdout:
+  #   type: console
+  #   inputs:
+  #     - files
+  #   encoding:
+  #     codec: text
       # pretty: true

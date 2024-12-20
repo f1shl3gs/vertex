@@ -18,6 +18,7 @@ struct Config {
     /// By default, there is no limit.
     rate: Option<usize>,
 
+    #[serde(default)]
     acknowledgements: bool,
 }
 

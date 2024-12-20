@@ -1,5 +1,6 @@
 mod chunk;
 
+use std::hash::{DefaultHasher, Hash, Hasher};
 use std::time::Duration;
 
 use async_stream::stream;
@@ -118,6 +119,16 @@ fn watchable_response(headers: &http::header::HeaderMap) -> bool {
     }
 }
 
+/// Hash value of the content is checked, and if the current_hash is same as the last_hash
+/// then nothing will be yield, so vertex will not reload config. Note that, the comment of
+/// the config(only in yaml) will be calculated too, so it will trigger the reload routine.
+#[inline]
+fn config_hash(data: &Bytes) -> u64 {
+    let mut hasher = DefaultHasher::new();
+    data.hash(&mut hasher);
+    hasher.finish()
+}
+
 /// Polls the HTTP endpoint after/every `interval`, returning a stream of `ConfigBuilder`.
 fn poll_http(
     interval: Duration,
@@ -127,17 +138,20 @@ fn poll_http(
     proxy: ProxyConfig,
 ) -> impl Stream<Item = Builder> {
     stream! {
-        loop {
-            // Before this loop starting, config is loaded already.
-            tokio::time::sleep(interval).await;
+        let mut last_hash = 0u64;
 
+        loop {
             // Retry loop to fetch config
             let mut backoff = ExponentialBackoff::from_secs(10).max_delay(5 * interval);
             let (parts, incoming) = loop {
                 let resp = match http_request(&url, &headers, &tls_config, &proxy).await {
                     Ok(resp) => resp,
                     Err(err) => {
-                        warn!(message = "fetch request failed", %err);
+                        warn!(
+                            message = "fetch request failed",
+                            %err,
+                        );
+
                         backoff.wait().await;
                         continue;
                     }
@@ -160,7 +174,18 @@ fn poll_http(
             if !watchable_response(&parts.headers) {
                 match incoming.collect().await {
                     Ok(data) => {
-                        let builder = match config::load(data.to_bytes().chunk(), None) {
+                        let data = data.to_bytes();
+                        let hash = config_hash(&data);
+                        if hash == last_hash && last_hash != 0 {
+                            debug!(
+                                message = "config is not changed yet",
+                            );
+
+                            tokio::time::sleep(interval).await;
+                            continue;
+                        }
+
+                        let builder = match config::load(data.chunk(), None) {
                             Ok((builder, warnings)) => {
                                 for warning in warnings.into_iter() {
                                     warn!(message = warning)
@@ -178,17 +203,23 @@ fn poll_http(
                             }
                         };
 
+                        // save the last hash
+                        last_hash = hash;
+                        backoff.reset();
+
                         yield builder;
 
                         tokio::time::sleep(interval).await;
                     }
 
                     Err(err) => {
-                        warn!(message = "load config failed", %err, %url);
+                        warn!(
+                            message = "load config failed",
+                            %err,
+                            %url,
+                        );
 
                         backoff.wait().await;
-
-                        continue;
                     }
                 }
 
@@ -215,10 +246,18 @@ fn poll_http(
                 ChunkedDecoder::default(),
             );
 
-
             while let Some(result) = frames.next().await {
                 match result {
                     Ok(data) => {
+                        let hash = config_hash(&data);
+                        if hash == last_hash && last_hash != 0 {
+                            debug!(
+                                message = "config is not changed yet",
+                            );
+
+                            continue;
+                        }
+
                         let builder = match config::load(data.chunk(), None) {
                             Ok((builder, warnings)) => {
                                 for warning in warnings.into_iter() {
@@ -229,12 +268,16 @@ fn poll_http(
                             }
                             Err(errs) => {
                                 for err in errs {
-                                    error!(message = err)
+                                    error!(message = "load config builder failed", err)
                                 }
 
                                 continue;
                             }
                         };
+
+                        // save the last hash
+                        last_hash = hash;
+                        backoff.reset();
 
                         yield builder
                     }
