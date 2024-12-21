@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734796080510,
+  "lastUpdate": 1734796264476,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4c459164a9eaf37cc02b717b139c3cbb2a37e66e",
-          "message": "chore(deps): bump serde from 1.0.213 to 1.0.214 (#1964)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.213 to 1.0.214.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.213...v1.0.214)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-29T10:36:50+08:00",
-          "tree_id": "0432841b7a8a887438070bc7860a9c6401210cdf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4c459164a9eaf37cc02b717b139c3cbb2a37e66e"
-        },
-        "date": 1730170022638,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 514,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35311,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1650095375811b4c6aaf3a8d7f9588f58a9fcd7a",
           "message": "chore(deps): bump hyper-util from 0.1.9 to 0.1.10 (#1965)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.9 to 0.1.10.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.9...v0.1.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-29T10:37:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 529,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35818.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69e05efd6063d85383b202b99ce06f993b11d08f",
+          "message": "simplify (#2072)",
+          "timestamp": "2024-12-21T23:40:35+08:00",
+          "tree_id": "ca58a5d0c7c04f14bbfd87c90ec6d8444f544761",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69e05efd6063d85383b202b99ce06f993b11d08f"
+        },
+        "date": 1734796246760,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 515,
             "unit": "s"
           },
           {
