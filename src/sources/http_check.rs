@@ -8,6 +8,7 @@ use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Error, Pipeline, ShutdownSignal, Source};
 use futures_util::stream::FuturesUnordered;
+use futures_util::StreamExt;
 use http::{HeaderName, HeaderValue, Request, StatusCode};
 use http_body_util::Full;
 use serde::{Deserialize, Serialize};
@@ -94,10 +95,7 @@ impl SourceConfig for Config {
         }
 
         Ok(Box::pin(async move {
-            use futures::StreamExt;
-
-            let mut tasks = FuturesUnordered::new();
-
+            let tasks = FuturesUnordered::new();
             for (client, target) in targets {
                 tasks.push(tokio::spawn(run(
                     client,
@@ -108,7 +106,7 @@ impl SourceConfig for Config {
                 )))
             }
 
-            while let Some(_task) = tasks.next().await {}
+            let _ = tasks.collect::<Vec<_>>().await;
 
             Ok(())
         }))
