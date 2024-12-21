@@ -6,7 +6,12 @@ use value::Value;
 use vtl::{Diagnostic, TargetValue};
 
 #[derive(FromArgs, Debug)]
-#[argh(subcommand, name = "vtl", description = "Run a VTL script")]
+#[argh(
+    subcommand,
+    name = "vtl",
+    description = "Run a VTL script",
+    help_triggers("-h", "--help")
+)]
 pub struct Vtl {
     #[argh(positional, description = "which file to run")]
     path: PathBuf,
