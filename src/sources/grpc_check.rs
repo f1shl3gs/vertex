@@ -5,6 +5,8 @@ use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
+use futures_util::stream::FuturesUnordered;
+use futures_util::StreamExt;
 use tonic::Code;
 use tonic_health::pb::health_check_response::ServingStatus;
 use tonic_health::pb::health_client::HealthClient;
@@ -24,8 +26,8 @@ struct Config {
     service: String,
 
     /// Endpoint for gRPC service.
-    #[configurable(required, format = "uri", example = "http://example.com:9000")]
-    endpoint: String,
+    #[configurable(required)]
+    targets: Vec<String>,
 
     /// This sources collects metrics on an interval.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -42,7 +44,7 @@ impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         Ok(Box::pin(run(
             self.service.clone(),
-            self.endpoint.clone(),
+            self.targets.clone(),
             self.timeout,
             self.interval,
             cx.output,
@@ -57,45 +59,56 @@ impl SourceConfig for Config {
 
 async fn run(
     service: String,
-    endpoint: String,
+    targets: Vec<String>,
     timeout: Duration,
     interval: Duration,
-    mut output: Pipeline,
-    mut shutdown: ShutdownSignal,
+    output: Pipeline,
+    shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
-    let mut ticker = tokio::time::interval(interval);
+    let tasks = FuturesUnordered::new();
 
-    loop {
-        tokio::select! {
-            biased;
+    for target in targets {
+        let mut output = output.clone();
+        let mut shutdown = shutdown.clone();
+        let service = service.clone();
 
-            _ = &mut shutdown => break,
-            _ = ticker.tick() => {}
-        }
+        tasks.push(tokio::spawn(async move {
+            let mut ticker = tokio::time::interval(interval);
 
-        let metrics = scrape(service.clone(), endpoint.clone(), timeout).await;
+            loop {
+                tokio::select! {
+                    biased;
 
-        if let Err(err) = output.send(metrics).await {
-            warn!(message = "send metrics failed", %err);
-            break;
-        }
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
+                let metrics = scrape(&service, &target, timeout).await;
+
+                if let Err(err) = output.send(metrics).await {
+                    warn!(message = "send metrics failed", %err);
+                    break;
+                }
+            }
+        }))
     }
+
+    let _ = tasks.collect::<Vec<_>>().await;
 
     Ok(())
 }
 
-async fn scrape(service: String, endpoint: String, timeout: Duration) -> Vec<Metric> {
+async fn scrape(service: &str, target: &str, timeout: Duration) -> Vec<Metric> {
     let start = Instant::now();
-    let result = match tokio::time::timeout(timeout, check(service.clone(), endpoint.clone())).await
-    {
+    let result = match tokio::time::timeout(timeout, check(service, target.to_string())).await {
         Ok(result) => result,
         Err(err) => Err(err.into()),
     };
     let elapsed = start.elapsed();
 
     let tags = tags!(
-        "service" => service.clone(),
-        "endpoint" => endpoint.clone()
+        "service" => service,
+        "endpoint" => target
     );
 
     let (code, serving_status) = result.unwrap_or_else(|err| {
@@ -122,7 +135,7 @@ async fn scrape(service: String, endpoint: String, timeout: Duration) -> Vec<Met
             i32::from(serving_status),
             tags!(
                 "service" => service,
-                "endpoint" => endpoint,
+                "endpoint" => target,
                 "serving_status" => serving_status.as_str_name()
             ),
         ),
@@ -131,7 +144,7 @@ async fn scrape(service: String, endpoint: String, timeout: Duration) -> Vec<Met
     metrics
 }
 
-async fn check(service: String, address: String) -> framework::Result<(Code, ServingStatus)> {
+async fn check(service: &str, address: String) -> framework::Result<(Code, ServingStatus)> {
     let conn = tonic::transport::Endpoint::new(address)?.connect().await?;
     let mut client = HealthClient::new(conn);
     let result = client
@@ -204,8 +217,8 @@ mod tests {
 
         // server not start
         let metrics = scrape(
-            DummyService::NAME.to_string(),
-            endpoint.clone(),
+            DummyService::NAME,
+            endpoint.as_str(),
             Duration::from_secs(1),
         )
         .await;
@@ -231,8 +244,8 @@ mod tests {
             .set_service_status("dummy", tonic_health::ServingStatus::Serving)
             .await;
         let metrics = scrape(
-            DummyService::NAME.to_string(),
-            endpoint.clone(),
+            DummyService::NAME,
+            endpoint.as_str(),
             Duration::from_secs(1),
         )
         .await;
@@ -248,8 +261,8 @@ mod tests {
             .set_service_status("dummy", tonic_health::ServingStatus::NotServing)
             .await;
         let metrics = scrape(
-            DummyService::NAME.to_string(),
-            endpoint.clone(),
+            DummyService::NAME,
+            endpoint.as_str(),
             Duration::from_secs(1),
         )
         .await;
