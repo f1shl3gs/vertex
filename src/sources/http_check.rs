@@ -1,13 +1,14 @@
+use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
-use async_trait::async_trait;
 use configurable::{configurable_component, Configurable};
 use event::{tags, Metric};
 use framework::config::{default_interval, Output, SourceConfig, SourceContext};
-use framework::http::HttpClient;
+use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Error, Pipeline, ShutdownSignal, Source};
-use http::{Request, StatusCode};
+use futures_util::stream::FuturesUnordered;
+use http::{HeaderName, HeaderValue, Request, StatusCode};
 use http_body_util::Full;
 use serde::{Deserialize, Serialize};
 use url::Url;
@@ -17,11 +18,51 @@ const fn default_timeout() -> Duration {
 }
 
 /// Method is the HTTP methods that http check supported.
-#[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Copy, Configurable, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "UPPERCASE")]
 enum Method {
     #[default]
     Get,
+}
+
+impl From<Method> for http::Method {
+    fn from(method: Method) -> Self {
+        match method {
+            Method::Get => http::Method::GET,
+        }
+    }
+}
+
+impl Method {
+    fn as_str(self) -> &'static str {
+        match self {
+            Method::Get => "GET",
+        }
+    }
+}
+
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+struct Target {
+    /// The method used to call the endpoint.
+    #[serde(default)]
+    method: Method,
+
+    /// The URL of the endpoint to be monitored
+    #[configurable(required, format = "uri", example = "http://localhost:8080")]
+    url: Url,
+
+    /// TLS configuration
+    tls: Option<TlsConfig>,
+
+    auth: Option<Auth>,
+
+    /// Extra HTTP headers
+    #[serde(default)]
+    headers: HashMap<String, String>,
+
+    /// Timeout for HTTP request, it's value should be less than `interval`.
+    #[serde(with = "humanize::duration::serde", default = "default_timeout")]
+    timeout: Duration,
 }
 
 /// The HTTP Check source can be used for synthethic checks against HTTP
@@ -31,44 +72,46 @@ enum Method {
 /// the status code matches the class.
 #[configurable_component(source, name = "http_check")]
 struct Config {
-    /// The URL of the endpoint to be monitored.
-    #[configurable(required, format = "uri", example = "http://localhost:80")]
-    endpoint: Url,
-
-    /// TLS configuration
-    tls: Option<TlsConfig>,
-
-    /// The method used to call the endpoint.
-    #[serde(default)]
-    method: Method,
+    /// Targets to probe
+    #[configurable(required)]
+    targets: Vec<Target>,
 
     /// This sources collects metrics on an interval.
     #[serde(with = "humanize::duration::serde", default = "default_interval")]
     interval: Duration,
-
-    /// Timeout for HTTP request, it's value should be less than `interval`.
-    #[serde(with = "humanize::duration::serde", default = "default_timeout")]
-    timeout: Duration,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "http_check")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let client = HttpClient::new(&self.tls, &cx.proxy)?;
-        let method = match self.method {
-            Method::Get => http::Method::GET,
-        };
+        let mut targets = vec![];
+        let interval = self.interval;
 
-        Ok(Box::pin(run(
-            client,
-            method,
-            self.endpoint.clone(),
-            self.interval,
-            self.timeout,
-            cx.output,
-            cx.shutdown,
-        )))
+        for target in &self.targets {
+            let client = HttpClient::new(&target.tls, &cx.proxy)?;
+            targets.push((client, target.clone()));
+        }
+
+        Ok(Box::pin(async move {
+            use futures::StreamExt;
+
+            let mut tasks = FuturesUnordered::new();
+
+            for (client, target) in targets {
+                tasks.push(tokio::spawn(run(
+                    client,
+                    target,
+                    interval,
+                    cx.output.clone(),
+                    cx.shutdown.clone(),
+                )))
+            }
+
+            while let Some(_task) = tasks.next().await {}
+
+            Ok(())
+        }))
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -78,32 +121,30 @@ impl SourceConfig for Config {
 
 async fn run(
     client: HttpClient,
-    method: http::Method,
-    endpoint: Url,
+    target: Target,
     interval: Duration,
-    timeout: Duration,
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
-) -> Result<(), ()> {
+) {
     let mut ticker = tokio::time::interval(interval);
 
     loop {
         tokio::select! {
-            biased;
-
-            _ = &mut shutdown => break,
-            _ = ticker.tick() => {}
-        };
+            _ = ticker.tick() => {},
+            _ = &mut shutdown => {
+                break;
+            }
+        }
 
         let start = Instant::now();
-        let result = probe(&client, &method, endpoint.as_str(), timeout).await;
+        let result = probe(&client, &target).await;
         let elapsed = start.elapsed();
         let mut metrics = vec![Metric::gauge_with_tags(
             "http_check_duration",
             "Measures the duration of the HTTP check",
             elapsed,
             tags!(
-                "url" => endpoint.to_string()
+                "url" => target.url.to_string(),
             ),
         )];
 
@@ -126,8 +167,8 @@ async fn run(
                     "The check resulted in status_code.",
                     status_code.as_u16(),
                     tags!(
-                        "url" => endpoint.to_string(),
-                        "method" => method.as_str(),
+                        "url" => target.url.to_string(),
+                        "method" => target.method.as_str(),
                         "status_class" => status_class,
                     ),
                 ))
@@ -138,8 +179,8 @@ async fn run(
                     "Records errors occurring during HTTP check.",
                     1,
                     tags!(
-                        "method" => method.as_str(),
-                        "url" => endpoint.to_string(),
+                        "method" => target.method.as_str(),
+                        "url" => target.url.to_string(),
                         "err" => err.to_string(),
                     ),
                 ));
@@ -151,21 +192,25 @@ async fn run(
             break;
         }
     }
-
-    Ok(())
 }
 
-async fn probe(
-    client: &HttpClient,
-    method: &http::Method,
-    url: &str,
-    timeout: Duration,
-) -> Result<StatusCode, Error> {
-    let result = tokio::time::timeout(timeout, async move {
-        let req = Request::builder()
-            .method(method)
-            .uri(url)
+async fn probe(client: &HttpClient, target: &Target) -> Result<StatusCode, Error> {
+    let result = tokio::time::timeout(target.timeout, async move {
+        let mut req = Request::builder()
+            .method::<http::Method>(target.method.into())
+            .uri(target.url.as_str())
             .body(Full::default())?;
+
+        if let Some(auth) = &target.auth {
+            auth.apply(&mut req);
+        }
+
+        for (key, value) in &target.headers {
+            let key = HeaderName::from_bytes(key.as_bytes())?;
+            let value = HeaderValue::from_bytes(value.as_bytes())?;
+
+            req.headers_mut().insert(key, value);
+        }
 
         let resp = client.send(req).await?;
 
@@ -184,7 +229,7 @@ mod tests {
     use bytes::Bytes;
     use event::MetricValue;
     use framework::config::ProxyConfig;
-    use http::{Method, Response};
+    use http::Response;
     use hyper::body::Incoming;
     use hyper::service::service_fn;
     use hyper_util::rt::TokioIo;
@@ -253,16 +298,16 @@ mod tests {
             let (output, receiver) = Pipeline::new_test();
             let shutdown = ShutdownSignal::noop();
             let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+            let target = Target {
+                method: Method::Get,
+                url: Url::parse(format!("{endpoint}/{code}").as_str()).unwrap(),
+                tls: None,
+                auth: None,
+                headers: Default::default(),
+                timeout: default_timeout(),
+            };
 
-            let task = tokio::spawn(run(
-                client,
-                Method::GET,
-                Url::parse(&format!("{endpoint}/{code}")).unwrap(),
-                default_interval(),
-                default_timeout(),
-                output,
-                shutdown,
-            ));
+            let task = tokio::spawn(run(client, target, default_interval(), output, shutdown));
             tokio::time::sleep(Duration::from_secs(1)).await;
             let events = collect_ready(receiver).await;
             task.abort();
