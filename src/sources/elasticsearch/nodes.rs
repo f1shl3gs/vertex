@@ -517,7 +517,10 @@ impl Elasticsearch {
                 metrics
             }
             Err(err) => {
-                warn!(message = "Fetch node stats failed", ?err);
+                warn!(
+                    message = "Fetch node stats failed",
+                    %err
+                );
 
                 vec![]
             }

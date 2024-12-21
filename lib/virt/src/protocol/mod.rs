@@ -13,6 +13,7 @@ mod open;
 mod primitives;
 mod storage_pool_get_info;
 
+use std::fmt::{Display, Formatter};
 use std::io::{self, Read, Write};
 use std::string::FromUtf8Error;
 
@@ -160,6 +161,19 @@ pub enum Error {
     InvalidCase(i32),
     InvalidEnum(i32),
     InvalidLen(usize),
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::Io(err) => err.fmt(f),
+            Error::Utf8(err) => err.fmt(f),
+            Error::Other(err) => err.fmt(f),
+            Error::InvalidCase(c) => write!(f, "invalid case {}", c),
+            Error::InvalidEnum(c) => write!(f, "invalid enum {}", c),
+            Error::InvalidLen(len) => write!(f, "invalid len {}", len),
+        }
+    }
 }
 
 impl From<io::Error> for Error {

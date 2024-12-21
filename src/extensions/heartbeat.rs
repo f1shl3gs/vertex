@@ -182,7 +182,7 @@ async fn run(
                 warn!(
                     message = "upload vertex status failed",
                     endpoint = endpoint.uri.to_string(),
-                    ?err
+                    %err
                 );
 
                 continue;

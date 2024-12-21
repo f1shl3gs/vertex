@@ -303,7 +303,7 @@ fn create_log(
             // TODO: metrics
             warn!(
                 message = "Parse kubernetes container logs failed",
-                ?err,
+                %err,
                 internal_log_rate_limit = true
             );
             LogRecord::from(line)

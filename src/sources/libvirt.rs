@@ -49,8 +49,12 @@ impl SourceConfig for Config {
                 }
 
                 let start = Instant::now();
-                let result = gather_v2(&sock).await.map_err(|err| {
-                    warn!(message = "Scrape libvirt metrics failed", ?err);
+                let result = gather(&sock).await.map_err(|err| {
+                    warn!(
+                        message = "Scrape libvirt metrics failed",
+                        %err
+                    );
+
                     err
                 });
                 let elapsed = start.elapsed();
@@ -87,7 +91,7 @@ impl SourceConfig for Config {
     }
 }
 
-async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
+async fn gather(path: &str) -> Result<Vec<Metric>, Error> {
     let mut cli = Client::connect(path).await?;
     cli.open().await?;
 
@@ -394,10 +398,16 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         // See also: https://github.com/libvirt/libvirt/blob/56fbabf1a1e272c6cc50adcb603996cf8e94ad08/include/libvirt/virterror.h#L209
                         match lerr.code {
                             55 => {
-                                warn!(message = "Invalid operation block_io_tune", ?err)
+                                warn!(
+                                    message = "Invalid operation block_io_tune",
+                                    %err
+                                )
                             }
                             84 => {
-                                warn!(message = "Unsupported operation block_io_tune", ?err)
+                                warn!(
+                                    message = "Unsupported operation block_io_tune",
+                                    %err
+                                )
                             }
                             _ => return Err(err),
                         }

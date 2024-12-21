@@ -117,7 +117,7 @@ impl SyncTransform for Rewrite {
                         Err(err) => {
                             warn!(
                                 message = "run VTL script failed",
-                                ?err,
+                                %err,
                                 internal_log_rate_limit = true
                             );
 

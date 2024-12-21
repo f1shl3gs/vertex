@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use std::io;
 
 use crate::protocol;
@@ -12,6 +13,16 @@ pub enum Error {
 
     /// Libvirt returned error
     Libvirt(protocol::MessageError),
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::IO(err) => err.fmt(f),
+            Error::Xdr(err) => err.fmt(f),
+            Error::Libvirt(err) => err.fmt(f),
+        }
+    }
 }
 
 impl From<io::Error> for Error {

@@ -1,4 +1,5 @@
 use std::borrow::{Borrow, Cow};
+use std::fmt::{Display, Formatter};
 use std::io::{self, Read, Write};
 use std::ops::Deref;
 
@@ -200,6 +201,16 @@ pub struct MessageError {
     pub int1: i32,
     pub int2: i32,
     pub net: Option<Network>,
+}
+
+impl Display for MessageError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        if let Some(msg) = &self.message {
+            Ok(f.write_str(msg)?)
+        } else {
+            write!(f, "message error, code: {}", self.code)
+        }
+    }
 }
 
 impl MessageError {

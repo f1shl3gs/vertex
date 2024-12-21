@@ -389,7 +389,7 @@ impl RedisSource {
                 Err(err) => {
                     warn!(
                         message = "Redis CLUSTER INFO failed",
-                        ?err,
+                        %err,
                         internal_log_rate_limit = true
                     );
                 }
@@ -459,7 +459,10 @@ async fn slowlog_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
             metrics.push(Metric::gauge("slowlog_length", "Total slowlog", length));
         }
         Err(err) => {
-            warn!(message = "slowlog length query failed", ?err);
+            warn!(
+                message = "slowlog length query failed",
+                %err
+            );
         }
     }
 

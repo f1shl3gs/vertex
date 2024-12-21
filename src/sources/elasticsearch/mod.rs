@@ -117,7 +117,10 @@ impl Elasticsearch {
             match self.snapshots().await {
                 Ok(sm) => metrics.extend(sm),
                 Err(err) => {
-                    warn!(message = "Fetch snapshots metrics failed", ?err);
+                    warn!(
+                        message = "Fetch snapshots metrics failed",
+                        %err
+                    );
                 }
             }
         }

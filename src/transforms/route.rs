@@ -109,7 +109,7 @@ impl SyncTransform for Route {
                         Err(err) => {
                             warn!(
                                 message = "run vtl script failed",
-                                ?err,
+                                %err,
                                 route,
                                 internal_log_rate_limit = true
                             );

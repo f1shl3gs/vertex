@@ -65,7 +65,7 @@ async fn run(
                             if let Err(err) = stream.set_keepalive(*keepalive) {
                                 error!(
                                     message = "set keepalive failed",
-                                    ?err
+                                    %err
                                 );
 
                                 continue;
@@ -77,7 +77,7 @@ async fn run(
                     Err(err) => {
                         error!(
                             message = "accept tcp connection failed",
-                            ?err
+                            %err
                         );
 
                         continue;

@@ -219,8 +219,8 @@ async fn collect_services_metric(
                 Err(err) => {
                     warn!(
                         message = "Fetch service status failed",
-                        service = ?name.to_owned(),
-                        ?err
+                        service = ?name,
+                        %err
                     );
 
                     return Err(err);
