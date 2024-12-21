@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734780928447,
+  "lastUpdate": 1734792948480,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e9bb7ee120b823291f2ee40a11b9aca395e6b73d",
-          "message": "chore(deps): bump encoding_rs from 0.8.34 to 0.8.35 (#1959)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.34 to 0.8.35.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.34...v0.8.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-25T10:25:57+08:00",
-          "tree_id": "c10091d6841ee45201b1a2a12a4e113f86d495f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e9bb7ee120b823291f2ee40a11b9aca395e6b73d"
-        },
-        "date": 1729823295975,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 518480,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 539920,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "edad0947569c28f5d8970ce96b8dbeeb7fe8b98f",
+          "message": "support multiple targets to check (#2070)",
+          "timestamp": "2024-12-21T22:53:32+08:00",
+          "tree_id": "73b32a0ecd25bfdbf84f83068748c803f063f645",
+          "url": "https://github.com/f1shl3gs/vertex/commit/edad0947569c28f5d8970ce96b8dbeeb7fe8b98f"
+        },
+        "date": 1734792930497,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 542130,
             "unit": "ns/op"
           }
         ]
