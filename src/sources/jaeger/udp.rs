@@ -119,7 +119,10 @@ pub(super) async fn serve(
                         }
                     }
                     Err(err) => {
-                        warn!(message = "Receiving udp packet failed", ?err);
+                        warn!(
+                            message = "Receiving udp packet failed",
+                            %err
+                        );
                     }
                 }
             },

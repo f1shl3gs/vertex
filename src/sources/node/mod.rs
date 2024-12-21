@@ -823,7 +823,11 @@ async fn run(
         }
 
         if let Err(err) = out.send(metrics).await {
-            error!(message = "Error sending node metrics", ?err);
+            error!(
+                message = "Error sending node metrics",
+                %err
+            );
+
             return Err(());
         }
     }

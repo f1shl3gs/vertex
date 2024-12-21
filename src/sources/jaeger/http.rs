@@ -77,7 +77,11 @@ async fn handle(
     match deserialize_binary_batch(data.to_vec()) {
         Ok(batch) => {
             if let Err(err) = output.lock().await.send(batch).await {
-                error!(message = "Error sending batch", ?err);
+                error!(
+                    message = "Error sending batch",
+                    %err
+                );
+
                 Ok(Response::builder()
                     .status(StatusCode::SERVICE_UNAVAILABLE)
                     .body(Full::default())

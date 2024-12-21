@@ -92,7 +92,10 @@ async fn run(
             .collect::<Vec<_>>();
 
         if let Err(err) = output.send(metrics).await {
-            warn!(message = "failed to send metrics", ?err);
+            warn!(
+                message = "failed to send metrics",
+                %err
+            );
         }
     }
 

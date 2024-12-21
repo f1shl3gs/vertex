@@ -126,7 +126,10 @@ async fn handle(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error> 
         }
 
         Err(err) => {
-            error!(message = "Build report failed", ?err);
+            error!(
+                message = "Build report failed",
+                %err
+            );
 
             let resp = Response::builder()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)

@@ -110,7 +110,7 @@ impl TaskTransform for Throttle {
                                             .map_err(|err| {
                                                 error!(
                                                     message = "Failed to render template",
-                                                    ?err,
+                                                    %err,
                                                     field = "key_field",
                                                     drop_event = false
                                                 );

@@ -1,4 +1,5 @@
 use std::cmp::Ordering;
+use std::fmt::Display;
 use std::net::SocketAddr;
 
 use bytes::{Buf, BytesMut};
@@ -58,7 +59,11 @@ pub async fn serve_connection(
 
     'RECV: loop {
         if let Err(err) = conn.read_buf(&mut buf).await {
-            error!(message = "read packet failed", ?err, ?peer,);
+            error!(
+                message = "read packet failed",
+                %err,
+                %peer,
+            );
             return;
         }
 
@@ -141,7 +146,12 @@ pub async fn serve_connection(
                         match variant_length(&payload[10..]) {
                             Ok((_len, _advanced)) => {}
                             Err(err) => {
-                                error!(message = "read properties length", ?peer, ?err);
+                                error!(
+                                    message = "read properties length",
+                                    %err,
+                                    %peer,
+                                );
+
                                 return;
                             }
                         }
@@ -160,7 +170,12 @@ pub async fn serve_connection(
                     };
 
                     if let Err(err) = conn.write_all(resp).await {
-                        error!(message = "write CONNACK failed", ?err, ?peer);
+                        error!(
+                            message = "write CONNACK failed",
+                            %err,
+                            ?peer
+                        );
+
                         return;
                     }
 
@@ -177,7 +192,12 @@ pub async fn serve_connection(
                             s
                         }
                         Err(err) => {
-                            error!(message = "invalid topic name", ?err, ?peer);
+                            error!(
+                                message = "invalid topic name",
+                                %err,
+                                %peer,
+                            );
+
                             return;
                         }
                     };
@@ -199,7 +219,12 @@ pub async fn serve_connection(
                         }
 
                         if let Err(err) = conn.write_all(&resp).await {
-                            error!(message = "write PUBLISH response failed", ?err, ?peer);
+                            error!(
+                                message = "write PUBLISH response failed",
+                                %err,
+                                %peer
+                            );
+
                             return;
                         }
 
@@ -215,7 +240,12 @@ pub async fn serve_connection(
                                 payload.advance(advanced + len);
                             }
                             Err(err) => {
-                                error!(message = "read publish properties failed", ?peer, ?err);
+                                error!(
+                                    message = "read publish properties failed",
+                                    %err,
+                                    %peer,
+                                );
+
                                 return;
                             }
                         }
@@ -228,7 +258,12 @@ pub async fn serve_connection(
                         .insert(path!("topic"), topic.to_string());
 
                     if let Err(err) = output.send(log).await {
-                        warn!(message = "send message failed", ?err, ?peer);
+                        warn!(
+                            message = "send message failed",
+                            %err,
+                            %peer
+                        );
+
                         return;
                     }
                 }
@@ -236,7 +271,12 @@ pub async fn serve_connection(
                     // this response is compatible with MQTT_VERSION_311 & MQTT_VERSION_5
                     let resp = [MQTT_PINGRESP >> 4, 0];
                     if let Err(err) = conn.write(&resp).await {
-                        error!(message = "wrtie PINGRESP failed", ?err, ?peer);
+                        error!(
+                            message = "wrtie PINGRESP failed",
+                            %err,
+                            %peer
+                        );
+
                         return;
                     }
                 }
@@ -268,6 +308,15 @@ pub async fn serve_connection(
 enum LengthError {
     MalformedRemainingLength,
     InsufficientBytes,
+}
+
+impl Display for LengthError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            LengthError::MalformedRemainingLength => f.write_str("malformed remaining length"),
+            LengthError::InsufficientBytes => f.write_str("insufficient bytes"),
+        }
+    }
 }
 
 /// Parses variable byte integer in the stream and returns the length

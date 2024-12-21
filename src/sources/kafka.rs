@@ -411,7 +411,10 @@ async fn run(
                             break;
                         }
                         _ => {
-                            warn!(message = "unexpected error when heartbeat", ?err);
+                            warn!(
+                                message = "unexpected error when heartbeat",
+                                %err,
+                            );
 
                             retries -= 1;
                             if retries <= 0 {
@@ -465,7 +468,10 @@ async fn run(
                     .collect::<Vec<_>>();
 
                 if let Err(err) = cc.commit(topics).await {
-                    error!(message = "commit offset failed", ?err);
+                    error!(
+                        message = "commit offset failed",
+                        %err
+                    );
                 }
             }
         });
@@ -483,7 +489,10 @@ async fn run(
                     notify.notify_waiters();
 
                     if let Err(err) = consumer.leave().await {
-                        warn!(message = "consumer leave failed", ?err);
+                        warn!(
+                            message = "consumer leave failed",
+                            %err
+                        );
                     }
 
                     return Ok(());
@@ -500,7 +509,10 @@ async fn run(
                     topics
                 }
                 Err(err) => {
-                    error!(message = "list topics failed", ?err);
+                    error!(
+                        message = "list topics failed",
+                        %err
+                    );
 
                     continue;
                 }
