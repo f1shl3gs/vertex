@@ -1,8 +1,8 @@
 use std::fmt::{Debug, Display, Formatter};
 use std::str::FromStr;
 
-use configurable::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
-use configurable::{Configurable, GenerateError};
+use configurable::schema::{SchemaGenerator, SchemaObject};
+use configurable::Configurable;
 use http::uri::{Authority, PathAndQuery, Scheme};
 use http::Uri;
 use percent_encoding::percent_decode_str;
@@ -22,8 +22,8 @@ pub struct UriSerde {
 }
 
 impl Configurable for UriSerde {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let mut schema = generate_string_schema();
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = String::generate_schema(gen);
         schema.format = Some("uri");
 
         let metadata = schema.metadata();
@@ -31,7 +31,7 @@ impl Configurable for UriSerde {
             "http://username:password@example.com/some/resource".to_string(),
         )];
 
-        Ok(schema)
+        schema
     }
 }
 

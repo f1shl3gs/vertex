@@ -29,7 +29,7 @@ fn gen() {
         mode: Mode,
     }
 
-    let root_schema = generate_root_schema::<Config>().unwrap();
+    let root_schema = generate_root_schema::<Config>();
 
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);

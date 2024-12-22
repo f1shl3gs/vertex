@@ -5,22 +5,22 @@ use event::{Bucket, MetricValue, Quantile};
 use indexmap::indexmap;
 
 use crate::schema::{
-    generate_array_schema, generate_map_schema, generate_number_schema, generate_one_of_schema,
-    generate_string_schema, generate_struct_schema, InstanceType, SchemaGenerator, SchemaObject,
+    generate_number_schema, generate_one_of_schema, generate_struct_schema, InstanceType,
+    SchemaGenerator, SchemaObject,
 };
-use crate::{Configurable, ConfigurableString, GenerateError};
+use crate::{Configurable, ConfigurableString};
 
 impl Configurable for Key {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(generate_string_schema())
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        String::generate_schema(gen)
     }
 }
 
 impl ConfigurableString for Key {}
 
 impl Configurable for Value {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(SchemaObject {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
             instance_type: Some(
                 vec![
                     InstanceType::Boolean,
@@ -32,60 +32,60 @@ impl Configurable for Value {
                 .into(),
             ),
             ..Default::default()
-        })
+        }
     }
 }
 
 impl Configurable for Tags {
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        generate_map_schema::<BTreeMap<Key, Value>>(gen)
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        BTreeMap::<Key, Value>::generate_schema(gen)
     }
 }
 
 impl Configurable for Bucket {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
         let properties = indexmap! {
             "upper" => generate_number_schema::<f64>(),
             "count" => generate_number_schema::<u64>(),
         };
         let requirement = BTreeSet::from(["upper", "count"]);
 
-        Ok(generate_struct_schema(properties, requirement, None))
+        generate_struct_schema(properties, requirement)
     }
 }
 
 impl Configurable for Quantile {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
         let properties = indexmap! {
             "quantile" => generate_number_schema::<f64>(),
             "value" => generate_number_schema::<f64>(),
         };
         let requirement = BTreeSet::from(["quantile", "value"]);
 
-        Ok(generate_struct_schema(properties, requirement, None))
+        generate_struct_schema(properties, requirement)
     }
 }
 
 impl Configurable for MetricValue {
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
         let histogram_properties = indexmap! {
-            "count" => generate_number_schema::<u64>(),
-            "sum" => generate_number_schema::<f64>(),
-            "buckets" => generate_array_schema::<Bucket>(gen)?,
+            "count" => u64::generate_schema(gen),
+            "sum" => f64::generate_schema(gen),
+            "buckets" => Vec::<Bucket>::generate_schema(gen),
         };
         let histogram_requirement = BTreeSet::from(["count", "sum", "buckets"]);
 
         let summary_properties = indexmap! {
-            "count" => generate_number_schema::<u64>(),
-            "sum" => generate_number_schema::<f64>(),
-            "quantiles" => generate_array_schema::<Quantile>(gen)?,
+            "count" => u64::generate_schema(gen),
+            "sum" => f64::generate_schema(gen),
+            "quantiles" => Vec::<Quantile>::generate_schema(gen),
         };
         let summary_requirement = BTreeSet::from(["count", "sum", "quantiles"]);
 
-        Ok(generate_one_of_schema(&[
-            generate_number_schema::<f64>(),
-            generate_struct_schema(histogram_properties, histogram_requirement, None),
-            generate_struct_schema(summary_properties, summary_requirement, None),
-        ]))
+        generate_one_of_schema(vec![
+            f64::generate_schema(gen),
+            generate_struct_schema(histogram_properties, histogram_requirement),
+            generate_struct_schema(summary_properties, summary_requirement),
+        ])
     }
 }

@@ -1,12 +1,12 @@
-use crate::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
-use crate::{Configurable, GenerateError};
+use crate::schema::{SchemaGenerator, SchemaObject};
+use crate::Configurable;
 
 impl Configurable for chrono_tz::Tz {
-    fn generate_schema(_: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let mut schema = generate_string_schema();
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = String::generate_schema(gen);
         let metadta = schema.metadata();
         metadta.description = Some("An IANA timezone.");
 
-        Ok(schema)
+        schema
     }
 }

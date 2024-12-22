@@ -11,8 +11,8 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use configurable::schema::{generate_array_schema, SchemaGenerator, SchemaObject};
-use configurable::{Configurable, GenerateError};
+use configurable::schema::{SchemaGenerator, SchemaObject};
+use configurable::Configurable;
 use futures_util::TryFutureExt;
 use http::{HeaderMap, Uri};
 use hyper::rt::{Read, Write};
@@ -116,8 +116,8 @@ impl From<&str> for NoProxy {
 }
 
 impl Configurable for NoProxy {
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        generate_array_schema::<String>(gen)
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        Vec::<String>::generate_schema(gen)
     }
 }
 

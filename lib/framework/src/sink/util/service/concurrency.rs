@@ -4,7 +4,7 @@ use configurable::schema::{
     generate_const_string_schema, generate_number_schema, generate_one_of_schema, SchemaGenerator,
     SchemaObject,
 };
-use configurable::{Configurable, GenerateError};
+use configurable::Configurable;
 use serde::de::{Error, Unexpected, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -25,14 +25,12 @@ pub enum Concurrency {
 }
 
 impl Configurable for Concurrency {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let schema = generate_one_of_schema(&[
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        generate_one_of_schema(vec![
             generate_const_string_schema("none".to_string()),
             generate_const_string_schema("adaptive".to_string()),
             generate_number_schema::<usize>(),
-        ]);
-
-        Ok(schema)
+        ])
     }
 }
 

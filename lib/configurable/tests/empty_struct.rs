@@ -9,7 +9,7 @@ fn empty_struct() {
     #[derive(Configurable, Serialize, Deserialize)]
     struct Empty {}
 
-    let root_schema = generate_root_schema::<Empty>().expect("generate schema success");
+    let root_schema = generate_root_schema::<Empty>();
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 

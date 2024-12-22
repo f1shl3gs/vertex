@@ -6,8 +6,8 @@ use std::sync::LazyLock;
 use bytes::Bytes;
 use chrono::format::{Item, StrftimeItems};
 use chrono::Utc;
-use configurable::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
-use configurable::{Configurable, ConfigurableString, GenerateError};
+use configurable::schema::{SchemaGenerator, SchemaObject};
+use configurable::{Configurable, ConfigurableString};
 use event::log::path::parse_target_path;
 use event::{log::Value, EventRef, Metric};
 use log_schema::log_schema;
@@ -237,8 +237,8 @@ impl<'de> Deserialize<'de> for Template {
 }
 
 impl Configurable for Template {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(generate_string_schema())
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        String::generate_schema(gen)
     }
 }
 

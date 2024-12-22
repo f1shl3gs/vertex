@@ -1,28 +1,31 @@
 use http::{Method, Uri};
 
 use crate::schema::{
-    generate_const_string_schema, generate_one_of_schema, generate_string_schema, SchemaGenerator,
+    generate_const_string_schema, generate_one_of_schema, InstanceType, SchemaGenerator,
     SchemaObject,
 };
-use crate::{Configurable, GenerateError};
+use crate::Configurable;
 
 impl Configurable for Uri {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let mut schema = generate_string_schema();
-        schema.format = Some("uri");
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = SchemaObject {
+            instance_type: Some(InstanceType::String.into()),
+            format: Some("uri"),
+            ..Default::default()
+        };
 
         let metadata = schema.metadata();
         metadata.examples = vec![serde_json::Value::String(
             "http://example.com/some/resource".to_string(),
         )];
 
-        Ok(schema)
+        schema
     }
 }
 
 impl Configurable for Method {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let mut schema = generate_one_of_schema(&[
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = generate_one_of_schema(vec![
             generate_const_string_schema("OPTIONS".to_string()),
             generate_const_string_schema("GET".to_string()),
             generate_const_string_schema("POST".to_string()),
@@ -39,6 +42,6 @@ impl Configurable for Method {
             serde_json::Value::String("POST".to_string()),
         ];
 
-        Ok(schema)
+        schema
     }
 }
