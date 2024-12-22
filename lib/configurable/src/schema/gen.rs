@@ -1,4 +1,5 @@
 use super::{visit::Visitor, Map, RootSchema, Schema, SchemaObject};
+use crate::Configurable;
 
 /// Settings to customize how schemas are generated.
 #[derive(Debug)]
@@ -135,6 +136,24 @@ impl SchemaGenerator {
             meta_schema: Some(self.settings.meta_schema),
             schema: root_schema,
             definitions: self.definitions,
+        }
+    }
+
+    /// Generates a JSON Schema for the type `T`, and returns either the schema itself or a `$ref` schema referencing `T`'s schema.
+    pub fn subschema_for<T: Configurable>(&mut self) -> SchemaObject {
+        match T::reference() {
+            Some(name) => {
+                if !self.definitions().contains_key(name) {
+                    self.definitions_mut().insert(name, Schema::Bool(false));
+
+                    let schema = T::generate_schema(self);
+
+                    self.definitions_mut().insert(name, Schema::Object(schema));
+                }
+
+                SchemaObject::new_ref(format!("{}{}", self.settings().definitions_path(), name))
+            }
+            None => T::generate_schema(self),
         }
     }
 }

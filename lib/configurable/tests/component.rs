@@ -14,7 +14,7 @@ fn test_generate() {
 
     // assert!("some" == SomeConfig::NAME);
 
-    let schema = configurable::schema::generate_root_schema::<SomeConfig>().unwrap();
+    let schema = configurable::schema::generate_root_schema::<SomeConfig>();
     let json = serde_json::to_string_pretty(&schema)
         .expect("rendering root schema to JSON should not fail");
 

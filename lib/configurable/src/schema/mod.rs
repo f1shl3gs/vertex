@@ -26,7 +26,6 @@ pub type Set<V> = BTreeSet<V>;
 pub fn generate_struct_schema(
     properties: IndexMap<&'static str, SchemaObject>,
     required: BTreeSet<&'static str>,
-    additional_properties: Option<Box<Schema>>,
 ) -> SchemaObject {
     let properties = properties
         .into_iter()
@@ -38,13 +37,13 @@ pub fn generate_struct_schema(
         object: Some(Box::new(ObjectValidation {
             properties,
             required,
-            additional_properties,
             ..Default::default()
         })),
         ..Default::default()
     }
 }
 
+#[inline]
 pub fn generate_empty_struct_schema() -> SchemaObject {
     SchemaObject {
         instance_type: Some(InstanceType::Object.into()),
@@ -68,66 +67,14 @@ pub fn convert_to_flattened_schema(primary: &mut SchemaObject, mut subschema: Ve
     }));
 }
 
-pub fn get_or_generate_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
+pub fn generate_root_schema<T>() -> RootSchema
 where
     T: Configurable,
 {
-    let schema = match T::reference() {
-        Some(name) => {
-            if !gen.definitions().contains_key(name) {
-                gen.definitions_mut().insert(name, Schema::Bool(false));
+    let mut gen = SchemaSettings::new().into_generator();
+    let schema = gen.subschema_for::<T>();
 
-                let schema = generate_baseline_schema::<T>(gen)?;
-
-                gen.definitions_mut().insert(name, Schema::Object(schema));
-            }
-
-            get_schema_ref(gen, name)
-        }
-        None => T::generate_schema(gen)?,
-    };
-
-    Ok(schema)
-}
-
-pub fn generate_baseline_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
-where
-    T: Configurable,
-{
-    let schema = T::generate_schema(gen)?;
-    // TODO: apply metadata?
-    Ok(schema)
-}
-
-fn get_schema_ref<S: AsRef<str>>(gen: &mut SchemaGenerator, name: S) -> SchemaObject {
-    let ref_path = format!("{}{}", gen.settings().definitions_path(), name.as_ref());
-    SchemaObject::new_ref(ref_path)
-}
-
-pub fn generate_root_schema<T>() -> Result<RootSchema, GenerateError>
-where
-    T: Configurable,
-{
-    let mut schema_gen = SchemaSettings::new().into_generator();
-    let schema = get_or_generate_schema::<T>(&mut schema_gen)?;
-
-    Ok(schema_gen.into_root_schema(schema))
-}
-
-pub fn generate_map_schema<V>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
-where
-    V: Configurable,
-{
-    let element_schema = get_or_generate_schema::<V>(gen)?;
-
-    Ok(SchemaObject {
-        instance_type: Some(InstanceType::Object.into()),
-        object: Some(Box::new(ObjectValidation {
-            additional_properties: Some(Box::new(element_schema.into())),
-            ..Default::default()
-        })),
-        ..Default::default()
-    })
+    gen.into_root_schema(schema)
 }
 
 /// Asserts that the key type `K` generates a string-like schema, suitable for
@@ -136,7 +83,7 @@ pub fn assert_string_schema_for_map<K, M>(gen: &mut SchemaGenerator) -> Result<(
 where
     K: ConfigurableString,
 {
-    let key_schema = get_or_generate_schema::<K>(gen)?;
+    let key_schema = gen.subschema_for::<K>();
     let wrapped_schema = Schema::Object(key_schema);
 
     // Get a reference to the underlying schema if we're dealing with
@@ -211,10 +158,11 @@ where
     schema
 }
 
-pub fn generate_one_of_schema(subschemas: &[SchemaObject]) -> SchemaObject {
+#[inline]
+pub fn generate_one_of_schema(subschemas: Vec<SchemaObject>) -> SchemaObject {
     let subschemas = subschemas
-        .iter()
-        .map(|s| Schema::Object(s.clone()))
+        .into_iter()
+        .map(Schema::Object)
         .collect::<Vec<_>>();
 
     SchemaObject {
@@ -226,56 +174,7 @@ pub fn generate_one_of_schema(subschemas: &[SchemaObject]) -> SchemaObject {
     }
 }
 
-pub fn make_schema_optional(schema: &mut SchemaObject) -> Result<(), GenerateError> {
-    // We do a little dance here to add an ad
-    match schema.instance_type.as_mut() {
-        None => match schema.subschemas.as_mut() {
-            None => return Err(GenerateError::InvalidOptionalSchema),
-            Some(subschemas) => {
-                if let Some(any_of) = subschemas.any_of.as_mut() {
-                    any_of.push(Schema::Object(generate_null_schema()));
-                } else if let Some(one_of) = subschemas.one_of.as_mut() {
-                    one_of.push(Schema::Object(generate_null_schema()));
-                } else if subschemas.all_of.is_some() {
-                    // If we're dealing with an all-of schema, we have to build a new
-                    // one-of schema where the two choices are either the `null` schema,
-                    // or a subschema comprised of the all-of subschemas.
-                    let all_of = subschemas
-                        .all_of
-                        .take()
-                        .expect("all-of subschemas must be present here");
-                    let new_all_of_schema = SchemaObject {
-                        subschemas: Some(Box::new(SubschemaValidation {
-                            all_of: Some(all_of),
-                            ..Default::default()
-                        })),
-                        ..Default::default()
-                    };
-
-                    subschemas.one_of = Some(vec![
-                        Schema::Object(generate_null_schema()),
-                        Schema::Object(new_all_of_schema),
-                    ]);
-                } else {
-                    return Err(GenerateError::InvalidOptionalSchema);
-                }
-            }
-        },
-
-        Some(sov) => match sov {
-            SingleOrVec::Single(ty) if **ty != InstanceType::Null => {
-                *sov = vec![**ty, InstanceType::Null].into()
-            }
-            SingleOrVec::Vec(ty) if !ty.contains(&InstanceType::Null) => {
-                ty.push(InstanceType::Null)
-            }
-            _ => {}
-        },
-    }
-
-    Ok(())
-}
-
+#[inline]
 pub fn generate_null_schema() -> SchemaObject {
     SchemaObject {
         instance_type: Some(InstanceType::Null.into()),
@@ -283,42 +182,12 @@ pub fn generate_null_schema() -> SchemaObject {
     }
 }
 
+#[inline]
 pub fn generate_const_string_schema(value: String) -> SchemaObject {
     SchemaObject {
         const_value: Some(Value::String(value)),
         ..Default::default()
     }
-}
-
-pub fn generate_bool_schema() -> SchemaObject {
-    SchemaObject {
-        instance_type: Some(InstanceType::Boolean.into()),
-        ..Default::default()
-    }
-}
-
-pub fn generate_string_schema() -> SchemaObject {
-    SchemaObject {
-        instance_type: Some(InstanceType::String.into()),
-        ..Default::default()
-    }
-}
-
-pub fn generate_array_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
-where
-    T: Configurable,
-{
-    // Generate the actual schema for the element type `T`.
-    let element_schema = get_or_generate_schema::<T>(gen)?;
-
-    Ok(SchemaObject {
-        instance_type: Some(InstanceType::Array.into()),
-        array: Some(Box::new(ArrayValidation {
-            items: Some(SingleOrVec::Single(Box::new(element_schema.into()))),
-            ..Default::default()
-        })),
-        ..Default::default()
-    })
 }
 
 pub fn generate_internal_tagged_variant_schema(
@@ -331,5 +200,5 @@ pub fn generate_internal_tagged_variant_schema(
     let mut required = BTreeSet::new();
     required.insert(tag);
 
-    generate_struct_schema(properties, required, None)
+    generate_struct_schema(properties, required)
 }

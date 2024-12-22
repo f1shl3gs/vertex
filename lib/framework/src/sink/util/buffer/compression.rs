@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display, Formatter};
 
-use configurable::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
-use configurable::{Configurable, GenerateError};
+use configurable::schema::{SchemaGenerator, SchemaObject};
+use configurable::Configurable;
 use serde::de::{Error, MapAccess};
 use serde::ser::SerializeMap;
 use serde::{de, ser, Serializer};
@@ -190,9 +190,8 @@ impl Compression {
 }
 
 impl Configurable for Compression {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        // TODO: validate!?
-        Ok(generate_string_schema())
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        String::generate_schema(gen)
     }
 }
 

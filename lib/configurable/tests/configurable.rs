@@ -5,8 +5,7 @@ use serde::Serialize;
 
 #[allow(clippy::print_stdout)]
 fn gen<T: Configurable + Serialize + Sized>() {
-    let schema =
-        configurable::schema::generate_root_schema::<T>().expect("generate root schema failed");
+    let schema = configurable::schema::generate_root_schema::<T>();
 
     let json = serde_json::to_string_pretty(&schema)
         .expect("rendering root schema to JSON should not fail");

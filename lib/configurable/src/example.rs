@@ -377,7 +377,7 @@ fn get_default_or_example(obj: &SchemaObject) -> Option<&Value> {
 
 /// Generate YAML example from a JSON Schema
 pub fn generate_config<T: Configurable>() -> String {
-    let root_schema = generate_root_schema::<T>().expect("generate schema success");
+    let root_schema = generate_root_schema::<T>();
     Examplar::new(root_schema).generate()
 }
 

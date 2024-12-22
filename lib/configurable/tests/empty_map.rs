@@ -13,7 +13,7 @@ fn empty_map() {
         map: BTreeMap<String, String>,
     }
 
-    let root_schema = generate_root_schema::<Outer>().unwrap();
+    let root_schema = generate_root_schema::<Outer>();
 
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);

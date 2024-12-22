@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::collections::{BTreeMap, HashMap};
 use std::net::SocketAddr;
 use std::path::PathBuf;
@@ -8,19 +7,19 @@ use serde_json::Value;
 
 use crate::configurable::ConfigurableString;
 use crate::schema::{
-    assert_string_schema_for_map, generate_array_schema, generate_baseline_schema,
-    generate_bool_schema, generate_map_schema, generate_number_schema, generate_string_schema,
-    make_schema_optional, InstanceType, Metadata, SchemaGenerator, SchemaObject,
+    assert_string_schema_for_map, generate_null_schema, generate_number_schema, ArrayValidation,
+    InstanceType, Metadata, ObjectValidation, Schema, SchemaGenerator, SchemaObject, SingleOrVec,
+    SubschemaValidation,
 };
-use crate::{Configurable, GenerateError};
+use crate::Configurable;
 
 // Numbers.
 macro_rules! impl_configurable_numeric {
 	($($ty:ty),+) => {
 		$(
 			impl Configurable for $ty {
-				fn generate_schema(_: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-					Ok(generate_number_schema::<Self>())
+				fn generate_schema(_: &mut SchemaGenerator) -> SchemaObject {
+					generate_number_schema::<Self>()
 				}
 			}
 		)+
@@ -62,11 +61,18 @@ where
         false
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
         // Make sure our key type is _truly_ a string schema.
-        assert_string_schema_for_map::<K, Self>(gen)?;
+        assert_string_schema_for_map::<K, Self>(gen).expect("key must be string like");
 
-        generate_map_schema::<V>(gen)
+        SchemaObject {
+            instance_type: Some(InstanceType::Object.into()),
+            object: Some(Box::new(ObjectValidation {
+                additional_properties: Some(Box::new(gen.subschema_for::<V>().into())),
+                ..Default::default()
+            })),
+            ..Default::default()
+        }
     }
 }
 
@@ -81,41 +87,40 @@ where
         false
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
         // Make sure our key type is _truly_ a string schema.
-        assert_string_schema_for_map::<K, Self>(gen)?;
+        assert_string_schema_for_map::<K, Self>(gen).expect("key must be string like");
 
-        generate_map_schema::<V>(gen)
+        SchemaObject {
+            instance_type: Some(InstanceType::Object.into()),
+            object: Some(Box::new(ObjectValidation {
+                additional_properties: Some(Box::new(gen.subschema_for::<V>().into())),
+                ..Default::default()
+            })),
+            ..Default::default()
+        }
     }
 }
 
 impl Configurable for String {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(SchemaObject {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
             instance_type: Some(InstanceType::String.into()),
             ..Default::default()
-        })
+        }
     }
 }
-
-impl Configurable for Cow<'static, str> {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(generate_string_schema())
-    }
-}
-
-impl ConfigurableString for Cow<'static, str> {}
 
 impl Configurable for bool {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(generate_bool_schema())
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
+            instance_type: Some(InstanceType::Boolean.into()),
+            ..Default::default()
+        }
     }
 }
 
-impl<T> Configurable for Option<T>
-where
-    T: Configurable,
-{
+impl<T: Configurable> Configurable for Option<T> {
     fn reference() -> Option<&'static str> {
         match T::reference() {
             Some(_) => Some(std::any::type_name::<Self>()),
@@ -127,11 +132,55 @@ where
         false
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let mut inner_schema = generate_baseline_schema::<T>(gen)?;
-        make_schema_optional(&mut inner_schema)?;
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = T::generate_schema(gen);
 
-        Ok(inner_schema)
+        match schema.instance_type.as_mut() {
+            None => match schema.subschemas.as_mut() {
+                None => panic!("invalid option field type"),
+                Some(subschemas) => {
+                    if let Some(any_of) = subschemas.any_of.as_mut() {
+                        any_of.push(Schema::Object(generate_null_schema()));
+                    } else if let Some(one_of) = subschemas.one_of.as_mut() {
+                        one_of.push(Schema::Object(generate_null_schema()));
+                    } else if subschemas.all_of.is_some() {
+                        // If we're dealing with an all-of schema, we have to build a new
+                        // one-of schema where the two choices are either the `null` schema,
+                        // or a subschema comprised of the all-of subschemas.
+                        let all_of = subschemas
+                            .all_of
+                            .take()
+                            .expect("all-of subschemas must be present here");
+                        let new_all_of_schema = SchemaObject {
+                            subschemas: Some(Box::new(SubschemaValidation {
+                                all_of: Some(all_of),
+                                ..Default::default()
+                            })),
+                            ..Default::default()
+                        };
+
+                        subschemas.one_of = Some(vec![
+                            Schema::Object(generate_null_schema()),
+                            Schema::Object(new_all_of_schema),
+                        ]);
+                    } else {
+                        panic!("invalid option field type")
+                    }
+                }
+            },
+
+            Some(sov) => match sov {
+                SingleOrVec::Single(ty) if **ty != InstanceType::Null => {
+                    *sov = vec![**ty, InstanceType::Null].into()
+                }
+                SingleOrVec::Vec(ty) if !ty.contains(&InstanceType::Null) => {
+                    ty.push(InstanceType::Null)
+                }
+                _ => {}
+            },
+        }
+
+        schema
     }
 }
 
@@ -140,14 +189,24 @@ impl<T> Configurable for Vec<T>
 where
     T: Configurable,
 {
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        generate_array_schema::<T>(gen)
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        // Generate the actual schema for the element type `T`.
+        let element_schema = gen.subschema_for::<T>();
+
+        SchemaObject {
+            instance_type: Some(InstanceType::Array.into()),
+            array: Some(Box::new(ArrayValidation {
+                items: Some(SingleOrVec::Single(Box::new(element_schema.into()))),
+                ..Default::default()
+            })),
+            ..Default::default()
+        }
     }
 }
 
 impl Configurable for Duration {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        Ok(SchemaObject {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
             instance_type: Some(InstanceType::String.into()),
             metadata: Some(
                 Metadata {
@@ -157,33 +216,34 @@ impl Configurable for Duration {
                 .into(),
             ),
             ..Default::default()
-        })
+        }
     }
 }
 
 impl Configurable for PathBuf {
-    fn generate_schema(_: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let mut schema = generate_string_schema();
-        let metadata = schema.metadata();
-
-        metadata.description = Some("file path");
-
-        Ok(generate_string_schema())
+    fn generate_schema(_: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
+            metadata: Some(Box::new(Metadata {
+                description: Some("file path"),
+                ..Default::default()
+            })),
+            instance_type: Some(InstanceType::String.into()),
+            ..Default::default()
+        }
     }
 }
 
 // Additional types that do not map directly to scalars.
 impl Configurable for SocketAddr {
-    fn generate_schema(_: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        // TODO: We don't need anything other than a string schema to (de)serialize a `SocketAddr`,
-        // but we eventually should have validation since the format for the possible permutations
-        // is well-known and can be easily codified.
-        let mut schema = generate_string_schema();
-        let metadata = schema.metadata();
-        metadata.description = Some("An internet socket address, either IPv4 or IPv6.");
-        metadata.examples = vec![Value::String("127.0.0.1:8080".to_owned())];
-        schema.format = Some("ip-address");
-
-        Ok(schema)
+    fn generate_schema(_: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
+            metadata: Some(Box::new(Metadata {
+                description: Some("An internet socket address, either IPv4 or IPv6."),
+                examples: vec![Value::String("127.0.0.1:8080".to_owned())],
+                ..Default::default()
+            })),
+            instance_type: Some(InstanceType::String.into()),
+            ..Default::default()
+        }
     }
 }

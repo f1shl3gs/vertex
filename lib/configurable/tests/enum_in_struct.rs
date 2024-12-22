@@ -49,7 +49,7 @@ pub struct ConsoleSinkConfig {
 #[allow(clippy::print_stdout)]
 #[test]
 fn enum_in_struct() {
-    let root_schema = generate_root_schema::<ConsoleSinkConfig>().expect("generate schema success");
+    let root_schema = generate_root_schema::<ConsoleSinkConfig>();
 
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);

@@ -1,12 +1,12 @@
-use crate::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
-use crate::{Configurable, GenerateError};
+use crate::schema::{InstanceType, SchemaGenerator, SchemaObject};
+use crate::Configurable;
 
 impl Configurable for url::Url {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let mut schema = generate_string_schema();
-
-        schema.format = Some("uri");
-
-        Ok(schema)
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
+            instance_type: Some(InstanceType::String.into()),
+            format: Some("uri"),
+            ..Default::default()
+        }
     }
 }

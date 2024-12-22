@@ -62,11 +62,8 @@ fn impl_from_struct(
             return Ok(quote!(
                 fn generate_schema(
                     schema_gen: &mut ::configurable::schema::SchemaGenerator,
-                ) -> std::result::Result<
-                    ::configurable::schema::SchemaObject,
-                    ::configurable::GenerateError,
-                > {
-                    Ok(::configurable::schema::generate_empty_struct_schema())
+                ) -> ::configurable::schema::SchemaObject {
+                    ::configurable::schema::generate_empty_struct_schema()
                 }
             ));
         }
@@ -101,7 +98,6 @@ fn impl_from_struct(
             let mut schema = ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
-                None,
             );
 
             if !flattened_subschemas.is_empty() {
@@ -122,15 +118,12 @@ fn impl_from_struct(
             let mut schema = ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
-                None,
             );
         )
     };
 
     Ok(quote!(
-        fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
-            -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
-        {
+        fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator) -> ::configurable::schema::SchemaObject {
             let mut properties = ::configurable::IndexMap::new();
             let mut required = ::std::collections::BTreeSet::new();
 
@@ -138,7 +131,7 @@ fn impl_from_struct(
 
             #maybe_description
 
-            Ok(schema)
+            schema
         }
     ))
 }
@@ -181,7 +174,7 @@ fn generate_named_struct_field(field: &syn::Field, field_attrs: FieldAttrs) -> T
     );
 
     quote!({
-        let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_typ>(schema_gen)?;
+        let mut subschema = schema_gen.subschema_for::<#field_typ>();
 
         #maybe_format
 
@@ -215,17 +208,17 @@ fn impl_from_enum(
 
     Ok(quote!(
         fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
-            -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
+            -> ::configurable::schema::SchemaObject
         {
             let mut subschemas = ::std::vec::Vec::new();
 
             #(#mapped_variants)*
 
-            let mut schema = ::configurable::schema::generate_one_of_schema(&subschemas);
+            let mut schema = ::configurable::schema::generate_one_of_schema(subschemas);
 
             #maybe_description
 
-            Ok(schema)
+            schema
         }
     ))
 }
@@ -305,7 +298,6 @@ fn generate_enum_struct_named_variant_schema(
         ::configurable::schema::generate_struct_schema(
             properties,
             required,
-            None
         )
     })
 }
@@ -352,7 +344,7 @@ fn generate_enum_unamed_variant_schema(
             .map(|desc| quote!( subschema.metadata().description = Some(#desc); ));
 
         return Ok(quote! {
-            let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
+            let mut subschema = schema_gen.subschema_for::<#field_type>();
 
             #maybe_description
 
@@ -366,18 +358,19 @@ fn generate_enum_unamed_variant_schema(
         quote!(
             let mut properties = ::configurable::IndexMap::new();
             let mut required = ::std::collections::BTreeSet::new();
-            let subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
+            let subschema = schema_gen.subschema_for::<#field_type>();
+
             properties.insert(#variant_name, subschema);
             required.insert(#variant_name);
+
             ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
-                None,
             )
         )
     } else {
         quote!(
-            ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?
+            schema_gen.subschema_for::<#field_type>()
         )
     };
 
@@ -429,7 +422,7 @@ fn generate_named_enum_field(field: &syn::Field) -> Result<TokenStream> {
     let field_schema = {
         let field_type = &field.ty;
         let spanned_generate_schema = quote_spanned! {field.span() =>
-            ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?
+            schema_gen.subschema_for::<#field_type>()
         };
 
         quote!(

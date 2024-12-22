@@ -3,9 +3,9 @@ use serde::Serialize;
 
 use crate::configurable::ConfigurableString;
 use crate::schema::{
-    assert_string_schema_for_map, generate_map_schema, SchemaGenerator, SchemaObject,
+    assert_string_schema_for_map, InstanceType, ObjectValidation, SchemaGenerator, SchemaObject,
 };
-use crate::{Configurable, GenerateError};
+use crate::Configurable;
 
 impl<K, V> Configurable for IndexMap<K, V>
 where
@@ -16,9 +16,16 @@ where
         false
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        assert_string_schema_for_map::<K, Self>(gen)?;
+    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+        assert_string_schema_for_map::<K, Self>(gen).expect("key must be string like");
 
-        generate_map_schema::<V>(gen)
+        SchemaObject {
+            instance_type: Some(InstanceType::Object.into()),
+            object: Some(Box::new(ObjectValidation {
+                additional_properties: Some(Box::new(gen.subschema_for::<V>().into())),
+                ..Default::default()
+            })),
+            ..Default::default()
+        }
     }
 }

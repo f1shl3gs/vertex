@@ -37,7 +37,7 @@ fn flatten_struct() {
         inner: Protocol,
     }
 
-    let root_schema = generate_root_schema::<Config>().expect("generate schema success");
+    let root_schema = generate_root_schema::<Config>();
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
@@ -96,7 +96,7 @@ fn flatten_enum() {
         mode: Mode,
     }
 
-    let root_schema = generate_root_schema::<Config>().expect("generate schema success");
+    let root_schema = generate_root_schema::<Config>();
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
     println!("{}", text);
 
