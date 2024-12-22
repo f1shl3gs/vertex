@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734885383084,
+  "lastUpdate": 1734885408971,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "33189d2ff267732d3c8227fa721d47683b6e9d58",
-          "message": "chore(deps): bump quick-xml from 0.36.2 to 0.37.0 (#1963)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.36.2 to 0.37.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.36.2...v0.37.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-28T16:17:29+08:00",
-          "tree_id": "a2128a19939fe9d6f4219f2e4bcc94715034efc8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33189d2ff267732d3c8227fa721d47683b6e9d58"
-        },
-        "date": 1730103635933,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.972,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 137.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 302.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 622.65,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4c459164a9eaf37cc02b717b139c3cbb2a37e66e",
           "message": "chore(deps): bump serde from 1.0.213 to 1.0.214 (#1964)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.213 to 1.0.214.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.213...v1.0.214)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-29T10:36:50+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 619.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "655deed5499029b30676c37a8483989a9a48bd90",
+          "message": "refine `configurable` macro generation process",
+          "timestamp": "2024-12-23T00:33:54+08:00",
+          "tree_id": "133cc66e463ff332802df120d82f9a8c8e91d4bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/655deed5499029b30676c37a8483989a9a48bd90"
+        },
+        "date": 1734885390892,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.933,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 146.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 302.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 593.91,
             "unit": "ns/op"
           }
         ]
