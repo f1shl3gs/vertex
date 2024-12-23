@@ -554,7 +554,8 @@ mod tests {
     #[test]
     fn priority_stats() {
         let path =
-            "tests/node/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/cache0/priority_stats".into();
+            "tests/node/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/cache0/priority_stats"
+                .into();
         let stats = read_priority_stats(path).unwrap();
         assert_eq!(stats.unused_percent, 99);
         assert_eq!(stats.metadata_percent, 0);
