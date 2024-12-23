@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734954834676,
+  "lastUpdate": 1734955245760,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4c459164a9eaf37cc02b717b139c3cbb2a37e66e",
-          "message": "chore(deps): bump serde from 1.0.213 to 1.0.214 (#1964)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.213 to 1.0.214.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.213...v1.0.214)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-29T10:36:50+08:00",
-          "tree_id": "0432841b7a8a887438070bc7860a9c6401210cdf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4c459164a9eaf37cc02b717b139c3cbb2a37e66e"
-        },
-        "date": 1730170021716,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28854000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 670670,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.369,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1650095375811b4c6aaf3a8d7f9588f58a9fcd7a",
           "message": "chore(deps): bump hyper-util from 0.1.9 to 0.1.10 (#1965)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.9 to 0.1.10.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.9...v0.1.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-10-29T10:37:14+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.681,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "28a0604b3411cc9aa61dba1f0fcb53f726e2836e",
+          "message": "bump thiserror, serde_json and syn to latest (#2075)",
+          "timestamp": "2024-12-23T19:50:22+08:00",
+          "tree_id": "18427be32f1e88301490730b27635164a783f5fa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/28a0604b3411cc9aa61dba1f0fcb53f726e2836e"
+        },
+        "date": 1734955227738,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27865000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 770960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.828,
             "unit": "ns/op"
           }
         ]
