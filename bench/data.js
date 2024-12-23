@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734978538720,
+  "lastUpdate": 1734978961639,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5393e667ae944dc81bfb0de6ca81ee26c0458947",
-          "message": "chore(deps): bump syn from 2.0.86 to 2.0.87 (#1969)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.86 to 2.0.87.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.86...2.0.87)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-03T20:09:48+08:00",
-          "tree_id": "6425b2587657de98fde69582fd9a3bce9e3a99f5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5393e667ae944dc81bfb0de6ca81ee26c0458947"
-        },
-        "date": 1730636403818,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 501,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35295.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7827b26eabeb7329f5dc93ab6cc7fe757ea4c6dc",
           "message": "chore(deps): bump thiserror from 1.0.66 to 1.0.67 (#1970)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.66 to 1.0.67.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.66...1.0.67)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-04T13:31:28+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35780.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "74f37d56f1cab84ea088d78c82039e08d1b06023",
+          "message": "fix metric tags and description when build our own metric (#2077)",
+          "timestamp": "2024-12-24T02:25:24+08:00",
+          "tree_id": "1818d1b76749f61350d35107e50e7e77e2ca0971",
+          "url": "https://github.com/f1shl3gs/vertex/commit/74f37d56f1cab84ea088d78c82039e08d1b06023"
+        },
+        "date": 1734978943962,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 527,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35775.4,
             "unit": "KiB"
           }
         ]
