@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734955260169,
+  "lastUpdate": 1734974838535,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1650095375811b4c6aaf3a8d7f9588f58a9fcd7a",
-          "message": "chore(deps): bump hyper-util from 0.1.9 to 0.1.10 (#1965)\n\nBumps [hyper-util](https://github.com/hyperium/hyper-util) from 0.1.9 to 0.1.10.\r\n- [Release notes](https://github.com/hyperium/hyper-util/releases)\r\n- [Changelog](https://github.com/hyperium/hyper-util/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper-util/compare/v0.1.9...v0.1.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-10-29T10:37:14+08:00",
-          "tree_id": "f93c74c79651c4c93454d7aefa71328d017f713b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1650095375811b4c6aaf3a8d7f9588f58a9fcd7a"
-        },
-        "date": 1730169568399,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542810,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 528320,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6244db07f37bf4757222a7ece1beea8f625178e2",
+          "message": "re-order node tests (#2076)\n\n* re-order node tests",
+          "timestamp": "2024-12-24T01:24:51+08:00",
+          "tree_id": "d81a28fc417a77d96cd770a2190376249bd025c7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6244db07f37bf4757222a7ece1beea8f625178e2"
+        },
+        "date": 1734974820955,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536450,
             "unit": "ns/op"
           }
         ]
