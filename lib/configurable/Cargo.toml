@@ -13,7 +13,7 @@ configurable-derive = { path = "../configurable-derive" }
 inventory = { version = "0.3.16", default-features = false }
 indexmap = { version = "2.7.0", default-features = false, features = ["serde", "std"] }
 serde = { version = "1.0.216", default-features = false }
-serde_json = { version = "1.0.133", default-features = false }
+serde_json = { version = "1.0.134", default-features = false }
 
 # externals
 chrono-tz = { version = "0.10.0", default-features = false }
