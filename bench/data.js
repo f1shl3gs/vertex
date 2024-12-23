@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734974908331,
+  "lastUpdate": 1734975322925,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7b659e3aeadeaeba8e83c93873c82c619fff706d",
-          "message": "chore(deps): bump syn from 2.0.85 to 2.0.86 (#1968)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.85 to 2.0.86.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.85...2.0.86)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-01T10:00:35+08:00",
-          "tree_id": "12696541daaee22050d744bfd319b5f1196c4e08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7b659e3aeadeaeba8e83c93873c82c619fff706d"
-        },
-        "date": 1730427028775,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 505,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35295.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d27fd619f6e42f0fc9505daf31b685bf55e5cac1",
           "message": "chore(deps): bump thiserror from 1.0.65 to 1.0.66 (#1967)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.65 to 1.0.66.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.65...1.0.66)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-01T10:00:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35738,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6244db07f37bf4757222a7ece1beea8f625178e2",
+          "message": "re-order node tests (#2076)\n\n* re-order node tests",
+          "timestamp": "2024-12-24T01:24:51+08:00",
+          "tree_id": "d81a28fc417a77d96cd770a2190376249bd025c7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6244db07f37bf4757222a7ece1beea8f625178e2"
+        },
+        "date": 1734975305279,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 529,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35742,
             "unit": "KiB"
           }
         ]
