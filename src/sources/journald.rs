@@ -650,7 +650,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_codec() {
-        let reader = tokio::fs::File::open("tests/fixtures/journal_export.txt")
+        let reader = tokio::fs::File::open("tests/journal/export.txt")
             .await
             .unwrap();
         let mut stream = FramedRead::new(reader, EntryCodec::new());

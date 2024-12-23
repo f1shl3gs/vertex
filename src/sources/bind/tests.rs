@@ -39,7 +39,7 @@ async fn v3_handle(req: Request<Incoming>) -> hyper::Result<Response<Full<Bytes>
         "/xml/v3/zones",
     ] {
         if available == path {
-            return file_send(available.replace("/xml", "tests/fixtures/bind").as_str()).await;
+            return file_send(available.replace("/xml", "tests/bind").as_str()).await;
         }
     }
 
@@ -60,7 +60,7 @@ async fn v2_handle(req: Request<Incoming>) -> hyper::Result<Response<Full<Bytes>
     if req.uri().path() != "/" {
         Ok(not_found())
     } else {
-        file_send("tests/fixtures/bind/v2.xml").await
+        file_send("tests/bind/v2.xml").await
     }
 }
 

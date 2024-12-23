@@ -142,7 +142,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_net_stats() {
-        let path = "tests/fixtures/proc/net/netstat".into();
+        let path = "tests/node/proc/net/netstat".into();
 
         let stats = get_net_stats(path).await.unwrap();
 
@@ -155,7 +155,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_snmp_stats() {
-        let path = "tests/fixtures/proc/net/snmp".into();
+        let path = "tests/node/proc/net/snmp".into();
         let stats = get_net_stats(path).await.unwrap();
 
         let props = stats.get("Udp").unwrap();
@@ -167,7 +167,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_snmp6_stats() {
-        let path = "tests/fixtures/proc/net/snmp6".into();
+        let path = "tests/node/proc/net/snmp6".into();
         let stats = get_snmp6_stats(path).await.unwrap();
 
         let props = stats.get("Ip6").unwrap();

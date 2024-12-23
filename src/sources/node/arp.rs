@@ -42,7 +42,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let proc_path = "tests/fixtures/proc";
+        let proc_path = "tests/node/proc";
         gather(proc_path.into()).await.unwrap();
     }
 }

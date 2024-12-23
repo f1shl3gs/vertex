@@ -36,7 +36,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_random() {
-        let path = "tests/fixtures/proc".into();
+        let path = "tests/node/proc".into();
         let (avail, pool_size) = read_random(path).await.unwrap();
 
         assert_eq!(avail, 3943);

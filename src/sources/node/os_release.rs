@@ -80,7 +80,7 @@ mod tests {
 
     #[test]
     fn test_parse_os_release() {
-        let path = format!("tests/fixtures{}", USR_LIB_OS_RELEASE);
+        let path = format!("tests/node/{}", USR_LIB_OS_RELEASE);
         let m = parse_os_release(&path).unwrap();
 
         assert_eq!(m.get("NAME").unwrap(), "Ubuntu");

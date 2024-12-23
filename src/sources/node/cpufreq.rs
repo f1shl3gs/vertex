@@ -142,8 +142,10 @@ async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
     };
 
     stat.current_frequency = read_into(root.join("cpufreq/cpuinfo_cur_freq")).ok();
+    // AMD CPU do have theos two files
     stat.maximum_frequency = read_into(root.join("cpufreq/cpuinfo_max_freq")).ok();
     stat.minimum_frequency = read_into(root.join("cpufreq/cpuinfo_min_freq")).ok();
+
     stat.transition_latency = read_into(root.join("cpufreq/cpuinfo_transition_latency")).ok();
     stat.scaling_current_frequency = read_into(root.join("cpufreq/scaling_cur_freq")).ok();
     stat.scaling_maximum_frequency = read_into(root.join("cpufreq/scaling_max_freq")).ok();
@@ -161,21 +163,11 @@ async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
-
     use super::*;
 
     #[tokio::test]
-    async fn test_parse_cpu_freq_cpu_info() {
-        let cpu_path = PathBuf::from("tests/fixtures/sys/devices/system/cpu/cpu0");
-        let v = parse_cpu_freq_cpu_info(cpu_path).await.unwrap();
-        assert_eq!(v.minimum_frequency, Some(800000));
-        assert_eq!(v.maximum_frequency, Some(2400000));
-    }
-
-    #[tokio::test]
     async fn test_get_cpu_freq_stat() {
-        let sys_path = "tests/fixtures/sys";
+        let sys_path = "tests/node/sys";
         let stats = get_cpu_freq_stat(sys_path.into()).await.unwrap();
 
         assert_eq!(

@@ -366,9 +366,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_fibre_channel_class() {
-        let fcc = fibre_channel_class("tests/fixtures/sys".into())
-            .await
-            .unwrap();
+        let fcc = fibre_channel_class("tests/node/sys".into()).await.unwrap();
         assert_eq!(fcc.len(), 1);
         let host = &fcc[0];
 

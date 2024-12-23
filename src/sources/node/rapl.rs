@@ -123,7 +123,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_rapl_zones() {
-        let root = "tests/fixtures/sys".into();
+        let root = "tests/node/sys".into();
         let mut zones = get_rapl_zones(root).await.unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.

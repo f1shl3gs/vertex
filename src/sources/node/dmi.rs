@@ -132,8 +132,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let dmi =
-            DesktopManagementInterface::parse("tests/fixtures/sys/class/dmi/id".into()).unwrap();
+        let dmi = DesktopManagementInterface::parse("tests/node/sys/class/dmi/id".into()).unwrap();
 
         assert_eq!(dmi.bios_date.unwrap(), "04/12/2021");
         assert_eq!(dmi.bios_release.unwrap(), "2.2");

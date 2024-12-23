@@ -197,7 +197,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_thermal_zone_stats() {
-        let root = "tests/fixtures/sys".into();
+        let root = "tests/node/sys".into();
         let stats = thermal_zone_stats(root).await.unwrap();
         assert_eq!(
             stats,
@@ -224,7 +224,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_cooling_device_stats() {
-        let root = "tests/fixtures/sys".into();
+        let root = "tests/node/sys".into();
         let stats = cooling_device_stats(root).await.unwrap();
         assert_eq!(
             stats,

@@ -192,7 +192,7 @@ mod tests {
     #[test]
     fn test_boot_time() {
         // NOTE: the value returned is not constant, so assert_eq! will not help
-        boot_time("tests/fixtures/proc/uptime").unwrap();
+        boot_time("tests/node/proc/uptime").unwrap();
     }
 
     #[test]

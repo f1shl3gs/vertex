@@ -356,17 +356,6 @@ struct Config {
     collectors: Collectors,
 }
 
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            proc_path: default_proc_path(),
-            sys_path: default_sys_path(),
-            interval: default_interval(),
-            collectors: Collectors::default(),
-        }
-    }
-}
-
 #[derive(Debug, Default, Deserialize, Serialize)]
 struct NodeMetrics {
     interval: Duration,
@@ -812,19 +801,20 @@ async fn run(
             }));
         }
 
-        let mut metrics = vec![];
-        while let Some(Ok(mut parts)) = tasks.next().await {
+        while let Some(Ok(mut metrics)) = tasks.next().await {
             let now = chrono::Utc::now();
-            parts
+            metrics
                 .iter_mut()
                 .for_each(|metric| metric.timestamp = Some(now));
 
-            metrics.extend(parts);
-        }
+            if let Err(err) = out.send(metrics).await {
+                error!(
+                    message = "Error sending node metrics",
+                    %err,
+                );
 
-        if let Err(err) = out.send(metrics).await {
-            error!(message = "Error sending node metrics", ?err);
-            return Err(());
+                return Err(());
+            }
         }
     }
 
