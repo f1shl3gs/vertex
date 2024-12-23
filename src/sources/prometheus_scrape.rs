@@ -22,11 +22,18 @@ use thiserror::Error;
 struct Config {
     /// Endpoints to scrape metrics from.
     #[configurable(required, format = "uri", example = "http://example.com/metrics")]
-    endpoints: Vec<String>,
+    targets: Vec<String>,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
+
+    tls: Option<TlsConfig>,
+
+    auth: Option<Auth>,
+
+    /// Global jitterSeed seed is used to spread scrape workload across HA setup.
+    jitter_seed: Option<u64>,
 
     /// Controls how tag conflicts are handled if the scraped source has tags
     /// that Vertex would add. If true Vertex will not add the new tag if the
@@ -35,13 +42,6 @@ struct Config {
     /// "honor_labels" configuration.
     #[serde(default)]
     honor_labels: bool,
-
-    tls: Option<TlsConfig>,
-
-    auth: Option<Auth>,
-
-    /// Global jitterSeed seed is used to spread scrape workload across HA setup.
-    jitter_seed: Option<u64>,
 }
 
 #[async_trait::async_trait]
@@ -49,7 +49,7 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let urls = self
-            .endpoints
+            .targets
             .iter()
             .map(|s| s.parse::<Uri>())
             .collect::<Result<Vec<Uri>, _>>()?;
@@ -95,7 +95,7 @@ fn offset<H: Hash>(h: &H, now: i64, interval: Duration, jitter_seed: u64) -> Dur
 
 fn scrape(
     client: HttpClient,
-    urls: Vec<Uri>,
+    targets: Vec<Uri>,
     auth: Option<Auth>,
     honor_labels: bool,
     interval: Duration,
@@ -103,14 +103,12 @@ fn scrape(
     shutdown: ShutdownSignal,
     output: Pipeline,
 ) -> Source {
-    let shutdown = shutdown;
-
     Box::pin(async move {
         let auth = Arc::new(auth);
 
-        let handles = urls
+        let handles = targets
             .into_iter()
-            .map(|url| {
+            .map(|uri| {
                 let client = client.clone();
                 let mut shutdown = shutdown.clone();
                 let mut output = output.clone();
@@ -118,14 +116,14 @@ fn scrape(
                     "timestamp can not be represented in a timestamp with nanosecond precision.",
                 );
                 let mut ticker = tokio::time::interval_at(
-                    tokio::time::Instant::now() + offset(&url, now, interval, jitter_seed),
+                    tokio::time::Instant::now() + offset(&uri, now, interval, jitter_seed),
                     interval,
                 );
                 let auth = Arc::clone(&auth);
                 let instance = format!(
                     "{}:{}",
-                    url.host().unwrap_or_default(),
-                    url.port_u16().unwrap_or_else(|| match url.scheme() {
+                    uri.host().unwrap_or_default(),
+                    uri.port_u16().unwrap_or_else(|| match uri.scheme() {
                         Some(scheme) if scheme == &http::uri::Scheme::HTTP => 80,
                         Some(scheme) if scheme == &http::uri::Scheme::HTTPS => 443,
                         _ => 0,
@@ -142,7 +140,7 @@ fn scrape(
                         }
 
                         let start = Instant::now();
-                        let result = scrape_one(&client, auth.as_ref(), &url).await;
+                        let result = scrape_one(&client, auth.as_ref(), &uri).await;
                         let elapsed = start.elapsed();
 
                         let (mut metrics, success) = match result {
@@ -166,6 +164,7 @@ fn scrape(
                         metrics.extend_from_slice(&[
                             Metric::gauge("up", "", success),
                             Metric::gauge("scrape_duration_seconds", "", elapsed),
+                            Metric::gauge("scrape_samples_scraped", "", metrics.len()),
                         ]);
 
                         metrics.iter_mut().for_each(|metric| {
