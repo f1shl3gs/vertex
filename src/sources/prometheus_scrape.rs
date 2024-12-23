@@ -22,7 +22,7 @@ use thiserror::Error;
 struct Config {
     /// Endpoints to scrape metrics from.
     #[configurable(required, format = "uri", example = "http://example.com/metrics")]
-    endpoints: Vec<String>,
+    targets: Vec<String>,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -41,7 +41,8 @@ struct Config {
     auth: Option<Auth>,
 
     /// Global jitterSeed seed is used to spread scrape workload across HA setup.
-    jitter_seed: Option<u64>,
+    #[serde(default)]
+    jitter_seed: u64,
 }
 
 #[async_trait::async_trait]
@@ -49,7 +50,7 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let urls = self
-            .endpoints
+            .targets
             .iter()
             .map(|s| s.parse::<Uri>())
             .collect::<Result<Vec<Uri>, _>>()?;
@@ -61,7 +62,7 @@ impl SourceConfig for Config {
             self.auth.clone(),
             self.honor_labels,
             self.interval,
-            self.jitter_seed.unwrap_or_default(),
+            self.jitter_seed,
             cx.shutdown,
             cx.output,
         ))
@@ -246,31 +247,36 @@ fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
     let start = Utc::now();
 
     for group in groups {
-        let name = &group.name;
-        match group.metrics {
-            GroupKind::Counter(map) => {
-                for (key, metric) in map {
-                    let counter = Metric::sum(name, "", metric.value)
-                        .with_timestamp(utc_timestamp(key.timestamp, start))
-                        .with_tags(key.labels.into());
+        let MetricGroup {
+            name,
+            description,
+            metrics,
+        } = group;
 
-                    events.push(counter);
+        match metrics {
+            GroupKind::Counter(metrics) => {
+                for (key, metric) in metrics {
+                    let metric = Metric::sum(&name, &description, metric.value)
+                        .with_tags(key.labels.into())
+                        .with_timestamp(utc_timestamp(key.timestamp, start));
+
+                    events.push(metric);
                 }
             }
             GroupKind::Gauge(metrics) | GroupKind::Untyped(metrics) => {
                 for (key, metric) in metrics {
-                    let gauge = Metric::gauge(name, "", metric.value)
-                        .with_timestamp(utc_timestamp(key.timestamp, start))
-                        .with_tags(key.labels.into());
+                    let metric = Metric::gauge(&name, &description, metric.value)
+                        .with_tags(key.labels.into())
+                        .with_timestamp(utc_timestamp(key.timestamp, start));
 
-                    events.push(gauge);
+                    events.push(metric);
                 }
             }
             GroupKind::Summary(metrics) => {
                 for (key, metric) in metrics {
-                    let m = Metric::summary(
-                        name,
-                        "",
+                    let metric = Metric::summary(
+                        &name,
+                        &description,
                         metric.count,
                         metric.sum,
                         metric
@@ -282,16 +288,17 @@ fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
                             })
                             .collect::<Vec<_>>(),
                     )
+                    .with_tags(key.labels.into())
                     .with_timestamp(utc_timestamp(key.timestamp, start));
 
-                    events.push(m);
+                    events.push(metric);
                 }
             }
             GroupKind::Histogram(metrics) => {
                 for (key, metric) in metrics {
-                    let m = Metric::histogram(
-                        name,
-                        "",
+                    let metric = Metric::histogram(
+                        &name,
+                        &description,
                         metric.count,
                         metric.sum,
                         metric
@@ -303,9 +310,10 @@ fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
                             })
                             .collect::<Vec<_>>(),
                     )
+                    .with_tags(key.labels.into())
                     .with_timestamp(utc_timestamp(key.timestamp, start));
 
-                    events.push(m);
+                    events.push(metric);
                 }
             }
         }

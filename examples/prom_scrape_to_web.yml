@@ -1,0 +1,12 @@
+sources:
+  scrape:
+    type: prometheus_scrape
+    targets:
+      - http://localhost:9100/metrics
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - scrape
+    endpoint: 127.0.0.1:9101
