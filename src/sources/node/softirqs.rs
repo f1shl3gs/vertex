@@ -104,7 +104,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let stat = Softirqs::parse("tests/fixtures/proc/softirqs".into()).unwrap();
+        let stat = Softirqs::parse("tests/node/proc/softirqs".into()).unwrap();
 
         assert_eq!(stat.hi[0], 3);
         assert_eq!(stat.timer[1], 247490);

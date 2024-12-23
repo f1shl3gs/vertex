@@ -1159,7 +1159,7 @@ mod tests {
         let dir = temp_dir();
         let config = Config {
             ignore_older_than: None,
-            include: vec![PathBuf::from("tests/fixtures/gzipped.log")],
+            include: vec![PathBuf::from("tests/tail/gzipped.log")],
             // TODO: remove this once files are fingerprinted after decompression
             //
             // Currently, this needs to be smaller than the total size of the compressed file
@@ -1190,7 +1190,7 @@ mod tests {
     async fn test_non_utf8_encoded_file() {
         let dir = temp_dir();
         let config = Config {
-            include: vec![PathBuf::from("tests/fixtures/utf-16le.log")],
+            include: vec![PathBuf::from("tests/tail/utf-16le.log")],
             charset: Some(UTF_16LE),
             ..test_default_tail_config(dir.clone())
         };

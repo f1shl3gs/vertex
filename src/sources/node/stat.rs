@@ -105,7 +105,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_stat() {
-        let proc = "tests/fixtures/proc".into();
+        let proc = "tests/node/proc".into();
         let stat = read_stat(proc).await.unwrap();
 
         assert_eq!(stat.ctxt, 38014093);

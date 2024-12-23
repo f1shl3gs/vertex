@@ -81,7 +81,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_bonding_stats() {
-        let path = PathBuf::from("tests/fixtures/bonding/sys");
+        let path = PathBuf::from("tests/bonding/sys");
         let stats = read_bonding_stats(path).await.unwrap();
 
         assert_ne!(stats.len(), 0);

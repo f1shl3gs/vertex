@@ -159,7 +159,7 @@ mod tests {
         let cases = vec![
             TestCase {
                 name: "udp file found, no error should come up".to_string(),
-                file: "tests/fixtures/proc/net/udp".into(),
+                file: "tests/node/proc/net/udp".into(),
                 want: NetIPSocketSummary {
                     tx_queue_length: 2,
                     rx_queue_length: 2,
@@ -169,7 +169,7 @@ mod tests {
             },
             TestCase {
                 name: "udp6 file found, no error should come up".to_string(),
-                file: "tests/fixtures/proc/net/udp6".into(),
+                file: "tests/node/proc/net/udp6".into(),
                 want: NetIPSocketSummary {
                     tx_queue_length: 0,
                     rx_queue_length: 0,
@@ -185,7 +185,7 @@ mod tests {
             },
             TestCase {
                 name: "error case - parse error".to_string(),
-                file: "tests/fixtures/proc/net/udp_broken".into(),
+                file: "tests/node/proc/net/udp_broken".into(),
                 want: Default::default(),
                 want_err: true,
             },

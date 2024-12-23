@@ -265,7 +265,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_parse_pool_procfs_file() {
-        let paths = glob("tests/fixtures/proc/spl/kstat/zfs/*/io").unwrap();
+        let paths = glob("tests/node/proc/spl/kstat/zfs/*/io").unwrap();
         let mut parsed = 0;
         for path in paths.flatten() {
             let path = path.to_str().unwrap();
@@ -289,7 +289,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_parse_pool_objset_file() {
-        let paths = glob("tests/fixtures/proc/spl/kstat/zfs/*/objset-*").unwrap();
+        let paths = glob("tests/node/proc/spl/kstat/zfs/*/objset-*").unwrap();
         for path in paths.filter_map(Result::ok) {
             let kvs = parse_pool_objset_file(path.to_str().unwrap())
                 .await
@@ -310,7 +310,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_parse_pool_state_file() {
-        let paths = glob("tests/fixtures/proc/spl/kstat/zfs/*/state").unwrap();
+        let paths = glob("tests/node/proc/spl/kstat/zfs/*/state").unwrap();
         let mut handled = 0;
         for path in paths.filter_map(Result::ok) {
             handled += 1;

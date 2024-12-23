@@ -302,7 +302,7 @@ mod tests {
                     "remote_addr" => "2.125.160.216",
                     "request_path" => "/foo/bar"
                 ),
-                "tests/fixtures/geoip/GeoIP2-City-Test.mmdb",
+                "tests/geoip/GeoIP2-City-Test.mmdb",
                 fields!(
                     "city_name" => "Boxford",
                     "country_code" => "GB",
@@ -323,7 +323,7 @@ mod tests {
                     "remote_addr" => "67.43.156.9",
                     "request_path" => "/foo/bar",
                 ),
-                "tests/fixtures/geoip/GeoIP2-City-Test.mmdb",
+                "tests/geoip/GeoIP2-City-Test.mmdb",
                 fields!(
                     "city_name" => "",
                     "country_code" => "BT",
@@ -344,7 +344,7 @@ mod tests {
                     "remote_addr" => "10.1.12.1",
                     "request_path" => "/foo/bar",
                 ),
-                "tests/fixtures/geoip/GeoLite2-ASN-Test.mmdb",
+                "tests/geoip/GeoLite2-ASN-Test.mmdb",
                 fields!(
                     "autonomous_system_number" => 0,
                     "autonomous_system_organization" => "",

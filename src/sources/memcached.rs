@@ -886,11 +886,11 @@ mod tests {
     #[tokio::test]
     async fn test_parse_stats() {
         let mut stats = Stats::default();
-        let data = std::fs::read_to_string("tests/fixtures/memcached/stats.txt").unwrap();
+        let data = std::fs::read_to_string("tests/memcached/stats.txt").unwrap();
         stats.append(&data).unwrap();
-        let data = std::fs::read_to_string("tests/fixtures/memcached/slabs.txt").unwrap();
+        let data = std::fs::read_to_string("tests/memcached/slabs.txt").unwrap();
         stats.append(&data).unwrap();
-        let data = std::fs::read_to_string("tests/fixtures/memcached/items.txt").unwrap();
+        let data = std::fs::read_to_string("tests/memcached/items.txt").unwrap();
         stats.append(&data).unwrap();
 
         assert_eq!(stats.version, "1.6.12");
@@ -920,7 +920,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_parse_stats_settings() {
-        let data = std::fs::read_to_string("tests/fixtures/memcached/settings.txt").unwrap();
+        let data = std::fs::read_to_string("tests/memcached/settings.txt").unwrap();
 
         let stats = parse_stats_settings(&data);
         assert_eq!(stats.get("chunk_size").unwrap(), "48");

@@ -1427,11 +1427,7 @@ mod tests {
             }
         }
 
-        file_send(format!(
-            "tests/fixtures/elasticsearch/nodestats/{}.json",
-            cx.version
-        ))
-        .await
+        file_send(format!("tests/elasticsearch/nodestats/{}.json", cx.version)).await
     }
 
     async fn start_server_and_fetch(cx: Arc<Context>) {
@@ -1498,7 +1494,7 @@ mod tests {
     fn decode_5() {
         use bytes::Buf;
 
-        let data = std::fs::read("tests/fixtures/elasticsearch/nodestats/5.4.2.json").unwrap();
+        let data = std::fs::read("tests/elasticsearch/nodestats/5.4.2.json").unwrap();
         let xd = &mut serde_json::Deserializer::from_reader(data.reader());
         let result: Result<NodeStatsResp, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {

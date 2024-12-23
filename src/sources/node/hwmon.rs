@@ -546,7 +546,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let path = "tests/fixtures/sys".into();
+        let path = "tests/node/sys".into();
         let ms = gather(path).await.unwrap();
         assert_ne!(ms.len(), 0);
     }
@@ -577,7 +577,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_collect_sensor_data() {
-        let path = "tests/fixtures/sys/class/hwmon/hwmon3";
+        let path = "tests/node/sys/class/hwmon/hwmon3";
         let kvs = collect_sensor_data(path).await.unwrap();
 
         assert_eq!(kvs.get("fan2").unwrap().get("input").unwrap(), "1098");
@@ -586,7 +586,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_hwmon_name() {
-        let path = "tests/fixtures/sys/class/hwmon/hwmon2";
+        let path = "tests/node/sys/class/hwmon/hwmon2";
         let name = hwmon_name(path).await.unwrap();
         assert_eq!(name, "platform_applesmc_768")
     }

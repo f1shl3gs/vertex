@@ -441,7 +441,7 @@ mod tests {
 
     #[test]
     fn test_deserialize_output() {
-        let text = include_str!("../../tests/fixtures/nvidia-smi.xml");
+        let text = include_str!("../../tests/nvidia/smi.xml");
         let smi: Smi = quick_xml::de::from_str(text).unwrap();
         assert_eq!(smi.driver_version, "470.82.00");
         assert_eq!(smi.gpus.len(), 1);

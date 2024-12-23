@@ -255,7 +255,7 @@ mod tests {
 
     #[test]
     fn decode_server() {
-        let data = std::fs::read("tests/fixtures/bind/v3/server").unwrap();
+        let data = std::fs::read("tests/bind/v3/server").unwrap();
         let xd = &mut quick_xml::de::Deserializer::from_reader(data.reader());
         let result: Result<Statistics, _> = serde_path_to_error::deserialize(xd);
 
@@ -279,7 +279,7 @@ mod tests {
 
     #[test]
     fn decode_zones() {
-        let data = std::fs::read("tests/fixtures/bind/v3/zones").unwrap();
+        let data = std::fs::read("tests/bind/v3/zones").unwrap();
         let xd = &mut quick_xml::de::Deserializer::from_reader(data.reader());
         let result: Result<ZoneStatistics, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {

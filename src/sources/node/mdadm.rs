@@ -397,7 +397,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_parse_mdstat() {
-        let path = Path::new("tests/fixtures/proc/mdstat");
+        let path = Path::new("tests/node/proc/mdstat");
         let stats = parse_mdstat(path).await.unwrap();
 
         assert_eq!(

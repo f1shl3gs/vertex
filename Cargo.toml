@@ -8,7 +8,7 @@ repository = "https://github.com/f1shl3gs/vertex"
 publish = false
 rust-version = "1.81"
 exclude = [
-    "tests/fixtures"
+    "tests/node"
 ]
 
 # This profile optimizes for runtime performance and small binary size at the expense of longer

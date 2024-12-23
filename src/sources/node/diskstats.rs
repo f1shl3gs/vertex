@@ -169,7 +169,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let proc_path = "tests/fixtures/proc";
+        let proc_path = "tests/node/proc";
         let conf = Config {
             ignored: default_ignored(),
         };

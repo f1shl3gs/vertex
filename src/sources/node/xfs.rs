@@ -611,7 +611,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_xfs_sys_stats() {
-        let sys_path = "tests/fixtures/sys".into();
+        let sys_path = "tests/node/sys".into();
         let stats = xfs_sys_stats(sys_path).await.unwrap();
         assert_eq!(stats.len(), 2);
 
