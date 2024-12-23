@@ -384,7 +384,7 @@ tower = { version = "0.5.2", default-features = false }
 # Serde
 serde = { version = "1.0.216", default-features = false, features = ["derive"] }
 serde_yaml = { version = "0.9.34", default-features = false }
-serde_json = { version = "1.0.133", default-features = false }
+serde_json = { version = "1.0.134", default-features = false }
 
 # Protobuf
 prost = { version = "0.13.4", default-features = false, features = ["std"] }
@@ -424,7 +424,7 @@ rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "3bd650d80bc2c06a
 smallvec = { version = "1.13.2", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 sqlx = { version = "0.8.2", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
-thiserror = { version = "2.0.8", default-features = false }
+thiserror = { version = "2.0.9", default-features = false }
 tonic = { version = "0.12.3", default-features = false, optional = true }
 tonic-health = { version = "0.12.3", default-features = false, optional = true }
 typetag = { version = "0.2.19" }
