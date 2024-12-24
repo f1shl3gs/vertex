@@ -7,14 +7,13 @@ use configurable::configurable_component;
 use event::{Bucket, Metric, Quantile, EXPORTED_INSTANCE_KEY, INSTANCE_KEY};
 use framework::config::{default_interval, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient, HttpError};
-use framework::pipeline::Pipeline;
-use framework::shutdown::ShutdownSignal;
 use framework::tls::TlsConfig;
 use framework::Source;
 use http::{StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
 use prometheus::{GroupKind, MetricGroup};
 use thiserror::Error;
+use tokio::task::JoinSet;
 
 /// Collect metrics from prometheus clients.
 #[configurable_component(source, name = "prometheus_scrape")]
@@ -49,101 +48,53 @@ struct Config {
 #[typetag::serde(name = "prometheus_scrape")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let urls = self
+        let targets = self
             .targets
             .iter()
             .map(|s| s.parse::<Uri>())
             .collect::<Result<Vec<Uri>, _>>()?;
         let client = HttpClient::new(&self.tls, &cx.proxy)?;
 
-        Ok(scrape(
-            client,
-            urls,
-            self.auth.clone(),
-            self.honor_labels,
-            self.interval,
-            self.jitter_seed,
-            cx.shutdown,
-            cx.output,
-        ))
-    }
+        let shutdown = cx.shutdown;
+        let output = cx.output;
+        let auth = Arc::new(self.auth.clone());
+        let interval = self.interval;
+        let jitter_seed = self.jitter_seed;
+        let honor_labels = self.honor_labels;
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
-    }
-}
+        Ok(Box::pin(async move {
+            let mut set = JoinSet::new();
 
-fn calculate_hash<T: Hash>(t: &T) -> u64 {
-    // Default hasher is not the fastest, but it's totally fine here, cause
-    // this func is not in the hot path.
-    let mut s = std::collections::hash_map::DefaultHasher::new();
-    t.hash(&mut s);
-    s.finish()
-}
-
-// offset returns the time until the next scrape cycle for the target.
-fn offset<H: Hash>(h: &H, now: i64, interval: Duration, jitter_seed: u64) -> Duration {
-    let hv = calculate_hash(h);
-    let base = interval.as_nanos() as i64 - now % interval.as_nanos() as i64;
-    let offset = (hv ^ jitter_seed) % interval.as_nanos() as u64;
-    let mut next = base + offset as i64;
-    if next > interval.as_nanos() as i64 {
-        next -= interval.as_nanos() as i64
-    }
-
-    Duration::from_nanos(next as u64)
-}
-
-fn scrape(
-    client: HttpClient,
-    urls: Vec<Uri>,
-    auth: Option<Auth>,
-    honor_labels: bool,
-    interval: Duration,
-    jitter_seed: u64,
-    shutdown: ShutdownSignal,
-    output: Pipeline,
-) -> Source {
-    let shutdown = shutdown;
-
-    Box::pin(async move {
-        let auth = Arc::new(auth);
-
-        let handles = urls
-            .into_iter()
-            .map(|url| {
-                let client = client.clone();
-                let mut shutdown = shutdown.clone();
+            for target in targets {
                 let mut output = output.clone();
-                let now = Utc::now().timestamp_nanos_opt().expect(
-                    "timestamp can not be represented in a timestamp with nanosecond precision.",
-                );
-                let mut ticker = tokio::time::interval_at(
-                    tokio::time::Instant::now() + offset(&url, now, interval, jitter_seed),
-                    interval,
-                );
+                let mut shutdown = shutdown.clone();
+
+                let client = client.clone();
                 let auth = Arc::clone(&auth);
                 let instance = format!(
                     "{}:{}",
-                    url.host().unwrap_or_default(),
-                    url.port_u16().unwrap_or_else(|| match url.scheme() {
+                    target.host().unwrap_or_default(),
+                    target.port_u16().unwrap_or_else(|| match target.scheme() {
                         Some(scheme) if scheme == &http::uri::Scheme::HTTP => 80,
                         Some(scheme) if scheme == &http::uri::Scheme::HTTPS => 443,
                         _ => 0,
                     })
                 );
 
-                tokio::spawn(async move {
+                set.spawn(async move {
+                    let mut ticker = tokio::time::interval_at(
+                        tokio::time::Instant::now() + offset(&target, interval, jitter_seed),
+                        interval,
+                    );
+
                     loop {
                         tokio::select! {
-                            biased;
-
                             _ = &mut shutdown => break,
                             _ = ticker.tick() => {}
                         }
 
                         let start = Instant::now();
-                        let result = scrape_one(&client, auth.as_ref(), &url).await;
+                        let result = scrape_one(&client, auth.as_ref(), &target).await;
                         let elapsed = start.elapsed();
 
                         let (mut metrics, success) = match result {
@@ -151,7 +102,7 @@ fn scrape(
                                 if metrics.is_empty() {
                                     warn!(
                                         message = "cannot read or parse metrics",
-                                        ?instance,
+                                        instance,
                                         internal_log_rate_limit = 60
                                     );
                                 }
@@ -159,16 +110,24 @@ fn scrape(
                                 (metrics, true)
                             }
                             Err(err) => {
-                                warn!(message = "scrape metrics failed", %err, instance);
+                                warn!(
+                                    message = "scrape metrics failed",
+                                    %err,
+                                    instance,
+                                );
 
                                 (vec![], false)
                             }
                         };
+
                         metrics.extend_from_slice(&[
                             Metric::gauge("up", "", success),
                             Metric::gauge("scrape_duration_seconds", "", elapsed),
+                            Metric::gauge("scrape_samples_scraped", "", metrics.len()),
                         ]);
 
+                        // NOTE: timestamp already set in the conversion function, so we don't
+                        // need to set it here
                         metrics.iter_mut().for_each(|metric| {
                             // Handle "instance" overwrite
                             if let Some(value) = metric.remote_tag(&INSTANCE_KEY) {
@@ -189,14 +148,44 @@ fn scrape(
                             return;
                         }
                     }
-                })
-            })
-            .collect::<Vec<_>>();
+                });
+            }
 
-        futures::future::join_all(handles).await;
+            set.join_all().await;
 
-        Ok(())
-    })
+            Ok(())
+        }))
+    }
+
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::metrics()]
+    }
+}
+
+fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    // Default hasher is not the fastest, but it's totally fine here, cause
+    // this func is not in the hot path.
+    let mut s = std::collections::hash_map::DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
+}
+
+// offset returns the time until the next scrape cycle for the target.
+fn offset<H: Hash>(h: &H, interval: Duration, jitter_seed: u64) -> Duration {
+    let now = Utc::now()
+        .timestamp_nanos_opt()
+        .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
+
+    let hv = calculate_hash(h);
+    let base = interval.as_nanos() as i64 - now % interval.as_nanos() as i64;
+    let offset = (hv ^ jitter_seed) % interval.as_nanos() as u64;
+
+    let mut next = base + offset as i64;
+    if next > interval.as_nanos() as i64 {
+        next -= interval.as_nanos() as i64
+    }
+
+    Duration::from_nanos(next as u64)
 }
 
 #[derive(Debug, Error)]
@@ -214,9 +203,9 @@ enum ScrapeError {
 async fn scrape_one(
     client: &HttpClient,
     auth: &Option<Auth>,
-    url: &Uri,
+    uri: &Uri,
 ) -> Result<Vec<Metric>, ScrapeError> {
-    let mut req = http::Request::get(url)
+    let mut req = http::Request::get(uri)
         .body(Full::default())
         .map_err(HttpError::BuildRequest)?;
     if let Some(auth) = auth {
@@ -325,9 +314,7 @@ fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
 fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
     match timestamp {
         None => Some(default),
-        Some(timestamp) => {
-            DateTime::<Utc>::from_timestamp(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
-        }
+        Some(timestamp) => DateTime::<Utc>::from_timestamp_millis(timestamp),
     }
 }
 
@@ -346,12 +333,11 @@ mod tests {
     #[test]
     fn spread_offset() {
         let n = 1000;
-        let now = chrono::Utc::now().timestamp_nanos_opt().unwrap();
         let interval = default_interval();
 
         for _i in 0..n {
             let s = random_string(20);
-            let o = offset(&s, now, interval, 0);
+            let o = offset(&s, interval, 0);
             assert!(o < interval);
         }
     }
@@ -362,12 +348,11 @@ mod tests {
         let t2 = String::from("boo");
         let t3 = String::from("far");
 
-        let now = chrono::Utc::now().timestamp_nanos_opt().unwrap();
         let interval = default_interval();
 
-        let o1 = offset(&t1, now, interval, 0);
-        let o2 = offset(&t2, now, interval, 0);
-        let o3 = offset(&t3, now, interval, 0);
+        let o1 = offset(&t1, interval, 0);
+        let o2 = offset(&t2, interval, 0);
+        let o3 = offset(&t3, interval, 0);
         assert!(o1 < interval);
         assert!(o2 < interval);
         assert!(o3 < interval);
