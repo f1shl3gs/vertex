@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735157422062,
+  "lastUpdate": 1735157431844,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8f88eefc38b6ce9961ef049fd15d3daf74cd70e5",
-          "message": "chore(deps): bump thiserror from 1.0.67 to 1.0.68 (#1971)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.67 to 1.0.68.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.67...1.0.68)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-05T10:14:56+08:00",
-          "tree_id": "9278ec320121ca0cba97732362cd2592f23cffc6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8f88eefc38b6ce9961ef049fd15d3daf74cd70e5"
-        },
-        "date": 1730773499085,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 504,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35296.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b743e12d0ea9cccf1693ef059f8b8a1de34fa29",
           "message": "chore(deps): bump twox-hash from 2.0.0 to 2.0.1 (#1973)\n\nBumps [twox-hash](https://github.com/shepmaster/twox-hash) from 2.0.0 to 2.0.1.\r\n- [Changelog](https://github.com/shepmaster/twox-hash/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/shepmaster/twox-hash/compare/v2.0.0...v2.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: twox-hash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-05T10:15:23+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35775.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1cc67b48d3b629300fce39e58d13830366c94c80",
+          "message": "sources/clickhouse_metrics: add more tests and integration tests for clickhouse_metrics (#2081)",
+          "timestamp": "2024-12-26T04:00:08+08:00",
+          "tree_id": "aead2df0061cd67b4ae2a4a47aafd3eb33e64671",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1cc67b48d3b629300fce39e58d13830366c94c80"
+        },
+        "date": 1735157414099,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35753.1,
             "unit": "KiB"
           }
         ]
