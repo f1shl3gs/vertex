@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735156943475,
+  "lastUpdate": 1735156945441,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7b659e3aeadeaeba8e83c93873c82c619fff706d",
-          "message": "chore(deps): bump syn from 2.0.85 to 2.0.86 (#1968)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.85 to 2.0.86.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.85...2.0.86)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-01T10:00:35+08:00",
-          "tree_id": "12696541daaee22050d744bfd319b5f1196c4e08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7b659e3aeadeaeba8e83c93873c82c619fff706d"
-        },
-        "date": 1730426599305,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.969,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 145.01,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 610.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5393e667ae944dc81bfb0de6ca81ee26c0458947",
           "message": "chore(deps): bump syn from 2.0.86 to 2.0.87 (#1969)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.86 to 2.0.87.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.86...2.0.87)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-03T20:09:48+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 687.45,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "548cc93fbbd82de59305469b5d974573edb726e6",
+          "message": "remove unnecessary derive for config (#2082)",
+          "timestamp": "2024-12-26T03:59:39+08:00",
+          "tree_id": "d1c01745c3d3c7b20525d2dfa2ec0f6199c00457",
+          "url": "https://github.com/f1shl3gs/vertex/commit/548cc93fbbd82de59305469b5d974573edb726e6"
+        },
+        "date": 1735156927943,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.593,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 143.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 335.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 653.97,
             "unit": "ns/op"
           }
         ]
