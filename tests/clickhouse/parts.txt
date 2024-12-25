@@ -1,0 +1,8 @@
+system	processors_profile_log	1328514	3	57246
+system	metric_log	2913192	3	17704
+system	query_log	1120145	5	9340
+system	asynchronous_metric_log	6542276	7	9827358
+system	text_log	11053526	4	273479
+system	error_log	885	1	1
+system	opentelemetry_span_log	1834587	3	60693
+system	trace_log	4703775	6	272643

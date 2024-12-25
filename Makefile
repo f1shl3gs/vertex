@@ -93,6 +93,10 @@ integration-test-kafka:
 integration-test-elasticsearch:
 	cargo test -p vertex --lib sinks::elasticsearch::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: clickhouse-integration-tests
+clickhouse-integration-tests:
+	cargo test -p vertex --lib sources::clickhouse_metrics::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
+
 .PHONY: integration-tests
 integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub integration-test-redis integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch
 

@@ -1,18 +1,19 @@
-use std::io::BufRead;
+use std::num::ParseFloatError;
 use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
-use bytes::{Buf, Bytes};
+use bytes::Bytes;
 use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::{default_interval, Output, SourceConfig, SourceContext};
-use framework::http::{Auth, HttpClient};
+use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
 use http::{Method, Request};
 use http_body_util::{BodyExt, Full};
-use tokio::task::JoinError;
+use thiserror::Error;
+use tokio::task::JoinSet;
 use url::Url;
 
 #[configurable_component(source, name = "clickhouse_metrics")]
@@ -49,6 +50,36 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::metrics()]
     }
+}
+
+#[derive(Debug, Error)]
+enum Error {
+    #[error(transparent)]
+    Http(#[from] HttpError),
+
+    #[error("parse metric({key}) value failed, {err}")]
+    Parse {
+        key: String,
+        #[source]
+        err: ParseFloatError,
+    },
+}
+
+fn parse_metric(input: &str) -> Result<Vec<(&str, f64)>, Error> {
+    let mut pairs = vec![];
+
+    for line in input.lines() {
+        if let Some((key, value)) = line.split_once('\t') {
+            let value = value.parse::<f64>().map_err(|err| Error::Parse {
+                key: key.to_string(),
+                err,
+            })?;
+
+            pairs.push((key, value));
+        }
+    }
+
+    Ok(pairs)
 }
 
 struct Collector {
@@ -88,99 +119,87 @@ impl Collector {
             .finish()
             .to_string();
 
+        let endpoint = match endpoint.port() {
+            Some(port) => format!("{}://{}:{}", endpoint.scheme(), endpoint.host_str().unwrap(), port),
+            None => format!("{}://{}", endpoint.scheme(), endpoint.host_str().unwrap()),
+        };
+
         Collector {
             metric_uri,
             async_metric_uri,
             events_uri,
             parts_uri,
 
-            endpoint: endpoint.to_string(),
+            endpoint,
             client,
             auth,
         }
     }
 
-    async fn currently_metrics(&self) -> Vec<Metric> {
-        let metrics = match self.fetch_metrics(&self.metric_uri).await {
-            Ok(ms) => ms,
-            Err(err) => {
-                warn!(message = "fetch metrics field", %err);
-                vec![]
-            }
-        };
+    async fn currently_metrics(&self) -> Result<Vec<Metric>, Error> {
+        let data = self.fetch(&self.metric_uri).await?;
 
-        metrics
-            .iter()
-            .map(|(key, value)| {
-                Metric::gauge_with_tags(
-                    sanitize_metric_name(key),
-                    format!("Number of {key} currently processed"),
-                    *value,
-                    tags!(
-                        "endpoint" => self.endpoint.clone(),
-                    ),
-                )
-            })
-            .collect::<Vec<_>>()
+        let lines = parse_metric(unsafe { std::str::from_utf8_unchecked(&data) })?;
+
+        let mut metrics = Vec::with_capacity(lines.len());
+        for (key, value) in lines {
+            metrics.push(Metric::gauge_with_tags(
+                sanitize_metric_name(key),
+                format!("Number of {key} currently processed"),
+                value,
+                tags!(
+                    "endpoint" => self.endpoint.clone(),
+                ),
+            ))
+        }
+
+        Ok(metrics)
     }
 
-    async fn async_metrics(&self) -> Vec<Metric> {
-        let metrics = match self.fetch_metrics(&self.async_metric_uri).await {
-            Ok(ms) => ms,
-            Err(err) => {
-                warn!(message = "fetch async metrics failed", %err);
-                vec![]
-            }
-        };
+    async fn async_metrics(&self) -> Result<Vec<Metric>, Error> {
+        let data = self.fetch(&self.async_metric_uri).await?;
 
-        metrics
-            .iter()
-            .map(|(key, value)| {
-                Metric::gauge_with_tags(
-                    sanitize_metric_name(key),
-                    format!("Number of {key} async processed"),
-                    *value,
-                    tags!(
-                        "endpoint" => self.endpoint.clone()
-                    ),
-                )
-            })
-            .collect::<Vec<_>>()
+        let lines = parse_metric(unsafe { std::str::from_utf8_unchecked(&data) })?;
+
+        let mut metrics = Vec::with_capacity(lines.len());
+        for (key, value) in lines {
+            metrics.push(Metric::gauge_with_tags(
+                sanitize_metric_name(key),
+                format!("Number of {key} async processed"),
+                value,
+                tags!(
+                    "endpoint" => self.endpoint.clone()
+                ),
+            ))
+        }
+
+        Ok(metrics)
     }
 
-    async fn event_metrics(&self) -> Vec<Metric> {
-        let metrics = match self.fetch_metrics(&self.events_uri).await {
-            Ok(ms) => ms,
-            Err(err) => {
-                warn!(message = "fetch events metrics failed", %err);
-                vec![]
-            }
-        };
+    async fn event_metrics(&self) -> Result<Vec<Metric>, Error> {
+        let data = self.fetch(&self.events_uri).await?;
 
-        metrics
-            .iter()
-            .map(|(key, value)| {
-                Metric::sum_with_tags(
-                    sanitize_metric_name(key) + "_total",
-                    format!("Number of {key} total processed"),
-                    *value,
-                    tags!(
-                        "endpoint" => &self.endpoint
-                    ),
-                )
-            })
-            .collect::<Vec<_>>()
+        let lines = parse_metric(unsafe { std::str::from_utf8_unchecked(&data) })?;
+
+        let mut metrics = Vec::with_capacity(lines.len());
+        for (key, value) in lines {
+            metrics.push(Metric::sum_with_tags(
+                sanitize_metric_name(key) + "_total",
+                format!("Number of {key} total processed"),
+                value,
+                tags!(
+                    "endpoint" => self.endpoint.clone()
+                ),
+            ));
+        }
+
+        Ok(metrics)
     }
 
-    async fn parts_metrics(&self) -> Vec<Metric> {
-        let body = match self.fetch(&self.parts_uri).await {
-            Ok(body) => body,
-            Err(err) => {
-                warn!(message = "fetch parts metrics failed", %err);
+    async fn parts_metrics(&self) -> Result<Vec<Metric>, Error> {
+        let body = self.fetch(&self.parts_uri).await?;
 
-                return vec![];
-            }
-        };
+        let text = String::from_utf8_lossy(&body);
 
         // The response body looks like
         //
@@ -190,71 +209,66 @@ impl Collector {
         // system	asynchronous_metric_log	223293	5	96173
         // system	trace_log	17850	3	995
         //
-        // database table bytes count rows
-        body.lines()
-            .filter_map(|line| {
-                if line.is_err() {
-                    return None;
-                }
+        // 8 is the "system" database
+        let mut metrics = Vec::with_capacity(3 * 8);
+        for line in text.lines() {
+            if line.is_empty() {
+                continue;
+            }
 
-                let line = match line {
-                    Ok(line) => line,
-                    Err(_err) => return None,
-                };
+            let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+            if parts.len() != 5 {
+                continue;
+            }
 
-                let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-                if parts.len() != 5 {
-                    return None;
-                }
+            let bytes: u64 = parts[2].parse().expect("parse ok");
+            let count: u64 = parts[3].parse().expect("parse ok");
+            let rows: u64 = parts[4].parse().expect("parse ok");
+            let tags = tags!(
+                "database" => parts[0].to_string(),
+                "table" => parts[1].to_string(),
+                "endpoint" => self.endpoint.clone(),
+            );
 
-                let bytes: u64 = parts[2].parse().ok()?;
-                let count: u64 = parts[3].parse().ok()?;
-                let rows: u64 = parts[4].parse().ok()?;
-                let tags = tags!(
-                    "database" => parts[0].to_string(),
-                    "table" => parts[1].to_string(),
-                    "endpoint" => self.endpoint.clone(),
-                );
-                Some(vec![
-                    Metric::gauge_with_tags(
-                        "table_parts_bytes",
-                        "Table size in bytes",
-                        bytes,
-                        tags.clone(),
-                    ),
-                    Metric::gauge_with_tags(
-                        "table_parts_count",
-                        "Number of parts of the table",
-                        count,
-                        tags.clone(),
-                    ),
-                    Metric::gauge_with_tags(
-                        "table_parts_rows",
-                        "Number of rows in the table",
-                        rows,
-                        tags,
-                    ),
-                ])
-            })
-            .flatten()
-            .collect()
+            metrics.extend_from_slice(&[
+                Metric::gauge_with_tags(
+                    "clickhouse_table_parts_bytes",
+                    "Table size in bytes",
+                    bytes,
+                    tags.clone(),
+                ),
+                Metric::gauge_with_tags(
+                    "clickhouse_table_parts_count",
+                    "Number of parts of the table",
+                    count,
+                    tags.clone(),
+                ),
+                Metric::gauge_with_tags(
+                    "clickhouse_table_parts_rows",
+                    "Number of rows in the table",
+                    rows,
+                    tags,
+                ),
+            ]);
+        }
+
+        Ok(metrics)
     }
 
-    async fn fetch(&self, uri: &str) -> crate::Result<Bytes> {
+    async fn fetch(&self, uri: &str) -> Result<Bytes, HttpError> {
         let mut req = Request::builder()
             .method(Method::GET)
             .uri(uri)
             .body(Full::<Bytes>::default())?;
-
         if let Some(auth) = &self.auth {
             auth.apply(&mut req);
         }
 
         let resp = self.client.send(req).await?;
-        let (parts, incoming) = resp.into_parts();
 
+        let (parts, incoming) = resp.into_parts();
         if !parts.status.is_success() {
-            return Err(format!("unexpected status code {}", parts.status).into());
+            return Err(HttpError::UnexpectedStatus(parts.status));
         }
 
         incoming
@@ -262,30 +276,6 @@ impl Collector {
             .await
             .map(|data| data.to_bytes())
             .map_err(Into::into)
-    }
-
-    async fn fetch_metrics(&self, uri: &str) -> crate::Result<Vec<(String, f64)>> {
-        let body = self.fetch(uri).await?;
-        let buf = body.reader();
-
-        let results = buf
-            .lines()
-            .filter_map(|s| match s {
-                Ok(line) => {
-                    let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-                    if parts.len() != 2 {
-                        return None;
-                    }
-
-                    let v = parts[1].parse::<f64>().ok()?;
-
-                    Some((parts[0].to_string(), v))
-                }
-                Err(_) => None,
-            })
-            .collect::<Vec<_>>();
-
-        Ok(results)
     }
 }
 
@@ -302,39 +292,69 @@ async fn run(
 
     loop {
         tokio::select! {
-            biased;
-
             _ = &mut shutdown => return Ok(()),
             _ = ticker.tick() => {}
         }
 
-        let mut tasks = vec![];
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.currently_metrics().await }));
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.async_metrics().await }));
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.event_metrics().await }));
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.parts_metrics().await }));
+        let mut group = JoinSet::new();
 
-        match futures::future::join_all(tasks)
-            .await
-            .into_iter()
-            .collect::<Result<Vec<Vec<Metric>>, JoinError>>()
-        {
-            Ok(metrics) => {
-                if let Err(err) = output
-                    .send(metrics.into_iter().flatten().collect::<Vec<_>>())
-                    .await
-                {
-                    warn!(message = "send metrics failed", %err);
+        let c = Arc::clone(&collector);
+        group.spawn(async move {
+            c.currently_metrics().await.unwrap_or_else(|err| {
+                warn!(
+                    message = "fetch currently metrics failed",
+                    %err
+                );
 
-                    return Ok(());
-                }
-            }
-            Err(err) => {
-                error!(message = "spawn tasks failed", %err);
+                vec![]
+            })
+        });
+
+        let c = Arc::clone(&collector);
+        group.spawn(async move {
+            c.async_metrics().await.unwrap_or_else(|err| {
+                warn!(
+                    message = "fetch async metrics failed",
+                    %err
+                );
+
+                vec![]
+            })
+        });
+
+        let c = Arc::clone(&collector);
+        group.spawn(async move {
+            c.event_metrics().await.unwrap_or_else(|err| {
+                warn!(
+                    message = "fetch event metrics failed",
+                    %err
+                );
+
+                vec![]
+            })
+        });
+
+        let c = Arc::clone(&collector);
+        group.spawn(async move {
+            c.parts_metrics().await.unwrap_or_else(|err| {
+                warn!(
+                    message = "fetch parts metrics failed",
+                    %err,
+                    instance = c.endpoint
+                );
+
+                vec![]
+            })
+        });
+
+        while let Some(Ok(metrics)) = group.join_next().await {
+            if let Err(err) = output.send(metrics).await {
+                warn!(
+                    message = "send metrics failed",
+                    %err
+                );
+
+                continue;
             }
         }
     }
@@ -344,7 +364,13 @@ async fn run(
 // acronyms are converted to lower-case and preceded by an underscore.
 fn sanitize_metric_name(name: &str) -> String {
     let mut converted = String::from("clickhouse_");
-    let name = name.replace("MHz", "_mhz").replace("CPU", "cpu");
+    let name = name
+        .replace("MHz", "Mhz")
+        .replace("CPU", "Cpu")
+        .replace("OS", "Os")
+        .replace("IO", "Io")
+        .replace("HTTP", "Http")
+        .replace(".", "_");
 
     for (i, ch) in name.char_indices() {
         if ch == '.' {
@@ -364,8 +390,6 @@ fn sanitize_metric_name(name: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use framework::config::ProxyConfig;
-
     use super::*;
 
     #[test]
@@ -381,15 +405,89 @@ mod tests {
         assert_eq!(sanitized, "clickhouse_cpu_frequency_mhz_0");
     }
 
-    #[allow(clippy::print_stdout)]
-    #[ignore]
-    #[tokio::test]
-    async fn parts() {
-        let endpoint = "http://127.0.0.1:8123".parse().unwrap();
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
-        let c = Collector::new(client, None, endpoint);
+    macro_rules! assert_eq_if {
+        ($pair:expr, $key: expr, $value:expr) => {
+            if $pair.0 == $key {
+                assert_eq!($pair.1, $value, $key);
+                continue;
+            }
+        };
+    }
 
-        let body = c.fetch(&c.parts_uri).await.unwrap();
-        println!("{}", String::from_utf8_lossy(body.as_ref()))
+    #[test]
+    fn metrics() {
+        let input = include_str!("../../tests/clickhouse/metric.txt");
+
+        let pairs = parse_metric(input).unwrap();
+        for pair in pairs {
+            assert_eq_if!(pair, "Query", 1.0);
+            assert_eq_if!(pair, "PartMutation", 0.0);
+            assert_eq_if!(pair, "BackgroundSchedulePoolSize", 512.0);
+            assert_eq_if!(pair, "BackgroundBufferFlushSchedulePoolSize", 16.0);
+        }
+    }
+
+    #[test]
+    fn async_metrics() {
+        // http://127.0.0.1:8123/?query=select+replaceRegexpAll%28toString%28metric%29%2C+%27-%27%2C+%27_%27%29+AS+metric%2C+value+from+system.asynchronous_metrics
+        let input = include_str!("../../tests/clickhouse/async_metric.txt");
+
+        let pairs = parse_metric(input).unwrap();
+        for pair in pairs {
+            assert_eq_if!(pair, "OSIOWaitTimeCPU14", 0.0);
+            assert_eq_if!(pair, "OSUserTimeCPU25", 0.049997100168190256);
+            assert_eq_if!(pair, "OSSystemTimeCPU27", 0.00999942003363805);
+        }
+    }
+
+    #[test]
+    fn events() {
+        let input = include_str!("../../tests/clickhouse/event.txt");
+
+        let pairs = parse_metric(input).unwrap();
+        for pair in pairs {
+            assert_eq_if!(pair, "Seek", 2663.0);
+            assert_eq_if!(pair, "FileOpen", 849681.0);
+            assert_eq_if!(pair, "ReadBufferFromFileDescriptorReadBytes", 10136645420.0);
+            assert_eq_if!(pair, "OSCPUVirtualTimeMicroseconds", 802585162.0);
+        }
+    }
+}
+
+#[cfg(all(test, feature = "clickhouse-integration-tests"))]
+mod integration_tests {
+    use super::*;
+    use crate::testing::components::{run_and_assert_source_compliance, SOURCE_TAGS};
+    use crate::testing::{trace_init, ContainerBuilder, WaitFor};
+
+    const PORT: u16 = 8123;
+
+    #[tokio::test]
+    async fn run() {
+        trace_init();
+
+        let container = ContainerBuilder::new("clickhouse/clickhouse-server:24.8-alpine")
+            .port(PORT)
+            .run()
+            .unwrap();
+        container
+            .wait(WaitFor::Stderr("Logging errors to /var/log"))
+            .unwrap();
+
+        tokio::time::sleep(Duration::from_secs(2)).await;
+
+        // TODO: make sure no warn or error log issued
+        let addr = container.get_host_port(PORT).unwrap();
+        let source = Config {
+            endpoint: format!("http://{}", addr).parse().unwrap(),
+            tls: None,
+            auth: None,
+            interval: Duration::from_secs(10),
+        };
+
+        let events =
+            run_and_assert_source_compliance(source, Duration::from_secs(10), &SOURCE_TAGS).await;
+
+        println!("got {} events", events.len());
     }
 }

@@ -44,9 +44,11 @@ pub enum HttpError {
     #[error("Failed to make HTTP(S) request: {0}")]
     CallRequest(#[from] hyper_util::client::legacy::Error),
     #[error("Failed to reading response: {0}")]
-    ReadIncoming(hyper::Error),
+    ReadIncoming(#[from] hyper::Error),
     #[error("Failed to build HTTP request: {0}")]
-    BuildRequest(http::Error),
+    BuildRequest(#[from] http::Error),
+    #[error("unexpected status code {0}")]
+    UnexpectedStatus(http::StatusCode),
 }
 
 #[derive(Clone)]
