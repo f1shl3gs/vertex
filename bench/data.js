@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735170814437,
+  "lastUpdate": 1735170833417,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7827b26eabeb7329f5dc93ab6cc7fe757ea4c6dc",
-          "message": "chore(deps): bump thiserror from 1.0.66 to 1.0.67 (#1970)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.66 to 1.0.67.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.66...1.0.67)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-04T13:31:28+08:00",
-          "tree_id": "b49b72313aedb1ce11f977c6a343b4b4071dfd47",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7827b26eabeb7329f5dc93ab6cc7fe757ea4c6dc"
-        },
-        "date": 1730698874612,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27946000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 686730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.802,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b743e12d0ea9cccf1693ef059f8b8a1de34fa29",
           "message": "chore(deps): bump twox-hash from 2.0.0 to 2.0.1 (#1973)\n\nBumps [twox-hash](https://github.com/shepmaster/twox-hash) from 2.0.0 to 2.0.1.\r\n- [Changelog](https://github.com/shepmaster/twox-hash/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/shepmaster/twox-hash/compare/v2.0.0...v2.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: twox-hash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-05T10:15:23+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.626,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "575d4d356c25d3a785a5c73f2e179f0f7a205c4b",
+          "message": "sinks/prometheus: optimize metrics store and write output (#2083)",
+          "timestamp": "2024-12-26T07:43:10+08:00",
+          "tree_id": "f50309d2984dc6a9355865b3c5784a3faab06fac",
+          "url": "https://github.com/f1shl3gs/vertex/commit/575d4d356c25d3a785a5c73f2e179f0f7a205c4b"
+        },
+        "date": 1735170814815,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28629000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1983.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 49.768,
             "unit": "ns/op"
           }
         ]
