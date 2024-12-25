@@ -105,6 +105,7 @@ integration-tests-prometheus_remote_write = []
 integration-tests-prometheus_scrape = []
 integration-tests-redis = []
 integration-tests-zookeeper = []
+clickhouse-integration-tests = []
 
 all-integration-tests = [
     "integration-tests-consul",
@@ -120,7 +121,8 @@ all-integration-tests = [
     "integration-tests-prometheus_remote_write",
     "integration-tests-prometheus_scrape",
     "integration-tests-redis",
-    "integration-tests-zookeeper"
+    "integration-tests-zookeeper",
+    "clickhouse-integration-tests",
 ]
 
 extensions-heartbeat = ["dep:uuid", "dep:sysinfo"]
