@@ -1,10 +1,8 @@
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
-use std::fmt::Write;
 use std::hash::{Hash, Hasher};
-use std::io::Write as _;
+use std::io::Write;
 use std::net::SocketAddr;
-use std::ops::{Deref, DerefMut};
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -19,12 +17,12 @@ use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, ShutdownSignal, Sink, StreamSink};
 use futures::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
-use http::HeaderMap;
+use http::header::{ACCEPT_ENCODING, CONTENT_ENCODING, CONTENT_TYPE};
 use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
 use hyper::{Method, Request, Response, StatusCode};
-use parking_lot::Mutex;
+use parking_lot::RwLock;
 
 #[configurable_component(sink, name = "prometheus_exporter")]
 #[serde(deny_unknown_fields)]
@@ -71,33 +69,22 @@ impl SinkConfig for Config {
 }
 
 struct ExpiringEntry {
-    metric: Metric,
+    tags: Tags,
+    value: MetricValue,
+
+    // unix timestamp in milli seconds
     expired_at: i64,
-}
-
-impl Deref for ExpiringEntry {
-    type Target = Metric;
-
-    fn deref(&self) -> &Self::Target {
-        &self.metric
-    }
-}
-
-impl DerefMut for ExpiringEntry {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.metric
-    }
 }
 
 impl Hash for ExpiringEntry {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.series.hash(state)
+        self.tags.hash(state)
     }
 }
 
 impl PartialEq<Self> for ExpiringEntry {
     fn eq(&self, other: &Self) -> bool {
-        self.series.eq(&other.series)
+        self.tags == other.tags
     }
 }
 
@@ -110,9 +97,10 @@ impl PartialOrd<Self> for ExpiringEntry {
 }
 
 impl Ord for ExpiringEntry {
+    // the tags order might not same, so we have to compare one by one
     fn cmp(&self, other: &Self) -> Ordering {
-        let a = self.tags();
-        let b = other.tags();
+        let a = &self.tags;
+        let b = &other.tags;
 
         match a.len().cmp(&b.len()) {
             Ordering::Equal => {}
@@ -154,9 +142,9 @@ impl PrometheusExporter {
 }
 
 #[inline]
-fn write_tags(buf: &mut BytesMut, tags: &Tags) {
+fn write_tags<T: Write>(buf: &mut T, tags: &Tags) {
     if tags.is_empty() {
-        buf.put_slice(b" ");
+        let _ = buf.write_all(b" ");
         return;
     }
 
@@ -164,30 +152,30 @@ fn write_tags(buf: &mut BytesMut, tags: &Tags) {
     for (key, value) in tags {
         if first {
             first = false;
-            buf.put_u8(b'{');
+            buf.write_all(b"{").unwrap();
         } else {
-            buf.put_u8(b',');
+            buf.write_all(b",").unwrap();
         }
 
-        buf.put_slice(key.as_bytes());
-        buf.put("=\"".as_bytes());
-        buf.put(value.to_string_lossy().as_ref().as_bytes());
-        buf.put("\"".as_bytes());
+        buf.write_all(key.as_bytes()).unwrap();
+        buf.write_all(b"=\"").unwrap();
+        buf.write_all(value.to_string_lossy().as_bytes()).unwrap();
+        buf.write_all(b"\"").unwrap();
     }
 
-    buf.put_slice(b"} ");
+    buf.write_all(b"} ").unwrap();
 }
 
 #[inline]
-fn write_simple_metric(buf: &mut BytesMut, name: &str, tags: &Tags, value: f64) {
-    buf.put_slice(name.as_bytes());
+fn write_simple_metric<T: Write>(buf: &mut T, name: &str, tags: &Tags, value: f64) {
+    buf.write_all(name.as_bytes()).unwrap();
     write_tags(buf, tags);
-    buf.put_slice(value.to_string().as_bytes());
-    buf.put_slice(b"\n");
+    buf.write_all(value.to_string().as_bytes()).unwrap();
+    buf.write_all(b"\n").unwrap();
 }
 
-fn write_summary_metric(
-    buf: &mut BytesMut,
+fn write_summary_metric<T: Write>(
+    buf: &mut T,
     name: &str,
     tags: &Tags,
     quantiles: &[Quantile],
@@ -196,42 +184,44 @@ fn write_summary_metric(
 ) {
     // write quantiles
     for quantile in quantiles {
-        buf.put(name.as_bytes());
+        buf.write_all(name.as_bytes()).unwrap();
 
-        buf.put_slice(b"{quantile=\"");
-        buf.put(quantile.quantile.to_string().as_bytes());
-        buf.put_slice(b"\"");
+        buf.write_all(b"{quantile=\"").unwrap();
+        buf.write_all(quantile.quantile.to_string().as_bytes())
+            .unwrap();
+        buf.write_all(b"\"").unwrap();
         // handle other tags
         for (key, value) in tags {
-            buf.put_slice(b",");
-            buf.put(key.as_bytes());
-            buf.put_slice(b"=\"");
-            buf.put(value.to_string_lossy().as_bytes());
-            buf.put_slice(b"\"");
+            buf.write_all(b",").unwrap();
+            buf.write_all(key.as_bytes()).unwrap();
+            buf.write_all(b"=\"").unwrap();
+            buf.write_all(value.to_string_lossy().as_bytes()).unwrap();
+            buf.write_all(b"\"").unwrap();
         }
-        buf.put_slice(b"} ");
+        buf.write_all(b"} ").unwrap();
 
-        buf.put(quantile.value.to_string().as_bytes());
-        buf.put_slice(b"\n");
+        buf.write_all(quantile.value.to_string().as_bytes())
+            .unwrap();
+        buf.write_all(b"\n").unwrap();
     }
 
     // write sum
-    buf.put(name.as_bytes());
-    buf.put_slice(b"_sum");
+    buf.write_all(name.as_bytes()).unwrap();
+    buf.write_all(b"_sum").unwrap();
     write_tags(buf, tags);
-    buf.put(sum.to_string().as_bytes());
-    buf.put_slice(b"\n");
+    buf.write_all(sum.to_string().as_bytes()).unwrap();
+    buf.write_all(b"\n").unwrap();
 
     // write count
-    buf.put(name.as_bytes());
-    buf.put_slice(b"_count");
+    buf.write_all(name.as_bytes()).unwrap();
+    buf.write_all(b"_count").unwrap();
     write_tags(buf, tags);
-    buf.put(count.to_string().as_bytes());
-    buf.put_slice(b"\n");
+    buf.write_all(count.to_string().as_bytes()).unwrap();
+    buf.write_all(b"\n").unwrap();
 }
 
-fn write_histogram_metric(
-    buf: &mut BytesMut,
+fn write_histogram_metric<T: Write>(
+    buf: &mut T,
     name: &str,
     tags: &Tags,
     buckets: &[Bucket],
@@ -240,64 +230,85 @@ fn write_histogram_metric(
 ) {
     // write buckets
     for bucket in buckets {
-        buf.put(name.as_bytes());
+        buf.write_all(name.as_bytes()).unwrap();
 
-        buf.put_slice(b"_bucket{le=\"");
+        buf.write_all(b"_bucket{le=\"").unwrap();
         if bucket.upper == f64::MAX {
-            buf.put_slice(b"+Inf\"");
+            buf.write_all(b"+Inf\"").unwrap();
         } else {
-            buf.put(bucket.upper.to_string().as_bytes());
-            buf.put_slice(b"\"");
+            buf.write_all(bucket.upper.to_string().as_bytes()).unwrap();
+            buf.write_all(b"\"").unwrap();
         }
 
         // handle other tags
         for (key, value) in tags {
-            buf.put_slice(b",");
-            buf.put(key.as_bytes());
-            buf.put_slice(b"=\"");
-            buf.put(value.to_string_lossy().as_bytes());
-            buf.put_slice(b"\"");
+            buf.write_all(b",").unwrap();
+            buf.write_all(key.as_bytes()).unwrap();
+            buf.write_all(b"=\"").unwrap();
+            buf.write_all(value.to_string_lossy().as_bytes()).unwrap();
+            buf.write_all(b"\"").unwrap();
         }
-        buf.put_slice(b"} ");
+        buf.write_all(b"} ").unwrap();
 
-        buf.put(bucket.count.to_string().as_bytes());
-        buf.put_slice(b"\n");
+        buf.write_all(bucket.count.to_string().as_bytes()).unwrap();
+        buf.write_all(b"\n").unwrap();
     }
 
     // write sum
-    buf.put(name.as_bytes());
-    buf.put_slice(b"_sum");
+    buf.write_all(name.as_bytes()).unwrap();
+    buf.write_all(b"_sum").unwrap();
     write_tags(buf, tags);
-    buf.put(sum.to_string().as_bytes());
-    buf.put_slice(b"\n");
+    buf.write_all(sum.to_string().as_bytes()).unwrap();
+    buf.write_all(b"\n").unwrap();
 
     // write count
-    buf.put(name.as_bytes());
-    buf.put_slice(b"_count");
+    buf.write_all(name.as_bytes()).unwrap();
+    buf.write_all(b"_count").unwrap();
     write_tags(buf, tags);
-    buf.put(count.to_string().as_bytes());
-    buf.put_slice(b"\n");
+    buf.write_all(count.to_string().as_bytes()).unwrap();
+    buf.write_all(b"\n").unwrap();
 }
 
 fn handle(
     req: Request<Incoming>,
-    metrics: Arc<Mutex<BTreeMap<String, Sets>>>,
-    now: i64,
+    metrics: Arc<RwLock<BTreeMap<String, Sets>>>,
 ) -> Response<Full<Bytes>> {
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/metrics") => {
-            let mut buf = BytesMut::with_capacity(8 * 1024);
+            let now = Utc::now().timestamp_millis();
 
-            metrics.lock().iter().for_each(|(name, sets)| {
+            let mut buf = match req.headers().get(ACCEPT_ENCODING) {
+                None => RespWriter::plain(),
+                Some(value) => {
+                    if value.as_bytes().windows(4).any(|s| s == b"gzip") {
+                        RespWriter::gzip()
+                    } else {
+                        RespWriter::plain()
+                    }
+                }
+            };
+
+            metrics.read().iter().for_each(|(name, sets)| {
                 let mut header = false;
                 for entry in &sets.metrics {
-                    let ExpiringEntry { metric, expired_at } = entry;
+                    let ExpiringEntry {
+                        tags,
+                        value,
+                        expired_at,
+                        ..
+                    } = entry;
+
                     if *expired_at < now {
                         continue;
                     }
 
                     if !header {
-                        let kind = match entry.value {
+                        header = true;
+
+                        // write header like this
+                        // # HELP node_cpu_scaling_governor Current enabled CPU frequency governor
+                        // # TYPE node_cpu_scaling_governor gauge
+                        let kind = match value {
                             MetricValue::Gauge(_) => "gauge",
                             MetricValue::Sum(_) => "counter",
                             MetricValue::Histogram { .. } => "histogram",
@@ -310,69 +321,44 @@ fn handle(
                             name, sets.description, name, kind
                         )
                         .unwrap();
-                        header = true;
                     }
 
-                    match &metric.value {
+                    match &value {
                         MetricValue::Sum(value) => {
-                            write_simple_metric(&mut buf, name, metric.tags(), *value);
+                            write_simple_metric(&mut buf, name, tags, *value);
                         }
                         MetricValue::Gauge(value) => {
-                            write_simple_metric(&mut buf, name, metric.tags(), *value);
+                            write_simple_metric(&mut buf, name, tags, *value);
                         }
                         MetricValue::Histogram {
                             count,
                             sum,
                             buckets,
                         } => {
-                            write_histogram_metric(
-                                &mut buf,
-                                name,
-                                metric.tags(),
-                                buckets,
-                                *sum,
-                                *count,
-                            );
+                            write_histogram_metric(&mut buf, name, tags, buckets, *sum, *count);
                         }
                         MetricValue::Summary {
                             count,
                             sum,
                             quantiles,
                         } => {
-                            write_summary_metric(
-                                &mut buf,
-                                name,
-                                metric.tags(),
-                                quantiles,
-                                *sum,
-                                *count,
-                            );
+                            write_summary_metric(&mut buf, name, tags, quantiles, *sum, *count);
                         }
                     }
                 }
             });
 
             let mut builder = Response::builder()
-                .header(http::header::CONTENT_TYPE, "text/plain; charset=utf-8")
+                .header(CONTENT_TYPE, "text/plain; charset=utf-8")
                 .status(StatusCode::OK);
 
-            let body = if !should_compress(req.headers()) {
-                buf.freeze()
-            } else {
-                let mut encoder = flate2::write::GzEncoder::new(
-                    BytesMut::new().writer(),
-                    flate2::Compression::default(),
-                );
-                encoder.write_all(&buf).unwrap();
-
-                builder = builder.header(http::header::CONTENT_ENCODING, "gzip");
-
-                encoder.finish().unwrap().into_inner().freeze()
-            };
+            if let Some(encoding) = buf.content_encoding() {
+                builder = builder.header(CONTENT_ENCODING, encoding);
+            }
 
             builder
-                .body(Full::new(body))
-                .expect("Response build failed") // error should never happened
+                .body(Full::new(buf.into_bytes()))
+                .expect("Response build failed") // error should never have happened
         }
         _ => Response::builder()
             .status(StatusCode::NOT_FOUND)
@@ -381,22 +367,13 @@ fn handle(
     }
 }
 
-fn should_compress(headers: &HeaderMap) -> bool {
-    match headers.get(http::header::ACCEPT_ENCODING) {
-        Some(value) => match value.to_str() {
-            Ok(value) => value.contains("gzip"),
-            Err(_err) => false,
-        },
-        None => false,
-    }
-}
-
 #[async_trait]
 impl StreamSink for PrometheusExporter {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        // The key is metric name, Sets is a container of tags sets and its
-        // value, timestamp
-        let states = Arc::new(Mutex::new(BTreeMap::<String, Sets>::new()));
+        // The state key is metric name, `Sets` is a container of tags, value and timestamp.
+        // HashMap might have better performance, but we want the output is ordered so that's
+        // why we choose BTreeMap.
+        let states = Arc::new(RwLock::new(BTreeMap::<String, Sets>::new()));
         let (trigger_shutdown, shutdown, _shutdown_done) = ShutdownSignal::new_wired();
 
         // HTTP server routine
@@ -407,9 +384,9 @@ impl StreamSink for PrometheusExporter {
         let http_shutdown = shutdown.clone();
         let service = service_fn(move |req: Request<Incoming>| {
             let metrics = Arc::clone(&http_states);
+
             async move {
-                let now = Utc::now().timestamp();
-                let resp = handle(req, metrics, now);
+                let resp = handle(req, metrics);
 
                 Ok::<_, hyper::Error>(resp)
             }
@@ -436,9 +413,8 @@ impl StreamSink for PrometheusExporter {
                 }
 
                 let mut cleaned = 0;
-                let mut state = gc_states.lock();
-                let now = Utc::now().timestamp();
-
+                let now = Utc::now().timestamp_millis();
+                let mut state = gc_states.write();
                 for (_name, set) in state.iter_mut() {
                     set.metrics.retain(|entry| {
                         let keep = entry.expired_at > now;
@@ -461,27 +437,36 @@ impl StreamSink for PrometheusExporter {
         // Handle input metrics
         while let Some(events) = input.next().await {
             if let Events::Metrics(metrics) = events {
-                let mut state = states.lock();
                 let now = Utc::now();
+                let mut state = states.write();
 
                 metrics.into_iter().for_each(|mut metric| {
                     let finalizers = metric.take_finalizers();
+                    let Metric {
+                        series,
+                        description,
+                        timestamp,
+                        value,
+                        ..
+                    } = metric;
 
                     // Looks a little bit dummy but this should avoid some allocation for state's K.
-                    let sets = match state.get_mut(metric.name()) {
+                    let sets = match state.get_mut(&series.name) {
                         Some(sets) => sets,
-                        None => state.entry(metric.name().to_string()).or_insert(Sets {
-                            description: metric.description.clone().unwrap_or_default(),
+                        None => state.entry(series.name).or_insert(Sets {
+                            description: description.unwrap_or_default(),
                             metrics: Default::default(),
                         }),
                     };
 
                     // `insert` does not update the entry, but `replace` does.
-                    let timestamp = metric.timestamp.unwrap_or(now);
-                    sets.metrics.replace(ExpiringEntry {
-                        metric,
-                        expired_at: timestamp.timestamp() + self.ttl.as_secs() as i64,
+                    let timestamp = timestamp.unwrap_or(now).timestamp_millis();
+                    sets.metrics.insert(ExpiringEntry {
+                        tags: series.tags,
+                        value,
+                        expired_at: timestamp + self.ttl.as_millis() as i64,
                     });
+
                     finalizers.update_status(EventStatus::Delivered)
                 })
             }
@@ -493,6 +478,61 @@ impl StreamSink for PrometheusExporter {
         trigger_shutdown.cancel();
 
         Ok(())
+    }
+}
+
+enum RespWriter {
+    Plain(BytesMut),
+    Gzip(flate2::write::GzEncoder<bytes::buf::Writer<BytesMut>>),
+}
+
+impl Write for RespWriter {
+    #[allow(clippy::disallowed_methods)]
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        match self {
+            RespWriter::Plain(w) => w.writer().write(buf),
+            RespWriter::Gzip(w) => w.write(buf),
+        }
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        match self {
+            RespWriter::Plain(w) => w.writer().flush(),
+            RespWriter::Gzip(w) => w.flush(),
+        }
+    }
+}
+
+const DEFAULT_CAPACITY: usize = 16 * 1024;
+
+impl RespWriter {
+    fn plain() -> Self {
+        Self::Plain(BytesMut::with_capacity(DEFAULT_CAPACITY))
+    }
+
+    fn gzip() -> Self {
+        Self::Gzip(flate2::write::GzEncoder::new(
+            BytesMut::with_capacity(DEFAULT_CAPACITY).writer(),
+            flate2::Compression::default(),
+        ))
+    }
+
+    fn into_bytes(self) -> Bytes {
+        match self {
+            RespWriter::Plain(w) => w.freeze(),
+            RespWriter::Gzip(w) => w
+                .finish()
+                .expect("should be flushable")
+                .into_inner()
+                .freeze(),
+        }
+    }
+
+    fn content_encoding(&self) -> Option<&'static str> {
+        match self {
+            RespWriter::Plain(_) => None,
+            RespWriter::Gzip(_) => Some("gzip"),
+        }
     }
 }
 
@@ -510,13 +550,11 @@ mod tests {
     fn metrics_insert() {
         #[allow(clippy::mutable_key_type)]
         let mut set = BTreeSet::new();
-        let m1 = Metric::gauge("foo", "", 0.1);
-        let mut m2 = m1.clone();
-        m2.value = MetricValue::Gauge(0.2);
 
-        let now = Utc::now().timestamp();
+        let now = Utc::now().timestamp_millis();
         let ent = ExpiringEntry {
-            metric: m1,
+            tags: tags!(),
+            value: MetricValue::Gauge(0.1),
             expired_at: now + 60,
         };
 
@@ -525,7 +563,8 @@ mod tests {
         assert_eq!(set.len(), 1);
 
         let ent = ExpiringEntry {
-            metric: m2,
+            tags: tags!(),
+            value: MetricValue::Gauge(0.2),
             expired_at: now + 120,
         };
 
@@ -563,7 +602,7 @@ mod tests {
         let count = 2693;
 
         // no tags
-        let mut buf = BytesMut::new();
+        let mut buf = RespWriter::plain();
         write_summary_metric(
             &mut buf,
             "rpc_duration_seconds",
@@ -598,7 +637,7 @@ rpc_duration_seconds{quantile="0.99",foo="bar"} 76656
 rpc_duration_seconds_sum{foo="bar"} 17560473
 rpc_duration_seconds_count{foo="bar"} 2693
 "#,
-            std::str::from_utf8(&buf).unwrap()
+            std::str::from_utf8(buf.into_bytes().as_ref()).unwrap()
         );
     }
 
@@ -634,7 +673,7 @@ rpc_duration_seconds_count{foo="bar"} 2693
         ];
 
         // no tags
-        let mut buf = BytesMut::new();
+        let mut buf = RespWriter::plain();
         write_histogram_metric(
             &mut buf,
             "http_request_duration_seconds",
@@ -674,7 +713,7 @@ http_request_duration_seconds_bucket{le="+Inf",foo="bar"} 144320
 http_request_duration_seconds_sum{foo="bar"} 53423
 http_request_duration_seconds_count{foo="bar"} 144320
 "#,
-            std::str::from_utf8(&buf).unwrap()
+            std::str::from_utf8(buf.into_bytes().as_ref()).unwrap()
         );
     }
 }
