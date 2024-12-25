@@ -120,7 +120,12 @@ impl Collector {
             .to_string();
 
         let endpoint = match endpoint.port() {
-            Some(port) => format!("{}://{}:{}", endpoint.scheme(), endpoint.host_str().unwrap(), port),
+            Some(port) => format!(
+                "{}://{}:{}",
+                endpoint.scheme(),
+                endpoint.host_str().unwrap(),
+                port
+            ),
             None => format!("{}://{}", endpoint.scheme(), endpoint.host_str().unwrap()),
         };
 
