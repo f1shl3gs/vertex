@@ -4,7 +4,6 @@ use std::fmt::Write;
 use std::hash::{Hash, Hasher};
 use std::io::Write as _;
 use std::net::SocketAddr;
-use std::ops::{Deref, DerefMut};
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -24,7 +23,7 @@ use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
 use hyper::{Method, Request, Response, StatusCode};
-use parking_lot::Mutex;
+use parking_lot::RwLock;
 
 #[configurable_component(sink, name = "prometheus_exporter")]
 #[serde(deny_unknown_fields)]
@@ -71,33 +70,22 @@ impl SinkConfig for Config {
 }
 
 struct ExpiringEntry {
-    metric: Metric,
+    tags: Tags,
+    value: MetricValue,
+
+    // unix timestamp in milli seconds
     expired_at: i64,
-}
-
-impl Deref for ExpiringEntry {
-    type Target = Metric;
-
-    fn deref(&self) -> &Self::Target {
-        &self.metric
-    }
-}
-
-impl DerefMut for ExpiringEntry {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.metric
-    }
 }
 
 impl Hash for ExpiringEntry {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.series.hash(state)
+        self.tags.hash(state)
     }
 }
 
 impl PartialEq<Self> for ExpiringEntry {
     fn eq(&self, other: &Self) -> bool {
-        self.series.eq(&other.series)
+        self.tags == other.tags
     }
 }
 
@@ -111,8 +99,8 @@ impl PartialOrd<Self> for ExpiringEntry {
 
 impl Ord for ExpiringEntry {
     fn cmp(&self, other: &Self) -> Ordering {
-        let a = self.tags();
-        let b = other.tags();
+        let a = &self.tags;
+        let b = &other.tags;
 
         match a.len().cmp(&b.len()) {
             Ordering::Equal => {}
@@ -281,23 +269,34 @@ fn write_histogram_metric(
 
 fn handle(
     req: Request<Incoming>,
-    metrics: Arc<Mutex<BTreeMap<String, Sets>>>,
-    now: i64,
+    metrics: Arc<RwLock<BTreeMap<String, Sets>>>,
 ) -> Response<Full<Bytes>> {
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/metrics") => {
-            let mut buf = BytesMut::with_capacity(8 * 1024);
+            let now = Utc::now().timestamp_millis();
+            let mut buf = BytesMut::with_capacity(16 * 1024);
 
-            metrics.lock().iter().for_each(|(name, sets)| {
+            metrics.read().iter().for_each(|(name, sets)| {
                 let mut header = false;
                 for entry in &sets.metrics {
-                    let ExpiringEntry { metric, expired_at } = entry;
+                    let ExpiringEntry {
+                        tags,
+                        value,
+                        expired_at,
+                        ..
+                    } = entry;
+
                     if *expired_at < now {
                         continue;
                     }
 
                     if !header {
-                        let kind = match entry.value {
+                        header = true;
+
+                        // write header like this
+                        // # HELP node_cpu_scaling_governor Current enabled CPU frequency governor
+                        // # TYPE node_cpu_scaling_governor gauge
+                        let kind = match value {
                             MetricValue::Gauge(_) => "gauge",
                             MetricValue::Sum(_) => "counter",
                             MetricValue::Histogram { .. } => "histogram",
@@ -310,43 +309,28 @@ fn handle(
                             name, sets.description, name, kind
                         )
                         .unwrap();
-                        header = true;
                     }
 
-                    match &metric.value {
+                    match &value {
                         MetricValue::Sum(value) => {
-                            write_simple_metric(&mut buf, name, metric.tags(), *value);
+                            write_simple_metric(&mut buf, name, tags, *value);
                         }
                         MetricValue::Gauge(value) => {
-                            write_simple_metric(&mut buf, name, metric.tags(), *value);
+                            write_simple_metric(&mut buf, name, tags, *value);
                         }
                         MetricValue::Histogram {
                             count,
                             sum,
                             buckets,
                         } => {
-                            write_histogram_metric(
-                                &mut buf,
-                                name,
-                                metric.tags(),
-                                buckets,
-                                *sum,
-                                *count,
-                            );
+                            write_histogram_metric(&mut buf, name, tags, buckets, *sum, *count);
                         }
                         MetricValue::Summary {
                             count,
                             sum,
                             quantiles,
                         } => {
-                            write_summary_metric(
-                                &mut buf,
-                                name,
-                                metric.tags(),
-                                quantiles,
-                                *sum,
-                                *count,
-                            );
+                            write_summary_metric(&mut buf, name, tags, quantiles, *sum, *count);
                         }
                     }
                 }
@@ -372,7 +356,7 @@ fn handle(
 
             builder
                 .body(Full::new(body))
-                .expect("Response build failed") // error should never happened
+                .expect("Response build failed") // error should never have happened
         }
         _ => Response::builder()
             .status(StatusCode::NOT_FOUND)
@@ -394,9 +378,10 @@ fn should_compress(headers: &HeaderMap) -> bool {
 #[async_trait]
 impl StreamSink for PrometheusExporter {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        // The key is metric name, Sets is a container of tags sets and its
-        // value, timestamp
-        let states = Arc::new(Mutex::new(BTreeMap::<String, Sets>::new()));
+        // The state key is metric name, `Sets` is a container of tags, value and timestamp.
+        // HashMap might have better performance, but we want the output is ordered so that's
+        // why we choose BTreeMap.
+        let states = Arc::new(RwLock::new(BTreeMap::<String, Sets>::new()));
         let (trigger_shutdown, shutdown, _shutdown_done) = ShutdownSignal::new_wired();
 
         // HTTP server routine
@@ -407,9 +392,9 @@ impl StreamSink for PrometheusExporter {
         let http_shutdown = shutdown.clone();
         let service = service_fn(move |req: Request<Incoming>| {
             let metrics = Arc::clone(&http_states);
+
             async move {
-                let now = Utc::now().timestamp();
-                let resp = handle(req, metrics, now);
+                let resp = handle(req, metrics);
 
                 Ok::<_, hyper::Error>(resp)
             }
@@ -436,9 +421,8 @@ impl StreamSink for PrometheusExporter {
                 }
 
                 let mut cleaned = 0;
-                let mut state = gc_states.lock();
-                let now = Utc::now().timestamp();
-
+                let now = Utc::now().timestamp_millis();
+                let mut state = gc_states.write();
                 for (_name, set) in state.iter_mut() {
                     set.metrics.retain(|entry| {
                         let keep = entry.expired_at > now;
@@ -461,27 +445,36 @@ impl StreamSink for PrometheusExporter {
         // Handle input metrics
         while let Some(events) = input.next().await {
             if let Events::Metrics(metrics) = events {
-                let mut state = states.lock();
                 let now = Utc::now();
+                let mut state = states.write();
 
                 metrics.into_iter().for_each(|mut metric| {
                     let finalizers = metric.take_finalizers();
+                    let Metric {
+                        series,
+                        description,
+                        timestamp,
+                        value,
+                        ..
+                    } = metric;
 
                     // Looks a little bit dummy but this should avoid some allocation for state's K.
-                    let sets = match state.get_mut(metric.name()) {
+                    let sets = match state.get_mut(&series.name) {
                         Some(sets) => sets,
-                        None => state.entry(metric.name().to_string()).or_insert(Sets {
-                            description: metric.description.clone().unwrap_or_default(),
+                        None => state.entry(series.name).or_insert(Sets {
+                            description: description.unwrap_or_default(),
                             metrics: Default::default(),
                         }),
                     };
 
                     // `insert` does not update the entry, but `replace` does.
-                    let timestamp = metric.timestamp.unwrap_or(now);
-                    sets.metrics.replace(ExpiringEntry {
-                        metric,
-                        expired_at: timestamp.timestamp() + self.ttl.as_secs() as i64,
+                    let timestamp = timestamp.unwrap_or(now).timestamp_millis();
+                    sets.metrics.insert(ExpiringEntry {
+                        tags: series.tags,
+                        value,
+                        expired_at: timestamp + self.ttl.as_millis() as i64,
                     });
+
                     finalizers.update_status(EventStatus::Delivered)
                 })
             }
@@ -510,13 +503,11 @@ mod tests {
     fn metrics_insert() {
         #[allow(clippy::mutable_key_type)]
         let mut set = BTreeSet::new();
-        let m1 = Metric::gauge("foo", "", 0.1);
-        let mut m2 = m1.clone();
-        m2.value = MetricValue::Gauge(0.2);
 
-        let now = Utc::now().timestamp();
+        let now = Utc::now().timestamp_millis();
         let ent = ExpiringEntry {
-            metric: m1,
+            tags: tags!(),
+            value: MetricValue::Gauge(0.1),
             expired_at: now + 60,
         };
 
@@ -525,7 +516,8 @@ mod tests {
         assert_eq!(set.len(), 1);
 
         let ent = ExpiringEntry {
-            metric: m2,
+            tags: tags!(),
+            value: MetricValue::Gauge(0.2),
             expired_at: now + 120,
         };
 
