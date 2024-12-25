@@ -16,7 +16,6 @@ use framework::shutdown::ShutdownSignal;
 use framework::Source;
 
 #[configurable_component(source, name = "selfstat")]
-#[derive(Copy, Clone)]
 struct Config {
     /// The interval between scrapes.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
