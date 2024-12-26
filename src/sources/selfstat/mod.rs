@@ -6,6 +6,7 @@ mod linux;
 mod runtime;
 
 use std::fmt::Debug;
+use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use configurable::configurable_component;
@@ -15,8 +16,15 @@ use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
 
+fn default_proc_path() -> PathBuf {
+    PathBuf::from("/proc")
+}
+
 #[configurable_component(source, name = "selfstat")]
 struct Config {
+    #[serde(default = "default_proc_path")]
+    proc_path: PathBuf,
+
     /// The interval between scrapes.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
@@ -26,7 +34,12 @@ struct Config {
 #[typetag::serde(name = "selfstat")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        Ok(Box::pin(run(self.interval, cx.shutdown, cx.output)))
+        Ok(Box::pin(run(
+            self.proc_path.clone(),
+            self.interval,
+            cx.shutdown,
+            cx.output,
+        )))
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -35,6 +48,7 @@ impl SourceConfig for Config {
 }
 
 async fn run(
+    root: PathBuf,
     interval: Duration,
     mut shutdown: ShutdownSignal,
     mut output: Pipeline,
@@ -49,7 +63,7 @@ async fn run(
             _ = ticker.tick() => {}
         }
 
-        match gather().await {
+        match gather(&root).await {
             Ok(mut metrics) => {
                 let now = Some(chrono::Utc::now());
                 metrics.iter_mut().for_each(|m| m.timestamp = now);
@@ -75,9 +89,9 @@ async fn run(
     Ok(())
 }
 
-async fn gather() -> Result<Vec<Metric>, std::io::Error> {
+async fn gather(root: &Path) -> Result<Vec<Metric>, std::io::Error> {
     #[cfg(target_os = "linux")]
-    let mut metrics = linux::proc_info().await?;
+    let mut metrics = linux::proc_info(root);
     #[cfg(not(target_os = "linux"))]
     let mut metrics = vec![];
 
