@@ -1,6 +1,5 @@
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
-use std::hash::{Hash, Hasher};
 use std::io::Write;
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -76,15 +75,9 @@ struct ExpiringEntry {
     expired_at: i64,
 }
 
-impl Hash for ExpiringEntry {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.tags.hash(state)
-    }
-}
-
 impl PartialEq<Self> for ExpiringEntry {
     fn eq(&self, other: &Self) -> bool {
-        self.tags == other.tags
+        self.tags.eq(&other.tags)
     }
 }
 
@@ -459,9 +452,9 @@ impl StreamSink for PrometheusExporter {
                         }),
                     };
 
-                    // `insert` does not update the entry, but `replace` does.
                     let timestamp = timestamp.unwrap_or(now).timestamp_millis();
-                    sets.metrics.insert(ExpiringEntry {
+                    // `insert` does not update the entry, the `replace` does.
+                    sets.metrics.replace(ExpiringEntry {
                         tags: series.tags,
                         value,
                         expired_at: timestamp + self.ttl.as_millis() as i64,
