@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735186717079,
+  "lastUpdate": 1735186809769,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0250c8f3b52457b3cc1f7e70de73037223169d79",
-          "message": "chore(deps): bump libc from 0.2.161 to 0.2.162 (#1975)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.161 to 0.2.162.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.162/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.161...0.2.162)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-08T12:38:25+08:00",
-          "tree_id": "4729303fa1d2ec2543cf20ed3e8b46c1fd4c6739",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0250c8f3b52457b3cc1f7e70de73037223169d79"
-        },
-        "date": 1731041302102,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 510,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35435.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "81a55191f02d34718c6955d86a561066056e5a76",
           "message": "chore(deps): bump tokio from 1.41.0 to 1.41.1 (#1976)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.41.0 to 1.41.1.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.41.0...tokio-1.41.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-08T12:38:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35761.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5026cb5ee39f5324c2b541e2fe4c7b248e8800a6",
+          "message": "add `process_network_receive_bytes_total`, `process_virtual_memory_max_bytes` and `process_network_transmit_bytes_total` (#2085)",
+          "timestamp": "2024-12-26T12:08:06+08:00",
+          "tree_id": "e11f803419f0e1e306b3667d7770a1036f22a37f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5026cb5ee39f5324c2b541e2fe4c7b248e8800a6"
+        },
+        "date": 1735186791686,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 620,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35764.1,
             "unit": "KiB"
           }
         ]
