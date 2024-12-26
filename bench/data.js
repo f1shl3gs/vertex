@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735186227117,
+  "lastUpdate": 1735186230159,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "feec62040b47953f6915d03efc37be6ffccaa35b",
-          "message": "chore(deps): bump url from 2.5.2 to 2.5.3 (#1972)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.2 to 2.5.3.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.2...v2.5.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-05T10:40:48+08:00",
-          "tree_id": "0ec6cf345758852374755c8fed824c2a76692edf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/feec62040b47953f6915d03efc37be6ffccaa35b"
-        },
-        "date": 1730774589349,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.225,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.412,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.29,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 186.81,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5026cb5ee39f5324c2b541e2fe4c7b248e8800a6",
+          "message": "add `process_network_receive_bytes_total`, `process_virtual_memory_max_bytes` and `process_network_transmit_bytes_total` (#2085)",
+          "timestamp": "2024-12-26T12:08:06+08:00",
+          "tree_id": "e11f803419f0e1e306b3667d7770a1036f22a37f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5026cb5ee39f5324c2b541e2fe4c7b248e8800a6"
+        },
+        "date": 1735186212436,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.541,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 105.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 186.65,
             "unit": "ns/op"
           }
         ]
