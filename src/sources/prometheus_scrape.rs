@@ -82,8 +82,11 @@ impl SourceConfig for Config {
                 );
 
                 set.spawn(async move {
+                    let now = Utc::now()
+                        .timestamp_nanos_opt()
+                        .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
                     let mut ticker = tokio::time::interval_at(
-                        tokio::time::Instant::now() + offset(&target, interval, jitter_seed),
+                        tokio::time::Instant::now() + offset(&target, interval, jitter_seed, now),
                         interval,
                     );
 
@@ -171,11 +174,7 @@ fn calculate_hash<T: Hash>(t: &T) -> u64 {
 }
 
 // offset returns the time until the next scrape cycle for the target.
-fn offset<H: Hash>(h: &H, interval: Duration, jitter_seed: u64) -> Duration {
-    let now = Utc::now()
-        .timestamp_nanos_opt()
-        .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
-
+fn offset<H: Hash>(h: &H, interval: Duration, jitter_seed: u64, now: i64) -> Duration {
     let hv = calculate_hash(h);
     let base = interval.as_nanos() as i64 - now % interval.as_nanos() as i64;
     let offset = (hv ^ jitter_seed) % interval.as_nanos() as u64;
@@ -323,7 +322,7 @@ mod tests {
     use framework::config::default_interval;
     use testify::random::random_string;
 
-    use crate::sources::prometheus_scrape::{offset, Config};
+    use super::*;
 
     #[test]
     fn generate_config() {
@@ -337,7 +336,7 @@ mod tests {
 
         for _i in 0..n {
             let s = random_string(20);
-            let o = offset(&s, interval, 0);
+            let o = offset(&s, interval, 0, 100);
             assert!(o < interval);
         }
     }
@@ -350,9 +349,10 @@ mod tests {
 
         let interval = default_interval();
 
-        let o1 = offset(&t1, interval, 0);
-        let o2 = offset(&t2, interval, 0);
-        let o3 = offset(&t3, interval, 0);
+        let now = 100;
+        let o1 = offset(&t1, interval, 0, now);
+        let o2 = offset(&t2, interval, 0, now);
+        let o3 = offset(&t3, interval, 0, now);
         assert!(o1 < interval);
         assert!(o2 < interval);
         assert!(o3 < interval);
