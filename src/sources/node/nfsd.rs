@@ -350,7 +350,7 @@ macro_rules! rpc_metric {
         Metric::sum_with_tags(
             "node_nfsd_requests_total",
             "Number of NFSd procedures invoked.",
-            $value as f64,
+            $value,
             tags! {
                 "proto" => $proto.to_string(),
                 "method" => $name.to_string()
@@ -366,58 +366,58 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum(
             "node_nfsd_reply_cache_hits_total",
             "Total number of NFSd Reply Cache hits (client lost server response).",
-            stats.reply_cache.hits as f64,
+            stats.reply_cache.hits,
         ),
         Metric::sum(
             "node_nfsd_reply_cache_misses_total",
             "Total number of NFSd Reply Cache an operation that requires caching (idempotent).",
-            stats.reply_cache.misses as f64,
+            stats.reply_cache.misses,
         ),
         Metric::sum(
             "node_nfsd_reply_cache_nocache_total",
             "Total number of NFSd Reply Cache non-idempotent operations (rename/delete/…).",
-            stats.reply_cache.no_cache as f64,
+            stats.reply_cache.no_cache,
         ),
         // collects statistics for the file handles
         // NOTE: Other FileHandles entries are unused in the kernel
         Metric::sum(
             "node_nfsd_file_handles_stale_total",
             "Total number of NFSd stale file handles",
-            stats.file_handles.stale as f64,
+            stats.file_handles.stale,
         ),
         // collects statistics for the bytes in/out
         Metric::sum(
             "node_nfsd_disk_bytes_read_total",
             "Total NFSd bytes read.",
-            stats.input_output.read as f64,
+            stats.input_output.read,
         ),
         Metric::sum(
             "node_nfsd_disk_bytes_written_total",
             "Total NFSd bytes written.",
-            stats.input_output.write as f64,
+            stats.input_output.write,
         ),
         // collects statistics for kernel server threads
         Metric::gauge(
             "node_nfsd_server_threads",
             "Total number of NFSd kernel threads that are running.",
-            stats.threads.threads as f64,
+            stats.threads.threads,
         ),
         // collects statistics for the read ahead cache.
         Metric::gauge(
             "node_nfsd_read_ahead_cache_size_blocks",
             "How large the read ahead cache is in blocks.",
-            stats.read_ahead_cache.cache_size as f64,
+            stats.read_ahead_cache.cache_size,
         ),
         Metric::sum(
             "node_nfsd_read_ahead_cache_not_found_total",
             "Total number of NFSd read ahead cache not found.",
-            stats.read_ahead_cache.not_found as f64,
+            stats.read_ahead_cache.not_found,
         ),
         // collects statistics for network packets/connections.
         Metric::sum_with_tags(
             "node_nfsd_packets_total",
             "Total NFSd network packets (sent+received) by protocol type.",
-            stats.network.udp_count as f64,
+            stats.network.udp_count,
             tags!(
                 "proto" => "udp"
             ),
@@ -425,7 +425,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum_with_tags(
             "node_nfsd_packets_total",
             "Total NFSd network packets (sent+received) by protocol type.",
-            stats.network.tcp_count as f64,
+            stats.network.tcp_count,
             tags!(
                 "proto" => "tcp"
             ),
@@ -433,13 +433,13 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum(
             "node_nfsd_connections_total",
             "Total number of NFSd TCP connections.",
-            stats.network.tcp_connect as f64,
+            stats.network.tcp_connect,
         ),
         // collects statistics for kernel server RPCs.
         Metric::sum_with_tags(
             "node_nfsd_rpc_errors_total",
             "Total number of NFSd RPC errors by error type.",
-            stats.server_rpc.bad_fmt as f64,
+            stats.server_rpc.bad_fmt,
             tags!(
                 "error" => "fmt"
             ),
@@ -447,7 +447,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum_with_tags(
             "node_nfsd_rpc_errors_total",
             "Total number of NFSd RPC errors by error type.",
-            stats.server_rpc.bad_auth as f64,
+            stats.server_rpc.bad_auth,
             tags!(
                 "error" => "auth"
             ),
@@ -455,7 +455,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum_with_tags(
             "node_nfsd_rpc_errors_total",
             "Total number of NFSd RPC errors by error type.",
-            stats.server_rpc.badc_int as f64,
+            stats.server_rpc.badc_int,
             tags!(
                 "error" => "cInt"
             ),
@@ -463,7 +463,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum(
             "node_nfsd_server_rpcs_total",
             "Total number of NFSd RPCs.",
-            stats.server_rpc.rpc_count as f64,
+            stats.server_rpc.rpc_count,
         ),
         // collects statistics for NFSv2 requests
         rpc_metric!("2", "GetAttr", stats.v2_stats.get_attr),

@@ -25,7 +25,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 return Ok(vec![]);
             }
 
-            hwmon_metrics(entry.path()).await
+            hwmon_metrics(entry.path())
         }));
     }
 
@@ -47,18 +47,29 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
-    let chip = &hwmon_name(&dir).await?;
-    let data = {
-        let result = collect_sensor_data(&dir).await;
-        match result {
-            Ok(r) => r,
-            Err(_err) => collect_sensor_data(dir.join("device")).await?,
+fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
+    let chip = &hwmon_name(&dir)?;
+
+    let mut data = collect_sensor_data(&dir)?;
+    if std::fs::exists(dir.join("device"))? {
+        let device_data = collect_sensor_data(dir.join("device"))?;
+
+        for (key, dev_props) in device_data {
+            match data.get_mut(&key) {
+                Some(dst) => {
+                    for (k, v) in dev_props {
+                        dst.insert(k, v);
+                    }
+                }
+                None => {
+                    data.insert(key, dev_props);
+                }
+            }
         }
-    };
+    }
 
     let mut metrics = Vec::new();
-    if let Ok(chip_name) = human_readable_chip_name(dir).await {
+    if let Ok(chip_name) = human_readable_chip_name(dir) {
         metrics.push(Metric::gauge_with_tags(
             "node_hwmon_chip_names",
             "Annotation metric for human-readable chip names",
@@ -70,16 +81,11 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
         ));
     }
 
+    // format all sensors.
     for (sensor, props) in &data {
         let sensor_type = match explode_sensor_filename(sensor) {
             Ok((st, _, _)) => st,
-            _ => {
-                warn!(
-                    message = "unknown sensor type",
-                    %sensor
-                );
-                continue;
-            }
+            _ => "",
         };
 
         if let Some(label) = props.get("label") {
@@ -98,12 +104,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
         }
 
         if sensor_type == "beep_enable" {
-            let mut v = 0f64;
-            if let Some(value) = props.get("") {
-                if value == "1" {
-                    v = 1.0;
-                }
-            }
+            let v = matches!(props.get(""), Some(v) if v == "1");
 
             metrics.push(Metric::gauge_with_tags(
                 "node_hwmon_beep_enabled",
@@ -119,16 +120,11 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
         }
 
         if sensor_type == "vrm" {
-            let v = match props.get("") {
-                Some(value) => {
-                    let pr = value.parse::<f64>();
-                    if pr.is_err() {
-                        continue;
-                    }
-
-                    pr.unwrap()
-                }
-
+            let value = match props.get("") {
+                Some(value) => match value.parse::<f64>() {
+                    Ok(v) => v,
+                    Err(_err) => continue,
+                },
                 None => {
                     continue;
                 }
@@ -137,7 +133,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
             metrics.push(Metric::gauge_with_tags(
                 "node_hwmon_voltage_regulator_version",
                 "Hardware voltage regulator",
-                v,
+                value,
                 tags!(
                     "chip" => chip,
                     "sensor" => sensor,
@@ -175,7 +171,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
             let mut name = prefix.clone();
             if element == "input" {
                 // input is actually the value
-                if let Some(_v) = props.get("") {
+                if props.contains_key("") {
                     name += "_input";
                 }
             } else if !element.is_empty() {
@@ -187,11 +183,11 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
                 _ => continue,
             };
 
-            // special key, fault, alarm & beep should be handed out without units
+            // special elements, fault, alarm & beep should be handed out without units
             if element == "fault" || element == "alarm" {
                 metrics.push(Metric::gauge_with_tags(
                     name,
-                    format!("Hardware sensor {} status ({})", sensor, sensor_type),
+                    format!("Hardware sensor {} status ({})", element, sensor_type),
                     pv,
                     tags!(
                         "chip" => chip,
@@ -249,7 +245,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
             if sensor_type == "curr" {
                 metrics.push(Metric::gauge_with_tags(
                     name + "_amps",
-                    format!("Hardware monitor for current ({})", sensor),
+                    format!("Hardware monitor for current ({})", element),
                     pv * 0.001,
                     tags!(
                         "chip" => chip,
@@ -312,6 +308,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
                         "sensor" => sensor,
                     ),
                 ));
+
                 continue;
             }
 
@@ -325,6 +322,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
                         "sensor" => sensor,
                     ),
                 ));
+
                 continue;
             }
 
@@ -337,7 +335,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::gauge_with_tags(
                     name + "_rpm",
                     format!(
-                        "hardware monitor for fan revolutions per minute ({})",
+                        "Hardware monitor for fan revolutions per minute ({})",
                         element
                     ),
                     pv,
@@ -346,6 +344,7 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
                         "sensor" => sensor,
                     ),
                 ));
+
                 continue;
             }
 
@@ -366,41 +365,29 @@ async fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 // This function can be optimized by parallelling sensors
-async fn collect_sensor_data(
+fn collect_sensor_data(
     dir: impl AsRef<Path>,
 ) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let dirs = std::fs::read_dir(dir)?;
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
 
-    for result in dirs {
-        match result {
-            Ok(entry) => {
-                let filename = entry.file_name();
+    for entry in dirs.flatten() {
+        let filename = entry.file_name();
 
-                if let Ok((sensor, num, property)) =
-                    explode_sensor_filename(filename.to_str().unwrap())
-                {
-                    if !is_hwmon_sensor(sensor) {
-                        continue;
-                    }
-
-                    match read_to_string(entry.path()) {
-                        Ok(value) => {
-                            let sensor = format!("{}{}", sensor, num);
-                            stats
-                                .entry(sensor)
-                                .or_default()
-                                .insert(property.to_string(), value);
-                        }
-                        _ => continue,
-                    }
-                }
+        if let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap()) {
+            if !is_hwmon_sensor(sensor) {
+                continue;
             }
-            Err(err) => {
-                warn!(
-                    message = "read sensor dir failed",
-                    %err
-                );
+
+            match read_to_string(entry.path()) {
+                Ok(value) => {
+                    let sensor = format!("{}{}", sensor, if num.is_empty() { "0" } else { num });
+                    stats
+                        .entry(sensor)
+                        .or_default()
+                        .insert(property.to_string(), value);
+                }
+                _ => continue,
             }
         }
     }
@@ -410,56 +397,51 @@ async fn collect_sensor_data(
 
 // explode_sensor_filename splits a sensor name into <type><num>_<property>
 fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
-    let s = name.as_bytes();
+    let input = name.as_bytes();
 
-    let mut typ_end = 0;
-    let mut num_end = 0;
-
-    // consume type
-    for (i, c) in s.iter().enumerate() {
-        if c.is_ascii_digit() {
-            typ_end = i;
+    let mut num_start = 0;
+    while num_start < input.len() {
+        if input[num_start].is_ascii_digit() {
             break;
         }
+
+        num_start += 1;
+    }
+    if num_start >= input.len() {
+        return Ok((&name[..num_start], &name[num_start..], &name[num_start..]));
     }
 
-    // we never meet an number
-    if typ_end == 0 {
-        return Err(());
-    }
-
-    // consume num until we meet '_'
-    for (i, c) in s.iter().enumerate() {
-        if *c == b'_' {
-            num_end = i;
+    let mut num_end = num_start;
+    while num_end < input.len() {
+        if !input[num_end].is_ascii_digit() {
             break;
         }
-    }
 
-    if num_end == 0 {
-        return Ok((&name[0..typ_end], &name[typ_end..name.len()], ""));
+        num_end += 1;
     }
-
-    // we never meet the property separator '_'
-    if num_end == typ_end {
-        return Err(());
+    if num_end >= input.len() {
+        return Ok((
+            &name[0..num_start],
+            &name[num_start..num_end],
+            &name[num_end..],
+        ));
     }
 
     Ok((
-        &name[0..typ_end],
-        &name[typ_end..num_end],
+        &name[0..num_start],
+        &name[num_start..num_end],
         &name[num_end + 1..],
     ))
 }
 
 // human_readable_name is similar to the methods in
-async fn human_readable_chip_name<P: AsRef<Path>>(dir: P) -> Result<String, Error> {
+fn human_readable_chip_name<P: AsRef<Path>>(dir: P) -> Result<String, Error> {
     let path = dir.as_ref().join("name");
     let content = read_to_string(path)?;
     Ok(content)
 }
 
-async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
+fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
     // generate a name for a sensor path
 
     // sensor numbering depends on the order of linux module loading and
@@ -506,9 +488,9 @@ async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
 
     // it looks bad, name and device don't provide enough information
     // return a hwmon[0-9]* name
-    let name = path.file_name().unwrap().to_str().unwrap();
+    let name = path.file_name().unwrap().to_string_lossy().to_string();
 
-    Ok(name.into())
+    Ok(name)
 }
 
 fn is_hwmon_sensor(s: &str) -> bool {
@@ -534,10 +516,10 @@ static HWMON_INVALID_METRIC_CHARS: LazyLock<Regex> =
     LazyLock::new(|| Regex::new("[^a-z0-9:_]").unwrap());
 
 fn sanitized(s: &str) -> String {
-    let s = s.trim();
-    let s = HWMON_INVALID_METRIC_CHARS.replace_all(s, "_");
+    let s = s.trim().to_lowercase();
+    let replaced = HWMON_INVALID_METRIC_CHARS.replace_all(&s, "_");
 
-    s.to_string()
+    replaced.trim_matches('_').to_string()
 }
 
 #[cfg(test)]
@@ -575,19 +557,19 @@ mod tests {
         assert!(!is_hwmon_sensor("foo"));
     }
 
-    #[tokio::test]
-    async fn test_collect_sensor_data() {
+    #[test]
+    fn test_collect_sensor_data() {
         let path = "tests/node/sys/class/hwmon/hwmon3";
-        let kvs = collect_sensor_data(path).await.unwrap();
+        let kvs = collect_sensor_data(path).unwrap();
 
         assert_eq!(kvs.get("fan2").unwrap().get("input").unwrap(), "1098");
         assert_eq!(kvs.get("in0").unwrap().get("max").unwrap(), "1744");
     }
 
-    #[tokio::test]
-    async fn test_hwmon_name() {
+    #[test]
+    fn test_hwmon_name() {
         let path = "tests/node/sys/class/hwmon/hwmon2";
-        let name = hwmon_name(path).await.unwrap();
+        let name = hwmon_name(path).unwrap();
         assert_eq!(name, "platform_applesmc_768")
     }
 }

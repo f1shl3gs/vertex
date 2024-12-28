@@ -50,7 +50,7 @@ fn default_bugs_include() -> regex::Regex {
 
 macro_rules! state_metric {
     ($cpu: expr, $mode: expr, $value: expr) => {
-        Metric::gauge_with_tags(
+        Metric::sum_with_tags(
             "node_cpu_seconds_total",
             "Seconds the CPUs spent in each mode",
             $value,

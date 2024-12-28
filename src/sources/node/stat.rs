@@ -13,32 +13,28 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum(
             "node_intr_total",
             "Total number of interrupts serviced.",
-            stat.intr as f64,
+            stat.intr,
         ),
         Metric::sum(
             "node_context_switches_total",
             "Total number of context switches.",
-            stat.ctxt as f64,
+            stat.ctxt,
         ),
-        Metric::sum(
-            "node_forks_total",
-            "Total number of forks.",
-            stat.forks as f64,
-        ),
+        Metric::sum("node_forks_total", "Total number of forks.", stat.forks),
         Metric::gauge(
             "node_boot_time_seconds",
             "Node boot time, in unixtime.",
-            stat.btime as f64,
+            stat.btime,
         ),
         Metric::gauge(
             "node_procs_running",
             "Number of processes in runnable state.",
-            stat.procs_running as f64,
+            stat.procs_running,
         ),
         Metric::gauge(
             "node_procs_blocked",
             "Number of processes blocked waiting for I/O to complete.",
-            stat.procs_blocked as f64,
+            stat.procs_blocked,
         ),
     ])
 }

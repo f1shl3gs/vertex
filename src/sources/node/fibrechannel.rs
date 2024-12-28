@@ -245,7 +245,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_dumped_frames_total",
                 "Number of dumped frames",
-                host.counters.dumped_frames as f64,
+                host.counters.dumped_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -253,7 +253,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_error_frames_total",
                 "Number of errors in frames",
-                host.counters.error_frames as f64,
+                host.counters.error_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -261,7 +261,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_invalid_crc_total",
                 "Invalid Cyclic Redundancy Check count",
-                host.counters.invalid_crc_count as f64,
+                host.counters.invalid_crc_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -269,7 +269,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_rx_frames_total",
                 "Number of frames received",
-                host.counters.rx_frames as f64,
+                host.counters.rx_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -277,7 +277,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_rx_words_total",
                 "Number of words received by host port",
-                host.counters.rx_words as f64,
+                host.counters.rx_words,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -285,7 +285,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_tx_frames_total",
                 "Number of frames transmitted by host port",
-                host.counters.tx_frames as f64,
+                host.counters.tx_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -293,7 +293,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_tx_words_total",
                 "Number of words transmitted by host port",
-                host.counters.tx_frames as f64,
+                host.counters.tx_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -301,7 +301,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_seconds_since_last_reset_total",
                 "Number of seconds since last host port reset",
-                host.counters.seconds_since_last_reset as f64,
+                host.counters.seconds_since_last_reset,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -309,7 +309,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_invalid_tx_words_total",
                 "Number of invalid words transmitted by host port",
-                host.counters.invalid_tx_word_count as f64,
+                host.counters.invalid_tx_word_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -317,7 +317,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_link_failure_total",
                 "Number of times the host port link has failed",
-                host.counters.link_failure_count as f64,
+                host.counters.link_failure_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -325,7 +325,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_loss_of_sync_total",
                 "Number of failures on either bit or transmission word boundaries",
-                host.counters.loss_of_sync_count as f64,
+                host.counters.loss_of_sync_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -333,7 +333,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_loss_of_signal_total",
                 "Number of times signal has been lost",
-                host.counters.loss_of_signal_count as f64,
+                host.counters.loss_of_signal_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -341,7 +341,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_nos_total",
                 "Number Not_Operational Primitive Sequence received by host port",
-                host.counters.nos_count as f64,
+                host.counters.nos_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
@@ -349,7 +349,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_fibrechannel_fcp_packet_aborts_total",
                 "Number of aborted packets",
-                host.counters.fcp_packet_aborts as f64,
+                host.counters.fcp_packet_aborts,
                 tags!(
                     "fc_host" => name
                 ),

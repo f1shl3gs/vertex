@@ -287,8 +287,8 @@ macro_rules! power_supply_metric {
         if let Some(v) = $value {
             $vec.push(Metric::gauge_with_tags(
                 concat!("node_power_supply_", $name),
-                concat!("value of /sys/class/power_supply/<power_supply>/", $name),
-                v as f64,
+                concat!($name, " value of /sys/class/power_supply/<power_supply>"),
+                v,
                 tags! {
                     POWER_SUPPLY_KEY => $power_supply.clone()
                 },

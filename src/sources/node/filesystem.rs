@@ -1,10 +1,9 @@
+use std::ffi::CString;
 use std::path::PathBuf;
-use std::{ffi::CString, path::Path};
 
 use event::{tags, tags::Key, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -42,23 +41,34 @@ fn default_fs_type_exclude() -> regex::Regex {
 }
 
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = conf.get_stats(proc_path.join("mounts")).await?;
+    let stats = conf.get_stats(proc_path)?;
 
-    let mut metrics = Vec::new();
+    let mut metrics = Vec::with_capacity(stats.len() * 8);
     for stat in stats {
+        let device_error = stat.device_error.is_some();
         let tags = tags!(
-            Key::from_static("device") => stat.device,
+            Key::from_static("device") => stat.device.clone(),
             Key::from_static("fstype") => stat.fs_type,
-            Key::from_static("mount_point") => stat.mount_point,
+            Key::from_static("mountpoint") => stat.mount_point.clone(),
+            Key::from_static("device_error") => stat.device_error.unwrap_or_default(),
         );
 
-        if stat.device_error == 1 {
-            metrics.push(Metric::gauge_with_tags(
+        metrics.extend([
+            Metric::gauge_with_tags(
                 "node_filesystem_device_error",
                 "Whether an error occurred while getting statistics for the given device.",
                 1.0,
-                tags,
-            ));
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_readonly",
+                "Filesystem read-only status.",
+                stat.ro,
+                tags.clone(),
+            ),
+        ]);
+
+        if device_error {
             continue;
         }
 
@@ -66,32 +76,43 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             Metric::gauge_with_tags(
                 "node_filesystem_size_bytes",
                 "Filesystem size in bytes.",
-                stat.size as f64,
+                stat.size,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_filesystem_free_bytes",
                 "Filesystem free space in bytes.",
-                stat.free as f64,
+                stat.free,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_filesystem_avail_bytes",
                 "Filesystem space available to non-root users in bytes.",
-                stat.avail as f64,
+                stat.avail,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_filesystem_files",
                 "Filesystem total file nodes.",
-                stat.files as f64,
+                stat.files,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "node_filesystem_readonly",
-                "Filesystem read-only status.",
-                stat.ro as f64,
-                tags,
+                "node_filesystem_files_free",
+                "Filesystem total free file nodes",
+                stat.files_free,
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_mount_info",
+                "Filesystem mount information",
+                1,
+                tags!(
+                    "device" => stat.device,
+                    "major" => stat.major,
+                    "minor" => stat.minor,
+                    "mountpoint" => stat.mount_point,
+                ),
             ),
         ]);
     }
@@ -100,53 +121,65 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
 }
 
 impl Config {
-    async fn get_stats<P: AsRef<Path>>(&self, path: P) -> Result<Vec<Stat>, Error> {
+    fn get_stats(&self, root: PathBuf) -> Result<Vec<Stat>, Error> {
+        let data = std::fs::read_to_string(root.join("1/mountinfo"))
+            .or_else(|_err| std::fs::read_to_string(root.join("self/mountinfo")))?;
+
         let mut stats = Vec::new();
-        let f = tokio::fs::File::open(path).await?;
-        let reader = tokio::io::BufReader::new(f);
-        let mut lines = reader.lines();
-
-        while let Some(line) = lines.next_line().await? {
+        for line in data.lines() {
             let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-
-            if parts.len() < 4 {
-                continue;
+            if parts.len() < 10 {
+                return Err(Error::Other(format!(
+                    "malformed mount point information: {}",
+                    line
+                )));
             }
 
-            let device = parts[0].to_string();
-            let mount_point = parts[1].to_string();
-            let mount_point = mount_point.replace("\\040", " ");
-            let mount_point = mount_point.replace("\\011", "\t");
-            let fs_type = parts[2].to_string();
-            let options = parts[3].to_string();
+            let mut m = 5;
+            while parts[m + 1] != "-" {
+                m += 1;
+            }
 
+            // Ensure we handle the translation of \040 and \011
+            // as per fstab(5)
+            let mount_point = parts[4].replace("\\040", " ").replace("\\011", "\t");
             if self.mount_points_exclude.is_match(&mount_point) {
                 continue;
             }
 
-            if self.fs_type_exclude.is_match(&fs_type) {
+            let fs_type = parts[m + 2];
+            if self.fs_type_exclude.is_match(fs_type) {
                 continue;
             }
 
+            let device = parts[m + 3];
+            let options = parts[5];
             let ro = options
                 .split(',')
                 .find(|&flag| flag == "ro")
                 .map_or(0u64, |_| 1u64);
 
+            let (major, minor) = parts[2]
+                .split_once(':')
+                .map(|(major, minor)| (major.to_string(), minor.to_string()))
+                .unwrap_or_default();
+
             match statfs(&mount_point) {
                 Ok(usage) => {
                     stats.push(Stat {
-                        device,
+                        device: device.to_string(),
                         mount_point: mount_point.clone(),
-                        fs_type,
-                        options,
+                        fs_type: fs_type.to_string(),
+                        options: options.to_string(),
                         ro,
                         size: usage.size(),
                         free: usage.free(),
                         avail: usage.avail(),
                         files: usage.files(),
                         files_free: usage.files_free(),
-                        device_error: 0,
+                        device_error: None,
+                        major,
+                        minor,
                     });
                 }
 
@@ -158,9 +191,9 @@ impl Config {
                     );
 
                     stats.push(Stat {
-                        device,
-                        fs_type,
-                        options,
+                        device: device.to_string(),
+                        fs_type: fs_type.to_string(),
+                        options: options.to_string(),
                         mount_point: mount_point.clone(),
                         size: 0,
                         free: 0,
@@ -168,7 +201,9 @@ impl Config {
                         files: 0,
                         files_free: 0,
                         ro: 0,
-                        device_error: 1,
+                        device_error: Some(err.to_string()),
+                        major,
+                        minor,
                     });
                 }
             }
@@ -199,6 +234,8 @@ struct Stat {
     mount_point: String,
     fs_type: String,
     options: String,
+    major: String,
+    minor: String,
 
     size: u64,
     free: u64,
@@ -206,7 +243,7 @@ struct Stat {
     files: u64,
     files_free: u64,
     ro: u64,
-    device_error: u64,
+    device_error: Option<String>,
 }
 
 struct Usage(libc::statvfs);
@@ -244,11 +281,11 @@ mod tests {
 
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_stats() {
-        let path = PathBuf::from("tests/node/proc/mounts");
+    #[test]
+    fn test_get_stats() {
+        let path = PathBuf::from("tests/node/proc");
         let conf = Config::default();
-        let stats = conf.get_stats(path).await.unwrap();
+        let stats = conf.get_stats(path).unwrap();
         assert_ne!(stats.len(), 0);
     }
 }

@@ -156,7 +156,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         metrics.push(Metric::gauge_with_tags(
             "node_thermal_zone_temp",
             "Zone temperature in Celsius",
-            stat.temp as f64,
+            stat.temp,
             tags!(
                 "zone" => stat.name,
                 "type" => stat.typ,
@@ -170,7 +170,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_cooling_device_cur_state",
                 "Current throttle state of the cooling device",
-                stat.cur_state as f64,
+                stat.cur_state,
                 tags!(
                     "name" => stat.name.clone(),
                     "type" => stat.typ.clone()
@@ -179,7 +179,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_cooling_device_max_state",
                 "Maximum throttle state of the cooling device",
-                stat.max_state as f64,
+                stat.max_state,
                 tags!(
                     "name" => stat.name,
                     "type" => stat.typ

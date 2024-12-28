@@ -8,51 +8,68 @@ use super::Error;
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/net/udp6`
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
-    if let Ok(v4) = net_udp_summary(proc_path.clone()).await {
-        metrics.extend_from_slice(&[
-            Metric::gauge_with_tags(
-                "node_udp_queues",
-                "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                v4.tx_queue_length as f64,
-                tags! {
-                    "ip" => "v4",
-                    "queue" => "tx",
-                },
-            ),
-            Metric::gauge_with_tags(
-                "node_udp_queues",
-                "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                v4.rx_queue_length as f64,
-                tags! {
-                    "ip" => "v4",
-                    "queue" => "rx",
-                },
-            ),
-        ]);
+    let mut metrics = Vec::with_capacity(4);
+
+    match net_ip_socket_summary(proc_path.join("net/udp")).await {
+        Ok(v4) => {
+            metrics.extend([
+                Metric::gauge_with_tags(
+                    "node_udp_queues",
+                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
+                    v4.tx_queue_length,
+                    tags! {
+                        "ip" => "v4",
+                        "queue" => "tx",
+                    },
+                ),
+                Metric::gauge_with_tags(
+                    "node_udp_queues",
+                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
+                    v4.rx_queue_length,
+                    tags! {
+                        "ip" => "v4",
+                        "queue" => "rx",
+                    },
+                ),
+            ]);
+        }
+        Err(err) => {
+            warn!(
+                message = "couldn't get udp queue stats",
+                %err,
+            );
+        }
     }
 
-    if let Ok(v6) = net_udp6_summary(proc_path).await {
-        metrics.extend_from_slice(&[
-            Metric::gauge_with_tags(
-                "node_udp_queues",
-                "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                v6.tx_queue_length as f64,
-                tags! {
-                    "ip" => "v6",
-                    "queue" => "tx",
-                },
-            ),
-            Metric::gauge_with_tags(
-                "node_udp_queues",
-                "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                v6.rx_queue_length as f64,
-                tags! {
-                    "ip" => "v6",
-                    "queue" => "rx",
-                },
-            ),
-        ]);
+    match net_ip_socket_summary(proc_path.join("net/udp6")).await {
+        Ok(v6) => {
+            metrics.extend_from_slice(&[
+                Metric::gauge_with_tags(
+                    "node_udp_queues",
+                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
+                    v6.tx_queue_length,
+                    tags! {
+                        "ip" => "v6",
+                        "queue" => "tx",
+                    },
+                ),
+                Metric::gauge_with_tags(
+                    "node_udp_queues",
+                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
+                    v6.rx_queue_length,
+                    tags! {
+                        "ip" => "v6",
+                        "queue" => "rx",
+                    },
+                ),
+            ]);
+        }
+        Err(err) => {
+            warn!(
+                message = "couldn't get udp6 queue stats",
+                %err,
+            );
+        }
     }
 
     Ok(metrics)
@@ -72,14 +89,6 @@ struct NetIPSocketSummary {
     // used_sockets shows the total number of parsed lines representing the number
     // of used sockets
     used_sockets: u64,
-}
-
-async fn net_udp_summary(root: PathBuf) -> Result<NetIPSocketSummary, Error> {
-    net_ip_socket_summary(root.join("net/udp")).await
-}
-
-async fn net_udp6_summary(root: PathBuf) -> Result<NetIPSocketSummary, Error> {
-    net_ip_socket_summary(root.join("net/udp6")).await
 }
 
 /// NetIPSocketLine represents the fields parsed from a single line
@@ -104,13 +113,12 @@ async fn net_ip_socket_summary(path: PathBuf) -> Result<NetIPSocketSummary, Erro
     let mut lines = reader.lines();
     let mut summary = NetIPSocketSummary::default();
 
-    while let Some(line) = lines.next_line().await? {
-        // skip the head line
-        if line.starts_with("  sl") {
-            continue;
-        }
+    // skip first line
+    let _ = lines.next_line().await;
 
+    while let Some(line) = lines.next_line().await? {
         let (tx, rx) = parse_net_ip_socket_queues(&line)?;
+
         summary.used_sockets += 1;
         summary.tx_queue_length += tx;
         summary.rx_queue_length += rx;
@@ -122,7 +130,8 @@ async fn net_ip_socket_summary(path: PathBuf) -> Result<NetIPSocketSummary, Erro
 fn parse_net_ip_socket_queues(line: &str) -> Result<(u64, u64), Error> {
     // the content looks like
     // sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode ref pointer drops
-    //    73: 0100007F:0143 00000000:0000 07 00000000:00000000 00:00000000 00000000     0        0 36799 2 0000000000000000 0
+    // 1560: 00000000:B2A8 00000000:0000 07 00000000:00000000 00:00000000 00000000  1000        0 49584 2 00000000d54e19cb 195
+    // 3674: 00000000:BAEA 00000000:0000 07 00000000:00000000 00:00000000 00000000  1000        0 53882 2 00000000e53720bf 0
     let fields = line
         .split_ascii_whitespace()
         .nth(4)

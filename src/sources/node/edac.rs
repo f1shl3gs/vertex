@@ -31,7 +31,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_edac_correctable_errors_total",
                 "Total correctable memory errors.",
-                ce_count as f64,
+                ce_count,
                 tags!(
                     CONTROLLER_KEY => controller.to_string()
                 ),
@@ -39,7 +39,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_edac_uncorrectable_errors_total",
                 "Total uncorrectable memory errors.",
-                ue_count as f64,
+                ue_count,
                 tags!(
                     CONTROLLER_KEY => controller.to_string()
                 ),
@@ -47,7 +47,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_edac_csrow_correctable_errors_total",
                 "Total correctable memory errors for this csrow.",
-                ce_noinfo_count as f64,
+                ce_noinfo_count,
                 tags!(
                     CONTROLLER_KEY => controller.to_string(),
                     "csrow" => "unknown",
@@ -56,7 +56,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_edac_csrow_uncorrectable_errors_total",
                 "Total uncorrectable memory errors for this csrow.",
-                ue_noinfo_count as f64,
+                ue_noinfo_count,
                 tags!(
                     CONTROLLER_KEY => controller.to_string(),
                     "csrow" => "unknown",
@@ -81,7 +81,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                     Metric::sum_with_tags(
                         "node_edac_csrow_correctable_errors_total",
                         "Total correctable memory errors for this csrow.",
-                        ce_count as f64,
+                        ce_count,
                         tags!(
                             CONTROLLER_KEY => controller.to_string(),
                             "csrow" => num.to_string(),
@@ -90,7 +90,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                     Metric::sum_with_tags(
                         "node_edac_csrow_uncorrectable_errors_total",
                         "Total uncorrectable memory errors for this csrow.",
-                        ue_count as f64,
+                        ue_count,
                         tags!(
                             CONTROLLER_KEY => controller.to_string(),
                             "csrow" => num,

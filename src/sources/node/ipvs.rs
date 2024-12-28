@@ -40,27 +40,27 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         Metric::sum(
             "node_ipvs_connections_total",
             "The total number of connections made.",
-            stats.connections as f64,
+            stats.connections,
         ),
         Metric::sum(
             "node_ipvs_incoming_packets_total",
             "The total number of incoming packets.",
-            stats.incoming_packets as f64,
+            stats.incoming_packets,
         ),
         Metric::sum(
             "node_ipvs_outgoing_packets_total",
             "The total number of outgoing packets.",
-            stats.outgoing_packets as f64,
+            stats.outgoing_packets,
         ),
         Metric::sum(
             "node_ipvs_incoming_bytes_total",
             "The total amount of incoming data.",
-            stats.incoming_bytes as f64,
+            stats.incoming_bytes,
         ),
         Metric::sum(
             "node_ipvs_outgoing_bytes_total",
             "The total amount of outgoing data.",
-            stats.outgoing_bytes as f64,
+            stats.outgoing_bytes,
         ),
     ];
 
@@ -115,19 +115,19 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             Metric::gauge_with_tags(
                 "node_ipvs_backend_connections_active",
                 "The current active connections by local and remote address.",
-                status.active_conn as f64,
+                status.active_conn,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_ipvs_backend_connections_inactive",
                 "The current inactive connections by local and remote address.",
-                status.inact_conn as f64,
+                status.inact_conn,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_ipvs_backend_weight",
                 "The current backend weight by local and remote address.",
-                status.weight as f64,
+                status.weight,
                 tags,
             ),
         ])

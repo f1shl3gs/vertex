@@ -79,7 +79,7 @@ impl DesktopManagementInterface {
                 "product_sku" => dmi.product_sku = Some(value),
                 "product_uuid" => dmi.product_uuid = Some(value),
                 "product_version" => dmi.product_version = Some(value),
-                "sys_vendor" => dmi.system_vendor = Some(value),
+                "system_vendor" => dmi.system_vendor = Some(value),
                 _ => continue,
             }
         }

@@ -45,7 +45,7 @@ impl NetSockstat {
 
         // If sockstat contains the number of used sockets, export it
         if !v6 && self.used.is_some() {
-            let v = self.used.unwrap() as f64;
+            let v = self.used.unwrap();
 
             metrics.push(Metric::gauge(
                 "node_sockstat_sockets_used",
@@ -93,11 +93,11 @@ impl NetSockstat {
                 ));
             }
 
-            if let Some(v) = nsp.memory {
+            if let Some(value) = nsp.memory {
                 metrics.push(Metric::gauge(
                     format!("node_sockstat_{}_memory", nsp.protocol),
                     format!("Number of {} sockets in stat memory", nsp.protocol),
-                    v as f64,
+                    value,
                 ))
             }
         }

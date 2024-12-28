@@ -15,7 +15,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             metrics.push(Metric::gauge_with_tags(
                 "node_cpu_frequency_hertz",
                 "Current cpu thread frequency in hertz.",
-                v as f64 * 1000.0,
+                v * 1000,
                 tags!(
                     Key::from_static("cpu") => cpu.clone(),
                 ),
@@ -26,7 +26,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             metrics.push(Metric::gauge_with_tags(
                 "node_cpu_frequency_min_hertz",
                 "Minimum cpu thread frequency in hertz.",
-                v as f64 * 1000.0,
+                v * 1000,
                 tags!(
                     Key::from_static("cpu") => cpu.clone(),
                 ),
@@ -36,8 +36,8 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         if let Some(v) = stat.maximum_frequency {
             metrics.push(Metric::gauge_with_tags(
                 "node_cpu_frequency_max_hertz",
-                "Maximum cpu thread frequency in hertz.",
-                v as f64 * 1000.0,
+                "Maximum CPU thread frequency in hertz.",
+                v * 1000,
                 tags!(
                     Key::from_static("cpu") => cpu.clone(),
                 ),
@@ -48,7 +48,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             metrics.push(Metric::gauge_with_tags(
                 "node_cpu_scaling_frequency_hertz",
                 "Current scaled CPU thread frequency in hertz.",
-                v as f64 * 1000.0,
+                v * 1000,
                 tags!(
                     Key::from_static("cpu") => cpu.clone(),
                 ),

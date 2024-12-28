@@ -11,12 +11,12 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_filefd_allocated",
             "File descriptor statistics: allocated",
-            allocated as f64,
+            allocated,
         ),
         Metric::gauge(
             "node_filefd_maximum",
             "File descriptor statistics: maximum",
-            maximum as f64,
+            maximum,
         ),
     ])
 }

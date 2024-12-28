@@ -13,12 +13,12 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_entropy_available_bits",
             "Bits of available entropy.",
-            avail as f64,
+            avail,
         ),
         Metric::gauge(
             "node_entropy_pool_size_bits",
             "Bits of entropy pool.",
-            pool_size as f64,
+            pool_size,
         ),
     ])
 }
