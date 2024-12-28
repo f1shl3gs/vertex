@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735301819659,
+  "lastUpdate": 1735345262393,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3ac811f734efc56139c68a181154b6df119fbf1d",
-          "message": "chore(deps): bump pprof from 0.13.0 to 0.14.0 (#1977)\n\nBumps [pprof](https://github.com/tikv/pprof-rs) from 0.13.0 to 0.14.0.\r\n- [Changelog](https://github.com/tikv/pprof-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/pprof-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pprof\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-08T20:18:48+08:00",
-          "tree_id": "cc4f7e2465cf838f52e3b2e75a0c4221b88bfb70",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ac811f734efc56139c68a181154b6df119fbf1d"
-        },
-        "date": 1731068443999,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 543600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8b1a0a7682261465fbbf2f1818946309af56bbbb",
+          "message": "sources/node: add missing metrics which added by node_exporter (#2089)",
+          "timestamp": "2024-12-28T08:18:33+08:00",
+          "tree_id": "321e891bb70c1b835fd4e6563e9d53ec9cfac5d7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8b1a0a7682261465fbbf2f1818946309af56bbbb"
+        },
+        "date": 1735345243470,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 538180,
             "unit": "ns/op"
           }
         ]
