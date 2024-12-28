@@ -382,7 +382,7 @@ impl Metric {
     where
         N: Into<String>,
         D: Into<String>,
-        V: Into<f64>,
+        V: IntoF64,
     {
         Self {
             series: MetricSeries {
@@ -392,7 +392,7 @@ impl Metric {
             description: Some(desc.into()),
             unit: None,
             timestamp: None,
-            value: MetricValue::Sum(v.into()),
+            value: MetricValue::Sum(v.into_f64()),
             metadata: EventMetadata::default(),
         }
     }
