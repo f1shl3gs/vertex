@@ -70,7 +70,7 @@ macro_rules! build_metrics {
             $metrics.push(Metric::sum_with_tags(
                 "node_softirqs_functions_total",
                 "Softirq counts per CPU",
-                value as f64,
+                value,
                 tags!(
                     Key::from_static("cpu") => cpu as i64,
                     Key::from_static("type") => $name

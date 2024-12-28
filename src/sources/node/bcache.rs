@@ -23,12 +23,12 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
             Metric::gauge(
                 "node_bcache_average_key_size_sectors",
                 "Average data per key in the btree (sectors).",
-                stat.bcache.average_key_size as f64,
+                stat.bcache.average_key_size,
             ),
             Metric::gauge(
                 "node_bcache_btree_cache_size_bytes",
                 "Amount of memory currently used by the btree cache.",
-                stat.bcache.btree_cache_size as f64,
+                stat.bcache.btree_cache_size,
             ),
             Metric::gauge(
                 "node_bcache_cache_available_percent",
@@ -43,7 +43,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
             Metric::gauge(
                 "node_bcache_root_usage_percent",
                 "Percentage of the root btree node in use (tree depth increases if too high).",
-                stat.bcache.root_usage_percent as f64,
+                stat.bcache.root_usage_percent,
             ),
             Metric::gauge(
                 "node_bcache_tree_depth",
@@ -54,7 +54,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
             Metric::gauge(
                 "node_bcache_active_journal_entries",
                 "Number of journal entries that are newer than the index.",
-                stat.bcache.internal.active_journal_entries as f64,
+                stat.bcache.internal.active_journal_entries,
             ),
             Metric::gauge(
                 "node_bcache_btree_node",
@@ -81,7 +81,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 Metric::gauge_with_tags(
                     "node_bcache_dirty_data_bytes",
                     "Amount of dirty data for this backing device in the cache.",
-                    bdev.dirty_data as f64,
+                    bdev.dirty_data,
                     tags.clone(),
                 ),
                 Metric::gauge_with_tags(

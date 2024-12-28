@@ -52,6 +52,7 @@ mod timex;
 mod udp_queues;
 mod uname;
 mod vmstat;
+mod watchdog;
 mod wifi;
 #[cfg(target_os = "linux")]
 mod xfs;
@@ -254,6 +255,9 @@ struct Collectors {
     #[serde(default = "default_vmstat_config")]
     vmstat: Option<vmstat::Config>,
 
+    #[serde(default = "default_true")]
+    watchdog: bool,
+
     #[cfg(target_os = "linux")]
     #[serde(default = "default_true")]
     xfs: bool,
@@ -270,57 +274,58 @@ struct Collectors {
 impl Default for Collectors {
     fn default() -> Self {
         Self {
-            arp: default_true(),
+            arp: true,
             bcache: default_bcache_config(),
-            btrfs: default_true(),
-            bonding: default_true(),
-            conntrack: default_true(),
+            btrfs: true,
+            bonding: true,
+            conntrack: true,
             cpu: default_cpu_config(),
             cpufreq: true,
             diskstats: default_diskstats_config(),
-            dmi: default_true(),
-            drm: default_true(),
-            edac: default_true(),
-            entropy: default_true(),
-            fibrechannel: default_true(),
-            filefd: default_true(),
+            dmi: true,
+            drm: true,
+            edac: true,
+            entropy: true,
+            fibrechannel: true,
+            filefd: true,
             filesystem: default_filesystem_config(),
-            hwmon: default_true(),
-            infiniband: default_true(),
+            hwmon: true,
+            infiniband: true,
             ipvs: default_ipvs_config(),
-            loadavg: default_true(),
-            mdadm: default_true(),
-            memory: default_true(),
+            loadavg: true,
+            mdadm: true,
+            memory: true,
             netclass: default_netclass_config(),
             netdev: default_netdev_config(),
             netstat: default_netstat_config(),
-            nfs: default_true(),
-            nfsd: default_true(),
-            nvme: default_true(),
-            os_release: default_true(),
+            nfs: true,
+            nfsd: true,
+            nvme: true,
+            os_release: true,
             power_supply: default_powersupply_config(),
-            pressure: default_true(),
+            pressure: true,
             processes: false,
-            rapl: default_true(),
-            schedstat: default_true(),
-            selinux: default_true(),
-            sockstat: default_true(),
-            softnet: default_true(),
+            rapl: true,
+            schedstat: true,
+            selinux: true,
+            sockstat: true,
+            softnet: true,
             softirqs: false,
-            stat: default_true(),
-            time: default_true(),
-            timex: default_true(),
-            tcpstat: default_true(),
-            thermal_zone: default_true(),
-            udp_queues: default_true(),
-            uname: default_true(),
+            stat: true,
+            time: true,
+            timex: true,
+            tcpstat: true,
+            thermal_zone: true,
+            udp_queues: true,
+            uname: true,
             vmstat: default_vmstat_config(),
-            xfs: default_true(),
-            zfs: default_true(),
+            watchdog: true,
+            xfs: true,
+            zfs: true,
 
             // MacOS
             #[cfg(target_os = "macos")]
-            boot_time: default_true(),
+            boot_time: true,
         }
     }
 }
@@ -746,8 +751,10 @@ async fn run(
         }
 
         if collectors.time {
+            let sys_path = sys_path.clone();
+
             tasks.push(tokio::spawn(async {
-                record_gather!("time", time::gather())
+                record_gather!("time", time::gather(sys_path))
             }))
         }
 
@@ -775,6 +782,14 @@ async fn run(
             let conf = conf.clone();
             tasks.push(tokio::spawn(async move {
                 record_gather!("vmstat", vmstat::gather(conf, proc_path))
+            }))
+        }
+
+        if collectors.watchdog {
+            let sys_path = sys_path.clone();
+
+            tasks.push(tokio::spawn(async move {
+                record_gather!("watchdog", watchdog::gather(sys_path))
             }))
         }
 

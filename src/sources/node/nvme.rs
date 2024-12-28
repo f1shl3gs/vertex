@@ -10,14 +10,15 @@ pub async fn gather(root: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut readdir = read_dir(root.join("class/nvme"))?;
 
     while let Some(Ok(entry)) = readdir.next() {
-        let [serial, model, state, firmware_rev] = read_nvme_device(entry.path())?;
+        let [device, serial, model, state, firmware_rev] = read_nvme_device(entry.path())?;
 
         metrics.push(Metric::gauge_with_tags(
             "node_nvme_info",
             "node_nvme_info Non-numeric data from /sys/class/nvme/<device>, value is always 1",
             1f64,
             tags!(
-                "firmware_rev" => firmware_rev,
+                "device" => device,
+                "firmware_revision" => firmware_rev,
                 "model" => model,
                 "serial" => serial,
                 "state" => state,
@@ -28,13 +29,17 @@ pub async fn gather(root: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn read_nvme_device(root: PathBuf) -> Result<[String; 4], std::io::Error> {
+fn read_nvme_device(root: PathBuf) -> Result<[String; 5], std::io::Error> {
+    let device = root
+        .file_name()
+        .map(|p| p.to_string_lossy().to_string())
+        .unwrap_or_default();
     let serial = read_to_string(root.join("serial"))?;
     let model = read_to_string(root.join("model"))?;
     let state = read_to_string(root.join("state"))?;
     let firmware = read_to_string(root.join("firmware_rev"))?;
 
-    Ok([serial, model, state, firmware])
+    Ok([device, serial, model, state, firmware])
 }
 
 #[cfg(test)]

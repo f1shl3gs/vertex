@@ -46,7 +46,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_network_up",
-                "Value is 1 if operstat is 'up', o otherwise",
+                "Value is 1 if operstate is 'up', 0 otherwise",
                 if nci.operstate == "up" { 1.0 } else { 0.0 },
                 tags.clone(),
             ),
@@ -56,6 +56,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 1f64,
                 tags!(
                     Key::from_static("address") => nci.address,
+                    Key::from_static("adminstate") => admin_state(nci.flags),
                     Key::from_static("broadcast") => nci.broadcast,
                     Key::from_static("device") => device,
                     Key::from_static("duplex") => nci.duplex,
@@ -68,7 +69,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.addr_assign_type {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_address_assign_type",
-                "address_assign_type value of /sys/class/net/<iface>",
+                "Network device property: address_assign_type",
                 v,
                 tags.clone(),
             ));
@@ -77,7 +78,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.carrier {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_carrier",
-                "carrier value of /sys/class/net/<iface>",
+                "Network device property: carrier",
                 v,
                 tags.clone(),
             ));
@@ -86,7 +87,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.carrier_changes {
             metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_changes_total",
-                "carrier_changes value of /sys/class/net/<iface>",
+                "Network device property: carrier_changes_total",
                 v,
                 tags.clone(),
             ));
@@ -95,7 +96,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.carrier_up_count {
             metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_up_changes_total",
-                "carrier_up_count value of /sys/class/net/<iface>",
+                "Network device property: carrier_up_changes_total",
                 v,
                 tags.clone(),
             ));
@@ -104,7 +105,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.carrier_down_count {
             metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_down_changes_total",
-                "carrier_down_count value of /sys/class/net/<iface>",
+                "Network device property: carrier_down_changes_total",
                 v,
                 tags.clone(),
             ));
@@ -113,7 +114,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.dev_id {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_device_id",
-                "dev_id value of /sys/class/net/<iface>",
+                "Network device property: device_id",
                 v,
                 tags.clone(),
             ));
@@ -122,7 +123,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.dormant {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_dormant",
-                "dormant value of /sys/class/net/<iface>",
+                "Network device property: dormant",
                 v,
                 tags.clone(),
             ));
@@ -131,7 +132,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.flags {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_flags",
-                "flags value of /sys/class/net/<iface>",
+                "Network device property: flags",
                 v,
                 tags.clone(),
             ));
@@ -140,7 +141,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.ifindex {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_id",
-                "ifindex value of /sys/class/net/<iface>",
+                "Network device property: iface_id",
                 v,
                 tags.clone(),
             ));
@@ -149,7 +150,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.iflink {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_link",
-                "iflink value of /sys/class/net/<iface>",
+                "Network device property: iface_link",
                 v,
                 tags.clone(),
             ));
@@ -158,7 +159,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.link_mode {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_link_mode",
-                "link_mode value of /sys/class/net/<iface>",
+                "Network device property: iface_link_mode",
                 v,
                 tags.clone(),
             ));
@@ -167,7 +168,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.mtu {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_mtu_bytes",
-                "mtu value of /sys/class/net/<iface>",
+                "Network device property: mtu_bytes",
                 v,
                 tags.clone(),
             ));
@@ -176,7 +177,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.name_assign_type {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_name_assign_type",
-                "name_assign_type value of /sys/class/net/<iface>",
+                "Network device property: name_assign_type",
                 v,
                 tags.clone(),
             ));
@@ -196,7 +197,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
             let speed_bytes = v as f64 * 1000.0 * 1000.0 / 8.0;
             metrics.push(Metric::gauge_with_tags(
                 "node_network_speed_bytes",
-                "speed value of /sys/class/net/<iface>",
+                "Network device property: speed_bytes",
                 speed_bytes,
                 tags.clone(),
             ));
@@ -205,7 +206,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.tx_queue_len {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_transmit_queue_length",
-                "tx_queue_len value of /sys/class/net/<iface>",
+                "Network device property: transmit_queue_length",
                 v,
                 tags.clone(),
             ))
@@ -214,7 +215,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         if let Some(v) = nci.typ {
             metrics.push(Metric::gauge_with_tags(
                 "node_network_protocol_type",
-                "type value of /sys/class/net/<iface>",
+                "Network device property: protocol_type",
                 v,
                 tags,
             ));
@@ -222,6 +223,20 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
     }
 
     Ok(metrics)
+}
+
+#[inline]
+fn admin_state(flags: Option<i64>) -> &'static str {
+    match flags {
+        Some(flags) => {
+            if flags & 1 == 1 {
+                "up"
+            } else {
+                "down"
+            }
+        }
+        None => "unknown",
+    }
 }
 
 async fn net_class_devices(sys_path: PathBuf) -> Result<Vec<String>, Error> {

@@ -2,12 +2,12 @@
 //!
 //! Docs from https://www.kernel.org/doc/Documentation/iostats.txt
 
+use std::collections::HashMap;
 use std::path::PathBuf;
 
 use event::{tags, tags::Key, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -31,29 +31,110 @@ impl Default for Config {
 }
 
 pub fn default_ignored() -> regex::Regex {
-    regex::Regex::new("^(ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\\d+n\\d+p)\\d+$").unwrap()
+    regex::Regex::new(r#"^(z?ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\d+n\d+p)\d+$"#).unwrap()
 }
 
 pub async fn gather(conf: Config, root: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
-    let file = tokio::fs::File::open(root.join("diskstats")).await?;
-    let reader = tokio::io::BufReader::new(file);
-    let mut lines = reader.lines();
+    let data = std::fs::read_to_string(root.join("diskstats"))?;
 
-    while let Some(line) = lines.next_line().await? {
-        let mut parts = line.split_ascii_whitespace();
-        let device = parts.nth(2).unwrap();
+    // https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
+    //
+    // The /proc/diskstats file displays the I/O statistics
+    // of block devices. Each line contains the following 14
+    // fields:
+    //
+    // ==  ===================================
+    // 1  major number
+    // 2  minor number
+    // 3  device name
+    // 4  reads completed successfully
+    // 5  reads merged
+    // 6  sectors read
+    // 7  time spent reading (ms)
+    // 8  writes completed
+    // 9  writes merged
+    // 10  sectors written
+    // 11  time spent writing (ms)
+    // 12  I/Os currently in progress
+    // 13  time spent doing I/Os (ms)
+    // 14  weighted time spent doing I/Os (ms)
+    //     ==  ===================================
+    //
+    //     Kernel 4.18+ appends four more fields for discard
+    //     tracking putting the total at 18:
+    //
+    // ==  ===================================
+    // 15  discards completed successfully
+    // 16  discards merged
+    // 17  sectors discarded
+    // 18  time spent discarding
+    //     ==  ===================================
+    //
+    // Kernel 5.5+ appends two more fields for flush requests:
+    //
+    // ==  =====================================
+    // 19  flush requests completed successfully
+    // 20  time spent flushing
+    //     ==  =====================================
+    //
+    //     For more details refer to Documentation/admin-guide/iostats.rst
+    for line in data.lines() {
+        // the content looks like this
+        // 259       0 nvme0n1 366 0 23480 41 3 0 0 0 0 41 41 0 0 0 0
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+        if parts.len() < 14 {
+            continue;
+        }
+
+        let major = parts[0];
+        let minor = parts[1];
+        let device = parts[2];
         if conf.ignored.is_match(device) {
             continue;
         }
 
-        // the content looks like this
-        // 259       0 nvme0n1 366 0 23480 41 3 0 0 0 0 41 41 0 0 0 0
-        for (index, part) in parts.enumerate() {
+        let info = match udev_device_properties(major, minor) {
+            Ok(info) => info,
+            Err(err) => {
+                warn!(
+                    message = "read udev properties failed",
+                    major,
+                    minor,
+                    %err,
+                );
+
+                continue;
+            }
+        };
+
+        let serial = info
+            .get("SCSI_IDENT_SERIAL")
+            .or_else(|| info.get("ID_SERIAL_SHORT"))
+            .cloned()
+            .unwrap_or_default();
+
+        metrics.push(Metric::gauge_with_tags(
+            "node_disk_info",
+            "Info of /sys/block/<block_device>.",
+            1,
+            tags!(
+                "device" => device,
+                "major" => major,
+                "minor" => minor,
+                "path" => info.get("ID_PATH").cloned().unwrap_or_default(),
+                "wwn" => info.get("ID_WWN").cloned().unwrap_or_default(),
+                "model" => info.get("ID_MODEL").cloned().unwrap_or_default(),
+                "serial" => serial,
+                "revision" => info.get("ID_REVISION").cloned().unwrap_or_default(),
+            ),
+        ));
+
+        for (index, part) in parts.iter().skip(3).enumerate() {
             let v = part.parse::<f64>().unwrap_or(0f64);
 
             match index {
-                0 => metrics.push(Metric::gauge_with_tags(
+                0 => metrics.push(Metric::sum_with_tags(
                     "node_disk_reads_completed_total",
                     "The total number of reads completed successfully",
                     v,
@@ -158,9 +239,103 @@ pub async fn gather(conf: Config, root: PathBuf) -> Result<Vec<Metric>, Error> {
                 _ => {}
             }
         }
+
+        if let Some(fs_type) = info.get("ID_FS_TYPE") {
+            metrics.push(Metric::gauge_with_tags(
+                "node_disk_filesystem_info",
+                "Info about disk filesystem",
+                1,
+                tags!(
+                    "device" => device,
+                    "type" => fs_type,
+                    "usage" => info.get("ID_FS_USAGE").cloned().unwrap_or_default(),
+                    "uuid" => info.get("ID_FS_UUID").cloned().unwrap_or_default(),
+                    "version" => info.get("ID_FS_VERSION").cloned().unwrap_or_default(),
+                ),
+            ))
+        }
+
+        if let Some(name) = info.get("DM_NAME") {
+            metrics.push(Metric::gauge_with_tags(
+                "node_disk_device_mapper_info",
+                "Info about disk device mapper",
+                1,
+                tags!(
+                    "device" => device,
+                    "name" => name,
+                    "uuid" => info.get("DM_UUID").cloned().unwrap_or_default(),
+                    "vg_name" => info.get("DM_VG_NAME").cloned().unwrap_or_default(),
+                    "lv_name" => info.get("DM_LV_NAME").cloned().unwrap_or_default(),
+                    "lv_layer" => info.get("DM_LV_LAYER").cloned().unwrap_or_default(),
+                ),
+            ))
+        }
+
+        if info.contains_key("ID_ATA") {
+            for (key, name, desc) in [
+                (
+                    "ID_ATA_WRITE_CACHE",
+                    "node_disk_ata_write_cache",
+                    "ATA disk has a write cache.",
+                ),
+                (
+                    "ID_ATA_WRITE_CACHE_ENABLED",
+                    "node_disk_ata_write_cache_enabled",
+                    "ATA disk has its write cache enabled.",
+                ),
+                (
+                    "ID_ATA_ROTATION_RATE_RPM",
+                    "node_disk_ata_rotation_rate_rpm",
+                    "ATA disk rotation rate in RPMs (0 for SSDs).",
+                ),
+            ] {
+                if let Some(value) = info.get(key) {
+                    match value.parse::<f64>() {
+                        Ok(value) => metrics.push(Metric::gauge_with_tags(
+                            name,
+                            desc,
+                            value,
+                            tags!(
+                                "device" => device,
+                            ),
+                        )),
+                        Err(err) => {
+                            warn!(
+                                message = "parse ATA value failed",
+                                %err
+                            );
+
+                            continue;
+                        }
+                    }
+                } else {
+                    debug!(message = "udev attribute does not exist", attr = key);
+                }
+            }
+        }
     }
 
     Ok(metrics)
+}
+
+fn udev_device_properties(major: &str, minor: &str) -> Result<HashMap<String, String>, Error> {
+    let path = format!("/run/udev/data/b{}:{}", major, minor);
+    let data = std::fs::read_to_string(path)?;
+
+    let mut properties = HashMap::new();
+    for line in data.lines() {
+        // we're only interested in device properties
+        match line.strip_prefix("E:") {
+            Some(value) => {
+                if let Some((key, value)) = value.split_once("=") {
+                    properties.insert(key.to_string(), value.to_string());
+                }
+            }
+            None => continue,
+        }
+    }
+
+    Ok(properties)
 }
 
 #[cfg(test)]
@@ -175,6 +350,22 @@ mod tests {
         };
 
         let result = gather(conf, proc_path.into()).await.unwrap();
+        assert_ne!(result.len(), 0);
+    }
+
+    #[test]
+    fn udev() {
+        let info = udev_device_properties("259", "0").unwrap();
+        println!("{:?}", info);
+    }
+
+    #[tokio::test]
+    async fn gather_root() {
+        let conf = Config {
+            ignored: default_ignored(),
+        };
+
+        let result = gather(conf, "/proc".into()).await.unwrap();
         assert_ne!(result.len(), 0);
     }
 }

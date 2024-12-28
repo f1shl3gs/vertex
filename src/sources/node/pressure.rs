@@ -20,50 +20,54 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let cpu = psi_stats(proc_path.join("pressure/cpu")).await?;
     let io = psi_stats(proc_path.join("pressure/io")).await?;
     let memory = psi_stats(proc_path.join("pressure/memory")).await?;
+    let irq = psi_stats(proc_path.join("pressure/irq")).await?;
 
-    let mut metrics = Vec::new();
+    let mut metrics = Vec::with_capacity(6);
     if let Some(some) = cpu.some {
-        let v = some.total as f64 / 1000.0 / 1000.0;
         metrics.push(Metric::sum(
             "node_pressure_cpu_waiting_seconds_total",
             "Total time in seconds that processes have waited for CPU time",
-            v,
+            some.total as f64 / 1000.0 / 1000.0,
         ));
     }
 
     if let Some(some) = io.some {
-        let v = some.total as f64 / 1000.0 / 1000.0;
         metrics.push(Metric::sum(
             "node_pressure_io_waiting_seconds_total",
             "Total time in seconds that processes have waited due to IO congestion",
-            v,
+            some.total as f64 / 1000.0 / 1000.0,
         ));
     }
 
     if let Some(full) = io.full {
-        let v = full.total as f64 / 1000.0 / 1000.0;
         metrics.push(Metric::sum(
             "node_pressure_io_stalled_seconds_total",
             "Total time in seconds no process could make progress due to IO congestion",
-            v,
+            full.total as f64 / 1000.0 / 1000.0,
         ));
     }
 
     if let Some(some) = memory.some {
-        let v = some.total as f64 / 1000.0 / 1000.0;
         metrics.push(Metric::sum(
             "node_pressure_memory_waiting_seconds_total",
             "Total time in seconds that processes have waited for memory",
-            v,
+            some.total as f64 / 1000.0 / 1000.0,
         ));
     }
 
     if let Some(full) = memory.full {
-        let v = full.total as f64 / 1000.0 / 1000.0;
         metrics.push(Metric::sum(
             "node_pressure_memory_stalled_seconds_total",
             "Total time in seconds no process could make progress due to memory congestion",
-            v,
+            full.total as f64 / 1000.0 / 1000.0,
+        ));
+    }
+
+    if let Some(full) = irq.full {
+        metrics.push(Metric::sum(
+            "node_pressure_irq_stalled_seconds_total",
+            "Total time in seconds no process could make progress due to IRQ congestion",
+            full.total as f64 / 1000.0 / 1000.0,
         ));
     }
 

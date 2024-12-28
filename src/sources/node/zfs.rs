@@ -13,11 +13,7 @@ macro_rules! parse_subsystem_metrics {
         let path = format!("{}/spl/kstat/zfs/{}", $root, $path);
         for (k, v) in parse_procfs_file(&path).await? {
             let k = k.replace("-", "_");
-            $metrics.push(Metric::gauge(
-                format!("node_{}_{}", $subsystem, k),
-                k,
-                v as f64,
-            ))
+            $metrics.push(Metric::gauge(format!("node_{}_{}", $subsystem, k), k, v))
         }
     };
 }
@@ -51,7 +47,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             metrics.push(Metric::gauge_with_tags(
                 format!("node_zfs_zpool_{}", k),
                 k,
-                v as f64,
+                v,
                 tags! {
                     "zpool" => pool_name.clone()
                 },
@@ -73,7 +69,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             metrics.push(Metric::gauge_with_tags(
                 format!("node_zfs_zpool_dataset_{}", k),
                 desc,
-                v as f64,
+                v,
                 tags!(
                     "zpool" => pool_name,
                     "dataset" => dataset

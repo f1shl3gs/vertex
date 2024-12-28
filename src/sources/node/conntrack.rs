@@ -38,27 +38,27 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_nf_conntrack_entries",
             "Number of currently allocated flow entries for connection tracking.",
-            count as f64,
+            count,
         ),
         Metric::gauge(
             "node_nf_conntrack_entries_limit",
             "Maximum size of connection tracking table.",
-            max as f64,
+            max,
         ),
         Metric::gauge(
             "node_nf_conntrack_stat_found",
             "Number of searched entries which were successful.",
-            statistic.found as f64,
+            statistic.found,
         ),
         Metric::gauge(
             "node_nf_conntrack_stat_invalid",
             "Number of packets seen which can not be tracked.",
-            statistic.invalid as f64,
+            statistic.invalid,
         ),
         Metric::gauge(
             "node_nf_conntrack_stat_ignore",
             "Number of packets seen which are already connected to a conntrack entry.",
-            statistic.ignore as f64
+            statistic.ignore
         ),
         Metric::gauge(
             "node_nf_conntrack_stat_insert",

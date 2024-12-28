@@ -390,7 +390,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum_with_tags(
             "node_nfs_packets_total",
             "Total NFSd network packets (sent+received) by protocol type.",
-            stats.network.udp_count as f64,
+            stats.network.udp_count,
             tags! {
                 "protocol" => "udp"
             },
@@ -398,7 +398,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum_with_tags(
             "node_nfs_packets_total",
             "Total NFSd network packets (sent+received) by protocol type.",
-            stats.network.tcp_count as f64,
+            stats.network.tcp_count,
             tags! {
                 "protocol" => "tcp"
             },
@@ -406,7 +406,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum(
             "node_nfs_connections_total",
             "Total number of NFSd TCP connections.",
-            stats.network.net_count as f64,
+            stats.network.net_count,
         ),
     ];
 
@@ -415,17 +415,17 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum(
             "node_nfs_rpcs_total",
             "Total number of RPCs performed.",
-            stats.client_rpc.rpc_count as f64,
+            stats.client_rpc.rpc_count,
         ),
         Metric::sum(
             "node_nfs_rpc_retransmissions_total",
             "Number of RPC transmissions performed.",
-            stats.client_rpc.retransmissions as f64,
+            stats.client_rpc.retransmissions,
         ),
         Metric::sum(
             "node_nfs_rpc_authentication_refreshes_total",
             "Number of RPC authentication refreshes performed.",
-            stats.client_rpc.auth_refreshes as f64,
+            stats.client_rpc.auth_refreshes,
         ),
     ]);
 

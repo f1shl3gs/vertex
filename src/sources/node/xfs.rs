@@ -20,7 +20,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_extents_allocated_total",
                 "Number of extents allocated for a filesystem.",
-                stat.extent_allocation.extents_allocated as f64,
+                stat.extent_allocation.extents_allocated,
                 tags.clone(),
             ),
             Metric::sum_with_tags(

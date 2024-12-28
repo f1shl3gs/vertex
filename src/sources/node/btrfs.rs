@@ -52,6 +52,16 @@ struct Device {
     size: u64,
 }
 
+/// Number of commits and various time related statistics.
+/// See Linux fs/btrfs/sysfs.c with 6.x version
+struct CommitStats {
+    commits: u64,
+
+    last_commit_ms: u64,  // micro seconds
+    max_commit_ms: u64,   // micro seconds
+    total_commit_ms: u64, // micro seconds
+}
+
 /// Stats contains statistics for a single Btrfs filesystem.
 /// See Linux fs/btrfs/sysfs.c for more information
 pub struct Stats {
@@ -64,12 +74,14 @@ pub struct Stats {
     node_size: u64,
     quota_override: u64,
     sector_size: u64,
+
+    commit_stats: CommitStats,
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = stats(sys_path).await?;
 
-    let mut metrics = vec![];
+    let mut metrics = Vec::with_capacity(stats.len() * 12);
     for stat in stats {
         metrics.extend(stats_to_metrics(stat));
     }
@@ -84,13 +96,49 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Filesystem information",
             1.0,
             tags!(
-                "label" => stats.label
+                "label" => stats.label,
+                "uuid" => stats.uuid.clone()
             ),
         ),
-        Metric::gauge(
+        Metric::gauge_with_tags(
             "node_btrfs_global_rsv_size_bytes",
             "Size of global reserve.",
-            stats.allocation.global_rsv_size as f64,
+            stats.allocation.global_rsv_size,
+            tags!(
+                "uuid" => stats.uuid.clone()
+            ),
+        ),
+        Metric::sum_with_tags(
+            "node_btrfs_commits_total",
+            "The total number of commits that have occurred.",
+            stats.commit_stats.commits,
+            tags!(
+                "uuid" => stats.uuid.clone()
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "node_btrfs_last_commit_seconds",
+            "Duration of the most recent commit, in seconds",
+            stats.commit_stats.last_commit_ms / 1000,
+            tags!(
+                "uuid" => stats.uuid.clone()
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "node_btrfs_max_commit_seconds",
+            "Duration of the slowest commit, in seconds",
+            stats.commit_stats.max_commit_ms / 1000,
+            tags!(
+                "uuid" => stats.uuid.clone()
+            ),
+        ),
+        Metric::sum_with_tags(
+            "node_btrfs_commit_seconds_total",
+            "Sum of the duration of all commits, in seconds",
+            stats.commit_stats.total_commit_ms / 1000,
+            tags!(
+                "uuid" => stats.uuid.clone()
+            ),
         ),
     ];
 
@@ -99,7 +147,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
         metrics.push(Metric::gauge_with_tags(
             "node_btrfs_device_size_bytes",
             "Size of a device that is part of the filesystem.",
-            device.size as f64,
+            device.size,
             tags!(
                 Key::from_static("device") => name
             ),
@@ -108,25 +156,26 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
 
     // Information about data, metadata and system data.
     if let Some(s) = stats.allocation.data {
-        metrics.extend(get_allocation_stats("data", s));
+        metrics.extend(get_allocation_stats("data", &stats.uuid, s));
     }
     if let Some(s) = stats.allocation.metadata {
-        metrics.extend(get_allocation_stats("metadata", s));
+        metrics.extend(get_allocation_stats("metadata", &stats.uuid, s));
     }
     if let Some(s) = stats.allocation.system {
-        metrics.extend(get_allocation_stats("system", s));
+        metrics.extend(get_allocation_stats("system", &stats.uuid, s));
     }
 
     metrics
 }
 
-fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
+fn get_allocation_stats(typ: &str, uuid: &str, stats: AllocationStats) -> Vec<Metric> {
     let mut metrics = vec![Metric::gauge_with_tags(
         "node_btrfs_reserved_bytes",
         "Amount of space reserved for a data type",
-        stats.reserved_bytes as f64,
+        stats.reserved_bytes,
         tags!(
-            Key::from_static("block_group_type") => typ
+            Key::from_static("block_group_type") => typ,
+            Key::from_static("uuid") => uuid
         ),
     )];
 
@@ -136,16 +185,17 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
             Metric::gauge_with_tags(
                 "node_btrfs_used_bytes",
                 "Amount of used space by a layout/data type",
-                usage.used_bytes as f64,
+                usage.used_bytes,
                 tags!(
                     Key::from_static("block_group_type") => typ,
-                    Key::from_static("mode") => mode.clone()
+                    Key::from_static("mode") => mode.clone(),
+                    Key::from_static("uuid") => uuid
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_btrfs_size_bytes",
                 "Amount of space allocated for a layout/data type",
-                usage.total_bytes as f64,
+                usage.total_bytes,
                 tags!(
                     Key::from_static("block_group_type") => typ,
                     Key::from_static("mode") => mode.clone()
@@ -157,7 +207,8 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
                 usage.ratio,
                 tags!(
                     Key::from_static("block_group_type") => typ,
-                    Key::from_static("mode") => mode
+                    Key::from_static("mode") => mode,
+                    Key::from_static("uuid") => uuid
                 ),
             ),
         ])
@@ -166,12 +217,12 @@ fn get_allocation_stats(typ: &str, stats: AllocationStats) -> Vec<Metric> {
     metrics
 }
 
-fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
+fn get_layout_metrics(typ: &str, uuid: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
     vec![
         Metric::gauge_with_tags(
             "node_btrfs_used_bytes",
             "Amount of used space by a layout/data type",
-            s.used_bytes as f64,
+            s.used_bytes,
             tags!(
                 "block_group_type" => typ.to_string(),
                 "mode" => mode.to_string()
@@ -180,7 +231,7 @@ fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
         Metric::gauge_with_tags(
             "node_btrfs_size_bytes",
             "Amount of space allocated for a layout/data type",
-            s.total_bytes as f64,
+            s.total_bytes,
             tags!(
                 "block_group_type" => typ.to_string(),
                 "mode" => mode.to_string()
@@ -192,7 +243,8 @@ fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
             s.ratio,
             tags!(
                 "block_group_type" => typ.to_string(),
-                "mode" => mode.to_string()
+                "mode" => mode.to_string(),
+                "uuid" => uuid,
             ),
         ),
     ]
@@ -235,6 +287,9 @@ async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
     let path = root.join("sectorsize");
     let sector_size = read_into(path)?;
 
+    let path = root.join("commit_stats");
+    let commit_stats = read_commit_stats(path)?;
+
     let path = root.join("allocation/global_rsv_reserved");
     let global_rsv_reserved = read_into(path)?;
 
@@ -266,6 +321,37 @@ async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
             metadata,
             system,
         },
+        commit_stats,
+    })
+}
+
+fn read_commit_stats(path: PathBuf) -> Result<CommitStats, Error> {
+    let data = std::fs::read_to_string(path)?;
+
+    let mut commits = 0;
+    let mut last_commit_ms = 0;
+    let mut max_commit_ms = 0;
+    let mut total_commit_ms = 0;
+
+    for line in data.lines() {
+        if let Some((key, value)) = line.split_once(" ") {
+            let value = value.parse::<u64>()?;
+
+            match key {
+                "commits" => commits = value,
+                "last_commit_ms" => last_commit_ms = value,
+                "max_commit_ms" => max_commit_ms = value,
+                "total_commit_ms" => total_commit_ms = value,
+                _ => {}
+            }
+        }
+    }
+
+    Ok(CommitStats {
+        commits,
+        last_commit_ms,
+        max_commit_ms,
+        total_commit_ms,
     })
 }
 

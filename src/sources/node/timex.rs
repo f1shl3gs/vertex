@@ -37,7 +37,7 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_timex_sync_status",
             "Is clock synchronized to a reliable server (1 = yes, 0 = no).",
-            sync_status as f64,
+            sync_status,
         ),
         Metric::gauge(
             "node_timex_offset_seconds",
@@ -62,12 +62,12 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_timex_status",
             "Value of the status array bits.",
-            tx.status as f64,
+            tx.status,
         ),
         Metric::gauge(
             "node_timex_loop_time_constant",
             "Phase-locked loop time constant.",
-            tx.constant as f64,
+            tx.constant,
         ),
         Metric::gauge(
             "node_timex_tick_seconds",
@@ -87,37 +87,37 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_timex_pps_shift_seconds",
             "Pulse per second interval duration.",
-            tx.shift as f64,
+            tx.shift,
         ),
         Metric::gauge(
             "node_timex_pps_stability_hertz",
             "Pulse per second stability, average of recent frequency changes.",
-            tx.stabil as f64,
+            tx.stabil,
         ),
-        Metric::gauge(
+        Metric::sum(
             "node_timex_pps_jitter_total",
             "Pulse per second count of jitter limit exceeded events.",
-            tx.jitcnt as f64,
+            tx.jitcnt,
         ),
         Metric::sum(
             "node_timex_pps_calibration_total",
             "Pulse per second count of calibration intervals.",
-            tx.calcnt as f64,
+            tx.calcnt,
         ),
         Metric::sum(
             "node_timex_pps_error_total",
             "Pulse per second count of calibration errors.",
-            tx.errcnt as f64,
+            tx.errcnt,
         ),
         Metric::sum(
             "node_timex_pps_stability_exceeded_total",
             "Pulse per second count of stability limit exceeded events.",
-            tx.stbcnt as f64,
+            tx.stbcnt,
         ),
         Metric::gauge(
             "node_timex_tai_offset_seconds",
             "International Atomic Time (TAI) offset.",
-            tx.tai as f64,
+            tx.tai,
         ),
     ])
 }

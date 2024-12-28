@@ -183,52 +183,52 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 Metric::gauge_with_tags(
                     "node_infiniband_rate_bytes_per_second",
                     "Maximum signal transfer rate",
-                    port.rate as f64,
+                    port.rate,
                     tags.clone(),
                 ),
             ]);
 
-            if let Some(v) = port.counters.port_multicast_rcv_packets {
+            if let Some(value) = port.counters.port_multicast_rcv_packets {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_multicast_packets_received_total",
                     "Number of multicast packets received",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_multicast_xmit_packets {
+            if let Some(value) = port.counters.port_multicast_xmit_packets {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_multicast_packets_transmitted_total",
                     "Number of multicast packets transmitted",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_rcv_data_64 {
+            if let Some(value) = port.counters.port_rcv_data_64 {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_data_received_bytes_total",
                     "Number of data octets received on all links",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_rcv_packets_64 {
+            if let Some(value) = port.counters.port_rcv_packets_64 {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_packets_received_total",
                     "Number of data packets received on all links",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_unicast_rcv_packets {
+            if let Some(value) = port.counters.port_unicast_rcv_packets {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_unicast_packets_received_total",
                     "Number of unicast packets received",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
@@ -237,7 +237,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_unicast_packets_transmitted_total",
                     "Number of unicast packets transmitted",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -246,7 +246,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_data_transmitted_bytes_total",
                     "Number of data octets transmitted on all links",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -255,7 +255,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_legacy_packets_transmitted_total",
                     "Number of data packets received on all links",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -264,7 +264,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_excessive_buffer_overrun_errors_total",
                     "Number of times that OverrunErrors consecutive flow control update periods occurred, each having at least one overrun error.",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -273,7 +273,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_link_downed_total",
                     "Number of times the link failed to recover from an error state and went down",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -282,7 +282,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_link_error_recovery_total",
                     "Number of times the link successfully recovered from an error state",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -291,7 +291,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_local_link_integrity_errors_total",
                     "Number of times that the count of local physical errors exceeded the threshold specified by LocalPhyErrors.",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -300,7 +300,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_multicast_packets_received_total",
                     "Number of multicast packets received (including errors)",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -309,7 +309,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_multicast_packets_transmitted_total",
                     "Number of multicast packets transmitted (including errors)",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -318,7 +318,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_constraint_errors_received_total",
                     "Number of packets received on the switch physical port that are discarded",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -327,7 +327,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_constraint_errors_transmitted_total",
                     "Number of packets not transmitted from the switch physical port",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -336,7 +336,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_data_received_bytes_total",
                     "Number of data octets received on all links",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -345,7 +345,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_data_transmitted_bytes_total",
                     "Number of data octets transmitted on all links",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
@@ -354,106 +354,106 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_discards_received_total",
                     "Number of inbound packets discarded by the port because the port is down or congested",
-                    v as f64,
+                    v,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_xmit_discards {
+            if let Some(value) = port.counters.port_xmit_discards {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_discards_transmitted_total",
                     "Number of outbound packets discarded by the port because the port is down or congested",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_rcv_errors {
+            if let Some(value) = port.counters.port_rcv_errors {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_errors_received_total",
                     "Number of packets containing an error that were received on this port",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_rcv_packets {
+            if let Some(value) = port.counters.port_rcv_packets {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_packets_received_total",
                     "Number of packets received on all VLs by this port (including errors)",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_xmit_packets {
+            if let Some(value) = port.counters.port_xmit_packets {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_packets_transmitted_total",
                     "Number of packets transmitted on all VLs from this port (including errors)",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_xmit_wait {
+            if let Some(value) = port.counters.port_xmit_wait {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_transmit_wait_total",
                     "Number of ticks during which the port had data to transmit but no data was sent during the entire tick",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.unicast_rcv_packets {
+            if let Some(value) = port.counters.unicast_rcv_packets {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_unicast_packets_received_total",
                     "Number of unicast packets received (including errors)",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.unicast_xmit_packets {
+            if let Some(value) = port.counters.unicast_xmit_packets {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_unicast_packets_transmitted_total",
                     "Number of unicast packets transmitted (including errors)",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_rcv_remote_physical_errors {
+            if let Some(value) = port.counters.port_rcv_remote_physical_errors {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_receive_remote_physical_errors_total",
                     "Number of packets marked with the EBP (End of Bad Packet) delimiter received on the port.",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.port_rcv_switch_relay_errors {
+            if let Some(value) = port.counters.port_rcv_switch_relay_errors {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_port_receive_switch_relay_errors_total",
                     "Number of packets that could not be forwarded by the switch.",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.symbol_error {
+            if let Some(value) = port.counters.symbol_error {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_symbol_error_total",
                     "Number of minor link errors detected on one or more physical lanes.",
-                    v as f64,
+                    value,
                     tags.clone(),
                 ))
             }
 
-            if let Some(v) = port.counters.vl15_dropped {
+            if let Some(value) = port.counters.vl15_dropped {
                 metrics.push(Metric::sum_with_tags(
                     "node_infiniband_vl15_dropped_total",
                     "Number of incoming VL15 packets dropped due to resource limitations.",
-                    v as f64,
+                    value,
                     tags,
                 ))
             }

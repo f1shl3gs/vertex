@@ -281,7 +281,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_md_disks_required",
                 "Total number of disks of device.",
-                stat.disks_total as f64,
+                stat.disks_total,
                 tags!(
                     Key::from_static("device") => device.clone(),
                 ),
@@ -289,7 +289,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_md_blocks",
                 "Total number of blocks on device.",
-                stat.blocks_total as f64,
+                stat.blocks_total,
                 tags!(
                     Key::from_static("device") => device.clone()
                 ),
@@ -297,7 +297,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_md_blocks_synced",
                 "Number of blocks synced on device.",
-                stat.blocks_synced as f64,
+                stat.blocks_synced,
                 tags!(
                     Key::from_static("device") => device.clone()
                 ),
@@ -305,7 +305,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_md_disks",
                 "Number of active/failed/spare disks of device.",
-                stat.disks_active as f64,
+                stat.disks_active,
                 tags!(
                     Key::from_static("device") => device.clone(),
                     Key::from_static("state") => "active"
@@ -314,7 +314,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_md_disks",
                 "Number of active/failed/spare disks of device.",
-                stat.disks_failed as f64,
+                stat.disks_failed,
                 tags!(
                     Key::from_static("device") => device.clone(),
                     Key::from_static("state") => "failed"
@@ -323,7 +323,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::gauge_with_tags(
                 "node_md_disks",
                 "Number of active/failed/spare disks of device.",
-                stat.disks_spare as f64,
+                stat.disks_spare,
                 tags!(
                     Key::from_static("device") => device.clone(),
                     Key::from_static("state") => "spare"
