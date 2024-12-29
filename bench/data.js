@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735346127777,
+  "lastUpdate": 1735433266163,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "151140196ce99e73ef95934b948a9b562c57551f",
-          "message": "chore(deps): bump thiserror from 2.0.1 to 2.0.3 (#1979)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.1 to 2.0.3.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.1...2.0.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-11T12:33:54+08:00",
-          "tree_id": "b7098a8522f3155d5d10c097f743c2d210e60987",
-          "url": "https://github.com/f1shl3gs/vertex/commit/151140196ce99e73ef95934b948a9b562c57551f"
-        },
-        "date": 1731299753342,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 535750,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 536720,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e7eed794c7e5e8304b4f581fa67f494e823b2fdc",
+          "message": "sources/node: reduce tokio io calls (#2091)",
+          "timestamp": "2024-12-29T08:45:30+08:00",
+          "tree_id": "895f04f79b662c01418e4e2fcf93d706a8d4ee6b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e7eed794c7e5e8304b4f581fa67f494e823b2fdc"
+        },
+        "date": 1735433248604,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 531130,
             "unit": "ns/op"
           }
         ]
