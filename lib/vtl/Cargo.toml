@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dev-dependencies]
-glob = { version = "0.3.1" }
+glob = { version = "0.3.2", default-features = false }
 
 [dependencies]
 bytes = { version = "1.9.0", default-features = false }
