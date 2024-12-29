@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735453623875,
+  "lastUpdate": 1735453629726,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e18d81b2d18e8bec0d1b0823391d922aced5e5b6",
-          "message": "chore(deps): bump flate2 from 1.0.34 to 1.0.35 (#1981)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.34 to 1.0.35.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.34...1.0.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-15T14:49:19+08:00",
-          "tree_id": "4235a025f17555477d8385597c11b392cea9fedc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e18d81b2d18e8bec0d1b0823391d922aced5e5b6"
-        },
-        "date": 1731653516599,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.633,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 139.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 315.86,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 637.92,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fd254c5901290fc60042a356e6eb4d0a517eb6b8",
           "message": "chore(deps): bump libc from 0.2.162 to 0.2.164 (#1982)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.162 to 0.2.164.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.164/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.162...0.2.164)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-16T20:46:20+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 588.07,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6f30629e22f998fc7a32a03862cf00e8cefeac03",
+          "message": "bump syn to 2.0.92 (#2093)",
+          "timestamp": "2024-12-29T14:24:22+08:00",
+          "tree_id": "47000a140dfec055f3aa01d37e484f5468dab427",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6f30629e22f998fc7a32a03862cf00e8cefeac03"
+        },
+        "date": 1735453611804,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.575,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 140.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 313.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 630.29,
             "unit": "ns/op"
           }
         ]
