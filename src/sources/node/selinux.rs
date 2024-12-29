@@ -49,10 +49,9 @@ fn get_enabled(proc_path: PathBuf) -> Result<bool, Error> {
 }
 
 fn default_enforce_mode() -> Result<bool, Error> {
-    let content = read_to_string("/etc/selinux/config")?;
-    for line in content.lines() {
-        let line = line.trim();
+    let data = std::fs::read_to_string("/etc/selinux/config")?;
 
+    for line in data.lines() {
         if let Some(value) = line.strip_prefix("SELINUX=") {
             return if value == "enforcing" {
                 Ok(true)

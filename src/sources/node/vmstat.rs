@@ -6,7 +6,6 @@ use event::Metric;
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -31,12 +30,11 @@ impl Default for Config {
 }
 
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let file = tokio::fs::File::open(proc_path.join("vmstat")).await?;
-    let mut lines = tokio::io::BufReader::new(file).lines();
-    let mut metrics = Vec::new();
+    let data = std::fs::read_to_string(proc_path.join("vmstat"))?;
 
-    while let Some(line) = lines.next_line().await? {
-        if !conf.fields.is_match(&line) {
+    let mut metrics = Vec::new();
+    for line in data.lines() {
+        if !conf.fields.is_match(line) {
             continue;
         }
 

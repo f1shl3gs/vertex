@@ -7,7 +7,7 @@ use std::path::PathBuf;
 
 use event::{tags, tags::Key, Metric};
 
-use super::{read_to_string, Error};
+use super::Error;
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = xfs_sys_stats(sys_path).await?;
@@ -430,10 +430,10 @@ async fn xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<Stats>, Error> {
 }
 
 async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
-    let content = read_to_string(path)?;
+    let data = std::fs::read_to_string(path)?;
 
     let mut stat = Stats::default();
-    for line in content.lines() {
+    for line in data.lines() {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
 
         // Expact at least a string label and a single integer value, ex:

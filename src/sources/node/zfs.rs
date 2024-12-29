@@ -4,7 +4,6 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use event::{tags, Metric};
-use tokio::io::AsyncBufReadExt;
 
 use super::{read_to_string, Error};
 
@@ -106,13 +105,11 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 async fn parse_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
-    let f = tokio::fs::File::open(path).await?;
-    let reader = tokio::io::BufReader::new(f);
-    let mut lines = reader.lines();
-    let mut kvs = BTreeMap::new();
+    let data = std::fs::read_to_string(path)?;
 
+    let mut kvs = BTreeMap::new();
     let mut parse = false;
-    while let Some(line) = lines.next_line().await? {
+    for line in data.lines() {
         let fields = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if !parse
@@ -139,12 +136,6 @@ async fn parse_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
 }
 
 async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
-    let mut kvs = BTreeMap::new();
-
-    let f = tokio::fs::File::open(path).await?;
-    let reader = tokio::io::BufReader::new(f);
-    let mut lines = reader.lines();
-
     let length = path.split('/').count();
     if length < 2 {
         return Err(Error::from(
@@ -152,9 +143,12 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
         ));
     }
 
+    let data = std::fs::read_to_string(path)?;
+
+    let mut kvs = BTreeMap::new();
     let mut parse = false;
     let mut headers = vec![];
-    while let Some(line) = lines.next_line().await? {
+    for line in data.lines() {
         let fields = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if !parse && fields.len() >= 12 && fields[0] == "nread" {
@@ -181,15 +175,13 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
 }
 
 async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
-    let mut kvs = BTreeMap::new();
-    let f = tokio::fs::File::open(path).await?;
-    let reader = tokio::io::BufReader::new(f);
-    let mut lines = reader.lines();
+    let data = std::fs::read_to_string(path)?;
 
+    let mut kvs = BTreeMap::new();
     let mut parse = false;
     let mut pool_name = String::new();
     let mut dataset_name = String::new();
-    while let Some(line) = lines.next_line().await? {
+    for line in data.lines() {
         let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if !parse

@@ -1,4 +1,3 @@
-use std::io::BufRead;
 use std::num::ParseIntError;
 use std::path::PathBuf;
 
@@ -33,11 +32,9 @@ impl Softirqs {
                 .collect::<Result<Vec<u64>, ParseIntError>>()
         }
 
-        let file = std::fs::File::open(path)?;
-        let mut lines = std::io::BufReader::new(file).lines();
-
+        let data = std::fs::read_to_string(path)?;
         let mut stat = Self::default();
-        while let Some(Ok(line)) = lines.next() {
+        for line in data.lines() {
             let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
 
             // require at least one cpu

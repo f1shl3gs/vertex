@@ -3,7 +3,6 @@ use std::convert::TryInto;
 use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -329,12 +328,10 @@ pub struct ClientRPCStats {
 
 /// client_rpc_stats retrieves NFS client RPC statistics from file
 pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats, Error> {
-    let f = tokio::fs::File::open(&path).await?;
-    let reader = tokio::io::BufReader::new(f);
-    let mut lines = reader.lines();
+    let data = std::fs::read_to_string(path)?;
 
     let mut stats = ClientRPCStats::default();
-    while let Some(line) = lines.next_line().await? {
+    for line in data.lines() {
         let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if parts.len() < 2 {
@@ -350,15 +347,10 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
 
         match parts[0] {
             "net" => stats.network = values.try_into()?,
-
             "rpc" => stats.client_rpc = ClientRPC::new(values)?,
-
             "proc2" => stats.v2_stats = values.try_into()?,
-
             "proc3" => stats.v3_stats = values.try_into()?,
-
             "proc4" => stats.client_v4_stats = values.try_into()?,
-
             _ => {
                 return Err(Error::from("errors parsing NFS metric line"));
             }

@@ -6,7 +6,7 @@ use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use super::{read_to_string, Error};
+use super::Error;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -146,10 +146,10 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
 
 impl Config {
     async fn get_net_dev_stats(&self, proc_path: PathBuf) -> Result<Vec<DeviceStatus>, Error> {
-        let content = read_to_string(proc_path.join("net/dev"))?;
-        let lines = content.lines();
+        let data = std::fs::read_to_string(proc_path.join("net/dev"))?;
+
         let mut stats = Vec::new();
-        for line in lines.skip(2) {
+        for line in data.lines().skip(2) {
             let stat = DeviceStatus::from_str(line)?;
             stats.push(stat);
         }

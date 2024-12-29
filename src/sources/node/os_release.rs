@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 use chrono::NaiveDate;
 use event::{tags, Metric};
 
-use super::{read_to_string, Error};
+use super::Error;
 
 const ETC_OS_RELEASE: &str = "/etc/os-release";
 const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
@@ -77,10 +77,10 @@ fn release_infos() -> Result<BTreeMap<String, String>, Error> {
 }
 
 fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error> {
-    let content = read_to_string(path)?;
-    let mut envs = BTreeMap::new();
+    let data = std::fs::read_to_string(path)?;
 
-    for line in content.lines() {
+    let mut envs = BTreeMap::new();
+    for line in data.lines() {
         if let Some((key, value)) = line.split_once('=') {
             let value = value.trim_matches('"').to_string();
             envs.insert(key.to_string(), value);

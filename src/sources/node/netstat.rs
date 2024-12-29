@@ -5,7 +5,6 @@ use event::Metric;
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -67,26 +66,24 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
 }
 
 async fn get_net_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let f = tokio::fs::File::open(path).await?;
-    let r = tokio::io::BufReader::new(f);
-    let mut lines = r.lines();
+    let data = std::fs::read_to_string(path)?;
+    let mut lines = data.lines();
+
     let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
-
-    while let Some(line) = lines.next_line().await? {
+    while let Some(line) = lines.next() {
         let names = line.split_ascii_whitespace().collect::<Vec<_>>();
-
-        let line = match lines.next_line().await? {
-            Some(line) => line,
+        let values = match lines.next() {
+            Some(line) => line.split_ascii_whitespace().collect::<Vec<_>>(),
             None => break,
         };
-        let values = line.split_ascii_whitespace().collect::<Vec<_>>();
+
+        if names.len() != values.len() {
+            return Err(Error::from("mismatch field count"));
+        }
 
         // remove trailing :
         let protocol = names[0].strip_suffix(':').unwrap();
         stats.insert(protocol.to_string(), BTreeMap::new());
-        if names.len() != values.len() {
-            return Err(Error::from("mismatch field count"));
-        }
 
         for i in 0..names.len() {
             let props = stats.get_mut(protocol).unwrap();
@@ -101,12 +98,10 @@ async fn get_net_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String
 async fn get_snmp6_stats(
     path: PathBuf,
 ) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let f = tokio::fs::File::open(path).await?;
-    let r = tokio::io::BufReader::new(f);
-    let mut lines = r.lines();
-    let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
+    let data = std::fs::read_to_string(path)?;
 
-    while let Some(line) = lines.next_line().await? {
+    let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
+    for line in data.lines() {
         let stat = line.split_ascii_whitespace().collect::<Vec<_>>();
         if stat.len() < 2 {
             continue;

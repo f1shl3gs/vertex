@@ -3,7 +3,6 @@
 use std::path::PathBuf;
 
 use event::{tags, Metric};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -49,12 +48,10 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 async fn schedstat(proc_path: PathBuf) -> Result<Vec<Schedstat>, Error> {
-    let f = tokio::fs::File::open(proc_path.join("schedstat")).await?;
-    let r = tokio::io::BufReader::new(f);
-    let mut lines = r.lines();
+    let data = std::fs::read_to_string(proc_path.join("schedstat"))?;
 
     let mut stats = Vec::new();
-    while let Some(line) = lines.next_line().await? {
+    for line in data.lines() {
         if !line.starts_with("cpu") {
             continue;
         }

@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_to_string, Error};
+use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stat = read_stat(proc_path).await?;
@@ -50,10 +50,10 @@ struct Stat {
 }
 
 async fn read_stat(proc_path: PathBuf) -> Result<Stat, Error> {
-    let content = read_to_string(proc_path.join("stat"))?;
+    let data = std::fs::read_to_string(proc_path.join("stat"))?;
 
     let mut stat = Stat::default();
-    for line in content.lines() {
+    for line in data.lines() {
         if line.starts_with("ctxt ") {
             stat.ctxt = line.strip_prefix("ctxt ").unwrap().parse().unwrap_or(0u64);
             continue;

@@ -1,36 +1,32 @@
 use std::collections::BTreeMap;
 use std::fs::{canonicalize, read_link};
 use std::path::{Path, PathBuf};
-use std::sync::LazyLock;
 
 use event::{tags, Metric};
-use futures::stream::{FuturesUnordered, StreamExt};
-use regex::Regex;
+use tokio::task::JoinSet;
 
 use super::{read_to_string, Error};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let mut tasks = FuturesUnordered::new();
     let mut dirs = std::fs::read_dir(sys_path.join("class/hwmon"))?;
 
+    let mut tasks = JoinSet::new();
     while let Some(Ok(entry)) = dirs.next() {
-        tasks.push(tokio::spawn(async move {
-            let meta = entry.metadata()?;
-            let meta = match meta.file_type().is_symlink() {
-                true => canonicalize(entry.path())?.metadata()?,
-                false => meta,
-            };
+        let meta = entry.metadata()?;
+        let meta = match meta.file_type().is_symlink() {
+            true => canonicalize(entry.path())?.metadata()?,
+            false => meta,
+        };
 
-            if !meta.is_dir() {
-                return Ok(vec![]);
-            }
+        if !meta.is_dir() {
+            continue;
+        }
 
-            hwmon_metrics(entry.path())
-        }));
+        tasks.spawn(async move { hwmon_metrics(entry.path()) });
     }
 
     let mut metrics = vec![];
-    while let Some(result) = tasks.next().await {
+    while let Some(result) = tasks.join_next().await {
         match result {
             Ok(result) => match result {
                 Ok(partial) => metrics.extend(partial),
@@ -69,7 +65,7 @@ fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
     }
 
     let mut metrics = Vec::new();
-    if let Ok(chip_name) = human_readable_chip_name(dir) {
+    if let Ok(chip_name) = human_readable_chip_name(&dir) {
         metrics.push(Metric::gauge_with_tags(
             "node_hwmon_chip_names",
             "Annotation metric for human-readable chip names",
@@ -435,9 +431,8 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
 }
 
 // human_readable_name is similar to the methods in
-fn human_readable_chip_name<P: AsRef<Path>>(dir: P) -> Result<String, Error> {
-    let path = dir.as_ref().join("name");
-    let content = read_to_string(path)?;
+fn human_readable_chip_name(dir: &Path) -> Result<String, Error> {
+    let content = read_to_string(dir.join("name"))?;
     Ok(content)
 }
 
@@ -477,8 +472,7 @@ fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
     }
 
     // preference 2: is there a name file
-    let name_path = path.join("name");
-    match read_to_string(name_path) {
+    match read_to_string(path.join("name")) {
         Ok(content) => return Ok(content),
         Err(err) => debug!(
             message = "read device name failed",
@@ -512,19 +506,44 @@ fn is_hwmon_sensor(s: &str) -> bool {
     .contains(&s)
 }
 
-static HWMON_INVALID_METRIC_CHARS: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new("[^a-z0-9:_]").unwrap());
-
 fn sanitized(s: &str) -> String {
-    let s = s.trim().to_lowercase();
-    let replaced = HWMON_INVALID_METRIC_CHARS.replace_all(&s, "_");
+    let mut buf = s.to_string();
+    for ch in unsafe { buf.as_bytes_mut() } {
+        if ch.is_ascii_lowercase() || ch.is_ascii_digit() || *ch == b':' {
+            continue;
+        }
 
-    replaced.trim_matches('_').to_string()
+        // convert to lower case
+        if ch.is_ascii_uppercase() {
+            // A: 65
+            // a: 97
+            *ch += 32;
+            continue;
+        }
+
+        *ch = b'_';
+    }
+
+    buf
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn sanitize_names() {
+        for (input, want) in [
+            ("nvme", "nvme"),
+            ("nct6775.656", "nct6775_656"),
+            ("0000:0c:00.0", "0000:0c:00_0"),
+            ("asus-ec-sensors", "asus_ec_sensors"),
+            ("bEeP", "beep"),
+        ] {
+            let got = sanitized(input);
+            assert_eq!(got, want, "input: {}", input);
+        }
+    }
 
     #[tokio::test]
     async fn test_gather() {
