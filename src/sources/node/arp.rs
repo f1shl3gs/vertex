@@ -8,11 +8,11 @@ use event::{tags, tags::Key, Metric};
 use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let content = std::fs::read_to_string(proc_path.join("net/arp"))?;
-    let mut devices = HashMap::new();
+    let data = std::fs::read_to_string(proc_path.join("net/arp"))?;
 
+    let mut devices = HashMap::new();
     // the first line is title, so we don't need it
-    for line in content.lines().skip(1) {
+    for line in data.lines().skip(1) {
         let dev = line.split_ascii_whitespace().nth(5).expect("must exists");
 
         devices

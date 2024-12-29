@@ -394,10 +394,10 @@ struct WritebackRateDebugStats {
 }
 
 fn read_writeback_rate_debug(path: PathBuf) -> Result<WritebackRateDebugStats, Error> {
-    let content = std::fs::read_to_string(path)?;
-    let mut stats = WritebackRateDebugStats::default();
+    let data = std::fs::read_to_string(path)?;
 
-    for line in content.lines() {
+    let mut stats = WritebackRateDebugStats::default();
+    for line in data.lines() {
         if let Some(value) = line.strip_prefix("rate:") {
             let value = value.trim().strip_suffix("/sec").unwrap_or(value);
             let value = parse_bytes(value)
@@ -475,10 +475,10 @@ struct PriorityStats {
 // Sectors per Q:	64
 // Quantiles:	[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 20946 20946 20946 20946 20946 20946 20946 20946 20946 20946 20946 20946 20946 20946 20946 20946]
 fn read_priority_stats(path: PathBuf) -> Result<PriorityStats, Error> {
-    let content = read_to_string(path)?;
-    let mut stats = PriorityStats::default();
+    let data = std::fs::read_to_string(path)?;
 
-    for line in content.lines() {
+    let mut stats = PriorityStats::default();
+    for line in data.lines() {
         if let Some(value) = line.strip_prefix("Unused:") {
             if let Some(text) = value.trim().strip_suffix('%') {
                 stats.unused_percent = text.parse()?;

@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use event::Metric;
-use tokio::io::AsyncBufReadExt;
 
 use super::{read_into, Error};
 
@@ -150,18 +149,11 @@ impl ConntrackStatEntry {
 }
 
 async fn get_conntrack_statistics(proc_path: PathBuf) -> Result<Vec<ConntrackStatEntry>, Error> {
-    let file = tokio::fs::File::open(proc_path.join("net/stat/nf_conntrack")).await?;
-    let mut lines = tokio::io::BufReader::new(file).lines();
+    let data = std::fs::read_to_string(proc_path.join("net/stat/nf_conntrack"))?;
+
     let mut stats = Vec::new();
-
-    let mut first = true;
-    while let Some(line) = lines.next_line().await? {
-        if first {
-            first = false;
-            continue;
-        }
-
-        if let Ok(ent) = ConntrackStatEntry::new(&line) {
+    for line in data.lines().skip(1) {
+        if let Ok(ent) = ConntrackStatEntry::new(line) {
             stats.push(ent);
         }
     }

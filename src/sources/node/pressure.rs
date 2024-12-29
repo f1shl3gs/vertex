@@ -14,7 +14,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_to_string, Error};
+use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let cpu = psi_stats(proc_path.join("pressure/cpu")).await?;
@@ -93,13 +93,13 @@ struct PSIStats {
 }
 
 async fn psi_stats(path: PathBuf) -> Result<PSIStats, Error> {
-    let content = read_to_string(path)?;
+    let data = std::fs::read_to_string(path)?;
     let mut stats = PSIStats {
         some: None,
         full: None,
     };
 
-    for line in content.lines() {
+    for line in data.lines() {
         let stat = parse_psi_stat(line)?;
 
         if line.starts_with("some") {

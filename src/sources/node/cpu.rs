@@ -5,7 +5,6 @@ use std::path::PathBuf;
 use event::{tags, tags::Key, Metric};
 use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -121,12 +120,10 @@ struct CPUStat {
 }
 
 async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
-    let file = tokio::fs::File::open(proc_path.join("stat")).await?;
-    let reader = tokio::io::BufReader::new(file);
-    let mut lines = reader.lines();
-    let mut stats = Vec::new();
+    let data = std::fs::read_to_string(proc_path.join("stat"))?;
 
-    while let Some(line) = lines.next_line().await? {
+    let mut stats = Vec::new();
+    for line in data.lines() {
         if !line.starts_with("cpu") {
             continue;
         }

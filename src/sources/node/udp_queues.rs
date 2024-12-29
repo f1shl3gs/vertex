@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use event::{tags, Metric};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -108,16 +107,12 @@ struct NetIPSocketLine {
 }
 
 async fn net_ip_socket_summary(path: PathBuf) -> Result<NetIPSocketSummary, Error> {
-    let f = tokio::fs::File::open(path).await?;
-    let reader = tokio::io::BufReader::new(f);
-    let mut lines = reader.lines();
+    let data = std::fs::read_to_string(path)?;
+
     let mut summary = NetIPSocketSummary::default();
-
     // skip first line
-    let _ = lines.next_line().await;
-
-    while let Some(line) = lines.next_line().await? {
-        let (tx, rx) = parse_net_ip_socket_queues(&line)?;
+    for line in data.lines().skip(1) {
+        let (tx, rx) = parse_net_ip_socket_queues(line)?;
 
         summary.used_sockets += 1;
         summary.tx_queue_length += tx;

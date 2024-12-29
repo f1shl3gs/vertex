@@ -2,7 +2,6 @@ use std::convert::{TryFrom, TryInto};
 use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
-use tokio::io::AsyncBufReadExt;
 
 use super::nfs::{Network, V2Stats, V3Stats};
 use super::Error;
@@ -294,12 +293,10 @@ struct ServerRPCStats {
 }
 
 async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Error> {
-    let f = tokio::fs::File::open(path).await?;
-    let reader = tokio::io::BufReader::new(f);
-    let mut lines = reader.lines();
+    let data = std::fs::read_to_string(path)?;
 
     let mut stats = ServerRPCStats::default();
-    while let Some(line) = lines.next_line().await? {
+    for line in data.lines() {
         let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if parts.len() < 2 {

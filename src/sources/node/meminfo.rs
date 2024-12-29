@@ -29,12 +29,10 @@ pub async fn gather(root: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 async fn get_mem_info(root: PathBuf) -> Result<HashMap<String, f64>, std::io::Error> {
+    let data = std::fs::read_to_string(root.join("meminfo"))?;
+
     let mut infos = HashMap::new();
-
-    let content = std::fs::read_to_string(root.join("meminfo"))?;
-    let lines = content.lines();
-
-    for line in lines {
+    for line in data.lines() {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
 
         let mut fv = parts[1]

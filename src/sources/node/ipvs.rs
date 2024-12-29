@@ -4,7 +4,6 @@ use std::path::PathBuf;
 use event::tags::Tags;
 use event::Metric;
 use serde::{Deserialize, Serialize};
-use tokio::io::AsyncBufReadExt;
 
 use super::Error;
 
@@ -155,8 +154,8 @@ struct IPVSStats {
 }
 
 async fn parse_ipvs_stats(root: PathBuf) -> Result<IPVSStats, Error> {
-    let content = std::fs::read_to_string(root.join("net/ip_vs_stat"))?;
-    let lines = content.lines().collect::<Vec<_>>();
+    let data = std::fs::read_to_string(root.join("net/ip_vs_stat"))?;
+    let lines = data.lines().collect::<Vec<_>>();
     if lines.len() < 4 {
         return Err("ip_vs_stats corrupt: too short".into());
     }
@@ -213,9 +212,7 @@ struct IPVSBackendStatus {
 }
 
 async fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatus>, Error> {
-    let f = tokio::fs::File::open(root.join("net/ip_vs")).await?;
-    let r = tokio::io::BufReader::new(f);
-    let mut lines = r.lines();
+    let data = std::fs::read_to_string(root.join("net/ip_vs"))?;
 
     let mut status = vec![];
     let mut proto = String::new();
@@ -223,7 +220,7 @@ async fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatu
     let mut local_address = String::new();
     let mut local_port = 0u16;
 
-    while let Some(line) = lines.next_line().await? {
+    for line in data.lines() {
         let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
         if fields.is_empty() {
             continue;

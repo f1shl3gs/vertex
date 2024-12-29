@@ -35,7 +35,6 @@ pub fn default_ignored() -> regex::Regex {
 }
 
 pub async fn gather(conf: Config, root: PathBuf) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
     let data = std::fs::read_to_string(root.join("diskstats"))?;
 
     // https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
@@ -79,6 +78,7 @@ pub async fn gather(conf: Config, root: PathBuf) -> Result<Vec<Metric>, Error> {
     //     ==  =====================================
     //
     //     For more details refer to Documentation/admin-guide/iostats.rst
+    let mut metrics = Vec::new();
     for line in data.lines() {
         // the content looks like this
         // 259       0 nvme0n1 366 0 23480 41 3 0 0 0 0 41 41 0 0 0 0
@@ -325,13 +325,10 @@ fn udev_device_properties(major: &str, minor: &str) -> Result<HashMap<String, St
     let mut properties = HashMap::new();
     for line in data.lines() {
         // we're only interested in device properties
-        match line.strip_prefix("E:") {
-            Some(value) => {
-                if let Some((key, value)) = value.split_once("=") {
-                    properties.insert(key.to_string(), value.to_string());
-                }
+        if let Some(value) = line.strip_prefix("E:") {
+            if let Some((key, value)) = value.split_once("=") {
+                properties.insert(key.to_string(), value.to_string());
             }
-            None => continue,
         }
     }
 
