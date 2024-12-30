@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735532882363,
+  "lastUpdate": 1735532892429,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fd254c5901290fc60042a356e6eb4d0a517eb6b8",
-          "message": "chore(deps): bump libc from 0.2.162 to 0.2.164 (#1982)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.162 to 0.2.164.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.164/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.162...0.2.164)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-16T20:46:20+08:00",
-          "tree_id": "a89e371847cc205f0cc3b07cf1b3194c6aa9ad4b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fd254c5901290fc60042a356e6eb4d0a517eb6b8"
-        },
-        "date": 1731761316510,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.244,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.555,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.87,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 184.88,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff9491c7f4e1114959afb218aac892f8d12d23c8",
+          "message": "bump quick-xml to 0.37.2 (#2094)",
+          "timestamp": "2024-12-30T12:25:45+08:00",
+          "tree_id": "d59dfb3039eb01b68ac93b15dee12fb38c3f6fde",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff9491c7f4e1114959afb218aac892f8d12d23c8"
+        },
+        "date": 1735532874407,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.344,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.475,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.63,
             "unit": "ns/op"
           }
         ]
