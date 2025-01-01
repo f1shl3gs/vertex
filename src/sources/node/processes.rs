@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::fs::read_dir;
 use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
@@ -7,7 +6,7 @@ use event::{tags, Metric};
 use super::{read_into, read_to_string, Error};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let (procs, threads) = get_procs_and_threads(proc_path.clone()).await?;
+    let (procs, threads) = get_procs_and_threads(&proc_path).await?;
     let mut metrics = vec![];
 
     let max_threads: usize = read_into(proc_path.join("sys/kernel/threads-max"))?;
@@ -88,13 +87,15 @@ impl Stats {
     }
 }
 
-async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats), Error> {
+async fn get_procs_and_threads(root: &Path) -> Result<(Stats, Stats), Error> {
+    let dirs = std::fs::read_dir(root)?;
+
     let mut procs = Stats::new();
     let mut threads = Stats::new();
 
-    let mut dirs = read_dir(root)?;
-    while let Some(Ok(entry)) = dirs.next() {
+    for entry in dirs.flatten() {
         let path = entry.path().join("stat");
+
         match read_to_string(path) {
             Ok(content) => match parse_state(&content) {
                 Some(state) => procs.append(state),
@@ -104,9 +105,9 @@ async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats),
             Err(_) => continue,
         }
 
-        match read_dir(entry.path().join("task")) {
-            Ok(mut dirs) => {
-                while let Some(Ok(entry)) = dirs.next() {
+        match std::fs::read_dir(entry.path().join("task")) {
+            Ok(dirs) => {
+                for entry in dirs.flatten() {
                     match read_to_string(entry.path().join("stat")) {
                         Ok(content) => match parse_state(&content) {
                             Some(state) => threads.append(state),

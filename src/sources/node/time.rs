@@ -88,11 +88,10 @@ struct ClockSource {
 }
 
 fn parse_clock_sources(root: &Path) -> Result<Vec<ClockSource>, Error> {
-    let path = root.join("devices/system/clocksource");
-    let mut dirs = std::fs::read_dir(path)?;
+    let dirs = std::fs::read_dir(root.join("devices/system/clocksource"))?;
 
     let mut sources = vec![];
-    while let Some(Ok(entry)) = dirs.next() {
+    for entry in dirs.flatten() {
         let name = match entry
             .file_name()
             .to_string_lossy()

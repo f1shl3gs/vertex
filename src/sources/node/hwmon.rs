@@ -8,10 +8,10 @@ use tokio::task::JoinSet;
 use super::{read_to_string, Error};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let mut dirs = std::fs::read_dir(sys_path.join("class/hwmon"))?;
+    let dirs = std::fs::read_dir(sys_path.join("class/hwmon"))?;
 
     let mut tasks = JoinSet::new();
-    while let Some(Ok(entry)) = dirs.next() {
+    for entry in dirs.flatten() {
         let meta = entry.metadata()?;
         let meta = match meta.file_type().is_symlink() {
             true => canonicalize(entry.path())?.metadata()?,
@@ -26,16 +26,11 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     }
 
     let mut metrics = vec![];
-    while let Some(result) = tasks.join_next().await {
+    while let Some(Ok(result)) = tasks.join_next().await {
         match result {
-            Ok(result) => match result {
-                Ok(partial) => metrics.extend(partial),
-                Err(err) => {
-                    warn!(message = "gather metrics failed", %err);
-                }
-            },
+            Ok(partial) => metrics.extend(partial),
             Err(err) => {
-                warn!(message = "spawn task failed", %err);
+                warn!(message = "gather metrics failed", %err);
             }
         }
     }
@@ -47,8 +42,9 @@ fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
     let chip = &hwmon_name(&dir)?;
 
     let mut data = collect_sensor_data(&dir)?;
-    if std::fs::exists(dir.join("device"))? {
-        let device_data = collect_sensor_data(dir.join("device"))?;
+    let dev_path = dir.join("device");
+    if std::fs::exists(&dev_path)? {
+        let device_data = collect_sensor_data(&dev_path)?;
 
         for (key, dev_props) in device_data {
             match data.get_mut(&key) {
@@ -436,7 +432,7 @@ fn human_readable_chip_name(dir: &Path) -> Result<String, Error> {
     Ok(content)
 }
 
-fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
+fn hwmon_name(path: &Path) -> Result<String, Error> {
     // generate a name for a sensor path
 
     // sensor numbering depends on the order of linux module loading and
@@ -451,10 +447,9 @@ fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
 
     // preference 1: construct a name based on device name, always unique
 
-    let path = path.as_ref();
-    let ap = path.join("device");
-    if read_link(&ap).is_ok() {
-        let dev_path = canonicalize(ap)?;
+    let dev_path = path.join("device");
+    if read_link(&dev_path).is_ok() {
+        let dev_path = canonicalize(dev_path)?;
         let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
         let dev_prefix = dev_path.parent().unwrap();
         let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();
@@ -587,8 +582,8 @@ mod tests {
 
     #[test]
     fn test_hwmon_name() {
-        let path = "tests/node/sys/class/hwmon/hwmon2";
-        let name = hwmon_name(path).unwrap();
+        let path = PathBuf::from("tests/node/sys/class/hwmon/hwmon2");
+        let name = hwmon_name(&path).unwrap();
         assert_eq!(name, "platform_applesmc_768")
     }
 }

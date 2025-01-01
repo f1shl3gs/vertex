@@ -6,7 +6,7 @@ use std::sync::LazyLock;
 use event::{tags, tags::Key, Metric};
 use regex::Regex;
 
-use super::{read_to_string, Error};
+use super::Error;
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]
@@ -52,7 +52,7 @@ struct MDStat {
 }
 
 async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
-    let content = read_to_string(path)?;
+    let content = std::fs::read_to_string(path)?;
     let lines = content.split('\n').collect::<Vec<_>>();
 
     let mut stats = vec![];
@@ -272,7 +272,7 @@ fn state_metric_value(key: &str, state: &str) -> f64 {
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = parse_mdstat(proc_path.join("mdstat")).await?;
 
-    let mut metrics = vec![];
+    let mut metrics = Vec::with_capacity(stats.len() * 11);
     for stat in stats {
         let device = stat.name;
         let state = stat.activity_state;

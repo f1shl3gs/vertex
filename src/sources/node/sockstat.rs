@@ -4,11 +4,11 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_to_string, Error};
+use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stat4 = sockstat4(proc_path.clone()).await?;
-    let stat6 = sockstat6(proc_path).await?;
+    let stat4 = parse_sockstat(proc_path.join("net/sockstat"))?;
+    let stat6 = parse_sockstat(proc_path.join("net/sockstat6"))?;
 
     let mut metrics = stat4.metrics(false);
     metrics.extend(stat6.metrics(true));
@@ -106,24 +106,11 @@ impl NetSockstat {
     }
 }
 
-async fn sockstat4(root: PathBuf) -> Result<NetSockstat, Error> {
-    // This file is small and can be read with one syscall
-    let content = read_to_string(root.join("net/sockstat"))?;
+fn parse_sockstat(path: PathBuf) -> Result<NetSockstat, Error> {
+    let data = std::fs::read_to_string(path)?;
 
-    parse_sockstat(&content)
-}
-
-async fn sockstat6(root: PathBuf) -> Result<NetSockstat, Error> {
-    // This file is small and can be read with one syscall
-    let content = read_to_string(root.join("net/sockstat6"))?;
-
-    parse_sockstat(&content)
-}
-
-fn parse_sockstat(content: &str) -> Result<NetSockstat, Error> {
     let mut stat = NetSockstat::default();
-
-    for line in content.lines() {
+    for line in data.lines() {
         let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
         let size = fields.len();
 
@@ -176,18 +163,13 @@ mod tests {
 
     #[test]
     fn test_parse_sockstat() {
-        let input = r#"TCP6: inuse 24
-UDP6: inuse 9
-UDPLITE6: inuse 0
-RAW6: inuse 1
-FRAG6: inuse 0 memory 0"#;
-        let ns = parse_sockstat(input).unwrap();
+        let ns = parse_sockstat("tests/node/proc/net/sockstat6".into()).unwrap();
         assert_eq!(ns.used, None);
 
         // TCP6
         let nsp = ns.protocols.first().unwrap();
         assert_eq!(nsp.protocol, "TCP6");
-        assert_eq!(nsp.inuse, 24);
+        assert_eq!(nsp.inuse, 17);
         assert_eq!(nsp.orphan, None);
         assert_eq!(nsp.tw, None);
 

@@ -240,11 +240,11 @@ fn admin_state(flags: Option<i64>) -> &'static str {
 }
 
 async fn net_class_devices(sys_path: PathBuf) -> Result<Vec<String>, Error> {
-    let mut dirs = std::fs::read_dir(sys_path.join("class/net"))?;
-    let mut devices = Vec::new();
+    let dirs = std::fs::read_dir(sys_path.join("class/net"))?;
 
-    while let Some(Ok(ent)) = dirs.next() {
-        devices.push(ent.file_name().into_string().unwrap());
+    let mut devices = Vec::new();
+    for entry in dirs.flatten() {
+        devices.push(entry.file_name().into_string().unwrap());
     }
 
     Ok(devices)
@@ -335,10 +335,10 @@ struct NetClassInterface {
 
 impl NetClassInterface {
     pub async fn parse(path: &str) -> Result<NetClassInterface, Error> {
-        let mut dirs = std::fs::read_dir(path)?;
-        let mut nci = NetClassInterface::default();
+        let dirs = std::fs::read_dir(path)?;
 
-        while let Some(Ok(entry)) = dirs.next() {
+        let mut nci = NetClassInterface::default();
+        for entry in dirs.flatten() {
             let file = entry.file_name();
             let value = match read_to_string(entry.path()) {
                 Ok(v) => v,

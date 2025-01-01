@@ -1,15 +1,14 @@
-use std::fs::read_dir;
 use std::path::PathBuf;
 
 use event::{tags, Metric};
 
 use super::{read_to_string, Error};
 
-pub async fn gather(root: PathBuf) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
-    let mut readdir = read_dir(root.join("class/nvme"))?;
+pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let dirs = std::fs::read_dir(sys_path.join("class/nvme"))?;
 
-    while let Some(Ok(entry)) = readdir.next() {
+    let mut metrics = Vec::new();
+    for entry in dirs.flatten() {
         let [device, serial, model, state, firmware_rev] = read_nvme_device(entry.path())?;
 
         metrics.push(Metric::gauge_with_tags(
@@ -34,6 +33,7 @@ fn read_nvme_device(root: PathBuf) -> Result<[String; 5], std::io::Error> {
         .file_name()
         .map(|p| p.to_string_lossy().to_string())
         .unwrap_or_default();
+
     let serial = read_to_string(root.join("serial"))?;
     let model = read_to_string(root.join("model"))?;
     let state = read_to_string(root.join("state"))?;
@@ -45,19 +45,6 @@ fn read_nvme_device(root: PathBuf) -> Result<[String; 5], std::io::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[tokio::test]
-    async fn test_read_dir() {
-        let path = PathBuf::from("tests/node/sys/class/nvme/nvme0");
-        let mut rd = read_dir(path).unwrap();
-
-        let mut count = 0;
-        while let Some(Ok(_dir)) = rd.next() {
-            count += 1;
-        }
-
-        assert_eq!(count, 4);
-    }
 
     #[test]
     fn test_read_nvme_device() {

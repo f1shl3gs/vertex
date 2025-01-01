@@ -41,8 +41,8 @@ async fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
     let mut names: BTreeMap<String, i32> = BTreeMap::new();
 
     // loop through directory files searching for file "name" from subdirs
-    let mut dirs = std::fs::read_dir(root)?;
-    while let Some(Ok(entry)) = dirs.next() {
+    let dirs = std::fs::read_dir(root)?;
+    for entry in dirs.flatten() {
         let path = entry.path().join("name");
         let name = match read_to_string(path) {
             Ok(c) => c,

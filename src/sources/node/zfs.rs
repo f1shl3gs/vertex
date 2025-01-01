@@ -38,17 +38,18 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     // pool stats
     let pattern = format!("{}/spl/kstat/zfs/*/io", proc_path);
     let paths = glob::glob(&pattern)?;
-    for path in paths.filter_map(Result::ok) {
+
+    for path in paths.flatten() {
         let path = path.to_str().unwrap();
         let pool_name = parse_pool_name(path)?;
         let kvs = parse_pool_procfs_file(path).await?;
-        for (k, v) in kvs {
+        for (key, value) in kvs {
             metrics.push(Metric::gauge_with_tags(
-                format!("node_zfs_zpool_{}", k),
-                k,
-                v,
+                format!("node_zfs_zpool_{}", key),
+                key,
+                value,
                 tags! {
-                    "zpool" => pool_name.clone()
+                    "zpool" => pool_name.to_string()
                 },
             ))
         }
@@ -56,19 +57,19 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
     let pattern = format!("{}/spl/kstat/zfs/*/objset-*", proc_path);
     let paths = glob::glob(&pattern)?;
-    for path in paths.filter_map(Result::ok) {
+    for path in paths.flatten() {
         let path = path.to_str().unwrap();
         let kvs = parse_pool_objset_file(path).await?;
-        for (k, v) in kvs {
-            let fields = k.split('.').collect::<Vec<_>>();
+        for (key, value) in kvs {
+            let fields = key.split('.').collect::<Vec<_>>();
             let desc = fields[0].to_string();
             let pool_name = fields[1].to_string();
             let dataset = fields[2].to_string();
 
             metrics.push(Metric::gauge_with_tags(
-                format!("node_zfs_zpool_dataset_{}", k),
+                format!("node_zfs_zpool_dataset_{}", key),
                 desc,
-                v,
+                value,
                 tags!(
                     "zpool" => pool_name,
                     "dataset" => dataset
@@ -79,23 +80,18 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
     let pattern = format!("{}/spl/kstat/zfs/*/state", proc_path);
     let paths = glob::glob(&pattern)?;
-    for path in paths.filter_map(Result::ok) {
+    for path in paths.flatten() {
         let path = path.to_string_lossy();
         let pool_name = parse_pool_name(path.as_ref())?;
         let kvs = parse_pool_state_file(path.as_ref()).await?;
-        for (k, v) in kvs {
-            let v = match v {
-                true => 1f64,
-                false => 0f64,
-            };
-
+        for (key, value) in kvs {
             metrics.push(Metric::gauge_with_tags(
                 "node_zfs_zpool_state",
                 "kstat.zfs.misc.state",
-                v,
+                value,
                 tags!(
-                    "zpool" => pool_name.clone(),
-                    "state" => k
+                    "zpool" => pool_name.to_string(),
+                    "state" => key
                 ),
             ))
         }
@@ -218,32 +214,30 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
 }
 
 async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, bool>, Error> {
-    let stats = [
+    const STATS: [&str; 6] = [
         "online", "degraded", "faulted", "offline", "removed", "unavail",
     ];
     let actual_state = read_to_string(path)?.trim().to_lowercase();
 
     let mut kvs = BTreeMap::new();
 
-    for s in stats {
-        let active = actual_state == s;
-        let key = s.to_string();
+    for stat in STATS {
+        let active = actual_state == stat;
 
-        kvs.insert(key, active);
+        kvs.insert(stat.to_string(), active);
     }
 
     Ok(kvs)
 }
 
-fn parse_pool_name(path: &str) -> Result<String, Error> {
+fn parse_pool_name(path: &str) -> Result<&str, Error> {
     let elements = path.split('/').collect::<Vec<_>>();
     let length = elements.len();
     if length < 2 {
         return Err("zpool path did not return at least two elements".into());
     }
 
-    let name = elements[length - 2];
-    Ok(name.to_string())
+    Ok(elements[length - 2])
 }
 
 #[cfg(test)]
@@ -278,7 +272,7 @@ mod tests {
     #[tokio::test]
     async fn test_parse_pool_objset_file() {
         let paths = glob("tests/node/proc/spl/kstat/zfs/*/objset-*").unwrap();
-        for path in paths.filter_map(Result::ok) {
+        for path in paths.flatten() {
             let kvs = parse_pool_objset_file(path.to_str().unwrap())
                 .await
                 .unwrap();
@@ -300,7 +294,7 @@ mod tests {
     async fn test_parse_pool_state_file() {
         let paths = glob("tests/node/proc/spl/kstat/zfs/*/state").unwrap();
         let mut handled = 0;
-        for path in paths.filter_map(Result::ok) {
+        for path in paths.flatten() {
             handled += 1;
             let path: &str = path.to_str().unwrap();
             let pool_name = parse_pool_name(path).unwrap();

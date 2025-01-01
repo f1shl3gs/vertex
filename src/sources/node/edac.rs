@@ -1,6 +1,6 @@
 //! Exposes error detection and correction statistics
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use event::tags::Key;
 use event::{tags, Metric};
@@ -25,8 +25,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             .unwrap()
             .to_string();
 
-        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) =
-            read_edac_stats(path.clone()).await?;
+        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(&path).await?;
         metrics.extend([
             Metric::sum_with_tags(
                 "node_edac_correctable_errors_total",
@@ -76,7 +75,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 .unwrap()
                 .to_string();
 
-            if let Ok((ce_count, ue_count)) = read_edac_csrow_stats(path).await {
+            if let Ok((ce_count, ue_count)) = read_edac_csrow_stats(&path).await {
                 metrics.extend([
                     Metric::sum_with_tags(
                         "node_edac_csrow_correctable_errors_total",
@@ -104,7 +103,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn read_edac_stats(path: PathBuf) -> Result<(u64, u64, u64, u64), Error> {
+async fn read_edac_stats(path: &Path) -> Result<(u64, u64, u64, u64), Error> {
     let ce_count = read_into(path.join("ce_count"))?;
     let ce_noinfo_count = read_into(path.join("ce_noinfo_count"))?;
     let ue_count = read_into(path.join("ue_count"))?;
@@ -113,7 +112,7 @@ async fn read_edac_stats(path: PathBuf) -> Result<(u64, u64, u64, u64), Error> {
     Ok((ce_count, ce_noinfo_count, ue_count, ue_noinfo_count))
 }
 
-async fn read_edac_csrow_stats(path: PathBuf) -> Result<(u64, u64), Error> {
+async fn read_edac_csrow_stats(path: &Path) -> Result<(u64, u64), Error> {
     let ce_count = read_into(path.join("ce_count"))?;
     let ue_count = read_into(path.join("ue_count"))?;
 
@@ -126,9 +125,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_edac_stats() {
-        let path = "tests/node/sys/devices/system/edac/mc/mc0".into();
+        let path = PathBuf::from("tests/node/sys/devices/system/edac/mc/mc0");
         let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) =
-            read_edac_stats(path).await.unwrap();
+            read_edac_stats(&path).await.unwrap();
 
         assert_eq!(ce_count, 1);
         assert_eq!(ce_noinfo_count, 2);
@@ -138,8 +137,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_edac_csrow_stats() {
-        let path = "tests/node/sys/devices/system/edac/mc/mc0/csrow0".into();
-        let (ce_count, ue_count) = read_edac_csrow_stats(path).await.unwrap();
+        let path = PathBuf::from("tests/node/sys/devices/system/edac/mc/mc0/csrow0");
+        let (ce_count, ue_count) = read_edac_csrow_stats(&path).await.unwrap();
 
         assert_eq!(ce_count, 3);
         assert_eq!(ue_count, 4);

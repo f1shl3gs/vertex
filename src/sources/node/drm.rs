@@ -23,7 +23,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         let vendor = "amd".to_string();
         let tags = tags!("card" => card.clone());
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "node_drm_card_info",
                 "Card information",

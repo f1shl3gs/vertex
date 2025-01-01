@@ -6,21 +6,22 @@ use event::Metric;
 
 use super::Error;
 
-pub async fn gather(root: PathBuf) -> Result<Vec<Metric>, Error> {
-    let infos = get_mem_info(root).await?;
-    let mut metrics = Vec::new();
-    for (k, v) in infos {
-        if k.ends_with("_total") {
+pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let infos = get_mem_info(proc_path).await?;
+
+    let mut metrics = Vec::with_capacity(infos.len());
+    for (key, value) in infos {
+        if key.ends_with("_total") {
             metrics.push(Metric::sum(
-                format!("node_memory_{}", k),
-                format!("Memory information field {}", k),
-                v,
+                format!("node_memory_{}", key),
+                format!("Memory information field {}", key),
+                value,
             ));
         } else {
             metrics.push(Metric::gauge(
-                format!("node_memory_{}", k),
-                format!("Memory information field {}", k),
-                v,
+                format!("node_memory_{}", key),
+                format!("Memory information field {}", key),
+                value,
             ));
         }
     }

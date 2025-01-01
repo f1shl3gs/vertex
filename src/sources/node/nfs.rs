@@ -444,7 +444,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     ]);
 
     // collects statistics for NFSv3 requests
-    metrics.extend_from_slice(&[
+    metrics.extend([
         procedure_metric!("3", "Null", stats.v3_stats.null),
         procedure_metric!("3", "GetAttr", stats.v3_stats.get_attr),
         procedure_metric!("3", "SetAttr", stats.v3_stats.set_attr),
@@ -470,7 +470,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     ]);
 
     // collects statistics for NFSv4 requests
-    metrics.extend_from_slice(&[
+    metrics.extend([
         procedure_metric!("4", "Null", stats.client_v4_stats.null),
         procedure_metric!("4", "Read", stats.client_v4_stats.read),
         procedure_metric!("4", "Write", stats.client_v4_stats.write),

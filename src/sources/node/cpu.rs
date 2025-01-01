@@ -63,10 +63,10 @@ macro_rules! state_metric {
 
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_stat(proc_path).await?;
-    let mut metrics = Vec::with_capacity(stats.len() * 10);
 
+    let mut metrics = Vec::with_capacity(stats.len() * 10);
     for (cpu, stat) in stats.iter().enumerate() {
-        metrics.extend_from_slice(&[
+        metrics.extend([
             state_metric!(cpu, "user", stat.user),
             state_metric!(cpu, "nice", stat.nice),
             state_metric!(cpu, "system", stat.system),
@@ -80,25 +80,26 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         // Guest CPU is also accounted for in cpuStat.User and cpuStat.Nice,
         // expose these as separate metrics.
         if conf.guest {
-            metrics.push(Metric::sum_with_tags(
-                "node_cpu_guest_seconds_total",
-                "Seconds the CPUs spent in guests (VMs) for each mode.",
-                stat.guest,
-                tags!(
-                    Key::from_static("cpu") => cpu as i64,
-                    Key::from_static("mode") => "user",
+            metrics.extend([
+                Metric::sum_with_tags(
+                    "node_cpu_guest_seconds_total",
+                    "Seconds the CPUs spent in guests (VMs) for each mode.",
+                    stat.guest,
+                    tags!(
+                        Key::from_static("cpu") => cpu as i64,
+                        Key::from_static("mode") => "user",
+                    ),
                 ),
-            ));
-
-            metrics.push(Metric::sum_with_tags(
-                "node_cpu_guest_seconds_total",
-                "Seconds the CPUs spent in guests (VMs) for each mode.",
-                stat.guest_nice,
-                tags!(
-                    Key::from_static("cpu") => cpu as i64,
-                    Key::from_static("mode") => "nice"
+                Metric::sum_with_tags(
+                    "node_cpu_guest_seconds_total",
+                    "Seconds the CPUs spent in guests (VMs) for each mode.",
+                    stat.guest_nice,
+                    tags!(
+                        Key::from_static("cpu") => cpu as i64,
+                        Key::from_static("mode") => "nice"
+                    ),
                 ),
-            ));
+            ]);
         }
     }
 

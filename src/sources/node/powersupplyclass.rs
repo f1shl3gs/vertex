@@ -153,12 +153,11 @@ struct PowerSupply {
 
 /// power_supply_class returns info for all power supplies read
 /// from /sys/class/power_supply
-async fn power_supply_class<P: AsRef<Path>>(root: P) -> Result<Vec<PowerSupply>, Error> {
-    let path = root.as_ref().join("class/power_supply");
-    let mut readdir = std::fs::read_dir(path)?;
+async fn power_supply_class(root: &Path) -> Result<Vec<PowerSupply>, Error> {
+    let dirs = std::fs::read_dir(root.join("class/power_supply"))?;
 
     let mut pss = vec![];
-    while let Some(Ok(entry)) = readdir.next() {
+    for entry in dirs.flatten() {
         let ps = parse_power_supply(entry.path()).await?;
         pss.push(ps);
     }
@@ -174,93 +173,819 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
         ..Default::default()
     };
 
-    let mut readdir = std::fs::read_dir(path)?;
-    while let Some(Ok(entry)) = readdir.next() {
+    let dirs = std::fs::read_dir(path)?;
+    for entry in dirs.flatten() {
         // TODO: node_exporter will skip none regular entry
         let meta = entry.metadata()?;
         if !meta.is_file() {
             continue;
         }
 
-        let content = match read_to_string(entry.path()) {
-            Ok(c) => c,
-            Err(err) => {
-                if err.kind() == std::io::ErrorKind::NotFound {
-                    continue;
-                }
-
-                return Err(err.into());
-            }
-        };
-
         match entry.file_name().to_string_lossy().as_ref() {
-            "authentic" => ps.authentic = content.parse().ok(),
-            "calibrate" => ps.calibrate = content.parse().ok(),
-            "capacity" => ps.capacity = content.parse().ok(),
-            "capacity_alert_max" => ps.capacity_alert_max = content.parse().ok(),
-            "capacity_alert_min" => ps.capacity_alert_min = content.parse().ok(),
-            "capacity_level" => ps.capacity_level = content.to_string(),
-            "charge_avg" => ps.charge_avg = content.parse().ok(),
-            "charge_control_limit" => ps.charge_control_limit = content.parse().ok(),
-            "charge_control_limit_max" => ps.charge_control_limit_max = content.parse().ok(),
-            "charge_counter" => ps.charge_counter = content.parse().ok(),
-            "charge_empty" => ps.charge_empty = content.parse().ok(),
-            "charge_empty_design" => ps.charge_empty_design = content.parse().ok(),
-            "charge_full" => ps.charge_full = content.parse().ok(),
-            "charge_full_design" => ps.charge_full_design = content.parse().ok(),
-            "charge_now" => ps.charge_now = content.parse().ok(),
-            "charge_term_current" => ps.charge_term_current = content.parse().ok(),
-            "charge_type" => ps.charge_type = content.to_string(),
-            "constant_charge_current" => ps.constant_charge_current = content.parse().ok(),
-            "constant_charge_current_max" => ps.constant_charge_current_max = content.parse().ok(),
-            "constant_charge_voltage" => ps.constant_charge_voltage = content.parse().ok(),
-            "constant_charge_voltage_max" => ps.constant_charge_voltage_max = content.parse().ok(),
-            "current_avg" => ps.current_avg = content.parse().ok(),
-            "current_boot" => ps.current_boot = content.parse().ok(),
-            "current_max" => ps.current_max = content.parse().ok(),
-            "current_now" => ps.current_now = content.parse().ok(),
-            "cycle_count" => ps.cycle_count = content.parse().ok(),
-            "energy_avg" => ps.energy_avg = content.parse().ok(),
-            "energy_empty" => ps.energy_empty = content.parse().ok(),
-            "energy_empty_design" => ps.energy_empty_design = content.parse().ok(),
-            "energy_full" => ps.energy_full = content.parse().ok(),
-            "energy_full_design" => ps.energy_full_design = content.parse().ok(),
-            "energy_now" => ps.energy_now = content.parse().ok(),
-            "health" => ps.health = content.to_string(),
-            "input_current_limit" => ps.input_current_limit = content.parse().ok(),
-            "manufacturer" => ps.manufacturer = content.to_string(),
-            "model_name" => ps.model_name = content.to_string(),
-            "online" => ps.online = content.parse().ok(),
-            "power_avg" => ps.power_avg = content.parse().ok(),
-            "power_now" => ps.power_now = content.parse().ok(),
-            "precharge_current" => ps.precharge_current = content.parse().ok(),
-            "present" => ps.present = content.parse().ok(),
-            "scope" => ps.scope = content.to_string(),
-            "serial_number" => ps.serial_number = content.to_string(),
-            "status" => ps.status = content.to_string(),
-            "technology" => ps.technology = content.to_string(),
-            "temp" => ps.temp = content.parse().ok(),
-            "temp_alert_max" => ps.temp_alert_max = content.parse().ok(),
-            "temp_alert_min" => ps.temp_alert_min = content.parse().ok(),
-            "temp_ambient" => ps.temp_ambient = content.parse().ok(),
-            "temp_ambient_max" => ps.temp_ambient_max = content.parse().ok(),
-            "temp_ambient_min" => ps.temp_ambient_min = content.parse().ok(),
-            "temp_max" => ps.temp_max = content.parse().ok(),
-            "temp_min" => ps.temp_min = content.parse().ok(),
-            "time_to_empty_avg" => ps.time_to_empty_avg = content.parse().ok(),
-            "time_to_empty_now" => ps.time_to_empty_now = content.parse().ok(),
-            "time_to_full_avg" => ps.time_to_full_avg = content.parse().ok(),
-            "time_to_full_now" => ps.time_to_full_now = content.parse().ok(),
-            "type" => ps.typ = content.to_string(),
-            "usb_type" => ps.usb_type = content.to_string(),
-            "voltage_avg" => ps.voltage_avg = content.parse().ok(),
-            "voltage_boot" => ps.voltage_boot = content.parse().ok(),
-            "voltage_max" => ps.voltage_max = content.parse().ok(),
-            "voltage_max_design" => ps.voltage_max_design = content.parse().ok(),
-            "voltage_min" => ps.voltage_min = content.parse().ok(),
-            "voltage_min_design" => ps.voltage_min_design = content.parse().ok(),
-            "voltage_now" => ps.voltage_now = content.parse().ok(),
-            "voltage_ocv" => ps.voltage_ocv = content.parse().ok(),
+            "authentic" => {
+                ps.authentic = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "calibrate" => {
+                ps.calibrate = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "capacity" => {
+                ps.capacity = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "capacity_alert_max" => {
+                ps.capacity_alert_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "capacity_alert_min" => {
+                ps.capacity_alert_min = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "capacity_level" => {
+                ps.capacity_level = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_avg" => {
+                ps.charge_avg = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_control_limit" => {
+                ps.charge_control_limit = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_control_limit_max" => {
+                ps.charge_control_limit_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_counter" => {
+                ps.charge_counter = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_empty" => {
+                ps.charge_empty = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_empty_design" => {
+                ps.charge_empty_design = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_full" => {
+                ps.charge_full = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_full_design" => {
+                ps.charge_full_design = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_now" => {
+                ps.charge_now = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_term_current" => {
+                ps.charge_term_current = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "charge_type" => {
+                ps.charge_type = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "constant_charge_current" => {
+                ps.constant_charge_current = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "constant_charge_current_max" => {
+                ps.constant_charge_current_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "constant_charge_voltage" => {
+                ps.constant_charge_voltage = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "constant_charge_voltage_max" => {
+                ps.constant_charge_voltage_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "current_avg" => {
+                ps.current_avg = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "current_boot" => {
+                ps.current_boot = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "current_max" => {
+                ps.current_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "current_now" => {
+                ps.current_now = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "cycle_count" => {
+                ps.cycle_count = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "energy_avg" => {
+                ps.energy_avg = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "energy_empty" => {
+                ps.energy_empty = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "energy_empty_design" => {
+                ps.energy_empty_design = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "energy_full" => {
+                ps.energy_full = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "energy_full_design" => {
+                ps.energy_full_design = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "energy_now" => {
+                ps.energy_now = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "health" => {
+                ps.health = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "input_current_limit" => {
+                ps.input_current_limit = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "manufacturer" => {
+                ps.manufacturer = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "model_name" => {
+                ps.model_name = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "online" => {
+                ps.online = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "power_avg" => {
+                ps.power_avg = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "power_now" => {
+                ps.power_now = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "precharge_current" => {
+                ps.precharge_current = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "present" => {
+                ps.present = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "scope" => {
+                ps.scope = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "serial_number" => {
+                ps.serial_number = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "status" => {
+                ps.status = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "technology" => {
+                ps.technology = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp" => {
+                ps.temp = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp_alert_max" => {
+                ps.temp_alert_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp_alert_min" => {
+                ps.temp_alert_min = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp_ambient" => {
+                ps.temp_ambient = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp_ambient_max" => {
+                ps.temp_ambient_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp_ambient_min" => {
+                ps.temp_ambient_min = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp_max" => {
+                ps.temp_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "temp_min" => {
+                ps.temp_min = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "time_to_empty_avg" => {
+                ps.time_to_empty_avg = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "time_to_empty_now" => {
+                ps.time_to_empty_now = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "time_to_full_avg" => {
+                ps.time_to_full_avg = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "time_to_full_now" => {
+                ps.time_to_full_now = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "type" => {
+                ps.typ = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "usb_type" => {
+                ps.usb_type = match read_to_string(entry.path()) {
+                    Ok(content) => content,
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_avg" => {
+                ps.voltage_avg = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_boot" => {
+                ps.voltage_boot = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_max" => {
+                ps.voltage_max = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_max_design" => {
+                ps.voltage_max_design = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_min" => {
+                ps.voltage_min = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_min_design" => {
+                ps.voltage_min_design = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_now" => {
+                ps.voltage_now = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
+            "voltage_ocv" => {
+                ps.voltage_ocv = match read_to_string(entry.path()) {
+                    Ok(content) => content.parse().ok(),
+                    Err(err) => {
+                        if err.kind() == std::io::ErrorKind::NotFound {
+                            continue;
+                        }
+
+                        return Err(err.into());
+                    }
+                }
+            }
             _ => continue,
         }
     }
@@ -328,7 +1053,7 @@ macro_rules! power_supply_metric_divide_10 {
 }
 
 pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let psc = power_supply_class(sys_path).await?;
+    let psc = power_supply_class(&sys_path).await?;
     let mut metrics = vec![];
     for ps in psc {
         if conf.ignored.is_match(&ps.name) {
@@ -560,8 +1285,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_power_supply_class() {
-        let root = "tests/node/sys";
-        let mut pss = power_supply_class(root).await.unwrap();
+        let root = PathBuf::from("tests/node/sys");
+        let mut pss = power_supply_class(&root).await.unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.
         // And the order of Github CI and Centos Stream is different, so it must be sorted

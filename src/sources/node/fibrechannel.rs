@@ -93,8 +93,10 @@ pub struct FibreChannelHost {
 
 /// fibre_channel_class parse everything in /sys/class/fc_host
 pub async fn fibre_channel_class(sys_path: PathBuf) -> Result<Vec<FibreChannelHost>, Error> {
+    let dirs = std::fs::read_dir(sys_path.join("class/fc_host"))?;
+
     let mut fcc = Vec::new();
-    for entry in std::fs::read_dir(sys_path.join("class/fc_host"))?.flatten() {
+    for entry in dirs.flatten() {
         let host = parse_fibre_channel_host(entry.path()).await?;
         fcc.push(host);
     }
@@ -179,17 +181,13 @@ async fn read_hex(path: PathBuf) -> Result<u64, Error> {
 
 /// parse_fibre_channel_statistics parses metrics from a single FC host
 async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCounters, Error> {
+    let dirs = std::fs::read_dir(root.join("statistics"))?;
+
     let mut counters = FibreChannelCounters::default();
+    for entry in dirs.flatten() {
+        let name = entry.file_name();
+        let path = entry.path();
 
-    let path = root.join("statistics");
-    for dir in std::fs::read_dir(path)? {
-        let ent = match dir {
-            Ok(ent) => ent,
-            _ => continue,
-        };
-
-        let name = ent.file_name();
-        let path = ent.path();
         match name.to_str().unwrap() {
             "dumped_frames" => counters.dumped_frames = read_hex(path).await?,
             "error_frames" => counters.error_frames = read_hex(path).await?,
@@ -221,7 +219,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     for host in hosts {
         let name = host.name;
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             // first the Host values
             Metric::gauge_with_tags(
                 "node_fibrechannel_info",
