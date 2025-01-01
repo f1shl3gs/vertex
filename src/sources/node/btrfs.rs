@@ -181,7 +181,7 @@ fn get_allocation_stats(typ: &str, uuid: &str, stats: AllocationStats) -> Vec<Me
 
     // Add all layout statistics
     for (mode, usage) in stats.layouts {
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "node_btrfs_used_bytes",
                 "Amount of used space by a layout/data type",
@@ -356,10 +356,10 @@ fn read_commit_stats(path: PathBuf) -> Result<CommitStats, Error> {
 }
 
 async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
-    let mut dirs = std::fs::read_dir(path)?;
-    let mut files = vec![];
+    let dirs = std::fs::read_dir(path)?;
 
-    while let Some(Ok(entry)) = dirs.next() {
+    let mut files = vec![];
+    for entry in dirs.flatten() {
         let name = entry.file_name().into_string().unwrap();
         files.push(name);
     }
@@ -368,11 +368,10 @@ async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
 }
 
 async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
-    let path = path.join("devices");
-    let mut dirs = std::fs::read_dir(path)?;
+    let dirs = std::fs::read_dir(path.join("devices"))?;
 
     let mut devices = BTreeMap::new();
-    while let Some(Ok(entry)) = dirs.next() {
+    for entry in dirs.flatten() {
         let name = entry.file_name().to_string_lossy().to_string();
         let path = entry.path().join("size");
         let size: u64 = read_into(path).unwrap_or(0);
@@ -421,10 +420,10 @@ async fn read_layouts(
     root: PathBuf,
     devices: usize,
 ) -> Result<BTreeMap<String, LayoutUsage>, Error> {
-    let mut dirs = std::fs::read_dir(root)?;
+    let dirs = std::fs::read_dir(root)?;
 
     let mut layouts = BTreeMap::new();
-    while let Some(Ok(entry)) = dirs.next() {
+    for entry in dirs.flatten() {
         let path = entry.path();
         if !path.is_dir() {
             continue;

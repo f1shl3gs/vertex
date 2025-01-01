@@ -34,8 +34,8 @@ pub fn default_ignored() -> regex::Regex {
     regex::Regex::new(r#"^(z?ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\d+n\d+p)\d+$"#).unwrap()
 }
 
-pub async fn gather(conf: Config, root: PathBuf) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(root.join("diskstats"))?;
+pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(proc_path.join("diskstats"))?;
 
     // https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
     //

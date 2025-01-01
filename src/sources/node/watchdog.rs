@@ -5,11 +5,10 @@ use event::{tags, Metric};
 use super::{read_into, read_to_string};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
-    let root = sys_path.join("class/watchdog");
-    let mut dirs = root.read_dir()?;
+    let dirs = sys_path.join("class/watchdog").read_dir()?;
 
     let mut metrics = Vec::new();
-    while let Some(Ok(entry)) = dirs.next() {
+    for entry in dirs.flatten() {
         let path = entry.path();
         let name = entry.file_name().to_string_lossy().to_string();
         let stat = parse_watchdog(path)?;

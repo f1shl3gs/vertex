@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_into, read_to_string, Error};
+use super::Error;
 
 pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let enabled = get_enabled(proc_path)?;
@@ -12,22 +12,20 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
         enabled,
     )];
 
-    if !enabled {
-        return Ok(metrics);
+    if enabled {
+        metrics.extend([
+            Metric::gauge(
+                "node_selinux_config_mode",
+                "Configured SELinux enforcement mode",
+                default_enforce_mode()?,
+            ),
+            Metric::gauge(
+                "node_selinux_current_mode",
+                "Current SELinux enforcement mode",
+                current_enforce_mode(sys_path)?,
+            ),
+        ]);
     }
-
-    metrics.extend([
-        Metric::gauge(
-            "node_selinux_config_mode",
-            "Configured SELinux enforcement mode",
-            default_enforce_mode()?,
-        ),
-        Metric::gauge(
-            "node_selinux_current_mode",
-            "Current SELinux enforcement mode",
-            current_enforce_mode(sys_path)?,
-        ),
-    ]);
 
     Ok(metrics)
 }
@@ -43,7 +41,7 @@ fn get_enabled(proc_path: PathBuf) -> Result<bool, Error> {
     };
 
     // The content is end with '0x0000'
-    let content = read_to_string(path)?;
+    let content = std::fs::read_to_string(path)?;
 
     Ok(!content.starts_with("kernel"))
 }
@@ -66,6 +64,9 @@ fn default_enforce_mode() -> Result<bool, Error> {
     Ok(false)
 }
 
+#[inline]
 fn current_enforce_mode(sys_path: PathBuf) -> Result<i32, Error> {
-    read_into(sys_path.join("fs/selinux/enforce"))
+    let content = std::fs::read_to_string(sys_path.join("fs/selinux/enforce"))?;
+
+    content.parse().map_err(Into::into)
 }

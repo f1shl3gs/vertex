@@ -58,6 +58,7 @@ mod wifi;
 mod xfs;
 mod zfs;
 
+use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
 use std::str::FromStr;
@@ -378,22 +379,51 @@ struct NodeMetrics {
 /// relative small and the filesystem is kind of `tmpfs`, so the performance should never
 /// be a problem.
 pub fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
-    let mut data = std::fs::read(path)?;
+    let mut data = read_file(path)?;
 
-    let mut len = data.len();
-    while len > 0 {
-        match data[len - 1] {
-            b'\t' | b'\n' | b'\x0C' | b'\r' | b' ' => {}
-            _ => {
-                data.truncate(len);
-                break;
-            }
+    let trimmed = data.trim_ascii_end();
+    unsafe { data.set_len(trimmed.len()) }
+
+    String::from_utf8(data)
+        .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err.to_string()))
+}
+
+/// `read_file` read contents of entire file. This is similar to `std::fs::read`
+/// but without the call to libc::stat, because many files in /proc and /sys report
+/// incorrect file sizes (either 0 or 4096). Reads a max file size of 1024kB. For
+/// files larger than this, a reader should be used.
+#[inline]
+fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>, std::io::Error> {
+    const MAX_BUF_SIZE: usize = 1024 * 1024;
+    const STEP: usize = 128;
+
+    let mut file = std::fs::File::open(&path)?;
+
+    let mut offset = 0;
+    let mut buf = vec![0; STEP];
+    loop {
+        let cnt = file.read(&mut buf.as_mut_slice()[offset..])?;
+        offset += cnt;
+
+        if offset >= MAX_BUF_SIZE {
+            return Err(std::io::Error::from(std::io::ErrorKind::FileTooLarge));
         }
 
-        len -= 1;
+        if cnt < STEP {
+            break;
+        }
+
+        #[allow(clippy::uninit_vec)]
+        if cnt == STEP {
+            // grow one STEP more
+            buf.reserve(STEP);
+            unsafe { buf.set_len(offset + STEP) };
+        }
     }
 
-    Ok(unsafe { String::from_utf8_unchecked(data) })
+    unsafe { buf.set_len(offset) };
+
+    Ok(buf)
 }
 
 pub fn read_into<P, T, E>(path: P) -> Result<T, Error>

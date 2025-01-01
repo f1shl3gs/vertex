@@ -31,14 +31,15 @@ struct ThermalZoneStats {
     passive: Option<u64>,
 }
 
-async fn thermal_zone_stats(root: PathBuf) -> Result<Vec<ThermalZoneStats>, Error> {
+async fn thermal_zone_stats(root: &Path) -> Result<Vec<ThermalZoneStats>, Error> {
     let pattern = format!(
         "{}/class/thermal/thermal_zone[0-9]*",
         root.to_string_lossy()
     );
     let paths = glob::glob(&pattern)?;
+
     let mut stats = vec![];
-    for path in paths.filter_map(Result::ok) {
+    for path in paths.flatten() {
         let stat = parse_thermal_zone(&path).await?;
         stats.push(stat);
     }
@@ -116,8 +117,9 @@ async fn cooling_device_stats(root: PathBuf) -> Result<Vec<CoolingDeviceStats>, 
         root.to_string_lossy()
     );
     let paths = glob::glob(&pattern)?;
+
     let mut stats = vec![];
-    for path in paths.filter_map(Result::ok) {
+    for path in paths.flatten() {
         let stat = parse_cooling_device_stats(path).await?;
         stats.push(stat);
     }
@@ -149,9 +151,9 @@ async fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats,
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = thermal_zone_stats(sys_path.clone()).await?;
+    let stats = thermal_zone_stats(&sys_path).await?;
 
-    let mut metrics = vec![];
+    let mut metrics = Vec::with_capacity(stats.len());
     for stat in stats {
         metrics.push(Metric::gauge_with_tags(
             "node_thermal_zone_temp",
@@ -165,6 +167,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     }
 
     let stats = cooling_device_stats(sys_path).await?;
+    metrics.reserve(stats.len() * 2);
     for stat in stats {
         metrics.extend([
             Metric::gauge_with_tags(
@@ -197,8 +200,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_thermal_zone_stats() {
-        let root = "tests/node/sys".into();
-        let stats = thermal_zone_stats(root).await.unwrap();
+        let root = PathBuf::from("tests/node/sys");
+        let stats = thermal_zone_stats(&root).await.unwrap();
+
         assert_eq!(
             stats,
             vec![

@@ -167,7 +167,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 Key::from_static("port") => port.name
             );
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "node_infiniband_state_id",
                     "State of the InfiniBand port (0: no change, 1: down, 2: init, 3: armed, 4: active, 5: act defer)",
@@ -464,9 +464,10 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 async fn infiniband_class<P: AsRef<Path>>(root: P) -> Result<Vec<InfiniBandDevice>, Error> {
+    let dirs = std::fs::read_dir(root)?;
+
     let mut devices = vec![];
-    let mut readdir = tokio::fs::read_dir(root).await?;
-    while let Some(entry) = readdir.next_entry().await? {
+    for entry in dirs.flatten() {
         let dev = parse_infiniband_device(entry.path()).await?;
         devices.push(dev);
     }
@@ -474,16 +475,15 @@ async fn infiniband_class<P: AsRef<Path>>(root: P) -> Result<Vec<InfiniBandDevic
     Ok(devices)
 }
 
-async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Error> {
-    let name = path.file_name().unwrap().to_str().unwrap();
+async fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Error> {
+    let name = root.file_name().unwrap().to_str().unwrap();
     let mut device = InfiniBandDevice {
         name: name.to_string(),
         ..Default::default()
     };
 
     for sub in ["board_id", "fw_ver", "hca_type"] {
-        let sp = path.clone().join(sub);
-        let content = match read_to_string(sp) {
+        let content = match read_to_string(root.join(sub)) {
             Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
@@ -502,9 +502,8 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
         }
     }
 
-    let pp = path.clone().join("ports");
-    let mut dirs = tokio::fs::read_dir(pp).await?;
-    while let Some(entry) = dirs.next_entry().await? {
+    let dirs = std::fs::read_dir(root.join("ports"))?;
+    for entry in dirs.flatten() {
         let port = parse_infiniband_port(name, entry.path()).await?;
         device.ports.push(port);
     }
@@ -526,20 +525,17 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
         ..Default::default()
     };
 
-    let sp = root.clone().join("state");
-    let content = read_to_string(sp)?;
+    let content = read_to_string(root.join("state"))?;
     let (id, name) = parse_state(&content)?;
     ibp.state = name;
     ibp.state_id = id;
 
-    let pp = root.clone().join("phys_state");
-    let content = read_to_string(pp)?;
+    let content = read_to_string(root.join("phys_state"))?;
     let (id, name) = parse_state(&content)?;
     ibp.phys_state = name;
     ibp.phys_state_id = id;
 
-    let pp = root.clone().join("rate");
-    let content = read_to_string(pp)?;
+    let content = read_to_string(root.join("rate"))?;
     let rate = parse_rate(&content)?;
     ibp.rate = rate;
 
@@ -577,11 +573,10 @@ fn parse_rate(s: &str) -> Result<u64, Error> {
 }
 
 async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, Error> {
-    let mut counters = InfiniBandCounters::default();
+    let dirs = std::fs::read_dir(root.join("counters"))?;
 
-    let cp = root.clone().join("counters");
-    let mut readdir = tokio::fs::read_dir(cp).await?;
-    while let Some(entry) = readdir.next_entry().await? {
+    let mut counters = InfiniBandCounters::default();
+    for entry in dirs.flatten() {
         let path = entry.path();
         let name = entry.file_name();
         let name = name.to_str().unwrap();
@@ -640,10 +635,9 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
     }
 
     // Parse legacy counters
-    let path = root.clone().join("counters_ext");
-    match std::fs::read_dir(path) {
-        Ok(mut readdir) => {
-            while let Some(Ok(entry)) = readdir.next() {
+    match std::fs::read_dir(root.join("counters_ext")) {
+        Ok(dirs) => {
+            for entry in dirs.flatten() {
                 let name = entry.file_name();
 
                 let content = match read_to_string(entry.path()) {

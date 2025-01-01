@@ -119,8 +119,8 @@ async fn get_cpu_freq_stat(sys_path: PathBuf) -> Result<Vec<Stat>, Error> {
         "{}/devices/system/cpu/cpu[0-9]*",
         sys_path.to_string_lossy()
     ))?;
-    let mut stats = Vec::new();
 
+    let mut stats = Vec::new();
     for path in cpus.flatten() {
         let stat = parse_cpu_freq_cpu_info(path).await?;
         stats.push(stat)

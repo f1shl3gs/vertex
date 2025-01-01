@@ -1,4 +1,3 @@
-use std::fs::read_dir;
 use std::io::ErrorKind;
 use std::path::PathBuf;
 
@@ -34,52 +33,309 @@ struct DesktopManagementInterface {
 
 impl DesktopManagementInterface {
     fn parse(root: PathBuf) -> Result<Self, Error> {
-        let mut dirs = read_dir(root)?;
-        let mut dmi = DesktopManagementInterface::default();
+        let dirs = std::fs::read_dir(root)?;
 
-        while let Some(Ok(entry)) = dirs.next() {
+        let mut dmi = DesktopManagementInterface::default();
+        for entry in dirs.flatten() {
             if !entry.metadata()?.is_file() {
                 continue;
             }
 
-            let name = entry.file_name();
-            if name == "modalias" || name == "uevent" {
-                continue;
-            }
+            match entry.file_name().to_string_lossy().as_ref() {
+                "bios_date" => {
+                    dmi.bios_date = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
 
-            let value = match read_to_string(entry.path()) {
-                Ok(value) => value,
-                Err(err) => {
-                    if err.kind() == ErrorKind::PermissionDenied {
-                        continue;
+                                return Err(err.into());
+                            }
+                        }
                     }
-
-                    return Err(err.into());
                 }
-            };
+                "bios_release" => {
+                    dmi.bios_release = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
 
-            match name.to_string_lossy().as_ref() {
-                "bios_date" => dmi.bios_date = Some(value),
-                "bios_release" => dmi.bios_release = Some(value),
-                "bios_vendor" => dmi.bios_vendor = Some(value),
-                "bios_version" => dmi.bios_version = Some(value),
-                "board_asset_tag" => dmi.board_asset_tag = Some(value),
-                "board_name" => dmi.board_name = Some(value),
-                "board_serial" => dmi.board_serial = Some(value),
-                "board_vendor" => dmi.board_vendor = Some(value),
-                "board_version" => dmi.board_version = Some(value),
-                "chassis_asset_tag" => dmi.chassis_asset_tag = Some(value),
-                "chassis_serial" => dmi.chassis_serial = Some(value),
-                "chassis_type" => dmi.chassis_type = Some(value),
-                "chassis_vendor" => dmi.chassis_vendor = Some(value),
-                "chassis_version" => dmi.chassis_version = Some(value),
-                "product_family" => dmi.product_family = Some(value),
-                "product_name" => dmi.product_name = Some(value),
-                "product_serial" => dmi.product_serial = Some(value),
-                "product_sku" => dmi.product_sku = Some(value),
-                "product_uuid" => dmi.product_uuid = Some(value),
-                "product_version" => dmi.product_version = Some(value),
-                "system_vendor" => dmi.system_vendor = Some(value),
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "bios_vendor" => {
+                    dmi.bios_vendor = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "bios_version" => {
+                    dmi.bios_version = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "board_asset_tag" => {
+                    dmi.board_asset_tag = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "board_name" => {
+                    dmi.board_name = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "board_serial" => {
+                    dmi.board_serial = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "board_vendor" => {
+                    dmi.board_vendor = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "board_version" => {
+                    dmi.board_version = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "chassis_asset_tag" => {
+                    dmi.chassis_asset_tag = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "chassis_serial" => {
+                    dmi.chassis_serial = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "chassis_type" => {
+                    dmi.chassis_type = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "chassis_vendor" => {
+                    dmi.chassis_vendor = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "chassis_version" => {
+                    dmi.chassis_version = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "product_family" => {
+                    dmi.product_family = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "product_name" => {
+                    dmi.product_name = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "product_serial" => {
+                    dmi.product_serial = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "product_sku" => {
+                    dmi.product_sku = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "product_uuid" => {
+                    dmi.product_uuid = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "product_version" => {
+                    dmi.product_version = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
+                "system_vendor" => {
+                    dmi.system_vendor = {
+                        match read_to_string(entry.path()) {
+                            Ok(value) => Some(value),
+                            Err(err) => {
+                                if err.kind() == ErrorKind::PermissionDenied {
+                                    continue;
+                                }
+
+                                return Err(err.into());
+                            }
+                        }
+                    }
+                }
                 _ => continue,
             }
         }

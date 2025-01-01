@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use event::tags::Tags;
 use event::Metric;
@@ -33,7 +33,7 @@ fn default_labels() -> Vec<String> {
 }
 
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = parse_ipvs_stats(proc_path.clone()).await?;
+    let stats = parse_ipvs_stats(&proc_path).await?;
 
     let mut metrics = vec![
         Metric::sum(
@@ -110,7 +110,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             tags.insert(key, kv[i].clone());
         }
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "node_ipvs_backend_connections_active",
                 "The current active connections by local and remote address.",
@@ -153,7 +153,7 @@ struct IPVSStats {
     outgoing_bytes: u64,
 }
 
-async fn parse_ipvs_stats(root: PathBuf) -> Result<IPVSStats, Error> {
+async fn parse_ipvs_stats(root: &Path) -> Result<IPVSStats, Error> {
     let data = std::fs::read_to_string(root.join("net/ip_vs_stat"))?;
     let lines = data.lines().collect::<Vec<_>>();
     if lines.len() < 4 {

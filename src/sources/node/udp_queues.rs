@@ -42,7 +42,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
     match net_ip_socket_summary(proc_path.join("net/udp6")).await {
         Ok(v6) => {
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "node_udp_queues",
                     "Number of allocated memory in the kernel for UDP datagrams in bytes.",
