@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735783727368,
+  "lastUpdate": 1735784143238,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "876db95f5ef8792ba341bab3b9ca59739b715d16",
-          "message": "chore(deps): bump quick-xml from 0.37.0 to 0.37.1 (#1987)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.37.0 to 0.37.1.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.37.0...v0.37.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-18T18:55:21+08:00",
-          "tree_id": "e0435f248052ee3300d5f2ee2b89056c134f3826",
-          "url": "https://github.com/f1shl3gs/vertex/commit/876db95f5ef8792ba341bab3b9ca59739b715d16"
-        },
-        "date": 1731927919634,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 507,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35447.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d4aa56537afc3ee31d737c233c83c3a85c53d547",
           "message": "chore(deps): bump hyper from 1.5.0 to 1.5.1 (#1988)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.0 to 1.5.1.\r\n- [Release notes](https://github.com/hyperium/hyper/releases)\r\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.0...v1.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-20T12:44:27+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35716.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e03949902df61878c48f16cc197455073d62b757",
+          "message": "bump syn to 2.0.94 (#2097)",
+          "timestamp": "2025-01-02T10:05:13+08:00",
+          "tree_id": "acc2b69b05aa4d62d125dd62e7cdada85ed637cf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e03949902df61878c48f16cc197455073d62b757"
+        },
+        "date": 1735784125504,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 523,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35716.8,
             "unit": "KiB"
           }
         ]
