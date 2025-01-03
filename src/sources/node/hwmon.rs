@@ -340,6 +340,23 @@ fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
                 continue;
             }
 
+            if sensor_type == "freq" && element == "input" {
+                if let Some(label) = props.get("label") {
+                    metrics.push(Metric::gauge_with_tags(
+                        name + "_freq_mhz",
+                        "Hardware monitor for GPU frequency in MHz",
+                        pv / 1000000.0,
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                            "label" => sanitized(label),
+                        ),
+                    ));
+                }
+
+                continue;
+            }
+
             // fallback, just dump the metric as is
             metrics.push(Metric::gauge_with_tags(
                 name,
@@ -507,6 +524,7 @@ fn is_hwmon_sensor(s: &str) -> bool {
         "energy",
         "humidity",
         "intrusion",
+        "freq",
     ]
     .contains(&s)
 }
