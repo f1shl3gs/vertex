@@ -5,7 +5,7 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
@@ -213,18 +213,25 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     Ok(kvs)
 }
 
-async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, bool>, Error> {
-    const STATS: [&str; 6] = [
-        "online", "degraded", "faulted", "offline", "removed", "unavail",
-    ];
-    let actual_state = read_to_string(path)?.trim().to_lowercase();
+const STATS: [&str; 7] = [
+    "online",
+    "degraded",
+    "faulted",
+    "offline",
+    "removed",
+    "unavail",
+    "suspended",
+];
+
+async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<&'static str, bool>, Error> {
+    let actual_state = read_string(path)?.to_lowercase();
 
     let mut kvs = BTreeMap::new();
 
     for stat in STATS {
         let active = actual_state == stat;
 
-        kvs.insert(stat.to_string(), active);
+        kvs.insert(stat, active);
     }
 
     Ok(kvs)

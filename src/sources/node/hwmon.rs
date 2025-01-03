@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use event::{tags, Metric};
 use tokio::task::JoinSet;
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let dirs = std::fs::read_dir(sys_path.join("class/hwmon"))?;
@@ -371,7 +371,7 @@ fn collect_sensor_data(
                 continue;
             }
 
-            match read_to_string(entry.path()) {
+            match read_string(entry.path()) {
                 Ok(value) => {
                     let sensor = format!("{}{}", sensor, if num.is_empty() { "0" } else { num });
                     stats
@@ -391,15 +391,25 @@ fn collect_sensor_data(
 fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
     let input = name.as_bytes();
 
+    let mut found_underscore = false;
     let mut num_start = 0;
     while num_start < input.len() {
         if input[num_start].is_ascii_digit() {
             break;
         }
 
+        if input[num_start] == b'_' {
+            found_underscore = true;
+        }
+
         num_start += 1;
     }
     if num_start >= input.len() {
+        // num is not found
+        if found_underscore {
+            return Err(());
+        }
+
         return Ok((&name[..num_start], &name[num_start..], &name[num_start..]));
     }
 
@@ -428,7 +438,7 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
 
 // human_readable_name is similar to the methods in
 fn human_readable_chip_name(dir: &Path) -> Result<String, Error> {
-    let content = read_to_string(dir.join("name"))?;
+    let content = read_string(dir.join("name"))?;
     Ok(content)
 }
 
@@ -467,7 +477,7 @@ fn hwmon_name(path: &Path) -> Result<String, Error> {
     }
 
     // preference 2: is there a name file
-    match read_to_string(path.join("name")) {
+    match read_string(path.join("name")) {
         Ok(content) => return Ok(content),
         Err(err) => debug!(
             message = "read device name failed",

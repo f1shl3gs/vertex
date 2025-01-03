@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_into, read_to_string, Error};
+use super::{read_into, read_string, Error};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path).await?;
@@ -147,9 +147,7 @@ struct ClassDRMCardAMDGPUStats {
 }
 
 async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUStats, Error> {
-    let path = format!("{}/device/uevent", card);
-    let uevent = read_to_string(path)?;
-
+    let uevent = read_string(format!("{}/device/uevent", card))?;
     if !uevent.contains("DRIVER=amdgpu") {
         return Err(Error::from("the device is not an amdgpu"));
     }
@@ -178,12 +176,11 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
         .unwrap_or(0);
 
     let path = format!("{}/device/mem_info_vram_vendor", card);
-    let memory_vram_vendor = read_to_string(path).unwrap_or_default().trim().to_string();
+    let memory_vram_vendor = read_string(path).unwrap_or_default();
     let path = format!("{}/device/power_dpm_force_performance_level", card);
-    let power_dpm_force_performance_level =
-        read_to_string(path).unwrap_or_default().trim().to_string();
+    let power_dpm_force_performance_level = read_string(path).unwrap_or_default();
     let path = format!("{}/device/unique_id", card);
-    let unique_id = read_to_string(path).unwrap_or_default().trim().to_string();
+    let unique_id = read_string(path).unwrap_or_default();
 
     Ok(ClassDRMCardAMDGPUStats {
         name: name.to_string(),

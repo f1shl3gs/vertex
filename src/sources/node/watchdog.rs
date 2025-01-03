@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_into, read_to_string};
+use super::{read_into, read_string};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
     let dirs = sys_path.join("class/watchdog").read_dir()?;
@@ -123,16 +123,16 @@ fn parse_watchdog(path: PathBuf) -> Result<Stat, crate::Error> {
 
         match entry.file_name().to_string_lossy().as_ref() {
             "bootstatus" => stat.bootstatus = read_into(entry.path()).ok(),
-            "options" => stat.options = read_to_string(entry.path()).ok(),
+            "options" => stat.options = read_string(entry.path()).ok(),
             "fw_version" => stat.fw_version = read_into(entry.path()).ok(),
-            "identity" => stat.identity = read_to_string(entry.path()).ok(),
+            "identity" => stat.identity = read_string(entry.path()).ok(),
             "nowayout" => stat.nowayout = read_into(entry.path()).ok(),
-            "state" => stat.state = read_to_string(entry.path()).ok(),
-            "status" => stat.status = read_to_string(entry.path()).ok(),
+            "state" => stat.state = read_string(entry.path()).ok(),
+            "status" => stat.status = read_string(entry.path()).ok(),
             "timeleft" => stat.timeleft = read_into(entry.path()).ok(),
             "timeout" => stat.timeout = read_into(entry.path()).ok(),
             "pretimeout" => stat.pretimeout = read_into(entry.path()).ok(),
-            "pretimeout_governor" => stat.pretimeout_governor = read_to_string(entry.path()).ok(),
+            "pretimeout_governor" => stat.pretimeout_governor = read_string(entry.path()).ok(),
             "access_cs0" => stat.access_cs0 = read_into(entry.path()).ok(),
             _ => continue,
         }

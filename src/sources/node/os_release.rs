@@ -1,5 +1,4 @@
 use std::collections::BTreeMap;
-use std::sync::LazyLock;
 
 use chrono::NaiveDate;
 use event::{tags, Metric};
@@ -9,11 +8,8 @@ use super::Error;
 const ETC_OS_RELEASE: &str = "/etc/os-release";
 const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
 
-static OS_RELEASE: LazyLock<BTreeMap<String, String>> =
-    LazyLock::new(|| release_infos().expect("couldn't get os-release infos"));
-
 pub async fn gather() -> Result<Vec<Metric>, Error> {
-    let infos = &*OS_RELEASE;
+    let infos = release_infos()?;
 
     let mut metrics = vec![
         Metric::gauge_with_tags(

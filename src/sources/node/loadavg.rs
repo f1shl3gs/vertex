@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     match get_load(proc_path).await {
@@ -17,7 +17,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 async fn get_load(path: PathBuf) -> Result<Vec<f64>, std::io::Error> {
-    let content = read_to_string(path.join("loadavg"))?;
+    let content = read_string(path.join("loadavg"))?;
     let loads = content
         .split_ascii_whitespace()
         .map(|part| part.parse::<f64>().unwrap_or(0.0))

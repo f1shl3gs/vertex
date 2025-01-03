@@ -370,15 +370,9 @@ struct NodeMetrics {
     collectors: Collectors,
 }
 
-/// `read_to_string` should be a real async function, but the implement of
-/// `tokio::fs::read_to_string` will spawn a thread for reading files, which actually
-/// increase cpu and memory usage. The `tokio-uring` might be help, and it should be
-/// introduced once it's ready.
-///
 /// The files this function will(should) be reading is under `/sys` and `/proc` which is
-/// relative small and the filesystem is kind of `tmpfs`, so the performance should never
-/// be a problem.
-pub fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
+/// very small, so the performance should never be a problem.
+pub fn read_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
     let mut data = read_file(path)?;
 
     let trimmed = data.trim_ascii_end();
@@ -395,7 +389,7 @@ pub fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error>
 #[inline]
 fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>, std::io::Error> {
     const MAX_BUF_SIZE: usize = 1024 * 1024;
-    const STEP: usize = 128;
+    const STEP: usize = 32;
 
     let mut file = std::fs::File::open(&path)?;
 
@@ -432,7 +426,7 @@ where
     T: FromStr<Err = E>,
     Error: From<E>,
 {
-    let content = read_to_string(path)?;
+    let content = read_string(path)?;
     Ok(<T as FromStr>::from_str(content.as_str())?)
 }
 

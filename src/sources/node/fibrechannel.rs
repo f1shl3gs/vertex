@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 #[derive(Debug, Default)]
 pub struct FibreChannelCounters {
@@ -123,8 +123,7 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
         "supported_classes",
         "supported_speeds",
     ] {
-        let name = root.join(sub);
-        let value = read_to_string(name)?.trim_end().to_string();
+        let value = read_string(root.join(sub))?;
 
         match sub {
             "speed" => host.speed = value,
@@ -168,7 +167,7 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
 }
 
 async fn read_hex(path: PathBuf) -> Result<u64, Error> {
-    let content = read_to_string(path)?
+    let content = read_string(path)?
         .trim_end()
         .strip_prefix("0x")
         .unwrap()

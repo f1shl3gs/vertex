@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use event::{tags, tags::Key, Metric};
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = read_bonding_stats(sys_path).await?;
@@ -32,23 +32,23 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64>>, Error> {
-    let mut status = HashMap::new();
-    let masters = read_to_string(sys_path.join("class/net/bonding_masters"))?;
+    let masters = read_string(sys_path.join("class/net/bonding_masters"))?;
 
+    let mut status = HashMap::new();
     let parts = masters.split_ascii_whitespace();
     for master in parts {
         let path = sys_path.join(format!("class/net/{}/bonding/slaves", master));
 
-        if let Ok(slaves) = read_to_string(path) {
+        if let Ok(slaves) = read_string(path) {
             let mut sstat = vec![0f64, 0f64];
             for slave in slaves.split_ascii_whitespace() {
                 let path = sys_path.join(format!(
                     "class/net/{}/lower_{}/bonding_slave/mii_status",
                     master, slave
                 ));
-                if let Ok(state) = read_to_string(path) {
+                if let Ok(state) = read_string(path) {
                     sstat[0] += 1f64;
-                    if state.trim() == "up" {
+                    if state == "up" {
                         sstat[1] += 1f64;
                     }
                 }
@@ -58,9 +58,9 @@ async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64
                     "class/net/{}/slave_{}/bonding_slave/mii_status",
                     master, slave
                 ));
-                if let Ok(state) = read_to_string(path) {
+                if let Ok(state) = read_string(path) {
                     sstat[0] += 1f64;
-                    if state.trim() == "up" {
+                    if state == "up" {
                         sstat[1] += 1f64;
                     }
                 }

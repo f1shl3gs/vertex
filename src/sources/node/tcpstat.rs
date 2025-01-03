@@ -226,7 +226,7 @@ impl AsyncWrite for NetlinkSocket {
 
 async fn fetch_tcp_stats(family: u8) -> io::Result<Statistics> {
     #[rustfmt::skip]
-        let msg = [
+    let msg = [
         // u32, length of the netlink packet, including the header and the payload
         72u8, 0, 0, 0,
         // u16, message type, SOCK_DIAG_BY_FAMILY

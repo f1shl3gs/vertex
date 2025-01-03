@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use event::{tags, tags::Key, Metric};
 
-use super::{read_into, read_to_string, Error};
+use super::{read_into, read_string, Error};
 
 const SECTOR_SIZE: u64 = 512;
 
@@ -266,44 +266,36 @@ async fn stats(root: PathBuf) -> Result<Vec<Stats>, Error> {
 async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
     let devices = read_device_info(&root).await?;
 
-    let path = root.join("label");
-    let label = read_to_string(path)?;
+    let label = read_string(root.join("label"))?;
+    let uuid = read_string(root.join("metadata_uuid"))?;
+    let features = list_files(root.join("features")).await?;
+    let clone_alignment = read_into(root.join("clone_alignment"))?;
+    let node_size = read_into(root.join("nodesize"))?;
+    let quota_override = read_into(root.join("quota_override"))?;
+    let sector_size = read_into(root.join("sectorsize"))?;
 
-    let path = root.join("metadata_uuid");
-    let uuid = read_to_string(path)?;
+    let commit_stats = match read_commit_stats(root.join("commit_stats")) {
+        Ok(stats) => stats,
+        Err(err) => {
+            // if commit_stats not found. btrfs version < 6.0
+            if err.is_not_found() {
+                CommitStats {
+                    commits: 0,
+                    last_commit_ms: 0,
+                    max_commit_ms: 0,
+                    total_commit_ms: 0,
+                }
+            } else {
+                return Err(err.into());
+            }
+        }
+    };
 
-    let path = root.join("features");
-    let features = list_files(path).await?;
-
-    let path = root.join("clone_alignment");
-    let clone_alignment = read_into(path)?;
-
-    let path = root.join("nodesize");
-    let node_size = read_into(path)?;
-
-    let path = root.join("quota_override");
-    let quota_override = read_into(path)?;
-
-    let path = root.join("sectorsize");
-    let sector_size = read_into(path)?;
-
-    let path = root.join("commit_stats");
-    let commit_stats = read_commit_stats(path)?;
-
-    let path = root.join("allocation/global_rsv_reserved");
-    let global_rsv_reserved = read_into(path)?;
-
-    let path = root.join("allocation/global_rsv_size");
-    let global_rsv_size = read_into(path)?;
-
-    let path = root.join("allocation/data");
-    let data = read_allocation_stats(path, devices.len()).await.ok();
-
-    let path = root.join("allocation/metadata");
-    let metadata = read_allocation_stats(path, devices.len()).await.ok();
-
-    let path = root.join("allocation/system");
-    let system = read_allocation_stats(path, devices.len()).await.ok();
+    let global_rsv_reserved = read_into(root.join("allocation/global_rsv_reserved"))?;
+    let global_rsv_size = read_into(root.join("allocation/global_rsv_size"))?;
+    let data = read_allocation_stats(root.join("allocation/data"), devices.len()).ok();
+    let metadata = read_allocation_stats(root.join("allocation/metadata"), devices.len()).ok();
+    let system = read_allocation_stats(root.join("allocation/system"), devices.len()).ok();
 
     Ok(Stats {
         uuid,
@@ -387,7 +379,7 @@ async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error
     Ok(devices)
 }
 
-async fn read_allocation_stats(root: PathBuf, devices: usize) -> Result<AllocationStats, Error> {
+fn read_allocation_stats(root: PathBuf, devices: usize) -> Result<AllocationStats, Error> {
     let may_used_bytes = read_into(root.join("bytes_may_use"))?;
     let pinned_bytes = read_into(root.join("bytes_pinned"))?;
     let read_only_bytes = read_into(root.join("bytes_readonly"))?;
@@ -399,7 +391,7 @@ async fn read_allocation_stats(root: PathBuf, devices: usize) -> Result<Allocati
     let total_bytes = read_into(root.join("total_bytes"))?;
     // this file may not exists
     let total_pinned_bytes = read_into(root.join("total_bytes_pinned")).unwrap_or_default();
-    let layouts = read_layouts(root, devices).await?;
+    let layouts = read_layouts(root, devices)?;
 
     Ok(AllocationStats {
         disk_used_bytes,
@@ -416,10 +408,7 @@ async fn read_allocation_stats(root: PathBuf, devices: usize) -> Result<Allocati
     })
 }
 
-async fn read_layouts(
-    root: PathBuf,
-    devices: usize,
-) -> Result<BTreeMap<String, LayoutUsage>, Error> {
+fn read_layouts(root: PathBuf, devices: usize) -> Result<BTreeMap<String, LayoutUsage>, Error> {
     let dirs = std::fs::read_dir(root)?;
 
     let mut layouts = BTreeMap::new();
@@ -430,7 +419,7 @@ async fn read_layouts(
         }
 
         let name = entry.file_name().to_string_lossy().to_string();
-        let layout = read_layout(path, devices).await?;
+        let layout = read_layout(path, devices)?;
 
         layouts.insert(name, layout);
     }
@@ -439,7 +428,7 @@ async fn read_layouts(
 }
 
 // read_layout reads the Btrfs layout statistics for an allocation layout.
-async fn read_layout(root: PathBuf, devices: usize) -> Result<LayoutUsage, Error> {
+fn read_layout(root: PathBuf, devices: usize) -> Result<LayoutUsage, Error> {
     let total_bytes = read_into(root.join("total_bytes"))?;
     let used_bytes = read_into(root.join("used_bytes"))?;
 

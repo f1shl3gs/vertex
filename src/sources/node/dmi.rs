@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 /// `DesktopManagementInterface` contains info from files in /sys/class/dmi/id
 #[derive(Default)]
@@ -44,7 +44,7 @@ impl DesktopManagementInterface {
             match entry.file_name().to_string_lossy().as_ref() {
                 "bios_date" => {
                     dmi.bios_date = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -58,7 +58,7 @@ impl DesktopManagementInterface {
                 }
                 "bios_release" => {
                     dmi.bios_release = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -72,7 +72,7 @@ impl DesktopManagementInterface {
                 }
                 "bios_vendor" => {
                     dmi.bios_vendor = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -86,7 +86,7 @@ impl DesktopManagementInterface {
                 }
                 "bios_version" => {
                     dmi.bios_version = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -100,7 +100,7 @@ impl DesktopManagementInterface {
                 }
                 "board_asset_tag" => {
                     dmi.board_asset_tag = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -114,7 +114,7 @@ impl DesktopManagementInterface {
                 }
                 "board_name" => {
                     dmi.board_name = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -128,7 +128,7 @@ impl DesktopManagementInterface {
                 }
                 "board_serial" => {
                     dmi.board_serial = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -142,7 +142,7 @@ impl DesktopManagementInterface {
                 }
                 "board_vendor" => {
                     dmi.board_vendor = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -156,7 +156,7 @@ impl DesktopManagementInterface {
                 }
                 "board_version" => {
                     dmi.board_version = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -170,7 +170,7 @@ impl DesktopManagementInterface {
                 }
                 "chassis_asset_tag" => {
                     dmi.chassis_asset_tag = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -184,7 +184,7 @@ impl DesktopManagementInterface {
                 }
                 "chassis_serial" => {
                     dmi.chassis_serial = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -198,7 +198,7 @@ impl DesktopManagementInterface {
                 }
                 "chassis_type" => {
                     dmi.chassis_type = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -212,7 +212,7 @@ impl DesktopManagementInterface {
                 }
                 "chassis_vendor" => {
                     dmi.chassis_vendor = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -226,7 +226,7 @@ impl DesktopManagementInterface {
                 }
                 "chassis_version" => {
                     dmi.chassis_version = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -240,7 +240,7 @@ impl DesktopManagementInterface {
                 }
                 "product_family" => {
                     dmi.product_family = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -254,7 +254,7 @@ impl DesktopManagementInterface {
                 }
                 "product_name" => {
                     dmi.product_name = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -268,7 +268,7 @@ impl DesktopManagementInterface {
                 }
                 "product_serial" => {
                     dmi.product_serial = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -282,7 +282,7 @@ impl DesktopManagementInterface {
                 }
                 "product_sku" => {
                     dmi.product_sku = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -296,7 +296,7 @@ impl DesktopManagementInterface {
                 }
                 "product_uuid" => {
                     dmi.product_uuid = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -310,7 +310,7 @@ impl DesktopManagementInterface {
                 }
                 "product_version" => {
                     dmi.product_version = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {
@@ -322,9 +322,9 @@ impl DesktopManagementInterface {
                         }
                     }
                 }
-                "system_vendor" => {
+                "sys_vendor" => {
                     dmi.system_vendor = {
-                        match read_to_string(entry.path()) {
+                        match read_string(entry.path()) {
                             Ok(value) => Some(value),
                             Err(err) => {
                                 if err.kind() == ErrorKind::PermissionDenied {

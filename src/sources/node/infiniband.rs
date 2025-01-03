@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use event::{tags, tags::Key, Metric};
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 /// InfiniBandCounters contains counter values from files in
 /// /sys/class/infiniband/<Name>/ports/<Port>/counters or
@@ -483,7 +483,7 @@ async fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Erro
     };
 
     for sub in ["board_id", "fw_ver", "hca_type"] {
-        let content = match read_to_string(root.join(sub)) {
+        let content = match read_string(root.join(sub)) {
             Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
@@ -525,17 +525,17 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
         ..Default::default()
     };
 
-    let content = read_to_string(root.join("state"))?;
+    let content = read_string(root.join("state"))?;
     let (id, name) = parse_state(&content)?;
     ibp.state = name;
     ibp.state_id = id;
 
-    let content = read_to_string(root.join("phys_state"))?;
+    let content = read_string(root.join("phys_state"))?;
     let (id, name) = parse_state(&content)?;
     ibp.phys_state = name;
     ibp.phys_state_id = id;
 
-    let content = read_to_string(root.join("rate"))?;
+    let content = read_string(root.join("rate"))?;
     let rate = parse_rate(&content)?;
     ibp.rate = rate;
 
@@ -581,7 +581,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
         let name = entry.file_name();
         let name = name.to_str().unwrap();
 
-        let content = match read_to_string(path) {
+        let content = match read_string(path) {
             Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
@@ -640,7 +640,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
             for entry in dirs.flatten() {
                 let name = entry.file_name();
 
-                let content = match read_to_string(entry.path()) {
+                let content = match read_string(entry.path()) {
                     Ok(c) => c,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
