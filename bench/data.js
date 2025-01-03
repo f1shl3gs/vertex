@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735888423104,
+  "lastUpdate": 1735888440156,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "37ef0ec3623a5cb12cdfe101b0bf8af5df84c48d",
-          "message": "chore(deps): bump proc-macro2 from 1.0.89 to 1.0.91 (#1990)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.89 to 1.0.91.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.89...1.0.91)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-21T19:13:22+08:00",
-          "tree_id": "dacd1940c7b4188074688ca380fc18a20b70a9d3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/37ef0ec3623a5cb12cdfe101b0bf8af5df84c48d"
-        },
-        "date": 1732188215895,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 517,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35424.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ece4a82a4e77ff03f4ee677553aea93fb026a8f6",
           "message": "chore(deps): bump syn from 2.0.87 to 2.0.89 (#1991)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.87 to 2.0.89.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.87...2.0.89)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-21T19:30:50+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35708.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fcae8e76b7a63a21894de7182f604f54714652c0",
+          "message": "add GPU clk (#2100)",
+          "timestamp": "2025-01-03T15:03:14+08:00",
+          "tree_id": "e20909db5e046bfed2e39b3c58044354eb592d04",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fcae8e76b7a63a21894de7182f604f54714652c0"
+        },
+        "date": 1735888420972,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 527,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35712.2,
             "unit": "KiB"
           }
         ]
