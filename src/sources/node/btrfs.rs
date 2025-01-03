@@ -286,7 +286,7 @@ async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
                     total_commit_ms: 0,
                 }
             } else {
-                return Err(err.into());
+                return Err(err);
             }
         }
     };
