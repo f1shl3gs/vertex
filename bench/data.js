@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735883923945,
+  "lastUpdate": 1735883936912,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "876db95f5ef8792ba341bab3b9ca59739b715d16",
-          "message": "chore(deps): bump quick-xml from 0.37.0 to 0.37.1 (#1987)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.37.0 to 0.37.1.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.37.0...v0.37.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-18T18:55:21+08:00",
-          "tree_id": "e0435f248052ee3300d5f2ee2b89056c134f3826",
-          "url": "https://github.com/f1shl3gs/vertex/commit/876db95f5ef8792ba341bab3b9ca59739b715d16"
-        },
-        "date": 1731927478398,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.329,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 144.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 310.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 640.08,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d4aa56537afc3ee31d737c233c83c3a85c53d547",
           "message": "chore(deps): bump hyper from 1.5.0 to 1.5.1 (#1988)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.0 to 1.5.1.\r\n- [Release notes](https://github.com/hyperium/hyper/releases)\r\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.0...v1.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-20T12:44:27+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 631.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c161b6d26298a64fa1cf59f4f008a582ed9dd294",
+          "message": "sources/node: simplify and fix tests (#2098)",
+          "timestamp": "2025-01-03T13:56:09+08:00",
+          "tree_id": "1c43472a5f2282eee82d8c60bfe70e716b1bb395",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c161b6d26298a64fa1cf59f4f008a582ed9dd294"
+        },
+        "date": 1735883919131,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.421,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 148,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 321.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 638.66,
             "unit": "ns/op"
           }
         ]
