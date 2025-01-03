@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 
-use super::{read_into, read_to_string, Error};
+use super::{read_into, read_string, Error};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let (procs, threads) = get_procs_and_threads(&proc_path).await?;
@@ -96,7 +96,7 @@ async fn get_procs_and_threads(root: &Path) -> Result<(Stats, Stats), Error> {
     for entry in dirs.flatten() {
         let path = entry.path().join("stat");
 
-        match read_to_string(path) {
+        match read_string(path) {
             Ok(content) => match parse_state(&content) {
                 Some(state) => procs.append(state),
                 None => continue,
@@ -108,7 +108,7 @@ async fn get_procs_and_threads(root: &Path) -> Result<(Stats, Stats), Error> {
         match std::fs::read_dir(entry.path().join("task")) {
             Ok(dirs) => {
                 for entry in dirs.flatten() {
-                    match read_to_string(entry.path().join("stat")) {
+                    match read_string(entry.path().join("stat")) {
                         Ok(content) => match parse_state(&content) {
                             Some(state) => threads.append(state),
                             None => continue,

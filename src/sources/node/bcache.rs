@@ -5,7 +5,7 @@ use event::{tags, tags::Key, Metric};
 use humanize::bytes::parse_bytes;
 use serde::{Deserialize, Serialize};
 
-use super::{error::ParseError, read_to_string, Error};
+use super::{error::ParseError, read_string, Error};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Config {
@@ -520,7 +520,7 @@ struct Stat {
 }
 
 fn read_value(path: PathBuf) -> Result<u64, Error> {
-    match read_to_string(path) {
+    match read_string(path) {
         Ok(content) => {
             let value = content.parse()?;
             Ok(value)

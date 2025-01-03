@@ -5,7 +5,7 @@ use event::{tags, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Config {
@@ -340,7 +340,7 @@ impl NetClassInterface {
         let mut nci = NetClassInterface::default();
         for entry in dirs.flatten() {
             let file = entry.file_name();
-            let value = match read_to_string(entry.path()) {
+            let value = match read_string(entry.path()) {
                 Ok(v) => v,
                 _ => continue,
             };

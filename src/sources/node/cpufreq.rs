@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::{tags, tags::Key, Metric};
 
-use super::{read_into, read_to_string, Error};
+use super::{read_into, read_string, Error};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path).await?;
@@ -152,11 +152,11 @@ async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
     stat.scaling_minimum_frequency = read_into(root.join("cpufreq/scaling_min_freq")).ok();
 
     stat.available_governors =
-        read_to_string(root.join("cpufreq/scaling_available_governors")).unwrap_or_default();
-    stat.driver = read_to_string(root.join("cpufreq/scaling_driver")).unwrap_or_default();
-    stat.governor = read_to_string(root.join("cpufreq/scaling_governor")).unwrap_or_default();
-    stat.related_cpus = read_to_string(root.join("cpufreq/related_cpus")).unwrap_or_default();
-    stat.set_speed = read_to_string(root.join("cpufreq/scaling_setspeed")).unwrap_or_default();
+        read_string(root.join("cpufreq/scaling_available_governors")).unwrap_or_default();
+    stat.driver = read_string(root.join("cpufreq/scaling_driver")).unwrap_or_default();
+    stat.governor = read_string(root.join("cpufreq/scaling_governor")).unwrap_or_default();
+    stat.related_cpus = read_string(root.join("cpufreq/related_cpus")).unwrap_or_default();
+    stat.set_speed = read_string(root.join("cpufreq/scaling_setspeed")).unwrap_or_default();
 
     Ok(stat)
 }

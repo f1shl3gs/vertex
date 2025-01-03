@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(proc_path).await?;
@@ -22,7 +22,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 async fn read_file_nr(proc_path: PathBuf) -> Result<(u64, u64), Error> {
-    let content = read_to_string(proc_path.join("sys/fs/file-nr"))?;
+    let content = read_string(proc_path.join("sys/fs/file-nr"))?;
 
     // the file-nr proc is only 1 line with 3 values
     let parts = content.split_ascii_whitespace().collect::<Vec<_>>();

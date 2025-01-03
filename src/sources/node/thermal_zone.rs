@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 
-use super::{read_into, read_to_string, Error};
+use super::{read_into, read_string, Error};
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>
 /// for a single <zone>
@@ -57,16 +57,12 @@ async fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
         .to_string();
 
     // required attributes
-    let path = root.join("type");
-    let typ = read_to_string(path)?;
-    let path = root.join("policy");
-    let policy = read_to_string(path)?;
-    let path = root.join("temp");
-    let temp = read_into(path)?;
+    let typ = read_string(root.join("type"))?;
+    let policy = read_string(root.join("policy"))?;
+    let temp = read_into(root.join("temp"))?;
 
     // optional attributes
-    let path = root.join("mode");
-    let mode = match read_to_string(path) {
+    let mode = match read_string(root.join("mode")) {
         Ok(content) => match content.as_str() {
             "enabled" => Some(true),
             "disabled" => Some(false),
@@ -136,7 +132,7 @@ async fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats,
         .unwrap()
         .to_string();
 
-    let typ = read_to_string(root.join("type"))?;
+    let typ = read_string(root.join("type"))?;
     let max_state = read_into(root.join("max_state"))?;
     // cur_state can be -1, eg intel powerclamp
     // https://www.kernel.org/doc/Documentation/thermal/intel_powerclamp.txt

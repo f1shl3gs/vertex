@@ -57,7 +57,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             Metric::gauge_with_tags(
                 "node_filesystem_device_error",
                 "Whether an error occurred while getting statistics for the given device.",
-                1.0,
+                device_error,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
@@ -101,7 +101,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
                 "node_filesystem_files_free",
                 "Filesystem total free file nodes",
                 stat.files_free,
-                tags.clone(),
+                tags,
             ),
             Metric::gauge_with_tags(
                 "node_filesystem_mount_info",

@@ -5,7 +5,7 @@ use event::{tags, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{read_to_string, Error};
+use super::{read_string, Error};
 
 const POWER_SUPPLY_KEY: Key = Key::from_static("power_supply");
 
@@ -183,7 +183,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
 
         match entry.file_name().to_string_lossy().as_ref() {
             "authentic" => {
-                ps.authentic = match read_to_string(entry.path()) {
+                ps.authentic = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -195,7 +195,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "calibrate" => {
-                ps.calibrate = match read_to_string(entry.path()) {
+                ps.calibrate = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -207,7 +207,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "capacity" => {
-                ps.capacity = match read_to_string(entry.path()) {
+                ps.capacity = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -219,7 +219,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "capacity_alert_max" => {
-                ps.capacity_alert_max = match read_to_string(entry.path()) {
+                ps.capacity_alert_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -231,7 +231,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "capacity_alert_min" => {
-                ps.capacity_alert_min = match read_to_string(entry.path()) {
+                ps.capacity_alert_min = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -243,7 +243,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "capacity_level" => {
-                ps.capacity_level = match read_to_string(entry.path()) {
+                ps.capacity_level = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -255,7 +255,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_avg" => {
-                ps.charge_avg = match read_to_string(entry.path()) {
+                ps.charge_avg = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -267,7 +267,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_control_limit" => {
-                ps.charge_control_limit = match read_to_string(entry.path()) {
+                ps.charge_control_limit = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -279,7 +279,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_control_limit_max" => {
-                ps.charge_control_limit_max = match read_to_string(entry.path()) {
+                ps.charge_control_limit_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -291,7 +291,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_counter" => {
-                ps.charge_counter = match read_to_string(entry.path()) {
+                ps.charge_counter = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -303,7 +303,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_empty" => {
-                ps.charge_empty = match read_to_string(entry.path()) {
+                ps.charge_empty = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -315,7 +315,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_empty_design" => {
-                ps.charge_empty_design = match read_to_string(entry.path()) {
+                ps.charge_empty_design = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -327,7 +327,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_full" => {
-                ps.charge_full = match read_to_string(entry.path()) {
+                ps.charge_full = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -339,7 +339,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_full_design" => {
-                ps.charge_full_design = match read_to_string(entry.path()) {
+                ps.charge_full_design = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -351,7 +351,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_now" => {
-                ps.charge_now = match read_to_string(entry.path()) {
+                ps.charge_now = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -363,7 +363,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_term_current" => {
-                ps.charge_term_current = match read_to_string(entry.path()) {
+                ps.charge_term_current = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -375,7 +375,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "charge_type" => {
-                ps.charge_type = match read_to_string(entry.path()) {
+                ps.charge_type = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -387,7 +387,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "constant_charge_current" => {
-                ps.constant_charge_current = match read_to_string(entry.path()) {
+                ps.constant_charge_current = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -399,7 +399,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "constant_charge_current_max" => {
-                ps.constant_charge_current_max = match read_to_string(entry.path()) {
+                ps.constant_charge_current_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -411,7 +411,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "constant_charge_voltage" => {
-                ps.constant_charge_voltage = match read_to_string(entry.path()) {
+                ps.constant_charge_voltage = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -423,7 +423,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "constant_charge_voltage_max" => {
-                ps.constant_charge_voltage_max = match read_to_string(entry.path()) {
+                ps.constant_charge_voltage_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -435,7 +435,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "current_avg" => {
-                ps.current_avg = match read_to_string(entry.path()) {
+                ps.current_avg = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -447,7 +447,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "current_boot" => {
-                ps.current_boot = match read_to_string(entry.path()) {
+                ps.current_boot = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -459,7 +459,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "current_max" => {
-                ps.current_max = match read_to_string(entry.path()) {
+                ps.current_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -471,7 +471,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "current_now" => {
-                ps.current_now = match read_to_string(entry.path()) {
+                ps.current_now = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -483,7 +483,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "cycle_count" => {
-                ps.cycle_count = match read_to_string(entry.path()) {
+                ps.cycle_count = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -495,7 +495,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "energy_avg" => {
-                ps.energy_avg = match read_to_string(entry.path()) {
+                ps.energy_avg = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -507,7 +507,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "energy_empty" => {
-                ps.energy_empty = match read_to_string(entry.path()) {
+                ps.energy_empty = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -519,7 +519,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "energy_empty_design" => {
-                ps.energy_empty_design = match read_to_string(entry.path()) {
+                ps.energy_empty_design = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -531,7 +531,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "energy_full" => {
-                ps.energy_full = match read_to_string(entry.path()) {
+                ps.energy_full = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -543,7 +543,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "energy_full_design" => {
-                ps.energy_full_design = match read_to_string(entry.path()) {
+                ps.energy_full_design = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -555,7 +555,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "energy_now" => {
-                ps.energy_now = match read_to_string(entry.path()) {
+                ps.energy_now = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -567,7 +567,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "health" => {
-                ps.health = match read_to_string(entry.path()) {
+                ps.health = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -579,7 +579,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "input_current_limit" => {
-                ps.input_current_limit = match read_to_string(entry.path()) {
+                ps.input_current_limit = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -591,7 +591,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "manufacturer" => {
-                ps.manufacturer = match read_to_string(entry.path()) {
+                ps.manufacturer = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -603,7 +603,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "model_name" => {
-                ps.model_name = match read_to_string(entry.path()) {
+                ps.model_name = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -615,7 +615,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "online" => {
-                ps.online = match read_to_string(entry.path()) {
+                ps.online = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -627,7 +627,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "power_avg" => {
-                ps.power_avg = match read_to_string(entry.path()) {
+                ps.power_avg = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -639,7 +639,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "power_now" => {
-                ps.power_now = match read_to_string(entry.path()) {
+                ps.power_now = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -651,7 +651,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "precharge_current" => {
-                ps.precharge_current = match read_to_string(entry.path()) {
+                ps.precharge_current = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -663,7 +663,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "present" => {
-                ps.present = match read_to_string(entry.path()) {
+                ps.present = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -675,7 +675,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "scope" => {
-                ps.scope = match read_to_string(entry.path()) {
+                ps.scope = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -687,7 +687,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "serial_number" => {
-                ps.serial_number = match read_to_string(entry.path()) {
+                ps.serial_number = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -699,7 +699,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "status" => {
-                ps.status = match read_to_string(entry.path()) {
+                ps.status = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -711,7 +711,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "technology" => {
-                ps.technology = match read_to_string(entry.path()) {
+                ps.technology = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -723,7 +723,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp" => {
-                ps.temp = match read_to_string(entry.path()) {
+                ps.temp = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -735,7 +735,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp_alert_max" => {
-                ps.temp_alert_max = match read_to_string(entry.path()) {
+                ps.temp_alert_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -747,7 +747,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp_alert_min" => {
-                ps.temp_alert_min = match read_to_string(entry.path()) {
+                ps.temp_alert_min = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -759,7 +759,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp_ambient" => {
-                ps.temp_ambient = match read_to_string(entry.path()) {
+                ps.temp_ambient = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -771,7 +771,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp_ambient_max" => {
-                ps.temp_ambient_max = match read_to_string(entry.path()) {
+                ps.temp_ambient_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -783,7 +783,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp_ambient_min" => {
-                ps.temp_ambient_min = match read_to_string(entry.path()) {
+                ps.temp_ambient_min = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -795,7 +795,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp_max" => {
-                ps.temp_max = match read_to_string(entry.path()) {
+                ps.temp_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -807,7 +807,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "temp_min" => {
-                ps.temp_min = match read_to_string(entry.path()) {
+                ps.temp_min = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -819,7 +819,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "time_to_empty_avg" => {
-                ps.time_to_empty_avg = match read_to_string(entry.path()) {
+                ps.time_to_empty_avg = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -831,7 +831,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "time_to_empty_now" => {
-                ps.time_to_empty_now = match read_to_string(entry.path()) {
+                ps.time_to_empty_now = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -843,7 +843,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "time_to_full_avg" => {
-                ps.time_to_full_avg = match read_to_string(entry.path()) {
+                ps.time_to_full_avg = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -855,7 +855,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "time_to_full_now" => {
-                ps.time_to_full_now = match read_to_string(entry.path()) {
+                ps.time_to_full_now = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -867,7 +867,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "type" => {
-                ps.typ = match read_to_string(entry.path()) {
+                ps.typ = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -879,7 +879,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "usb_type" => {
-                ps.usb_type = match read_to_string(entry.path()) {
+                ps.usb_type = match read_string(entry.path()) {
                     Ok(content) => content,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -891,7 +891,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_avg" => {
-                ps.voltage_avg = match read_to_string(entry.path()) {
+                ps.voltage_avg = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -903,7 +903,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_boot" => {
-                ps.voltage_boot = match read_to_string(entry.path()) {
+                ps.voltage_boot = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -915,7 +915,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_max" => {
-                ps.voltage_max = match read_to_string(entry.path()) {
+                ps.voltage_max = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -927,7 +927,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_max_design" => {
-                ps.voltage_max_design = match read_to_string(entry.path()) {
+                ps.voltage_max_design = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -939,7 +939,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_min" => {
-                ps.voltage_min = match read_to_string(entry.path()) {
+                ps.voltage_min = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -951,7 +951,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_min_design" => {
-                ps.voltage_min_design = match read_to_string(entry.path()) {
+                ps.voltage_min_design = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -963,7 +963,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_now" => {
-                ps.voltage_now = match read_to_string(entry.path()) {
+                ps.voltage_now = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
@@ -975,7 +975,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                 }
             }
             "voltage_ocv" => {
-                ps.voltage_ocv = match read_to_string(entry.path()) {
+                ps.voltage_ocv = match read_string(entry.path()) {
                     Ok(content) => content.parse().ok(),
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
