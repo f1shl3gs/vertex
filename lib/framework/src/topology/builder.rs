@@ -588,7 +588,7 @@ pub async fn build_pieces(
         let component = name.id().to_string();
         let (trigger, tripwire) = Tripwire::new();
         let attrs = Attributes::from([
-            ("component", component.into()),
+            ("component", component.clone().into()),
             ("component_kind", "sink".into()),
             ("component_type", typetag.into()),
         ]);
@@ -614,7 +614,8 @@ pub async fn build_pieces(
             )
             .await
             .map(|_| {
-                debug!(message = "Finished");
+                debug!(message = "sink finished", sink = component);
+
                 TaskOutput::Sink(rx)
             })
         };
@@ -622,41 +623,47 @@ pub async fn build_pieces(
         let task = Task::new(name.clone(), typetag, sink);
         let component_key = name.clone();
         let healthcheck_task = async move {
-            if enable_healthcheck {
-                let duration = Duration::from_secs(10);
-                timeout(duration, healthcheck)
-                    .map(|result| match result {
-                        Ok(Ok(_)) => {
-                            info!(message = "Healthcheck: Passed");
-                            Ok(TaskOutput::HealthCheck)
-                        }
+            if !enable_healthcheck {
+                info!(
+                    message = "health check disabled",
+                    sink = %component_key,
+                );
 
-                        Ok(Err(err)) => {
-                            error!(
-                                message = "Healthcheck: Failed",
-                                %err,
-                                component_kind = "sink",
-                                component_id = %component_key,
-                            );
-
-                            Err(())
-                        }
-
-                        Err(_) => {
-                            error!(
-                                message = "Healthcheck: timeout",
-                                component_kind = "sink",
-                                component_id = %component_key,
-                            );
-
-                            Err(())
-                        }
-                    })
-                    .await
-            } else {
-                info!(message = "Healthcheck: Disabled");
-                Ok(TaskOutput::HealthCheck)
+                return Ok(TaskOutput::HealthCheck);
             }
+
+            let duration = Duration::from_secs(10);
+            timeout(duration, healthcheck)
+                .map(|result| match result {
+                    Ok(Ok(_)) => {
+                        info!(
+                            message = "health check passed",
+                            sink = %component_key,
+                        );
+
+                        Ok(TaskOutput::HealthCheck)
+                    }
+
+                    Ok(Err(err)) => {
+                        error!(
+                            message = "health check failed",
+                            %err,
+                            sink = %component_key,
+                        );
+
+                        Err(())
+                    }
+
+                    Err(_) => {
+                        error!(
+                            message = "health check timeout",
+                            sink = %component_key,
+                        );
+
+                        Err(())
+                    }
+                })
+                .await
         };
 
         let healthcheck_task = Task::new(name.clone(), typetag, healthcheck_task);
