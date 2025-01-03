@@ -104,14 +104,57 @@ impl Pipeline {
         )
     }
 
-    #[cfg(any(test, feature = "test-util"))]
+    pub async fn send(&mut self, events: impl Into<Events>) -> Result<(), ClosedError> {
+        self.inner
+            .as_mut()
+            .expect("no default output")
+            .send(events.into())
+            .await
+    }
+
+    pub async fn send_named(&mut self, name: &str, events: Events) -> Result<(), ClosedError> {
+        self.named_inners
+            .get_mut(name)
+            .expect("unknown output")
+            .send(events)
+            .await
+    }
+
+    pub async fn send_batch<E, I>(&mut self, events: I) -> Result<(), ClosedError>
+    where
+        E: Into<Event> + ByteSizeOf,
+        I: IntoIterator<Item = E>,
+    {
+        self.inner
+            .as_mut()
+            .expect("no default output")
+            .send_batch(events)
+            .await
+    }
+
+    pub async fn send_event_stream<S, E>(&mut self, events: S) -> Result<(), ClosedError>
+    where
+        S: Stream<Item = E> + Unpin,
+        E: Into<Event> + ByteSizeOf,
+    {
+        self.inner
+            .as_mut()
+            .expect("no default output")
+            .send_event_stream(events)
+            .await
+    }
+}
+
+#[cfg(any(test, feature = "test-util"))]
+impl Pipeline {
+    #[cfg(feature = "test-util")]
     pub fn new_test() -> (Self, impl Stream<Item = Event> + Unpin) {
         let (pipe, recv) = Self::new_with_buffer(100);
         let recv = recv.flat_map(|events| futures::stream::iter(events.into_events()));
         (pipe, recv)
     }
 
-    #[cfg(any(test, feature = "test-util"))]
+    #[cfg(feature = "test-util")]
     pub fn new_test_finalize(
         status: event::EventStatus,
     ) -> (Self, impl Stream<Item = Event> + Unpin) {
@@ -151,46 +194,6 @@ impl Pipeline {
 
         self.named_inners.insert(name, inner);
         recv
-    }
-
-    pub async fn send(&mut self, events: impl Into<Events>) -> Result<(), ClosedError> {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send(events.into())
-            .await
-    }
-
-    pub async fn send_named(&mut self, name: &str, events: Events) -> Result<(), ClosedError> {
-        self.named_inners
-            .get_mut(name)
-            .expect("unknown output")
-            .send(events)
-            .await
-    }
-
-    pub async fn send_batch<E, I>(&mut self, events: I) -> Result<(), ClosedError>
-    where
-        E: Into<Event> + ByteSizeOf,
-        I: IntoIterator<Item = E>,
-    {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send_batch(events)
-            .await
-    }
-
-    pub async fn send_event_stream<S, E>(&mut self, events: S) -> Result<(), ClosedError>
-    where
-        S: Stream<Item = E> + Unpin,
-        E: Into<Event> + ByteSizeOf,
-    {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send_event_stream(events)
-            .await
     }
 }
 
