@@ -350,12 +350,6 @@ mod tests {
         assert_ne!(result.len(), 0);
     }
 
-    #[test]
-    fn udev() {
-        let info = udev_device_properties("259", "0").unwrap();
-        println!("{:?}", info);
-    }
-
     #[tokio::test]
     async fn gather_root() {
         let conf = Config {
