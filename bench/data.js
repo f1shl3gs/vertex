@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736082576265,
+  "lastUpdate": 1736082593680,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33613a2c35896fa6f562358597357fa40c23fbab",
-          "message": "chore(deps): bump url from 2.5.3 to 2.5.4 (#1993)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.3 to 2.5.4.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.3...v2.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-23T12:29:36+08:00",
-          "tree_id": "72a3ae8a52dc615608e337c771ede5ee678908e9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33613a2c35896fa6f562358597357fa40c23fbab"
-        },
-        "date": 1732336852834,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 527,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35425.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 520,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35609,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "85f021f23a2487fa567df3b1ca8e3c383241d044",
+          "message": "bump syn to 2.0.95 (#2104)",
+          "timestamp": "2025-01-05T20:59:04+08:00",
+          "tree_id": "e2eef4e15c725fd801537e5fad7d7ca191eb3d77",
+          "url": "https://github.com/f1shl3gs/vertex/commit/85f021f23a2487fa567df3b1ca8e3c383241d044"
+        },
+        "date": 1736082575566,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 533,
             "unit": "s"
           },
           {
