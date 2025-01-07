@@ -61,7 +61,7 @@ memchr = { version = "2.7.4", default-features = false }
 metrics = { path = "../metrics" }
 pem = { version = "3.0.4", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.1", default-features = false }
-pin-project-lite = { version = "0.2.15", default-features = false }
+pin-project-lite = { version = "0.2.16", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 regex = { version = "1.11.1", default-features = false }
 rustls = { version = "0.23.20", default-features = false, features = ["ring"] }
