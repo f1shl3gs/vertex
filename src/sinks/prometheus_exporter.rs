@@ -10,7 +10,7 @@ use bytes::{BufMut, Bytes, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::Tags;
-use event::{Bucket, EventStatus, Events, Finalizable, Metric, MetricValue, Quantile};
+use event::{Bucket, EventStatus, Events, MetricValue, Quantile};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
 use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, ShutdownSignal, Sink, StreamSink};
@@ -431,34 +431,27 @@ impl StreamSink for PrometheusExporter {
         while let Some(events) = input.next().await {
             if let Events::Metrics(metrics) = events {
                 let now = Utc::now();
+                let ttl = self.ttl.as_millis() as i64;
                 let mut state = states.write();
 
-                metrics.into_iter().for_each(|mut metric| {
-                    let finalizers = metric.take_finalizers();
-                    let Metric {
-                        series,
-                        description,
-                        timestamp,
-                        value,
-                        ..
-                    } = metric;
+                metrics.into_iter().for_each(|metric| {
+                    let (series, description, value, timestamp, mut metadata) = metric.into_parts();
+                    let finalizers = metadata.take_finalizers();
+                    let timestamp = timestamp.unwrap_or(now).timestamp_millis();
 
-                    // Looks a little bit dummy but this should avoid some allocation for state's K.
-                    let sets = match state.get_mut(&series.name) {
-                        Some(sets) => sets,
-                        None => state.entry(series.name).or_insert(Sets {
+                    state
+                        .entry(series.name)
+                        .and_modify(|sets| {
+                            sets.metrics.replace(ExpiringEntry {
+                                tags: series.tags,
+                                value,
+                                expired_at: timestamp + ttl,
+                            });
+                        })
+                        .or_insert(Sets {
                             description: description.unwrap_or_default(),
                             metrics: Default::default(),
-                        }),
-                    };
-
-                    let timestamp = timestamp.unwrap_or(now).timestamp_millis();
-                    // `insert` does not update the entry, the `replace` does.
-                    sets.metrics.replace(ExpiringEntry {
-                        tags: series.tags,
-                        value,
-                        expired_at: timestamp + self.ttl.as_millis() as i64,
-                    });
+                        });
 
                     finalizers.update_status(EventStatus::Delivered)
                 })
