@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736219348894,
+  "lastUpdate": 1736219737574,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4e8c24751a42ee33e0fa0960d9b191f66003dbae",
-          "message": "add sources/static_metrics (#1995)\n\n* add sources/static_metrics",
-          "timestamp": "2024-11-23T15:21:18+08:00",
-          "tree_id": "62378b067b63673bedef09581207e0c33f6fde9b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e8c24751a42ee33e0fa0960d9b191f66003dbae"
-        },
-        "date": 1732347535753,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 523,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35624.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "604bd9e98affe184d93b4cd8b25f7cb9fc8af708",
           "message": "cargo update (#1996)",
           "timestamp": "2024-11-23T17:04:11+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35609,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b564fd393243d1de54647212391366207fa9ac23",
+          "message": "chore(deps): bump pin-project-lite from 0.2.15 to 0.2.16 (#2105)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.15 to 0.2.16.\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.15...v0.2.16)\n\n---\nupdated-dependencies:\n- dependency-name: pin-project-lite\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-07T11:05:05+08:00",
+          "tree_id": "2c4a37a690329fa0c7824ac11b61230b4481f060",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b564fd393243d1de54647212391366207fa9ac23"
+        },
+        "date": 1736219719679,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 515,
             "unit": "s"
           },
           {
