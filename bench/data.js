@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736262616843,
+  "lastUpdate": 1736263035960,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "604bd9e98affe184d93b4cd8b25f7cb9fc8af708",
-          "message": "cargo update (#1996)",
-          "timestamp": "2024-11-23T17:04:11+08:00",
-          "tree_id": "4aa75b6b64ccf251ff2d5e68549226612acd99b0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/604bd9e98affe184d93b4cd8b25f7cb9fc8af708"
-        },
-        "date": 1732353262067,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28125000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 677950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.587,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9864e9b17a5fd7b89fc9df386eb765d6bda5062e",
           "message": "add comment (#1997)",
           "timestamp": "2024-11-24T15:50:39+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.866,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "765055ca2565c32153865920a08013d6e11acd28",
+          "message": "sinks/prometheus_exporter: simplify insert (#2108)",
+          "timestamp": "2025-01-07T23:06:30+08:00",
+          "tree_id": "eefc130271f043b65f161eedd3f5bdf5e28436fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/765055ca2565c32153865920a08013d6e11acd28"
+        },
+        "date": 1736263017009,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28050000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 675050,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.483,
             "unit": "ns/op"
           }
         ]
