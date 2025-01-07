@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736262548907,
+  "lastUpdate": 1736262570614,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "604bd9e98affe184d93b4cd8b25f7cb9fc8af708",
-          "message": "cargo update (#1996)",
-          "timestamp": "2024-11-23T17:04:11+08:00",
-          "tree_id": "4aa75b6b64ccf251ff2d5e68549226612acd99b0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/604bd9e98affe184d93b4cd8b25f7cb9fc8af708"
-        },
-        "date": 1732352808461,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.408,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 145.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 321.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 621.58,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9864e9b17a5fd7b89fc9df386eb765d6bda5062e",
           "message": "add comment (#1997)",
           "timestamp": "2024-11-24T15:50:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 627.55,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "765055ca2565c32153865920a08013d6e11acd28",
+          "message": "sinks/prometheus_exporter: simplify insert (#2108)",
+          "timestamp": "2025-01-07T23:06:30+08:00",
+          "tree_id": "eefc130271f043b65f161eedd3f5bdf5e28436fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/765055ca2565c32153865920a08013d6e11acd28"
+        },
+        "date": 1736262552504,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.415,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 131.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 306.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 600.95,
             "unit": "ns/op"
           }
         ]
