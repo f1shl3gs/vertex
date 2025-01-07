@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736082593680,
+  "lastUpdate": 1736219261804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "80fe7f10d6f67c3569d08a3d14c929e1aa6f3b0f",
-          "message": "chore(deps): bump rustls from 0.23.17 to 0.23.18 (#1994)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.17 to 0.23.18.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.17...v/0.23.18)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-23T12:30:07+08:00",
-          "tree_id": "ea7ef91c9aa855c93d9279cced19d9af58977308",
-          "url": "https://github.com/f1shl3gs/vertex/commit/80fe7f10d6f67c3569d08a3d14c929e1aa6f3b0f"
-        },
-        "date": 1732336327348,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 549950,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532260,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b564fd393243d1de54647212391366207fa9ac23",
+          "message": "chore(deps): bump pin-project-lite from 0.2.15 to 0.2.16 (#2105)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.15 to 0.2.16.\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.15...v0.2.16)\n\n---\nupdated-dependencies:\n- dependency-name: pin-project-lite\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-07T11:05:05+08:00",
+          "tree_id": "2c4a37a690329fa0c7824ac11b61230b4481f060",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b564fd393243d1de54647212391366207fa9ac23"
+        },
+        "date": 1736219244108,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530580,
             "unit": "ns/op"
           }
         ]
