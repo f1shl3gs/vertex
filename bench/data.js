@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736219268720,
+  "lastUpdate": 1736219269621,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33613a2c35896fa6f562358597357fa40c23fbab",
-          "message": "chore(deps): bump url from 2.5.3 to 2.5.4 (#1993)\n\nBumps [url](https://github.com/servo/rust-url) from 2.5.3 to 2.5.4.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.5.3...v2.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-23T12:29:36+08:00",
-          "tree_id": "72a3ae8a52dc615608e337c771ede5ee678908e9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33613a2c35896fa6f562358597357fa40c23fbab"
-        },
-        "date": 1732336405194,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 548660,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 530580,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b3ae00b8202a52d63872764936b142a6474d1da1",
+          "message": "chore(deps): bump async-trait from 0.1.84 to 0.1.85 (#2106)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.84 to 0.1.85.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.84...0.1.85)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-07T11:05:29+08:00",
+          "tree_id": "58f85540ef16bae1e49f124e3b1a79aa7721113b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b3ae00b8202a52d63872764936b142a6474d1da1"
+        },
+        "date": 1736219251392,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534420,
             "unit": "ns/op"
           }
         ]
