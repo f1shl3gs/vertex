@@ -511,17 +511,23 @@ impl Metric {
         &self.metadata
     }
 
-    // TODO: add more information
     #[inline]
     pub fn into_parts(
         self,
     ) -> (
         MetricSeries,
+        Option<String>,
         MetricValue,
         Option<DateTime<Utc>>,
         EventMetadata,
     ) {
-        (self.series, self.value, self.timestamp, self.metadata)
+        (
+            self.series,
+            self.description,
+            self.value,
+            self.timestamp,
+            self.metadata,
+        )
     }
 
     pub fn metadata_mut(&mut self) -> &mut EventMetadata {
