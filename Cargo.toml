@@ -410,7 +410,7 @@ flate2 = { version = "1.0.35", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
 glob = { version = "0.3.2", default-features = false }
 indexmap = { version = "2.7.0", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.16", default-features = false }
+inventory = { version = "0.3.17", default-features = false }
 k8s-openapi = { version = "0.24.0", default-features = false, optional = true, features = ["earliest"] }
 kube = { version = "0.98.0", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
 libc = { version = "0.2.169", default-features = false, optional = true }
