@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736308564014,
+  "lastUpdate": 1736308601122,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9864e9b17a5fd7b89fc9df386eb765d6bda5062e",
-          "message": "add comment (#1997)",
-          "timestamp": "2024-11-24T15:50:39+08:00",
-          "tree_id": "794c1938b3b3cda9f02bc8968e7eb6ab0d8876ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9864e9b17a5fd7b89fc9df386eb765d6bda5062e"
-        },
-        "date": 1732434795600,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.344,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 133.02,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 308.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 602.23,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4d88518743884c9e1a987174cfe2b19787442555",
           "message": "remove unnecessary allocations (#1998)",
           "timestamp": "2024-11-24T18:46:38+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 600.95,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e7910bfc585f66c0a38a0a3c1b6ca6646357baef",
+          "message": "chore(deps): bump inventory from 0.3.16 to 0.3.17 (#2109)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.16 to 0.3.17.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.16...0.3.17)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-08T11:53:38+08:00",
+          "tree_id": "aaa19bc4aad9e34e946f3ed1b1532374df096e3e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e7910bfc585f66c0a38a0a3c1b6ca6646357baef"
+        },
+        "date": 1736308582367,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.429,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 145.97,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 330.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 636.23,
             "unit": "ns/op"
           }
         ]
