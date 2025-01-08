@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736309044727,
+  "lastUpdate": 1736309069567,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9864e9b17a5fd7b89fc9df386eb765d6bda5062e",
-          "message": "add comment (#1997)",
-          "timestamp": "2024-11-24T15:50:39+08:00",
-          "tree_id": "794c1938b3b3cda9f02bc8968e7eb6ab0d8876ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9864e9b17a5fd7b89fc9df386eb765d6bda5062e"
-        },
-        "date": 1732435231881,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28409000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 724570,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.27,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4d88518743884c9e1a987174cfe2b19787442555",
           "message": "remove unnecessary allocations (#1998)",
           "timestamp": "2024-11-24T18:46:38+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.483,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e7910bfc585f66c0a38a0a3c1b6ca6646357baef",
+          "message": "chore(deps): bump inventory from 0.3.16 to 0.3.17 (#2109)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.16 to 0.3.17.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.16...0.3.17)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-08T11:53:38+08:00",
+          "tree_id": "aaa19bc4aad9e34e946f3ed1b1532374df096e3e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e7910bfc585f66c0a38a0a3c1b6ca6646357baef"
+        },
+        "date": 1736309050750,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29057000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 586410,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.792,
             "unit": "ns/op"
           }
         ]
