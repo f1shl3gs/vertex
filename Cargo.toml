@@ -103,7 +103,7 @@ integration-tests-ntp = []
 integration-tests-prometheus_exporter = []
 integration-tests-prometheus_remote_write = []
 integration-tests-prometheus_scrape = []
-integration-tests-redis = []
+redis-integration-tests = []
 integration-tests-zookeeper = []
 clickhouse-integration-tests = []
 
@@ -120,7 +120,7 @@ all-integration-tests = [
     "integration-tests-prometheus_exporter",
     "integration-tests-prometheus_remote_write",
     "integration-tests-prometheus_scrape",
-    "integration-tests-redis",
+    "redis-integration-tests",
     "integration-tests-zookeeper",
     "clickhouse-integration-tests",
 ]

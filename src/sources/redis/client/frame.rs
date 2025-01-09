@@ -81,18 +81,18 @@ impl Frame {
                 let line = get_line(src)?.to_vec();
 
                 // Convert the line to a String
-                let string = String::from_utf8(line)?;
+                let s = String::from_utf8(line)?;
 
-                Ok(Frame::Simple(string))
+                Ok(Frame::Simple(s))
             }
             b'-' => {
                 // Read the line and convert it to `Vec<u8>`
                 let line = get_line(src)?.to_vec();
 
                 // Convert the line to a String
-                let string = String::from_utf8(line)?;
+                let msg = String::from_utf8(line)?;
 
-                Ok(Frame::Error(string))
+                Ok(Frame::Error(msg))
             }
             b':' => {
                 let len = get_decimal(src)?;

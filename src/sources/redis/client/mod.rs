@@ -73,7 +73,7 @@ impl Client {
         self.stream.flush().await
     }
 
-    pub async fn query<T: FromRespValue>(&mut self, cmds: &[&str]) -> Result<T, RespErr> {
+    pub async fn execute<T: FromRespValue>(&mut self, cmds: &[&str]) -> Result<T, RespErr> {
         self.write_bulks(cmds).await?;
 
         let frame = self.read_frame().await?;
