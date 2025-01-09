@@ -1101,7 +1101,7 @@ mod integration_tests {
 
         let metrics = source.collect().await.unwrap();
 
-        assert!(metrics.len() > 0);
+        assert!(!metrics.is_empty());
     }
 
     #[tokio::test]
