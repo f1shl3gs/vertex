@@ -53,8 +53,8 @@ builder-x86_64-unknown-linux-gnu:
 integration-test-nginx_stub:
 	cargo test -p vertex --lib sources::nginx_stub::integration_tests --features all-integration-tests --no-fail-fast
 
-.PHONY: integration-test-redis
-integration-test-redis:
+.PHONY: redis-integration-tests
+redis-integration-tests:
 	cargo test -p vertex --lib sources::redis::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-zookeeper
@@ -98,7 +98,7 @@ clickhouse-integration-tests:
 	cargo test -p vertex --lib sources::clickhouse_metrics::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
 
 .PHONY: integration-tests
-integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub integration-test-redis integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch
+integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub redis-integration-tests integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch
 
 .PHONY: udeps
 udeps:

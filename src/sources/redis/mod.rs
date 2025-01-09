@@ -2,6 +2,7 @@ mod client;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::BufRead;
+use std::net::SocketAddr;
 use std::sync::LazyLock;
 use std::time::Duration;
 
@@ -248,35 +249,36 @@ impl From<std::num::ParseFloatError> for Error {
 struct Config {
     /// Redis address
     #[configurable(required, format = "ip-address")]
-    endpoint: String,
+    endpoint: SocketAddr,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 
-    #[serde(default = "default_namespace")]
-    namespace: Option<String>,
-
     #[serde(default)]
-    user: Option<String>,
-
+    username: Option<String>,
     #[serde(default)]
     password: Option<String>,
-}
 
-fn default_namespace() -> Option<String> {
-    Some("redis".to_string())
+    #[serde(default)]
+    client_name: Option<String>,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "redis")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        if self.username.is_some() & self.password.is_none() {
+            return Err("password is required, if username provided".into());
+        }
+
         let src = RedisSource {
-            url: self.endpoint.clone(),
-            namespace: self.namespace.clone(),
+            username: self.username.clone(),
+            password: self.password.clone(),
+
+            address: self.endpoint,
             interval: self.interval,
-            client_name: None,
+            client_name: self.client_name.clone(),
         };
 
         Ok(Box::pin(src.run(cx.output, cx.shutdown)))
@@ -288,14 +290,12 @@ impl SourceConfig for Config {
 }
 
 struct RedisSource {
-    // user: Option<String>,
-    // password: Option<String>,
-    url: String,
-    namespace: Option<String>,
-    interval: Duration,
+    username: Option<String>,
+    password: Option<String>,
 
+    address: SocketAddr,
+    interval: Duration,
     client_name: Option<String>,
-    // TODO: add TLS and timeouts
 }
 
 impl RedisSource {
@@ -337,10 +337,8 @@ impl RedisSource {
             let timestamp = chrono::Utc::now();
             metrics.iter_mut().for_each(|m| {
                 m.timestamp = Some(timestamp);
-                m.insert_tag("instance", &self.url);
-                if let Some(ref namespace) = self.namespace {
-                    m.set_name(format!("{}_{}", namespace, m.name()));
-                }
+                m.insert_tag("instance", self.address.to_string());
+                m.set_name(format!("redis_{}", m.name()));
             });
 
             if let Err(err) = output.send(metrics).await {
@@ -357,23 +355,31 @@ impl RedisSource {
     }
 
     async fn collect(&self) -> Result<Vec<Metric>, Error> {
-        let mut metrics = vec![];
-        let mut cli = Client::connect(&self.url).await?;
+        let mut cli = Client::connect(&self.address).await?;
 
-        if let Some(ref name) = self.client_name {
-            cli.query::<String>(&["client", "setname", name]).await?;
+        if let Some(password) = &self.password {
+            match &self.username {
+                Some(username) => {
+                    cli.execute::<String>(&["auth", username, password]).await?;
+                }
+                None => {
+                    cli.execute::<String>(&["auth", password]).await?;
+                }
+            }
         }
 
-        let mut db_count = match databases(&mut cli).await {
-            Ok(n) => n,
-            Err(err) => {
-                debug!(message = "redis config get failed", %err);
-                0
-            }
-        };
+        if let Some(ref name) = self.client_name {
+            cli.execute::<String>(&["client", "setname", name]).await?;
+        }
 
-        let infos = cli.query::<Bytes>(&["info", "all"]).await?;
-        let infos = std::str::from_utf8(&infos).unwrap();
+        let mut db_count = databases(&mut cli).await.unwrap_or_else(|err| {
+            debug!(message = "redis config get failed", target = ?self.address, %err);
+            0
+        });
+
+        let resp = cli.execute::<Bytes>(&["info", "all"]).await?;
+        let infos = std::str::from_utf8(&resp).unwrap();
+        let mut metrics = vec![];
 
         if infos.contains("cluster_enabled:1") {
             match cluster_info(&mut cli).await {
@@ -435,7 +441,7 @@ impl RedisSource {
 }
 
 async fn databases(cli: &mut Client) -> Result<u64, Error> {
-    let parts = cli.query::<Vec<String>>(&["config", "get", "*"]).await?;
+    let parts = cli.execute::<Vec<String>>(&["config", "get", "*"]).await?;
 
     for pos in 0..parts.len() / 2 {
         let key = &parts[2 * pos];
@@ -454,7 +460,7 @@ async fn databases(cli: &mut Client) -> Result<u64, Error> {
 async fn slowlog_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
     let mut metrics = vec![];
 
-    match cli.query::<u64>(&["slowlog", "len"]).await {
+    match cli.execute::<u64>(&["slowlog", "len"]).await {
         Ok(length) => {
             metrics.push(Metric::gauge("slowlog_length", "Total slowlog", length));
         }
@@ -463,7 +469,7 @@ async fn slowlog_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    let values: Vec<i64> = cli.query(&["slowlog", "get", "1"]).await?;
+    let values: Vec<i64> = cli.execute(&["slowlog", "get", "1"]).await?;
 
     let mut last_id: i64 = 0;
     let mut last_slow_execution_second: f64 = 0.0;
@@ -489,7 +495,7 @@ async fn slowlog_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
 // https://redis.io/commands/latency-latest
 async fn latency_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
     let mut metrics = vec![];
-    let values: Vec<Vec<String>> = cli.query(&["latency", "latest"]).await?;
+    let values: Vec<Vec<String>> = cli.execute(&["latency", "latest"]).await?;
 
     for parts in values {
         let event = parts[0].clone();
@@ -520,9 +526,9 @@ async fn latency_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
 }
 
 async fn cluster_info(cli: &mut Client) -> Result<Vec<Metric>, Error> {
-    let keyword = "cluster_enabled:1".as_bytes();
-    let infos = cli.query::<Bytes>(&["cluster", "info"]).await?;
+    let infos = cli.execute::<Bytes>(&["cluster", "info"]).await?;
 
+    let keyword = "cluster_enabled:1".as_bytes();
     if infos[..].windows(keyword.len()).any(|p| p == keyword) {
         let mut metrics = vec![];
 
@@ -1047,7 +1053,7 @@ mod tests {
     }
 }
 
-#[cfg(all(test, feature = "integration-tests-redis"))]
+#[cfg(all(test, feature = "redis-integration-tests"))]
 mod integration_tests {
     use super::*;
     use crate::testing::{ContainerBuilder, WaitFor};
@@ -1058,60 +1064,73 @@ mod integration_tests {
         for i in 0..100 {
             let key = format!("key_{}", i);
             let value = format!("value_{}", i);
-            let resp = cli.query::<String>(&["set", &key, &value]).await.unwrap();
+            let resp = cli.execute::<String>(&["set", &key, &value]).await.unwrap();
             assert_eq!(resp, "OK")
         }
     }
 
-    #[tokio::test]
-    async fn dump_config() {
-        let container = ContainerBuilder::new("redis:5.0")
-            .port(REDIS_PORT)
-            .run()
-            .unwrap();
+    async fn run(password: Option<&str>, image: &str) {
+        let mut builder = ContainerBuilder::new(image).port(REDIS_PORT);
+        if let Some(password) = password {
+            builder = builder.args(["--requirepass", password]);
+        }
+        let container = builder.run().unwrap();
         container
             .wait(WaitFor::Stdout("Ready to accept connections"))
             .unwrap();
-        let url = container.get_host_port(REDIS_PORT).unwrap();
 
-        let mut cli = Client::connect(url).await.unwrap();
-        let resp: Vec<String> = cli.query(&["config", "get", "*"]).await.unwrap();
+        let target = container
+            .get_host_port(REDIS_PORT)
+            .unwrap()
+            .parse::<SocketAddr>()
+            .unwrap();
+        let mut client = Client::connect(&target).await.unwrap();
+        if let Some(password) = password {
+            client.execute::<String>(&["auth", password]).await.unwrap();
+        }
+        write_testdata(&mut client).await;
 
-        assert_ne!(resp.len(), 0);
+        let source = RedisSource {
+            username: None,
+            password: password.map(ToString::to_string),
+
+            address: target,
+            interval: Duration::from_secs(10),
+            client_name: None,
+        };
+
+        let metrics = source.collect().await.unwrap();
+
+        assert!(metrics.len() > 0);
     }
 
     #[tokio::test]
-    async fn test_slowlog() {
-        let container = ContainerBuilder::new("redis:5.0")
-            .port(REDIS_PORT)
-            .run()
-            .unwrap();
-        container
-            .wait(WaitFor::Stdout("Ready to accept connections"))
-            .unwrap();
-        let url = container.get_host_port(REDIS_PORT).unwrap();
-        let mut cli = Client::connect(url).await.unwrap();
-
-        write_testdata(&mut cli).await;
-
-        let v = slowlog_metrics(&mut cli).await.unwrap();
-        assert_eq!(v.len(), 3);
+    async fn with_auth_v5() {
+        run(Some("password"), "redis:5.0-alpine").await;
     }
 
     #[tokio::test]
-    async fn test_latency_latest() {
-        let container = ContainerBuilder::new("redis:5.0")
-            .port(REDIS_PORT)
-            .run()
-            .unwrap();
-        container
-            .wait(WaitFor::Stdout("Ready to accept connections"))
-            .unwrap();
-        let url = container.get_host_port(REDIS_PORT).unwrap();
-        let mut cli = Client::connect(url).await.unwrap();
+    async fn without_auth_v5() {
+        run(None, "redis:5.0-alpine").await;
+    }
 
-        write_testdata(&mut cli).await;
+    #[tokio::test]
+    async fn with_auth_v6() {
+        run(Some("password"), "redis:6.0-alpine").await;
+    }
 
-        latency_metrics(&mut cli).await.unwrap();
+    #[tokio::test]
+    async fn without_auth_v6() {
+        run(None, "redis:6.0-alpine").await;
+    }
+
+    #[tokio::test]
+    async fn with_auth_v7() {
+        run(Some("password"), "redis:7.0-alpine").await;
+    }
+
+    #[tokio::test]
+    async fn without_auth_v7() {
+        run(None, "redis:7.0-alpine").await;
     }
 }
