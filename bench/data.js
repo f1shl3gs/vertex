@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736399643786,
+  "lastUpdate": 1736399647873,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7c1e2f82a6a05a135b02657b4a11e828ad9bbfbc",
-          "message": "remove tracing-test of lib/tail (#1999)",
-          "timestamp": "2024-11-26T12:31:07+08:00",
-          "tree_id": "8232ddf04b2bbfbf14bb3221f81a7c2d4b1d6385",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c1e2f82a6a05a135b02657b4a11e828ad9bbfbc"
-        },
-        "date": 1732596109099,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29137000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 768430,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.981,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 43.532,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6841a9f9bcc3560407495c27e9a3811f74dba8e9",
+          "message": "chore(deps): bump thiserror from 2.0.9 to 2.0.10 (#2113)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.9 to 2.0.10.\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.9...2.0.10)\n\n---\nupdated-dependencies:\n- dependency-name: thiserror\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <26081140+f1shl3gs@users.noreply.github.com>",
+          "timestamp": "2025-01-09T13:03:10+08:00",
+          "tree_id": "6e11241ac2d4cc986e5894f6816c9440df44dd4a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6841a9f9bcc3560407495c27e9a3811f74dba8e9"
+        },
+        "date": 1736399629392,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28591000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 608270,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.75,
             "unit": "ns/op"
           }
         ]
