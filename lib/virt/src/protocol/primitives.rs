@@ -332,7 +332,7 @@ pub fn pack_opaque_flex<Out: Write>(
     maxsz: Option<usize>,
     out: &mut Out,
 ) -> Result<usize> {
-    if maxsz.map_or(false, |m| val.len() > m) {
+    if maxsz.is_some_and(|m| val.len() > m) {
         return Err(Error::InvalidLen(maxsz.unwrap()));
     }
 

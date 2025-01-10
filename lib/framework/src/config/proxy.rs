@@ -23,9 +23,9 @@ impl NoProxyInterceptor {
                     return false;
                 }
 
-                let matches = host.map_or(false, |host| {
+                let matches = host.is_some_and(|host| {
                     self.0.matches(host)
-                        || port.map_or(false, |port| {
+                        || port.is_some_and(|port| {
                             let url = format!("{}:{}", host, port);
                             self.0.matches(&url)
                         })
