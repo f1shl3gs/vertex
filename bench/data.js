@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736409377106,
+  "lastUpdate": 1736511822331,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "43245e9010ddd3eecb57603783f03a0b99826c56",
-          "message": "chore(deps): bump tracing-core from 0.1.32 to 0.1.33 (#2001)\n\nBumps [tracing-core](https://github.com/tokio-rs/tracing) from 0.1.32 to 0.1.33.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-core-0.1.32...tracing-core-0.1.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-core\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-26T12:58:52+08:00",
-          "tree_id": "a87caed6e79dac292dca601b59830110559d41a4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43245e9010ddd3eecb57603783f03a0b99826c56"
-        },
-        "date": 1732597255450,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 543500,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a261b63d6a8a7f26b3e527c1ac6faf2042169670",
+          "message": "chore(deps): bump rustls from 0.23.20 to 0.23.21 (#2118)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.20 to 0.23.21.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/commits)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-10T20:21:04+08:00",
+          "tree_id": "0782ee5eef99c7547f00da354ea5559e82ec2b50",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a261b63d6a8a7f26b3e527c1ac6faf2042169670"
+        },
+        "date": 1736511803934,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534190,
             "unit": "ns/op"
           }
         ]
