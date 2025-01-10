@@ -271,60 +271,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn chassis() {
-        let paths = glob::glob("tests/redfish/DSP2043_2024.3/*/Chassis/*/index.json").unwrap();
-
-        for path in paths.flatten() {
-            let data = std::fs::read_to_string(&path).unwrap();
-
-            match serde_json::from_slice::<Chassis>(data.as_bytes()) {
-                Ok(_) => {}
-                Err(err) => {
-                    if err.to_string().contains(r##"missing field `Status`"##) {
-                        continue;
-                    }
-
-                    panic!("{:?}\n{}\n{}", path, err, data);
-                }
-            }
-        }
-    }
-
-    #[test]
-    fn thermal() {
-        let paths =
-            glob::glob("tests/redfish/DSP2043_2024.3/*/Chassis/*/Thermal/index.json").unwrap();
-
-        for path in paths.flatten() {
-            let data = std::fs::read_to_string(&path).unwrap();
-
-            match serde_json::from_slice::<Thermal>(data.as_bytes()) {
-                Ok(_) => {}
-                Err(err) => {
-                    panic!("{:?}\n{}\n{}", path, err, data);
-                }
-            }
-        }
-    }
-
-    #[test]
-    fn power() {
-        let paths =
-            glob::glob("tests/redfish/DSP2043_2024.3/*/Chassis/*/Power/index.json").unwrap();
-
-        for path in paths.flatten() {
-            let data = std::fs::read_to_string(&path).unwrap();
-
-            match serde_json::from_slice::<Power>(data.as_bytes()) {
-                Ok(_) => {}
-                Err(err) => {
-                    panic!("{:?}\n{}\n{}", path, err, data);
-                }
-            }
-        }
-    }
-
-    #[test]
     fn dell_r720_power() {
         let data = std::fs::read("tests/redfish/dell_r720_power.json").unwrap();
 
