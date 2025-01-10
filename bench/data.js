@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736511871764,
+  "lastUpdate": 1736511880434,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "23f54f20f282ec3b18c764f1f6ce8bcfd3fa37b8",
-          "message": "remove unnecessary macro (#2002)",
-          "timestamp": "2024-11-26T20:38:20+08:00",
-          "tree_id": "f2fa0843aab18543b44c7e0e46fc967371bab6fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/23f54f20f282ec3b18c764f1f6ce8bcfd3fa37b8"
-        },
-        "date": 1732624854277,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.607,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 143.7,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 317.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 631.01,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 626.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0fa5695a809e1a233ae4dd73075aee951f27aef2",
+          "message": "chore(deps): bump uuid from 1.11.0 to 1.11.1 (#2117)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.11.0 to 1.11.1.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.11.0...1.11.1)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-10T20:21:35+08:00",
+          "tree_id": "7d8c43f519d6bde5b63688982775bf64f55564ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0fa5695a809e1a233ae4dd73075aee951f27aef2"
+        },
+        "date": 1736511861659,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.564,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 141.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 635.76,
             "unit": "ns/op"
           }
         ]
