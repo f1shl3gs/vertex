@@ -129,10 +129,7 @@ fn parse_state(content: &str) -> Option<&str> {
     // fields and their data types:
     // * https://man7.org/linux/man-pages/man5/proc.5.html
     // * https://man7.org/linux/man-pages/man3/scanf.3.html
-    let index = match content.rfind(')') {
-        Some(index) => index,
-        None => return None,
-    };
+    let index = content.rfind(')')?;
 
     content.get(index + 2..index + 3)
 }
@@ -142,10 +139,7 @@ fn parse_state(content: &str) -> Option<&str> {
 // * https://man7.org/linux/man-pages/man5/proc.5.html
 // * https://man7.org/linux/man-pages/man3/scanf.3.html
 fn parse_stat_and_threads(content: &str) -> Option<(&str, usize)> {
-    let index = match content.rfind(')') {
-        Some(index) => index,
-        None => return None,
-    };
+    let index = content.rfind(')')?;
 
     let (_, s) = content.split_at(index + 1);
     let list = s.trim().split_ascii_whitespace().collect::<Vec<_>>();

@@ -81,10 +81,7 @@ impl Decoder {
         // than handling it specially on each processing, we handle it centrally here. Also, the
         // BOM does not serve any more use for use, since the source encoding is already
         // pre-identified as part of decoder initialization.
-        if output
-            .get(..BOM_UTF8_LEN)
-            .map_or(false, |start| start == BOM_UTF8)
-        {
+        if output.get(..BOM_UTF8_LEN) == Some(BOM_UTF8) {
             output.slice(BOM_UTF8_LEN..)
         } else {
             output

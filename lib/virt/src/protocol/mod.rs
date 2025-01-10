@@ -210,7 +210,7 @@ pub fn pack_flex<W: Write, T: Pack<W>>(
     max_size: Option<usize>,
     w: &mut W,
 ) -> Result<usize> {
-    if max_size.map_or(false, |m| val.len() > m) {
+    if max_size.is_some_and(|m| val.len() > m) {
         return Err(Error::InvalidLen(max_size.unwrap()));
     }
 
