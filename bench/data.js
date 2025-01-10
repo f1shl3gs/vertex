@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736514154418,
+  "lastUpdate": 1736514562163,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "949ab1f7b79d3cd3977a88f34273bbfb09e6fca5",
-          "message": "chore(deps): bump tracing from 0.1.40 to 0.1.41 (#2006)\n\nBumps [tracing](https://github.com/tokio-rs/tracing) from 0.1.40 to 0.1.41.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-0.1.40...tracing-0.1.41)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-28T11:54:24+08:00",
-          "tree_id": "f5ee3e33043e0bb4eb500a5ff26ada6bba56a937",
-          "url": "https://github.com/f1shl3gs/vertex/commit/949ab1f7b79d3cd3977a88f34273bbfb09e6fca5"
-        },
-        "date": 1732766661392,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 509,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35509.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c9d6431ab87f63e23025da72c772a0f758c43d87",
           "message": "chore(deps): bump socket2 from 0.5.7 to 0.5.8 (#2007)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.7 to 0.5.8.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-28T18:40:38+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 35665.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "034c2df37c68e164a3bbea42a4876c4dc6137109",
+          "message": "bump toolchain to 1.84.0 (#2119)",
+          "timestamp": "2025-01-10T20:58:48+08:00",
+          "tree_id": "01fc94cfd5d31551b566d7035b2ffc0327a9a60c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/034c2df37c68e164a3bbea42a4876c4dc6137109"
+        },
+        "date": 1736514544280,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 523,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 35802.9,
             "unit": "KiB"
           }
         ]
