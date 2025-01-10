@@ -230,6 +230,18 @@ impl From<i32> for Value {
     }
 }
 
+impl From<u64> for Value {
+    fn from(v: u64) -> Value {
+        Value::I64(v as i64)
+    }
+}
+
+impl From<usize> for Value {
+    fn from(v: usize) -> Value {
+        Value::I64(v as i64)
+    }
+}
+
 impl From<&str> for Value {
     /// Convenience method for creating a `Value` from a `&'static str`.
     fn from(s: &str) -> Self {

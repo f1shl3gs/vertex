@@ -1,0 +1,18 @@
+sources:
+  redfish:
+    type: redfish
+    targets:
+      - http://localhost:8000
+    collector:
+      network: true
+
+  selfstat:
+    type: selfstat
+    interval: 5s
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - redfish
+      - selfstat

@@ -49,6 +49,10 @@ pub enum HttpError {
     BuildRequest(#[from] http::Error),
     #[error("unexpected status code {0}")]
     UnexpectedStatus(http::StatusCode),
+
+    // decode errors
+    #[error("decode json response failed, {0}")]
+    InvalidJson(#[from] serde_json::Error),
 }
 
 #[derive(Clone)]
