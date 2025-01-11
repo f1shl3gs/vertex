@@ -1,0 +1,73 @@
+{
+  "Tasks": {
+    "@odata.id": "/redfish/v1/TaskService"
+  },
+  "Chassis": {
+    "@odata.id": "/redfish/v1/Chassis"
+  },
+  "Id": "RootService",
+  "ProtocolFeaturesSupported": {
+    "ExpandQuery": {
+      "Levels": true,
+      "NoLinks": true,
+      "Links": true,
+      "ExpandAll": true,
+      "MaxLevels": 2
+    },
+    "OnlyMemberQuery": true,
+    "DeepOperations": {
+      "DeepPOST": false,
+      "DeepPATCH": false,
+      "MaxLevels": 2
+    },
+    "FilterQuery": true,
+    "ExcerptQuery": true,
+    "SelectQuery": true
+  },
+  "Links": {
+    "Sessions": {
+      "@odata.id": "/redfish/v1/SessionService/Sessions"
+    }
+  },
+  "RedfishVersion": "1.10.0",
+  "EventService": {
+    "@odata.id": "/redfish/v1/EventService"
+  },
+  "JsonSchemas": {
+    "@odata.id": "/redfish/v1/JsonSchemas"
+  },
+  "Systems": {
+    "@odata.id": "/redfish/v1/Systems"
+  },
+  "TelemetryService": {
+    "@odata.id": "/redfish/v1/TelemetryService"
+  },
+  "UpdateService": {
+    "@odata.id": "/redfish/v1/UpdateService"
+  },
+  "Registries": {
+    "@odata.id": "/redfish/v1/Registries"
+  },
+  "CertificateService": {
+    "@odata.id": "/redfish/v1/CertificateService"
+  },
+  "UUID": "3D03A592-79E7-11EA-9029-B1651358D6FA",
+  "Vendor": "Lenovo",
+  "Name": "Root Service",
+  "JobService": {
+    "@odata.id": "/redfish/v1/JobService"
+  },
+  "Description": "This resource is used to represent a service root for a Redfish implementation.",
+  "@odata.type": "#ServiceRoot.v1_7_0.ServiceRoot",
+  "SessionService": {
+    "@odata.id": "/redfish/v1/SessionService"
+  },
+  "@odata.id": "/redfish/v1/",
+  "@odata.etag": "\"9d900d0444cd31da3490c\"",
+  "AccountService": {
+    "@odata.id": "/redfish/v1/AccountService"
+  },
+  "Managers": {
+    "@odata.id": "/redfish/v1/Managers"
+  }
+}
