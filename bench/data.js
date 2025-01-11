@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736596091580,
+  "lastUpdate": 1736596094539,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c9d6431ab87f63e23025da72c772a0f758c43d87",
-          "message": "chore(deps): bump socket2 from 0.5.7 to 0.5.8 (#2007)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.7 to 0.5.8.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-28T18:40:38+08:00",
-          "tree_id": "856a534240ee3da53d60803a3d1cf8a63121f084",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c9d6431ab87f63e23025da72c772a0f758c43d87"
-        },
-        "date": 1732790565835,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.088,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.127,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.51,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 186.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cf08fa764e5a37bfe005b30222c85f21efbad006",
+          "message": "add sources/redfish (#2120)",
+          "timestamp": "2025-01-11T19:45:08+08:00",
+          "tree_id": "8ed103bc2938031b0842ef7d5540289a493b60ea",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cf08fa764e5a37bfe005b30222c85f21efbad006"
+        },
+        "date": 1736596075775,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.481,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.68,
             "unit": "ns/op"
           }
         ]
