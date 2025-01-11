@@ -268,7 +268,6 @@ mod power {
 #[cfg(test)]
 mod tests {
     use super::power::Power;
-    use super::*;
 
     #[test]
     fn dell_r720_power() {
