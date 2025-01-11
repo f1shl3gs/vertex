@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736587767781,
+  "lastUpdate": 1736587788587,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "949ab1f7b79d3cd3977a88f34273bbfb09e6fca5",
-          "message": "chore(deps): bump tracing from 0.1.40 to 0.1.41 (#2006)\n\nBumps [tracing](https://github.com/tokio-rs/tracing) from 0.1.40 to 0.1.41.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-0.1.40...tracing-0.1.41)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-28T11:54:24+08:00",
-          "tree_id": "f5ee3e33043e0bb4eb500a5ff26ada6bba56a937",
-          "url": "https://github.com/f1shl3gs/vertex/commit/949ab1f7b79d3cd3977a88f34273bbfb09e6fca5"
-        },
-        "date": 1732766661641,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28877000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 750750,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.927,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c9d6431ab87f63e23025da72c772a0f758c43d87",
           "message": "chore(deps): bump socket2 from 0.5.7 to 0.5.8 (#2007)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.7 to 0.5.8.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-28T18:40:38+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.456,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d28ab25c67061ef8e518f90d6b3fd4f1473f1742",
+          "message": "chore(deps): bump proc-macro2 from 1.0.92 to 1.0.93 (#2122)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.92 to 1.0.93.\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.92...1.0.93)\n\n---\nupdated-dependencies:\n- dependency-name: proc-macro2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-11T17:18:54+08:00",
+          "tree_id": "905c0aaf1df85fe42c7b3c70f1aa005d5e872b21",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d28ab25c67061ef8e518f90d6b3fd4f1473f1742"
+        },
+        "date": 1736587770134,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28439000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 710740,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.568,
             "unit": "ns/op"
           }
         ]
