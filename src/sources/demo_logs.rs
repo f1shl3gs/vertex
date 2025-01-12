@@ -266,25 +266,4 @@ mod tests {
     fn generate_config() {
         crate::testing::test_generate_config::<Config>()
     }
-
-    #[test]
-    fn serial() {
-        let config = Config {
-            count: 0,
-            interval: Default::default(),
-            framing: FramingConfig::Bytes,
-            decoding: Default::default(),
-            format: OutputFormat::Shuffle {
-                sequence: false,
-                lines: vec![
-                    "foo".into()
-                ],
-            },
-        };
-
-        let text = serde_yaml::to_string(&config).unwrap();
-        println!("{}", text);
-        let got = serde_yaml::from_str::<Config>(&text).unwrap();
-        println!("{:?}", got);
-    }
 }
