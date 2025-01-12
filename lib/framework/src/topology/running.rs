@@ -664,7 +664,7 @@ impl RunningTopology {
                         fanout = %input
                     );
 
-                    let _ = output.send(ControlMessage::Replace(key.clone(), None));
+                    let _ = output.send(ControlMessage::Pause(key.clone()));
                 }
             }
         }
@@ -780,7 +780,7 @@ impl RunningTopology {
                 .outputs
                 .get_mut(input)
                 .unwrap()
-                .send(ControlMessage::Replace(key.clone(), Some(tx.clone())));
+                .send(ControlMessage::Replace(key.clone(), tx.clone()));
         }
 
         self.inputs.insert(key.clone(), tx);
