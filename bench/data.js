@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736696330578,
+  "lastUpdate": 1736696751204,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9faf70fb563304884da2731d856944f6223561ed",
-          "message": "chore(deps): bump libc from 0.2.166 to 0.2.167 (#2010)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.166 to 0.2.167.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.167/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.166...0.2.167)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-29T20:39:41+08:00",
-          "tree_id": "18834caac658c8bf4f44f79addd413cfdcce6786",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9faf70fb563304884da2731d856944f6223561ed"
-        },
-        "date": 1732884602179,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 525,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35537.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "df85f075ec1740c68dc88f93862a0aeb5ae19d66",
           "message": "chore(deps): bump tracing-subscriber from 0.3.18 to 0.3.19 (#2011)\n\nBumps [tracing-subscriber](https://github.com/tokio-rs/tracing) from 0.3.18 to 0.3.19.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-subscriber-0.3.18...tracing-subscriber-0.3.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-30T11:36:32+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 534,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36403.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "76164a72606dbb66ac0e9dc4c19f8fd6a6845000",
+          "message": "add ControlMessage::Pause (#2123)",
+          "timestamp": "2025-01-12T23:35:05+08:00",
+          "tree_id": "2adcb7d4f277ff3b9f4c0af52e0be28bd63751b0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/76164a72606dbb66ac0e9dc4c19f8fd6a6845000"
+        },
+        "date": 1736696733315,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 537,
             "unit": "s"
           },
           {
