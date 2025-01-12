@@ -1,18 +1,24 @@
 sources:
   logs1:
     type: demo_logs
-    rate: 1
-    log: info blah
+    format:
+      type: shuffle
+      lines:
+        - info blah
 
   logs2:
     type: demo_logs
-    rate: 1
-    log: warn blah
+    format:
+      type: shuffle
+      lines:
+        - warn blah
 
   logs3:
     type: demo_logs
-    rate: 1
-    log: error blah
+    format:
+      type: shuffle
+      lines:
+        - error blah
 
 transforms:
   route:
@@ -26,22 +32,18 @@ transforms:
       warn: .message contains warn
 
   info:
-    type: relabel
+    type: rewrite
     inputs:
       - route.info
-    operations:
-      - type: set
-        key: level
-        value: info
+    script: |
+      .level = info
 
   warn:
-    type: relabel
+    type: rewrite
     inputs:
       - route.warn
-    operations:
-      - type: set
-        key: level
-        value: warn
+    script: |
+      .level = warn
 
 sinks:
   stdout:

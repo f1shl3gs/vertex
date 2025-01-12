@@ -11,7 +11,7 @@ transforms:
       - metrics
       - selfstat
     operations:
-      - type: set
+      - action: set
         key: host
         value: ${HOSTNAME}
 

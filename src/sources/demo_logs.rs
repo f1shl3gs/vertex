@@ -130,7 +130,7 @@ fn json_log_line() -> String {
 }
 
 #[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
-#[serde(tag = "format", rename_all = "snake_case")]
+#[serde(tag = "type", rename_all = "snake_case")]
 enum OutputFormat {
     /// Lines are chosen at random from the list specified using `lines`
     Shuffle {
@@ -205,7 +205,6 @@ struct Config {
     decoding: DeserializerConfig,
 
     /// The format of the randomly generated output.
-    #[serde(default)]
     format: OutputFormat,
 }
 
@@ -266,5 +265,26 @@ mod tests {
     #[test]
     fn generate_config() {
         crate::testing::test_generate_config::<Config>()
+    }
+
+    #[test]
+    fn serial() {
+        let config = Config {
+            count: 0,
+            interval: Default::default(),
+            framing: FramingConfig::Bytes,
+            decoding: Default::default(),
+            format: OutputFormat::Shuffle {
+                sequence: false,
+                lines: vec![
+                    "foo".into()
+                ],
+            },
+        };
+
+        let text = serde_yaml::to_string(&config).unwrap();
+        println!("{}", text);
+        let got = serde_yaml::from_str::<Config>(&text).unwrap();
+        println!("{:?}", got);
     }
 }

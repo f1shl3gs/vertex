@@ -1,8 +1,12 @@
 sources:
   logs:
     type: demo_logs
-    rate: 1
-    log: "{\"foo\": \"bar\"}"
+    format:
+      type: shuffle
+      lines:
+        - "{\"foo\": \"bar\"}"
+        - "{}"
+        - "{\"key\": \"value\"}"
 
 transforms:
   rewrite:
@@ -13,6 +17,7 @@ transforms:
       msg, err = parse_json(.message)
       del(.message)
       . = merge(msg, .)
+      .rewrited = true
 
 sinks:
   stdout:
