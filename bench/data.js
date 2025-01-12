@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736701096579,
+  "lastUpdate": 1736701553363,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "df85f075ec1740c68dc88f93862a0aeb5ae19d66",
-          "message": "chore(deps): bump tracing-subscriber from 0.3.18 to 0.3.19 (#2011)\n\nBumps [tracing-subscriber](https://github.com/tokio-rs/tracing) from 0.3.18 to 0.3.19.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-subscriber-0.3.18...tracing-subscriber-0.3.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-30T11:36:32+08:00",
-          "tree_id": "129fb664be7403c163dd0693dcdf12c624302797",
-          "url": "https://github.com/f1shl3gs/vertex/commit/df85f075ec1740c68dc88f93862a0aeb5ae19d66"
-        },
-        "date": 1732938406881,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 520,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35537.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "dbc677d3f5b9993761555b9098eda9ebf784a042",
           "message": "chore(deps): bump syn from 2.0.89 to 2.0.90 (#2012)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.89 to 2.0.90.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.89...2.0.90)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-30T11:45:27+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 537,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36403.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "03e886007b93c4def9a9b3cbd16de3820265b951",
+          "message": "fix example config validation (#2124)",
+          "timestamp": "2025-01-13T00:54:33+08:00",
+          "tree_id": "9857346ffdeda7120ca56c318079aa9b3cd56bd8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/03e886007b93c4def9a9b3cbd16de3820265b951"
+        },
+        "date": 1736701534548,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 560,
             "unit": "s"
           },
           {
