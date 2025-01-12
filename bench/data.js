@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736596556843,
+  "lastUpdate": 1736696255187,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "61fa268d36b8249806381bd1cffc2899cab285db",
-          "message": "chore(deps): bump bytes from 1.8.0 to 1.9.0 (#2008)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.8.0 to 1.9.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.8.0...v1.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-29T11:53:28+08:00",
-          "tree_id": "7ab069002255b63380bae74718fa5a5ce03e97bc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/61fa268d36b8249806381bd1cffc2899cab285db"
-        },
-        "date": 1732852545118,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 530160,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525890,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "76164a72606dbb66ac0e9dc4c19f8fd6a6845000",
+          "message": "add ControlMessage::Pause (#2123)",
+          "timestamp": "2025-01-12T23:35:05+08:00",
+          "tree_id": "2adcb7d4f277ff3b9f4c0af52e0be28bd63751b0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/76164a72606dbb66ac0e9dc4c19f8fd6a6845000"
+        },
+        "date": 1736696237024,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 521900,
             "unit": "ns/op"
           }
         ]
