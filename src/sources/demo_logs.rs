@@ -130,7 +130,7 @@ fn json_log_line() -> String {
 }
 
 #[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
-#[serde(tag = "format", rename_all = "snake_case")]
+#[serde(tag = "type", rename_all = "snake_case")]
 enum OutputFormat {
     /// Lines are chosen at random from the list specified using `lines`
     Shuffle {
@@ -205,7 +205,6 @@ struct Config {
     decoding: DeserializerConfig,
 
     /// The format of the randomly generated output.
-    #[serde(default)]
     format: OutputFormat,
 }
 

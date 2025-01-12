@@ -1,4 +1,4 @@
-data_dir: ./temp
+data_dir: ./
 
 provider:
   type: http
