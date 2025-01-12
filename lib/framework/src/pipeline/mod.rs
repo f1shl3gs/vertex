@@ -6,8 +6,6 @@ use std::task::{Context, Poll};
 
 use bytesize::ByteSizeOf;
 use errors::ClosedError;
-#[cfg(any(test, feature = "test-util"))]
-use event::array::into_event_stream;
 use event::{Event, EventContainer, Events};
 use futures::Stream;
 use futures_util::StreamExt;
@@ -147,7 +145,7 @@ impl Pipeline {
 
 #[cfg(any(test, feature = "test-util"))]
 impl Pipeline {
-    #[cfg(feature = "test-util")]
+    #[cfg(any(test, feature = "test-util"))]
     pub fn new_test() -> (Self, impl Stream<Item = Event> + Unpin) {
         let (pipe, recv) = Self::new_with_buffer(100);
         let recv = recv.flat_map(|events| futures::stream::iter(events.into_events()));
@@ -158,6 +156,8 @@ impl Pipeline {
     pub fn new_test_finalize(
         status: event::EventStatus,
     ) -> (Self, impl Stream<Item = Event> + Unpin) {
+        use event::array::into_event_stream;
+
         let (pipe, recv) = Self::new_with_buffer(100);
 
         // In a source test pipeline, there is no sink to acknowledge events,

@@ -13,10 +13,20 @@ use tokio_util::sync::ReusableBoxFuture;
 use crate::config::ComponentKey;
 
 pub enum ControlMessage {
+    /// Adds a new sink to the fanout
     Add(ComponentKey, BufferSender<Events>),
+
+    /// Remove a sink from the fanout
     Remove(ComponentKey),
+
+    /// Pauses a sink in the fanout
+    ///
+    /// If a fanout has any paused sinks, subsequent sends cannot proceed until
+    /// all paused sinks have been replaced.
+    Pause(ComponentKey),
+
     /// Will stop accepting events until Some with given id is replaced.
-    Replace(ComponentKey, Option<BufferSender<Events>>),
+    Replace(ComponentKey, BufferSender<Events>),
 }
 
 impl fmt::Debug for ControlMessage {
@@ -25,6 +35,7 @@ impl fmt::Debug for ControlMessage {
         match self {
             Self::Add(id, _) => write!(f, "Add({:?})", id),
             Self::Remove(id) => write!(f, "Remove({:?})", id),
+            Self::Pause(id) => write!(f, "Pause({:?})", id),
             Self::Replace(id, _) => write!(f, "Replace({:?})", id),
         }
     }
@@ -114,8 +125,8 @@ impl Fanout {
         match message {
             ControlMessage::Add(id, sink) => self.add(id, sink),
             ControlMessage::Remove(id) => self.remove(&id),
-            ControlMessage::Replace(id, None) => self.pause(&id),
-            ControlMessage::Replace(id, Some(sink)) => self.replace(&id, sink),
+            ControlMessage::Pause(id) => self.pause(&id),
+            ControlMessage::Replace(id, sink) => self.replace(&id, sink),
         }
     }
 
@@ -200,14 +211,14 @@ impl Fanout {
                         Some(ControlMessage::Remove(id)) => {
                             send_group.remove(&id);
                         },
-                        Some(ControlMessage::Replace(id, Some(sink))) => {
-                            send_group.replace(&id, Sender::new(sink));
-                        },
-                        Some(ControlMessage::Replace(id, None)) => {
+                        Some(ControlMessage::Pause(id)) => {
                             send_group.pause(&id);
                         },
+                        Some(ControlMessage::Replace(id, sink)) => {
+                            send_group.replace(&id, Sender::new(sink));
+                        },
                         None => {
-                            // Control channel is closed, process mut be shutting down
+                            // Control channel is closed, which means Vertex is shutting down.
                             control_channel_open = false;
                         }
                     }
@@ -477,16 +488,15 @@ mod tests {
         let old_receiver = mem::replace(&mut receivers[sender_id], receiver);
 
         control
-            .send(ControlMessage::Replace(
-                ComponentKey::from(sender_id.to_string()),
-                None,
-            ))
+            .send(ControlMessage::Pause(ComponentKey::from(
+                sender_id.to_string(),
+            )))
             .expect("sending control message should not fail");
 
         control
             .send(ControlMessage::Replace(
                 ComponentKey::from(sender_id.to_string()),
-                Some(sender),
+                sender,
             ))
             .expect("sending control message should not fail");
 
@@ -503,16 +513,15 @@ mod tests {
         let old_receiver = mem::replace(&mut receivers[sender_id], receiver);
 
         control
-            .send(ControlMessage::Replace(
-                ComponentKey::from(sender_id.to_string()),
-                None,
-            ))
+            .send(ControlMessage::Pause(ComponentKey::from(
+                sender_id.to_string(),
+            )))
             .expect("sending control message should not fail");
 
         (old_receiver, sender)
     }
 
-    fn finish_sender_replace(
+    fn finish_sender_resume(
         control: &UnboundedSender<ControlMessage>,
         sender_id: usize,
         sender: BufferSender<Events>,
@@ -520,7 +529,7 @@ mod tests {
         control
             .send(ControlMessage::Replace(
                 ComponentKey::from(sender_id.to_string()),
-                Some(sender),
+                sender,
             ))
             .expect("sending control message should not fail");
     }
@@ -780,7 +789,7 @@ mod tests {
 
         // Finish our sender replacement, which should wake up the third send and allow it to
         // actually complete:
-        finish_sender_replace(&control, 0, new_first_sender);
+        finish_sender_resume(&control, 0, new_first_sender);
         assert!(third_send.is_woken());
         assert_ready!(third_send.poll());
 
