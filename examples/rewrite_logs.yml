@@ -2,11 +2,7 @@ sources:
   logs:
     type: demo_logs
     format:
-      type: shuffle
-      lines:
-        - "{\"foo\": \"bar\"}"
-        - "{}"
-        - "{\"key\": \"value\"}"
+      type: json
 
 transforms:
   rewrite:
@@ -17,7 +13,8 @@ transforms:
       msg, err = parse_json(.message)
       del(.message)
       . = merge(msg, .)
-      .rewrited = true
+      .ua, pe = parse_user_agent(.ua) 
+      # del(.datetime)
 
 sinks:
   stdout:
@@ -26,3 +23,4 @@ sinks:
       - rewrite
     encoding:
       codec: json
+      pretty: true

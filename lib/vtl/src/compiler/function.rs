@@ -6,11 +6,13 @@ mod compact;
 mod contains;
 mod del;
 mod ends_with;
+mod exists;
 mod find;
 mod flatten;
 mod floor;
 mod format;
 mod from_unix_timestamp;
+mod get;
 mod get_env;
 mod get_hostname;
 mod includes;
@@ -35,9 +37,11 @@ mod parse_json;
 mod parse_query;
 mod parse_timestamp;
 mod parse_url;
+mod parse_user_agent;
 mod push;
 mod replace;
 mod round;
+mod set;
 mod slice;
 mod split;
 mod starts_with;
@@ -217,11 +221,13 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(contains::Contains),
         Box::new(del::Del),
         Box::new(ends_with::EndsWith),
+        Box::new(exists::Exists),
         Box::new(find::Find),
         Box::new(flatten::Flatten),
         Box::new(floor::Floor),
         Box::new(format::Format),
         Box::new(from_unix_timestamp::FromUnixTimestamp),
+        Box::new(get::Get),
         Box::new(get_env::GetEnv),
         Box::new(get_hostname::GetHostname),
         Box::new(includes::Includes),
@@ -246,8 +252,10 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(parse_query::ParseQuery),
         Box::new(parse_timestamp::ParseTimestamp),
         Box::new(parse_url::ParseUrl),
+        Box::new(parse_user_agent::ParseUserAgent),
         Box::new(push::Push),
         Box::new(replace::Replace),
+        Box::new(set::Set),
         Box::new(slice::Slice),
         Box::new(split::Split),
         Box::new(starts_with::StartsWith),
