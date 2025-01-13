@@ -21,7 +21,7 @@ impl Function for Flatten {
         &[
             Parameter {
                 name: "value",
-                kind: Kind::CONTAINER,
+                kind: Kind::ARRAY_OR_OBJECT,
                 required: true,
             },
             Parameter {
@@ -73,7 +73,7 @@ impl Expression for FlattenFunc {
                 .into(),
             value => {
                 return Err(ExpressionError::UnexpectedType {
-                    want: Kind::CONTAINER,
+                    want: Kind::ARRAY_OR_OBJECT,
                     got: value.kind(),
                     span: self.value.span,
                 })

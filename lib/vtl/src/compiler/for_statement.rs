@@ -57,7 +57,7 @@ impl Expression for ForStatement {
             }
             _ => {
                 return Err(ExpressionError::UnexpectedType {
-                    want: Kind::CONTAINER,
+                    want: Kind::ARRAY_OR_OBJECT,
                     got: iterator.kind(),
                     span: self.iterator.span,
                 })

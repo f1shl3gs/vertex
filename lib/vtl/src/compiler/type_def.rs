@@ -136,6 +136,14 @@ impl TypeDef {
     }
 
     #[inline]
+    pub fn undefined() -> Self {
+        TypeDef {
+            fallible: false,
+            kind: Kind::UNDEFINED,
+        }
+    }
+
+    #[inline]
     pub fn fallible(mut self) -> Self {
         self.fallible = true;
         self

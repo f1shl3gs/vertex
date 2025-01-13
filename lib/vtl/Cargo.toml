@@ -17,3 +17,4 @@ serde_json = { version = "1.0.135", default-features = false }
 twox-hash = { version = "2.1.0", default-features = false, features = ["xxhash3_64"] }
 url = { version = "2.5.4", default-features = false }
 value = { path = "../value" }
+woothee = { version = "0.13.0", default-features = false }
