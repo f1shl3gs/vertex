@@ -79,6 +79,8 @@ impl Kind {
     pub const ARRAY_OR_BYTES: Kind = Kind(1 << 1 | 1 << 6);
     pub const BYTES_OR_INTEGER: Kind = Kind(1 << 1 | 1 << 2);
 
+    pub const REDACTABLE: Kind = Kind(1 << 1 | 1 << 5 | 1 << 6);
+
     pub const ANY: Kind =
         Kind(1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9);
 

@@ -2,9 +2,12 @@ mod abs;
 mod append;
 mod assert_eq;
 mod ceil;
+mod cidr_contains;
 mod compact;
 mod contains;
+mod decode_base64;
 mod del;
+mod encode_base64;
 mod ends_with;
 mod exists;
 mod find;
@@ -26,12 +29,15 @@ mod is_ipv6;
 mod is_object;
 mod is_string;
 mod is_timestamp;
+mod join;
+mod kebabcase;
 mod keys;
 mod length;
 mod log;
 mod lowercase;
 mod r#match;
 mod merge;
+mod mod_func;
 mod now;
 mod parse_json;
 mod parse_query;
@@ -39,10 +45,12 @@ mod parse_timestamp;
 mod parse_url;
 mod parse_user_agent;
 mod push;
+mod redact;
 mod replace;
 mod round;
 mod set;
 mod slice;
+mod snakecase;
 mod split;
 mod starts_with;
 mod to_bool;
@@ -51,6 +59,7 @@ mod to_integer;
 mod to_string;
 mod to_unix_timestamp;
 mod trim;
+mod truncate;
 mod r#typeof;
 mod unique;
 mod uppercase;
@@ -217,9 +226,12 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(append::Append),
         Box::new(assert_eq::AssertEq),
         Box::new(ceil::Ceil),
+        Box::new(cidr_contains::CidrContains),
         Box::new(compact::Compact),
         Box::new(contains::Contains),
+        Box::new(decode_base64::DecodeBase64),
         Box::new(del::Del),
+        Box::new(encode_base64::EncodeBase64),
         Box::new(ends_with::EndsWith),
         Box::new(exists::Exists),
         Box::new(find::Find),
@@ -241,12 +253,15 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(is_object::IsObject),
         Box::new(is_string::IsString),
         Box::new(is_timestamp::IsTimestamp),
+        Box::new(join::Join),
+        Box::new(kebabcase::KebabCase),
         Box::new(keys::Keys),
         Box::new(length::Length),
         Box::new(log::Log),
         Box::new(lowercase::Lowercase),
         Box::new(r#match::Match),
         Box::new(merge::Merge),
+        Box::new(mod_func::Mod),
         Box::new(now::Now),
         Box::new(parse_json::ParseJson),
         Box::new(parse_query::ParseQuery),
@@ -254,9 +269,11 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(parse_url::ParseUrl),
         Box::new(parse_user_agent::ParseUserAgent),
         Box::new(push::Push),
+        Box::new(redact::Redact),
         Box::new(replace::Replace),
         Box::new(set::Set),
         Box::new(slice::Slice),
+        Box::new(snakecase::SnakeCase),
         Box::new(split::Split),
         Box::new(starts_with::StartsWith),
         Box::new(to_bool::ToBool),
@@ -265,6 +282,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(to_string::ToString),
         Box::new(to_unix_timestamp::ToUnixTimestamp),
         Box::new(trim::Trim),
+        Box::new(truncate::Truncate),
         Box::new(r#typeof::TypeOf),
         Box::new(unique::Unique),
         Box::new(uppercase::Uppercase),
@@ -292,7 +310,7 @@ pub fn compile_and_run<F: Function>(
     let mut arguments_list = ArgumentList::new(func.identifier(), func.parameters());
     for argument in arguments {
         if let Err(err) = arguments_list.push(Spanned::new(argument, Span::empty()), &state) {
-            panic!("{}", err)
+            panic!("build arguments list failed, {}", err)
         }
     }
 
@@ -308,7 +326,7 @@ pub fn compile_and_run<F: Function>(
     assert_eq!(
         call.type_def(&state),
         td,
-        "want: {}, got: {}",
+        "type_def want: {}, got: {}",
         td.kind,
         call.type_def(&state).kind
     );
