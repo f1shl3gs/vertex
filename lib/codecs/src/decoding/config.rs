@@ -41,7 +41,7 @@ impl FramingConfig {
 
 /// Configuration for building a `Deserializer`.
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize, Default)]
-#[serde(tag = "codec", rename_all = "snake_case")]
+#[serde(tag = "codec", rename_all = "lowercase")]
 pub enum DeserializerConfig {
     /// Configures the `JsonDeserializer`
     Json(JsonDeserializerConfig),

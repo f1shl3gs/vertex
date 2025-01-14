@@ -396,6 +396,7 @@ struct Config {
     decoding: DeserializerConfig,
 
     /// The format of the randomly generated output.
+    #[serde(default)]
     format: OutputFormat,
 }
 
@@ -408,9 +409,9 @@ impl SourceConfig for Config {
         let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build();
         let format = self.format.clone();
 
-        let mut output = cx.output;
         let count = self.count;
         let mut ticker = tokio::time::interval(self.interval);
+        let mut output = cx.output;
         let mut shutdown = cx.shutdown;
 
         Ok(Box::pin(async move {

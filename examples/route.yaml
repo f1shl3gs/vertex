@@ -1,24 +1,33 @@
 sources:
   logs1:
     type: demo_logs
+    decoding:
+      codec: json
     format:
       type: shuffle
       lines:
-        - info blah
+        - |
+          {"message": "info blah"}
 
   logs2:
     type: demo_logs
+    decoding:
+      codec: json
     format:
       type: shuffle
       lines:
-        - warn blah
+        - |
+          {"message": "warn blah"}
 
   logs3:
     type: demo_logs
+    decoding:
+      codec: json
     format:
       type: shuffle
       lines:
-        - error blah
+        - |
+          {"message": "error blah"}
 
 transforms:
   route:
@@ -28,22 +37,22 @@ transforms:
       - logs2
       - logs3
     route:
-      info: .message contains info
-      warn: .message contains warn
+      info: contains(.message, "info")
+      warn: contains(.message, "warn")
 
   info:
     type: rewrite
     inputs:
       - route.info
     script: |
-      .level = info
+      .level = "info"
 
   warn:
     type: rewrite
     inputs:
       - route.warn
     script: |
-      .level = warn
+      .level = "warn"
 
 sinks:
   stdout:
