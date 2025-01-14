@@ -1,19 +1,12 @@
 use std::fmt::Debug;
 
 use dashmap::DashMap;
-use tracing_core::{
-    callsite::Identifier,
-    field::{display, Field, Value, Visit},
-    span,
-    subscriber::Interest,
-    Event, Metadata, Subscriber,
-};
+use tracing_core::callsite::Identifier;
+use tracing_core::field::{display, Field, Value, Visit};
+use tracing_core::subscriber::Interest;
+use tracing_core::{span, Event, Metadata, Subscriber};
 use tracing_subscriber::layer::{Context, Layer};
 use tracing_subscriber::registry::LookupSpan;
-
-#[cfg(test)]
-#[macro_use]
-extern crate tracing;
 
 #[cfg(not(test))]
 use std::time::Instant;
@@ -403,6 +396,7 @@ mod test {
     use std::time::Duration;
 
     use testify::instant::MockClock;
+    use tracing::info;
     use tracing_subscriber::layer::SubscriberExt;
 
     use super::*;
