@@ -12,7 +12,7 @@ use bytes::{Bytes, BytesMut};
 use event::Event;
 use format::{DeserializeError, Deserializer as _};
 use smallvec::SmallVec;
-use tracing::warn;
+use tracing::{error, warn};
 
 use super::FramingError;
 pub use config::{DecodingConfig, DeserializerConfig, FramingConfig};
@@ -161,7 +161,15 @@ impl Decoder {
         self.deserializer
             .parse(frame)
             .map(|events| Some((events, byte_size)))
-            .map_err(DecodeError::Deserialize)
+            .map_err(|err| {
+                error!(
+                    message = "failed deserializing frame",
+                    ?err,
+                    internal_log_rate_limit = true
+                );
+
+                DecodeError::Deserialize(err)
+            })
     }
 }
 

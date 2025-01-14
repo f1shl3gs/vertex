@@ -41,14 +41,14 @@ impl FramingConfig {
 
 /// Configuration for building a `Deserializer`.
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize, Default)]
-#[serde(rename_all = "snake_case")]
+#[serde(tag = "codec", rename_all = "lowercase")]
 pub enum DeserializerConfig {
+    /// Configures the `JsonDeserializer`
+    Json(JsonDeserializerConfig),
+
     /// Configures the `BytesDeserializer`
     #[default]
     Bytes,
-
-    /// Configures the `JsonDeserializer`
-    Json(JsonDeserializerConfig),
 
     /// Configures the `LogfmtDeserializer`
     Logfmt,
