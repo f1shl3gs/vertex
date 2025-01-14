@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736865821445,
+  "lastUpdate": 1736865849248,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "df85f075ec1740c68dc88f93862a0aeb5ae19d66",
-          "message": "chore(deps): bump tracing-subscriber from 0.3.18 to 0.3.19 (#2011)\n\nBumps [tracing-subscriber](https://github.com/tokio-rs/tracing) from 0.3.18 to 0.3.19.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-subscriber-0.3.18...tracing-subscriber-0.3.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-11-30T11:36:32+08:00",
-          "tree_id": "129fb664be7403c163dd0693dcdf12c624302797",
-          "url": "https://github.com/f1shl3gs/vertex/commit/df85f075ec1740c68dc88f93862a0aeb5ae19d66"
-        },
-        "date": 1732937951421,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.407,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 145.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 623.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "dbc677d3f5b9993761555b9098eda9ebf784a042",
           "message": "chore(deps): bump syn from 2.0.89 to 2.0.90 (#2012)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.89 to 2.0.90.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.89...2.0.90)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-11-30T11:45:27+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 649.81,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7ad02404c1a3024280e369d8858088bef8e45eeb",
+          "message": "fix route.yaml example (#2126)",
+          "timestamp": "2025-01-14T22:40:56+08:00",
+          "tree_id": "7abc8e469d37d64fb8dbed73fc8a64b482b6a0f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7ad02404c1a3024280e369d8858088bef8e45eeb"
+        },
+        "date": 1736865831095,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.616,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 140.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 310.13,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 636.22,
             "unit": "ns/op"
           }
         ]
