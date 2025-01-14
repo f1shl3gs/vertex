@@ -13,7 +13,7 @@ use crate::context::Context;
 use crate::SyntaxError;
 
 #[derive(Debug)]
-pub enum Error {
+enum Error {
     Addr,
     Bits,
     NoSeparator,
@@ -32,13 +32,13 @@ impl Display for Error {
 /// Simple implement of CIDR, cause all we need is contains
 ///
 /// https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing
-pub struct Cidr {
+struct Cidr {
     addr: IpAddr,
     bits: u32,
 }
 
 impl Cidr {
-    pub fn parse(s: &str) -> Result<Cidr, Error> {
+    fn parse(s: &str) -> Result<Cidr, Error> {
         let Some((ip, bits)) = s.split_once('/') else {
             return Err(Error::NoSeparator);
         };
@@ -51,13 +51,13 @@ impl Cidr {
         let bits = match addr {
             IpAddr::V4(_) => 32u32.checked_sub(bits),
             IpAddr::V6(_) => 128u32.checked_sub(bits),
-        }.ok_or(Error::Bits)?;
-
+        }
+        .ok_or(Error::Bits)?;
 
         Ok(Cidr { addr, bits })
     }
 
-    pub fn contains(&self, ip: &IpAddr) -> bool {
+    fn contains(&self, ip: &IpAddr) -> bool {
         match (self.addr, ip) {
             (IpAddr::V4(addr), IpAddr::V4(ip)) => {
                 let addr = u32::from_be_bytes(addr.octets()) >> self.bits;
@@ -164,8 +164,8 @@ impl Expression for CidrContainsFunc {
 
 #[cfg(test)]
 mod cidr_tests {
-    use std::net::Ipv6Addr;
     use super::*;
+    use std::net::Ipv6Addr;
 
     #[test]
     fn v4_24bit() {
