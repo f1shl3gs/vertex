@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736889928191,
+  "lastUpdate": 1736890340480,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4",
-          "message": "add more jemalloc metrics",
-          "timestamp": "2024-12-02T00:30:50+08:00",
-          "tree_id": "88544fbb36362e4c7db20c714a3d86d3a47a8577",
-          "url": "https://github.com/f1shl3gs/vertex/commit/38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4"
-        },
-        "date": 1733071254053,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 505,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35533,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36517.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15769b24d80e6a00d4184325aa69eb67ee49c5b4",
+          "message": "lib/vtl: add more VTL functions (#2128)",
+          "timestamp": "2025-01-15T05:21:39+08:00",
+          "tree_id": "9c1df621f00257d61d2c77a0190e7298d05368e2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15769b24d80e6a00d4184325aa69eb67ee49c5b4"
+        },
+        "date": 1736890322378,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 531,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36588,
             "unit": "KiB"
           }
         ]
