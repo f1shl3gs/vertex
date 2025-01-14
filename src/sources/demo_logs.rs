@@ -130,12 +130,144 @@ fn random_domain() -> String {
 
 fn random_ipv4() -> String {
     let mut rnd = thread_rng();
-    let a = rnd.gen_range(1..255);
-    let b = rnd.gen_range(1..255);
-    let c = rnd.gen_range(1..255);
-    let d = rnd.gen_range(1..255);
 
-    format!("{}.{}.{}.{}", a, b, c, d)
+    loop {
+        let a = rnd.gen_range(1..255);
+
+        // 1.0.0.0 – 9.255.255.255
+        if a > 0 && a < 10 {
+            let b = rnd.gen_range(0..255);
+            let c = rnd.gen_range(0..255);
+            let d = rnd.gen_range(0..255);
+
+            return format!("{}.{}.{}.{}", a, b, c, d);
+        }
+
+        // 11.0.0.0 – 126.255.255.255
+        if (11..=126).contains(&a) {
+            let b = rnd.gen_range(0..255);
+            let c = rnd.gen_range(0..255);
+            let d = rnd.gen_range(0..255);
+
+            return format!("{}.{}.{}.{}", a, b, c, d);
+        }
+
+        // 129.0.0.0 – 169.253.255.255
+        if (129..=169).contains(&a) {
+            let b = if a == 169 {
+                rnd.gen_range(1..253)
+            } else {
+                rnd.gen_range(1..255)
+            };
+
+            let c = rnd.gen_range(0..255);
+            let d = rnd.gen_range(0..255);
+
+            return format!("{}.{}.{}.{}", a, b, c, d);
+        }
+
+        // 169.255.0.0 – 172.15.255.255
+        if (169..=172).contains(&a) {
+            let b = if a == 172 {
+                rnd.gen_range(1..15)
+            } else if a == 169 {
+                255
+            } else {
+                rnd.gen_range(1..255)
+            };
+
+            let c = rnd.gen_range(0..255);
+            let d = rnd.gen_range(0..255);
+
+            return format!("{}.{}.{}.{}", a, b, c, d);
+        }
+
+        // 172.32.0.0 – 191.0.1.255
+        if (172..=191).contains(&a) {
+            let b = if a == 172 {
+                rnd.gen_range(32..255)
+            } else if a == 191 {
+                0
+            } else {
+                rnd.gen_range(1..255)
+            };
+
+            let c = rnd.gen_range(0..255);
+            let d = rnd.gen_range(0..255);
+
+            return format!("{}.{}.{}.{}", a, b, c, d);
+        }
+
+        // 192.0.3.0 – 192.88.98.255
+        // 192.88.100.0 – 192.167.255.255
+        // 192.169.0.0 – 198.17.255.255
+        if a == 192 {
+            let b = rnd.gen_range(0..88);
+
+            // 192.0.3.0 – 192.88.98.255
+            if b < 88 {
+                let c = if b == 88 {
+                    rnd.gen_range(0..98)
+                } else {
+                    rnd.gen_range(0..255)
+                };
+
+                let d = rnd.gen_range(0..255);
+
+                return format!("{}.{}.{}.{}", a, b, c, d);
+            }
+
+            // 192.88.100.0 – 192.167.255.255
+            if (88..167).contains(&b) {
+                let c = if b == 88 {
+                    rnd.gen_range(100..255)
+                } else {
+                    rnd.gen_range(0..255)
+                };
+
+                let d = rnd.gen_range(0..255);
+
+                return format!("{}.{}.{}.{}", a, b, c, d);
+            }
+
+            if b == 169 {
+                let c = rnd.gen_range(0..255);
+                let d = rnd.gen_range(0..255);
+
+                return format!("{}.{}.{}.{}", a, b, c, d);
+            }
+
+            continue;
+        }
+
+        // part of 192.169.0.0 – 198.17.255.255
+        if a > 192 && a <= 198 {
+            let b = if a == 198 {
+                rnd.gen_range(0..17)
+            } else {
+                rnd.gen_range(0..255)
+            };
+
+            let c = rnd.gen_range(0..255);
+            let d = rnd.gen_range(0..255);
+
+            return format!("{}.{}.{}.{}", a, b, c, d);
+        }
+
+        // 198.20.0.0 – 223.255.255.255
+        if (198..=223).contains(&a) {
+            let b = if a == 198 {
+                rnd.gen_range(20..255)
+            } else {
+                rnd.gen_range(0..255)
+            };
+
+            let c = rnd.gen_range(0..255);
+            let d = rnd.gen_range(0..255);
+
+            return format!("{}.{}.{}.{}", a, b, c, d);
+        }
+    }
 }
 
 fn internal_ipv4() -> String {
