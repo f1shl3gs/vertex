@@ -75,54 +75,60 @@ struct Route {
 
 impl SyncTransform for Route {
     fn transform(&mut self, events: Events, output: &mut TransformOutputsBuf) {
-        if let Events::Logs(logs) = events {
-            logs.into_iter().for_each(|log| {
-                let mut failed = 0;
-                let mut target = LogTarget { log };
+        let Events::Logs(logs) = events else {
+            return;
+        };
 
-                for (route, program) in self.routes.iter_mut() {
-                    match program.run(&mut target) {
-                        Ok(value) => match value {
-                            Value::Boolean(b) if b => {
+        for log in logs {
+            let mut failed = 0;
+            let mut target = LogTarget { log };
+
+            for (route, program) in self.routes.iter_mut() {
+                match program.run(&mut target) {
+                    Ok(value) => match value {
+                        Value::Boolean(b) => {
+                            if b {
                                 output.push_named(route, target.log.clone().into())
+                            } else {
+                                // it's not match, but fine
                             }
-                            value => {
-                                failed += 1;
-                                let typ = match value {
-                                    Value::Bytes(_) => "bytes",
-                                    Value::Float(_) => "float",
-                                    Value::Integer(_) => "integer",
-                                    Value::Boolean(_) => "boolean",
-                                    Value::Timestamp(_) => "timestamp",
-                                    Value::Object(_) => "object",
-                                    Value::Array(_) => "array",
-                                    Value::Null => "null",
-                                };
-
-                                warn!(
-                                    message = "unexpected value type resolved",
-                                    r#type = typ,
-                                    internal_log_rate_limit = true
-                                )
-                            }
-                        },
-                        Err(err) => {
-                            warn!(
-                                message = "run vtl script failed",
-                                ?err,
-                                route,
-                                internal_log_rate_limit = true
-                            );
-
-                            failed += 1;
                         }
+                        value => {
+                            failed += 1;
+                            let typ = match value {
+                                Value::Bytes(_) => "bytes",
+                                Value::Float(_) => "float",
+                                Value::Integer(_) => "integer",
+                                Value::Boolean(_) => unreachable!(),
+                                Value::Timestamp(_) => "timestamp",
+                                Value::Object(_) => "object",
+                                Value::Array(_) => "array",
+                                Value::Null => "null",
+                            };
+
+                            warn!(
+                                message = "unexpected value type resolved",
+                                r#type = typ,
+                                internal_log_rate_limit = true
+                            )
+                        }
+                    },
+                    Err(err) => {
+                        warn!(
+                            message = "run vtl script failed",
+                            ?err,
+                            route,
+                            internal_log_rate_limit = true
+                        );
+
+                        failed += 1;
                     }
                 }
+            }
 
-                if failed == self.routes.len() {
-                    output.push_named(UNMATCHED_ROUTE, target.log.into())
-                }
-            })
+            if failed == self.routes.len() {
+                output.push_named(UNMATCHED_ROUTE, target.log.into())
+            }
         }
     }
 }
@@ -181,7 +187,7 @@ route:
     second: contains(.second, "foo")
     third: contains(.third, "bar")
 "##,
-                [None, None, None, Some(event.clone())],
+                [None, None, None, None],
             ),
         ];
 
