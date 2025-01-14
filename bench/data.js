@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736865886588,
+  "lastUpdate": 1736866305418,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "836c33f0ed3dbe44e5109011a55fbb8552f54a47",
-          "message": "add jemalloc metrics (#2013)",
-          "timestamp": "2024-12-01T10:38:51+08:00",
-          "tree_id": "96f551db3ec1da1b2951265f67f25daeb0f77e0e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/836c33f0ed3dbe44e5109011a55fbb8552f54a47"
-        },
-        "date": 1733021369902,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35537,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36553.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7ad02404c1a3024280e369d8858088bef8e45eeb",
+          "message": "fix route.yaml example (#2126)",
+          "timestamp": "2025-01-14T22:40:56+08:00",
+          "tree_id": "7abc8e469d37d64fb8dbed73fc8a64b482b6a0f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7ad02404c1a3024280e369d8858088bef8e45eeb"
+        },
+        "date": 1736866286741,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 534,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36517.5,
             "unit": "KiB"
           }
         ]
