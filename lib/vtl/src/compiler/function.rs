@@ -1,6 +1,7 @@
 mod abs;
 mod append;
 mod assert_eq;
+mod camelcase;
 mod ceil;
 mod cidr_contains;
 mod compact;
@@ -26,6 +27,7 @@ mod is_float;
 mod is_integer;
 mod is_ipv4;
 mod is_ipv6;
+mod is_null;
 mod is_object;
 mod is_string;
 mod is_timestamp;
@@ -39,6 +41,8 @@ mod r#match;
 mod merge;
 mod mod_func;
 mod now;
+mod parse_bytes;
+mod parse_duration;
 mod parse_json;
 mod parse_query;
 mod parse_timestamp;
@@ -225,6 +229,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(abs::Abs),
         Box::new(append::Append),
         Box::new(assert_eq::AssertEq),
+        Box::new(camelcase::CamelCase),
         Box::new(ceil::Ceil),
         Box::new(cidr_contains::CidrContains),
         Box::new(compact::Compact),
@@ -250,6 +255,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(is_integer::IsInteger),
         Box::new(is_ipv4::IsIpv4),
         Box::new(is_ipv6::IsIpv6),
+        Box::new(is_null::IsNull),
         Box::new(is_object::IsObject),
         Box::new(is_string::IsString),
         Box::new(is_timestamp::IsTimestamp),
@@ -263,6 +269,8 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(merge::Merge),
         Box::new(mod_func::Mod),
         Box::new(now::Now),
+        Box::new(parse_bytes::ParseBytes),
+        Box::new(parse_duration::ParseDuration),
         Box::new(parse_json::ParseJson),
         Box::new(parse_query::ParseQuery),
         Box::new(parse_timestamp::ParseTimestamp),

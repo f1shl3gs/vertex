@@ -4556,6 +4556,7 @@ dependencies = [
  "dyn-clone",
  "glob",
  "hostname 0.1.0",
+ "humanize",
  "regex",
  "serde",
  "serde_json",
