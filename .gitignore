@@ -6,3 +6,5 @@ tmp_.*
 .vscode
 
 .fleet
+
+tests/redfish/DSP2043_2024.3

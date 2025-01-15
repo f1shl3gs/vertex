@@ -63,17 +63,75 @@ impl Expression for KebabCaseFunc {
     }
 }
 
-// copied from serde_derive
+/// Converts a string to kebab case.
+///
+/// This function takes a string slice as its argument, then returns a `String`
+/// of which the case style is kebab case.
+///
+/// This function targets the upper and lower cases of ASCII alphabets for
+/// capitalization, and all characters except ASCII alphabets and ASCII numbers
+/// are replaced to hyphens as word separators.
 fn kebabcase(input: &str) -> String {
-    let mut output = String::new();
-    for (i, ch) in input.char_indices() {
-        if i > 0 && ch.is_uppercase() {
-            output.push('-');
+    let mut result = String::with_capacity(input.len() + input.len() / 2);
+    // .len returns byte count but ok in this case!
+
+    enum ChIs {
+        FirstOfStr,
+        NextOfUpper,
+        NextOfContdUpper,
+        NextOfSepMark,
+        NextOfKeepedMark,
+        Others,
+    }
+    let mut flag = ChIs::FirstOfStr;
+
+    for ch in input.chars() {
+        if ch.is_ascii_uppercase() {
+            match flag {
+                ChIs::FirstOfStr => {
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
+                }
+                ChIs::NextOfUpper | ChIs::NextOfContdUpper => {
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfContdUpper;
+                }
+                _ => {
+                    result.push('-');
+                    result.push(ch.to_ascii_lowercase());
+                    flag = ChIs::NextOfUpper;
+                }
+            }
+        } else if ch.is_ascii_lowercase() {
+            match flag {
+                ChIs::NextOfContdUpper => {
+                    if let Some(prev) = result.pop() {
+                        result.push('-');
+                        result.push(prev);
+                    }
+                }
+                ChIs::NextOfSepMark | ChIs::NextOfKeepedMark => {
+                    result.push('-');
+                }
+                _ => (),
+            }
+            result.push(ch);
+            flag = ChIs::Others;
+        } else if ch.is_ascii_digit() {
+            if let ChIs::NextOfSepMark = flag {
+                result.push('-')
+            }
+            result.push(ch);
+            flag = ChIs::NextOfKeepedMark;
+        } else {
+            match flag {
+                ChIs::FirstOfStr => (),
+                _ => flag = ChIs::NextOfSepMark,
+            }
         }
-        output.push(ch.to_ascii_lowercase());
     }
 
-    output.replace('_', "-")
+    result
 }
 
 #[cfg(test)]
@@ -82,20 +140,99 @@ mod tests {
     use crate::compiler::function::compile_and_run;
 
     #[test]
-    fn casing() {
-        for (input, want) in [
-            ("Outcome", "outcome"),
-            ("VeryTasty", "very-tasty"),
-            ("A", "a"),
-            ("Z42", "z42"),
-            ("outcome", "outcome"),
-            ("very_tasty", "very-tasty"),
-            ("a", "a"),
-            ("z42", "z42"),
-        ] {
-            let got = kebabcase(input);
-            assert_eq!(got, want, "want: {}, got: {}\ninput: {}", want, got, input);
-        }
+    fn it_should_convert_camel_case() {
+        let result = kebabcase("abcDefGHIjk");
+        assert_eq!(result, "abc-def-gh-ijk");
+    }
+
+    #[test]
+    fn it_should_convert_pascal_case() {
+        let result = kebabcase("AbcDefGHIjk");
+        assert_eq!(result, "abc-def-gh-ijk");
+    }
+
+    #[test]
+    fn it_should_convert_snake_case() {
+        let result = kebabcase("abc_def_ghi");
+        assert_eq!(result, "abc-def-ghi");
+    }
+
+    #[test]
+    fn it_should_convert_kebab_case() {
+        let result = kebabcase("abc-def-ghi");
+        assert_eq!(result, "abc-def-ghi");
+    }
+
+    #[test]
+    fn it_should_convert_train_case() {
+        let result = kebabcase("Abc-Def-Ghi");
+        assert_eq!(result, "abc-def-ghi");
+    }
+
+    #[test]
+    fn it_should_convert_macro_case() {
+        let result = kebabcase("ABC_DEF_GHI");
+        assert_eq!(result, "abc-def-ghi");
+    }
+
+    #[test]
+    fn it_should_convert_cobol_case() {
+        let result = kebabcase("ABC-DEF-GHI");
+        assert_eq!(result, "abc-def-ghi");
+    }
+
+    #[test]
+    fn it_should_keep_digits() {
+        let result = kebabcase("abc123-456defG789HIJklMN12");
+        assert_eq!(result, "abc123-456-def-g789-hi-jkl-mn12");
+    }
+
+    #[test]
+    fn it_should_convert_when_starting_with_digit() {
+        let result = kebabcase("123abc456def");
+        assert_eq!(result, "123-abc456-def");
+
+        let result = kebabcase("123ABC456DEF");
+        assert_eq!(result, "123-abc456-def");
+    }
+
+    #[test]
+    fn it_should_treat_marks_as_separators() {
+        let result = kebabcase(":.abc~!@def#$ghi%&jk(lm)no/?");
+        assert_eq!(result, "abc-def-ghi-jk-lm-no");
+    }
+
+    #[test]
+    fn it_should_convert_empty() {
+        let result = kebabcase("");
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn it_should_treat_number_sequence_by_default() {
+        let result = kebabcase("abc123Def456#Ghi789");
+        assert_eq!(result, "abc123-def456-ghi789");
+
+        let result = kebabcase("ABC123-DEF456#GHI789");
+        assert_eq!(result, "abc123-def456-ghi789");
+
+        let result = kebabcase("abc123-def456#ghi789");
+        assert_eq!(result, "abc123-def456-ghi789");
+
+        let result = kebabcase("ABC123_DEF456#GHI789");
+        assert_eq!(result, "abc123-def456-ghi789");
+
+        let result = kebabcase("Abc123Def456#Ghi789");
+        assert_eq!(result, "abc123-def456-ghi789");
+
+        let result = kebabcase("abc123_def456#ghi789");
+        assert_eq!(result, "abc123-def456-ghi789");
+
+        let result = kebabcase("Abc123-Def456#-Ghi789");
+        assert_eq!(result, "abc123-def456-ghi789");
+
+        let result = kebabcase("000-abc123_def456#ghi789");
+        assert_eq!(result, "000-abc123-def456-ghi789");
     }
 
     #[test]
