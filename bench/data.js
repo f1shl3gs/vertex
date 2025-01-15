@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736961215369,
+  "lastUpdate": 1736961246260,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "666fce1a0bdab63c3b8a3e4c8a6d8a175cd950e9",
-          "message": "sinks/prometheus_exporter: optimize metrics serialize (#2015)\n\n* optimize metrics serialize",
-          "timestamp": "2024-12-02T13:24:50+08:00",
-          "tree_id": "6684f314e1de7061c9fa050e4ac7acb9ea6e8fca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/666fce1a0bdab63c3b8a3e4c8a6d8a175cd950e9"
-        },
-        "date": 1733117693969,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27916000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 714250,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.979,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "32019bbb9453388df193e5494addc9487ebc53fc",
           "message": "add sources/prometheus_pushgateway (#2017)",
           "timestamp": "2024-12-03T15:32:15+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.434,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "537f017e991bfd47e1a9479dd26e3b9babe9eef8",
+          "message": "fix camelcase, snakecase and kebabcase; add is_null, parse_bytes and parse_duration (#2130)",
+          "timestamp": "2025-01-16T01:02:52+08:00",
+          "tree_id": "4426e2cc331c0081bf42189a6061d05b6db86dc5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/537f017e991bfd47e1a9479dd26e3b9babe9eef8"
+        },
+        "date": 1736961223634,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28161000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 619990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.151,
             "unit": "ns/op"
           }
         ]
