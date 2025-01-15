@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736923494827,
+  "lastUpdate": 1736923496929,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dd0833b9fa8f51913a7fb9b7e3fd836c3e46c395",
-          "message": "chore(deps): bump indexmap from 2.6.0 to 2.7.0 (#2014)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.6.0 to 2.7.0.\r\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.6.0...2.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-01T10:53:40+08:00",
-          "tree_id": "33e884c5fa45cadc7a99e9ab8866e20d5198da0b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dd0833b9fa8f51913a7fb9b7e3fd836c3e46c395"
-        },
-        "date": 1733021743888,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 531880,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 528010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5fcbd08e99abecf515a16c88a2ed96de14ea486d",
+          "message": "style (#2129)",
+          "timestamp": "2025-01-15T14:42:20+08:00",
+          "tree_id": "8c9e1e17c4887e6d0b1fd052322e2523bb19beb1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5fcbd08e99abecf515a16c88a2ed96de14ea486d"
+        },
+        "date": 1736923477218,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 525260,
             "unit": "ns/op"
           }
         ]
