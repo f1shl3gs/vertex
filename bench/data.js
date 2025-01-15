@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736931282657,
+  "lastUpdate": 1736931715745,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "666fce1a0bdab63c3b8a3e4c8a6d8a175cd950e9",
-          "message": "sinks/prometheus_exporter: optimize metrics serialize (#2015)\n\n* optimize metrics serialize",
-          "timestamp": "2024-12-02T13:24:50+08:00",
-          "tree_id": "6684f314e1de7061c9fa050e4ac7acb9ea6e8fca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/666fce1a0bdab63c3b8a3e4c8a6d8a175cd950e9"
-        },
-        "date": 1733117725465,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 545,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35529,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "32019bbb9453388df193e5494addc9487ebc53fc",
           "message": "add sources/prometheus_pushgateway (#2017)",
           "timestamp": "2024-12-03T15:32:15+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36588,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "7c2902a31ce889282ff03f1c66846269cacbc19e",
+          "message": "implement Pipeline with LimitedSender/LimitedReceiver",
+          "timestamp": "2025-01-15T16:50:54+08:00",
+          "tree_id": "cdc92019b6aed4cd997c20ddda07c9f5ed0386ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c2902a31ce889282ff03f1c66846269cacbc19e"
+        },
+        "date": 1736931696947,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 539,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36584.6,
             "unit": "KiB"
           }
         ]
