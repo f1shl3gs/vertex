@@ -1,17 +1,14 @@
 mod errors;
 
 use std::collections::HashMap;
-use std::pin::Pin;
-use std::task::{Context, Poll};
 
+use buffers::channel::{self, LimitedReceiver, LimitedSender};
 use bytesize::ByteSizeOf;
 use errors::ClosedError;
 use event::{Event, EventContainer, Events};
 use futures::Stream;
 use futures_util::StreamExt;
 use metrics::{Attributes, Counter};
-use pin_project_lite::pin_project;
-use tokio::sync::mpsc;
 
 use crate::config::Output;
 
@@ -39,7 +36,7 @@ impl Builder {
         component: impl Into<String>,
         component_type: &'static str,
         output: Output,
-    ) -> ReceiverStream<Events> {
+    ) -> LimitedReceiver<Events> {
         match output.port {
             None => {
                 let (inner, rx) = Inner::new_with_buffer(
@@ -89,19 +86,6 @@ impl Pipeline {
         }
     }
 
-    pub fn new_with_buffer(n: usize) -> (Self, ReceiverStream<Events>) {
-        let (inner, rx) =
-            Inner::new_with_buffer(n, "".into(), "".into(), DEFAULT_OUTPUT.to_owned());
-
-        (
-            Self {
-                inner: Some(inner),
-                named_inners: Default::default(),
-            },
-            rx,
-        )
-    }
-
     pub async fn send(&mut self, events: impl Into<Events>) -> Result<(), ClosedError> {
         self.inner
             .as_mut()
@@ -145,10 +129,23 @@ impl Pipeline {
 
 #[cfg(any(test, feature = "test-util"))]
 impl Pipeline {
+    pub fn new_with_buffer(n: usize) -> (Self, LimitedReceiver<Events>) {
+        let (inner, rx) =
+            Inner::new_with_buffer(n, "".into(), "".into(), DEFAULT_OUTPUT.to_owned());
+
+        (
+            Self {
+                inner: Some(inner),
+                named_inners: Default::default(),
+            },
+            rx,
+        )
+    }
+
     #[cfg(any(test, feature = "test-util"))]
     pub fn new_test() -> (Self, impl Stream<Item = Event> + Unpin) {
         let (pipe, recv) = Self::new_with_buffer(100);
-        let recv = recv.flat_map(|events| futures::stream::iter(events.into_events()));
+        let recv = recv.into_stream().flat_map(event::array::into_event_stream);
         (pipe, recv)
     }
 
@@ -156,20 +153,18 @@ impl Pipeline {
     pub fn new_test_finalize(
         status: event::EventStatus,
     ) -> (Self, impl Stream<Item = Event> + Unpin) {
-        use event::array::into_event_stream;
-
         let (pipe, recv) = Self::new_with_buffer(100);
 
         // In a source test pipeline, there is no sink to acknowledge events,
         // so we have to add a map to the receiver to handle the finalization
-        let recv = recv.flat_map(move |mut events| {
+        let recv = recv.into_stream().flat_map(move |mut events| {
             events.for_each_event(|mut event| {
                 let metadata = event.metadata_mut();
                 metadata.update_status(status);
                 metadata.update_sources();
             });
 
-            into_event_stream(events)
+            event::array::into_event_stream(events)
         });
 
         (pipe, recv)
@@ -182,7 +177,7 @@ impl Pipeline {
         name: String,
     ) -> impl Stream<Item = Events> + Unpin {
         let (inner, recv) = Inner::new_with_buffer(100, "".into(), "".into(), name.clone());
-        let recv = recv.map(move |mut events| {
+        let recv = recv.into_stream().map(move |mut events| {
             events.for_each_event(|mut event| {
                 let metadata = event.metadata_mut();
                 metadata.update_status(status);
@@ -199,7 +194,7 @@ impl Pipeline {
 
 #[derive(Clone, Debug)]
 struct Inner {
-    inner: mpsc::Sender<Events>,
+    inner: LimitedSender<Events>,
 
     // metrics
     sent_events: Counter,
@@ -212,9 +207,8 @@ impl Inner {
         component: String,
         component_type: String,
         output: String,
-    ) -> (Self, ReceiverStream<Events>) {
-        let (tx, rx) = mpsc::channel(n);
-        let rx = tokio_stream::wrappers::ReceiverStream::new(rx);
+    ) -> (Self, LimitedReceiver<Events>) {
+        let (tx, rx) = channel::limited(n);
 
         let attrs = Attributes::from([
             ("output", output.into()),
@@ -239,7 +233,7 @@ impl Inner {
                 sent_events,
                 sent_bytes,
             },
-            ReceiverStream::new(rx),
+            rx,
         )
     }
 
@@ -247,7 +241,7 @@ impl Inner {
         let count = events.len();
         let byte_size = events.size_of();
 
-        self.inner.send(events).await?;
+        self.inner.send(events).await.map_err(|_err| ClosedError)?;
 
         self.sent_events.inc(count as u64);
         self.sent_bytes.inc(byte_size as u64);
@@ -274,7 +268,7 @@ impl Inner {
                     byte_size += s;
                 }
 
-                Err(err) => {
+                Err(_err) => {
                     self.sent_events.inc(count as u64);
                     self.sent_bytes.inc(byte_size as u64);
 
@@ -284,7 +278,7 @@ impl Inner {
                         %byte_size
                     );
 
-                    return Err(err.into());
+                    return Err(ClosedError);
                 }
             }
         }
@@ -311,37 +305,6 @@ impl Inner {
             self.send_batch(events.into_iter()).await?;
         }
         Ok(())
-    }
-}
-
-pin_project! {
-    #[derive(Debug)]
-    pub struct ReceiverStream<T> {
-        #[pin]
-        inner: tokio_stream::wrappers::ReceiverStream<T>,
-    }
-}
-
-impl<T> ReceiverStream<T> {
-    const fn new(inner: tokio_stream::wrappers::ReceiverStream<T>) -> Self {
-        Self { inner }
-    }
-
-    pub fn close(&mut self) {
-        self.inner.close()
-    }
-}
-
-impl<T> Stream for ReceiverStream<T> {
-    type Item = T;
-
-    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        let this = self.project();
-        this.inner.poll_next(cx)
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.inner.size_hint()
     }
 }
 

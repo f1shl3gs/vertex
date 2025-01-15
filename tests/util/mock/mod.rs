@@ -1,19 +1,18 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
-use std::task::Poll;
 
 use async_trait::async_trait;
+use buffers::channel::LimitedReceiver;
 use configurable::configurable_component;
 use event::{log::Value, EventContainer, Events, Finalizable, MetricValue};
 use framework::config::{
     DataType, Output, SinkConfig, SinkContext, SourceConfig, SourceContext, TransformConfig,
     TransformContext,
 };
-use framework::pipeline::{Pipeline, ReceiverStream};
+use framework::pipeline::Pipeline;
 use framework::OutputBuffer;
 use framework::{FunctionTransform, Healthcheck, Sink, Source, StreamSink, Transform};
 use futures::{FutureExt, StreamExt};
-use futures_util::stream;
 use futures_util::stream::BoxStream;
 use log_schema::log_schema;
 use thiserror::Error;
@@ -23,43 +22,48 @@ use tracing::{error, info};
 #[configurable_component(source, name = "mock")]
 pub struct MockSourceConfig {
     #[serde(skip)]
-    receiver: Arc<Mutex<Option<ReceiverStream<Events>>>>,
+    receiver: Arc<Mutex<Option<LimitedReceiver<Events>>>>,
     #[serde(skip)]
     event_counter: Option<Arc<AtomicUsize>>,
     #[serde(skip)]
     data_type: Option<DataType>,
+    #[serde(skip)]
+    force_shutdown: bool,
 
     // something for serde to use, so we can trigger rebuilds
     data: Option<String>,
 }
 
 impl MockSourceConfig {
-    pub fn new(receiver: ReceiverStream<Events>) -> Self {
+    pub fn new(receiver: LimitedReceiver<Events>) -> Self {
         Self {
             receiver: Arc::new(Mutex::new(Some(receiver))),
             event_counter: None,
             data_type: Some(DataType::All),
+            force_shutdown: false,
             data: None,
         }
     }
 
-    pub fn new_with_data(receiver: ReceiverStream<Events>, data: &str) -> Self {
+    pub fn new_with_data(receiver: LimitedReceiver<Events>, data: &str) -> Self {
         Self {
             receiver: Arc::new(Mutex::new(Some(receiver))),
             event_counter: None,
             data_type: Some(DataType::All),
+            force_shutdown: false,
             data: Some(data.into()),
         }
     }
 
     pub fn new_with_event_counter(
-        receiver: ReceiverStream<Events>,
+        receiver: LimitedReceiver<Events>,
         event_counter: Arc<AtomicUsize>,
     ) -> Self {
         Self {
             receiver: Arc::new(Mutex::new(Some(receiver))),
             event_counter: Some(event_counter),
             data_type: Some(DataType::All),
+            force_shutdown: false,
             data: None,
         }
     }
@@ -69,45 +73,41 @@ impl MockSourceConfig {
 #[typetag::serde(name = "mock")]
 impl SourceConfig for MockSourceConfig {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let wrapped = self.receiver.clone();
+        let wrapped = Arc::clone(&self.receiver);
         let event_counter = self.event_counter.clone();
         let mut recv = wrapped.lock().unwrap().take().unwrap();
-        let mut shutdown = Some(cx.shutdown);
+        let shutdown1 = cx.shutdown.clone();
+        let shutdown2 = cx.shutdown;
         let mut output = cx.output;
+        let force_shutdown = self.force_shutdown;
 
         Ok(Box::pin(async move {
-            let mut stream = stream::poll_fn(move |cx| {
-                if let Some(until) = shutdown.as_mut() {
-                    match until.poll_unpin(cx) {
-                        Poll::Ready(_res) => {
-                            info!("source shutdown");
-                            shutdown.take();
-                            recv.close();
+            tokio::pin!(shutdown1);
+            tokio::pin!(shutdown2);
+
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown1, if force_shutdown => break,
+
+                    Some(array) = recv.next() => {
+                        if let Some(counter) = &event_counter {
+                            counter.fetch_add(array.len(), Ordering::Relaxed);
                         }
 
-                        Poll::Pending => {}
-                    }
-                }
+                        if let Err(e) = output.send(array).await {
+                            error!(message = "Error sending in sink..", %e);
+                            return Err(())
+                        }
+                    },
 
-                recv.poll_next_unpin(cx)
-            })
-            .inspect(move |events| {
-                if let Some(counter) = &event_counter {
-                    counter.fetch_add(events.len(), Ordering::Relaxed);
-                }
-            })
-            .flat_map(|events| futures::stream::iter(events.into_events()));
-
-            match output.send_event_stream(&mut stream).await {
-                Ok(()) => {
-                    info!(message = "Finished sending");
-                    Ok(())
-                }
-                Err(err) => {
-                    error!(message = "Error sending in sink", %err);
-                    Err(())
+                    _ = &mut shutdown2, if !force_shutdown => break,
                 }
             }
+
+            info!("Finished sending.");
+            Ok(())
         }))
     }
 
