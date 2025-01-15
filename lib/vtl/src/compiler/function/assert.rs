@@ -1,12 +1,12 @@
 use value::{Kind, Value};
 
+use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
-use crate::SyntaxError;
-use crate::compiler::expr::Expr;
-use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
 use crate::compiler::state::TypeState;
+use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
 use crate::context::Context;
+use crate::SyntaxError;
 
 pub struct Assert;
 
@@ -39,7 +39,7 @@ impl Function for Assert {
         let message = arguments.get_opt();
 
         Ok(FunctionCall {
-            function: Box::new(AssertFunc { condition, message}),
+            function: Box::new(AssertFunc { condition, message }),
             span: cx.span,
         })
     }
@@ -59,7 +59,7 @@ impl Expression for AssertFunc {
                 want: Kind::BOOLEAN,
                 got: condition.kind(),
                 span: self.condition.span,
-            })
+            });
         };
 
         if b {
