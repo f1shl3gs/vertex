@@ -1,5 +1,6 @@
 mod abs;
 mod append;
+mod assert;
 mod assert_eq;
 mod camelcase;
 mod ceil;
@@ -45,9 +46,11 @@ mod parse_bytes;
 mod parse_duration;
 mod parse_json;
 mod parse_query;
+mod parse_regex;
 mod parse_timestamp;
 mod parse_url;
 mod parse_user_agent;
+mod pascalcase;
 mod push;
 mod redact;
 mod replace;
@@ -193,7 +196,7 @@ pub struct Parameter {
     /// The type kind this parameter expects to receive.
     pub kind: Kind,
 
-    /// Whether or not this is a required parameter
+    /// Whether this is a required parameter
     pub required: bool,
 }
 
@@ -228,6 +231,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
     vec![
         Box::new(abs::Abs),
         Box::new(append::Append),
+        Box::new(assert::Assert),
         Box::new(assert_eq::AssertEq),
         Box::new(camelcase::CamelCase),
         Box::new(ceil::Ceil),
@@ -273,9 +277,11 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(parse_duration::ParseDuration),
         Box::new(parse_json::ParseJson),
         Box::new(parse_query::ParseQuery),
+        Box::new(parse_regex::ParseRegex),
         Box::new(parse_timestamp::ParseTimestamp),
         Box::new(parse_url::ParseUrl),
         Box::new(parse_user_agent::ParseUserAgent),
+        Box::new(pascalcase::PascalCase),
         Box::new(push::Push),
         Box::new(redact::Redact),
         Box::new(replace::Replace),

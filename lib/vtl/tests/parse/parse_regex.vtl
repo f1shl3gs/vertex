@@ -1,0 +1,40 @@
+
+# notice the escape
+obj, err = parse_regex("blah", "^(?P<host>[\\w\\.]+) - (?P<user>[\\w]+) (?P<bytes_in>[\\d]+) \\[(?P<timestamp>.*)\\] \"(?P<method>[\\w]+) (?P<path>.*)\" (?P<status>[\\d]+) (?P<bytes_out>[\\d]+)$")
+assert_eq(obj, null)
+assert_eq(err, "value do not match regex")
+
+obj, err = parse_regex(
+    "5.86.210.12 - zieme4647 5667 [19/06/2019:17:20:49 -0400] \"GET /embrace/supply-chains/dynamic/vertical\" 201 20574",
+    "^(?P<host>[\\w\\.]+) - (?P<user>[\\w]+) (?P<bytes_in>[\\d]+) \\[(?P<timestamp>.*)\\] \"(?P<method>[\\w]+) (?P<path>.*)\" (?P<status>[\\d]+) (?P<bytes_out>[\\d]+)$"
+)
+assert_eq(obj, {
+    "bytes_in": "5667",
+    "host": "5.86.210.12",
+    "user": "zieme4647",
+    "timestamp": "19/06/2019:17:20:49 -0400",
+    "method": "GET",
+    "path": "/embrace/supply-chains/dynamic/vertical",
+    "status": "201",
+    "bytes_out": "20574"
+})
+assert_eq(err, null)
+
+# Note that
+# with the Question mark, you do not need to handle err anymore,
+# if the fallible function fails, the program will throw an error,
+# and stop immediately.
+obj = parse_regex(
+    "5.86.210.12 - zieme4647 5667 [19/06/2019:17:20:49 -0400] \"GET /embrace/supply-chains/dynamic/vertical\" 201 20574",
+    "^(?P<host>[\\w\\.]+) - (?P<user>[\\w]+) (?P<bytes_in>[\\d]+) \\[(?P<timestamp>.*)\\] \"(?P<method>[\\w]+) (?P<path>.*)\" (?P<status>[\\d]+) (?P<bytes_out>[\\d]+)$"
+)?
+assert_eq(obj, {
+    "bytes_in": "5667",
+    "host": "5.86.210.12",
+    "user": "zieme4647",
+    "timestamp": "19/06/2019:17:20:49 -0400",
+    "method": "GET",
+    "path": "/embrace/supply-chains/dynamic/vertical",
+    "status": "201",
+    "bytes_out": "20574"
+})

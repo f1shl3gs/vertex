@@ -25,6 +25,10 @@ topology:
   - changed-files:
     - any-glob-to-any-file: src/topology/**/*
 
+VTL:
+  - changed-files:
+    - any-glob-to-any-file: lib/vtl/**/*
+
 docs:
   - changed-files:
     - any-glob-to-any-file: docs/**/*

@@ -546,6 +546,7 @@ dependencies = [
  "futures-util",
  "log_schema",
  "memchr",
+ "regex",
  "serde",
  "serde_json",
  "serde_path_to_error",

@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use value::Value;
 use vtl::{compile, Diagnostic, TargetValue};
 
@@ -28,9 +30,12 @@ fn run(content: String) {
 fn run_scripts() {
     let paths = glob::glob("tests/**/*.vtl").unwrap();
     for path in paths.flatten() {
-        println!("{:?}", path);
-        let content = std::fs::read_to_string(path).unwrap();
+        let content = std::fs::read_to_string(&path).unwrap();
 
+        let start = Instant::now();
         run(content);
+        let elapsed = start.elapsed();
+
+        println!("{:016?}{}", elapsed, path.to_string_lossy());
     }
 }
