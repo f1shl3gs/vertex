@@ -80,7 +80,7 @@ impl Expression for AssertEqFunc {
                 })
             }
             None => Err(ExpressionError::Error {
-                message: format!("assertion failed, {} == {}", left, right),
+                message: format!("assertion failed, {} != {}", left, right),
                 span: self.left.span.merge(self.right.span),
             }),
         }

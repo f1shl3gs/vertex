@@ -1291,7 +1291,7 @@ pub fn unescape_string(mut s: &str) -> String {
                 b'0' => '\0',
                 b'{' => '{',
                 b'}' => '}',
-                _ => unimplemented!("invalid escape for {}", next as char),
+                _ => unimplemented!("invalid escape char {}", next as char),
             };
 
             string.push_str(&s[..i]);
