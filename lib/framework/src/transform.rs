@@ -42,7 +42,7 @@ where
     }
 }
 
-/// Transforms that tend to be more complicated runtime style componets.
+/// Transforms that tend to be more complicated runtime style components.
 ///
 /// These require coordination and map a stream of some `T` to some `U`
 ///
@@ -159,11 +159,11 @@ pub struct TransformOutputsBuf {
 }
 
 impl TransformOutputsBuf {
-    pub fn new_with_capacity(outpus: Vec<Output>, capacity: usize) -> Self {
+    pub fn new_with_capacity(outputs: Vec<Output>, capacity: usize) -> Self {
         let mut primary_buffer = None;
         let mut named_buffers = HashMap::new();
 
-        for output in outpus {
+        for output in outputs {
             match output.port {
                 Some(name) => {
                     named_buffers.insert(name.clone(), OutputBuffer::default());
@@ -212,7 +212,7 @@ impl TransformOutputsBuf {
         std::mem::take(self.primary_buffer.as_mut().expect("no default output"))
     }
 
-    pub fn take_all_nmaed(&mut self) -> HashMap<String, OutputBuffer> {
+    pub fn take_all_named(&mut self) -> HashMap<String, OutputBuffer> {
         std::mem::take(&mut self.named_buffers)
     }
 
