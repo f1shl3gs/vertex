@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736967906091,
+  "lastUpdate": 1736967921750,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "32019bbb9453388df193e5494addc9487ebc53fc",
-          "message": "add sources/prometheus_pushgateway (#2017)",
-          "timestamp": "2024-12-03T15:32:15+08:00",
-          "tree_id": "95f344edb84050dd4d0367da8145dcebc3c474dd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/32019bbb9453388df193e5494addc9487ebc53fc"
-        },
-        "date": 1733211759742,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28391000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 777820,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.006,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.151,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c24e3e056dad27c4f3572bc73a2a36e0b77803cb",
+          "message": "lib/vtl: add assert, parse_regex and pascalcase (#2132)",
+          "timestamp": "2025-01-16T02:54:14+08:00",
+          "tree_id": "1cfa840c799b35d1360617de5027cf8f41152131",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c24e3e056dad27c4f3572bc73a2a36e0b77803cb"
+        },
+        "date": 1736967903253,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28584000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 719250,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.378,
             "unit": "ns/op"
           }
         ]
