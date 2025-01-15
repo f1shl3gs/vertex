@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1736931224588,
+  "lastUpdate": 1736931246014,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4",
-          "message": "add more jemalloc metrics",
-          "timestamp": "2024-12-02T00:30:50+08:00",
-          "tree_id": "88544fbb36362e4c7db20c714a3d86d3a47a8577",
-          "url": "https://github.com/f1shl3gs/vertex/commit/38d64fd1ccb6e15e794a4a830594ca1c9cd9eff4"
-        },
-        "date": 1733070817939,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.654,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 142.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 311.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 652.86,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 617.08,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "7c2902a31ce889282ff03f1c66846269cacbc19e",
+          "message": "implement Pipeline with LimitedSender/LimitedReceiver",
+          "timestamp": "2025-01-15T16:50:54+08:00",
+          "tree_id": "cdc92019b6aed4cd997c20ddda07c9f5ed0386ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c2902a31ce889282ff03f1c66846269cacbc19e"
+        },
+        "date": 1736931227562,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.427,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 139.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 329.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 656.19,
             "unit": "ns/op"
           }
         ]
