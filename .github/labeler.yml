@@ -27,7 +27,7 @@ topology:
 
 VTL:
   - changed-files:
-      - any-glob-to-any-file: lib/vtl/**/*
+    - any-glob-to-any-file: lib/vtl/**/*
 
 docs:
   - changed-files:
