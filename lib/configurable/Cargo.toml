@@ -16,7 +16,7 @@ serde = { version = "1.0.217", default-features = false }
 serde_json = { version = "1.0.135", default-features = false }
 
 # externals
-chrono-tz = { version = "0.10.0", default-features = false }
+chrono-tz = { version = "0.10.1", default-features = false }
 encoding_rs = { version = "0.8.35", default-features = false }
 event = { path = "../event" }
 http = { version = "1.2.0", default-features = false, features = ["std"] }
