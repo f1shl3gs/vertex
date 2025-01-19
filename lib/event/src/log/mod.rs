@@ -8,6 +8,7 @@ use std::fmt::Debug;
 use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use chrono::Utc;
+use finalize::AddBatchNotifier;
 use log_schema::log_schema;
 use serde::Serialize;
 use value::path::{PathPrefix, ValuePath};
@@ -105,6 +106,14 @@ impl From<Value> for LogRecord {
             metadata: EventMetadata::default(),
             fields: value,
         }
+    }
+}
+
+impl AddBatchNotifier for LogRecord {
+    fn add_batch_notifier(&mut self, batch: BatchNotifier) {
+        let finalizer = EventFinalizer::new(batch);
+
+        self.metadata.add_finalizer(finalizer);
     }
 }
 
