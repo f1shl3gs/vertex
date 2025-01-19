@@ -27,6 +27,7 @@ has already been ported.
 | demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
 | exec                    | Execute a command and capture stdout as logs                      | &cross; | &check; | &cross; |
 | filestats               | Monitor files and send metadata metrics                           | &check; | &cross; | &cross; |
+| fluent                  | Receive logs from fluent-bit or fluentd                           | &cross; | &check; | &cross; |
 | grpc_check              | Check gRPC service                                                | &cross; | &cross; | &cross; |
 | haproxy                 | Scrapes metrics from haproxy                                      | &check; | &cross; | &cross; |
 | http_check              | Expose http endpoint health metrics                               | &check; | &cross; | &cross; |
