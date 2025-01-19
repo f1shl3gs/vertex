@@ -510,35 +510,49 @@ mod tests {
         let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
         let mut data = BytesMut::from(input.as_slice());
 
-        let logs = decoder.decode(&mut data).unwrap();
+        let (_chunk, logs) = decoder.decode(&mut data).unwrap().unwrap();
 
+        assert_eq!(logs.len(), 1);
+        let log = &logs[0];
+        let metadata = log.metadata().value();
+        let value = log.value();
+
+        let timestamp = DateTime::parse_from_rfc3339("2025-01-17T20:31:14.531155128Z")
+            .unwrap()
+            .to_utc();
         assert_eq!(
-            Some((
-                None,
-                vec![value::value!({
-                  "nulled": null,
+            metadata,
+            &value::value!({
+                "fluent": {
+                    "tag": "test",
+                    "timestamp": timestamp,
+                    "host": "127.0.0.1",
+                }
+            })
+        );
+        assert_eq!(
+            value,
+            &value::value!({
+              "nulled": null,
+              "basic": true,
+              "list": [
+                true,
+                null,
+                [true, null, true],
+                {
                   "basic": true,
-                  "list": [
-                    true,
-                    null,
-                    [true, null, true],
-                    {
-                      "basic": true,
-                      "buddy": 1.1
-                    }
-                  ],
-                  "map": {
-                    "basic": true,
-                    "list": [true, null, true],
-                    "map": {
-                      "basic": true,
-                      "buddy": (-1)
-                    }
-                  }
-                })
-                .into()]
-            )),
-            logs
+                  "buddy": 1.1
+                }
+              ],
+              "map": {
+                "basic": true,
+                "list": [true, null, true],
+                "map": {
+                  "basic": true,
+                  "buddy": (-1)
+                }
+              }
+            })
         );
     }
 
@@ -568,6 +582,7 @@ mod tests {
         metadata.insert("fluent.tag", "tag.name");
         let timestamp = DateTime::parse_from_rfc3339(timestamp).unwrap().to_utc();
         metadata.insert("fluent.timestamp", timestamp);
+        metadata.insert("fluent.host", "127.0.0.1");
 
         log
     }
@@ -701,12 +716,19 @@ mod tests {
         // [1441588984, {"message": "foo"}]
         // [1441588985, {"message": "bar"}]
         // [1441588986, {"message": "baz"}]
+
+        // message
+        // compressed
+
         let input = [
             147, 168, 116, 97, 103, 46, 110, 97, 109, 101, 196, 57, 146, 206, 85, 236, 230, 248,
             129, 167, 109, 101, 115, 115, 97, 103, 101, 163, 102, 111, 111, 146, 206, 85, 236, 230,
             249, 129, 167, 109, 101, 115, 115, 97, 103, 101, 163, 98, 97, 114, 146, 206, 85, 236,
-            230, 250, 129, 167, 109, 101, 115, 115, 97, 103, 101, 163, 98, 97, 122, 129, 167, 109,
-            101, 115, 115, 97, 103, 101, 163, 102, 111, 111,
+            230, 250, 129, 167, 109, 101, 115, 115, 97, 103, 101, 163, 98, 97, 122, 129,
+            // fixstr
+            //   c    o    m    p    r    e    s    s    e    d
+            170, 99, 111, 109, 112, 114, 101, 115, 115, 101, 100, // foo
+            163, 102, 111, 111,
         ];
 
         let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
