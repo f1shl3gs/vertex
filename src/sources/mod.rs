@@ -14,6 +14,8 @@ mod elasticsearch;
 mod exec;
 #[cfg(feature = "sources-filestats")]
 mod filestats;
+#[cfg(feature = "sources-fluent")]
+mod fluent;
 #[cfg(feature = "sources-grpc_check")]
 mod grpc_check;
 #[cfg(feature = "sources-haproxy")]

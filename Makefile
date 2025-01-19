@@ -102,8 +102,12 @@ redfish-integration-tests:
 clickhouse-integration-tests:
 	cargo test -p vertex --lib sources::clickhouse_metrics::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
 
+.PHONY: fluent-integration-tests
+fluent-integration-tests:
+	cargo test -p vertex --lib sources::fluent::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
+
 .PHONY: integration-tests
-integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub redis-integration-tests integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch redfish-integration-tests
+integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub redis-integration-tests integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch redfish-integration-tests fluent-integration-tests
 
 .PHONY: udeps
 udeps:
