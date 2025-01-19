@@ -6,6 +6,7 @@ use serde::Deserialize;
 
 pub struct ContainerBuilder {
     image: String,
+    extra_args: Vec<String>,
     args: Vec<String>,
     environments: Vec<(String, String)>,
     ports: Vec<u16>,
@@ -16,6 +17,7 @@ impl ContainerBuilder {
     pub fn new(image: impl Into<String>) -> Self {
         Self {
             image: image.into(),
+            extra_args: vec![],
             args: vec![],
             environments: vec![],
             ports: vec![],
@@ -23,9 +25,10 @@ impl ContainerBuilder {
         }
     }
 
-    pub fn with_volume<S>(self, orig: S, dest: S) -> Self
+    pub fn with_volume<S, T>(self, orig: S, dest: T) -> Self
     where
         S: Into<String>,
+        T: Into<String>,
     {
         let volumes = self
             .volumes
@@ -55,6 +58,19 @@ impl ContainerBuilder {
 
         Self {
             environments,
+            ..self
+        }
+    }
+
+    pub fn with_extra_args<S, T>(self, args: T) -> Self
+    where
+        S: Into<String>,
+        T: IntoIterator<Item = S>,
+    {
+        let docker_args = args.into_iter().map(Into::into).collect();
+
+        Self {
+            extra_args: docker_args,
             ..self
         }
     }
@@ -92,6 +108,7 @@ impl ContainerBuilder {
         .chain(environments)
         .chain(ports)
         .chain(volumes)
+        .chain(self.extra_args)
         .chain([self.image])
         .chain(self.args);
 
