@@ -12,8 +12,7 @@ use event::{AddBatchNotifier, BatchNotifier, BatchStatus, LogRecord};
 use flate2::read::MultiGzDecoder;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::tcp::TcpKeepaliveConfig;
-use framework::tls::TlsConfig;
-use framework::Source;
+use framework::{tcp, Source};
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
 use tokio_stream::StreamExt;
@@ -40,8 +39,7 @@ struct Config {
     /// The size of the received buffer used for each connection.
     #[serde(with = "humanize::bytes::serde_option")]
     receive_buffer: Option<usize>,
-
-    tls: Option<TlsConfig>,
+    // tls: Option<TlsConfig>,
 }
 
 #[async_trait::async_trait]
@@ -49,8 +47,11 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let listener = TcpListener::bind(&self.address).await?;
+
         let mut shutdown = cx.shutdown;
         let output = cx.output;
+        let keepalive = self.keepalive;
+        let receive_buffer = self.receive_buffer;
 
         Ok(Box::pin(async move {
             info!(
@@ -82,6 +83,24 @@ impl SourceConfig for Config {
                     message = "accept new connection",
                     %peer
                 );
+
+                if let Some(config) = &keepalive {
+                    if let Err(err) = config.apply_to(&stream) {
+                        warn!(
+                            message = "Failed configuring TCP keepalive",
+                            %err
+                        );
+                    }
+                }
+
+                if let Some(buffer_bytes) = receive_buffer {
+                    if let Err(err) = tcp::set_receive_buffer_size(&stream, buffer_bytes) {
+                        warn!(
+                            message = "Failed configuring receive buffer size on TCP socket",
+                            %err
+                        );
+                    }
+                }
 
                 let mut shutdown = shutdown.clone();
                 let mut output = output.clone();
@@ -884,7 +903,7 @@ mod integration_tests {
                 connection_limit: None,
                 keepalive: None,
                 receive_buffer: None,
-                tls: None,
+                // tls: None,
             };
 
             let source = config
