@@ -1,0 +1,15 @@
+sources:
+  forward:
+    type: fluent
+    receive_buffer: 64k
+    address: 0.0.0.0:24424
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - forward
+    acknowledgements: true
+    stream: stdout
+    encoding:
+      codec: json
