@@ -12,7 +12,7 @@ use datagram::{
     Mib2IcmpGroup, Mib2IpGroup, Mib2TcpGroup, Mib2UdpGroup, PortName, Processor, Sample,
     SampleHeader, SampledIpv4, SampledIpv6, Sfp, VgCounters, Vlan,
 };
-use event::Event;
+use event::{Events, LogRecord};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::UdpSource;
 use framework::{Error, Source};
@@ -53,7 +53,7 @@ impl SourceConfig for Config {
 struct SFlowSource;
 
 impl UdpSource for SFlowSource {
-    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Vec<Event>, Error> {
+    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, Error> {
         let datagram = Datagram::decode(data)?;
 
         let mut value = Value::Object(Default::default());
@@ -81,7 +81,7 @@ impl UdpSource for SFlowSource {
         }
         value.insert("samples", array);
 
-        Ok(vec![Event::Log(value.into())])
+        Ok(Events::from(LogRecord::from(value)))
     }
 }
 
