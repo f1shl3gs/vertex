@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737357825815,
+  "lastUpdate": 1737357895974,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5a9221ff175b5d1a2a9a466c33991eeddf9fa051",
-          "message": "remove unnecessary tokio-util features (#2024)",
-          "timestamp": "2024-12-05T15:23:53+08:00",
-          "tree_id": "6f08c2a1ad9a942160a9f55a85867168b3cf8b38",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5a9221ff175b5d1a2a9a466c33991eeddf9fa051"
-        },
-        "date": 1733384038716,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 521,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35632.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "450485e81749df31174a7f863c9d793579ca7800",
           "message": "fix https tests (#2025)\n\n* add https tests",
           "timestamp": "2024-12-05T16:47:44+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 535,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36756.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c0498581f85f4d40671675933ce7e98c9a5b5fb8",
+          "message": "fix assert_eq tests (#2136)",
+          "timestamp": "2025-01-20T15:13:17+08:00",
+          "tree_id": "a397ab505ac9eeae62d5e82e6ace949fdf5df67e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c0498581f85f4d40671675933ce7e98c9a5b5fb8"
+        },
+        "date": 1737357877321,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 556,
             "unit": "s"
           },
           {
