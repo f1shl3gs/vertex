@@ -52,7 +52,7 @@ hyper-rustls = { version = "0.27.5", default-features = false, features = ["rust
 hyper-util = { version = "0.1.10", default-features = false, features = ["client", "http1", "http2", "server"] }
 indexmap = { version = "2.7.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.17", default-features = false }
-ipnet = { version = "2.10.1", default-features = false, features = ["std"] }
+ipnet = { version = "2.11.0", default-features = false, features = ["std"] }
 listenfd = { version = "1.0.2", default-features = false, optional = true }
 libc = { version = "0.2.169", default-features = false }
 log_schema = { path = "../log_schema" }
