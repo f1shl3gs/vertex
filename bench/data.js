@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737390629615,
+  "lastUpdate": 1737390646202,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10d086b0170d98ef4b811875d707dbabeac37cb0",
-          "message": "chore(deps): bump the prost group with 3 updates (#2028)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.13.3 to 0.13.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.3...v0.13.4)\r\n\r\nUpdates `prost-types` from 0.13.3 to 0.13.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.3...v0.13.4)\r\n\r\nUpdates `prost-build` from 0.13.3 to 0.13.4\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.3...v0.13.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-07T12:35:49+08:00",
-          "tree_id": "524324412a824857e442918c7d76a360a954077a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10d086b0170d98ef4b811875d707dbabeac37cb0"
-        },
-        "date": 1733546765454,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28767000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 765540,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.018,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "de560ab4b03bad108d41d9cd2580902f2aff1fea",
           "message": "chore(deps): bump tokio-stream from 0.1.16 to 0.1.17 (#2029)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.16 to 0.1.17.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.16...tokio-stream-0.1.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-07T13:07:51+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.275,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6ff6ad3de78376ba1b5e773c7a05bc957266eba3",
+          "message": "implement UdpSource with events (#2143)",
+          "timestamp": "2025-01-21T00:19:30+08:00",
+          "tree_id": "90a25b243cef7c86780e726d03f67fb414b185af",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6ff6ad3de78376ba1b5e773c7a05bc957266eba3"
+        },
+        "date": 1737390627476,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28827000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 640180,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.915,
             "unit": "ns/op"
           }
         ]
