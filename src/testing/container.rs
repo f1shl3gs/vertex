@@ -87,7 +87,9 @@ impl ContainerBuilder {
     }
 
     fn pull(&self) -> std::io::Result<()> {
-        let output = Command::new("docker").args(["pull", &self.image]).output()?;
+        let output = Command::new("docker")
+            .args(["pull", &self.image])
+            .output()?;
 
         if output.status.success() {
             return Ok(());
