@@ -11,7 +11,7 @@ use crate::testing::{ContainerBuilder, WaitFor};
 #[tokio::test]
 async fn test_client() {
     let container = ContainerBuilder::new("consul:1.11.1")
-        .port(8500)
+        .with_port(8500)
         .run()
         .unwrap();
     container.wait(WaitFor::Stdout("Synced node info")).unwrap();
@@ -293,7 +293,7 @@ async fn test_gather() {
                 "-client",
                 "0.0.0.0",
             ])
-            .port(8500)
+            .with_port(8500)
             .run()
             .unwrap();
         container.wait(WaitFor::Stdout("Synced node info")).unwrap();

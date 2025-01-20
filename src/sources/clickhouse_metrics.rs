@@ -399,7 +399,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>();
+        crate::testing::generate_config::<Config>();
     }
 
     #[test]
@@ -472,7 +472,7 @@ mod integration_tests {
         trace_init();
 
         let container = ContainerBuilder::new("clickhouse/clickhouse-server:24.8-alpine")
-            .port(PORT)
+            .with_port(PORT)
             .run()
             .unwrap();
         container

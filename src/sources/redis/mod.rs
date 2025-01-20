@@ -1029,7 +1029,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     #[test]
@@ -1070,7 +1070,7 @@ mod integration_tests {
     }
 
     async fn run(password: Option<&str>, image: &str) {
-        let mut builder = ContainerBuilder::new(image).port(REDIS_PORT);
+        let mut builder = ContainerBuilder::new(image).with_port(REDIS_PORT);
         if let Some(password) = password {
             builder = builder.args(["--requirepass", password]);
         }

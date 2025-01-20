@@ -491,7 +491,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     #[test]
@@ -824,7 +824,7 @@ mod integration_tests {
 
     use super::*;
 
-    use crate::testing::{ContainerBuilder, WaitFor};
+    use crate::testing::{wait_for_tcp, ContainerBuilder, WaitFor};
 
     const FLUENT_BIT_IMAGE: &str = "fluent/fluent-bit";
     const FLUENT_BIT_TAG: &str = "3.2.4";
@@ -870,7 +870,7 @@ mod integration_tests {
                 "/fluent-bit/etc/fluent-bit.conf",
             )
             .with_extra_args(["--add-host", "host.docker.internal:host-gateway"])
-            .port(listen_port)
+            .with_port(listen_port)
             .run()
             .unwrap();
         container
@@ -983,30 +983,30 @@ mod integration_tests {
         let container = ContainerBuilder::new(format!("{}:{}", FLUENTD_IMAGE, FLUENTD_TAG))
             .with_volume(temp_dir.to_string_lossy(), "/fluentd/etc/fluent.conf")
             .with_extra_args(["--add-host", "host.docker.internal:host-gateway"])
-            .port(input_port)
+            .with_port(input_port)
             .run()
             .unwrap();
         container
             .wait(WaitFor::Stdout(r#"fluentd worker is now running"#))
             .unwrap();
 
+        // wait for HTTP input ready
+        let mapped = container.get_mapped_addr(input_port);
+        wait_for_tcp(mapped).await;
+        // wait for source ready
+        wait_for_tcp(source_addr).await;
+
         let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let tag = random_string(8);
         let value = random_string(16);
         let payload = format!(r#"{{ "key": "{value}" }}"#);
-        let req = Request::post(format!(
-            "http://{}/{}",
-            container.get_host_port(input_port).unwrap(),
-            tag
-        ))
-        .header("content-type", "application/json")
-        .body(Full::new(Bytes::from(payload.clone())))
-        .unwrap();
+        let req = Request::post(format!("http://{}/{}", mapped, tag))
+            .header("content-type", "application/json")
+            .body(Full::new(Bytes::from(payload.clone())))
+            .unwrap();
 
         let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 200);
-
-        tokio::time::sleep(Duration::from_secs(10)).await;
 
         let events = collect_ready(receiver).await;
 

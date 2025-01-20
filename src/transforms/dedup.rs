@@ -204,7 +204,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>();
+        crate::testing::generate_config::<Config>();
     }
 
     fn make_match_transform(size: usize, fields: Vec<String>) -> Dedup {

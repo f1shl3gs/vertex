@@ -16,7 +16,7 @@ async fn gather() {
     // while percona provide it
     let container = ContainerBuilder::new("percona:5.7.35")
         .with_env("MYSQL_ROOT_PASSWORD", "password")
-        .port(3306)
+        .with_port(3306)
         .run()
         .unwrap();
     container

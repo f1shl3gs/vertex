@@ -1002,7 +1002,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     // Available on unix only, see
@@ -1058,7 +1058,7 @@ mod integration_tests {
     async fn test_gather() {
         let pwd = std::env::current_dir().unwrap();
         let container = ContainerBuilder::new("haproxy:2.4.7")
-            .port(8404)
+            .with_port(8404)
             .with_volume(
                 format!("{}/tests/haproxy/haproxy.cfg", pwd.to_string_lossy()),
                 "/usr/local/etc/haproxy/haproxy.cfg".to_string(),

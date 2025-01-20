@@ -150,6 +150,6 @@ mod tests {
     #[ignore]
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 }

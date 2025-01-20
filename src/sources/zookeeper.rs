@@ -203,7 +203,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     #[test]
@@ -224,7 +224,7 @@ mod integration_tests {
     #[tokio::test]
     async fn test_fetch_stats() {
         let container = ContainerBuilder::new("zookeeper:3.6.2")
-            .port(2181)
+            .with_port(2181)
             .with_env("ZOO_4LW_COMMANDS_WHITELIST", "*")
             .run()
             .unwrap();

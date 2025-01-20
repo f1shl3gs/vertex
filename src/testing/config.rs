@@ -1,7 +1,7 @@
 use configurable::schema::generate_root_schema;
 use configurable::{generate_config_with_schema, Configurable};
 
-pub fn test_generate_config<T>()
+pub fn generate_config<T>()
 where
     for<'de> T: Configurable + serde::Deserialize<'de>,
 {

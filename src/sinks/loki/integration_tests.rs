@@ -16,7 +16,7 @@ const LOKI_PORT: u16 = 3100;
 async fn write_and_query() {
     // 1. setup Loki all-in-one container
     let container = ContainerBuilder::new("grafana/loki:1.4.1")
-        .port(LOKI_PORT)
+        .with_port(LOKI_PORT)
         .run()
         .unwrap();
     container.wait(WaitFor::Stderr("Starting Loki")).unwrap();
