@@ -392,7 +392,7 @@ mod integration_tests {
             .run()
             .unwrap();
         container.wait(WaitFor::Stderr("Cortex started")).unwrap();
-        let address = container.get_host_port(9009).unwrap();
+        let address = container.get_mapped_addr(9009);
 
         // 2. Setup sink
         let config = format!("endpoint: http://{}/api/v1/push", address);

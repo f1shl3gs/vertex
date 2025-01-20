@@ -1065,7 +1065,7 @@ mod integration_tests {
             )
             .run()
             .unwrap();
-        let addr = container.get_host_port(8404).unwrap();
+        let addr = container.get_mapped_addr(8404);
 
         // test unhealth gather
         let uncorrect_port = 111; // dummy, but ok

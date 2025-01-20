@@ -482,7 +482,7 @@ mod integration_tests {
         tokio::time::sleep(Duration::from_secs(2)).await;
 
         // TODO: make sure no warn or error log issued
-        let addr = container.get_host_port(PORT).unwrap();
+        let addr = container.get_mapped_addr(PORT);
         let source = Config {
             endpoint: format!("http://{}", addr).parse().unwrap(),
             tls: None,

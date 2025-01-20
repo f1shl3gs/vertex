@@ -1079,11 +1079,7 @@ mod integration_tests {
             .wait(WaitFor::Stdout("Ready to accept connections"))
             .unwrap();
 
-        let target = container
-            .get_host_port(REDIS_PORT)
-            .unwrap()
-            .parse::<SocketAddr>()
-            .unwrap();
+        let target = container.get_mapped_addr(REDIS_PORT);
         let mut client = Client::connect(&target).await.unwrap();
         if let Some(password) = password {
             client.execute::<String>(&["auth", password]).await.unwrap();

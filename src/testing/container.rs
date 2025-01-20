@@ -86,23 +86,7 @@ impl ContainerBuilder {
         Self { args, ..self }
     }
 
-    fn pull(&self) -> std::io::Result<()> {
-        let output = Command::new("docker")
-            .args(["pull", &self.image])
-            .output()?;
-
-        if output.status.success() {
-            return Ok(());
-        }
-
-        Err(std::io::Error::other(
-            String::from_utf8(output.stderr).unwrap(),
-        ))
-    }
-
     pub fn run(self) -> std::io::Result<Container> {
-        self.pull()?;
-
         let environments = self
             .environments
             .into_iter()
@@ -195,34 +179,6 @@ impl Container {
         format!("{}:{}", port.host, port.port)
             .parse::<SocketAddr>()
             .unwrap()
-    }
-
-    pub fn get_host_port(&self, internal: u16) -> Option<String> {
-        #[derive(Deserialize)]
-        struct Port {
-            #[serde(rename = "HostIp")]
-            host: String,
-            #[serde(rename = "HostPort")]
-            port: String,
-        }
-
-        let output = Command::new("docker")
-            .args([
-                "inspect",
-                self.0.as_str(),
-                "-f",
-                "{{json .NetworkSettings.Ports }}",
-            ])
-            .output()
-            .unwrap();
-
-        let mut ports: HashMap<String, Option<Vec<Port>>> =
-            serde_json::from_slice(&output.stdout).unwrap();
-        let key = format!("{}/tcp", internal);
-        let ports = ports.remove(&key)??;
-        let port = ports.first()?;
-
-        Some(format!("{}:{}", port.host, port.port))
     }
 }
 

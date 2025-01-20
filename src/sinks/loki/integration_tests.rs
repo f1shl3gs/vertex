@@ -20,7 +20,7 @@ async fn write_and_query() {
         .run()
         .unwrap();
     container.wait(WaitFor::Stderr("Starting Loki")).unwrap();
-    let address = container.get_host_port(LOKI_PORT).unwrap();
+    let address = container.get_mapped_addr(LOKI_PORT);
 
     // 2. setup loki service
     let label_value = random_string(8);

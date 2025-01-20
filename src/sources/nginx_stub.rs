@@ -366,7 +366,7 @@ mod integration_tests {
             .wait(crate::testing::WaitFor::Stdout(" start worker processes"))
             .unwrap();
 
-        let address = container.get_host_port(80).unwrap();
+        let address = container.get_mapped_addr(80);
 
         let cli = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 

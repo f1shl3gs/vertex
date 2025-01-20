@@ -15,9 +15,9 @@ async fn test_client() {
         .run()
         .unwrap();
     container.wait(WaitFor::Stdout("Synced node info")).unwrap();
-    let endpoint = container.get_host_port(8500).unwrap();
+    let endpoint = container.get_mapped_addr(8500);
     let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
-    let client = Client::new(endpoint, client);
+    let client = Client::new(endpoint.to_string(), client);
 
     let peers = client.peers().await.unwrap();
     assert_eq!(peers.len(), 1);
@@ -298,7 +298,7 @@ async fn test_gather() {
             .unwrap();
         container.wait(WaitFor::Stdout("Synced node info")).unwrap();
 
-        let host_port = container.get_host_port(8500).unwrap();
+        let host_port = container.get_mapped_addr(8500);
         let endpoint = format!("http://{}", host_port);
         let http_client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         for svc in &services {

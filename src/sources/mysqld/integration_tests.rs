@@ -1,4 +1,3 @@
-use std::net::SocketAddr;
 use std::time::Duration;
 
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
@@ -22,11 +21,7 @@ async fn gather() {
     container
         .wait(WaitFor::Stderr("ready for connections"))
         .unwrap();
-    let addr = container
-        .get_host_port(3306)
-        .unwrap()
-        .parse::<SocketAddr>()
-        .unwrap();
+    let addr = container.get_mapped_addr(3306);
 
     tokio::time::sleep(Duration::from_secs(15)).await;
 
