@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737390197148,
+  "lastUpdate": 1737390629615,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "de560ab4b03bad108d41d9cd2580902f2aff1fea",
-          "message": "chore(deps): bump tokio-stream from 0.1.16 to 0.1.17 (#2029)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.16 to 0.1.17.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.16...tokio-stream-0.1.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-07T13:07:51+08:00",
-          "tree_id": "3fe3b04b217ec9c860ee4eda34135d8dd67e0ee7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/de560ab4b03bad108d41d9cd2580902f2aff1fea"
-        },
-        "date": 1733548678637,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 520,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35628.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "df8ac9b28b7bf7b141494fec7d26413e5ca05e71",
           "message": "chore(deps): bump thiserror from 2.0.4 to 2.0.5 (#2030)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.4 to 2.0.5.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.4...2.0.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-08T14:52:14+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36756.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6ff6ad3de78376ba1b5e773c7a05bc957266eba3",
+          "message": "implement UdpSource with events (#2143)",
+          "timestamp": "2025-01-21T00:19:30+08:00",
+          "tree_id": "90a25b243cef7c86780e726d03f67fb414b185af",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6ff6ad3de78376ba1b5e773c7a05bc957266eba3"
+        },
+        "date": 1737390611447,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 543,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36756.9,
             "unit": "KiB"
           }
         ]
