@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737317398297,
+  "lastUpdate": 1737357290062,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "02c84cd2484c708b8c5169742f03b3f414953c6d",
-          "message": "style (#2021)",
-          "timestamp": "2024-12-04T16:07:12+08:00",
-          "tree_id": "e636752c904629600e750c054ebd5a623c08c445",
-          "url": "https://github.com/f1shl3gs/vertex/commit/02c84cd2484c708b8c5169742f03b3f414953c6d"
-        },
-        "date": 1733299757825,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534170,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532640,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f2b2664ab6c46b7fd6ac6c19660b402e2635207",
+          "message": "chore(deps): bump listenfd from 1.0.1 to 1.0.2 (#2137)\n\nBumps [listenfd](https://github.com/mitsuhiko/listenfd) from 1.0.1 to 1.0.2.\n- [Changelog](https://github.com/mitsuhiko/listenfd/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/mitsuhiko/listenfd/compare/1.0.1...1.0.2)\n\n---\nupdated-dependencies:\n- dependency-name: listenfd\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-20T15:11:49+08:00",
+          "tree_id": "ff74bbe7839113f0019881f63bdec42895405cde",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f2b2664ab6c46b7fd6ac6c19660b402e2635207"
+        },
+        "date": 1737357272320,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530220,
             "unit": "ns/op"
           }
         ]
