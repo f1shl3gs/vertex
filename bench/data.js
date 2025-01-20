@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737358601232,
+  "lastUpdate": 1737358609376,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d08e93287c730d04355408749a5678a00e893919",
-          "message": "add prometheus_pushgateway (#2026)",
-          "timestamp": "2024-12-07T12:33:47+08:00",
-          "tree_id": "557ad15445fd1e9226a4395a4b72f04814b01e7e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d08e93287c730d04355408749a5678a00e893919"
-        },
-        "date": 1733546635962,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 516,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35632.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36756.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "965ff522922d932a6b0545feb03a4112ed5a1f02",
+          "message": "chore(deps): bump indexmap from 2.7.0 to 2.7.1 (#2141)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.7.0 to 2.7.1.\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.7.0...2.7.1)\n\n---\nupdated-dependencies:\n- dependency-name: indexmap\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-20T15:25:32+08:00",
+          "tree_id": "60d030a5c4b66922b80de15324a7df81553f149c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/965ff522922d932a6b0545feb03a4112ed5a1f02"
+        },
+        "date": 1737358590986,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 552,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36755.9,
             "unit": "KiB"
           }
         ]
