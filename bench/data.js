@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737358125856,
+  "lastUpdate": 1737358138456,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5a9221ff175b5d1a2a9a466c33991eeddf9fa051",
-          "message": "remove unnecessary tokio-util features (#2024)",
-          "timestamp": "2024-12-05T15:23:53+08:00",
-          "tree_id": "6f08c2a1ad9a942160a9f55a85867168b3cf8b38",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5a9221ff175b5d1a2a9a466c33991eeddf9fa051"
-        },
-        "date": 1733383588681,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.589,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 146.45,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.15,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 662.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "450485e81749df31174a7f863c9d793579ca7800",
           "message": "fix https tests (#2025)\n\n* add https tests",
           "timestamp": "2024-12-05T16:47:44+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 636.56,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "965ff522922d932a6b0545feb03a4112ed5a1f02",
+          "message": "chore(deps): bump indexmap from 2.7.0 to 2.7.1 (#2141)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.7.0 to 2.7.1.\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.7.0...2.7.1)\n\n---\nupdated-dependencies:\n- dependency-name: indexmap\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-20T15:25:32+08:00",
+          "tree_id": "60d030a5c4b66922b80de15324a7df81553f149c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/965ff522922d932a6b0545feb03a4112ed5a1f02"
+        },
+        "date": 1737358120380,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.389,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 132.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 283.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 578.13,
             "unit": "ns/op"
           }
         ]
