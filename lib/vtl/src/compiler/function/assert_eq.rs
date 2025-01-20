@@ -117,7 +117,7 @@ mod tests {
             AssertEq,
             TypeDef::boolean().fallible(),
             Err(ExpressionError::Error {
-                message: "assertion failed, \"foo\" == \"bar\"".to_string(),
+                message: "assertion failed, \"foo\" != \"bar\"".to_string(),
                 span: Span::empty(),
             }),
         )
