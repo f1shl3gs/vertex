@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737360760552,
+  "lastUpdate": 1737371728266,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "98aebd612a2d40308259cb6dbeb80ea572edcd62",
-          "message": "chore(deps): bump tokio-rustls from 0.26.0 to 0.26.1 (#2027)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.26.0 to 0.26.1.\r\n- [Release notes](https://github.com/rustls/tokio-rustls/releases)\r\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-07T12:34:43+08:00",
-          "tree_id": "788e2d1135a53aeff6db54e7d1e26dd43a90a0bb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/98aebd612a2d40308259cb6dbeb80ea572edcd62"
-        },
-        "date": 1733546204115,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 533700,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 518520,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d8cf2b617f313c610835aa29c9c3da0a0a27b1dd",
+          "message": "tests: simplify testing (#2142)",
+          "timestamp": "2025-01-20T19:13:02+08:00",
+          "tree_id": "6e012b845fb5b55c071177e01cd3b6a1e9787520",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d8cf2b617f313c610835aa29c9c3da0a0a27b1dd"
+        },
+        "date": 1737371709965,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 518250,
             "unit": "ns/op"
           }
         ]
