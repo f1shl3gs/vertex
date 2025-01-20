@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737358152597,
+  "lastUpdate": 1737358597901,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "450485e81749df31174a7f863c9d793579ca7800",
-          "message": "fix https tests (#2025)\n\n* add https tests",
-          "timestamp": "2024-12-05T16:47:44+08:00",
-          "tree_id": "b6e09abbd16fb170878fa37011ef196a8b62a785",
-          "url": "https://github.com/f1shl3gs/vertex/commit/450485e81749df31174a7f863c9d793579ca7800"
-        },
-        "date": 1733389100641,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 520,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35632.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d08e93287c730d04355408749a5678a00e893919",
           "message": "add prometheus_pushgateway (#2026)",
           "timestamp": "2024-12-07T12:33:47+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 556,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36756.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a9376271292e93699825e781541438af2c898c2",
+          "message": "chore(deps): bump ipnet from 2.10.1 to 2.11.0 (#2139)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.10.1 to 2.11.0.\n- [Release notes](https://github.com/krisprice/ipnet/releases)\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\n- [Commits](https://github.com/krisprice/ipnet/commits/2.11.0)\n\n---\nupdated-dependencies:\n- dependency-name: ipnet\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-20T15:25:06+08:00",
+          "tree_id": "bfcfbc85567c380d7a6e0c2f49c5fc48370ab58e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a9376271292e93699825e781541438af2c898c2"
+        },
+        "date": 1737358579630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 539,
             "unit": "s"
           },
           {
