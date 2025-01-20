@@ -11,7 +11,7 @@ use std::sync::Arc;
 
 use configurable::configurable_component;
 use decode::DataField;
-use event::Event;
+use event::{Events, LogRecord};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::UdpSource;
 use framework::{Error, Source};
@@ -62,10 +62,10 @@ impl<T> UdpSource for NetFlowSource<T>
 where
     T: TemplateSystem + Send + Sync + 'static,
 {
-    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Vec<Event>, Error> {
+    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, Error> {
         let version = u16::from_be_bytes(data[0..2].try_into()?);
 
-        match version {
+        let value = match version {
             10 => {
                 // IPFIX
                 let ipfix = {
@@ -73,9 +73,7 @@ where
                     IpFix::decode(data, templates.deref_mut())?
                 };
 
-                let value = convert_ipfix(ipfix);
-
-                Ok(vec![value.into()])
+                convert_ipfix(ipfix)
             }
             9 => {
                 // NetFlow v9
@@ -84,9 +82,7 @@ where
                     NetFlow::decode(data, templates.deref_mut())?
                 };
 
-                let value = convert_netflow(netflow);
-
-                Ok(vec![value.into()])
+                convert_netflow(netflow)
             }
             _ => {
                 warn!(
@@ -96,9 +92,17 @@ where
                     internal_log_rate_secs = 30
                 );
 
-                Err(Error::from("unknown version"))
+                return Err(Error::from("unknown version"));
             }
-        }
+        };
+
+        let mut log = LogRecord::from(value);
+        let metadata = log.metadata_mut().value_mut();
+
+        metadata.insert("netflow.version", version);
+        metadata.insert("netflow.peer", peer.to_string());
+
+        Ok(log.into())
     }
 }
 

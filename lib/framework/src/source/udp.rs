@@ -1,13 +1,13 @@
 use std::net::SocketAddr;
 
-use event::Event;
+use event::Events;
 use tokio::net::UdpSocket;
 
 use crate::config::SourceContext;
 use crate::{udp, Source};
 
 pub trait UdpSource: Sized + Send + Sync + 'static {
-    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Vec<Event>, crate::Error>;
+    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, crate::Error>;
 
     fn run(
         self,
@@ -67,7 +67,7 @@ pub trait UdpSource: Sized + Send + Sync + 'static {
 
                 match self.build_events(peer, &buf[..size]) {
                     Ok(events) => {
-                        if let Err(err) = output.send_batch(events).await {
+                        if let Err(err) = output.send(events).await {
                             error!(
                                 message = "send events to output failed",
                                 %err,
