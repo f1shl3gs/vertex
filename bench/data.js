@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737358597901,
+  "lastUpdate": 1737358601232,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6f8671f23e22caee38c3346bddacbf99d25bd2ff",
-          "message": "add https tests (#2023)\n\n* add https tests",
-          "timestamp": "2024-12-05T15:01:29+08:00",
-          "tree_id": "7e0a45088e6af067db6f67e066db80aeab077c36",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6f8671f23e22caee38c3346bddacbf99d25bd2ff"
-        },
-        "date": 1733382704650,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28201000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 742950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.481,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5a9221ff175b5d1a2a9a466c33991eeddf9fa051",
           "message": "remove unnecessary tokio-util features (#2024)",
           "timestamp": "2024-12-05T15:23:53+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.058,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a9376271292e93699825e781541438af2c898c2",
+          "message": "chore(deps): bump ipnet from 2.10.1 to 2.11.0 (#2139)\n\nBumps [ipnet](https://github.com/krisprice/ipnet) from 2.10.1 to 2.11.0.\n- [Release notes](https://github.com/krisprice/ipnet/releases)\n- [Changelog](https://github.com/krisprice/ipnet/blob/master/RELEASES.md)\n- [Commits](https://github.com/krisprice/ipnet/commits/2.11.0)\n\n---\nupdated-dependencies:\n- dependency-name: ipnet\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-20T15:25:06+08:00",
+          "tree_id": "bfcfbc85567c380d7a6e0c2f49c5fc48370ab58e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a9376271292e93699825e781541438af2c898c2"
+        },
+        "date": 1737358581833,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28262000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 736440,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.019,
             "unit": "ns/op"
           }
         ]
