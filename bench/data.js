@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737357343397,
+  "lastUpdate": 1737357348636,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "02c84cd2484c708b8c5169742f03b3f414953c6d",
-          "message": "style (#2021)",
-          "timestamp": "2024-12-04T16:07:12+08:00",
-          "tree_id": "e636752c904629600e750c054ebd5a623c08c445",
-          "url": "https://github.com/f1shl3gs/vertex/commit/02c84cd2484c708b8c5169742f03b3f414953c6d"
-        },
-        "date": 1733299790176,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.488,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 139.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 312.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 615.13,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 625.28,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f2b2664ab6c46b7fd6ac6c19660b402e2635207",
+          "message": "chore(deps): bump listenfd from 1.0.1 to 1.0.2 (#2137)\n\nBumps [listenfd](https://github.com/mitsuhiko/listenfd) from 1.0.1 to 1.0.2.\n- [Changelog](https://github.com/mitsuhiko/listenfd/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/mitsuhiko/listenfd/compare/1.0.1...1.0.2)\n\n---\nupdated-dependencies:\n- dependency-name: listenfd\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-20T15:11:49+08:00",
+          "tree_id": "ff74bbe7839113f0019881f63bdec42895405cde",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f2b2664ab6c46b7fd6ac6c19660b402e2635207"
+        },
+        "date": 1737357330535,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 138.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 301.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 629.73,
             "unit": "ns/op"
           }
         ]
