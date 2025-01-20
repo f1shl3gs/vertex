@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::net::SocketAddr;
 use std::time::Duration;
 
 use configurable::configurable_component;
@@ -15,7 +16,7 @@ use tokio::net::TcpStream;
 struct Config {
     /// The endpoints to connect to.
     #[configurable(required)]
-    endpoint: String,
+    target: SocketAddr,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -27,7 +28,7 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         Ok(Box::pin(run(
-            self.endpoint.clone(),
+            self.target,
             self.interval,
             cx.output,
             cx.shutdown,
@@ -40,7 +41,7 @@ impl SourceConfig for Config {
 }
 
 async fn run(
-    endpoint: String,
+    target: SocketAddr,
     interval: Duration,
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
@@ -55,7 +56,7 @@ async fn run(
             _ = ticker.tick() => {}
         }
 
-        let mut metrics = match fetch_stats(&endpoint).await {
+        let mut metrics = match fetch_stats(target).await {
             Ok((version, state, peer_state, stats)) => {
                 let mut metrics = Vec::with_capacity(stats.len() + 2);
                 metrics.extend_from_slice(&[
@@ -64,7 +65,7 @@ async fn run(
                         "",
                         1,
                         tags!(
-                            INSTANCE_KEY => endpoint.clone()
+                            INSTANCE_KEY => target.to_string(),
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -73,7 +74,7 @@ async fn run(
                         1,
                         tags!(
                             "version" => version,
-                            INSTANCE_KEY => endpoint.clone()
+                            INSTANCE_KEY => target.to_string()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -82,7 +83,7 @@ async fn run(
                         1,
                         tags!(
                             "state" => state,
-                            INSTANCE_KEY => endpoint.clone()
+                            INSTANCE_KEY => target.to_string()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -91,7 +92,7 @@ async fn run(
                         1,
                         tags!(
                             "state" => peer_state,
-                            INSTANCE_KEY => endpoint.clone(),
+                            INSTANCE_KEY => target.to_string(),
                         ),
                     ),
                 ]);
@@ -102,7 +103,7 @@ async fn run(
                         format!("{} value of mntr", key),
                         value,
                         tags!(
-                            INSTANCE_KEY => endpoint.clone()
+                            INSTANCE_KEY => target.to_string()
                         ),
                     ));
                 }
@@ -120,7 +121,7 @@ async fn run(
                     "",
                     0,
                     tags!(
-                        INSTANCE_KEY => endpoint.clone()
+                        INSTANCE_KEY => target.to_string()
                     ),
                 )]
             }
@@ -149,7 +150,9 @@ fn parse_version(input: &str) -> String {
     version.to_string()
 }
 
-async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<String, f64>), Error> {
+async fn fetch_stats(
+    addr: SocketAddr,
+) -> Result<(String, String, String, BTreeMap<String, f64>), Error> {
     let socket = TcpStream::connect(addr).await?;
     let (reader, mut writer) = tokio::io::split(socket);
 
@@ -203,7 +206,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     #[test]
@@ -224,15 +227,15 @@ mod integration_tests {
     #[tokio::test]
     async fn test_fetch_stats() {
         let container = ContainerBuilder::new("zookeeper:3.6.2")
-            .port(2181)
+            .with_port(2181)
             .with_env("ZOO_4LW_COMMANDS_WHITELIST", "*")
             .run()
             .unwrap();
         tokio::time::sleep(Duration::from_secs(5)).await;
         // container.wait(WaitFor::Stdout("- Started ")).unwrap();
-        let addr = container.get_host_port(2181).unwrap();
+        let addr = container.get_mapped_addr(2181);
 
-        let (version, state, _peer_state, stats) = fetch_stats(addr.as_str()).await.unwrap();
+        let (version, state, _peer_state, stats) = fetch_stats(addr).await.unwrap();
         assert_eq!(version, "3.6.2--803c7f1a12f85978cb049af5e4ef23bd8b688715");
         assert_eq!(state, "standalone");
         assert!(*stats.get("zk_uptime").unwrap() > 0.0);

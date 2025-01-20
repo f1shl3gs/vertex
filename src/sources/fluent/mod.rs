@@ -191,22 +191,11 @@ impl Decoder {
     fn new(peer: IpAddr) -> Self {
         Decoder { peer }
     }
-}
 
-impl tokio_util::codec::Decoder for Decoder {
-    type Item = (Option<Vec<u8>>, Vec<LogRecord>);
-    type Error = DecodeError;
-
-    // all the received events is an array
-    //
-    // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#event-modes
-    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
-        if src.is_empty() {
-            return Ok(None);
-        }
-
-        let mut reader = src.reader();
-
+    fn decode_internal<R: Read>(
+        &self,
+        reader: &mut R,
+    ) -> Result<Option<(Option<Vec<u8>>, Vec<LogRecord>)>, DecodeError> {
         let len = match reader.read_u8()? {
             // fixarray
             typ @ 0x90..=0x9f => (typ & 0x0f) as usize,
@@ -226,7 +215,7 @@ impl tokio_util::codec::Decoder for Decoder {
         }
 
         // the first part
-        let tag = decode_string(&mut reader)?;
+        let tag = decode_string(reader)?;
 
         let typ = reader.read_u8()?;
         match typ {
@@ -244,7 +233,7 @@ impl tokio_util::codec::Decoder for Decoder {
 
                 let mut logs = Vec::with_capacity(arr_len);
                 for _ in 0..arr_len {
-                    let (timestamp, value) = decode_entry(&mut reader)?;
+                    let (timestamp, value) = decode_entry(reader)?;
                     let mut log = LogRecord::from(value);
 
                     let metadata = log.metadata_mut().value_mut();
@@ -258,7 +247,7 @@ impl tokio_util::codec::Decoder for Decoder {
 
                 if len == 3 {
                     // options
-                    let options = decode_options(&mut reader)?;
+                    let options = decode_options(reader)?;
 
                     Ok(Some((options.chunk, logs)))
                 } else {
@@ -287,7 +276,7 @@ impl tokio_util::codec::Decoder for Decoder {
                 reader.read_exact(&mut data)?;
 
                 let option = if len == 3 {
-                    Some(decode_options(&mut reader)?)
+                    Some(decode_options(reader)?)
                 } else {
                     None
                 };
@@ -329,10 +318,10 @@ impl tokio_util::codec::Decoder for Decoder {
 
             // bin
             0xc4..=0xc6 => {
-                let data = decode_binary(&mut reader)?;
+                let data = decode_binary(reader)?;
 
                 let option = if len == 3 {
-                    Some(decode_options(&mut reader)?)
+                    Some(decode_options(reader)?)
                 } else {
                     None
                 };
@@ -380,7 +369,7 @@ impl tokio_util::codec::Decoder for Decoder {
                 let secs = reader.read_u32()?;
                 let ts = DateTime::from_timestamp(secs as i64, 0).ok_or(MsgPackError::Timestamp)?;
 
-                let value = decode_value(&mut reader)?;
+                let value = decode_value(reader)?;
 
                 let mut log = LogRecord::from(value);
                 let metadata = log.metadata_mut().value_mut();
@@ -390,7 +379,7 @@ impl tokio_util::codec::Decoder for Decoder {
 
                 if len == 4 {
                     // only `size` or `chunk`
-                    let option = decode_options(&mut reader)?;
+                    let option = decode_options(reader)?;
                     Ok(Some((option.chunk, vec![log])))
                 } else {
                     Ok(Some((None, vec![log])))
@@ -398,6 +387,37 @@ impl tokio_util::codec::Decoder for Decoder {
             }
 
             typ => Err(MsgPackError::UnknownType(typ).into()),
+        }
+    }
+}
+
+impl tokio_util::codec::Decoder for Decoder {
+    type Item = (Option<Vec<u8>>, Vec<LogRecord>);
+    type Error = DecodeError;
+
+    // all the received events is an array
+    //
+    // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#event-modes
+    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+        if src.is_empty() {
+            return Ok(None);
+        }
+
+        let mut cursor = std::io::Cursor::new(&src[..]);
+        match self.decode_internal(&mut cursor) {
+            Ok(result) => {
+                src.advance(cursor.position() as usize);
+
+                Ok(result)
+            }
+            Err(err) => match err {
+                DecodeError::IO(_err) => {
+                    // IO error should never happen with std::io::Cursor,
+                    // so the only possible is leak of data to read
+                    Ok(None)
+                }
+                _ => Err(err),
+            },
         }
     }
 }
@@ -451,7 +471,10 @@ impl From<std::io::Error> for DecodeError {
 
 impl From<msgpack::Error> for DecodeError {
     fn from(err: msgpack::Error) -> Self {
-        DecodeError::Decode(err)
+        match err {
+            msgpack::Error::IO(err) => DecodeError::IO(err),
+            err => DecodeError::Decode(err),
+        }
     }
 }
 
@@ -491,7 +514,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     #[test]
@@ -808,8 +831,6 @@ mod tests {
 
 #[cfg(all(test, feature = "fluent-integration-tests"))]
 mod integration_tests {
-    use std::time::Duration;
-
     use bytes::Bytes;
     use event::{Event, EventStatus};
     use framework::config::ProxyConfig;
@@ -819,12 +840,12 @@ mod integration_tests {
     use http::Request;
     use http_body_util::Full;
     use testify::random::random_string;
-    use testify::{collect_ready, next_addr};
+    use testify::{collect_n, next_addr};
     use value::value;
 
     use super::*;
 
-    use crate::testing::{ContainerBuilder, WaitFor};
+    use crate::testing::{trace_init, wait_for_tcp, ContainerBuilder, WaitFor};
 
     const FLUENT_BIT_IMAGE: &str = "fluent/fluent-bit";
     const FLUENT_BIT_TAG: &str = "3.2.4";
@@ -833,6 +854,8 @@ mod integration_tests {
     const FLUENTD_TAG: &str = "v1.12";
 
     async fn run_fluent_bit(status: EventStatus) {
+        trace_init();
+
         let (source_addr, receiver) = start_source(status).await;
 
         let input_addr = next_addr();
@@ -870,32 +893,30 @@ mod integration_tests {
                 "/fluent-bit/etc/fluent-bit.conf",
             )
             .with_extra_args(["--add-host", "host.docker.internal:host-gateway"])
-            .port(listen_port)
+            .with_port(listen_port)
             .run()
             .unwrap();
         container
             .wait(WaitFor::Stderr(r#"stream processor started"#))
             .unwrap();
 
+        // wait for container ready
+        let input_addr = container.get_mapped_addr(listen_port);
+        wait_for_tcp(input_addr).await;
+
         let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let tag = random_string(8);
         let value = random_string(16);
         let payload = format!(r#"{{ "key": "{value}" }}"#);
-        let req = Request::post(format!(
-            "http://{}/{}",
-            container.get_host_port(listen_port).unwrap(),
-            tag
-        ))
-        .header("content-type", "application/json")
-        .body(Full::new(Bytes::from(payload.clone())))
-        .unwrap();
+        let req = Request::post(format!("http://{}/{}", input_addr, tag))
+            .header("content-type", "application/json")
+            .body(Full::new(Bytes::from(payload.clone())))
+            .unwrap();
 
         let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 201);
 
-        tokio::time::sleep(Duration::from_secs(2)).await;
-
-        let events = collect_ready(receiver).await;
+        let events = collect_n(receiver, 1).await;
 
         assert_eq!(events.len(), 1);
         let log = events[0].as_log();
@@ -936,6 +957,8 @@ mod integration_tests {
             source.await.unwrap();
         });
 
+        wait_for_tcp(address).await;
+
         (address, recv)
     }
 
@@ -945,6 +968,8 @@ mod integration_tests {
     }
 
     async fn run_fluentd(status: EventStatus, options: &str) {
+        trace_init();
+
         let (source_addr, receiver) = start_source(status).await;
 
         let input_addr = next_addr();
@@ -983,32 +1008,32 @@ mod integration_tests {
         let container = ContainerBuilder::new(format!("{}:{}", FLUENTD_IMAGE, FLUENTD_TAG))
             .with_volume(temp_dir.to_string_lossy(), "/fluentd/etc/fluent.conf")
             .with_extra_args(["--add-host", "host.docker.internal:host-gateway"])
-            .port(input_port)
+            .with_port(input_port)
             .run()
             .unwrap();
         container
             .wait(WaitFor::Stdout(r#"fluentd worker is now running"#))
             .unwrap();
 
+        // wait for HTTP input ready
+        let mapped = container.get_mapped_addr(input_port);
+        wait_for_tcp(mapped).await;
+        // wait for source ready
+        wait_for_tcp(source_addr).await;
+
         let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let tag = random_string(8);
         let value = random_string(16);
         let payload = format!(r#"{{ "key": "{value}" }}"#);
-        let req = Request::post(format!(
-            "http://{}/{}",
-            container.get_host_port(input_port).unwrap(),
-            tag
-        ))
-        .header("content-type", "application/json")
-        .body(Full::new(Bytes::from(payload.clone())))
-        .unwrap();
+        let req = Request::post(format!("http://{}/{}", mapped, tag))
+            .header("content-type", "application/json")
+            .body(Full::new(Bytes::from(payload.clone())))
+            .unwrap();
 
         let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 200);
 
-        tokio::time::sleep(Duration::from_secs(10)).await;
-
-        let events = collect_ready(receiver).await;
+        let events = collect_n(receiver, 1).await;
 
         assert_eq!(events.len(), 1);
         let log = events[0].as_log();

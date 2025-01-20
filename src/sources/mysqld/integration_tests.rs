@@ -1,4 +1,3 @@
-use std::net::SocketAddr;
 use std::time::Duration;
 
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
@@ -16,17 +15,13 @@ async fn gather() {
     // while percona provide it
     let container = ContainerBuilder::new("percona:5.7.35")
         .with_env("MYSQL_ROOT_PASSWORD", "password")
-        .port(3306)
+        .with_port(3306)
         .run()
         .unwrap();
     container
         .wait(WaitFor::Stderr("ready for connections"))
         .unwrap();
-    let addr = container
-        .get_host_port(3306)
-        .unwrap()
-        .parse::<SocketAddr>()
-        .unwrap();
+    let addr = container.get_mapped_addr(3306);
 
     tokio::time::sleep(Duration::from_secs(15)).await;
 

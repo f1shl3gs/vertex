@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::io::{BufRead, BufReader, ErrorKind, Read};
+use std::net::SocketAddr;
 use std::process::{Command, Stdio};
 
 use serde::Deserialize;
@@ -39,7 +40,7 @@ impl ContainerBuilder {
         Self { volumes, ..self }
     }
 
-    pub fn port(self, port: u16) -> Self {
+    pub fn with_port(self, port: u16) -> Self {
         let mut ports = self.ports.clone();
         ports.push(port);
 
@@ -150,7 +151,7 @@ impl Container {
         }
     }
 
-    pub fn get_host_port(&self, internal: u16) -> Option<String> {
+    pub fn get_mapped_addr(&self, internal: u16) -> SocketAddr {
         #[derive(Deserialize)]
         struct Port {
             #[serde(rename = "HostIp")]
@@ -172,10 +173,12 @@ impl Container {
         let mut ports: HashMap<String, Option<Vec<Port>>> =
             serde_json::from_slice(&output.stdout).unwrap();
         let key = format!("{}/tcp", internal);
-        let ports = ports.remove(&key)??;
-        let port = ports.first()?;
+        let ports = ports.remove(&key).unwrap().unwrap();
+        let port = ports.first().unwrap();
 
-        Some(format!("{}:{}", port.host, port.port))
+        format!("{}:{}", port.host, port.port)
+            .parse::<SocketAddr>()
+            .unwrap()
     }
 }
 

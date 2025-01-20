@@ -399,7 +399,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>();
+        crate::testing::generate_config::<Config>();
     }
 
     #[test]
@@ -472,7 +472,7 @@ mod integration_tests {
         trace_init();
 
         let container = ContainerBuilder::new("clickhouse/clickhouse-server:24.8-alpine")
-            .port(PORT)
+            .with_port(PORT)
             .run()
             .unwrap();
         container
@@ -482,7 +482,7 @@ mod integration_tests {
         tokio::time::sleep(Duration::from_secs(2)).await;
 
         // TODO: make sure no warn or error log issued
-        let addr = container.get_host_port(PORT).unwrap();
+        let addr = container.get_mapped_addr(PORT);
         let source = Config {
             endpoint: format!("http://{}", addr).parse().unwrap(),
             tls: None,

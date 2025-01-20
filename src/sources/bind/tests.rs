@@ -17,7 +17,7 @@ use super::{client, statistics_to_metrics, Config};
 
 #[test]
 fn generate_config() {
-    crate::testing::test_generate_config::<Config>()
+    crate::testing::generate_config::<Config>()
 }
 
 async fn v3_handle(req: Request<Incoming>) -> hyper::Result<Response<Full<Bytes>>> {

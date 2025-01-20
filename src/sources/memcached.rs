@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::net::SocketAddr;
 use std::time::{Duration, Instant};
 
 use chrono::Utc;
@@ -22,7 +23,7 @@ const INSTANCE_KEY: Key = Key::from_static("instance");
 struct Config {
     /// The endpoint to Memcached servers.
     #[configurable(required, format = "ip-address", example = "127.0.0.1:3000")]
-    endpoints: Vec<String>,
+    endpoints: Vec<SocketAddr>,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -50,7 +51,7 @@ impl SourceConfig for Config {
                     _ = ticker.tick() => {}
                 }
 
-                let metrics = futures::future::join_all(endpoints.iter().map(|addr| gather(addr)))
+                let metrics = futures::future::join_all(endpoints.iter().map(|addr| gather(*addr)))
                     .await
                     .into_iter()
                     .flatten()
@@ -105,7 +106,7 @@ macro_rules! get_value_from_string {
     };
 }
 
-async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
+async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
 
     match fetch_stats(addr).await {
@@ -602,7 +603,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
         Err(err) => {
             warn!(
                 message = "Fetch stats failed",
-                addr = addr,
+                %addr,
                 %err
             );
 
@@ -611,7 +612,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
     }
 }
 
-async fn fetch_settings_metric(addr: &str) -> Result<Vec<Metric>, ParseError> {
+async fn fetch_settings_metric(addr: SocketAddr) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
 
     match stats_settings(addr).await {
@@ -678,7 +679,7 @@ async fn fetch_settings_metric(addr: &str) -> Result<Vec<Metric>, ParseError> {
         Err(err) => {
             warn!(
                 message = "Fetch stats settings failed",
-                addr = addr,
+                %addr,
                 %err
             );
 
@@ -687,7 +688,7 @@ async fn fetch_settings_metric(addr: &str) -> Result<Vec<Metric>, ParseError> {
     }
 }
 
-async fn gather(addr: &str) -> Vec<Metric> {
+async fn gather(addr: SocketAddr) -> Vec<Metric> {
     let start = Instant::now();
 
     let (stats, settings) =
@@ -806,7 +807,7 @@ enum ParseError {
     ClientError,
 }
 
-async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
+async fn fetch_stats(addr: SocketAddr) -> Result<Stats, ParseError> {
     let mut stats = Stats::default();
     for cmd in ["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
         let resp = query(addr, cmd)
@@ -822,7 +823,7 @@ async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
     Ok(stats)
 }
 
-async fn stats_settings(addr: &str) -> Result<HashMap<String, String>, ParseError> {
+async fn stats_settings(addr: SocketAddr) -> Result<HashMap<String, String>, ParseError> {
     let resp: String =
         query(addr, "stats settings\r\n")
             .await
@@ -853,7 +854,7 @@ fn parse_stats_settings(input: &str) -> HashMap<String, String> {
     stats
 }
 
-async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
+async fn query(addr: SocketAddr, cmd: &str) -> Result<String, std::io::Error> {
     let socket = TcpStream::connect(addr).await?;
     let (mut reader, mut writer) = tokio::io::split(socket);
 
@@ -880,7 +881,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     #[tokio::test]
@@ -935,10 +936,12 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-memcached"))]
 mod integration_tests {
+    use std::net::SocketAddr;
+
     use super::*;
     use crate::testing::ContainerBuilder;
 
-    async fn write_data(addr: &str, n: i32) {
+    async fn write_data(addr: SocketAddr, n: i32) {
         let mut socket = TcpStream::connect(addr).await.unwrap();
         let (mut reader, mut writer) = socket.split();
 
@@ -955,19 +958,19 @@ mod integration_tests {
     #[tokio::test]
     async fn query_stats() {
         let container = ContainerBuilder::new("memcached:1.6.12-alpine3.14")
-            .port(11211)
+            .with_port(11211)
             .run()
             .unwrap();
 
-        let addr = container.get_host_port(11211).unwrap();
+        let addr = container.get_mapped_addr(11211);
 
-        write_data(&addr, 1000).await;
+        write_data(addr, 1000).await;
 
-        let stats = fetch_stats(&addr).await.unwrap();
+        let stats = fetch_stats(addr).await.unwrap();
         assert_eq!(stats.stats.get("cmd_set").unwrap(), &1000.0);
         assert_eq!(stats.stats.get("cmd_get").unwrap(), &0.0);
 
-        let stats = stats_settings(&addr).await.unwrap();
+        let stats = stats_settings(addr).await.unwrap();
         assert_eq!(stats.get("temporary_ttl").unwrap(), "61");
         assert_eq!(stats.get("warm_max_factor").unwrap(), "2.00");
         assert_eq!(stats.get("binding_protocol").unwrap(), "auto-negotiate");

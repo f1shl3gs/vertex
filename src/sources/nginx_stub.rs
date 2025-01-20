@@ -308,7 +308,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<Config>()
+        crate::testing::generate_config::<Config>()
     }
 
     #[test]
@@ -347,7 +347,7 @@ mod integration_tests {
     async fn new_test_nginx() {
         let pwd = current_dir().unwrap();
         let container = ContainerBuilder::new("nginx:1.21.3")
-            .port(80)
+            .with_port(80)
             .with_volume(
                 format!("{}/tests/nginx/nginx.conf", pwd.to_string_lossy()),
                 "/etc/nginx/nginx.conf".to_string(),
@@ -366,7 +366,7 @@ mod integration_tests {
             .wait(crate::testing::WaitFor::Stdout(" start worker processes"))
             .unwrap();
 
-        let address = container.get_host_port(80).unwrap();
+        let address = container.get_mapped_addr(80);
 
         let cli = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 
