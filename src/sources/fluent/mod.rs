@@ -808,8 +808,6 @@ mod tests {
 
 #[cfg(all(test, feature = "fluent-integration-tests"))]
 mod integration_tests {
-    use std::time::Duration;
-
     use bytes::Bytes;
     use event::{Event, EventStatus};
     use framework::config::ProxyConfig;
@@ -819,7 +817,7 @@ mod integration_tests {
     use http::Request;
     use http_body_util::Full;
     use testify::random::random_string;
-    use testify::{collect_ready, next_addr};
+    use testify::{collect_n, next_addr};
     use value::value;
 
     use super::*;
@@ -893,9 +891,7 @@ mod integration_tests {
         let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 201);
 
-        tokio::time::sleep(Duration::from_secs(2)).await;
-
-        let events = collect_ready(receiver).await;
+        let events = collect_n(receiver, 1).await;
 
         assert_eq!(events.len(), 1);
         let log = events[0].as_log();
@@ -935,6 +931,8 @@ mod integration_tests {
 
             source.await.unwrap();
         });
+
+        wait_for_tcp(address).await;
 
         (address, recv)
     }
@@ -1008,7 +1006,7 @@ mod integration_tests {
         let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 200);
 
-        let events = collect_ready(receiver).await;
+        let events = collect_n(receiver, 1).await;
 
         assert_eq!(events.len(), 1);
         let log = events[0].as_log();
