@@ -168,6 +168,22 @@ impl Events {
         }
     }
 
+    pub fn into_logs(self) -> Option<Vec<LogRecord>> {
+        if let Self::Logs(logs) = self {
+            Some(logs)
+        } else {
+            None
+        }
+    }
+
+    pub fn into_metrics(self) -> Option<Vec<Metric>> {
+        if let Self::Metrics(metrics) = self {
+            Some(metrics)
+        } else {
+            None
+        }
+    }
+
     pub fn for_each_event(&mut self, mut update: impl FnMut(EventMutRef<'_>)) {
         match self {
             Self::Logs(logs) => logs.iter_mut().for_each(|log| update(log.into())),

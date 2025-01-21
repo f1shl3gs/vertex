@@ -610,7 +610,7 @@ mod tests {
     use std::io::Cursor;
 
     use chrono::TimeZone;
-    use event::Event;
+    use event::{LogRecord};
     use futures::StreamExt;
     use tokio::time::{sleep, timeout, Duration};
 
@@ -758,11 +758,7 @@ MESSAGE=audit log
         units
     }
 
-    async fn run_with_units(
-        includes: &[&str],
-        excludes: &[&str],
-        cursor: Option<&str>,
-    ) -> Vec<Event> {
+    async fn run_with_units(includes: &[&str], excludes: &[&str], cursor: Option<&str>) -> Vec<LogRecord> {
         let includes = create_unit_matches(includes.to_vec());
         let excludes = create_unit_matches(excludes.to_vec());
         run_journal(includes, excludes, cursor).await
@@ -772,7 +768,7 @@ MESSAGE=audit log
         includes: HashSet<String>,
         excludes: HashSet<String>,
         cursor: Option<&str>,
-    ) -> Vec<Event> {
+    ) -> Vec<LogRecord> {
         let (tx, rx) = Pipeline::new_test();
         let (trigger, shutdown, _) = ShutdownSignal::new_wired();
         let mut checkpoint_path = testify::temp_dir();
@@ -803,9 +799,14 @@ MESSAGE=audit log
 
         sleep(Duration::from_millis(200)).await;
         drop(trigger);
-        timeout(Duration::from_secs(1), rx.collect::<Vec<Event>>())
+
+        timeout(Duration::from_secs(1), rx.collect::<Vec<_>>())
             .await
             .unwrap()
+            .into_iter()
+            .filter_map(|events| events.into_logs())
+            .flatten()
+            .collect::<Vec<_>>()
     }
 
     fn test_journal(includes: &[&str], excludes: &[&str]) -> JournaldSource {
@@ -834,6 +835,7 @@ MESSAGE=audit log
     #[tokio::test]
     async fn reads_journal() {
         let received = run_with_units(&[], &[], None).await;
+
         assert_eq!(received.len(), 8);
         assert_eq!(
             message(&received[0]),
@@ -847,9 +849,9 @@ MESSAGE=audit log
         assert_eq!(priority(&received[1]), Value::Bytes("DEBUG".into()));
     }
 
-    fn message(event: &Event) -> Value {
-        let log = event.as_log();
+    fn message(log: &LogRecord) -> Value {
         let v = log.get("message").unwrap();
+
         match v {
             Value::Bytes(_) => v.clone(),
             _ => panic!("invalid event"),
@@ -860,8 +862,7 @@ MESSAGE=audit log
         Value::Timestamp(DateTime::<Utc>::from_timestamp(secs, usecs).unwrap())
     }
 
-    fn timestamp(event: &Event) -> Value {
-        let log = event.as_log();
+    fn timestamp(log: &LogRecord) -> Value {
         let v = log.get("_SOURCE_REALTIME_TIMESTAMP").unwrap();
         let ns = match v {
             Value::Bytes(s) => {
@@ -874,8 +875,7 @@ MESSAGE=audit log
         Value::Timestamp(Utc.timestamp_nanos(ns * 1000))
     }
 
-    fn priority(event: &Event) -> Value {
-        let log = event.as_log();
+    fn priority(log: &LogRecord) -> Value {
         let v = log.get("PRIORITY").unwrap();
         match v {
             Value::Bytes(_) => v.clone(),

@@ -421,7 +421,7 @@ fn tail_source(
             log
         });
 
-        tokio::spawn(async move { output.send_event_stream(&mut messages).await });
+        tokio::spawn(async move { output.send_stream(&mut messages).await });
 
         tokio::task::spawn_blocking(move || {
             let result = harvester.run(tx, shutdown, shutdown_checkpointer, checkpointer);
@@ -449,7 +449,6 @@ mod tests {
 
     use encoding_rs::UTF_16LE;
     use event::log::{path, Value};
-    use event::Event;
     use event::EventStatus;
     use framework::{Pipeline, ShutdownSignal};
     use multiline::Mode;
@@ -494,7 +493,7 @@ mod tests {
         wait_shutdown: bool,
         acking_mode: AckingMode,
         inner: impl Future<Output = ()>,
-    ) -> Vec<Event> {
+    ) -> Vec<LogRecord> {
         let (tx, rx) = match acking_mode {
             AckingMode::Acks => {
                 let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
@@ -505,6 +504,10 @@ mod tests {
                 (tx, rx.boxed())
             }
         };
+
+        let rx = rx
+            .filter_map(|item| async { item.into_logs() })
+            .flat_map(|logs| futures::stream::iter(logs.into_iter()));
 
         let (trigger_shutdown, shutdown, shutdown_done) = ShutdownSignal::new_wired();
         let acks = !matches!(acking_mode, AckingMode::No);
@@ -573,8 +576,7 @@ mod tests {
         let mut foo = 0;
         let mut bar = 0;
 
-        for event in received {
-            let log = event.as_log();
+        for log in received {
             let line = log.get(".").unwrap().to_string_lossy();
 
             if line.starts_with("foo") {
@@ -673,10 +675,9 @@ mod tests {
         let mut i = 0;
         let mut pre_rot = true;
 
-        for mut event in received {
+        for mut log in received {
             assert_eq!(
-                event
-                    .metadata_mut()
+                log.metadata_mut()
                     .value_mut()
                     .get(path!("filename"))
                     .unwrap()
@@ -684,7 +685,7 @@ mod tests {
                 path.to_str().unwrap()
             );
 
-            let line = event.as_log().get(".").unwrap().to_string_lossy();
+            let line = log.get(".").unwrap().to_string_lossy();
             if pre_rot {
                 assert_eq!(line, format!("prerot {}", i));
             } else {
@@ -736,8 +737,8 @@ mod tests {
         .await;
 
         let mut is = [0; 3];
-        for event in received {
-            let line = event.as_log().get(".").unwrap().to_string_lossy();
+        for log in received {
+            let line = log.get(".").unwrap().to_string_lossy();
             let mut split = line.split(' ');
             let file = split.next().unwrap().parse::<usize>().unwrap();
             assert_ne!(file, 4);
@@ -780,11 +781,7 @@ mod tests {
 
             assert_eq!(received.len(), 1);
             assert_eq!(
-                received[0]
-                    .as_log()
-                    .get("%tail.file")
-                    .unwrap()
-                    .to_string_lossy(),
+                received[0].get("%tail.file").unwrap().to_string_lossy(),
                 path.to_str().unwrap()
             );
         }
@@ -809,20 +806,15 @@ mod tests {
 
             assert_eq!(received.len(), 1);
             assert_eq!(
-                received[0]
-                    .as_log()
-                    .get("%tail.source")
-                    .unwrap()
-                    .to_string_lossy(),
+                received[0].get("%tail.source").unwrap().to_string_lossy(),
                 path.to_str().unwrap()
             );
         }
     }
 
-    fn extract_messages_string(received: Vec<Event>) -> Vec<String> {
+    fn extract_messages_string(received: Vec<LogRecord>) -> Vec<String> {
         received
             .into_iter()
-            .map(Event::into_log)
             .map(|log| log.get(".").unwrap().to_string_lossy().into_owned())
             .collect()
     }
@@ -983,27 +975,23 @@ mod tests {
         let file_path = "%tail.file";
         let before_lines = received
             .iter()
-            .filter(|event| {
-                event
-                    .as_log()
-                    .get(file_path)
+            .filter(|log| {
+                log.get(file_path)
                     .unwrap()
                     .to_string_lossy()
                     .ends_with("before")
             })
-            .map(|event| event.as_log().get(".").unwrap().to_string_lossy())
+            .map(|log| log.get(".").unwrap().to_string_lossy())
             .collect::<Vec<_>>();
         let after_lines = received
             .iter()
-            .filter(|event| {
-                event
-                    .as_log()
-                    .get(file_path)
+            .filter(|log| {
+                log.get(file_path)
                     .unwrap()
                     .to_string_lossy()
                     .ends_with("after")
             })
-            .map(|event| event.as_log().get(".").unwrap().to_string_lossy())
+            .map(|log| log.get(".").unwrap().to_string_lossy())
             .collect::<Vec<_>>();
         assert_eq!(before_lines, vec!["second line"]);
         assert_eq!(after_lines, vec!["_first line", "_second line"]);
@@ -1248,10 +1236,9 @@ mod tests {
         );
     }
 
-    fn extract_messages_value(received: Vec<Event>) -> Vec<Value> {
+    fn extract_messages_value(received: Vec<LogRecord>) -> Vec<Value> {
         received
             .into_iter()
-            .map(Event::into_log)
             .map(|log| log.value().clone())
             .collect()
     }

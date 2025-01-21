@@ -2,7 +2,7 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use bytes::Bytes;
-use event::{BatchNotifier, BatchStatus, BatchStatusReceiver, Event};
+use event::{AddBatchNotifier, BatchNotifier, BatchStatus, BatchStatusReceiver, Events};
 use futures::TryFutureExt;
 use http::header::AUTHORIZATION;
 use http::{HeaderMap, Method, Request, Response, StatusCode, Uri};
@@ -25,7 +25,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         headers: &HeaderMap,
         peer_addr: &SocketAddr,
         body: Bytes,
-    ) -> Result<Vec<Event>, ErrorMessage>;
+    ) -> Result<Events, ErrorMessage>;
 
     fn run(
         self,
@@ -127,15 +127,19 @@ struct Inner {
 }
 
 async fn handle_request(
-    events: Result<Vec<Event>, ErrorMessage>,
+    events: Result<Events, ErrorMessage>,
     acknowledgements: bool,
     output: &mut Pipeline,
 ) -> Response<Full<Bytes>> {
     match events {
         Ok(mut events) => {
-            let receiver = BatchNotifier::maybe_apply_to(acknowledgements, &mut events);
+            let (batch, receiver) = BatchNotifier::maybe_new_with_receiver(acknowledgements);
+            if let Some(batch) = batch {
+                events.add_batch_notifier(batch);
+            }
+
             let result = output
-                .send_batch(events)
+                .send(events)
                 .map_err(move |err| {
                     // can only fail if receiving end disconnected, so we are
                     // shutting down, probably not gracefully.

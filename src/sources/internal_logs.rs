@@ -97,6 +97,7 @@ mod tests {
     use event::log::Value;
     use event::LogRecord;
     use futures::Stream;
+    use futures_util::StreamExt;
     use testify::collect_ready;
     use tokio::time::sleep;
 
@@ -119,7 +120,7 @@ mod tests {
         error!(message = "After source started", %test_id);
 
         sleep(Duration::from_millis(10)).await;
-        let mut logs = collect_ready(rx).await;
+        let mut logs = collect_ready(Box::pin(rx)).await;
         let test_id = Value::from(test_id.to_string());
         logs.retain(|log| log.get("test_id") == Some(&test_id));
 
@@ -159,6 +160,8 @@ mod tests {
         tokio::spawn(source);
         sleep(Duration::from_millis(10)).await;
         framework::trace::stop_buffering();
-        rx.map(|item| item.into_log())
+
+        rx.filter_map(|events| async move { events.into_logs() })
+            .flat_map(stream::iter)
     }
 }

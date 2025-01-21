@@ -136,7 +136,6 @@ impl SourceConfig for Config {
         let label_selector = self.prepare_label_selector();
 
         let log_source = LogSource {
-            source: cx.key.to_string(),
             exclude_pattern: vec![],
             fields_spec: self.annotation_fields.clone(),
             data_dir,
@@ -158,7 +157,6 @@ impl SourceConfig for Config {
 }
 
 struct LogSource {
-    source: String,
     field_selector: Option<String>,
     label_selector: Option<String>,
     exclude_pattern: Vec<glob::Pattern>,
@@ -172,7 +170,6 @@ struct LogSource {
 impl LogSource {
     async fn run(self, mut output: Pipeline, shutdown: ShutdownSignal) -> crate::Result<()> {
         let LogSource {
-            source,
             field_selector,
             label_selector,
             exclude_pattern,
@@ -231,50 +228,54 @@ impl LogSource {
         let checkpoints = checkpointer.view();
 
         let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(16);
-        let mut events = rx.map(futures::stream::iter).flatten().map(move |line| {
-            metrics::register_counter("component_received_bytes_total", "")
-                .recorder([("source", source.clone().into())])
-                .inc(line.text.len() as u64);
+        let mut stream = rx.map(move |lines| {
+            let mut logs = Vec::with_capacity(lines.len());
 
-            let mut log = create_log(
-                line.text,
-                &line.filename,
-                ingestion_timestamp_field.as_ref(),
-            );
+            for line in lines {
+                let mut log = create_log(
+                    line.text,
+                    &line.filename,
+                    ingestion_timestamp_field.as_ref(),
+                );
 
-            match pod_annotator.annotate(&mut log, &line.filename) {
-                Some(file_info) => {
-                    let attrs =
-                        metrics::Attributes::from([("pod", file_info.pod_name.to_string().into())]);
+                match pod_annotator.annotate(&mut log, &line.filename) {
+                    Some(file_info) => {
+                        let attrs = metrics::Attributes::from([(
+                            "pod",
+                            file_info.pod_name.to_string().into(),
+                        )]);
 
-                    metrics::register_counter("component_received_events_total", "")
-                        .recorder(attrs.clone())
-                        .inc(1);
-                    metrics::register_counter("component_received_bytes_total", "")
-                        .recorder(attrs)
-                        .inc(log.size_of() as u64);
+                        metrics::register_counter("component_received_events_total", "")
+                            .recorder(attrs.clone())
+                            .inc(1);
+                        metrics::register_counter("component_received_bytes_total", "")
+                            .recorder(attrs)
+                            .inc(log.size_of() as u64);
+                    }
+                    None => {
+                        // TODO: metrics
+                        // counter!("component_received_events_total", 1);
+                        // counter!("component_received_bytes_total", log.size_of() as u64);
+
+                        // counter!("kubernetes_event_annotation_failures_total", 1);
+                        error!(
+                            message = "Failed to annotate log with pod metadata",
+                            file = line.filename.as_str(),
+                            internal_log_rate_limit = true
+                        );
+                    }
                 }
-                None => {
-                    // TODO: metrics
-                    // counter!("component_received_events_total", 1);
-                    // counter!("component_received_bytes_total", log.size_of() as u64);
 
-                    // counter!("kubernetes_event_annotation_failures_total", 1);
-                    error!(
-                        message = "Failed to annotate log with pod metadata",
-                        file = line.filename.as_str(),
-                        internal_log_rate_limit = true
-                    );
-                }
+                checkpoints.update(line.fingerprint, line.offset);
+
+                logs.push(log);
             }
 
-            checkpoints.update(line.fingerprint, line.offset);
-
-            log
+            logs
         });
 
         // send events
-        tokio::spawn(async move { output.send_event_stream(&mut events).await });
+        tokio::spawn(async move { output.send_stream(&mut stream).await });
 
         // `spawn_blocking` will run this closure in another thread, so our tokio
         // workers wouldn't be blocked.

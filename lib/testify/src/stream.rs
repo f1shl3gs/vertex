@@ -25,3 +25,10 @@ where
 {
     rx.take(n).collect().await
 }
+
+pub async fn collect_one<S>(mut rx: S) -> S::Item
+where
+    S: Stream + Unpin,
+{
+    rx.next().await.unwrap()
+}

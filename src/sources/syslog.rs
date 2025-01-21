@@ -264,7 +264,7 @@ fn udp(
         })
         .boxed();
 
-        match output.send_event_stream(&mut stream).await {
+        match output.send_stream(&mut stream).await {
             Ok(()) => {
                 info!(message = "Finished sending");
                 Ok(())

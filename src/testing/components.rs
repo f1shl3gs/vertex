@@ -5,7 +5,7 @@ use std::future::Future;
 use std::sync::LazyLock;
 use std::time::Duration;
 
-use event::{Event, Events, Metric, MetricValue};
+use event::{Events, Metric, MetricValue};
 use framework::config::{SourceConfig, SourceContext};
 use framework::{Pipeline, Sink};
 use futures::Stream;
@@ -174,7 +174,7 @@ pub async fn run_and_assert_source_compliance<SC>(
     source: SC,
     timeout: Duration,
     tags: &[&str],
-) -> Vec<Event>
+) -> Vec<Events>
 where
     SC: SourceConfig,
 {
@@ -189,7 +189,7 @@ pub async fn run_and_assert_source_advanced<SC>(
     event_count: Option<usize>,
     tests: &LazyLock<ComponentTests>,
     tags: &[&str],
-) -> Vec<Event>
+) -> Vec<Events>
 where
     SC: SourceConfig,
 {

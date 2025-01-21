@@ -5,7 +5,7 @@ use base64::Engine;
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{Bucket, Event, Metric, Quantile};
+use event::{Bucket, Events, Metric, Quantile};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::util::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
 use framework::tls::TlsConfig;
@@ -60,7 +60,7 @@ impl HttpSource for PushgatewaySource {
         _headers: &HeaderMap,
         peer_addr: &SocketAddr,
         body: Bytes,
-    ) -> Result<Vec<Event>, ErrorMessage> {
+    ) -> Result<Events, ErrorMessage> {
         let mut extra_labels = parse_path_labels(uri.path())?;
         if !extra_labels.iter().any(|(key, _value)| key == "instance") {
             extra_labels.push(("instance".to_string(), peer_addr.ip().to_string()))
@@ -74,16 +74,20 @@ impl HttpSource for PushgatewaySource {
     }
 }
 
-fn convert_metrics(groups: Vec<MetricGroup>, extra_labels: &[(String, String)]) -> Vec<Event> {
-    let mut events = Vec::with_capacity(groups.len());
+fn convert_metrics(groups: Vec<MetricGroup>, extra_labels: &[(String, String)]) -> Events {
+    let mut metrics = Vec::with_capacity(groups.len());
     let start = Utc::now();
 
-    for group in groups {
-        let name = &group.name;
-        match group.metrics {
+    for MetricGroup {
+        name,
+        description,
+        metrics: group,
+    } in groups
+    {
+        match group {
             GroupKind::Counter(map) => {
                 for (key, metric) in map {
-                    let mut counter = Metric::sum(name, "", metric.value)
+                    let mut counter = Metric::sum(&name, &description, metric.value)
                         .with_timestamp(utc_timestamp(key.timestamp, start))
                         .with_tags(key.labels.into());
 
@@ -91,12 +95,12 @@ fn convert_metrics(groups: Vec<MetricGroup>, extra_labels: &[(String, String)]) 
                         counter.tags_mut().insert(key.clone(), value.clone());
                     }
 
-                    events.push(counter.into());
+                    metrics.push(counter);
                 }
             }
-            GroupKind::Gauge(metrics) | GroupKind::Untyped(metrics) => {
-                for (key, metric) in metrics {
-                    let mut gauge = Metric::gauge(name, "", metric.value)
+            GroupKind::Gauge(map) | GroupKind::Untyped(map) => {
+                for (key, metric) in map {
+                    let mut gauge = Metric::gauge(&name, &description, metric.value)
                         .with_timestamp(utc_timestamp(key.timestamp, start))
                         .with_tags(key.labels.into());
 
@@ -104,14 +108,14 @@ fn convert_metrics(groups: Vec<MetricGroup>, extra_labels: &[(String, String)]) 
                         gauge.tags_mut().insert(key.clone(), value.clone());
                     }
 
-                    events.push(gauge.into());
+                    metrics.push(gauge);
                 }
             }
-            GroupKind::Summary(metrics) => {
-                for (key, metric) in metrics {
+            GroupKind::Summary(map) => {
+                for (key, metric) in map {
                     let mut summary = Metric::summary(
-                        name,
-                        "",
+                        &name,
+                        &description,
                         metric.count,
                         metric.sum,
                         metric
@@ -130,14 +134,14 @@ fn convert_metrics(groups: Vec<MetricGroup>, extra_labels: &[(String, String)]) 
                         summary.tags_mut().insert(key.clone(), value.clone());
                     }
 
-                    events.push(summary.into());
+                    metrics.push(summary);
                 }
             }
-            GroupKind::Histogram(metrics) => {
-                for (key, metric) in metrics {
+            GroupKind::Histogram(map) => {
+                for (key, metric) in map {
                     let mut histogram = Metric::histogram(
-                        name,
-                        "",
+                        &name,
+                        &description,
                         metric.count,
                         metric.sum,
                         metric
@@ -156,13 +160,13 @@ fn convert_metrics(groups: Vec<MetricGroup>, extra_labels: &[(String, String)]) 
                         histogram.tags_mut().insert(key.clone(), value.clone());
                     }
 
-                    events.push(histogram.into());
+                    metrics.push(histogram);
                 }
             }
         }
     }
 
-    events
+    metrics.into()
 }
 
 fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
@@ -432,7 +436,11 @@ jobs_summary_count{type="a"} 1.0 1612411506789
         println!("{}", body);
         assert_eq!(parts.status, StatusCode::OK);
 
-        let got = collect_ready(rx).await;
+        let got = collect_ready(rx).await
+            .into_iter()
+            .flat_map(|events| events.into_metrics())
+            .flatten()
+            .collect::<Vec<_>>();
 
         let timestamp = Utc
             .with_ymd_and_hms(2021, 2, 4, 4, 5, 6)
@@ -443,17 +451,17 @@ jobs_summary_count{type="a"} 1.0 1612411506789
         assert_eq!(
             got,
             vec![
-                Metric::sum("jobs_total", "", 1.0)
+                Metric::sum("jobs_total", "Total number of jobs", 1.0)
                     .with_timestamp(Some(timestamp))
                     .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo"))
                     .into(),
-                Metric::gauge("jobs_current", "", 5.0)
+                Metric::gauge("jobs_current", "Current number of jobs", 5.0)
                     .with_timestamp(Some(timestamp))
                     .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo"))
                     .into(),
                 Metric::histogram(
                     "jobs_distribution",
-                    "",
+                    "Distribution of jobs",
                     1u64,
                     8.0,
                     vec![
@@ -482,7 +490,7 @@ jobs_summary_count{type="a"} 1.0 1612411506789
                 .with_timestamp(Some(timestamp))
                 .with_tags(tags!("instance" => "127.0.0.1", "job" => "foo", "type" => "a"))
                 .into(),
-                Metric::summary("jobs_summary", "", 1u64, 8.0, vec![])
+                Metric::summary("jobs_summary", "Summary of jobs", 1u64, 8.0, vec![])
                     .with_timestamp(Some(timestamp))
                     .with_tags(tags!("instance" => "127.0.0.1", "job" => "foo", "type" => "a"))
                     .into()
