@@ -610,7 +610,7 @@ mod tests {
     use std::io::Cursor;
 
     use chrono::TimeZone;
-    use event::{LogRecord};
+    use event::LogRecord;
     use futures::StreamExt;
     use tokio::time::{sleep, timeout, Duration};
 
@@ -758,7 +758,11 @@ MESSAGE=audit log
         units
     }
 
-    async fn run_with_units(includes: &[&str], excludes: &[&str], cursor: Option<&str>) -> Vec<LogRecord> {
+    async fn run_with_units(
+        includes: &[&str],
+        excludes: &[&str],
+        cursor: Option<&str>,
+    ) -> Vec<LogRecord> {
         let includes = create_unit_matches(includes.to_vec());
         let excludes = create_unit_matches(excludes.to_vec());
         run_journal(includes, excludes, cursor).await

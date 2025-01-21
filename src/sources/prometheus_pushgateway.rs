@@ -436,7 +436,8 @@ jobs_summary_count{type="a"} 1.0 1612411506789
         println!("{}", body);
         assert_eq!(parts.status, StatusCode::OK);
 
-        let got = collect_ready(rx).await
+        let got = collect_ready(rx)
+            .await
             .into_iter()
             .flat_map(|events| events.into_metrics())
             .flatten()
@@ -453,12 +454,10 @@ jobs_summary_count{type="a"} 1.0 1612411506789
             vec![
                 Metric::sum("jobs_total", "Total number of jobs", 1.0)
                     .with_timestamp(Some(timestamp))
-                    .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo"))
-                    .into(),
+                    .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo")),
                 Metric::gauge("jobs_current", "Current number of jobs", 5.0)
                     .with_timestamp(Some(timestamp))
-                    .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo"))
-                    .into(),
+                    .with_tags(tags!("instance" => "127.0.0.1", "type" => "a", "job" => "foo")),
                 Metric::histogram(
                     "jobs_distribution",
                     "Distribution of jobs",
@@ -488,12 +487,10 @@ jobs_summary_count{type="a"} 1.0 1612411506789
                     ]
                 )
                 .with_timestamp(Some(timestamp))
-                .with_tags(tags!("instance" => "127.0.0.1", "job" => "foo", "type" => "a"))
-                .into(),
+                .with_tags(tags!("instance" => "127.0.0.1", "job" => "foo", "type" => "a")),
                 Metric::summary("jobs_summary", "Summary of jobs", 1u64, 8.0, vec![])
                     .with_timestamp(Some(timestamp))
                     .with_tags(tags!("instance" => "127.0.0.1", "job" => "foo", "type" => "a"))
-                    .into()
             ]
         )
     }

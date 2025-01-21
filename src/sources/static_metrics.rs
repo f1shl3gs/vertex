@@ -111,7 +111,8 @@ mod tests {
     }
 
     async fn events_from_config(config: Config) -> Vec<Metric> {
-        run_and_assert_source_compliance(config, Duration::from_millis(100), &SOURCE_TAGS).await
+        run_and_assert_source_compliance(config, Duration::from_millis(100), &SOURCE_TAGS)
+            .await
             .into_iter()
             .flat_map(|events| events.into_metrics())
             .flatten()
@@ -250,10 +251,7 @@ mod tests {
         ];
 
         assert_eq!(events.len(), want.len());
-        for (got, (name, description, tags, value)) in events
-            .into_iter()
-            .zip(want)
-        {
+        for (got, (name, description, tags, value)) in events.into_iter().zip(want) {
             assert_eq!(got.name(), name);
             assert_eq!(got.description, description);
             assert_eq!(got.tags(), &tags);
