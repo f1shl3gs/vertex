@@ -275,7 +275,7 @@ sinks-influxdb = []
 sinks-jaeger = ["dep:jaeger"]
 sinks-kafka = ["dep:rskafka"]
 sinks-loki = ["dep:snap", "dep:buffers"]
-sinks-prometheus_exporter = ["dep:flate2"]
+sinks-prometheus_exporter = ["dep:flate2", "dep:parking_lot"]
 sinks-prometheus_remote_write = ["dep:snap"]
 sinks-socket = []
 

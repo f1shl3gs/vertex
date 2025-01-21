@@ -1,12 +1,18 @@
 sources:
   sflow:
     type: sflow
+    listen: 127.0.0.1:6344
 
 sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - sflow.metrics
+
   stdout:
     type: console
     inputs:
-      - sflow
+      - sflow.logs
     encoding:
       codec: json
       pretty: true

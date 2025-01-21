@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::env;
 use std::io::{Error, ErrorKind, Result, Write};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::Command;
 
 struct TrackedEnv {
@@ -134,7 +134,7 @@ fn main() {
     #[cfg(feature = "sinks-loki")]
     {
         // Generate proto if needed
-        let src = PathBuf::from("src/sinks/loki/proto");
+        let src = std::path::PathBuf::from("src/sinks/loki/proto");
         let include = &[src.clone()];
 
         println!("cargo:rerun-if-changed=src/sinks/loki/proto/loki.proto");

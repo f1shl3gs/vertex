@@ -4,19 +4,11 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use chrono::Utc;
 use configurable::configurable_component;
-use datagram::{
-    CounterRecord, CounterRecordData, Datagram, EgressQueue, EthernetCounters, ExtendedACL,
-    ExtendedFunction, ExtendedGateway, ExtendedLinuxReason, ExtendedRouter, ExtendedSwitch,
-    ExtendedTCPInfo, FlowRecord, FlowRecordRaw, FlowRecordSampleEthernet, HostAdapters, HostCPU,
-    HostDescription, HostDiskIO, HostMemory, HostNetIO, HostParent, IfCounters, Lane,
-    Mib2IcmpGroup, Mib2IpGroup, Mib2TcpGroup, Mib2UdpGroup, PortName, Processor, Sample,
-    SampleHeader, SampledIpv4, SampledIpv6, Sfp, VgCounters, Vlan,
-};
-use event::{Events, LogRecord};
+use datagram::*;
+use event::{tags, LogRecord, Metric};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
-use framework::source::UdpSource;
 use framework::{Error, Source};
-use value::Value;
+use value::{value, Value};
 
 fn default_listen() -> SocketAddr {
     SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 6343)
@@ -36,13 +28,14 @@ struct Config {
 #[typetag::serde(name = "sflow")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let source = SFlowSource;
-
-        source.run(self.listen, self.receive_buffer_bytes, cx)
+        Ok(Box::pin(run(self.listen, self.receive_buffer_bytes, cx)))
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+        vec![
+            Output::logs().with_port("logs"),
+            Output::metrics().with_port("metrics"),
+        ]
     }
 
     fn resources(&self) -> Vec<Resource> {
@@ -50,174 +43,248 @@ impl SourceConfig for Config {
     }
 }
 
-struct SFlowSource;
+async fn run(
+    addr: SocketAddr,
+    receive_buffer_bytes: Option<usize>,
+    cx: SourceContext,
+) -> Result<(), ()> {
+    let socket = match tokio::net::UdpSocket::bind(addr).await {
+        Ok(s) => s,
+        Err(err) => {
+            warn!(
+                message = "bind UDP socket failed",
+                %addr,
+                %err
+            );
 
-impl UdpSource for SFlowSource {
-    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, Error> {
-        let datagram = Datagram::decode(data)?;
-
-        let mut value = Value::Object(Default::default());
-        let Datagram {
-            agent_ip,
-            sub_agent_id,
-            sequence_number,
-            uptime,
-            samples_count,
-            samples,
-            ..
-        } = datagram;
-
-        value.insert("peer", peer.to_string());
-        value.insert("received_timestamp", Utc::now());
-
-        value.insert("agent_ip", agent_ip.to_string());
-        value.insert("sub_agent_id", sub_agent_id);
-        value.insert("sequence_number", sequence_number);
-        value.insert("uptime", uptime);
-
-        let mut array = Vec::with_capacity(samples_count as usize);
-        for sample in samples {
-            array.push(convert_sample(sample));
+            return Err(());
         }
-        value.insert("samples", array);
+    };
 
-        Ok(Events::from(LogRecord::from(value)))
+    if let Some(bytes) = receive_buffer_bytes {
+        if let Err(err) = framework::udp::set_receive_buffer_size(&socket, bytes) {
+            warn!(
+                message = "set receive buffer size failed",
+                %addr,
+                %err,
+            );
+        }
     }
+
+    let mut buf = [0u8; u16::MAX as usize];
+    let mut shutdown = cx.shutdown;
+    let mut output = cx.output;
+
+    loop {
+        let (size, peer) = tokio::select! {
+            result = socket.recv_from(&mut buf) => {
+                match result {
+                    Ok(t) => t,
+                    Err(err) => {
+                        warn!(
+                            message = "recv datagram failed",
+                            %err,
+                        );
+
+                        return Err(());
+                    }
+                }
+            },
+            _ = &mut shutdown => break,
+        };
+
+        match build_events(&buf[..size]) {
+            Ok((logs, metrics)) => {
+                if !logs.is_empty() {
+                    if let Err(_err) = output.send_named("logs", logs.into()).await {
+                        return Err(());
+                    }
+                }
+
+                if !metrics.is_empty() {
+                    if let Err(_err) = output.send_named("metrics", metrics.into()).await {
+                        return Err(());
+                    }
+                }
+            }
+            Err(err) => {
+                warn!(
+                    message = "build events failed",
+                    %err,
+                    %peer,
+                    internal_log_rate_secs = 30,
+                );
+
+                // println!("{:?}", &buf[..size]);
+            }
+        }
+    }
+
+    Ok(())
 }
 
-fn convert_sample(sample: Sample) -> Value {
-    let mut value = Value::Object(Default::default());
+fn build_events(data: &[u8]) -> Result<(Vec<LogRecord>, Vec<Metric>), Error> {
+    let Datagram {
+        agent_ip,
+        sub_agent_id,
+        sequence_number,
+        uptime,
+        samples,
+        ..
+    } = Datagram::decode(data)?;
 
-    match sample {
-        Sample::Flow {
-            header:
-                SampleHeader {
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                    ..
-                },
-            sampling_rate,
-            sample_pool,
-            drops,
-            input,
-            output,
-            flow_records_count,
-            records,
-        } => {
-            // header
-            value.insert("sample_sequence_number", sample_sequence_number);
-            value.insert("source_id_type", source_id_type);
-            value.insert("source_id_value", source_id_value);
+    let (mut logs, mut metrics) = convert_samples(samples);
 
-            value.insert("sampling_rate", sampling_rate);
-            value.insert("sample_pool", sample_pool);
-            value.insert("drops", drops);
-            value.insert("input", input);
-            value.insert("output", output);
+    // assume samples only contains one type of samples
+    if !logs.is_empty() {
+        let agent_ip = &agent_ip.to_string();
+        logs.iter_mut().for_each(|log| {
+            let metadata = log.metadata_mut().value_mut();
 
-            let mut array = Vec::with_capacity(flow_records_count as usize);
-            for record in records {
-                array.push(convert_flow_record(record));
+            metadata.insert(
+                "sflow",
+                value!({
+                    "agent": agent_ip,
+                    "sequence_number": sequence_number,
+                    "sub_agent_id": sub_agent_id,
+                    "uptime": uptime,
+                }),
+            );
+        })
+    }
+
+    if !metrics.is_empty() {
+        let timestamp = Utc::now();
+        metrics.iter_mut().for_each(|m| {
+            m.timestamp = Some(timestamp);
+            m.insert_tag("agent", agent_ip.to_string());
+        });
+    }
+
+    Ok((logs, metrics))
+}
+
+fn convert_samples(samples: Vec<Sample>) -> (Vec<LogRecord>, Vec<Metric>) {
+    let mut metrics = vec![];
+    let mut logs = vec![];
+
+    for Sample {
+        sample_sequence_number,
+        source_id_type,
+        source_id_value,
+        data,
+        ..
+    } in samples
+    {
+        match data {
+            SampleData::Flow {
+                sampling_rate,
+                sample_pool,
+                drops,
+                input,
+                output,
+                records,
+            } => {
+                let mut value = Value::Object(Default::default());
+
+                // header
+                value.insert("sample_sequence_number", sample_sequence_number);
+                value.insert("source_id_type", source_id_type);
+                value.insert("source_id_value", source_id_value);
+
+                value.insert("sampling_rate", sampling_rate);
+                value.insert("sample_pool", sample_pool);
+                value.insert("drops", drops);
+                value.insert("input", input);
+                value.insert("output", output);
+
+                let mut array = Vec::with_capacity(records.len());
+                for record in records {
+                    array.push(convert_flow_record(record));
+                }
+                value.insert("records", array);
+
+                logs.push(LogRecord::from(value));
             }
-            value.insert("records", array);
-        }
-        Sample::Counter {
-            header:
-                SampleHeader {
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                    ..
-                },
-            counter_records_count,
-            records,
-            ..
-        } => {
-            // header
-            value.insert("sample_sequence_number", sample_sequence_number);
-            value.insert("source_id_type", source_id_type);
-            value.insert("source_id_value", source_id_value);
+            SampleData::Counter { records } => {
+                // header
+                let mut partial = vec![];
+                for record in records {
+                    partial.extend(convert_counter_record(record));
+                }
 
-            let mut array = Vec::with_capacity(counter_records_count as usize);
-            for record in records {
-                array.push(convert_counter_record(record));
+                partial.iter_mut().for_each(|m| {
+                    m.insert_tag("source_id", source_id_value);
+                });
+
+                metrics.extend(partial);
             }
-            value.insert("records", array);
-        }
-        Sample::ExpandedFlow {
-            header:
-                SampleHeader {
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                    ..
-                },
-            sampling_rate,
-            sample_pool,
-            drops,
-            input_if_format,
-            input_if_value,
-            output_if_format,
-            output_if_value,
-            flow_records_count,
-            records,
-            ..
-        } => {
-            // header
-            value.insert("sample_sequence_number", sample_sequence_number);
-            value.insert("source_id_type", source_id_type);
-            value.insert("source_id_value", source_id_value);
+            SampleData::ExpandedFlow {
+                sampling_rate,
+                sample_pool,
+                drops,
+                input_if_format,
+                input_if_value,
+                output_if_format,
+                output_if_value,
+                records,
+                ..
+            } => {
+                let mut value = Value::Object(Default::default());
 
-            value.insert("sampling_rate", sampling_rate);
-            value.insert("sample_pool", sample_pool);
-            value.insert("drops", drops);
-            value.insert("input_if_format", input_if_format);
-            value.insert("input_if_value", input_if_value);
-            value.insert("output_if_format", output_if_format);
-            value.insert("output_if_value", output_if_value);
+                // header
+                value.insert("sample_sequence_number", sample_sequence_number);
+                value.insert("source_id_type", source_id_type);
+                value.insert("source_id_value", source_id_value);
 
-            let mut array = Vec::with_capacity(flow_records_count as usize);
-            for record in records {
-                array.push(convert_flow_record(record));
+                value.insert("sampling_rate", sampling_rate);
+                value.insert("sample_pool", sample_pool);
+                value.insert("drops", drops);
+                value.insert("input_if_format", input_if_format);
+                value.insert("input_if_value", input_if_value);
+                value.insert("output_if_format", output_if_format);
+                value.insert("output_if_value", output_if_value);
+
+                let mut array = Vec::with_capacity(records.len());
+                for record in records {
+                    array.push(convert_flow_record(record));
+                }
+                value.insert("records", array);
+
+                logs.push(LogRecord::from(value));
             }
-            value.insert("records", array);
-        }
-        Sample::Drop {
-            header:
-                SampleHeader {
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                    ..
-                },
-            drops,
-            input,
-            output,
-            reason,
-            flow_records_count,
-            records,
-            ..
-        } => {
-            // header
-            value.insert("sample_sequence_number", sample_sequence_number);
-            value.insert("source_id_type", source_id_type);
-            value.insert("source_id_value", source_id_value);
+            SampleData::Drop {
+                drops,
+                input,
+                output,
+                reason,
+                records,
+                ..
+            } => {
+                let mut value = Value::Object(Default::default());
 
-            value.insert("drops", drops);
-            value.insert("input", input);
-            value.insert("output", output);
-            value.insert("reason", reason);
+                // header
+                value.insert("sample_sequence_number", sample_sequence_number);
+                value.insert("source_id_type", source_id_type);
+                value.insert("source_id_value", source_id_value);
 
-            let mut array = Vec::with_capacity(flow_records_count as usize);
-            for record in records {
-                array.push(convert_flow_record(record));
+                value.insert("drops", drops);
+                value.insert("input", input);
+                value.insert("output", output);
+                value.insert("reason", reason);
+
+                let mut array = Vec::with_capacity(records.len());
+                for record in records {
+                    array.push(convert_flow_record(record));
+                }
+                value.insert("records", array);
+
+                logs.push(LogRecord::from(value));
             }
-            value.insert("records", array);
         }
     }
 
-    value
+    (logs, metrics)
 }
 
 #[inline]
@@ -385,50 +452,144 @@ fn convert_flow_record(record: FlowRecord) -> Value {
     value
 }
 
-fn convert_counter_record(record: CounterRecord) -> Value {
-    let mut value = Value::Object(Default::default());
-
+fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
     match record.data {
         CounterRecordData::Interface(IfCounters {
-            if_index,
-            if_type,
-            if_speed,
-            if_direction,
-            if_status,
-            if_in_octets,
-            if_in_ucast_pkts,
-            if_in_multicast_pkts,
-            if_in_broadcast_pkts,
-            if_in_discards,
-            if_in_errors,
-            if_in_unknown_protos,
-            if_out_octets,
-            if_out_ucast_pkts,
-            if_out_multicast_pkts,
-            if_out_broadcast_pkts,
-            if_out_discards,
-            if_out_errors,
-            if_promiscuous_mode,
+            index,
+            typ,
+            speed,
+            direction,
+            status,
+            in_octets,
+            in_ucast_pkts,
+            in_multicast_pkts,
+            in_broadcast_pkts,
+            in_discards,
+            in_errors,
+            in_unknown_protos,
+            out_octets,
+            out_ucast_pkts,
+            out_multicast_pkts,
+            out_broadcast_pkts,
+            out_discards,
+            out_errors,
+            promiscuous_mode,
         }) => {
-            value.insert("if_index", if_index);
-            value.insert("if_type", if_type);
-            value.insert("if_speed", if_speed);
-            value.insert("if_direction", if_direction);
-            value.insert("if_status", if_status);
-            value.insert("if_in_octets", if_in_octets);
-            value.insert("if_in_ucast_pkts", if_in_ucast_pkts);
-            value.insert("if_in_multicast_pkts", if_in_multicast_pkts);
-            value.insert("if_in_broadcast_pkts", if_in_broadcast_pkts);
-            value.insert("if_in_discards", if_in_discards);
-            value.insert("if_in_errors", if_in_errors);
-            value.insert("if_in_unknown_protos", if_in_unknown_protos);
-            value.insert("if_out_octets", if_out_octets);
-            value.insert("if_out_ucast_pkts", if_out_ucast_pkts);
-            value.insert("if_out_multicast_pkts", if_out_multicast_pkts);
-            value.insert("if_out_broadcast_pkts", if_out_broadcast_pkts);
-            value.insert("if_out_discards", if_out_discards);
-            value.insert("if_out_errors", if_out_errors);
-            value.insert("if_promiscuous_mode", if_promiscuous_mode);
+            let tags = tags!(
+                "index" => index,
+                "type" => typ,
+            );
+
+            vec![
+                Metric::gauge_with_tags(
+                    "sflow_interface_speed",
+                    "the speed of this interface",
+                    speed,
+                    tags.clone()
+                ),
+                Metric::gauge_with_tags(
+                    "sflow_interface_direction",
+                    "derived from MAU MIB(RFC 2668) 0 = unknown, 1=full-duplex, 2=half-duplex, 3=in, 4=out",
+                    direction,
+                    tags.clone()
+                ),
+                Metric::gauge_with_tags(
+                    "sflow_interface_admin_status",
+                    "admin status of this interface, 0 = down, 1 = up",
+                    (status & 0x1) != 0,
+                    tags.clone()
+                ),
+                Metric::gauge_with_tags(
+                    "sflow_interface_oper_status",
+                    "oper status of this interface, 0 = down, 1 = up",
+                    (status & 0x2) != 0,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_in_octets",
+                    "",
+                    in_octets,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_in_ucast_pkts",
+                    "",
+                    in_ucast_pkts,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_in_multicast_pkts",
+                    "",
+                    in_multicast_pkts,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_in_broadcast_pkts",
+                    "",
+                    in_broadcast_pkts,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_in_discards",
+                    "",
+                    in_discards,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_in_errors",
+                    "",
+                    in_errors,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_in_unknown_protos",
+                    "",
+                    in_unknown_protos,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_out_octets",
+                    "",
+                    out_octets,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_out_ucast_pkts",
+                    "",
+                    out_ucast_pkts,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_out_multicast_pkts",
+                    "",
+                    out_multicast_pkts,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_out_broadcast_pkts",
+                    "",
+                    out_broadcast_pkts,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_out_discards",
+                    "",
+                    out_discards,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_out_errors",
+                    "",
+                    out_errors,
+                    tags.clone()
+                ),
+                Metric::sum_with_tags(
+                    "sflow_interface_promiscuous_mode",
+                    "",
+                    promiscuous_mode,
+                    tags
+                )
+            ]
         }
         CounterRecordData::Ethernet(EthernetCounters {
             dot3_stats_alignment_errors,
@@ -445,40 +606,166 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             dot3_stats_internal_mac_receive_errors,
             dot3_stats_symbol_errors,
         }) => {
-            value.insert("dot3_stats_alignment_errors", dot3_stats_alignment_errors);
-            value.insert("dot3_stats_fcs_errors", dot3_stats_fcs_errors);
-            value.insert(
-                "dot3_stats_single_collision_frames",
-                dot3_stats_single_collision_frames,
-            );
-            value.insert(
-                "dot3_stats_multiple_collision_frames",
-                dot3_stats_multiple_collision_frames,
-            );
-            value.insert("dot3_stats_sqe_test_errors", dot3_stats_sqe_test_errors);
-            value.insert(
-                "dot3_stats_deferred_transmissions",
-                dot3_stats_deferred_transmissions,
-            );
-            value.insert("dot3_stats_late_collisions", dot3_stats_late_collisions);
-            value.insert(
-                "dot3_stats_excessive_collisions",
-                dot3_stats_excessive_collisions,
-            );
-            value.insert(
-                "dot3_stats_internal_mac_transmit_errors",
-                dot3_stats_internal_mac_transmit_errors,
-            );
-            value.insert(
-                "dot3_stats_carrier_sense_errors",
-                dot3_stats_carrier_sense_errors,
-            );
-            value.insert("dot3_stats_frame_too_longs", dot3_stats_frame_too_longs);
-            value.insert(
-                "dot3_stats_internal_mac_receive_errors",
-                dot3_stats_internal_mac_receive_errors,
-            );
-            value.insert("dot3_stats_symbol_errors", dot3_stats_symbol_errors);
+            vec![
+                Metric::sum(
+                    "dot3_stats_alignment_errors",
+                    "",
+                    dot3_stats_alignment_errors,
+                ),
+                Metric::sum("dot3_stats_fcs_errors", "", dot3_stats_fcs_errors),
+                Metric::sum(
+                    "dot3_stats_single_collision_frames",
+                    "",
+                    dot3_stats_single_collision_frames,
+                ),
+                Metric::sum(
+                    "dot3_stats_multiple_collision_frames",
+                    "",
+                    dot3_stats_multiple_collision_frames,
+                ),
+                Metric::sum("dot3_stats_sqe_test_errors", "", dot3_stats_sqe_test_errors),
+                Metric::sum(
+                    "dot3_stats_deferred_transmissions",
+                    "",
+                    dot3_stats_deferred_transmissions,
+                ),
+                Metric::sum("dot3_stats_late_collisions", "", dot3_stats_late_collisions),
+                Metric::sum(
+                    "dot3_stats_excessive_collisions",
+                    "",
+                    dot3_stats_excessive_collisions,
+                ),
+                Metric::sum(
+                    "dot3_stats_internal_mac_transmit_errors",
+                    "",
+                    dot3_stats_internal_mac_transmit_errors,
+                ),
+                Metric::sum(
+                    "dot3_stats_carrier_sense_errors",
+                    "",
+                    dot3_stats_carrier_sense_errors,
+                ),
+                Metric::sum("dot3_stats_frame_too_longs", "", dot3_stats_frame_too_longs),
+                Metric::sum(
+                    "dot3_stats_internal_mac_receive_errors",
+                    "",
+                    dot3_stats_internal_mac_receive_errors,
+                ),
+                Metric::sum("dot3_stats_symbol_errors", "", dot3_stats_symbol_errors),
+            ]
+        }
+        CounterRecordData::TokenRing(TokenRingCounters {
+            dot5_stats_line_errors,
+            dot5_stats_burst_errors,
+            dot5_stats_ac_errors,
+            dot5_stats_abort_trans_errors,
+            dot5_stats_internal_errors,
+            dot5_stats_lost_frame_errors,
+            dot5_stats_receive_congestions,
+            dot5_stats_frame_copied_errors,
+            dot5_stats_token_errors,
+            dot5_stats_soft_errors,
+            dot5_stats_hard_errors,
+            dot5_stats_signal_loss,
+            dot5_stats_transmit_beacons,
+            dot5_stats_recoverys,
+            dot5_stats_lobe_wires,
+            dot5_stats_removes,
+            dot5_stats_singles,
+            dot5_stats_freq_errors,
+        }) => {
+            vec![
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_line_errors",
+                    "",
+                    dot5_stats_line_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_burst_errors",
+                    "",
+                    dot5_stats_burst_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_ac_errors",
+                    "",
+                    dot5_stats_ac_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_abort_trans_errors",
+                    "",
+                    dot5_stats_abort_trans_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_internal_errors",
+                    "",
+                    dot5_stats_internal_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_lost_frame_errors",
+                    "",
+                    dot5_stats_lost_frame_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_receive_congestions",
+                    "",
+                    dot5_stats_receive_congestions,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_frame_copied_errors",
+                    "",
+                    dot5_stats_frame_copied_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_token_errors",
+                    "",
+                    dot5_stats_token_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_soft_errors",
+                    "",
+                    dot5_stats_soft_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_hard_errors",
+                    "",
+                    dot5_stats_hard_errors,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_signal_loss",
+                    "",
+                    dot5_stats_signal_loss,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_transmit_beacons",
+                    "",
+                    dot5_stats_transmit_beacons,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_recoverys",
+                    "",
+                    dot5_stats_recoverys,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_lobe_wires",
+                    "",
+                    dot5_stats_lobe_wires,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_removes",
+                    "",
+                    dot5_stats_removes,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_singles",
+                    "",
+                    dot5_stats_singles,
+                ),
+                Metric::sum(
+                    "sflow_token_ring_dot5_stats_freq_errors",
+                    "",
+                    dot5_stats_freq_errors,
+                ),
+            ]
         }
         CounterRecordData::VgCounters(VgCounters {
             dot12_in_high_priority_frames,
@@ -496,56 +783,70 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             dot12_hc_in_norm_priority_octets,
             dot12_hc_out_high_priority_octets,
         }) => {
-            value.insert(
-                "dot12_in_high_priority_frames",
-                dot12_in_high_priority_frames,
-            );
-            value.insert(
-                "dot12_in_high_priority_octets",
-                dot12_in_high_priority_octets,
-            );
-            value.insert(
-                "dot12_in_norm_priority_frames",
-                dot12_in_norm_priority_frames,
-            );
-            value.insert(
-                "dot12_in_norm_priority_octets",
-                dot12_in_norm_priority_octets,
-            );
-            value.insert("dot12_in_ipm_errors", dot12_in_ipm_errors);
-            value.insert(
-                "dot12_in_oversize_frame_errors",
-                dot12_in_oversize_frame_errors,
-            );
-            value.insert("dot12_in_data_errors", dot12_in_data_errors);
-            value.insert(
-                "dot12_in_null_addressed_frames",
-                dot12_in_null_addressed_frames,
-            );
-            value.insert(
-                "dot12_out_high_priority_frames",
-                dot12_out_high_priority_frames,
-            );
-            value.insert(
-                "dot12_out_high_priority_octets",
-                dot12_out_high_priority_octets,
-            );
-            value.insert(
-                "dot12_transition_into_trainings",
-                dot12_transition_into_trainings,
-            );
-            value.insert(
-                "dot12_hc_in_high_priority_octets",
-                dot12_hc_in_high_priority_octets,
-            );
-            value.insert(
-                "dot12_hc_in_norm_priority_octets",
-                dot12_hc_in_norm_priority_octets,
-            );
-            value.insert(
-                "dot12_hc_out_high_priority_octets",
-                dot12_hc_out_high_priority_octets,
-            );
+            vec![
+                Metric::sum(
+                    "dot12_in_high_priority_frames",
+                    "",
+                    dot12_in_high_priority_frames,
+                ),
+                Metric::sum(
+                    "dot12_in_high_priority_octets",
+                    "",
+                    dot12_in_high_priority_octets,
+                ),
+                Metric::sum(
+                    "dot12_in_norm_priority_frames",
+                    "",
+                    dot12_in_norm_priority_frames,
+                ),
+                Metric::sum(
+                    "dot12_in_norm_priority_octets",
+                    "",
+                    dot12_in_norm_priority_octets,
+                ),
+                Metric::sum("dot12_in_ipm_errors", "", dot12_in_ipm_errors),
+                Metric::sum(
+                    "dot12_in_oversize_frame_errors",
+                    "",
+                    dot12_in_oversize_frame_errors,
+                ),
+                Metric::sum("dot12_in_data_errors", "", dot12_in_data_errors),
+                Metric::sum(
+                    "dot12_in_null_addressed_frames",
+                    "",
+                    dot12_in_null_addressed_frames,
+                ),
+                Metric::sum(
+                    "dot12_out_high_priority_frames",
+                    "",
+                    dot12_out_high_priority_frames,
+                ),
+                Metric::sum(
+                    "dot12_out_high_priority_octets",
+                    "",
+                    dot12_out_high_priority_octets,
+                ),
+                Metric::sum(
+                    "dot12_transition_into_trainings",
+                    "",
+                    dot12_transition_into_trainings,
+                ),
+                Metric::sum(
+                    "dot12_hc_in_high_priority_octets",
+                    "",
+                    dot12_hc_in_high_priority_octets,
+                ),
+                Metric::sum(
+                    "dot12_hc_in_norm_priority_octets",
+                    "",
+                    dot12_hc_in_norm_priority_octets,
+                ),
+                Metric::sum(
+                    "dot12_hc_out_high_priority_octets",
+                    "",
+                    dot12_hc_out_high_priority_octets,
+                ),
+            ]
         }
         CounterRecordData::Vlan(Vlan {
             vlan_id,
@@ -555,12 +856,27 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             broadcast_pkts,
             discards,
         }) => {
-            value.insert("vlan_id", vlan_id);
-            value.insert("octets", octets);
-            value.insert("ucast_pkts", ucast_pkts);
-            value.insert("multicast_pkts", multicast_pkts);
-            value.insert("broadcast_pkts", broadcast_pkts);
-            value.insert("discards", discards);
+            let tags = tags!(
+                "id" => vlan_id,
+            );
+
+            vec![
+                Metric::sum_with_tags("sflow_vlan_octets", "", octets, tags.clone()),
+                Metric::sum_with_tags("sflow_vlan_ucast_pkts", "", ucast_pkts, tags.clone()),
+                Metric::sum_with_tags(
+                    "sflow_vlan_multicast_pkts",
+                    "",
+                    multicast_pkts,
+                    tags.clone(),
+                ),
+                Metric::sum_with_tags(
+                    "sflow_vlan_broadcast_pkts",
+                    "",
+                    broadcast_pkts,
+                    tags.clone(),
+                ),
+                Metric::sum_with_tags("sflow_vlan_discards", "", discards, tags),
+            ]
         }
         CounterRecordData::HostCPU(HostCPU {
             load_one,
@@ -580,31 +896,59 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             cpu_sintr,
             interrupts,
             contexts,
-            cpu_steal,
-            cpu_guest,
-            cpu_guest_nice,
+            ..
         }) => {
-            value.insert("load_one", load_one);
-            value.insert("load_five", load_five);
-            value.insert("load_fifteen", load_fifteen);
-            value.insert("proc_run", proc_run);
-            value.insert("proc_total", proc_total);
-            value.insert("cpu_num", cpu_num);
-            value.insert("cpu_speed", cpu_speed);
-            value.insert("uptime", uptime);
-            value.insert("cpu_user", cpu_user);
-            value.insert("cpu_nice", cpu_nice);
-            value.insert("cpu_system", cpu_system);
-            value.insert("cpu_idle", cpu_idle);
-            value.insert("cpu_wio", cpu_wio);
-            value.insert("cpu_intr", cpu_intr);
-            value.insert("cpu_sintr", cpu_sintr);
-            value.insert("interrupts", interrupts);
-            value.insert("contexts", contexts);
-
-            value.insert("cpu_steal", cpu_steal);
-            value.insert("cpu_guest", cpu_guest);
-            value.insert("cpu_guest_nice", cpu_guest_nice);
+            vec![
+                Metric::gauge(
+                    "sflow_host_cpu_load_one",
+                    "1 minute load avg, -1 = unknown",
+                    load_one,
+                ),
+                Metric::gauge(
+                    "sflow_host_cpu_load_five",
+                    "5 minute load avg, -1 = unknown",
+                    load_five,
+                ),
+                Metric::gauge(
+                    "sflow_host_cpu_load_fifteen",
+                    "15 minute load avg, -1 = unknown",
+                    load_fifteen,
+                ),
+                Metric::gauge(
+                    "sflow_host_cpu_proc_run",
+                    "total number of running processes",
+                    proc_run,
+                ),
+                Metric::gauge(
+                    "sflow_host_cpu_proc_total",
+                    "total number of processes",
+                    proc_total,
+                ),
+                Metric::gauge("sflow_host_cpu_num", "number of CPUs", cpu_num),
+                Metric::gauge("sflow_host_cpu_speed", "speed in MHz of CPU", cpu_speed),
+                Metric::gauge("sflow_host_cpu_uptime", "seconds since last reboot", uptime),
+                Metric::gauge("sflow_host_cpu_user", "user time (ms)", cpu_user),
+                Metric::gauge("sflow_host_cpu_nice", "nice time (ms)", cpu_nice),
+                Metric::gauge("sflow_host_cpu_system", "system time (ms)", cpu_system),
+                Metric::gauge("sflow_host_cpu_idle", "idle time (ms)", cpu_idle),
+                Metric::gauge(
+                    "sflow_host_cpu_wio",
+                    "time waiting for I/O to complete (ms)",
+                    cpu_wio,
+                ),
+                Metric::gauge(
+                    "sflow_host_cpu_intr",
+                    "time servicing interrupts (ms)",
+                    cpu_intr,
+                ),
+                Metric::gauge(
+                    "sflow_host_cpu_sintr",
+                    "time servicing soft interrupts (ms)",
+                    cpu_sintr,
+                ),
+                Metric::sum("sflow_host_cpu_interrupts", "interrupt count", interrupts),
+                Metric::sum("sflow_host_cpu_contexts", "context switch count", contexts),
+            ]
         }
         CounterRecordData::Processor(Processor {
             five_sec_cpu,
@@ -613,28 +957,50 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             total_memory,
             free_memory,
         }) => {
-            value.insert("five_sec_cpu", five_sec_cpu);
-            value.insert("one_min_cpu", one_min_cpu);
-            value.insert("five_min_cpu", five_min_cpu);
-            value.insert("total_memory", total_memory);
-            value.insert("free_memory", free_memory);
+            vec![
+                Metric::gauge(
+                    "sflow_processor_five_sec_cpu",
+                    "5 second average CPU utilization",
+                    five_sec_cpu,
+                ),
+                Metric::gauge(
+                    "sflow_processor_one_min_cpu",
+                    "1 minute average CPU utilization",
+                    one_min_cpu,
+                ),
+                Metric::gauge(
+                    "sflow_processor_five_min_cpu",
+                    "5 minute average CPU utilization",
+                    five_min_cpu,
+                ),
+                Metric::gauge(
+                    "sflow_processor_total_memory",
+                    "total memory (in bytes)",
+                    total_memory,
+                ),
+                Metric::gauge(
+                    "sflow_processor_free_memory",
+                    "free memory (in bytes)",
+                    free_memory,
+                ),
+            ]
         }
-        CounterRecordData::HostAdapters(HostAdapters { length, adapters }) => {
-            let mut array = Vec::with_capacity(length as usize);
+        CounterRecordData::HostAdapters(HostAdapters { adapters, .. }) => {
+            let mut metrics = Vec::with_capacity(adapters.len());
+
             for adapter in adapters {
-                let mut item = Value::Object(Default::default());
-                item.insert("if_index", adapter.if_index);
-
-                let mut mac_addresses = Vec::with_capacity(adapter.mac_addresses.len());
-                for mac in adapter.mac_addresses {
-                    mac_addresses.push(Value::from(mac_to_string(mac)));
-                }
-                item.insert("mac_addresses", mac_addresses);
-
-                array.push(item);
+                metrics.push(Metric::gauge_with_tags(
+                    "sflow_host_adapter_mac_addresses",
+                    "Physical or virtual network adapter NIC/vNIC",
+                    1,
+                    tags!(
+                        "if_index" => adapter.if_index,
+                        "mac" => adapter.mac_addresses.len()
+                    ),
+                ));
             }
 
-            value.insert("host_adapters", array);
+            metrics
         }
         CounterRecordData::HostDescription(HostDescription {
             host,
@@ -643,11 +1009,18 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             os_name,
             os_release,
         }) => {
-            value.insert("host", host);
-            value.insert("uuid", format_uuid(uuid));
-            value.insert("machine_type", machine_type_to_string(machine_type));
-            value.insert("os_name", os_name_to_string(os_name));
-            value.insert("os_release", os_release);
+            vec![Metric::gauge_with_tags(
+                "sflow_host_info",
+                "physical or virtual host description",
+                1,
+                tags!(
+                    "host" => host,
+                    "uuid" => format_uuid(uuid),
+                    "machine_type" => machine_type_to_string(machine_type),
+                    "os_name" => os_name_to_string(os_name),
+                    "os_release" => os_release,
+                ),
+            )]
         }
         CounterRecordData::HostMemory(HostMemory {
             mem_total,
@@ -662,17 +1035,19 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             swap_in,
             swap_out,
         }) => {
-            value.insert("mem_total", mem_total);
-            value.insert("mem_free", mem_free);
-            value.insert("mem_shared", mem_shared);
-            value.insert("mem_buffers", mem_buffers);
-            value.insert("mem_cached", mem_cached);
-            value.insert("swap_total", swap_total);
-            value.insert("swap_free", swap_free);
-            value.insert("page_in", page_in);
-            value.insert("page_out", page_out);
-            value.insert("swap_in", swap_in);
-            value.insert("swap_out", swap_out);
+            vec![
+                Metric::gauge("sflow_host_mem_total", "", mem_total),
+                Metric::gauge("sflow_host_mem_free", "", mem_free),
+                Metric::gauge("sflow_host_mem_shared", "", mem_shared),
+                Metric::gauge("sflow_host_mem_buffers", "", mem_buffers),
+                Metric::gauge("sflow_host_mem_cached", "", mem_cached),
+                Metric::gauge("sflow_host_swap_total", "", swap_total),
+                Metric::gauge("sflow_host_swap_free", "", swap_free),
+                Metric::gauge("sflow_host_page_in", "", page_in),
+                Metric::gauge("sflow_host_page_out", "", page_out),
+                Metric::gauge("sflow_host_swap_in", "", swap_in),
+                Metric::gauge("sflow_host_swap_out", "", swap_out),
+            ]
         }
         CounterRecordData::HostNetIO(HostNetIO {
             bytes_in,
@@ -684,14 +1059,16 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             errs_out,
             drops_out,
         }) => {
-            value.insert("bytes_in", bytes_in);
-            value.insert("packets_in", packets_in);
-            value.insert("errs_in", errs_in);
-            value.insert("drops_in", drops_in);
-            value.insert("bytes_out", bytes_out);
-            value.insert("packets_out", packets_out);
-            value.insert("errs_out", errs_out);
-            value.insert("drops_out", drops_out);
+            vec![
+                Metric::sum("sflow_host_network_bytes_in", "", bytes_in),
+                Metric::sum("sflow_host_network_packets_in", "", packets_in),
+                Metric::sum("sflow_host_network_errs_in", "", errs_in),
+                Metric::sum("sflow_host_network_drops_in", "", drops_in),
+                Metric::sum("sflow_host_network_bytes_out", "", bytes_out),
+                Metric::sum("sflow_host_network_packets_out", "", packets_out),
+                Metric::sum("sflow_host_network_errs_out", "", errs_out),
+                Metric::sum("sflow_host_network_drops_out", "", drops_out),
+            ]
         }
         CounterRecordData::HostDiskIO(HostDiskIO {
             disk_total,
@@ -704,182 +1081,218 @@ fn convert_counter_record(record: CounterRecord) -> Value {
             bytes_written,
             write_time,
         }) => {
-            value.insert("disk_total", disk_total);
-            value.insert("disk_free", disk_free);
-            value.insert("part_max_used", part_max_used);
-            value.insert("reads", reads);
-            value.insert("bytes_read", bytes_read);
-            value.insert("read_time", read_time);
-            value.insert("writes", writes);
-            value.insert("bytes_written", bytes_written);
-            value.insert("write_time", write_time);
+            vec![
+                Metric::sum(
+                    "sflow_host_disk_total",
+                    "total disk size in bytes",
+                    disk_total,
+                ),
+                Metric::sum(
+                    "sflow_host_disk_free",
+                    "total disk free in bytes",
+                    disk_free,
+                ),
+                Metric::sum(
+                    "sflow_host_part_max_used",
+                    "utilization of most utilized partition",
+                    part_max_used,
+                ),
+                Metric::sum("sflow_host_reads", "reads issued", reads),
+                Metric::sum("sflow_host_bytes_read", "bytes read", bytes_read),
+                Metric::sum("sflow_host_read_time", "read time (ms)", read_time),
+                Metric::sum("sflow_host_writes", "writes completed", writes),
+                Metric::sum("sflow_host_bytes_written", "bytes written", bytes_written),
+                Metric::sum("sflow_host_write_time", "write time (ms)", write_time),
+            ]
         }
         CounterRecordData::Mib2IpGroup(Mib2IpGroup {
-            ip_forwarding,
-            ip_default_ttl,
-            ip_in_receives,
-            ip_in_hdr_errors,
-            ip_in_addr_errors,
-            ip_forw_datagrams,
-            ip_in_unknown_protos,
-            ip_in_discards,
-            ip_in_delivers,
-            ip_out_requests,
-            ip_out_discards,
-            ip_out_no_routes,
-            ip_reasm_timeout,
-            ip_reasm_reqds,
-            ip_reasm_oks,
-            ip_reasm_fails,
-            ip_frag_oks,
-            ip_frag_fails,
-            ip_frag_creates,
+            forwarding,
+            default_ttl,
+            in_receives,
+            in_hdr_errors,
+            in_addr_errors,
+            forw_datagrams,
+            in_unknown_protos,
+            in_discards,
+            in_delivers,
+            out_requests,
+            out_discards,
+            out_no_routes,
+            reasm_timeout,
+            reasm_reqds,
+            reasm_oks,
+            reasm_fails,
+            frag_oks,
+            frag_fails,
+            frag_creates,
         }) => {
-            value.insert("ip_forwarding", ip_forwarding);
-            value.insert("ip_default_ttl", ip_default_ttl);
-            value.insert("ip_in_receives", ip_in_receives);
-            value.insert("ip_in_hdr_errors", ip_in_hdr_errors);
-            value.insert("ip_in_addr_errors", ip_in_addr_errors);
-            value.insert("ip_forw_datagrams", ip_forw_datagrams);
-            value.insert("ip_in_unknown_protos", ip_in_unknown_protos);
-            value.insert("ip_in_discards", ip_in_discards);
-            value.insert("ip_in_delivers", ip_in_delivers);
-            value.insert("ip_out_requests", ip_out_requests);
-            value.insert("ip_out_discards", ip_out_discards);
-            value.insert("ip_out_no_routes", ip_out_no_routes);
-            value.insert("ip_reasm_timeout", ip_reasm_timeout);
-            value.insert("ip_reasm_reqds", ip_reasm_reqds);
-            value.insert("ip_reasm_oks", ip_reasm_oks);
-            value.insert("ip_reasm_fails", ip_reasm_fails);
-            value.insert("ip_frag_oks", ip_frag_oks);
-            value.insert("ip_frag_fails", ip_frag_fails);
-            value.insert("ip_frag_creates", ip_frag_creates);
+            vec![
+                Metric::sum("sflow_ip_forwarding", "", forwarding),
+                Metric::sum("sflow_ip_default_ttl", "", default_ttl),
+                Metric::sum("sflow_ip_in_receives", "", in_receives),
+                Metric::sum("sflow_ip_in_hdr_errors", "", in_hdr_errors),
+                Metric::sum("sflow_ip_in_addr_errors", "", in_addr_errors),
+                Metric::sum("sflow_ip_forw_datagrams", "", forw_datagrams),
+                Metric::sum("sflow_ip_in_unknown_protos", "", in_unknown_protos),
+                Metric::sum("sflow_ip_in_discards", "", in_discards),
+                Metric::sum("sflow_ip_in_delivers", "", in_delivers),
+                Metric::sum("sflow_ip_out_requests", "", out_requests),
+                Metric::sum("sflow_ip_out_discards", "", out_discards),
+                Metric::sum("sflow_ip_out_no_routes", "", out_no_routes),
+                Metric::sum("sflow_ip_reasm_timeout", "", reasm_timeout),
+                Metric::sum("sflow_ip_reasm_reqds", "", reasm_reqds),
+                Metric::sum("sflow_ip_reasm_oks", "", reasm_oks),
+                Metric::sum("sflow_ip_reasm_fails", "", reasm_fails),
+                Metric::sum("sflow_ip_frag_oks", "", frag_oks),
+                Metric::sum("sflow_ip_frag_fails", "", frag_fails),
+                Metric::sum("sflow_ip_frag_creates", "", frag_creates),
+            ]
         }
         CounterRecordData::Mib2IcmpGroup(Mib2IcmpGroup {
-            icmp_in_msgs,
-            icmp_in_errors,
-            icmp_in_dest_unreachs,
-            icmp_in_time_excds,
-            icmp_in_param_probs,
-            icmp_in_src_quenchs,
-            icmp_in_redirects,
-            icmp_in_echos,
-            icmp_in_echo_reps,
-            icmp_in_timestamps,
-            icmp_in_addr_masks,
-            icmp_in_addr_mask_reps,
-            icmp_out_msgs,
-            icmp_out_errors,
-            icmp_out_dest_unreachs,
-            icmp_out_time_excds,
-            icmp_out_param_probs,
-            icmp_out_src_quenchs,
-            icmp_out_redirects,
-            icmp_out_echos,
-            icmp_out_echo_reps,
-            icmp_out_timestamps,
-            icmp_out_timestamp_reps,
-            icmp_out_addr_masks,
-            icmp_out_addr_mask_reps,
+            in_msgs,
+            in_errors,
+            in_dest_unreachs,
+            in_time_excds,
+            in_param_probs,
+            in_src_quenchs,
+            in_redirects,
+            in_echos,
+            in_echo_reps,
+            in_timestamps,
+            in_addr_masks,
+            in_addr_mask_reps,
+            out_msgs,
+            out_errors,
+            out_dest_unreachs,
+            out_time_excds,
+            out_param_probs,
+            out_src_quenchs,
+            out_redirects,
+            out_echos,
+            out_echo_reps,
+            out_timestamps,
+            out_timestamp_reps,
+            out_addr_masks,
+            out_addr_mask_reps,
         }) => {
-            value.insert("icmp_in_msgs", icmp_in_msgs);
-            value.insert("icmp_in_errors", icmp_in_errors);
-            value.insert("icmp_in_dest_unreachs", icmp_in_dest_unreachs);
-            value.insert("icmp_in_time_excds", icmp_in_time_excds);
-            value.insert("icmp_in_param_probs", icmp_in_param_probs);
-            value.insert("icmp_in_src_quenchs", icmp_in_src_quenchs);
-            value.insert("icmp_in_redirects", icmp_in_redirects);
-            value.insert("icmp_in_echos", icmp_in_echos);
-            value.insert("icmp_in_echo_reps", icmp_in_echo_reps);
-            value.insert("icmp_in_timestamps", icmp_in_timestamps);
-            value.insert("icmp_in_addr_masks", icmp_in_addr_masks);
-            value.insert("icmp_in_addr_mask_reps", icmp_in_addr_mask_reps);
-            value.insert("icmp_out_msgs", icmp_out_msgs);
-            value.insert("icmp_out_errors", icmp_out_errors);
-            value.insert("icmp_out_dest_unreachs", icmp_out_dest_unreachs);
-            value.insert("icmp_out_time_excds", icmp_out_time_excds);
-            value.insert("icmp_out_param_probs", icmp_out_param_probs);
-            value.insert("icmp_out_src_quenchs", icmp_out_src_quenchs);
-            value.insert("icmp_out_redirects", icmp_out_redirects);
-            value.insert("icmp_out_echos", icmp_out_echos);
-            value.insert("icmp_out_echo_reps", icmp_out_echo_reps);
-            value.insert("icmp_out_timestamps", icmp_out_timestamps);
-            value.insert("icmp_out_timestamp_reps", icmp_out_timestamp_reps);
-            value.insert("icmp_out_addr_masks", icmp_out_addr_masks);
-            value.insert("icmp_out_addr_mask_reps", icmp_out_addr_mask_reps);
+            vec![
+                Metric::sum("sflow_icmp_in_msgs", "", in_msgs),
+                Metric::sum("sflow_icmp_in_errors", "", in_errors),
+                Metric::sum("sflow_icmp_in_dest_unreachs", "", in_dest_unreachs),
+                Metric::sum("sflow_icmp_in_time_excds", "", in_time_excds),
+                Metric::sum("sflow_icmp_in_param_probs", "", in_param_probs),
+                Metric::sum("sflow_icmp_in_src_quenchs", "", in_src_quenchs),
+                Metric::sum("sflow_icmp_in_redirects", "", in_redirects),
+                Metric::sum("sflow_icmp_in_echos", "", in_echos),
+                Metric::sum("sflow_icmp_in_echo_reps", "", in_echo_reps),
+                Metric::sum("sflow_icmp_in_timestamps", "", in_timestamps),
+                Metric::sum("sflow_icmp_in_addr_masks", "", in_addr_masks),
+                Metric::sum("sflow_icmp_in_addr_mask_reps", "", in_addr_mask_reps),
+                Metric::sum("sflow_icmp_out_msgs", "", out_msgs),
+                Metric::sum("sflow_icmp_out_errors", "", out_errors),
+                Metric::sum("sflow_icmp_out_dest_unreachs", "", out_dest_unreachs),
+                Metric::sum("sflow_icmp_out_time_excds", "", out_time_excds),
+                Metric::sum("sflow_icmp_out_param_probs", "", out_param_probs),
+                Metric::sum("sflow_icmp_out_src_quenchs", "", out_src_quenchs),
+                Metric::sum("sflow_icmp_out_redirects", "", out_redirects),
+                Metric::sum("sflow_icmp_out_echos", "", out_echos),
+                Metric::sum("sflow_icmp_out_echo_reps", "", out_echo_reps),
+                Metric::sum("sflow_icmp_out_timestamps", "", out_timestamps),
+                Metric::sum("sflow_icmp_out_timestamp_reps", "", out_timestamp_reps),
+                Metric::sum("sflow_icmp_out_addr_masks", "", out_addr_masks),
+                Metric::sum("sflow_icmp_out_addr_mask_reps", "", out_addr_mask_reps),
+            ]
         }
         CounterRecordData::Mib2TcpGroup(Mib2TcpGroup {
-            tcp_rto_algorithm,
-            tcp_rto_min,
-            tcp_rto_max,
-            tcp_max_conn,
-            tcp_active_opens,
-            tcp_passive_opens,
-            tcp_attempt_fails,
-            tcp_estab_resets,
-            tcp_curr_estab,
-            tcp_in_segs,
-            tcp_out_segs,
-            tcp_retrans_segs,
-            tcp_in_errs,
-            tcp_out_rsts,
-            tcp_in_csum_errs,
+            rto_algorithm,
+            rto_min,
+            rto_max,
+            max_conn,
+            active_opens,
+            passive_opens,
+            attempt_fails,
+            estab_resets,
+            curr_estab,
+            in_segs,
+            out_segs,
+            retrans_segs,
+            in_errs,
+            out_rsts,
+            in_csum_errs,
         }) => {
-            value.insert("tcp_rto_algorithm", tcp_rto_algorithm);
-            value.insert("tcp_rto_min", tcp_rto_min);
-            value.insert("tcp_rto_max", tcp_rto_max);
-            value.insert("tcp_max_conn", tcp_max_conn);
-            value.insert("tcp_active_opens", tcp_active_opens);
-            value.insert("tcp_passive_opens", tcp_passive_opens);
-            value.insert("tcp_attempt_fails", tcp_attempt_fails);
-            value.insert("tcp_estab_resets", tcp_estab_resets);
-            value.insert("tcp_curr_estab", tcp_curr_estab);
-            value.insert("tcp_in_segs", tcp_in_segs);
-            value.insert("tcp_out_segs", tcp_out_segs);
-            value.insert("tcp_retrans_segs", tcp_retrans_segs);
-            value.insert("tcp_in_errs", tcp_in_errs);
-            value.insert("tcp_out_rsts", tcp_out_rsts);
-            value.insert("tcp_in_csum_errs", tcp_in_csum_errs);
+            vec![
+                Metric::sum("sflow_tcp_rto_algorithm", "", rto_algorithm),
+                Metric::sum("sflow_tcp_rto_min", "", rto_min),
+                Metric::sum("sflow_tcp_rto_max", "", rto_max),
+                Metric::sum("sflow_tcp_max_conn", "", max_conn),
+                Metric::sum("sflow_tcp_active_opens", "", active_opens),
+                Metric::sum("sflow_tcp_passive_opens", "", passive_opens),
+                Metric::sum("sflow_tcp_attempt_fails", "", attempt_fails),
+                Metric::sum("sflow_tcp_estab_resets", "", estab_resets),
+                Metric::sum("sflow_tcp_curr_estab", "", curr_estab),
+                Metric::sum("sflow_tcp_in_segs", "", in_segs),
+                Metric::sum("sflow_tcp_out_segs", "", out_segs),
+                Metric::sum("sflow_tcp_retrans_segs", "", retrans_segs),
+                Metric::sum("sflow_tcp_in_errs", "", in_errs),
+                Metric::sum("sflow_tcp_out_rsts", "", out_rsts),
+                Metric::sum("sflow_tcp_in_csum_errs", "", in_csum_errs),
+            ]
         }
         CounterRecordData::Mib2UdpGroup(Mib2UdpGroup {
-            udp_in_datagrams,
-            udp_no_ports,
-            udp_in_errors,
-            udp_out_datagrams,
-            udp_rcvbuf_errors,
-            udp_sndbuf_errors,
-            udp_in_csum_errors,
+            in_datagrams,
+            no_ports,
+            in_errors,
+            out_datagrams,
+            rcvbuf_errors,
+            sndbuf_errors,
+            in_csum_errors,
         }) => {
-            value.insert("udp_in_datagrams", udp_in_datagrams);
-            value.insert("udp_no_ports", udp_no_ports);
-            value.insert("udp_in_errors", udp_in_errors);
-            value.insert("udp_out_datagrams", udp_out_datagrams);
-            value.insert("udp_rcvbuf_errors", udp_rcvbuf_errors);
-            value.insert("udp_sndbuf_errors", udp_sndbuf_errors);
-            value.insert("udp_in_csum_errors", udp_in_csum_errors);
+            vec![
+                Metric::sum("sflow_udp_in_datagrams", "", in_datagrams),
+                Metric::sum("sflow_udp_no_ports", "", no_ports),
+                Metric::sum("sflow_udp_in_errors", "", in_errors),
+                Metric::sum("sflow_udp_out_datagrams", "", out_datagrams),
+                Metric::sum("sflow_udp_rcvbuf_errors", "", rcvbuf_errors),
+                Metric::sum("sflow_udp_sndbuf_errors", "", sndbuf_errors),
+                Metric::sum("sflow_udp_in_csum_errors", "", in_csum_errors),
+            ]
         }
-        CounterRecordData::PortName(PortName { name }) => {
-            value.insert("port_name", name);
+        CounterRecordData::PortName(PortName { .. }) => {
+            vec![]
         }
-        CounterRecordData::HostParent(HostParent {
-            container_type,
-            container_index,
-        }) => {
-            value.insert("container_type", container_type);
-            value.insert("container_index", container_index);
+        CounterRecordData::HostParent(HostParent { .. }) => {
+            vec![]
         }
         CounterRecordData::Sfp(Sfp {
-            module_id,
-            module_total_lanes,
-            module_supply_voltage,
-            module_temperature,
+            id,
+            total_lanes,
+            supply_voltage,
+            temperature,
             lanes,
         }) => {
-            value.insert("module_id", module_id);
-            value.insert("module_total_lanes", module_total_lanes);
-            value.insert("module_supply_voltage", module_supply_voltage);
-            value.insert("module_temperature", module_temperature);
-            let mut array = Vec::with_capacity(lanes.len());
+            let mut metrics = Vec::with_capacity(2 + lanes.len() * 9);
+
+            metrics.extend([
+                Metric::gauge_with_tags(
+                    "sflow_sfp_info",
+                    "information about the SFP module",
+                    1,
+                    tags!(
+                        "id" => id,
+                        "total_lanes" => total_lanes,
+                        "supply_voltage" => supply_voltage,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "sflow_sfp_temperature",
+                    "temperature of the SFP module",
+                    temperature,
+                    tags!(
+                        "id" => id,
+                    ),
+                ),
+            ]);
+
             for Lane {
                 lane_index,
                 tx_bias_current,
@@ -893,28 +1306,357 @@ fn convert_counter_record(record: CounterRecord) -> Value {
                 rx_wavelength,
             } in lanes
             {
-                let mut item = Value::Object(Default::default());
-                item.insert("lane_index", lane_index);
-                item.insert("tx_bias_current", tx_bias_current);
-                item.insert("tx_power", tx_power);
-                item.insert("tx_power_min", tx_power_min);
-                item.insert("tx_power_max", tx_power_max);
-                item.insert("tx_wavelength", tx_wavelength);
-                item.insert("rx_power", rx_power);
-                item.insert("rx_power_min", rx_power_min);
-                item.insert("rx_power_max", rx_power_max);
-                item.insert("rx_wavelength", rx_wavelength);
+                let tags = tags!(
+                    "id" => id, // 1-based index of lane within module, 0=unknown
+                    "index" => lane_index,
+                );
 
-                array.push(item);
+                metrics.extend([
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_tx_bias_current",
+                        "value in microamps",
+                        tx_bias_current,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_tx_power",
+                        "in micro watts",
+                        tx_power,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_tx_power_min",
+                        "in micro watts",
+                        tx_power_min,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_tx_power_max",
+                        "in micro watts",
+                        tx_power_max,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_tx_wavelength",
+                        "in nano meters",
+                        tx_wavelength,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_rx_power",
+                        "in micro watts",
+                        rx_power,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_rx_power_min",
+                        "in micro watts",
+                        rx_power_min,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_rx_power_max",
+                        "in micro watts",
+                        rx_power_max,
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "sflow_sfp_rx_wavelength",
+                        "in nano meters",
+                        rx_wavelength,
+                        tags,
+                    ),
+                ]);
             }
+
+            metrics
         }
-        CounterRecordData::Raw(format, data) => {
-            value.insert("format", format);
-            value.insert("data", data);
+        CounterRecordData::VirtNode(VirtNode {
+            mhz,
+            cpus,
+            memory,
+            memory_free,
+            num_domains,
+        }) => {
+            vec![
+                Metric::gauge("sflow_virt_node_mhz", "", mhz),
+                Metric::gauge("sflow_virt_node_cpus", "", cpus),
+                Metric::gauge("sflow_virt_node_memory", "", memory),
+                Metric::gauge("sflow_virt_node_memory_free", "", memory_free),
+                Metric::gauge("sflow_virt_node_num_domains", "", num_domains),
+            ]
+        }
+        CounterRecordData::VirtCpu(VirtCpu {
+            state,
+            cpu_time,
+            nr_virt_cpu,
+        }) => {
+            vec![
+                Metric::gauge("sflow_virt_cpu_state", "", state),
+                Metric::sum("sflow_virt_cpu_cpu_time_seconds", "", cpu_time / 1000),
+                Metric::gauge("sflow_virt_cpu_total", "", nr_virt_cpu),
+            ]
+        }
+        CounterRecordData::VirtMemory(VirtMemory { memory, max_memory }) => {
+            vec![
+                Metric::gauge("sflow_virt_memory_bytes", "", memory),
+                Metric::gauge("sflow_virt_memory_max_bytes", "", max_memory),
+            ]
+        }
+        CounterRecordData::VirtDisk(VirtDiskIO {
+            capacity,
+            allocation,
+            available,
+            rd_req,
+            rd_bytes,
+            wr_req,
+            wr_bytes,
+            errs,
+        }) => {
+            vec![
+                Metric::gauge(
+                    "sflow_virt_disk_capacity",
+                    "logical size in bytes",
+                    capacity,
+                ),
+                Metric::gauge(
+                    "sflow_virt_disk_allocation",
+                    "current allocation in bytes",
+                    allocation,
+                ),
+                Metric::gauge(
+                    "sflow_virt_disk_available",
+                    "remaining free bytes",
+                    available,
+                ),
+                Metric::gauge(
+                    "sflow_virt_disk_read_req",
+                    "number of read requests",
+                    rd_req,
+                ),
+                Metric::gauge(
+                    "sflow_virt_disk_read_bytes",
+                    "number of read bytes",
+                    rd_bytes,
+                ),
+                Metric::gauge(
+                    "sflow_virt_disk_write_req",
+                    "number of write requests",
+                    wr_req,
+                ),
+                Metric::gauge(
+                    "sflow_virt_disk_write_bytes",
+                    "number of written bytes",
+                    wr_bytes,
+                ),
+                Metric::gauge("sflow_virt_disk_errs", "read/write errors", errs),
+            ]
+        }
+        CounterRecordData::VirtNetIO(VirtNetIO {
+            rx_bytes,
+            rx_packets,
+            rx_errs,
+            rx_drop,
+            tx_bytes,
+            tx_packets,
+            tx_errs,
+            tx_drop,
+        }) => {
+            vec![
+                Metric::sum("sflow_virt_net_rx_bytes", "total bytes received", rx_bytes),
+                Metric::sum(
+                    "sflow_virt_net_rx_packets",
+                    "total packets received",
+                    rx_packets,
+                ),
+                Metric::sum("sflow_virt_net_rx_errs", "total receive errors", rx_errs),
+                Metric::sum("sflow_virt_net_rx_drop", "total receive drops", rx_drop),
+                Metric::sum(
+                    "sflow_virt_net_tx_bytes",
+                    "total bytes transmitted",
+                    tx_bytes,
+                ),
+                Metric::sum(
+                    "sflow_virt_net_tx_packets",
+                    "total packets transmitted",
+                    tx_packets,
+                ),
+                Metric::sum("sflow_virt_net_tx_errs", "total transmit errors", tx_errs),
+                Metric::sum("sflow_virt_net_tx_drop", "total transmit drops", tx_drop),
+            ]
+        }
+        CounterRecordData::NvidiaGpu(NvidiaGpu {
+            device_count,
+            processes,
+            gpu_time,
+            mem_time,
+            mem_total,
+            mem_free,
+            ecc_errors,
+            energy,
+            temperature,
+            fan_speed,
+        }) => {
+            vec![
+                Metric::gauge("sflow_nvidia_gpu_device_count", "the number of accessible devices", device_count),
+                Metric::gauge("sflow_nvidia_gpu_processes", "processes with a compute context on a device", processes),
+                Metric::sum("sflow_nvidia_gpu_time", "total milliseconds in which one or more kernels was executing on GPU sum across all devices", gpu_time),
+                Metric::gauge("sflow_nvidia_gpu_mem_time", "total milliseconds during which global device memory was being read/written sum across all devices", mem_time),
+                Metric::gauge("sflow_nvidia_gpu_mem_total", "sum of framebuffer memory across devices", mem_total),
+                Metric::gauge("sflow_nvidia_gpu_mem_free", "sum of free framebuffer memory across devices", mem_free),
+                Metric::gauge("sflow_nvidia_gpu_ecc_errors", "sum of volatile ECC errors across devices", ecc_errors),
+                Metric::gauge("sflow_nvidia_gpu_energy", "sum of millijoules across devices", energy),
+                Metric::gauge("sflow_nvidia_gpu_temperature", "maximum temperature in degrees Celsius across devices", temperature),
+                Metric::gauge("sflow_nvidia_gpu_fan_speed", "maximum fan speed in percent across devices", fan_speed),
+            ]
+        }
+        CounterRecordData::BcmTables(BcmTables {
+            host_entries,
+            host_entries_max,
+            ipv4_entries,
+            ipv4_entries_max,
+            ipv6_entries,
+            ipv6_entries_max,
+            ipv4_ipv6_entries,
+            ipv4_ipv6_entries_max,
+            long_ipv6_entries,
+            long_ipv6_entries_max,
+            total_routes,
+            total_routes_max,
+            ecmp_nexthops,
+            ecmp_nexthops_max,
+            mac_entries,
+            mac_entries_max,
+            ipv4_neighbors,
+            ipv6_neighbors,
+            ipv4_routes,
+            ipv6_routes,
+            acl_ingress_entries,
+            acl_ingress_entries_max,
+            acl_ingress_counters,
+            acl_ingress_counters_max,
+            acl_ingress_meters,
+            acl_ingress_meters_max,
+            acl_ingress_slices,
+            acl_ingress_slices_max,
+            acl_egress_entries,
+            acl_egress_entries_max,
+            acl_egress_counters,
+            acl_egress_counters_max,
+            acl_egress_meters,
+            acl_egress_meters_max,
+            acl_egress_slices,
+            acl_egress_slices_max,
+        }) => {
+            vec![
+                Metric::gauge("sflow_bcm_tables_host_entries", "", host_entries),
+                Metric::gauge("sflow_bcm_tables_host_entries_max", "", host_entries_max),
+                Metric::gauge("sflow_bcm_tables_ipv4_entries", "", ipv4_entries),
+                Metric::gauge("sflow_bcm_tables_ipv4_entries_max", "", ipv4_entries_max),
+                Metric::gauge("sflow_bcm_tables_ipv6_entries", "", ipv6_entries),
+                Metric::gauge("sflow_bcm_tables_ipv6_entries_max", "", ipv6_entries_max),
+                Metric::gauge("sflow_bcm_tables_ipv4_ipv6_entries", "", ipv4_ipv6_entries),
+                Metric::gauge(
+                    "sflow_bcm_tables_ipv4_ipv6_entries_max",
+                    "",
+                    ipv4_ipv6_entries_max,
+                ),
+                Metric::gauge("sflow_bcm_tables_long_ipv6_entries", "", long_ipv6_entries),
+                Metric::gauge(
+                    "sflow_bcm_tables_long_ipv6_entries_max",
+                    "",
+                    long_ipv6_entries_max,
+                ),
+                Metric::gauge("sflow_bcm_tables_total_routes", "", total_routes),
+                Metric::gauge("sflow_bcm_tables_total_routes_max", "", total_routes_max),
+                Metric::gauge("sflow_bcm_tables_ecmp_nexthops", "", ecmp_nexthops),
+                Metric::gauge("sflow_bcm_tables_ecmp_nexthops_max", "", ecmp_nexthops_max),
+                Metric::gauge("sflow_bcm_tables_mac_entries", "", mac_entries),
+                Metric::gauge("sflow_bcm_tables_mac_entries_max", "", mac_entries_max),
+                Metric::gauge("sflow_bcm_tables_ipv4_neighbors", "", ipv4_neighbors),
+                Metric::gauge("sflow_bcm_tables_ipv6_neighbors", "", ipv6_neighbors),
+                Metric::gauge("sflow_bcm_tables_ipv4_routes", "", ipv4_routes),
+                Metric::gauge("sflow_bcm_tables_ipv6_routes", "", ipv6_routes),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_entries",
+                    "",
+                    acl_ingress_entries,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_entries_max",
+                    "",
+                    acl_ingress_entries_max,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_counters",
+                    "",
+                    acl_ingress_counters,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_counters_max",
+                    "",
+                    acl_ingress_counters_max,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_meters",
+                    "",
+                    acl_ingress_meters,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_meters_max",
+                    "",
+                    acl_ingress_meters_max,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_slices",
+                    "",
+                    acl_ingress_slices,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_ingress_slices_max",
+                    "",
+                    acl_ingress_slices_max,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_egress_entries",
+                    "",
+                    acl_egress_entries,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_egress_entries_max",
+                    "",
+                    acl_egress_entries_max,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_egress_counters",
+                    "",
+                    acl_egress_counters,
+                ),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_egress_counters_max",
+                    "",
+                    acl_egress_counters_max,
+                ),
+                Metric::gauge("sflow_bcm_tables_acl_egress_meters", "", acl_egress_meters),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_egress_meters_max",
+                    "",
+                    acl_egress_meters_max,
+                ),
+                Metric::gauge("sflow_bcm_tables_acl_egress_slices", "", acl_egress_slices),
+                Metric::gauge(
+                    "sflow_bcm_tables_acl_egress_slices_max",
+                    "",
+                    acl_egress_slices_max,
+                ),
+            ]
+        }
+        CounterRecordData::Raw(format, ..) => {
+            warn!(message = "unknown counter record type", format,);
+
+            vec![]
         }
     }
-
-    value
 }
 
 // https://sflow.org/sflow_host.txt
@@ -989,4 +1731,59 @@ fn format_uuid(data: [u8; 16]) -> String {
     }
 
     unsafe { String::from_utf8_unchecked(dst) }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::generate_config::<Config>();
+    }
+
+    #[test]
+    fn build_event() {
+        let input = [
+            0, 0, 0, 5, 0, 0, 0, 1, 192, 168, 88, 254, 0, 1, 134, 160, 0, 0, 1, 219, 0, 3, 105, 19,
+            0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 3, 52, 0, 0, 0, 45, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 11,
+            0, 0, 8, 52, 0, 0, 0, 28, 0, 0, 14, 17, 0, 0, 0, 32, 0, 0, 0, 15, 171, 254, 128, 0, 0,
+            0, 0, 1, 4, 241, 48, 0, 0, 0, 0, 43, 0, 0, 7, 209, 0, 0, 0, 116, 0, 0, 0, 7, 0, 0, 0,
+            4, 0, 0, 0, 1, 2, 66, 201, 214, 193, 141, 8, 54, 0, 0, 0, 8, 0, 0, 0, 1, 2, 66, 81,
+            122, 123, 221, 0, 15, 0, 0, 0, 2, 0, 0, 0, 1, 4, 217, 245, 249, 228, 34, 0, 1, 0, 0, 0,
+            6, 0, 0, 0, 1, 2, 66, 230, 2, 129, 56, 0, 8, 0, 0, 0, 5, 0, 0, 0, 1, 2, 66, 202, 4,
+            103, 211, 0, 76, 0, 0, 0, 3, 0, 0, 0, 1, 70, 192, 135, 254, 47, 40, 46, 115, 0, 0, 0,
+            7, 0, 0, 0, 1, 2, 66, 20, 183, 202, 151, 90, 186, 0, 0, 7, 218, 0, 0, 0, 28, 1, 68,
+            125, 72, 0, 0, 129, 69, 0, 0, 3, 228, 0, 182, 7, 0, 0, 0, 3, 228, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 7, 217, 0, 0, 0, 60, 0, 0, 0, 1, 0, 0, 0, 200, 0, 1, 212, 192, 255, 255, 255,
+            255, 0, 55, 151, 97, 0, 1, 1, 99, 0, 50, 216, 139, 0, 0, 35, 104, 0, 0, 0, 103, 3, 84,
+            99, 88, 3, 16, 107, 72, 0, 9, 165, 91, 0, 0, 2, 38, 0, 56, 77, 7, 0, 0, 0, 0, 0, 0, 7,
+            216, 0, 0, 0, 100, 0, 1, 71, 180, 0, 0, 28, 223, 0, 0, 0, 0, 0, 1, 70, 114, 0, 0, 0,
+            166, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 156, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 123, 53, 0, 0, 0, 0, 0, 0, 0, 124, 0, 0, 13, 213, 0,
+            0, 122, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 156,
+            0, 0, 7, 215, 0, 0, 0, 76, 0, 0, 0, 1, 0, 0, 0, 64, 4, 139, 208, 36, 0, 0, 0, 0, 0, 0,
+            0, 20, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 4, 139, 126, 207, 3, 169, 247, 194, 0, 0,
+            0, 0, 0, 1, 248, 95, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 7, 213, 0, 0, 0, 52, 0, 0, 1, 96, 25, 169, 16, 0, 0, 0, 0, 134,
+            177, 237, 48, 0, 0, 0, 34, 116, 0, 135, 46, 207, 0, 0, 0, 69, 203, 148, 8, 0, 0, 57,
+            132, 42, 6, 71, 116, 120, 0, 0, 2, 18, 8, 192, 168, 0, 94, 151, 113, 13, 0, 0, 7, 212,
+            0, 0, 0, 72, 0, 0, 0, 15, 171, 254, 128, 0, 0, 0, 0, 1, 4, 241, 48, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 1, 32, 0, 0, 0, 0, 6, 150, 100, 160, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 8, 187, 25, 27, 66, 150, 245, 149, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 7, 211, 0, 0, 0, 80, 64, 249, 71, 174, 64, 211, 133, 31, 64, 171, 133, 31, 0, 0, 0,
+            1, 0, 0, 30, 48, 0, 0, 0, 32, 0, 0, 14, 17, 0, 10, 156, 196, 33, 47, 211, 74, 0, 5,
+            171, 134, 5, 219, 155, 236, 42, 91, 14, 206, 0, 166, 17, 132, 1, 235, 237, 222, 0, 243,
+            243, 114, 108, 34, 126, 40, 48, 6, 1, 147, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7,
+            214, 0, 0, 0, 40, 0, 0, 0, 0, 6, 249, 170, 170, 0, 1, 72, 86, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 64, 26, 133, 0, 0, 64, 251, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 208, 0, 0,
+            0, 64, 0, 0, 0, 6, 102, 101, 100, 111, 114, 97, 0, 0, 26, 163, 85, 64, 167, 93, 120,
+            125, 152, 156, 4, 217, 245, 249, 228, 34, 0, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, 22, 54, 46,
+            49, 50, 46, 56, 45, 50, 48, 48, 46, 102, 99, 52, 49, 46, 120, 56, 54, 95, 54, 52, 0, 0,
+        ];
+
+        let (logs, metrics) = build_events(&input).unwrap();
+        assert!(logs.is_empty());
+        assert!(!metrics.is_empty());
+    }
 }
