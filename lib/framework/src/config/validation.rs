@@ -1,20 +1,35 @@
 use std::collections::HashMap;
 
 use super::builder::Builder;
+use super::transform::get_transform_output_ids;
 use super::{ComponentKey, Config, OutputId, Resource};
+
+use crate::pipeline::DEFAULT_OUTPUT;
 
 pub fn warnings(config: &Config) -> Vec<String> {
     let mut warnings = vec![];
 
-    let source_names = config.sources.keys().map(|name| ("source", name.clone()));
-    let transform_names = config
-        .transforms
-        .keys()
-        .map(|name| ("transform", name.clone()));
+    let source_ids = config.sources.iter().flat_map(|(key, source)| {
+        source
+            .inner
+            .outputs()
+            .iter()
+            .map(|output| {
+                if let Some(port) = &output.port {
+                    ("source", OutputId::from((key, port.clone())))
+                } else {
+                    ("source", OutputId::from(key))
+                }
+            })
+            .collect::<Vec<_>>()
+    });
+    let transform_ids = config.transforms.iter().flat_map(|(key, transform)| {
+        get_transform_output_ids(transform.inner.as_ref(), key.clone())
+            .map(|output| ("transform", output))
+            .collect::<Vec<_>>()
+    });
 
-    // TODO: maybe warn about no consumers for named outputs as well?
-    for (input_type, name) in transform_names.chain(source_names) {
-        let id = OutputId::from(&name);
+    for (input_type, id) in transform_ids.chain(source_ids) {
         if !config
             .transforms
             .iter()
@@ -27,8 +42,8 @@ pub fn warnings(config: &Config) -> Vec<String> {
             warnings.push(format!(
                 "{} \"{}\" has no consumers",
                 capitalize(input_type),
-                name
-            ));
+                id
+            ))
         }
     }
 
@@ -163,6 +178,43 @@ pub fn check_resources(builder: &Builder) -> Result<(), Vec<String>> {
                 )
             })
             .collect())
+    }
+}
+
+/// To avoid collisions between `output` metric tags, check that a component
+/// does not have a named output with the name [`DEFAULT_OUTPUT`]
+pub fn check_outputs(builder: &Builder) -> Result<(), Vec<String>> {
+    let mut errors = vec![];
+
+    for (key, source) in builder.sources.iter() {
+        let outputs = source.inner.outputs();
+
+        if outputs
+            .iter()
+            .map(|output| output.port.as_deref().unwrap_or(""))
+            .any(|name| name == DEFAULT_OUTPUT)
+        {
+            errors.push(format!(
+                "Source {key} cannot have a named output with reserved name: {DEFAULT_OUTPUT}",
+            ));
+        }
+    }
+
+    for (key, transform) in builder.transforms.iter() {
+        // use the most general definition possible, since the real value isn't known yet
+        if get_transform_output_ids(transform.inner.as_ref(), key.clone())
+            .any(|output| matches!(output.port, Some(output) if output == DEFAULT_OUTPUT))
+        {
+            errors.push(format!(
+                "Transform {key} cannot have a named output with reserved name: `{DEFAULT_OUTPUT}`"
+            ));
+        }
+    }
+
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(errors)
     }
 }
 

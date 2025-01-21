@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use async_trait::async_trait;
 use configurable::NamedComponent;
 
-use crate::config::{GlobalOptions, Resource};
+use super::{GlobalOptions, Resource};
 use crate::{Extension, ShutdownSignal};
 
 #[derive(Clone)]

@@ -203,20 +203,6 @@ impl<T: Into<String>> From<(T, DataType)> for Output {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub enum ExpandType {
-    /// Chain components together one after another. Components will be named according
-    /// to this order (e.g. component_name.0 and so on). If alias is set to true,
-    /// then a Noop transform will be added as the last component and given the raw
-    /// component_name identifier so that it can be used as an input for other components.
-    Parallel { aggregates: bool },
-    /// This ways of expanding will take all the components and chain then in order.
-    /// The first node will be renamed `component_name.0` and so on.
-    /// If `alias` is set to `true, then a `Noop` transform will be added as the
-    /// last component and named `component_name` so that it can be used as an input.
-    Serial { alias: bool },
-}
-
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct PipelineConfig {
     pub sources: Vec<String>,
@@ -261,21 +247,11 @@ pub struct Config {
     pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
     pub healthcheck: HealthcheckOptions,
-
-    #[serde(skip_serializing, skip_deserializing)]
-    expansions: IndexMap<ComponentKey, Vec<ComponentKey>>,
 }
 
 impl Config {
     pub fn builder() -> Builder {
         Default::default()
-    }
-
-    pub fn get_inputs(&self, id: &ComponentKey) -> Vec<ComponentKey> {
-        self.expansions
-            .get(id)
-            .cloned()
-            .unwrap_or_else(|| vec![id.clone()])
     }
 }
 

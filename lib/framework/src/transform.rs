@@ -1,14 +1,12 @@
 use std::collections::HashMap;
 use std::pin::Pin;
 
-use async_trait::async_trait;
 use bytesize::ByteSizeOf;
-use configurable::configurable_component;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
 use futures_util::{stream, StreamExt};
 
-use crate::config::{DataType, Output, TransformConfig, TransformContext};
+use crate::config::Output;
 use crate::topology::{ControlChannel, Fanout};
 
 /// Transforms that are simple, and don't require attention to coordination.
@@ -256,6 +254,7 @@ impl TransformOutputs {
 
         for output in outputs {
             let (fanout, control) = Fanout::new();
+
             match output.port {
                 None => {
                     primary_output = Some(fanout);
@@ -295,32 +294,6 @@ impl TransformOutputs {
             buf.send(self.named_outputs.get_mut(key).expect("unknown output"))
                 .await;
         }
-    }
-}
-
-#[configurable_component(transform, name = "noop")]
-#[derive(Clone, Default)]
-pub struct Noop;
-
-#[async_trait]
-#[typetag::serde(name = "noop")]
-impl TransformConfig for Noop {
-    async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
-        Ok(Transform::function(self.clone()))
-    }
-
-    fn input_type(&self) -> DataType {
-        DataType::All
-    }
-
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::new(DataType::All)]
-    }
-}
-
-impl FunctionTransform for Noop {
-    fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
-        output.push(events);
     }
 }
 
