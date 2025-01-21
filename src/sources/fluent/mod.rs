@@ -255,70 +255,36 @@ impl Decoder {
                 }
             }
 
-            // PackedForward's second part could be str
-            // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#packedforward-mode
-            0xa0..=0xbf | 0xd9..=0xdb => {
-                // Client may send a `MessagePackEventStream` as msgpack `str` format
-                // for compatibility reasons.
-                let str_len = match typ {
-                    // fix str
-                    0xa0..=0xbf => (typ & 0x1f) as usize,
-                    // str 8
-                    0xd9 => reader.read_u8()? as usize,
-                    // str 16
-                    0xda => reader.read_u16()? as usize,
-                    // str 32
-                    0xdb => reader.read_u32()? as usize,
+            // PackedForward
+            0xa0..=0xbf | 0xd9..=0xdb | 0xc4..=0xc6 => {
+                let data = match typ {
+                    // PackedForward's second part could be str
+                    //
+                    // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#packedforward-mode
+                    0xa0..=0xbf | 0xd9..=0xdb => {
+                        // Client may send a `MessagePackEventStream` as msgpack `str` format
+                        // for compatibility reasons.
+                        let str_len = match typ {
+                            // fix str
+                            0xa0..=0xbf => (typ & 0x1f) as usize,
+                            // str 8
+                            0xd9 => reader.read_u8()? as usize,
+                            // str 16
+                            0xda => reader.read_u16()? as usize,
+                            // str 32
+                            0xdb => reader.read_u32()? as usize,
+                            _ => unreachable!(),
+                        };
+
+                        let mut data = vec![0; str_len];
+                        reader.read_exact(&mut data)?;
+
+                        data
+                    }
+                    // bin
+                    0xc4..=0xd6 => decode_binary(reader)?,
                     _ => unreachable!(),
                 };
-
-                let mut data = vec![0; str_len];
-                reader.read_exact(&mut data)?;
-
-                let option = if len == 3 {
-                    Some(decode_options(reader)?)
-                } else {
-                    None
-                };
-                let compressed = option.as_ref().map(|o| o.compressed).unwrap_or_default();
-
-                let buf = if compressed {
-                    let mut buf = Vec::new();
-                    MultiGzDecoder::new(data.as_slice())
-                        .read_to_end(&mut buf)
-                        .map(|_| buf)
-                        .map_err(|_err| DecodeError::Decompression)?
-                } else {
-                    data
-                };
-
-                let mut cursor = std::io::Cursor::new(buf);
-                let mut logs = Vec::new();
-                loop {
-                    let (timestamp, value) = decode_entry(&mut cursor)?;
-
-                    let mut log = LogRecord::from(value);
-                    let metadata = log.metadata_mut().value_mut();
-                    metadata.insert("fluent.timestamp", timestamp);
-                    metadata.insert("fluent.tag", tag.clone());
-                    metadata.insert("fluent.host", self.peer.to_string());
-
-                    logs.push(log);
-
-                    if cursor.remaining() == 0 {
-                        break;
-                    }
-                }
-
-                match option {
-                    Some(opt) => Ok(Some((opt.chunk, logs))),
-                    None => Ok(Some((None, logs))),
-                }
-            }
-
-            // bin
-            0xc4..=0xc6 => {
-                let data = decode_binary(reader)?;
 
                 let option = if len == 3 {
                     Some(decode_options(reader)?)
