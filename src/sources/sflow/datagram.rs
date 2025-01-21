@@ -214,7 +214,6 @@ const FLOW_TYPE_EXT_MPLS_VC: u32 = 1009;
 const FLOW_TYPE_EXT_MPLS_FEC: u32 = 1010;
 const FLOW_TYPE_EXT_MPLS_LVP_FEC: u32 = 1011;
 const FLOW_TYPE_EXT_VLAN_TUNNEL: u32 = 1012;
-
 // According to https://sflow.org/sflow_drops.txt
 const FLOW_TYPE_EGRESS_QUEUE: u32 = 1036;
 const FLOW_TYPE_EXT_ACL: u32 = 1037;
@@ -246,10 +245,17 @@ const COUNTER_TYPE_MIB2_IP_GROUP: u32 = 2007;
 const COUNTER_TYPE_MIB2_ICMP_GROUP: u32 = 2008;
 const COUNTER_TYPE_MIB2_TCP_GROUP: u32 = 2009;
 const COUNTER_TYPE_MIB2_UDP_GROUP: u32 = 2010;
+const COUNTER_TYPE_VIRT_NODE: u32 = 2100;
+const COUNTER_TYPE_VIRT_CPU: u32 = 2101;
+const COUNTER_TYPE_VIRT_MEMORY: u32 = 2102;
+const COUNTER_TYPE_VIRT_DISK_IO: u32 = 2103;
+const COUNTER_TYPE_VIRT_NET_IO: u32 = 2104;
 const COUNTER_TYPE_ENERGY: u32 = 3000;
 const COUNTER_TYPE_TEMPERATURE: u32 = 3001;
 const COUNTER_TYPE_HUMIDITY: u32 = 3002;
 const COUNTER_TYPE_FANS: u32 = 3003;
+const COUNTER_TYPE_NVIDIA_GPU: u32 = (5703 << 12) + 1;
+const COUNTER_TYPE_BCM_TABLES: u32 = (4413 << 12) + 3;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -435,25 +441,25 @@ pub enum FlowRecord {
 
 #[derive(Debug)]
 pub struct IfCounters {
-    pub if_index: u32,
-    pub if_type: u32,
-    pub if_speed: u64,
-    pub if_direction: u32,
-    pub if_status: u32,
-    pub if_in_octets: u64,
-    pub if_in_ucast_pkts: u32,
-    pub if_in_multicast_pkts: u32,
-    pub if_in_broadcast_pkts: u32,
-    pub if_in_discards: u32,
-    pub if_in_errors: u32,
-    pub if_in_unknown_protos: u32,
-    pub if_out_octets: u64,
-    pub if_out_ucast_pkts: u32,
-    pub if_out_multicast_pkts: u32,
-    pub if_out_broadcast_pkts: u32,
-    pub if_out_discards: u32,
-    pub if_out_errors: u32,
-    pub if_promiscuous_mode: u32,
+    pub index: u32,
+    pub typ: u32,
+    pub speed: u64,
+    pub direction: u32,
+    pub status: u32,
+    pub in_octets: u64,
+    pub in_ucast_pkts: u32,
+    pub in_multicast_pkts: u32,
+    pub in_broadcast_pkts: u32,
+    pub in_discards: u32,
+    pub in_errors: u32,
+    pub in_unknown_protos: u32,
+    pub out_octets: u64,
+    pub out_ucast_pkts: u32,
+    pub out_multicast_pkts: u32,
+    pub out_broadcast_pkts: u32,
+    pub out_discards: u32,
+    pub out_errors: u32,
+    pub promiscuous_mode: u32,
 }
 
 #[derive(Debug)]
@@ -471,6 +477,28 @@ pub struct EthernetCounters {
     pub dot3_stats_frame_too_longs: u32,
     pub dot3_stats_internal_mac_receive_errors: u32,
     pub dot3_stats_symbol_errors: u32,
+}
+
+#[derive(Debug)]
+pub struct TokenRingCounters {
+    pub dot5_stats_line_errors: u32,
+    pub dot5_stats_burst_errors: u32,
+    pub dot5_stats_ac_errors: u32,
+    pub dot5_stats_abort_trans_errors: u32,
+    pub dot5_stats_internal_errors: u32,
+    pub dot5_stats_lost_frame_errors: u32,
+    pub dot5_stats_receive_congestions: u32,
+    pub dot5_stats_frame_copied_errors: u32,
+    pub dot5_stats_token_errors: u32,
+    pub dot5_stats_soft_errors: u32,
+    pub dot5_stats_hard_errors: u32,
+    pub dot5_stats_signal_loss: u32,
+    pub dot5_stats_transmit_beacons: u32,
+    pub dot5_stats_recoverys: u32,
+    pub dot5_stats_lobe_wires: u32,
+    pub dot5_stats_removes: u32,
+    pub dot5_stats_singles: u32,
+    pub dot5_stats_freq_errors: u32,
 }
 
 #[derive(Debug)]
@@ -517,10 +545,10 @@ pub struct Lane {
 
 #[derive(Debug)]
 pub struct Sfp {
-    pub module_id: u32,
-    pub module_total_lanes: u32,    /* total lanes in module */
-    pub module_supply_voltage: u32, /* millivolts */
-    pub module_temperature: i32,    /* signed - in oC / 1000 */
+    pub id: u32,
+    pub total_lanes: u32,    /* total lanes in module */
+    pub supply_voltage: u32, /* millivolts */
+    pub temperature: i32,    /* signed - in oC / 1000 */
     pub lanes: Vec<Lane>,
 }
 
@@ -544,6 +572,7 @@ pub struct HostAdapter {
     pub mac_addresses: Vec<[u8; 6]>,
 }
 
+/// Phyical or virtual network adapter NIC/vNIC
 #[derive(Debug)]
 pub struct HostAdapters {
     pub length: u32,
@@ -636,106 +665,230 @@ pub struct HostNetIO {
 
 #[derive(Debug)]
 pub struct Mib2IpGroup {
-    pub ip_forwarding: u32,
-    pub ip_default_ttl: u32,
-    pub ip_in_receives: u32,
-    pub ip_in_hdr_errors: u32,
-    pub ip_in_addr_errors: u32,
-    pub ip_forw_datagrams: u32,
-    pub ip_in_unknown_protos: u32,
-    pub ip_in_discards: u32,
-    pub ip_in_delivers: u32,
-    pub ip_out_requests: u32,
-    pub ip_out_discards: u32,
-    pub ip_out_no_routes: u32,
-    pub ip_reasm_timeout: u32,
-    pub ip_reasm_reqds: u32,
-    pub ip_reasm_oks: u32,
-    pub ip_reasm_fails: u32,
-    pub ip_frag_oks: u32,
-    pub ip_frag_fails: u32,
-    pub ip_frag_creates: u32,
+    pub forwarding: u32,
+    pub default_ttl: u32,
+    pub in_receives: u32,
+    pub in_hdr_errors: u32,
+    pub in_addr_errors: u32,
+    pub forw_datagrams: u32,
+    pub in_unknown_protos: u32,
+    pub in_discards: u32,
+    pub in_delivers: u32,
+    pub out_requests: u32,
+    pub out_discards: u32,
+    pub out_no_routes: u32,
+    pub reasm_timeout: u32,
+    pub reasm_reqds: u32,
+    pub reasm_oks: u32,
+    pub reasm_fails: u32,
+    pub frag_oks: u32,
+    pub frag_fails: u32,
+    pub frag_creates: u32,
 }
 
 #[derive(Debug)]
 pub struct Mib2IcmpGroup {
-    pub icmp_in_msgs: u32,
-    pub icmp_in_errors: u32,
-    pub icmp_in_dest_unreachs: u32,
-    pub icmp_in_time_excds: u32,
-    pub icmp_in_param_probs: u32,
-    pub icmp_in_src_quenchs: u32,
-    pub icmp_in_redirects: u32,
-    pub icmp_in_echos: u32,
-    pub icmp_in_echo_reps: u32,
-    pub icmp_in_timestamps: u32,
-    pub icmp_in_addr_masks: u32,
-    pub icmp_in_addr_mask_reps: u32,
-    pub icmp_out_msgs: u32,
-    pub icmp_out_errors: u32,
-    pub icmp_out_dest_unreachs: u32,
-    pub icmp_out_time_excds: u32,
-    pub icmp_out_param_probs: u32,
-    pub icmp_out_src_quenchs: u32,
-    pub icmp_out_redirects: u32,
-    pub icmp_out_echos: u32,
-    pub icmp_out_echo_reps: u32,
-    pub icmp_out_timestamps: u32,
-    pub icmp_out_timestamp_reps: u32,
-    pub icmp_out_addr_masks: u32,
-    pub icmp_out_addr_mask_reps: u32,
+    pub in_msgs: u32,
+    pub in_errors: u32,
+    pub in_dest_unreachs: u32,
+    pub in_time_excds: u32,
+    pub in_param_probs: u32,
+    pub in_src_quenchs: u32,
+    pub in_redirects: u32,
+    pub in_echos: u32,
+    pub in_echo_reps: u32,
+    pub in_timestamps: u32,
+    pub in_addr_masks: u32,
+    pub in_addr_mask_reps: u32,
+    pub out_msgs: u32,
+    pub out_errors: u32,
+    pub out_dest_unreachs: u32,
+    pub out_time_excds: u32,
+    pub out_param_probs: u32,
+    pub out_src_quenchs: u32,
+    pub out_redirects: u32,
+    pub out_echos: u32,
+    pub out_echo_reps: u32,
+    pub out_timestamps: u32,
+    pub out_timestamp_reps: u32,
+    pub out_addr_masks: u32,
+    pub out_addr_mask_reps: u32,
 }
 
 #[derive(Debug)]
 pub struct Mib2TcpGroup {
-    pub tcp_rto_algorithm: u32,
-    pub tcp_rto_min: u32,
-    pub tcp_rto_max: u32,
-    pub tcp_max_conn: u32,
-    pub tcp_active_opens: u32,
-    pub tcp_passive_opens: u32,
-    pub tcp_attempt_fails: u32,
-    pub tcp_estab_resets: u32,
-    pub tcp_curr_estab: u32,
-    pub tcp_in_segs: u32,
-    pub tcp_out_segs: u32,
-    pub tcp_retrans_segs: u32,
-    pub tcp_in_errs: u32,
-    pub tcp_out_rsts: u32,
-    pub tcp_in_csum_errs: u32,
+    pub rto_algorithm: u32,
+    pub rto_min: u32,
+    pub rto_max: u32,
+    pub max_conn: u32,
+    pub active_opens: u32,
+    pub passive_opens: u32,
+    pub attempt_fails: u32,
+    pub estab_resets: u32,
+    pub curr_estab: u32,
+    pub in_segs: u32,
+    pub out_segs: u32,
+    pub retrans_segs: u32,
+    pub in_errs: u32,
+    pub out_rsts: u32,
+    pub in_csum_errs: u32,
 }
 
 #[derive(Debug)]
 pub struct Mib2UdpGroup {
-    pub udp_in_datagrams: u32,
-    pub udp_no_ports: u32,
-    pub udp_in_errors: u32,
-    pub udp_out_datagrams: u32,
-    pub udp_rcvbuf_errors: u32,
-    pub udp_sndbuf_errors: u32,
-    pub udp_in_csum_errors: u32,
+    pub in_datagrams: u32,
+    pub no_ports: u32,
+    pub in_errors: u32,
+    pub out_datagrams: u32,
+    pub rcvbuf_errors: u32,
+    pub sndbuf_errors: u32,
+    pub in_csum_errors: u32,
+}
+
+#[derive(Debug)]
+pub struct VirtNode {
+    pub mhz: u32,         /* expected CPU frequency */
+    pub cpus: u32,        /* the number of active CPUs */
+    pub memory: u64,      /* memory size in bytes */
+    pub memory_free: u64, /* unassigned memory in bytes */
+    pub num_domains: u32, /* number of active domains */
+}
+
+#[derive(Debug)]
+pub struct VirtCpu {
+    pub state: u32,       /* virtDomainState */
+    pub cpu_time: u32,    /* the CPU time used (ms) */
+    pub nr_virt_cpu: u32, /* number of virtual CPUs for the domain */
+}
+
+#[derive(Debug)]
+pub struct VirtMemory {
+    pub memory: u64,     /* memory in bytes used by domain */
+    pub max_memory: u64, /* memory in bytes allowed */
+}
+
+#[derive(Debug)]
+pub struct VirtDiskIO {
+    pub capacity: u64,   /* logical size in bytes */
+    pub allocation: u64, /* current allocation in bytes */
+    pub available: u64,  /* remaining free bytes */
+    pub rd_req: u32,     /* number of read requests */
+    pub rd_bytes: u64,   /* number of read bytes */
+    pub wr_req: u32,     /* number of write requests */
+    pub wr_bytes: u64,   /* number of  written bytes */
+    pub errs: u32,       /* read/write errors */
+}
+
+#[derive(Debug)]
+pub struct VirtNetIO {
+    pub rx_bytes: u64,   /* total bytes received */
+    pub rx_packets: u32, /* total packets received */
+    pub rx_errs: u32,    /* total receive errors */
+    pub rx_drop: u32,    /* total receive drops */
+    pub tx_bytes: u64,   /* total bytes transmitted */
+    pub tx_packets: u32, /* total packets transmitted */
+    pub tx_errs: u32,    /* total transmit errors */
+    pub tx_drop: u32,    /* total transmit drops */
+}
+
+/// https://sflow.org/sflow_nvml.txt
+#[derive(Debug)]
+pub struct NvidiaGpu {
+    pub device_count: u32, /* see nvmlDeviceGetCount */
+    pub processes: u32,    /* see nvmlDeviceGetComputeRunningProcesses */
+    pub gpu_time: u32,     /* total milliseconds in which one or more
+                           kernels was executing on GPU
+                           sum across all devices */
+    pub mem_time: u32, /* total milliseconds during which global device
+                       memory was being read/written
+                       sum across all devices */
+    pub mem_total: u64, /* sum of framebuffer memory across devices
+                        see nvmlDeviceGetMemoryInfo */
+    pub mem_free: u64, /* sum of free framebuffer memory across devices
+                       see nvmlDeviceGetMemoryInfo */
+    pub ecc_errors: u32, /* sum of volatile ECC errors across devices
+                         see nvmlDeviceGetTotalEccErrors */
+    pub energy: u32, /* sum of millijoules across devices
+                     see nvmlDeviceGetPowerUsage */
+    pub temperature: u32, /* maximum temperature in degrees Celsius
+                          across devices
+                          see nvmlDeviceGetTemperature */
+    pub fan_speed: u32, /* maximum fan speed in percent across devices
+                        see nvmlDeviceGetFanSpeed */
+}
+
+// Broadcom switch ASIC table utilizations
+// opaque = counter_data; enterprise = 4413 (Broadcom); format = 3
+//
+// https://sflow.org/sflow_broadcom_tables.txt
+#[derive(Debug)]
+pub struct BcmTables {
+    pub host_entries: u32,
+    pub host_entries_max: u32,
+    pub ipv4_entries: u32,
+    pub ipv4_entries_max: u32,
+    pub ipv6_entries: u32,
+    pub ipv6_entries_max: u32,
+    pub ipv4_ipv6_entries: u32,
+    pub ipv4_ipv6_entries_max: u32,
+    pub long_ipv6_entries: u32,
+    pub long_ipv6_entries_max: u32,
+    pub total_routes: u32,
+    pub total_routes_max: u32,
+    pub ecmp_nexthops: u32,
+    pub ecmp_nexthops_max: u32,
+    pub mac_entries: u32,
+    pub mac_entries_max: u32,
+    pub ipv4_neighbors: u32,
+    pub ipv6_neighbors: u32,
+    pub ipv4_routes: u32,
+    pub ipv6_routes: u32,
+    pub acl_ingress_entries: u32,
+    pub acl_ingress_entries_max: u32,
+    pub acl_ingress_counters: u32,
+    pub acl_ingress_counters_max: u32,
+    pub acl_ingress_meters: u32,
+    pub acl_ingress_meters_max: u32,
+    pub acl_ingress_slices: u32,
+    pub acl_ingress_slices_max: u32,
+    pub acl_egress_entries: u32,
+    pub acl_egress_entries_max: u32,
+    pub acl_egress_counters: u32,
+    pub acl_egress_counters_max: u32,
+    pub acl_egress_meters: u32,
+    pub acl_egress_meters_max: u32,
+    pub acl_egress_slices: u32,
+    pub acl_egress_slices_max: u32,
 }
 
 #[derive(Debug)]
 pub enum CounterRecordData {
     Interface(IfCounters),
     Ethernet(EthernetCounters),
+    TokenRing(TokenRingCounters),
     VgCounters(VgCounters),
     Vlan(Vlan),
+    Sfp(Sfp),
+    Processor(Processor),
+    PortName(PortName),
     HostDescription(HostDescription),
     HostAdapters(HostAdapters),
     HostParent(HostParent),
     HostCPU(HostCPU),
+    HostMemory(HostMemory),
     HostDiskIO(HostDiskIO),
     HostNetIO(HostNetIO),
-    HostMemory(HostMemory),
     Mib2IpGroup(Mib2IpGroup),
     Mib2IcmpGroup(Mib2IcmpGroup),
     Mib2TcpGroup(Mib2TcpGroup),
     Mib2UdpGroup(Mib2UdpGroup),
-    PortName(PortName),
-    Sfp(Sfp),
-    Processor(Processor),
+    VirtNode(VirtNode),
+    VirtCpu(VirtCpu),
+    VirtMemory(VirtMemory),
+    VirtDisk(VirtDiskIO),
+    VirtNetIO(VirtNetIO),
+    NvidiaGpu(NvidiaGpu),
+    BcmTables(BcmTables),
 
     Raw(u32, Vec<u8>),
 }
@@ -747,27 +900,31 @@ pub struct CounterRecord {
 }
 
 #[derive(Debug)]
-pub enum Sample {
-    Flow {
-        header: SampleHeader,
+pub struct Sample {
+    pub format: u32,
+    pub length: u32,
 
+    pub sample_sequence_number: u32,
+    pub source_id_type: u32,
+    pub source_id_value: u32,
+
+    pub data: SampleData,
+}
+
+#[derive(Debug)]
+pub enum SampleData {
+    Flow {
         sampling_rate: u32,
         sample_pool: u32,
         drops: u32,
         input: u32,
         output: u32,
-        flow_records_count: u32,
         records: Vec<FlowRecord>,
     },
     Counter {
-        header: SampleHeader,
-
-        counter_records_count: u32,
         records: Vec<CounterRecord>,
     },
     ExpandedFlow {
-        header: SampleHeader,
-
         sampling_rate: u32,
         sample_pool: u32,
         drops: u32,
@@ -775,17 +932,13 @@ pub enum Sample {
         input_if_value: u32,
         output_if_format: u32,
         output_if_value: u32,
-        flow_records_count: u32,
         records: Vec<FlowRecord>,
     },
     Drop {
-        header: SampleHeader,
-
         drops: u32,
         input: u32,
         output: u32,
         reason: u32,
-        flow_records_count: u32,
         records: Vec<FlowRecord>,
     },
 }
@@ -829,6 +982,7 @@ fn decode_mac(buf: &mut Cursor<&[u8]>) -> Result<[u8; 6], Error> {
     Ok(data)
 }
 
+// https://sflow.org/developers/structures.php
 fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error> {
     // read header first
     let data_format = buf.read_u32()?;
@@ -836,46 +990,46 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
 
     let data = match data_format {
         COUNTER_TYPE_INTERFACE => {
-            let if_index = buf.read_u32()?;
-            let if_type = buf.read_u32()?;
-            let if_speed = buf.read_u64()?;
-            let if_direction = buf.read_u32()?;
-            let if_status = buf.read_u32()?;
-            let if_in_octets = buf.read_u64()?;
-            let if_in_ucast_pkts = buf.read_u32()?;
-            let if_in_multicast_pkts = buf.read_u32()?;
-            let if_in_broadcast_pkts = buf.read_u32()?;
-            let if_in_discards = buf.read_u32()?;
-            let if_in_errors = buf.read_u32()?;
-            let if_in_unknown_protos = buf.read_u32()?;
-            let if_out_octets = buf.read_u64()?;
-            let if_out_ucast_pkts = buf.read_u32()?;
-            let if_out_multicast_pkts = buf.read_u32()?;
-            let if_out_broadcast_pkts = buf.read_u32()?;
-            let if_out_discards = buf.read_u32()?;
-            let if_out_errors = buf.read_u32()?;
-            let if_promiscuous_mode = buf.read_u32()?;
+            let index = buf.read_u32()?;
+            let typ = buf.read_u32()?;
+            let speed = buf.read_u64()?;
+            let direction = buf.read_u32()?;
+            let status = buf.read_u32()?;
+            let in_octets = buf.read_u64()?;
+            let in_ucast_pkts = buf.read_u32()?;
+            let in_multicast_pkts = buf.read_u32()?;
+            let in_broadcast_pkts = buf.read_u32()?;
+            let in_discards = buf.read_u32()?;
+            let in_errors = buf.read_u32()?;
+            let in_unknown_protos = buf.read_u32()?;
+            let out_octets = buf.read_u64()?;
+            let out_ucast_pkts = buf.read_u32()?;
+            let out_multicast_pkts = buf.read_u32()?;
+            let out_broadcast_pkts = buf.read_u32()?;
+            let out_discards = buf.read_u32()?;
+            let out_errors = buf.read_u32()?;
+            let promiscuous_mode = buf.read_u32()?;
 
             CounterRecordData::Interface(IfCounters {
-                if_index,
-                if_type,
-                if_speed,
-                if_direction,
-                if_status,
-                if_in_octets,
-                if_in_ucast_pkts,
-                if_in_multicast_pkts,
-                if_in_broadcast_pkts,
-                if_in_discards,
-                if_in_errors,
-                if_in_unknown_protos,
-                if_out_octets,
-                if_out_ucast_pkts,
-                if_out_multicast_pkts,
-                if_out_broadcast_pkts,
-                if_out_discards,
-                if_out_errors,
-                if_promiscuous_mode,
+                index,
+                typ,
+                speed,
+                direction,
+                status,
+                in_octets,
+                in_ucast_pkts,
+                in_multicast_pkts,
+                in_broadcast_pkts,
+                in_discards,
+                in_errors,
+                in_unknown_protos,
+                out_octets,
+                out_ucast_pkts,
+                out_multicast_pkts,
+                out_broadcast_pkts,
+                out_discards,
+                out_errors,
+                promiscuous_mode,
             })
         }
         COUNTER_TYPE_ETHERNET => {
@@ -907,6 +1061,47 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 dot3_stats_frame_too_longs,
                 dot3_stats_internal_mac_receive_errors,
                 dot3_stats_symbol_errors,
+            })
+        }
+        COUNTER_TYPE_TOKEN_RING => {
+            let dot5_stats_line_errors = buf.read_u32()?;
+            let dot5_stats_burst_errors = buf.read_u32()?;
+            let dot5_stats_ac_errors = buf.read_u32()?;
+            let dot5_stats_abort_trans_errors = buf.read_u32()?;
+            let dot5_stats_internal_errors = buf.read_u32()?;
+            let dot5_stats_lost_frame_errors = buf.read_u32()?;
+            let dot5_stats_receive_congestions = buf.read_u32()?;
+            let dot5_stats_frame_copied_errors = buf.read_u32()?;
+            let dot5_stats_token_errors = buf.read_u32()?;
+            let dot5_stats_soft_errors = buf.read_u32()?;
+            let dot5_stats_hard_errors = buf.read_u32()?;
+            let dot5_stats_signal_loss = buf.read_u32()?;
+            let dot5_stats_transmit_beacons = buf.read_u32()?;
+            let dot5_stats_recoverys = buf.read_u32()?;
+            let dot5_stats_lobe_wires = buf.read_u32()?;
+            let dot5_stats_removes = buf.read_u32()?;
+            let dot5_stats_singles = buf.read_u32()?;
+            let dot5_stats_freq_errors = buf.read_u32()?;
+
+            CounterRecordData::TokenRing(TokenRingCounters {
+                dot5_stats_line_errors,
+                dot5_stats_burst_errors,
+                dot5_stats_ac_errors,
+                dot5_stats_abort_trans_errors,
+                dot5_stats_internal_errors,
+                dot5_stats_lost_frame_errors,
+                dot5_stats_receive_congestions,
+                dot5_stats_frame_copied_errors,
+                dot5_stats_token_errors,
+                dot5_stats_soft_errors,
+                dot5_stats_hard_errors,
+                dot5_stats_signal_loss,
+                dot5_stats_transmit_beacons,
+                dot5_stats_recoverys,
+                dot5_stats_lobe_wires,
+                dot5_stats_removes,
+                dot5_stats_singles,
+                dot5_stats_freq_errors,
             })
         }
         COUNTER_TYPE_VG => {
@@ -942,7 +1137,6 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 dot12_hc_out_high_priority_octets,
             })
         }
-
         COUNTER_TYPE_VLAN => {
             let vlan_id = buf.read_u32()?;
             let octets = buf.read_u64()?;
@@ -960,12 +1154,11 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 discards,
             })
         }
-
         COUNTER_TYPE_SFP => {
-            let module_id = buf.read_u32()?;
-            let module_total_lanes = buf.read_u32()?;
-            let module_supply_voltage = buf.read_u32()?;
-            let module_temperature = buf.read_i32()?;
+            let id = buf.read_u32()?;
+            let total_lanes = buf.read_u32()?;
+            let supply_voltage = buf.read_u32()?;
+            let temperature = buf.read_i32()?;
             let length = buf.read_u32()?;
             let mut lanes = Vec::with_capacity(length as usize);
             for _ in 0..length {
@@ -995,14 +1188,13 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             }
 
             CounterRecordData::Sfp(Sfp {
-                module_id,
-                module_total_lanes,
-                module_supply_voltage,
-                module_temperature,
+                id,
+                total_lanes,
+                supply_voltage,
+                temperature,
                 lanes,
             })
         }
-
         COUNTER_TYPE_HOST_CPU => {
             let load_one = buf.read_f32()?;
             let load_five = buf.read_f32()?;
@@ -1045,6 +1237,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 cpu_sintr,
                 interrupts,
                 contexts,
+
                 cpu_steal,
                 cpu_guest,
                 cpu_guest_nice,
@@ -1065,7 +1258,6 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 free_memory,
             })
         }
-
         COUNTER_TYPE_PORT_NAME => {
             let name = buf.read_string()?;
             CounterRecordData::PortName(PortName { name })
@@ -1189,157 +1381,335 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 drops_out,
             })
         }
-
         COUNTER_TYPE_MIB2_IP_GROUP => {
-            let ip_forwarding = buf.read_u32()?;
-            let ip_default_ttl = buf.read_u32()?;
-            let ip_in_receives = buf.read_u32()?;
-            let ip_in_hdr_errors = buf.read_u32()?;
-            let ip_in_addr_errors = buf.read_u32()?;
-            let ip_forw_datagrams = buf.read_u32()?;
-            let ip_in_unknown_protos = buf.read_u32()?;
-            let ip_in_discards = buf.read_u32()?;
-            let ip_in_delivers = buf.read_u32()?;
-            let ip_out_requests = buf.read_u32()?;
-            let ip_out_discards = buf.read_u32()?;
-            let ip_out_no_routes = buf.read_u32()?;
-            let ip_reasm_timeout = buf.read_u32()?;
-            let ip_reasm_reqds = buf.read_u32()?;
-            let ip_reasm_oks = buf.read_u32()?;
-            let ip_reasm_fails = buf.read_u32()?;
-            let ip_frag_oks = buf.read_u32()?;
-            let ip_frag_fails = buf.read_u32()?;
-            let ip_frag_creates = buf.read_u32()?;
+            let forwarding = buf.read_u32()?;
+            let default_ttl = buf.read_u32()?;
+            let in_receives = buf.read_u32()?;
+            let in_hdr_errors = buf.read_u32()?;
+            let in_addr_errors = buf.read_u32()?;
+            let forw_datagrams = buf.read_u32()?;
+            let in_unknown_protos = buf.read_u32()?;
+            let in_discards = buf.read_u32()?;
+            let in_delivers = buf.read_u32()?;
+            let out_requests = buf.read_u32()?;
+            let out_discards = buf.read_u32()?;
+            let out_no_routes = buf.read_u32()?;
+            let reasm_timeout = buf.read_u32()?;
+            let reasm_reqds = buf.read_u32()?;
+            let reasm_oks = buf.read_u32()?;
+            let reasm_fails = buf.read_u32()?;
+            let frag_oks = buf.read_u32()?;
+            let frag_fails = buf.read_u32()?;
+            let frag_creates = buf.read_u32()?;
 
             CounterRecordData::Mib2IpGroup(Mib2IpGroup {
-                ip_forwarding,
-                ip_default_ttl,
-                ip_in_receives,
-                ip_in_hdr_errors,
-                ip_in_addr_errors,
-                ip_forw_datagrams,
-                ip_in_unknown_protos,
-                ip_in_discards,
-                ip_in_delivers,
-                ip_out_requests,
-                ip_out_discards,
-                ip_out_no_routes,
-                ip_reasm_timeout,
-                ip_reasm_reqds,
-                ip_reasm_oks,
-                ip_reasm_fails,
-                ip_frag_oks,
-                ip_frag_fails,
-                ip_frag_creates,
+                forwarding,
+                default_ttl,
+                in_receives,
+                in_hdr_errors,
+                in_addr_errors,
+                forw_datagrams,
+                in_unknown_protos,
+                in_discards,
+                in_delivers,
+                out_requests,
+                out_discards,
+                out_no_routes,
+                reasm_timeout,
+                reasm_reqds,
+                reasm_oks,
+                reasm_fails,
+                frag_oks,
+                frag_fails,
+                frag_creates,
             })
         }
         COUNTER_TYPE_MIB2_ICMP_GROUP => {
-            let icmp_in_msgs = buf.read_u32()?;
-            let icmp_in_errors = buf.read_u32()?;
-            let icmp_in_dest_unreachs = buf.read_u32()?;
-            let icmp_in_time_excds = buf.read_u32()?;
-            let icmp_in_param_probs = buf.read_u32()?;
-            let icmp_in_src_quenchs = buf.read_u32()?;
-            let icmp_in_redirects = buf.read_u32()?;
-            let icmp_in_echos = buf.read_u32()?;
-            let icmp_in_echo_reps = buf.read_u32()?;
-            let icmp_in_timestamps = buf.read_u32()?;
-            let icmp_in_addr_masks = buf.read_u32()?;
-            let icmp_in_addr_mask_reps = buf.read_u32()?;
-            let icmp_out_msgs = buf.read_u32()?;
-            let icmp_out_errors = buf.read_u32()?;
-            let icmp_out_dest_unreachs = buf.read_u32()?;
-            let icmp_out_time_excds = buf.read_u32()?;
-            let icmp_out_param_probs = buf.read_u32()?;
-            let icmp_out_src_quenchs = buf.read_u32()?;
-            let icmp_out_redirects = buf.read_u32()?;
-            let icmp_out_echos = buf.read_u32()?;
-            let icmp_out_echo_reps = buf.read_u32()?;
-            let icmp_out_timestamps = buf.read_u32()?;
-            let icmp_out_timestamp_reps = buf.read_u32()?;
-            let icmp_out_addr_masks = buf.read_u32()?;
-            let icmp_out_addr_mask_reps = buf.read_u32()?;
+            let in_msgs = buf.read_u32()?;
+            let in_errors = buf.read_u32()?;
+            let in_dest_unreachs = buf.read_u32()?;
+            let in_time_excds = buf.read_u32()?;
+            let in_param_probs = buf.read_u32()?;
+            let in_src_quenchs = buf.read_u32()?;
+            let in_redirects = buf.read_u32()?;
+            let in_echos = buf.read_u32()?;
+            let in_echo_reps = buf.read_u32()?;
+            let in_timestamps = buf.read_u32()?;
+            let in_addr_masks = buf.read_u32()?;
+            let in_addr_mask_reps = buf.read_u32()?;
+            let out_msgs = buf.read_u32()?;
+            let out_errors = buf.read_u32()?;
+            let out_dest_unreachs = buf.read_u32()?;
+            let out_time_excds = buf.read_u32()?;
+            let out_param_probs = buf.read_u32()?;
+            let out_src_quenchs = buf.read_u32()?;
+            let out_redirects = buf.read_u32()?;
+            let out_echos = buf.read_u32()?;
+            let out_echo_reps = buf.read_u32()?;
+            let out_timestamps = buf.read_u32()?;
+            let out_timestamp_reps = buf.read_u32()?;
+            let out_addr_masks = buf.read_u32()?;
+            let out_addr_mask_reps = buf.read_u32()?;
 
             CounterRecordData::Mib2IcmpGroup(Mib2IcmpGroup {
-                icmp_in_msgs,
-                icmp_in_errors,
-                icmp_in_dest_unreachs,
-                icmp_in_time_excds,
-                icmp_in_param_probs,
-                icmp_in_src_quenchs,
-                icmp_in_redirects,
-                icmp_in_echos,
-                icmp_in_echo_reps,
-                icmp_in_timestamps,
-                icmp_in_addr_masks,
-                icmp_in_addr_mask_reps,
-                icmp_out_msgs,
-                icmp_out_errors,
-                icmp_out_dest_unreachs,
-                icmp_out_time_excds,
-                icmp_out_param_probs,
-                icmp_out_src_quenchs,
-                icmp_out_redirects,
-                icmp_out_echos,
-                icmp_out_echo_reps,
-                icmp_out_timestamps,
-                icmp_out_timestamp_reps,
-                icmp_out_addr_masks,
-                icmp_out_addr_mask_reps,
+                in_msgs,
+                in_errors,
+                in_dest_unreachs,
+                in_time_excds,
+                in_param_probs,
+                in_src_quenchs,
+                in_redirects,
+                in_echos,
+                in_echo_reps,
+                in_timestamps,
+                in_addr_masks,
+                in_addr_mask_reps,
+                out_msgs,
+                out_errors,
+                out_dest_unreachs,
+                out_time_excds,
+                out_param_probs,
+                out_src_quenchs,
+                out_redirects,
+                out_echos,
+                out_echo_reps,
+                out_timestamps,
+                out_timestamp_reps,
+                out_addr_masks,
+                out_addr_mask_reps,
             })
         }
         COUNTER_TYPE_MIB2_TCP_GROUP => {
-            let tcp_rto_algorithm = buf.read_u32()?;
-            let tcp_rto_min = buf.read_u32()?;
-            let tcp_rto_max = buf.read_u32()?;
-            let tcp_max_conn = buf.read_u32()?;
-            let tcp_active_opens = buf.read_u32()?;
-            let tcp_passive_opens = buf.read_u32()?;
-            let tcp_attempt_fails = buf.read_u32()?;
-            let tcp_estab_resets = buf.read_u32()?;
-            let tcp_curr_estab = buf.read_u32()?;
-            let tcp_in_segs = buf.read_u32()?;
-            let tcp_out_segs = buf.read_u32()?;
-            let tcp_retrans_segs = buf.read_u32()?;
-            let tcp_in_errs = buf.read_u32()?;
-            let tcp_out_rsts = buf.read_u32()?;
-            let tcp_in_csum_errs = buf.read_u32()?;
+            let rto_algorithm = buf.read_u32()?;
+            let rto_min = buf.read_u32()?;
+            let rto_max = buf.read_u32()?;
+            let max_conn = buf.read_u32()?;
+            let active_opens = buf.read_u32()?;
+            let passive_opens = buf.read_u32()?;
+            let attempt_fails = buf.read_u32()?;
+            let estab_resets = buf.read_u32()?;
+            let curr_estab = buf.read_u32()?;
+            let in_segs = buf.read_u32()?;
+            let out_segs = buf.read_u32()?;
+            let retrans_segs = buf.read_u32()?;
+            let in_errs = buf.read_u32()?;
+            let out_rsts = buf.read_u32()?;
+            let in_csum_errs = buf.read_u32()?;
 
             CounterRecordData::Mib2TcpGroup(Mib2TcpGroup {
-                tcp_rto_algorithm,
-                tcp_rto_min,
-                tcp_rto_max,
-                tcp_max_conn,
-                tcp_active_opens,
-                tcp_passive_opens,
-                tcp_attempt_fails,
-                tcp_estab_resets,
-                tcp_curr_estab,
-                tcp_in_segs,
-                tcp_out_segs,
-                tcp_retrans_segs,
-                tcp_in_errs,
-                tcp_out_rsts,
-                tcp_in_csum_errs,
+                rto_algorithm,
+                rto_min,
+                rto_max,
+                max_conn,
+                active_opens,
+                passive_opens,
+                attempt_fails,
+                estab_resets,
+                curr_estab,
+                in_segs,
+                out_segs,
+                retrans_segs,
+                in_errs,
+                out_rsts,
+                in_csum_errs,
             })
         }
         COUNTER_TYPE_MIB2_UDP_GROUP => {
-            let udp_in_datagrams = buf.read_u32()?;
-            let udp_no_ports = buf.read_u32()?;
-            let udp_in_errors = buf.read_u32()?;
-            let udp_out_datagrams = buf.read_u32()?;
-            let udp_rcvbuf_errors = buf.read_u32()?;
-            let udp_sndbuf_errors = buf.read_u32()?;
-            let udp_in_csum_errors = buf.read_u32()?;
+            let in_datagrams = buf.read_u32()?;
+            let no_ports = buf.read_u32()?;
+            let in_errors = buf.read_u32()?;
+            let out_datagrams = buf.read_u32()?;
+            let rcvbuf_errors = buf.read_u32()?;
+            let sndbuf_errors = buf.read_u32()?;
+            let in_csum_errors = buf.read_u32()?;
 
             CounterRecordData::Mib2UdpGroup(Mib2UdpGroup {
-                udp_in_datagrams,
-                udp_no_ports,
-                udp_in_errors,
-                udp_out_datagrams,
-                udp_rcvbuf_errors,
-                udp_sndbuf_errors,
-                udp_in_csum_errors,
+                in_datagrams,
+                no_ports,
+                in_errors,
+                out_datagrams,
+                rcvbuf_errors,
+                sndbuf_errors,
+                in_csum_errors,
+            })
+        }
+        COUNTER_TYPE_VIRT_NODE => {
+            let mhz = buf.read_u32()?;
+            let cpus = buf.read_u32()?;
+            let memory = buf.read_u64()?;
+            let memory_free = buf.read_u64()?;
+            let num_domains = buf.read_u32()?;
+
+            CounterRecordData::VirtNode(VirtNode {
+                mhz,
+                cpus,
+                memory,
+                memory_free,
+                num_domains,
+            })
+        }
+        COUNTER_TYPE_VIRT_CPU => {
+            let state = buf.read_u32()?;
+            let cpu_time = buf.read_u32()?;
+            let nr_virt_cpu = buf.read_u32()?;
+
+            CounterRecordData::VirtCpu(VirtCpu {
+                state,
+                cpu_time,
+                nr_virt_cpu,
+            })
+        }
+        COUNTER_TYPE_VIRT_MEMORY => {
+            let memory = buf.read_u64()?;
+            let max_memory = buf.read_u64()?;
+
+            CounterRecordData::VirtMemory(VirtMemory { memory, max_memory })
+        }
+        COUNTER_TYPE_VIRT_DISK_IO => {
+            let capacity = buf.read_u64()?;
+            let allocation = buf.read_u64()?;
+            let available = buf.read_u64()?;
+            let rd_req = buf.read_u32()?;
+            let rd_bytes = buf.read_u64()?;
+            let wr_req = buf.read_u32()?;
+            let wr_bytes = buf.read_u64()?;
+            let errs = buf.read_u32()?;
+
+            CounterRecordData::VirtDisk(VirtDiskIO {
+                capacity,
+                allocation,
+                available,
+                rd_req,
+                rd_bytes,
+                wr_req,
+                wr_bytes,
+                errs,
+            })
+        }
+
+        COUNTER_TYPE_VIRT_NET_IO => {
+            let rx_bytes = buf.read_u64()?;
+            let rx_packets = buf.read_u32()?;
+            let rx_errs = buf.read_u32()?;
+            let rx_drop = buf.read_u32()?;
+            let tx_bytes = buf.read_u64()?;
+            let tx_packets = buf.read_u32()?;
+            let tx_errs = buf.read_u32()?;
+            let tx_drop = buf.read_u32()?;
+
+            CounterRecordData::VirtNetIO(VirtNetIO {
+                rx_bytes,
+                rx_packets,
+                rx_errs,
+                rx_drop,
+                tx_bytes,
+                tx_packets,
+                tx_errs,
+                tx_drop,
+            })
+        }
+
+        COUNTER_TYPE_NVIDIA_GPU => {
+            let device_count = buf.read_u32()?;
+            let processes = buf.read_u32()?;
+            let gpu_time = buf.read_u32()?;
+            let mem_time = buf.read_u32()?;
+            let mem_total = buf.read_u64()?;
+            let mem_free = buf.read_u64()?;
+            let ecc_errors = buf.read_u32()?;
+            let energy = buf.read_u32()?;
+            let temperature = buf.read_u32()?;
+            let fan_speed = buf.read_u32()?;
+
+            CounterRecordData::NvidiaGpu(NvidiaGpu {
+                device_count,
+                processes,
+                gpu_time,
+                mem_time,
+                mem_total,
+                mem_free,
+                ecc_errors,
+                energy,
+                temperature,
+                fan_speed,
+            })
+        }
+
+        COUNTER_TYPE_BCM_TABLES => {
+            let host_entries = buf.read_u32()?;
+            let host_entries_max = buf.read_u32()?;
+            let ipv4_entries = buf.read_u32()?;
+            let ipv4_entries_max = buf.read_u32()?;
+            let ipv6_entries = buf.read_u32()?;
+            let ipv6_entries_max = buf.read_u32()?;
+            let ipv4_ipv6_entries = buf.read_u32()?;
+            let ipv4_ipv6_entries_max = buf.read_u32()?;
+            let long_ipv6_entries = buf.read_u32()?;
+            let long_ipv6_entries_max = buf.read_u32()?;
+            let total_routes = buf.read_u32()?;
+            let total_routes_max = buf.read_u32()?;
+            let ecmp_nexthops = buf.read_u32()?;
+            let ecmp_nexthops_max = buf.read_u32()?;
+            let mac_entries = buf.read_u32()?;
+            let mac_entries_max = buf.read_u32()?;
+            let ipv4_neighbors = buf.read_u32()?;
+            let ipv6_neighbors = buf.read_u32()?;
+            let ipv4_routes = buf.read_u32()?;
+            let ipv6_routes = buf.read_u32()?;
+            let acl_ingress_entries = buf.read_u32()?;
+            let acl_ingress_entries_max = buf.read_u32()?;
+            let acl_ingress_counters = buf.read_u32()?;
+            let acl_ingress_counters_max = buf.read_u32()?;
+            let acl_ingress_meters = buf.read_u32()?;
+            let acl_ingress_meters_max = buf.read_u32()?;
+            let acl_ingress_slices = buf.read_u32()?;
+            let acl_ingress_slices_max = buf.read_u32()?;
+            let acl_egress_entries = buf.read_u32()?;
+            let acl_egress_entries_max = buf.read_u32()?;
+            let acl_egress_counters = buf.read_u32()?;
+            let acl_egress_counters_max = buf.read_u32()?;
+            let acl_egress_meters = buf.read_u32()?;
+            let acl_egress_meters_max = buf.read_u32()?;
+            let acl_egress_slices = buf.read_u32()?;
+            let acl_egress_slices_max = buf.read_u32()?;
+
+            CounterRecordData::BcmTables(BcmTables {
+                host_entries,
+                host_entries_max,
+                ipv4_entries,
+                ipv4_entries_max,
+                ipv6_entries,
+                ipv6_entries_max,
+                ipv4_ipv6_entries,
+                ipv4_ipv6_entries_max,
+                long_ipv6_entries,
+                long_ipv6_entries_max,
+                total_routes,
+                total_routes_max,
+                ecmp_nexthops,
+                ecmp_nexthops_max,
+                mac_entries,
+                mac_entries_max,
+                ipv4_neighbors,
+                ipv6_neighbors,
+                ipv4_routes,
+                ipv6_routes,
+                acl_ingress_entries,
+                acl_ingress_entries_max,
+                acl_ingress_counters,
+                acl_ingress_counters_max,
+                acl_ingress_meters,
+                acl_ingress_meters_max,
+                acl_ingress_slices,
+                acl_ingress_slices_max,
+                acl_egress_entries,
+                acl_egress_entries_max,
+                acl_egress_counters,
+                acl_egress_counters_max,
+                acl_egress_meters,
+                acl_egress_meters_max,
+                acl_egress_slices,
+                acl_egress_slices_max,
             })
         }
 
@@ -1609,7 +1979,7 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
         _ => return Err(Error::UnknownSampleFormat(format)),
     };
 
-    let sample = match format {
+    let data = match format {
         SAMPLE_FORMAT_FLOW => {
             let sampling_rate = buf.read_u32()?;
             let sample_pool = buf.read_u32()?;
@@ -1627,20 +1997,12 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
                 records.push(decode_flow_record(buf)?);
             }
 
-            Sample::Flow {
-                header: SampleHeader {
-                    format,
-                    length,
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                },
+            SampleData::Flow {
                 sampling_rate,
                 sample_pool,
                 drops,
                 input,
                 output,
-                flow_records_count,
                 records,
             }
         }
@@ -1655,17 +2017,7 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
                 records.push(decode_counter_record(buf)?);
             }
 
-            Sample::Counter {
-                header: SampleHeader {
-                    format,
-                    length,
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                },
-                counter_records_count,
-                records,
-            }
+            SampleData::Counter { records }
         }
         SAMPLE_FORMAT_EXPANDED_FLOW => {
             let sampling_rate = buf.read_u32()?;
@@ -1686,14 +2038,7 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
                 records.push(decode_flow_record(buf)?);
             }
 
-            Sample::ExpandedFlow {
-                header: SampleHeader {
-                    format,
-                    length,
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                },
+            SampleData::ExpandedFlow {
                 sampling_rate,
                 sample_pool,
                 drops,
@@ -1701,7 +2046,6 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
                 input_if_value,
                 output_if_format,
                 output_if_value,
-                flow_records_count,
                 records,
             }
         }
@@ -1721,19 +2065,11 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
                 records.push(decode_flow_record(buf)?);
             }
 
-            Sample::Drop {
-                header: SampleHeader {
-                    format,
-                    length,
-                    sample_sequence_number,
-                    source_id_type,
-                    source_id_value,
-                },
+            SampleData::Drop {
                 drops,
                 input,
                 output,
                 reason,
-                flow_records_count,
                 records,
             }
         }
@@ -1742,7 +2078,14 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
         }
     };
 
-    Ok(sample)
+    Ok(Sample {
+        format,
+        length,
+        sample_sequence_number,
+        source_id_type,
+        source_id_value,
+        data,
+    })
 }
 
 impl Datagram {
@@ -1936,13 +2279,8 @@ mod tests {
         assert_eq!(datagram.samples_count, 1);
         assert_eq!(datagram.samples.len(), 1);
 
-        match datagram.samples.first().unwrap() {
-            Sample::Drop {
-                flow_records_count,
-                records,
-                ..
-            } => {
-                assert_eq!(*flow_records_count, 1);
+        match &datagram.samples.first().unwrap().data {
+            SampleData::Drop { records, .. } => {
                 assert_eq!(records.len(), 1);
 
                 assert!(
@@ -1969,13 +2307,8 @@ mod tests {
         assert_eq!(datagram.samples_count, 1);
         assert_eq!(datagram.samples.len(), 1);
 
-        match datagram.samples.first().unwrap() {
-            Sample::Drop {
-                flow_records_count,
-                records,
-                ..
-            } => {
-                assert_eq!(*flow_records_count, 1);
+        match &(datagram.samples.first().unwrap().data) {
+            SampleData::Drop { records, .. } => {
                 assert_eq!(records.len(), 1);
 
                 assert!(
@@ -2002,13 +2335,8 @@ mod tests {
         assert_eq!(datagram.samples_count, 1);
         assert_eq!(datagram.samples.len(), 1);
 
-        match datagram.samples.first().unwrap() {
-            Sample::Drop {
-                records,
-                flow_records_count,
-                ..
-            } => {
-                assert_eq!(*flow_records_count, 1);
+        match &(datagram.samples.first().unwrap().data) {
+            SampleData::Drop { records, .. } => {
                 assert_eq!(records.len(), 1);
 
                 assert!(
