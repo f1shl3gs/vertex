@@ -180,6 +180,10 @@ impl SourceConfig for Config {
     fn resources(&self) -> Vec<Resource> {
         vec![Resource::tcp(self.address)]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        true
+    }
 }
 
 struct Decoder {

@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 use bytes::Bytes;
 use configurable::Configurable;
+use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
 use framework::tls::MaybeTlsListener;
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal};
@@ -40,12 +41,13 @@ pub async fn serve(
     config: ThriftHttpConfig,
     shutdown: ShutdownSignal,
     output: Pipeline,
+    acknowledgements: bool,
 ) -> crate::Result<()> {
     let output = Arc::new(Mutex::new(output));
     let listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
     let service = service_fn(move |req: Request<Incoming>| {
         let output = Arc::clone(&output);
-        async move { handle(output, req).await }
+        async move { handle(output, req, acknowledgements).await }
     });
 
     framework::http::serve(listener, service)
@@ -56,6 +58,7 @@ pub async fn serve(
 async fn handle(
     output: Arc<Mutex<Pipeline>>,
     req: Request<Incoming>,
+    acknowledgements: bool,
 ) -> Result<Response<Full<Bytes>>, hyper::Error> {
     if req.method() != Method::POST {
         return Ok::<_, hyper::Error>(
@@ -76,10 +79,28 @@ async fn handle(
     let data = req.into_body().collect().await?.to_bytes();
     match deserialize_binary_batch(data.to_vec()) {
         Ok(batch) => {
-            if let Err(err) = output.lock().await.send(batch).await {
+            let mut events: Events = batch.into();
+
+            let (batch, receiver) = BatchNotifier::maybe_new_with_receiver(acknowledgements);
+            if let Some(batch) = batch {
+                events.add_batch_notifier(batch);
+            }
+
+            if let Err(err) = output.lock().await.send(events).await {
                 error!(message = "Error sending batch", ?err);
+
+                let status = if let Some(receiver) = receiver {
+                    match receiver.await {
+                        BatchStatus::Delivered => StatusCode::OK,
+                        BatchStatus::Errored => StatusCode::INTERNAL_SERVER_ERROR,
+                        BatchStatus::Failed => StatusCode::SERVICE_UNAVAILABLE,
+                    }
+                } else {
+                    StatusCode::OK
+                };
+
                 Ok(Response::builder()
-                    .status(StatusCode::SERVICE_UNAVAILABLE)
+                    .status(status)
                     .body(Full::default())
                     .expect("build SERVER_UNAVAILABLE should always success"))
             } else {

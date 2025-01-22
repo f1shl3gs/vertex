@@ -154,6 +154,11 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
+
+    // TODO: change to true, if checkpoint implement
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 struct LogSource {

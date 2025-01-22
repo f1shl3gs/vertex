@@ -118,6 +118,10 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 /// Map the given unit name into a valid systemd unit

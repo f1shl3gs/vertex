@@ -174,6 +174,10 @@ impl SourceConfig for Config {
             Mode::Unix { .. } => vec![],
         }
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 #[derive(Debug, Clone)]

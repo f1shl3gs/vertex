@@ -255,7 +255,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
         .collect();
 
     if errors.is_empty() {
-        let config = Config {
+        let mut config = Config {
             global,
             healthcheck,
             sources,
@@ -263,6 +263,8 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
             transforms,
             extensions,
         };
+
+        config.propagate_acknowledgements()?;
 
         let warnings = validation::warnings(&config);
 
@@ -369,6 +371,10 @@ mod tests {
 
         fn outputs(&self) -> Vec<Output> {
             vec![Output::logs()]
+        }
+
+        fn can_acknowledge(&self) -> bool {
+            false
         }
     }
 

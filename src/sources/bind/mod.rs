@@ -92,6 +92,10 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::metrics()]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 fn statistics_to_metrics(s: client::Statistics) -> Vec<Metric> {

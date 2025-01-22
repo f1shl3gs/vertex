@@ -7,7 +7,7 @@ use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Events, Metric, Quantile};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
-use framework::source::util::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
+use framework::source::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
 use framework::tls::TlsConfig;
 use framework::Source;
 use http::{HeaderMap, Method, StatusCode, Uri};
@@ -47,6 +47,10 @@ impl SourceConfig for Config {
 
     fn resources(&self) -> Vec<Resource> {
         vec![Resource::tcp(self.address)]
+    }
+
+    fn can_acknowledge(&self) -> bool {
+        true
     }
 }
 
