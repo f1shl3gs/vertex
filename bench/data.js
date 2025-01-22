@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737509598407,
+  "lastUpdate": 1737509610757,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1f171479c3d5af5ad3bfea9c93b22d8e2a767ea6",
-          "message": "sources/sflow: init (#2032)\n\nadd sources/sflow",
-          "timestamp": "2024-12-09T17:16:26+08:00",
-          "tree_id": "8aaf375697139c0cd911802574b223b7f2dc2590",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1f171479c3d5af5ad3bfea9c93b22d8e2a767ea6"
-        },
-        "date": 1733735930170,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.269,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.673,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.67,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a59776cb7497fc603e6a446d768dcacbf88d4ea6",
+          "message": "lib/framework: pipeline send events only & add acknowledgement for SourceConfig (#2149)",
+          "timestamp": "2025-01-22T09:30:54+08:00",
+          "tree_id": "8ec991de92e49e9347cb433b82fc7f4c7815de0b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a59776cb7497fc603e6a446d768dcacbf88d4ea6"
+        },
+        "date": 1737509591140,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.336,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.028,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.42,
             "unit": "ns/op"
           }
         ]
