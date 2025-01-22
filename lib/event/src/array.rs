@@ -192,6 +192,22 @@ impl Events {
         }
     }
 
+    pub fn len(&self) -> usize {
+        match self {
+            Events::Logs(logs) => logs.len(),
+            Events::Metrics(metrics) => metrics.len(),
+            Events::Traces(traces) => traces.len(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        match self {
+            Events::Logs(logs) => logs.is_empty(),
+            Events::Metrics(metrics) => metrics.is_empty(),
+            Events::Traces(traces) => traces.is_empty(),
+        }
+    }
+
     pub fn iter_events(&self) -> impl Iterator<Item = EventRef> {
         match self {
             Events::Logs(logs) => EventsIter::Logs(logs.iter()),

@@ -4,8 +4,7 @@ use std::collections::BTreeMap;
 
 use bytes::Bytes;
 use event::log::Value;
-use event::{Event, LogRecord};
-use smallvec::{smallvec, SmallVec};
+use event::{Events, LogRecord};
 
 use super::{DeserializeError, Deserializer};
 
@@ -100,16 +99,13 @@ pub(crate) fn parse(line: &str) -> BTreeMap<String, Value> {
 pub struct LogfmtDeserializer;
 
 impl Deserializer for LogfmtDeserializer {
-    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
-        if buf.is_empty() {
-            return Ok(smallvec![]);
-        }
-
+    fn parse(&self, buf: Bytes) -> Result<Events, DeserializeError> {
         let line = std::str::from_utf8(&buf)?;
-        let pairs = parse(line);
 
+        let pairs = parse(line);
         let log = LogRecord::from(pairs);
-        Ok(smallvec![log.into()])
+
+        Ok(log.into())
     }
 }
 
@@ -190,10 +186,14 @@ mod tests {
 
         let deserializer = LogfmtDeserializer;
         for (input, want) in tests {
-            let mut events = deserializer.parse(input.into()).unwrap().into_iter();
-            assert_eq!(events.len(), 1);
-            let event = events.next().unwrap();
-            let log = event.as_log();
+            let mut logs = deserializer
+                .parse(input.into())
+                .unwrap()
+                .into_logs()
+                .unwrap();
+            assert_eq!(logs.len(), 1);
+
+            let log = logs.remove(0);
             let got = log.value().as_object().unwrap();
             assert_eq!(got.len(), want.len(), "input: {}\ngot: {:?}", input, got);
             for (key, value) in got {

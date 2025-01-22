@@ -4,7 +4,7 @@ use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 use buffers::channel::LimitedReceiver;
 use configurable::configurable_component;
-use event::{log::Value, EventContainer, Events, Finalizable, MetricValue};
+use event::{log::Value, Events, Finalizable, MetricValue};
 use framework::config::{
     DataType, Output, SinkConfig, SinkContext, SourceConfig, SourceContext, TransformConfig,
     TransformContext,

@@ -5,9 +5,8 @@ use std::pin::pin;
 use bytes::Bytes;
 use codecs::decoding::DecodeError;
 use codecs::decoding::StreamDecodingError;
-use event::Event;
+use event::Events;
 use futures_util::{FutureExt, StreamExt};
-use smallvec::SmallVec;
 use tokio::io::AsyncWriteExt;
 use tokio::net::{UnixListener, UnixStream};
 use tokio_stream::wrappers::UnixListenerStream;
@@ -30,8 +29,8 @@ pub fn build_unix_stream_source<D, H>(
     out: Pipeline,
 ) -> Source
 where
-    D: Clone + Send + Decoder<Item = (SmallVec<[Event; 1]>, usize), Error = DecodeError> + 'static,
-    H: Fn(&mut [Event], Option<Bytes>, usize) + Clone + Send + Sync + 'static,
+    D: Clone + Send + Decoder<Item = (Events, usize), Error = DecodeError> + 'static,
+    H: Fn(&mut Events, Option<Bytes>, usize) + Clone + Send + Sync + 'static,
 {
     Box::pin(async move {
         let listener = UnixListener::bind(&path).expect("Failed to bind to listener socket");
@@ -74,7 +73,7 @@ where
                         Some(Ok((mut events, byte_size))) => {
                             handle_events(&mut events, received_from.clone(), byte_size);
 
-                            if let Err(err) = output.send_batch(events).await {
+                            if let Err(err) = output.send(events).await {
                                 error!(
                                     message = "Error sending line",
                                     %err

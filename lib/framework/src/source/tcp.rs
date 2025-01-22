@@ -7,13 +7,12 @@ use bytes::Bytes;
 use codecs::decoding::StreamDecodingError;
 use codecs::ReadyFrames;
 use configurable::Configurable;
-use event::{BatchNotifier, BatchStatus, Event};
+use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
 use futures::StreamExt;
 use futures_util::future::BoxFuture;
 use futures_util::FutureExt;
 use listenfd::ListenFd;
 use serde::{de, Deserialize, Deserializer, Serialize};
-use smallvec::SmallVec;
 use socket2::SockRef;
 use tokio::io::AsyncWriteExt;
 use tokio::net::{TcpListener, TcpStream};
@@ -150,13 +149,13 @@ where
         + std::fmt::Display
         + Send
         + Unpin;
-    type Item: Into<SmallVec<[Event; 1]>> + Send + Unpin;
+    type Item: Into<Events> + Send + Unpin;
     type Decoder: Decoder<Item = (Self::Item, usize), Error = Self::Error> + Send + 'static;
     type Acker: TcpSourceAcker + Send;
 
     fn decoder(&self) -> Self::Decoder;
 
-    fn handle_events(&self, _events: &mut [Event], _host: Bytes, _size: usize) {}
+    fn handle_events(&self, _events: &mut [Events], _host: Bytes, _size: usize) {}
 
     fn build_acker(&self, item: &[Self::Item]) -> Self::Acker;
 
@@ -336,12 +335,13 @@ async fn handle_stream<T>(
                     Some(Ok((frames, byte_size))) => {
                         let acker = source.build_acker(&frames);
                         let (batch, receiver) = BatchNotifier::maybe_new_with_receiver(acknowledgements);
-                        let mut events = frames.into_iter().flat_map(Into::into).collect::<Vec<Event>>();
+                        let mut events = frames.into_iter().map(Into::into).collect::<Vec<_>>();
                         if let Some(batch) = batch {
                             for event in &mut events {
                                 event.add_batch_notifier(batch.clone());
                             }
                         }
+
                         source.handle_events(&mut events, host.clone(), byte_size);
 
                         match output.send_batch(events).await {

@@ -1,6 +1,5 @@
 use bytes::Bytes;
-use event::Event;
-use smallvec::{smallvec, SmallVec};
+use event::Events;
 
 use super::{DeserializeError, Deserializer};
 
@@ -12,8 +11,8 @@ use super::{DeserializeError, Deserializer};
 pub struct BytesDeserializer;
 
 impl Deserializer for BytesDeserializer {
-    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
-        Ok(smallvec![Event::from(buf)])
+    fn parse(&self, buf: Bytes) -> Result<Events, DeserializeError> {
+        Ok(Events::Logs(vec![buf.into()]))
     }
 }
 
@@ -29,10 +28,10 @@ mod tests {
         let input = Bytes::from("foo");
         let deserializer = BytesDeserializer;
 
-        let events = deserializer.parse(input).unwrap();
-        assert_eq!(events.len(), 1);
+        let logs = deserializer.parse(input).unwrap().into_logs().unwrap();
+        assert_eq!(logs.len(), 1);
         assert_eq!(
-            events[0].as_log().get(event_path!("message")).unwrap(),
+            logs[0].get(event_path!("message")).unwrap(),
             &Value::from("foo")
         );
     }

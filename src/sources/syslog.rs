@@ -11,7 +11,7 @@ use codecs::Decoder;
 use configurable::{configurable_component, Configurable};
 use event::log::path::PathPrefix;
 use event::log::OwnedValuePath;
-use event::{event_path, Event};
+use event::{event_path, Events, LogRecord};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -23,7 +23,6 @@ use framework::Source;
 use futures_util::StreamExt;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use smallvec::SmallVec;
 use tokio::net::UdpSocket;
 use tokio_util::udp::UdpFramed;
 
@@ -187,7 +186,7 @@ struct SyslogTcpSource {
 
 impl TcpSource for SyslogTcpSource {
     type Error = DecodeError;
-    type Item = SmallVec<[Event; 1]>;
+    type Item = Events;
     type Decoder = Decoder;
     type Acker = TcpNullAcker;
 
@@ -198,8 +197,10 @@ impl TcpSource for SyslogTcpSource {
         )
     }
 
-    fn handle_events(&self, events: &mut [Event], host: Bytes, size: usize) {
-        handle_events(events, &self.host_key, Some(host), size)
+    fn handle_events(&self, batch: &mut [Events], host: Bytes, size: usize) {
+        for events in batch {
+            handle_events(events, &self.host_key, Some(host.clone()), size)
+        }
     }
 
     fn build_acker(&self, _item: &[Self::Item]) -> Self::Acker {
@@ -246,12 +247,13 @@ fn udp(
         .take_until(shutdown)
         .filter_map(|frame| {
             let host_key = host_key.clone();
+
             async move {
                 match frame {
                     Ok(((mut events, byte_size), received_from)) => {
                         let received_from = received_from.ip().to_string().into();
                         handle_events(&mut events, &host_key, Some(received_from), byte_size);
-                        Some(events.remove(0))
+                        Some(events)
                     }
                     Err(err) => {
                         warn!(
@@ -284,22 +286,20 @@ fn udp(
     })
 }
 
+#[inline]
 fn handle_events(
-    events: &mut [Event],
+    events: &mut Events,
     host_key: &OwnedValuePath,
     default_host: Option<Bytes>,
     _byte_size: usize,
 ) {
     // TODO: handle the byte_size
-
-    for event in events {
-        enrich_syslog_event(event, host_key, default_host.clone());
-    }
+    events.for_each_log(|log| {
+        enrich_syslog_log(log, host_key, default_host.clone());
+    })
 }
 
-fn enrich_syslog_event(event: &mut Event, host_key: &OwnedValuePath, default_host: Option<Bytes>) {
-    let log = event.as_mut_log();
-
+fn enrich_syslog_log(log: &mut LogRecord, host_key: &OwnedValuePath, default_host: Option<Bytes>) {
     log.insert(log_schema().source_type_key(), "syslog");
 
     if let Some(default_host) = &default_host {
@@ -318,11 +318,6 @@ fn enrich_syslog_event(event: &mut Event, host_key: &OwnedValuePath, default_hos
         .and_then(|timestamp| timestamp.as_timestamp().cloned())
         .unwrap_or_else(Utc::now);
     log.insert(log_schema().timestamp_key(), timestamp);
-
-    trace!(
-        message = "Processing one event",
-        event = ?event
-    );
 }
 
 #[cfg(test)]
@@ -418,13 +413,16 @@ address: 127.0.0.1:12345
         host_key: &str,
         default_host: Option<Bytes>,
         bytes: Bytes,
-    ) -> Option<Event> {
+    ) -> Option<LogRecord> {
         let byte_size = bytes.len();
         let parser = SyslogDeserializer::default();
         let mut events = parser.parse(bytes).ok()?;
         let host_key = parse_value_path(host_key).unwrap();
         handle_events(&mut events, &host_key, default_host, byte_size);
-        Some(events.remove(0))
+
+        let log = events.into_logs().unwrap().remove(0);
+
+        Some(log)
     }
 
     #[test]
@@ -465,7 +463,7 @@ address: 127.0.0.1:12345
             );
             log.insert(log_schema().source_type_key(), "syslog");
 
-            log.into()
+            log
         };
 
         assert_event_data_eq!(event_from_bytes("host", None, raw.into()).unwrap(), want);
@@ -496,7 +494,7 @@ address: 127.0.0.1:12345
             log.insert("appname", "root");
             log.insert("procid", 8449);
 
-            Event::from(log)
+            log
         };
 
         assert_event_data_eq!(event, want);
@@ -512,8 +510,8 @@ address: 127.0.0.1:12345
 
     #[test]
     fn handles_empty_sd_element() {
-        fn there_is_map_called_empty(event: Event) -> bool {
-            let value = event.as_log().get("empty").expect("empty exists");
+        fn there_is_map_called_empty(log: LogRecord) -> bool {
+            let value = log.get("empty").expect("empty exists");
 
             matches!(value, Value::Object(_))
         }
@@ -571,9 +569,9 @@ address: 127.0.0.1:12345
     fn syslog_ng_default_network() {
         let msg = "i am foobar";
         let raw = format!(r#"<13>Feb 13 20:07:26 74794bfb6795 root[8539]: {}"#, msg);
-        let event = event_from_bytes("host", None, raw.into()).unwrap();
+        let log = event_from_bytes("host", None, raw.into()).unwrap();
 
-        let value = event.as_log().get(log_schema().timestamp_key()).unwrap();
+        let value = log.get(log_schema().timestamp_key()).unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
         let date: DateTime<Utc> = chrono::Local
             .with_ymd_and_hms(year, 2, 13, 20, 7, 26)
@@ -594,10 +592,10 @@ address: 127.0.0.1:12345
             log.insert(log_schema().source_type_key(), "syslog");
             log.insert(log_schema().message_key(), msg);
 
-            log.into()
+            log
         };
 
-        assert_event_data_eq!(event, want);
+        assert_event_data_eq!(log, want);
     }
 
     #[test]
@@ -607,9 +605,9 @@ address: 127.0.0.1:12345
             r#"<190>Feb 13 21:31:56 74794bfb6795 liblogging-stdlog:  [origin software="rsyslogd" swVersion="8.24.0" x-pid="8979" x-info="http://www.rsyslog.com"] {}"#,
             msg
         );
-        let event = event_from_bytes("host", None, raw.into()).unwrap();
+        let log = event_from_bytes("host", None, raw.into()).unwrap();
 
-        let value = event.as_log().get(log_schema().timestamp_key()).unwrap();
+        let value = log.get(log_schema().timestamp_key()).unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
         let date: DateTime<Utc> = chrono::Local
             .with_ymd_and_hms(year, 2, 13, 21, 31, 56)
@@ -634,10 +632,11 @@ address: 127.0.0.1:12345
             log.insert(log_schema().timestamp_key(), date);
             log.insert(log_schema().message_key(), msg);
             log.insert(log_schema().source_type_key(), "syslog");
-            log.into()
+
+            log
         };
 
-        assert_event_data_eq!(event, want);
+        assert_event_data_eq!(log, want);
     }
 
     #[test]
@@ -673,7 +672,7 @@ address: 127.0.0.1:12345
             log.insert(log_schema().message_key(), msg);
             log.insert(log_schema().source_type_key(), "syslog");
 
-            log.into()
+            log
         };
 
         assert_event_data_eq!(event, want);

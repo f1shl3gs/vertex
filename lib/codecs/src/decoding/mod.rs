@@ -9,9 +9,8 @@ pub mod framing;
 use std::fmt::Debug;
 
 use bytes::{Bytes, BytesMut};
-use event::Event;
+use event::Events;
 use format::{DeserializeError, Deserializer as _};
-use smallvec::SmallVec;
 use tracing::{error, warn};
 
 use super::FramingError;
@@ -96,7 +95,7 @@ impl From<SyslogDeserializer> for Deserializer {
 }
 
 impl format::Deserializer for Deserializer {
-    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
+    fn parse(&self, buf: Bytes) -> Result<Events, DeserializeError> {
         match self {
             Deserializer::Bytes(d) => d.parse(buf),
             Deserializer::Json(d) => d.parse(buf),
@@ -141,7 +140,7 @@ impl Decoder {
     fn handle_framing_result(
         &mut self,
         frame: Result<Option<Bytes>, FramingError>,
-    ) -> Result<Option<(SmallVec<[Event; 1]>, usize)>, DecodeError> {
+    ) -> Result<Option<(Events, usize)>, DecodeError> {
         let frame = frame.map_err(|err| {
             warn!(
                 message = "Failed framing bytes",
@@ -157,6 +156,12 @@ impl Decoder {
         };
 
         let byte_size = frame.len();
+        // It's common to receive empty frames when parsing NDJSON, since it allows
+        // multiple empty newlines. We proceed without a warning here.
+        if byte_size == 0 {
+            return Ok(None);
+        }
+
         // Parse structured events from the byte frame.
         self.deserializer
             .parse(frame)
@@ -174,7 +179,7 @@ impl Decoder {
 }
 
 impl tokio_util::codec::Decoder for Decoder {
-    type Item = (SmallVec<[Event; 1]>, usize);
+    type Item = (Events, usize);
     type Error = DecodeError;
 
     fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {

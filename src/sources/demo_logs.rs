@@ -426,7 +426,7 @@ impl SourceConfig for Config {
                 while let Some(next) = stream.next().await {
                     match next {
                         Ok((events, _byte_size)) => {
-                            if let Err(err) = output.send_batch(events.into_iter()).await {
+                            if let Err(err) = output.send(events).await {
                                 error!(message = "send demo log to output failed", %err);
 
                                 break;
