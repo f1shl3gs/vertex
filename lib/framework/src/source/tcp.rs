@@ -288,7 +288,7 @@ async fn handle_stream<T>(
         _ = &mut shutdown_signal => {
             return;
         }
-    };
+    }
 
     if let Some(keepalive) = keepalive {
         if let Err(err) = socket.set_keepalive(keepalive) {

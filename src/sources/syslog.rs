@@ -15,9 +15,8 @@ use event::{event_path, Event};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::source::util::{
-    build_unix_stream_source, SocketListenAddr, TcpNullAcker, TcpSource,
-};
+use framework::source::tcp::{SocketListenAddr, TcpNullAcker, TcpSource};
+use framework::source::unix::build_unix_stream_source;
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::TlsConfig;
 use framework::Source;

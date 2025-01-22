@@ -1,9 +1,9 @@
+mod finalizer;
 pub mod http;
-mod udp;
-pub mod util;
+pub mod tcp;
+pub mod udp;
+pub mod unix;
 
-use futures::future::BoxFuture;
+pub use finalizer::OrderedFinalizer;
 
-pub use udp::UdpSource;
-
-pub type Source = BoxFuture<'static, Result<(), ()>>;
+pub type Source = futures::future::BoxFuture<'static, Result<(), ()>>;

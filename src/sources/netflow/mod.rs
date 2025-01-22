@@ -13,7 +13,7 @@ use configurable::configurable_component;
 use decode::DataField;
 use event::{Events, LogRecord};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
-use framework::source::UdpSource;
+use framework::source::udp::UdpSource;
 use framework::{Error, Source};
 use ipfix::{DataRecord, FlowSet, IpFix, OptionsDataRecord};
 use netflow::NetFlow;
