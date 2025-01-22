@@ -2,6 +2,7 @@ use std::net::SocketAddr;
 
 use async_trait::async_trait;
 use configurable::Configurable;
+use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
 use framework::{Pipeline, ShutdownSignal};
 use futures_util::FutureExt;
 use jaeger::proto::collector_service_server::CollectorServiceServer;
@@ -27,6 +28,8 @@ pub struct GrpcServerConfig {
 
 struct JaegerCollector {
     output: Mutex<Pipeline>,
+
+    acknowledgements: bool,
 }
 
 #[async_trait]
@@ -37,12 +40,29 @@ impl CollectorService for JaegerCollector {
     ) -> Result<Response<PostSpansResponse>, Status> {
         let req = request.into_inner();
         if let Some(batch) = req.batch {
+            let mut events: Events = batch.into();
+
+            let (batch, receiver) = BatchNotifier::maybe_new_with_receiver(self.acknowledgements);
+            if let Some(batch) = batch {
+                events.add_batch_notifier(batch);
+            }
+
             let mut output = self.output.lock().await;
 
-            if let Err(err) = output.send(batch).await {
+            if let Err(err) = output.send(events).await {
                 warn!(message = "Error sending trace", %err);
                 return Err(Status::internal(err.to_string()));
             }
+
+            return if let Some(receiver) = receiver {
+                match receiver.await {
+                    BatchStatus::Delivered => Ok(Response::new(PostSpansResponse {})),
+                    BatchStatus::Errored => Err(Status::data_loss("Jaeger errored")),
+                    BatchStatus::Failed => Err(Status::unavailable("traces deliver failed")),
+                }
+            } else {
+                Ok(Response::new(PostSpansResponse {}))
+            };
         }
 
         Ok(Response::new(PostSpansResponse {}))
@@ -53,9 +73,11 @@ pub(super) async fn serve(
     config: GrpcServerConfig,
     shutdown: ShutdownSignal,
     output: Pipeline,
+    acknowledgements: bool,
 ) -> crate::Result<()> {
     let service = CollectorServiceServer::new(JaegerCollector {
         output: Mutex::new(output),
+        acknowledgements,
     });
 
     Server::builder()

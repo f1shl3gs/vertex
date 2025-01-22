@@ -23,8 +23,10 @@ struct Config {
 #[typetag::serde(name = "jaeger")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
+        let acknowledgements = cx.acknowledgements();
         let shutdown = cx.shutdown;
         let source = cx.key.to_string();
+
         let mut tasks = FuturesUnordered::new();
 
         if let Some(config) = &self.thrift_compact {
@@ -62,6 +64,7 @@ impl SourceConfig for Config {
                 config.clone(),
                 shutdown.clone(),
                 cx.output.clone(),
+                acknowledgements,
             )));
         }
 
@@ -70,6 +73,7 @@ impl SourceConfig for Config {
                 config.clone(),
                 shutdown,
                 cx.output,
+                acknowledgements,
             )));
         }
 
@@ -120,6 +124,10 @@ impl SourceConfig for Config {
         }
 
         resources
+    }
+
+    fn can_acknowledge(&self) -> bool {
+        self.thrift_http.is_some() || self.grpc.is_some()
     }
 }
 

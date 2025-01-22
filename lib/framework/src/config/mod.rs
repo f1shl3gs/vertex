@@ -203,20 +203,6 @@ impl<T: Into<String>> From<(T, DataType)> for Output {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub enum ExpandType {
-    /// Chain components together one after another. Components will be named according
-    /// to this order (e.g. component_name.0 and so on). If alias is set to true,
-    /// then a Noop transform will be added as the last component and given the raw
-    /// component_name identifier so that it can be used as an input for other components.
-    Parallel { aggregates: bool },
-    /// This ways of expanding will take all the components and chain then in order.
-    /// The first node will be renamed `component_name.0` and so on.
-    /// If `alias` is set to `true, then a `Noop` transform will be added as the
-    /// last component and named `component_name` so that it can be used as an input.
-    Serial { alias: bool },
-}
-
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct PipelineConfig {
     pub sources: Vec<String>,
@@ -261,9 +247,6 @@ pub struct Config {
     pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
     pub healthcheck: HealthcheckOptions,
-
-    #[serde(skip_serializing, skip_deserializing)]
-    expansions: IndexMap<ComponentKey, Vec<ComponentKey>>,
 }
 
 impl Config {
@@ -271,11 +254,47 @@ impl Config {
         Default::default()
     }
 
-    pub fn get_inputs(&self, id: &ComponentKey) -> Vec<ComponentKey> {
-        self.expansions
-            .get(id)
-            .cloned()
-            .unwrap_or_else(|| vec![id.clone()])
+    pub fn propagate_acknowledgements(&mut self) -> Result<(), Vec<String>> {
+        let inputs = self
+            .sinks
+            .iter()
+            .filter(|(_, sink)| sink.inner.acknowledgements())
+            .flat_map(|(name, sink)| {
+                sink.inputs
+                    .iter()
+                    .map(|input| (name.clone(), input.clone()))
+            })
+            .collect();
+
+        self.propagate_acks_rec(inputs);
+
+        Ok(())
+    }
+
+    fn propagate_acks_rec(&mut self, sink_inputs: Vec<(ComponentKey, OutputId)>) {
+        for (sink, input) in sink_inputs {
+            let component = &input.component;
+
+            if let Some(source) = self.sources.get_mut(component) {
+                if source.inner.can_acknowledge() {
+                    source.sink_acknowledgements = true;
+                } else {
+                    warn!(
+                        message = "Source has acknowledgements enabled by a sink, but acknowledgements are not supported by this source. Silent data loss could occur.",
+                        source = component.id(),
+                        sink = sink.id()
+                    );
+                }
+            } else if let Some(transform) = self.transforms.get(component) {
+                let inputs = transform
+                    .inputs
+                    .iter()
+                    .map(|input| (sink.clone(), input.clone()))
+                    .collect();
+
+                self.propagate_acks_rec(inputs);
+            }
+        }
     }
 }
 

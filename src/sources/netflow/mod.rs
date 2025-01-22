@@ -52,6 +52,10 @@ impl SourceConfig for Config {
     fn resources(&self) -> Vec<Resource> {
         vec![Resource::udp(self.listen)]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 struct NetFlowSource<T> {

@@ -174,6 +174,10 @@ impl SourceConfig for Config {
             Mode::Unix { .. } => vec![],
         }
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -264,7 +268,7 @@ fn udp(
         })
         .boxed();
 
-        match output.send_event_stream(&mut stream).await {
+        match output.send_stream(&mut stream).await {
             Ok(()) => {
                 info!(message = "Finished sending");
                 Ok(())

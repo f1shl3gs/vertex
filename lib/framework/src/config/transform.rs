@@ -3,16 +3,14 @@ use std::fmt::Debug;
 
 use async_trait::async_trait;
 use configurable::NamedComponent;
-use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
-use crate::config::{ComponentKey, DataType, ExpandType, GlobalOptions, Output};
-use crate::transform::Noop;
+use super::{ComponentKey, DataType, GlobalOptions, Output, OutputId};
 
 #[derive(Default)]
 pub struct TransformContext {
     // This is optional because currently there are a lot of places we use `TransformContext`
-    // that may not have the relevant data available (e.g. tests). In the furture it'd be
+    // that may not have the relevant data available (e.g. tests). In the future it'd be
     // nice to make it required somehow.
     pub key: Option<ComponentKey>,
     pub globals: GlobalOptions,
@@ -37,25 +35,30 @@ pub trait TransformConfig: NamedComponent + Debug + Send + Sync {
     /// Gets the list of outputs exposed by this transform.
     fn outputs(&self) -> Vec<Output>;
 
-    /// Returns true if the transform is able to be run across multiple tasks simultaneously
-    /// with no concerns around statfulness, ordering, etc
+    /// Whether concurrency should be enabled for this transform.
+    ///
+    /// When enabled, this transform may be run in parallel in order to attempt to
+    /// maximize throughput for this node in the topology. Transforms should generally
+    /// not run concurrently unless they are compute-heavy, as there is a const/overhead
+    /// associated with fanning out events to the parallel transform tasks.
     fn enable_concurrency(&self) -> bool {
         false
     }
 
-    /// Allows to detect if a transform can be embedded in another transform.
-    /// It's used by the pipelines transform for now
+    /// Whether this transform can be nested, given the types of transforms it would be
+    /// nested within.
+    ///
+    /// For some transforms, they can expand themselves into a sub-topology of nested
+    /// transforms. However, in order to prevent an infinite recursion of nested transforms,
+    /// we may want to only allow one layer of "expansion". Additionally, there may be
+    /// known issues with a transform that is nested under another specific transform
+    /// interacting poorly, or incorrectly.
+    ///
+    /// This method allows a transform to report if it can or cannot function correctly
+    /// if it is nested under transforms of a specific type, or if such nesting is
+    /// fundamentally disallowed.
     fn nestable(&self, _parents: &HashSet<&'static str>) -> bool {
         true
-    }
-
-    /// Allows a transform configuration to expand itself into multiple "child"
-    /// transformations to replace it. this allows a transform to act as a
-    /// macro for various patterns
-    fn expand(
-        &mut self,
-    ) -> crate::Result<Option<(IndexMap<String, Box<dyn TransformConfig>>, ExpandType)>> {
-        Ok(None)
     }
 }
 
@@ -76,74 +79,14 @@ impl<T> TransformOuter<T> {
     }
 }
 
-impl TransformOuter<String> {
-    pub(crate) fn expand(
-        mut self,
-        key: ComponentKey,
-        parent_types: &HashSet<&'static str>,
-        transforms: &mut IndexMap<ComponentKey, TransformOuter<String>>,
-        expansions: &mut IndexMap<ComponentKey, Vec<ComponentKey>>,
-    ) -> Result<(), String> {
-        if !self.inner.nestable(parent_types) {
-            return Err(format!(
-                "the component {} cannot be nested in {:?}",
-                self.inner.component_name(),
-                parent_types
-            ));
-        }
-
-        let expansion = self
-            .inner
-            .expand()
-            .map_err(|err| format!("failed to expand transform '{}': {}", key, err))?;
-
-        let mut ptypes = parent_types.clone();
-        ptypes.insert(self.inner.component_name());
-
-        if let Some((expanded, expand_type)) = expansion {
-            let mut children = Vec::new();
-            let mut inputs = self.inputs.clone();
-
-            for (name, content) in expanded {
-                let full_name = key.join(name);
-
-                let child = TransformOuter {
-                    inputs,
-                    inner: content,
-                };
-                child.expand(full_name.clone(), &ptypes, transforms, expansions)?;
-                children.push(full_name.clone());
-
-                inputs = match expand_type {
-                    ExpandType::Parallel { .. } => self.inputs.clone(),
-                    ExpandType::Serial { .. } => vec![full_name.to_string()],
-                }
-            }
-
-            if matches!(expand_type, ExpandType::Parallel { aggregates: true }) {
-                transforms.insert(
-                    key.clone(),
-                    TransformOuter {
-                        inputs: children.iter().map(ToString::to_string).collect(),
-                        inner: Box::new(Noop),
-                    },
-                );
-                children.push(key.clone());
-            } else if matches!(expand_type, ExpandType::Serial { alias: true }) {
-                transforms.insert(
-                    key.clone(),
-                    TransformOuter {
-                        inputs,
-                        inner: Box::new(Noop),
-                    },
-                );
-                children.push(key.clone());
-            }
-
-            expansions.insert(key.clone(), children);
-        } else {
-            transforms.insert(key, self);
-        }
-        Ok(())
-    }
+/// Often we want to call outputs just to retrieve the OutputId's
+/// without needing the schema definitions.
+pub fn get_transform_output_ids<T: TransformConfig + ?Sized>(
+    transform: &T,
+    key: ComponentKey,
+) -> impl Iterator<Item = OutputId> + '_ {
+    transform.outputs().into_iter().map(move |output| OutputId {
+        component: key.clone(),
+        port: output.port,
+    })
 }

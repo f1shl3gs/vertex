@@ -174,6 +174,10 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 async fn run_scheduled(
@@ -627,8 +631,9 @@ mod tests {
 
         assert_eq!(0, exit_status.unwrap().code().unwrap());
 
-        if let Poll::Ready(Some(event)) = futures::poll!(rx.next()) {
-            let log = event.as_log();
+        if let Poll::Ready(Some(events)) = futures::poll!(rx.next()) {
+            let log = events.into_logs().unwrap().remove(0);
+
             assert_eq!(log.get(COMMAND_KEY).unwrap(), &Value::from(command));
             assert_eq!(log.get(STREAM_KEY).unwrap(), &Value::from(STDOUT));
             assert_eq!(

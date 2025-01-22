@@ -180,6 +180,10 @@ impl SourceConfig for Config {
     fn resources(&self) -> Vec<Resource> {
         vec![Resource::tcp(self.address)]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        true
+    }
 }
 
 struct Decoder {
@@ -798,7 +802,7 @@ mod tests {
 #[cfg(all(test, feature = "fluent-integration-tests"))]
 mod integration_tests {
     use bytes::Bytes;
-    use event::{Event, EventStatus};
+    use event::{EventContainer, EventStatus, Events};
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
     use framework::Pipeline;
@@ -806,7 +810,7 @@ mod integration_tests {
     use http::Request;
     use http_body_util::Full;
     use testify::random::random_string;
-    use testify::{collect_n, next_addr};
+    use testify::{collect_one, next_addr};
     use value::value;
 
     use super::*;
@@ -882,10 +886,10 @@ mod integration_tests {
         let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 201);
 
-        let events = collect_n(receiver, 1).await;
+        let events = collect_one(receiver).await;
 
         assert_eq!(events.len(), 1);
-        let log = events[0].as_log();
+        let log = events.into_logs().unwrap().remove(0);
 
         // metadata
         let metadata = log.metadata().value();
@@ -902,7 +906,7 @@ mod integration_tests {
         );
     }
 
-    async fn start_source(status: EventStatus) -> (SocketAddr, impl Stream<Item = Event> + Unpin) {
+    async fn start_source(status: EventStatus) -> (SocketAddr, impl Stream<Item = Events> + Unpin) {
         let (pipeline, recv) = Pipeline::new_test_finalize(status);
         let address = next_addr();
 
@@ -999,10 +1003,10 @@ mod integration_tests {
         let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 200);
 
-        let events = collect_n(receiver, 1).await;
+        let events = collect_one(receiver).await;
 
         assert_eq!(events.len(), 1);
-        let log = events[0].as_log();
+        let log = events.into_logs().unwrap().remove(0);
 
         // metadata
         let metadata = log.metadata().value();

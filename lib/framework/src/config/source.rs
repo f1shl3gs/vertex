@@ -85,6 +85,21 @@ pub trait SourceConfig: NamedComponent + Debug + Send + Sync {
     fn resources(&self) -> Vec<Resource> {
         Vec::new()
     }
+
+    /// Whether this source can acknowledge the events it emits
+    ///
+    /// Generally, Vertex uses acknowledgements to track when an event has finally
+    /// been processed, either successfully or unsuccessfully. While it is used
+    /// internally in some areas, such as within disk buffers for knowing when a
+    /// message can be deleted from the buffer, it is primarily used to signal back
+    /// to a source that a message has been successfully(durably) processed or not.
+    ///
+    /// By exposing whether a source supports acknowledgements, we can avoid situations
+    /// where using acknowledgements would only add processing overhead for no benefit
+    /// to the source, as well as emit contextual warnings when end-to-end
+    /// acknowledgements are enabled, but the topology as configured does not actually
+    /// support the use of end-to-end acknowledgements.
+    fn can_acknowledge(&self) -> bool;
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -96,7 +111,7 @@ pub struct SourceOuter {
     pub inner: Box<dyn SourceConfig>,
 
     #[serde(default, skip)]
-    pub acknowledgements: bool,
+    pub sink_acknowledgements: bool,
 }
 
 impl SourceOuter {
@@ -104,7 +119,7 @@ impl SourceOuter {
         Self {
             inner: Box::new(source),
             proxy: Default::default(),
-            acknowledgements: false,
+            sink_acknowledgements: false,
         }
     }
 

@@ -1,20 +1,19 @@
-use std::collections::HashSet;
 use std::path::Path;
 
 use glob;
 use indexmap::{IndexMap, IndexSet};
 use serde::{Deserialize, Serialize};
 
+use super::extension::ExtensionConfig;
 use super::global::default_data_dir;
+use super::graph::Graph;
 use super::provider::ProviderConfig;
+use super::sink::SinkOuter;
+use super::source::SourceOuter;
+use super::transform::{get_transform_output_ids, TransformOuter};
 use super::validation;
 use super::{ComponentKey, Config, GlobalOptions, HealthcheckOptions, OutputId};
-use crate::config::extension::ExtensionConfig;
-use crate::config::graph::Graph;
-use crate::config::sink::SinkOuter;
-use crate::config::source::SourceOuter;
-use crate::config::transform::TransformOuter;
-use crate::config::{SinkConfig, SourceConfig, TransformConfig};
+use super::{SinkConfig, SourceConfig, TransformConfig};
 
 /// A complete Vertex configuration.
 #[derive(Debug, Default, Deserialize, Serialize)]
@@ -197,8 +196,6 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
         errors.extend(errs);
     }
 
-    let expansions = expand_macros(&mut builder)?;
-
     expand_globs(&mut builder);
 
     if let Err(type_errors) = validation::check_shape(&builder) {
@@ -207,6 +204,10 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
 
     if let Err(type_errors) = validation::check_resources(&builder) {
         errors.extend(type_errors);
+    }
+
+    if let Err(output_errors) = validation::check_outputs(&builder) {
+        errors.extend(output_errors);
     }
 
     let Builder {
@@ -254,15 +255,16 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
         .collect();
 
     if errors.is_empty() {
-        let config = Config {
+        let mut config = Config {
             global,
             healthcheck,
             sources,
             sinks,
             transforms,
             extensions,
-            expansions,
         };
+
+        config.propagate_acknowledgements()?;
 
         let warnings = validation::warnings(&config);
 
@@ -272,51 +274,19 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
     }
 }
 
-/// Some component configs can act like macros and expand themselves into multiple
-/// replacement configs. Performs those expansions and records the relevant metadata.
-pub fn expand_macros(
-    builder: &mut Builder,
-) -> Result<IndexMap<ComponentKey, Vec<ComponentKey>>, Vec<String>> {
-    let mut expanded_transforms = IndexMap::new();
-    let mut expansions = IndexMap::new();
-    let mut errors = Vec::new();
-    let parent_types = HashSet::new();
-
-    while let Some((key, transform)) = builder.transforms.pop() {
-        if let Err(err) = transform.expand(
-            key,
-            &parent_types,
-            &mut expanded_transforms,
-            &mut expansions,
-        ) {
-            errors.push(err);
-        }
-    }
-    builder.transforms = expanded_transforms;
-
-    if !errors.is_empty() {
-        Err(errors)
-    } else {
-        Ok(expansions)
-    }
-}
-
 /// Expand globs in input lists
 fn expand_globs(builder: &mut Builder) {
     let candidates = builder
         .sources
         .iter()
-        .flat_map(|(key, s)| {
-            s.inner.outputs().into_iter().map(|output| OutputId {
+        .flat_map(|(key, source)| {
+            source.inner.outputs().into_iter().map(|output| OutputId {
                 component: key.clone(),
                 port: output.port,
             })
         })
-        .chain(builder.transforms.iter().flat_map(|(key, t)| {
-            t.inner.outputs().into_iter().map(|output| OutputId {
-                component: key.clone(),
-                port: output.port,
-            })
+        .chain(builder.transforms.iter().flat_map(|(key, transform)| {
+            get_transform_output_ids(transform.inner.as_ref(), key.clone())
         }))
         .map(|output_id| output_id.to_string())
         .collect::<IndexSet<String>>();
@@ -401,6 +371,10 @@ mod tests {
 
         fn outputs(&self) -> Vec<Output> {
             vec![Output::logs()]
+        }
+
+        fn can_acknowledge(&self) -> bool {
+            false
         }
     }
 

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use buffers::channel::{self, LimitedReceiver, LimitedSender};
 use bytesize::ByteSizeOf;
 use errors::ClosedError;
-use event::{Event, EventContainer, Events};
+use event::{EventContainer, Events};
 use futures::Stream;
 use futures_util::StreamExt;
 use metrics::{Attributes, Counter};
@@ -104,7 +104,7 @@ impl Pipeline {
 
     pub async fn send_batch<E, I>(&mut self, events: I) -> Result<(), ClosedError>
     where
-        E: Into<Event> + ByteSizeOf,
+        E: Into<Events> + ByteSizeOf,
         I: IntoIterator<Item = E>,
     {
         self.inner
@@ -114,15 +114,15 @@ impl Pipeline {
             .await
     }
 
-    pub async fn send_event_stream<S, E>(&mut self, events: S) -> Result<(), ClosedError>
+    pub async fn send_stream<S, E>(&mut self, stream: S) -> Result<(), ClosedError>
     where
         S: Stream<Item = E> + Unpin,
-        E: Into<Event> + ByteSizeOf,
+        E: Into<Events> + ByteSizeOf,
     {
         self.inner
             .as_mut()
             .expect("no default output")
-            .send_event_stream(events)
+            .send_stream(stream)
             .await
     }
 }
@@ -143,28 +143,28 @@ impl Pipeline {
     }
 
     #[cfg(any(test, feature = "test-util"))]
-    pub fn new_test() -> (Self, impl Stream<Item = Event> + Unpin) {
+    pub fn new_test() -> (Self, impl Stream<Item = Events> + Unpin) {
         let (pipe, recv) = Self::new_with_buffer(100);
-        let recv = recv.into_stream().flat_map(event::array::into_event_stream);
-        (pipe, recv)
+
+        (pipe, recv.into_stream())
     }
 
     #[cfg(feature = "test-util")]
     pub fn new_test_finalize(
         status: event::EventStatus,
-    ) -> (Self, impl Stream<Item = Event> + Unpin) {
+    ) -> (Self, impl Stream<Item = Events> + Unpin) {
+        use event::Finalizable;
+
         let (pipe, recv) = Self::new_with_buffer(100);
 
         // In a source test pipeline, there is no sink to acknowledge events,
         // so we have to add a map to the receiver to handle the finalization
-        let recv = recv.into_stream().flat_map(move |mut events| {
-            events.for_each_event(|mut event| {
-                let metadata = event.metadata_mut();
-                metadata.update_status(status);
-                metadata.update_sources();
-            });
+        let recv = recv.into_stream().map(move |mut events| {
+            let mut finalizers = events.take_finalizers();
+            finalizers.update_status(status);
+            finalizers.update_sources();
 
-            event::array::into_event_stream(events)
+            events
         });
 
         (pipe, recv)
@@ -251,14 +251,13 @@ impl Inner {
 
     async fn send_batch<E, B>(&mut self, batch: B) -> Result<(), ClosedError>
     where
-        E: Into<Event> + ByteSizeOf,
+        E: Into<Events> + ByteSizeOf,
         B: IntoIterator<Item = E>,
     {
         let mut count = 0;
         let mut byte_size = 0;
 
-        let events = batch.into_iter().map(Into::into);
-        for events in event::array::events_into_arrays(events, Some(CHUNK_SIZE)) {
+        for events in batch.into_iter().map(Into::into) {
             let n = events.len();
             let s = events.size_of();
 
@@ -295,15 +294,15 @@ impl Inner {
         Ok(())
     }
 
-    async fn send_event_stream<S, E>(&mut self, events: S) -> Result<(), ClosedError>
+    async fn send_stream<S, E>(&mut self, mut stream: S) -> Result<(), ClosedError>
     where
         S: Stream<Item = E> + Unpin,
-        E: Into<Event> + ByteSizeOf,
+        E: Into<Events> + ByteSizeOf,
     {
-        let mut stream = events.ready_chunks(CHUNK_SIZE);
         while let Some(events) = stream.next().await {
-            self.send_batch(events.into_iter()).await?;
+            self.send(events.into()).await?;
         }
+
         Ok(())
     }
 }
@@ -325,7 +324,7 @@ mod tests {
         .await
     }
 
-    async fn emit_and_test(make_event: impl FnOnce(DateTime<Utc>) -> Event) {
+    async fn emit_and_test(make_event: impl FnOnce(DateTime<Utc>) -> Events) {
         let (mut sender, _stream) = Pipeline::new_test();
         let millis = thread_rng().gen_range(10..10000);
         let timestamp = Utc::now() - TimeDelta::try_milliseconds(millis).unwrap();

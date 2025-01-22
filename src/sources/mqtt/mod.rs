@@ -42,6 +42,11 @@ impl SourceConfig for Config {
     fn resources(&self) -> Vec<Resource> {
         vec![Resource::tcp(self.listen)]
     }
+
+    /// TODO: it could be true, `PUBACK`
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 async fn run(

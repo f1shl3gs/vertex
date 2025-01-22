@@ -2,8 +2,7 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use bytes::Bytes;
-use event::{BatchNotifier, BatchStatus, BatchStatusReceiver, Event};
-use futures::TryFutureExt;
+use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
 use http::header::AUTHORIZATION;
 use http::{HeaderMap, Method, Request, Response, StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
@@ -25,7 +24,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         headers: &HeaderMap,
         peer_addr: &SocketAddr,
         body: Bytes,
-    ) -> Result<Vec<Event>, ErrorMessage>;
+    ) -> Result<Events, ErrorMessage>;
 
     fn run(
         self,
@@ -127,57 +126,50 @@ struct Inner {
 }
 
 async fn handle_request(
-    events: Result<Vec<Event>, ErrorMessage>,
+    events: Result<Events, ErrorMessage>,
     acknowledgements: bool,
     output: &mut Pipeline,
 ) -> Response<Full<Bytes>> {
     match events {
         Ok(mut events) => {
-            let receiver = BatchNotifier::maybe_apply_to(acknowledgements, &mut events);
-            let result = output
-                .send_batch(events)
-                .map_err(move |err| {
-                    // can only fail if receiving end disconnected, so we are
-                    // shutting down, probably not gracefully.
-                    error!(
-                        message = "Failed to forward events, downstream is closed",
-                        %err
-                    );
+            let (batch, receiver) = BatchNotifier::maybe_new_with_receiver(acknowledgements);
+            if let Some(batch) = batch {
+                events.add_batch_notifier(batch);
+            }
 
-                    ErrorMessage::new(
+            if let Err(err) = output.send(events).await {
+                error!(
+                    message = "Failed to forward events, downstream is closed",
+                    %err
+                );
+
+                return ErrorMessage::new(
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Failed to forward events",
+                )
+                .into();
+            }
+
+            if let Some(receiver) = receiver {
+                match receiver.await {
+                    BatchStatus::Delivered => ok_resp(),
+                    BatchStatus::Errored => ErrorMessage::new(
                         StatusCode::INTERNAL_SERVER_ERROR,
-                        "Failed to forward events",
+                        "Error delivering contents to sink",
                     )
-                })
-                .and_then(|_r| handle_batch_status(receiver))
-                .await;
-
-            match result {
-                Ok(resp) => resp,
-                Err(err) => err.into(),
+                    .into(),
+                    BatchStatus::Failed => ErrorMessage::new(
+                        StatusCode::BAD_REQUEST,
+                        "Contents failed to deliver to sink",
+                    )
+                    .into(),
+                }
+            } else {
+                ok_resp()
             }
         }
 
         Err(err) => err.into(),
-    }
-}
-
-async fn handle_batch_status(
-    receiver: Option<BatchStatusReceiver>,
-) -> Result<Response<Full<Bytes>>, ErrorMessage> {
-    match receiver {
-        None => Ok(ok_resp()),
-        Some(receiver) => match receiver.await {
-            BatchStatus::Delivered => Ok(ok_resp()),
-            BatchStatus::Errored => Err(ErrorMessage::new(
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "Error delivering contents to sink",
-            )),
-            BatchStatus::Failed => Err(ErrorMessage::new(
-                StatusCode::BAD_REQUEST,
-                "Contents failed to deliver to sink",
-            )),
-        },
     }
 }
 

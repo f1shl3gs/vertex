@@ -65,7 +65,7 @@ async fn shutdown_while_active() {
     let (topology, _crash) = start_topology(config.build().unwrap(), false).await;
     let pump_handle = tokio::spawn(async move {
         let mut stream = futures::stream::repeat(Event::from("test"));
-        in1.send_event_stream(&mut stream).await
+        in1.send_stream(&mut stream).await
     });
 
     // Wait until at least 100 events have been seen by the source so we know the pump is running

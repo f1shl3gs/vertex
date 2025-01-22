@@ -4,10 +4,10 @@ use std::net::SocketAddr;
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{Bucket, Event, Metric, Quantile};
+use event::{Bucket, Events, Metric, Quantile};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
-use framework::source::util::http::{decode, ErrorMessage};
-use framework::source::util::http::{HttpSource, HttpSourceAuthConfig};
+use framework::source::http::{decode, ErrorMessage};
+use framework::source::http::{HttpSource, HttpSourceAuthConfig};
 use framework::{tls::TlsConfig, Source};
 use http::header::CONTENT_ENCODING;
 use http::{HeaderMap, Method, StatusCode, Uri};
@@ -52,13 +52,17 @@ impl SourceConfig for Config {
     fn resources(&self) -> Vec<Resource> {
         vec![Resource::tcp(self.address)]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        true
+    }
 }
 
 #[derive(Clone)]
 struct RemoteWriteSource;
 
 impl RemoteWriteSource {
-    fn decode_body(&self, body: Bytes) -> Result<Vec<Event>, ErrorMessage> {
+    fn decode_body(&self, body: Bytes) -> Result<Events, ErrorMessage> {
         let req = proto::WriteRequest::decode(body).map_err(|err| {
             ErrorMessage::new(
                 StatusCode::BAD_REQUEST,
@@ -84,7 +88,7 @@ impl HttpSource for RemoteWriteSource {
         headers: &HeaderMap,
         _peer_addr: &SocketAddr,
         mut body: Bytes,
-    ) -> Result<Vec<Event>, ErrorMessage> {
+    ) -> Result<Events, ErrorMessage> {
         if headers
             .get(CONTENT_ENCODING)
             .map(|header| header.as_ref())
@@ -106,40 +110,45 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
     }
 }
 
-fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
-    let mut result = Vec::new();
+fn reparse_groups(groups: Vec<MetricGroup>) -> Events {
+    let mut metrics = Vec::new();
     let start = Utc::now();
 
-    for group in groups {
-        match group.metrics {
-            GroupKind::Counter(metrics) => {
-                for (key, metric) in metrics {
+    for MetricGroup {
+        name,
+        description,
+        metrics: group,
+    } in groups
+    {
+        match group {
+            GroupKind::Counter(map) => {
+                for (key, metric) in map {
                     let counter =
-                        Metric::sum_with_tags(group.name.clone(), "", metric.value, key.labels)
+                        Metric::sum_with_tags(&name, &description, metric.value, key.labels)
                             .with_timestamp(utc_timestamp(key.timestamp, start));
 
-                    result.push(counter.into())
+                    metrics.push(counter)
                 }
             }
 
-            GroupKind::Gauge(metrics) | GroupKind::Untyped(metrics) => {
-                for (key, metric) in metrics {
+            GroupKind::Gauge(map) | GroupKind::Untyped(map) => {
+                for (key, metric) in map {
                     let gauge =
-                        Metric::gauge_with_tags(group.name.clone(), "", metric.value, key.labels)
+                        Metric::gauge_with_tags(&name, &description, metric.value, key.labels)
                             .with_timestamp(utc_timestamp(key.timestamp, start));
 
-                    result.push(gauge.into())
+                    metrics.push(gauge)
                 }
             }
 
-            GroupKind::Histogram(metrics) => {
-                for (key, metric) in metrics {
+            GroupKind::Histogram(map) => {
+                for (key, metric) in map {
                     let mut buckets = metric.buckets;
                     buckets.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal));
 
                     let histogram = Metric::histogram_with_tags(
-                        group.name.clone(),
-                        "",
+                        &name,
+                        &description,
                         key.labels,
                         metric.count,
                         metric.sum,
@@ -153,15 +162,15 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
                     )
                     .with_timestamp(utc_timestamp(key.timestamp, start));
 
-                    result.push(histogram.into());
+                    metrics.push(histogram);
                 }
             }
 
-            GroupKind::Summary(metrics) => {
-                for (key, metric) in metrics {
+            GroupKind::Summary(map) => {
+                for (key, metric) in map {
                     let summary = Metric::summary(
-                        group.name.clone(),
-                        "",
+                        &name,
+                        &description,
                         metric.count,
                         metric.sum,
                         metric
@@ -176,13 +185,13 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
                     .with_tags(key.labels.into())
                     .with_timestamp(utc_timestamp(key.timestamp, start));
 
-                    result.push(summary.into())
+                    metrics.push(summary)
                 }
             }
         }
     }
 
-    result
+    metrics.into()
 }
 
 #[cfg(test)]
@@ -197,7 +206,7 @@ mod tests {
     use framework::pipeline::Pipeline;
     use framework::tls::TlsConfig;
     use http_body_util::Full;
-    use testify::{assert_event_data_eq, collect_ready};
+    use testify::collect_ready;
 
     use super::*;
     use crate::common::prometheus::TimeSeries;
@@ -208,10 +217,10 @@ mod tests {
         crate::testing::generate_config::<Config>();
     }
 
-    fn make_events() -> Vec<Event> {
+    fn make_events() -> Events {
         let ts = || Utc::now().trunc_subsecs(3);
 
-        let metrics = vec![
+        let mut metrics = vec![
             Metric::sum_with_tags("counter_1", "", 42, tags!("type" => "counter")),
             Metric::gauge_with_tags("gauge_2", "", 42, tags!("type" => "gauge")),
             Metric::histogram_with_tags(
@@ -254,13 +263,9 @@ mod tests {
             .with_tags(tags!("type" => "summary")),
         ];
 
-        metrics
-            .into_iter()
-            .map(|mut m| {
-                m.timestamp = Some(ts());
-                Event::from(m)
-            })
-            .collect::<Vec<_>>()
+        metrics.iter_mut().for_each(|m| m.timestamp = Some(ts()));
+
+        metrics.into()
     }
 
     async fn run_and_receive(tls: Option<TlsConfig>) {
@@ -292,12 +297,11 @@ mod tests {
             address.port()
         );
 
-        let events = make_events();
         let mut timeseries = TimeSeries::new();
-        for event in events.clone() {
-            let metric = event.as_metric();
+        let mut events = make_events();
+        events.for_each_metric(|metric| {
             timeseries.encode_metric(metric);
-        }
+        });
 
         let wr = timeseries.finish();
         let mut out = BytesMut::with_capacity(wr.encoded_len());
@@ -310,9 +314,9 @@ mod tests {
         let resp = client.send(req).await.unwrap();
         assert!(resp.status().is_success());
 
-        let output = collect_ready(rx).await;
+        let output = collect_ready(rx).await.remove(0);
 
-        assert_event_data_eq!(events, output);
+        assert_eq!(events, output);
     }
 
     #[tokio::test]

@@ -55,6 +55,10 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::metrics()]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 async fn run(
@@ -103,15 +107,20 @@ async fn run(
 mod tests {
     use super::*;
     use crate::testing::components::{run_and_assert_source_compliance, SOURCE_TAGS};
-    use event::{tags, Bucket, Event, Quantile};
+    use event::{tags, Bucket, Quantile};
 
     #[test]
     fn generate_config() {
         crate::testing::generate_config::<Config>();
     }
 
-    async fn events_from_config(config: Config) -> Vec<Event> {
-        run_and_assert_source_compliance(config, Duration::from_millis(100), &SOURCE_TAGS).await
+    async fn events_from_config(config: Config) -> Vec<Metric> {
+        run_and_assert_source_compliance(config, Duration::from_millis(100), &SOURCE_TAGS)
+            .await
+            .into_iter()
+            .flat_map(|events| events.into_metrics())
+            .flatten()
+            .collect()
     }
 
     #[tokio::test]
@@ -246,9 +255,7 @@ mod tests {
         ];
 
         assert_eq!(events.len(), want.len());
-        for (got, (name, description, tags, value)) in
-            events.iter().map(|event| event.as_metric()).zip(want)
-        {
+        for (got, (name, description, tags, value)) in events.into_iter().zip(want) {
             assert_eq!(got.name(), name);
             assert_eq!(got.description, description);
             assert_eq!(got.tags(), &tags);

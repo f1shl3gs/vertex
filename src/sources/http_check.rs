@@ -115,6 +115,10 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::metrics()]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 async fn run(
@@ -231,7 +235,7 @@ mod tests {
     use hyper::body::Incoming;
     use hyper::service::service_fn;
     use hyper_util::rt::TokioIo;
-    use testify::collect_ready;
+    use testify::collect_one;
     use tokio::net::TcpListener;
 
     use super::*;
@@ -307,11 +311,12 @@ mod tests {
 
             let task = tokio::spawn(run(client, target, default_interval(), output, shutdown));
             tokio::time::sleep(Duration::from_secs(1)).await;
-            let events = collect_ready(receiver).await;
+            let events = collect_one(receiver).await;
             task.abort();
 
-            assert_eq!(events.len(), 2);
-            let metric = events[1].as_metric();
+            let metrics = events.into_metrics().unwrap();
+            assert_eq!(metrics.len(), 2);
+            let metric = &metrics[1];
             assert_eq!(
                 metric.value,
                 MetricValue::Gauge(code as f64),

@@ -114,6 +114,10 @@ impl SourceConfig for MockSourceConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::new(self.data_type.unwrap_or(DataType::Metric))]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 #[configurable_component(transform, name = "mock")]

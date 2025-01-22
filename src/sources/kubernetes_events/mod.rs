@@ -119,6 +119,10 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
+
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 #[cfg(test)]

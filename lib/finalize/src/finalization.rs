@@ -270,22 +270,6 @@ impl BatchNotifier {
         }
     }
 
-    /// Apply a new batch notifier to a batch of events, and returns
-    /// the receiver.
-    pub fn maybe_apply_to<T: AddBatchNotifier>(
-        enabled: bool,
-        events: &mut [T],
-    ) -> Option<BatchStatusReceiver> {
-        enabled.then(|| {
-            let (batch, receiver) = Self::new_with_receiver();
-            for event in events {
-                event.add_batch_notifier(batch.clone());
-            }
-
-            receiver
-        })
-    }
-
     /// Update this notifier's status from the status of a finalized event.
     fn update_status(&self, status: EventStatus) {
         // The status starts as Delivered and can only change if the new status
