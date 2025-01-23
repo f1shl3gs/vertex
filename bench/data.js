@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737622550299,
+  "lastUpdate": 1737622580957,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7cd607c6171b7b0a53fba41d4f74e31bc859a45d",
-          "message": "chore(deps): bump libc from 0.2.167 to 0.2.168 (#2034)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.167 to 0.2.168.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.168/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.167...0.2.168)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-10T17:27:10+08:00",
-          "tree_id": "ca072496bf4476900e61bd4361467cf5e1649d35",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7cd607c6171b7b0a53fba41d4f74e31bc859a45d"
-        },
-        "date": 1733823008885,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.379,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 144.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 678.89,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "dbd47dac15b4eaf70a17880394a87af7b9401a4a",
           "message": "chore(deps): bump twox-hash from 2.0.1 to 2.1.0 (#2036)\n\nBumps [twox-hash](https://github.com/shepmaster/twox-hash) from 2.0.1 to 2.1.0.\r\n- [Changelog](https://github.com/shepmaster/twox-hash/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/shepmaster/twox-hash/compare/v2.0.1...v2.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: twox-hash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-10T17:27:38+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 631.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4eac1c77f80e40b56e683c5e500ac147075e79c",
+          "message": "lib/codecs: decode inputs to Events (#2151)",
+          "timestamp": "2025-01-23T16:53:12+08:00",
+          "tree_id": "31f68ccd8217b8fc05303673d4927cb99d4c52d2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4eac1c77f80e40b56e683c5e500ac147075e79c"
+        },
+        "date": 1737622562637,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.718,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 148.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 310.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 632.87,
             "unit": "ns/op"
           }
         ]
