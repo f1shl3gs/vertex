@@ -1,0 +1,36 @@
+services:
+  vertex:
+    image: vertex:regression
+    ports:
+      - 9100:9100 # prometheus exporter
+    deploy:
+      resources:
+        limits:
+          cpus: 4
+          memory: 512M
+    volumes:
+      - type: bind
+        source: ${PWD}/vertex.yaml
+        target: /etc/vertex/vertex.yaml
+
+  lading:
+    image: ghcr.io/datadog/lading:0.25.4
+    depends_on:
+      - vertex
+    deploy:
+      resources:
+        limits:
+          cpus: 4
+          memory: 8G
+    ports:
+      - 9101:9101
+    volumes:
+      - ${PWD}/lading.yaml:/lading.yaml:ro
+    command:
+      - --config-path
+      - /lading.yaml
+      - --prometheus-addr
+      - 0.0.0.0:9101
+      - --no-target
+      - --experiment-duration-seconds
+      - "600"
