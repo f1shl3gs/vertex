@@ -74,6 +74,8 @@ mod redis;
 mod selfstat;
 #[cfg(feature = "sources-sflow")]
 mod sflow;
+#[cfg(feature = "sources-socket")]
+pub mod socket;
 #[cfg(feature = "sources-static_metrics")]
 mod static_metrics;
 #[cfg(feature = "sources-syslog")]

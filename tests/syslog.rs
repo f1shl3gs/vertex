@@ -161,14 +161,14 @@ fn random_structured_data(
 }
 
 fn tcp_json_sink(address: String) -> Config {
-    Config::new(
-        socket::Mode::Tcp(TcpSinkConfig::from_address(address)),
-        EncodingConfigWithFraming::new(
+    Config::new(socket::Mode::Tcp {
+        config: TcpSinkConfig::from_address(address),
+        encoding: EncodingConfigWithFraming::new(
             Some(FramingConfig::NewlineDelimited),
             SerializerConfig::Json(JsonSerializerConfig { pretty: false }),
             Default::default(),
         ),
-    )
+    })
 }
 
 #[tokio::test]

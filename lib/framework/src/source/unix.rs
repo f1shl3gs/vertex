@@ -2,7 +2,6 @@ use std::fs::remove_file;
 use std::path::PathBuf;
 use std::pin::pin;
 
-use bytes::Bytes;
 use codecs::decoding::DecodeError;
 use codecs::decoding::StreamDecodingError;
 use event::Events;
@@ -30,7 +29,7 @@ pub fn build_unix_stream_source<D, H>(
 ) -> Source
 where
     D: Clone + Send + Decoder<Item = (Events, usize), Error = DecodeError> + 'static,
-    H: Fn(&mut Events, Option<Bytes>, usize) + Clone + Send + Sync + 'static,
+    H: Fn(&mut Events, usize) + Clone + Send + Sync + 'static,
 {
     Box::pin(async move {
         let listener = UnixListener::bind(&path).expect("Failed to bind to listener socket");
@@ -54,14 +53,7 @@ where
             };
 
             let path = path.clone();
-            let np = if let Ok(addr) = socket.peer_addr() {
-                addr.as_pathname().map(|err| err.to_owned())
-            } else {
-                None
-            };
-
             let handle_events = handle_events.clone();
-            let received_from: Option<Bytes> = np.map(|p| p.to_string_lossy().into_owned().into());
 
             let stream = socket.allow_read_until(shutdown.clone().map(|_| ()));
             let mut stream = FramedRead::new(stream, decoder.clone());
@@ -71,7 +63,7 @@ where
                 loop {
                     match stream.next().await {
                         Some(Ok((mut events, byte_size))) => {
-                            handle_events(&mut events, received_from.clone(), byte_size);
+                            handle_events(&mut events, byte_size);
 
                             if let Err(err) = output.send(events).await {
                                 error!(

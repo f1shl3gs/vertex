@@ -1,6 +1,6 @@
 use std::fmt::Formatter;
 use std::io;
-use std::net::{IpAddr, SocketAddr};
+use std::net::SocketAddr;
 use std::time::Duration;
 
 use bytes::Bytes;
@@ -155,7 +155,7 @@ where
 
     fn decoder(&self) -> Self::Decoder;
 
-    fn handle_events(&self, _events: &mut [Events], _host: Bytes, _size: usize) {}
+    fn handle_events(&self, _events: &mut [Events], _peer: SocketAddr, _size: usize) {}
 
     fn build_acker(&self, item: &[Self::Item]) -> Self::Acker;
 
@@ -167,10 +167,10 @@ where
         tls: Option<TlsConfig>,
         receive_buffer_bytes: Option<usize>,
         cx: SourceContext,
-        acknowledgements: bool,
-        max_connections: Option<u32>,
+        max_connections: Option<usize>,
     ) -> crate::Result<crate::Source> {
         let listenfd = ListenFd::from_env();
+        let acknowledgements = cx.acknowledgements();
 
         Ok(Box::pin(async move {
             let listener = match make_listener(addr, listenfd, &tls).await {
@@ -225,7 +225,7 @@ where
 
                         debug!(
                             message = "Accepted a new connection",
-                            peer = %peer
+                            %peer
                         );
 
                         let fut = handle_stream(
@@ -235,7 +235,7 @@ where
                             receive_buffer_bytes,
                             source,
                             tripwire,
-                            peer.ip(),
+                            peer,
                             output,
                             acknowledgements,
                         );
@@ -258,7 +258,7 @@ async fn handle_stream<T>(
     receive_buffer_bytes: Option<usize>,
     source: T,
     mut tripwire: BoxFuture<'static, ()>,
-    peer: IpAddr,
+    peer: SocketAddr,
     mut output: Pipeline,
     acknowledgements: bool,
 ) where
@@ -309,7 +309,6 @@ async fn handle_stream<T>(
 
     let reader = FramedRead::new(socket, source.decoder());
     let mut reader = ReadyFrames::new(reader);
-    let host = Bytes::from(peer.to_string());
 
     loop {
         tokio::select! {
@@ -342,7 +341,7 @@ async fn handle_stream<T>(
                             }
                         }
 
-                        source.handle_events(&mut events, host.clone(), byte_size);
+                        source.handle_events(&mut events, peer, byte_size);
 
                         match output.send_batch(events).await {
                             Ok(_) => {

@@ -7,6 +7,7 @@ mod global;
 mod graph;
 mod helper;
 mod id;
+mod ip;
 mod loading;
 mod provider;
 mod proxy;
@@ -37,6 +38,7 @@ pub use helper::{
 };
 pub use id::{ComponentKey, OutputId};
 use indexmap::IndexMap;
+pub use ip::IpAccessConfig;
 pub use loading::load_from_paths_with_provider;
 pub use loading::{load, load_builder_from_paths, load_from_str, merge_path_lists, process_paths};
 pub use proxy::ProxyConfig;
