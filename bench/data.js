@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737622618655,
+  "lastUpdate": 1737623034188,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dbd47dac15b4eaf70a17880394a87af7b9401a4a",
-          "message": "chore(deps): bump twox-hash from 2.0.1 to 2.1.0 (#2036)\n\nBumps [twox-hash](https://github.com/shepmaster/twox-hash) from 2.0.1 to 2.1.0.\r\n- [Changelog](https://github.com/shepmaster/twox-hash/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/shepmaster/twox-hash/compare/v2.0.1...v2.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: twox-hash\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-10T17:27:38+08:00",
-          "tree_id": "e88b2f9c9243355561e282ec95682c66cbd27d5b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dbd47dac15b4eaf70a17880394a87af7b9401a4a"
-        },
-        "date": 1733823475949,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 527,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35756.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2e9d5d0bebd1f6ce95ee74130ba406234cddba5e",
           "message": "chore(deps): bump chrono from 0.4.38 to 0.4.39 (#2035)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.38 to 0.4.39.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.38...v0.4.39)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-10T17:28:48+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 36815.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4eac1c77f80e40b56e683c5e500ac147075e79c",
+          "message": "lib/codecs: decode inputs to Events (#2151)",
+          "timestamp": "2025-01-23T16:53:12+08:00",
+          "tree_id": "31f68ccd8217b8fc05303673d4927cb99d4c52d2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4eac1c77f80e40b56e683c5e500ac147075e79c"
+        },
+        "date": 1737623015945,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 539,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 36776.8,
             "unit": "KiB"
           }
         ]
