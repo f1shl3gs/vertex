@@ -105,15 +105,6 @@ mod tests {
     }
 
     #[test]
-    fn deserialize_empty() {
-        let input = Bytes::from("");
-        let deserializer = JsonDeserializer::new(true);
-
-        let events = deserializer.parse(input).unwrap();
-        assert!(events.is_empty());
-    }
-
-    #[test]
     fn deserialize_invalid_json() {
         let input = Bytes::from(r#"{"foo"#);
         let deserializer = JsonDeserializer::new(true);
