@@ -1,10 +1,9 @@
 use bytes::Bytes;
 use chrono::Utc;
 use configurable::Configurable;
-use event::Event;
+use event::{Events, LogRecord};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use smallvec::{smallvec, SmallVec};
 
 use super::{DeserializeError, Deserializer};
 use crate::serde::{default_lossy, skip_serializing_if_default};
@@ -46,36 +45,35 @@ impl JsonDeserializer {
 }
 
 impl Deserializer for JsonDeserializer {
-    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
-        // It's common to receive empty frames when parsing NDJSON, since it allows
-        // multiple empty newlines. We proceed without a warning here.
-        if buf.is_empty() {
-            return Ok(smallvec![]);
-        }
-
+    fn parse(&self, buf: Bytes) -> Result<Events, DeserializeError> {
         let json: serde_json::Value = if self.lossy {
             serde_json::from_str(&String::from_utf8_lossy(&buf))
         } else {
             serde_json::from_slice(&buf)
         }?;
-        let mut events = match json {
+        let mut logs = match json {
             serde_json::Value::Array(array) => array
                 .into_iter()
-                .map(TryInto::try_into)
-                .collect::<Result<SmallVec<[Event; 1]>, _>>()?,
-            _ => smallvec![json.try_into()?],
+                .map(|jv| {
+                    let ev: event::log::Value = jv.into();
+                    LogRecord::from(ev)
+                })
+                .collect::<Vec<LogRecord>>(),
+            _ => {
+                let ev: event::log::Value = json.into();
+                vec![LogRecord::from(ev)]
+            }
         };
 
         let timestamp = Utc::now();
         let timestamp_key = log_schema().timestamp_key();
-        for event in &mut events {
-            let log = event.as_mut_log();
+        for log in &mut logs {
             if !log.contains(timestamp_key) {
                 log.insert(timestamp_key, timestamp);
             }
         }
 
-        Ok(events)
+        Ok(logs.into())
     }
 }
 
@@ -90,26 +88,20 @@ mod tests {
         let input = Bytes::from(r#"{"foo":123}"#);
         let deserializer = JsonDeserializer::new(true);
 
-        let events = deserializer.parse(input).unwrap();
-        let mut events = events.into_iter();
+        let mut logs = deserializer
+            .parse(input)
+            .unwrap()
+            .into_logs()
+            .unwrap()
+            .into_iter();
 
         {
-            let event = events.next().unwrap();
-            let log = event.as_log();
+            let log = logs.next().unwrap();
             assert_eq!(log.get(event_path!("foo")).unwrap().clone(), 123.into());
             assert!(log.get(log_schema().timestamp_key()).is_some())
         }
 
-        assert_eq!(events.next(), None);
-    }
-
-    #[test]
-    fn deserialize_empty() {
-        let input = Bytes::from("");
-        let deserializer = JsonDeserializer::new(true);
-
-        let events = deserializer.parse(input).unwrap();
-        assert!(events.is_empty());
+        assert_eq!(logs.next(), None);
     }
 
     #[test]

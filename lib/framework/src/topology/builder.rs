@@ -8,7 +8,7 @@ use buffers::builder::TopologyBuilder;
 use buffers::channel::{BufferReceiver, BufferSender};
 use buffers::{BufferType, WhenFull};
 use bytesize::ByteSizeOf;
-use event::{EventContainer, Events};
+use event::Events;
 use futures::{FutureExt, StreamExt};
 use futures_util::stream::FuturesOrdered;
 use metrics::{Attributes, Counter};

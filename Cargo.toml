@@ -190,7 +190,7 @@ sources-redis = []
 sources-selfstat = ["dep:libc"]
 sources-sflow = ["dep:xdr"]
 sources-static_metrics = []
-sources-syslog = ["codecs/syslog", "dep:smallvec"]
+sources-syslog = ["codecs/syslog"]
 sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
 sources-zookeeper = []
 
@@ -431,7 +431,6 @@ quick-xml = { version = "0.37.2", default-features = false, features = ["seriali
 rand = { version = "0.8.5", default-features = false }
 regex = { version = "1.11.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "5f23b85b71dfeedebad5e5843ff1c29477d091c6", optional = true, features = ["transport-tls"] }
-smallvec = { version = "1.13.2", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 sqlx = { version = "0.8.3", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "2.0.11", default-features = false }

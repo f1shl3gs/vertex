@@ -9,7 +9,7 @@ use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::{Decoder, DecodingConfig};
 use configurable::{configurable_component, Configurable};
 use event::log::{OwnedValuePath, TargetPath};
-use event::{log::Value, LogRecord};
+use event::{log::Value, Events};
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -358,11 +358,11 @@ async fn run(
                                 let mut current = start;
                                 for record in records {
                                     current = record.offset;
-                                    if let Some(logs) =
+                                    if let Some(batch) =
                                         convert_message(record, &topic, partition, &dec, &keys)
                                             .await
                                     {
-                                        if let Err(err) = out.send(logs).await {
+                                        if let Err(err) = out.send_batch(batch).await {
                                             error!(message = "send logs failed", %err);
                                             return;
                                         }
@@ -548,7 +548,7 @@ async fn convert_message(
     partition: i32,
     decoder: &Decoder,
     keys: &Keys,
-) -> Option<Vec<LogRecord>> {
+) -> Option<Vec<Events>> {
     let RecordAndOffset { record, offset } = record;
     let payload = record.value?;
     let timestamp = if record.timestamp.timestamp() == 0 {
@@ -569,13 +569,11 @@ async fn convert_message(
     let mut stream = FramedRead::new(payload.as_slice(), decoder.clone());
     let (count, _) = stream.size_hint();
 
-    let mut logs = Vec::with_capacity(count);
+    let mut array = Vec::with_capacity(count);
     while let Some(result) = stream.next().await {
         match result {
-            Ok((events, _byte_size)) => {
-                for event in events {
-                    let mut log = event.into_log();
-
+            Ok((mut events, _byte_size)) => {
+                events.for_each_log(|log| {
                     log.insert_metadata(log_schema().source_type_key().value_path(), "kafka");
                     log.insert_metadata(&keys.timestamp, timestamp);
                     log.insert_metadata(&keys.key, key.clone());
@@ -583,9 +581,9 @@ async fn convert_message(
                     log.insert_metadata(&keys.partition, partition);
                     log.insert_metadata(&keys.offset, offset);
                     log.insert_metadata(&keys.headers, headers.clone());
+                });
 
-                    logs.push(log);
-                }
+                array.push(events);
             }
             Err(err) => {
                 if !err.can_continue() {
@@ -595,7 +593,7 @@ async fn convert_message(
         }
     }
 
-    Some(logs)
+    Some(array)
 }
 
 #[cfg(test)]

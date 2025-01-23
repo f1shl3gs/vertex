@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use configurable::configurable_component;
-use event::{EventContainer, Events};
+use event::Events;
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::stream::BoxStream;

@@ -5,7 +5,7 @@ use async_trait::async_trait;
 use bloomy::BloomFilter;
 use configurable::{configurable_component, Configurable};
 use event::tags::{Key, Value as TagValue};
-use event::{EventContainer, Events};
+use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::de::{Error, Visitor};

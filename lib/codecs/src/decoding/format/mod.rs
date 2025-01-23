@@ -11,8 +11,7 @@ use std::fmt::Debug;
 use std::str::Utf8Error;
 
 use ::bytes::Bytes;
-use event::Event;
-use smallvec::SmallVec;
+use event::Events;
 
 pub use self::bytes::BytesDeserializer;
 pub use json::{JsonDeserializer, JsonDeserializerConfig};
@@ -62,9 +61,9 @@ impl From<String> for DeserializeError {
 pub trait Deserializer: Clone + Debug + Send + Sync {
     /// Parses structured events from bytes.
     ///
-    /// It returns a `SmallVec` rather than an `Event` directly, since one byte
+    /// It returns a `Events` rather than an `Event` directly, since one byte
     /// frame can potentially hold multiple events, e.g. when parsing a JSON array.
     /// However, we optimize the most common case of emitting one event by not
     /// requiring heap allocations for it.
-    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError>;
+    fn parse(&self, buf: Bytes) -> Result<Events, DeserializeError>;
 }

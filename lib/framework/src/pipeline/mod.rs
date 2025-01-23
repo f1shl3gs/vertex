@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use buffers::channel::{self, LimitedReceiver, LimitedSender};
 use bytesize::ByteSizeOf;
 use errors::ClosedError;
-use event::{EventContainer, Events};
+use event::Events;
 use futures::Stream;
 use futures_util::StreamExt;
 use metrics::{Attributes, Counter};

@@ -10,7 +10,7 @@ use codecs::decoding::{DeserializerConfig, FramingConfig};
 use codecs::DecodingConfig;
 use configurable::{configurable_component, Configurable};
 use event::log::path::TargetPath;
-use event::{event_path, Event};
+use event::{event_path, Events};
 use framework::async_read::VecAsyncReadExt;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -18,7 +18,6 @@ use futures::FutureExt;
 use futures_util::StreamExt;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use smallvec::SmallVec;
 use thiserror::Error;
 use tokio::io::{AsyncRead, BufReader};
 use tokio::process::Command;
@@ -281,28 +280,28 @@ async fn run_command(
 
     spawn_reader_thread(stdout_reader, decoder.clone(), STDOUT, sender);
 
-    'send: while let Some(((events, _byte_size), stream)) = receiver.recv().await {
+    'send: while let Some(((mut events, _byte_size), stream)) = receiver.recv().await {
         // TODO: metric
 
         let total_count = events.len();
         let mut processed_count = 0;
 
-        for mut event in events {
-            handle_event(&command, hostname, &Some(stream), pid, &mut event);
+        handle_events(&command, hostname, &Some(stream), pid, &mut events);
 
-            match output.send(event).await {
-                Ok(_) => {
-                    processed_count += 1;
-                }
-                Err(err) => {
-                    error!(
-                        message = "Failed to forward events, downstream is closed",
-                        count = total_count - processed_count,
-                        %err
-                    );
+        // The variable `processed_count` is used in the Err branch
+        #[allow(unused_assignments)]
+        match output.send(events).await {
+            Ok(_) => {
+                processed_count += 1;
+            }
+            Err(err) => {
+                error!(
+                    message = "Failed to forward events, downstream is closed",
+                    count = total_count - processed_count,
+                    %err
+                );
 
-                    break 'send;
-                }
+                break 'send;
             }
         }
     }
@@ -357,14 +356,14 @@ fn build_command(
     cmd
 }
 
-fn handle_event(
+fn handle_events(
     command: &[String],
     hostname: &str,
     data_stream: &Option<&str>,
     pid: Option<u32>,
-    event: &mut Event,
+    events: &mut Events,
 ) {
-    if let Event::Log(log) = event {
+    events.for_each_log(|log| {
         // Add timestamp and hostname
         log.insert(log_schema().timestamp_key(), Utc::now());
         log.insert(log_schema().host_key(), hostname);
@@ -384,14 +383,14 @@ fn handle_event(
 
         // Add command
         log.try_insert(event_path!(COMMAND_KEY), command.to_owned())
-    }
+    })
 }
 
 fn spawn_reader_thread<R: 'static + AsyncRead + Unpin + Send>(
     reader: BufReader<R>,
     decoder: codecs::Decoder,
     origin: &'static str,
-    sender: Sender<((SmallVec<[Event; 1]>, usize), &'static str)>,
+    sender: Sender<((Events, usize), &'static str)>,
 ) {
     // Start collecting
     tokio::spawn(async move {
@@ -500,7 +499,6 @@ mod tests {
     use std::io::Cursor;
     use std::task::Poll;
 
-    use bytes::Bytes;
     use event::log::Value;
 
     use super::*;
@@ -517,10 +515,10 @@ mod tests {
         let data_stream = Some(STDOUT);
         let pid = Some(123);
 
-        let mut event = Bytes::from("hello").into();
-        handle_event(&command, hostname, &data_stream, pid, &mut event);
+        let mut events = Events::Logs(vec!["hello".into()]);
+        handle_events(&command, hostname, &data_stream, pid, &mut events);
 
-        let log = event.as_log();
+        let log = events.into_logs().unwrap().remove(0);
 
         assert_eq!(
             log.get(log_schema().host_key()).unwrap(),
@@ -576,7 +574,7 @@ mod tests {
             assert_eq!(bytes, 5);
             assert_eq!(events.len(), 1);
 
-            let log = events[0].as_log();
+            let log = events.into_logs().unwrap().remove(0);
             assert_eq!(
                 log.get(log_schema().message_key()).unwrap(),
                 &Value::from("hello")
@@ -589,7 +587,7 @@ mod tests {
             assert_eq!(byte_size, 5);
             assert_eq!(events.len(), 1);
 
-            let log = events[0].as_log();
+            let log = events.into_logs().unwrap().remove(0);
             assert_eq!(
                 log.get(log_schema().message_key()).unwrap(),
                 &Value::from("world"),

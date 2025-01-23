@@ -802,7 +802,7 @@ mod tests {
 #[cfg(all(test, feature = "fluent-integration-tests"))]
 mod integration_tests {
     use bytes::Bytes;
-    use event::{EventContainer, EventStatus, Events};
+    use event::{EventStatus, Events};
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
     use framework::Pipeline;

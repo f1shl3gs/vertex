@@ -5,10 +5,9 @@ use bytes::Bytes;
 use chrono::{DateTime, Datelike, Utc};
 use configurable::Configurable;
 use event::log::Value;
-use event::{event_path, Event, LogRecord};
+use event::{event_path, Events, LogRecord};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use smallvec::{smallvec, SmallVec};
 use syslog_loose::{IncompleteDate, Message, ProcId, Protocol, Variant};
 
 use super::{DeserializeError, Deserializer};
@@ -53,7 +52,7 @@ impl Default for SyslogDeserializer {
 }
 
 impl Deserializer for SyslogDeserializer {
-    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
+    fn parse(&self, buf: Bytes) -> Result<Events, DeserializeError> {
         let line = if self.lossy {
             String::from_utf8_lossy(&buf)
         } else {
@@ -64,9 +63,8 @@ impl Deserializer for SyslogDeserializer {
             resolve_year,
             Variant::Either,
         )?;
-        let event = convert(parsed).into();
 
-        Ok(smallvec![event])
+        Ok(Events::Logs(vec![convert(parsed)]))
     }
 }
 
