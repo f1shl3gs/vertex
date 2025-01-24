@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737749744547,
+  "lastUpdate": 1737749764367,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "044cd013248dbd215f556164e9c912d43efbdb69",
-          "message": "prefer /etc/machine-id (#2033)",
-          "timestamp": "2024-12-10T17:26:23+08:00",
-          "tree_id": "07308507b04c18ee84da5895ff0369fa6d0d2bac",
-          "url": "https://github.com/f1shl3gs/vertex/commit/044cd013248dbd215f556164e9c912d43efbdb69"
-        },
-        "date": 1733823495271,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29837000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1059900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.043,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 46.531,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "990aef28c6f794e4a2359fa3cce82eab0c9e7cb5",
+          "message": "lib/sources: add socket (#2152)",
+          "timestamp": "2025-01-25T04:04:36+08:00",
+          "tree_id": "cf7b35c170debebf071bb51752120936233074c0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/990aef28c6f794e4a2359fa3cce82eab0c9e7cb5"
+        },
+        "date": 1737749745219,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 32262000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 804650,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 47.124,
             "unit": "ns/op"
           }
         ]
