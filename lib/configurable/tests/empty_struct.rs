@@ -18,3 +18,16 @@ fn empty_struct() {
 
     let _ = serde_yaml::from_str::<Empty>(&example).unwrap();
 }
+
+#[test]
+fn empty_without_brace() {
+    #[derive(Configurable, Serialize, Deserialize)]
+    struct Empty;
+
+    let root_schema = generate_root_schema::<Empty>();
+    let text = serde_json::to_string_pretty(&root_schema).unwrap();
+    println!("{}", text);
+
+    let example = generate_config_with_schema(root_schema);
+    println!("{}", example);
+}

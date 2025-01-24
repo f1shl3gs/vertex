@@ -189,6 +189,7 @@ sources-redfish = []
 sources-redis = []
 sources-selfstat = ["dep:libc"]
 sources-sflow = ["dep:xdr"]
+sources-socket = []
 sources-static_metrics = []
 sources-syslog = ["codecs/syslog"]
 sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
@@ -234,6 +235,7 @@ sources = [
     "sources-redis",
     "sources-selfstat",
     "sources-sflow",
+    "sources-socket",
     "sources-static_metrics",
     "sources-syslog",
     "sources-tail",

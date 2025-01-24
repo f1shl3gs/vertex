@@ -78,15 +78,14 @@ impl MaybeTlsListener {
     #[allow(unused)]
     pub fn accept_stream_limited(
         self,
-        max_connections: Option<u32>,
+        max_connections: Option<usize>,
     ) -> impl Stream<
         Item = (
             Result<MaybeTlsIncomingStream<TcpStream>, TlsError>,
             Option<OwnedSemaphorePermit>,
         ),
     > {
-        let connection_semaphore =
-            max_connections.map(|max| Arc::new(Semaphore::new(max as usize)));
+        let connection_semaphore = max_connections.map(|max| Arc::new(Semaphore::new(max)));
 
         let mut semaphore_future = connection_semaphore
             .clone()

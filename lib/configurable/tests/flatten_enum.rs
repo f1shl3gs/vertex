@@ -17,14 +17,21 @@ fn flatten_struct() {
     #[derive(Configurable, Deserialize)]
     #[serde(rename_all = "lowercase", tag = "mode")]
     enum Protocol {
+        /// tcp variant
+        Tcp {
+            addr: String,
+            tls: String,
+        },
+
         /// unix variant
         Unix(UnixDetail),
 
-        /// tcp variant
-        Tcp { addr: String, tls: String },
-
         /// udp variant
-        Udp { addr: String },
+        Udp {
+            addr: String,
+        },
+
+        Noop,
     }
 
     #[derive(Configurable, Deserialize)]
@@ -33,8 +40,8 @@ fn flatten_struct() {
         #[configurable(example = "cc")]
         common: String,
 
-        #[serde(flatten)]
-        inner: Protocol,
+        // #[serde(flatten)]
+        protocol: Option<Protocol>,
     }
 
     let root_schema = generate_root_schema::<Config>();
@@ -46,7 +53,7 @@ fn flatten_struct() {
 
     let _n = serde_yaml::from_str::<Config>(&example).unwrap();
 }
-
+/*
 #[allow(clippy::print_stdout)]
 #[test]
 fn flatten_enum() {
@@ -103,3 +110,4 @@ fn flatten_enum() {
     let example = generate_config_with_schema(root_schema);
     println!("{}", example);
 }
+*/

@@ -2,7 +2,6 @@ use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::time::Duration;
 
-use bytes::Bytes;
 use chrono::Utc;
 use codecs::decoding::{
     BytesDeserializerDecoder, DecodeError, OctetCountingDecoder, SyslogDeserializer,
@@ -52,7 +51,7 @@ pub enum Mode {
         receive_buffer_bytes: Option<usize>,
 
         /// The max number of TCP connections that will be processed.
-        connection_limit: Option<u32>,
+        connection_limit: Option<usize>,
     },
     Udp {
         /// The address to listen for connections on, or systemd#N to use the Nth
@@ -123,7 +122,6 @@ impl SourceConfig for Config {
                     tls,
                     receive_buffer_bytes,
                     cx,
-                    false,
                     connection_limit,
                 )
             }
@@ -150,9 +148,7 @@ impl SourceConfig for Config {
                 Ok(build_unix_stream_source(
                     path,
                     decoder,
-                    move |events, host, byte_size| {
-                        handle_events(events, &host_key, host, byte_size)
-                    },
+                    move |events, byte_size| handle_events(events, &host_key, None, byte_size),
                     cx.shutdown,
                     cx.output,
                 ))
@@ -197,9 +193,9 @@ impl TcpSource for SyslogTcpSource {
         )
     }
 
-    fn handle_events(&self, batch: &mut [Events], host: Bytes, size: usize) {
+    fn handle_events(&self, batch: &mut [Events], peer: SocketAddr, size: usize) {
         for events in batch {
-            handle_events(events, &self.host_key, Some(host.clone()), size)
+            handle_events(events, &self.host_key, Some(peer), size)
         }
     }
 
@@ -251,7 +247,6 @@ fn udp(
             async move {
                 match frame {
                     Ok(((mut events, byte_size), received_from)) => {
-                        let received_from = received_from.ip().to_string().into();
                         handle_events(&mut events, &host_key, Some(received_from), byte_size);
                         Some(events)
                     }
@@ -290,27 +285,33 @@ fn udp(
 fn handle_events(
     events: &mut Events,
     host_key: &OwnedValuePath,
-    default_host: Option<Bytes>,
+    default_host: Option<SocketAddr>,
     _byte_size: usize,
 ) {
     // TODO: handle the byte_size
     events.for_each_log(|log| {
-        enrich_syslog_log(log, host_key, default_host.clone());
+        enrich_syslog_log(log, host_key, default_host);
     })
 }
 
-fn enrich_syslog_log(log: &mut LogRecord, host_key: &OwnedValuePath, default_host: Option<Bytes>) {
+fn enrich_syslog_log(
+    log: &mut LogRecord,
+    host_key: &OwnedValuePath,
+    default_host: Option<SocketAddr>,
+) {
     log.insert(log_schema().source_type_key(), "syslog");
 
     if let Some(default_host) = &default_host {
-        log.insert(event_path!("source_ip"), default_host.clone());
+        log.insert(event_path!("source_ip"), default_host.ip().to_string());
     }
 
     let parsed_hostname = log
         .get(event_path!("hostname"))
         .map(|hostname| hostname.coerce_to_bytes());
-    if let Some(parsed_host) = parsed_hostname.or(default_host) {
+    if let Some(parsed_host) = parsed_hostname {
         log.insert((PathPrefix::Event, host_key), parsed_host);
+    } else if let Some(default_host) = &default_host {
+        log.insert((PathPrefix::Event, host_key), default_host.ip().to_string());
     }
 
     let timestamp = log
@@ -322,6 +323,7 @@ fn enrich_syslog_log(log: &mut LogRecord, host_key: &OwnedValuePath, default_hos
 
 #[cfg(test)]
 mod tests {
+    use bytes::Bytes;
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
     use event::log::{parse_value_path, Value};
@@ -409,16 +411,12 @@ address: 127.0.0.1:12345
         }
     }
 
-    fn event_from_bytes(
-        host_key: &str,
-        default_host: Option<Bytes>,
-        bytes: Bytes,
-    ) -> Option<LogRecord> {
+    fn event_from_bytes(host_key: &str, bytes: Bytes) -> Option<LogRecord> {
         let byte_size = bytes.len();
         let parser = SyslogDeserializer::default();
         let mut events = parser.parse(bytes).ok()?;
         let host_key = parse_value_path(host_key).unwrap();
-        handle_events(&mut events, &host_key, default_host, byte_size);
+        handle_events(&mut events, &host_key, None, byte_size);
 
         let log = events.into_logs().unwrap().remove(0);
 
@@ -466,7 +464,7 @@ address: 127.0.0.1:12345
             log
         };
 
-        assert_event_data_eq!(event_from_bytes("host", None, raw.into()).unwrap(), want);
+        assert_event_data_eq!(event_from_bytes("host", raw.into()).unwrap(), want);
     }
 
     #[test]
@@ -477,7 +475,7 @@ address: 127.0.0.1:12345
             r#"[incorrect x]"#, msg
         );
 
-        let event = event_from_bytes("host", None, raw.into()).unwrap();
+        let event = event_from_bytes("host", raw.into()).unwrap();
         let want = {
             let mut log = LogRecord::from(msg);
 
@@ -504,7 +502,7 @@ address: 127.0.0.1:12345
             r#"[incorrect x=]"#, msg
         );
 
-        let event = event_from_bytes("host", None, raw.into()).unwrap();
+        let event = event_from_bytes("host", raw.into()).unwrap();
         assert_event_data_eq!(event, want);
     }
 
@@ -546,7 +544,7 @@ address: 127.0.0.1:12345
                 true,
             ),
         ] {
-            let event = event_from_bytes("host", None, input.clone().into()).unwrap();
+            let event = event_from_bytes("host", input.clone().into()).unwrap();
             assert_eq!(there_is_map_called_empty(event), want, "input: {}", input);
         }
     }
@@ -560,8 +558,8 @@ address: 127.0.0.1:12345
         let cleaned = r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - [meta sequenceId="1"] i am foobar"#;
 
         assert_event_data_eq!(
-            event_from_bytes("host", None, raw.into()).unwrap(),
-            event_from_bytes("host", None, cleaned.into()).unwrap()
+            event_from_bytes("host", raw.into()).unwrap(),
+            event_from_bytes("host", cleaned.into()).unwrap()
         );
     }
 
@@ -569,7 +567,7 @@ address: 127.0.0.1:12345
     fn syslog_ng_default_network() {
         let msg = "i am foobar";
         let raw = format!(r#"<13>Feb 13 20:07:26 74794bfb6795 root[8539]: {}"#, msg);
-        let log = event_from_bytes("host", None, raw.into()).unwrap();
+        let log = event_from_bytes("host", raw.into()).unwrap();
 
         let value = log.get(log_schema().timestamp_key()).unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
@@ -605,7 +603,7 @@ address: 127.0.0.1:12345
             r#"<190>Feb 13 21:31:56 74794bfb6795 liblogging-stdlog:  [origin software="rsyslogd" swVersion="8.24.0" x-pid="8979" x-info="http://www.rsyslog.com"] {}"#,
             msg
         );
-        let log = event_from_bytes("host", None, raw.into()).unwrap();
+        let log = event_from_bytes("host", raw.into()).unwrap();
 
         let value = log.get(log_schema().timestamp_key()).unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
@@ -646,7 +644,7 @@ address: 127.0.0.1:12345
             r#"<190>2019-02-13T21:53:30.605850+00:00 74794bfb6795 liblogging-stdlog:  [origin software="rsyslogd" swVersion="8.24.0" x-pid="9043" x-info="http://www.rsyslog.com"] {}"#,
             msg
         );
-        let event = event_from_bytes("host", None, raw.into()).unwrap();
+        let event = event_from_bytes("host", raw.into()).unwrap();
 
         let dt = NaiveDate::from_ymd_opt(2019, 2, 13)
             .unwrap()

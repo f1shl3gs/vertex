@@ -1,0 +1,23 @@
+sources:
+  selfstat:
+    type: selfstat
+    interval: 5s
+  socket:
+    type: socket
+    address: 0.0.0.0:8282
+    mode: tcp
+    receive_buffer_bytes: 64k
+
+sinks:
+  prometheus:
+    type: prometheus_exporter
+    inputs:
+      - selfstat
+  output:
+    type: socket
+    inputs:
+      - socket
+    mode: tcp
+    address: lading:8080
+    encoding:
+      codec: json
