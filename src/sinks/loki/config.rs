@@ -112,7 +112,7 @@ pub struct Config {
 
 impl Config {
     pub fn build_client(&self, cx: SinkContext) -> crate::Result<HttpClient> {
-        let client = HttpClient::new(&self.tls, cx.proxy())?;
+        let client = HttpClient::new(self.tls.as_ref(), cx.proxy())?;
         Ok(client)
     }
 }

@@ -60,6 +60,17 @@ impl ByteSizeOf for EventMetadata {
 }
 
 impl EventMetadata {
+    /// Creates `EventMetadata` with the given `Value`, and the rest of the
+    /// fields with default values.
+    pub fn default_with_value(value: Value) -> Self {
+        EventMetadata {
+            finalizers: Default::default(),
+            value,
+            source_id: None,
+            source_type: None,
+        }
+    }
+
     /// Returns a reference to the metadata value.
     #[inline]
     pub fn value(&self) -> &Value {

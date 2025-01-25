@@ -64,7 +64,7 @@ impl SinkConfig for Config {
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.into_settings();
 
-        let client = HttpClient::new(&self.tls, cx.proxy())?;
+        let client = HttpClient::new(self.tls.as_ref(), cx.proxy())?;
         let tenant_id = self.tenant_id.clone();
         let auth = self.auth.clone();
 
@@ -409,7 +409,7 @@ mod integration_tests {
 
         // 3. Query label values
         let endpoint = format!("http://{}/prometheus/api/v1/label/__name__/values", address);
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 
         let req = http::Request::get(endpoint)
             .body(Full::<Bytes>::default())

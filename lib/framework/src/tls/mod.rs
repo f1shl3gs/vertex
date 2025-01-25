@@ -106,7 +106,7 @@ mod tests {
     async fn assert_send_and_recv(cc: TlsConfig, sc: TlsConfig) {
         let send = "foobar";
         let addr = testify::next_addr();
-        let mut listener = MaybeTlsListener::bind(&addr, &Some(sc)).await.unwrap();
+        let mut listener = MaybeTlsListener::bind(&addr, Some(&sc)).await.unwrap();
 
         let cc = cc.client_config().unwrap();
         tokio::spawn(async move {

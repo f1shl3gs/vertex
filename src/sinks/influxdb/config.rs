@@ -71,7 +71,7 @@ struct Config {
 #[typetag::serde(name = "influxdb")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
         let endpoint = format!("{}/api/v2/write", self.endpoint).parse::<Uri>()?;
         let batch = self.batch.into_batcher_settings()?;
 

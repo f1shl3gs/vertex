@@ -36,7 +36,7 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
         let shutdown = cx.shutdown;
-        let listener = MaybeTlsListener::bind(&self.endpoint, &None).await?;
+        let listener = MaybeTlsListener::bind(&self.endpoint, None).await?;
 
         Ok(Box::pin(async move {
             framework::http::serve(listener, service_fn(http_handle))

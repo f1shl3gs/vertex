@@ -38,7 +38,7 @@ struct Config {
 #[typetag::serde(name = "nginx_stub")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
         let mut sources = Vec::with_capacity(self.endpoints.len());
         for endpoint in self.endpoints.iter() {
             sources.push(NginxStub::new(
@@ -372,7 +372,7 @@ mod integration_tests {
 
         let address = container.get_mapped_addr(80);
 
-        let cli = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let cli = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 
         // without auth
         let status = get_stub_status(&cli, &format!("http://{}/basic_status", address), None)

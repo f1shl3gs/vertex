@@ -10,8 +10,8 @@ harness = false
 path = "benches/tags.rs"
 
 [features]
-default = ["string_path"]
-string_path = ["value/string_path"]
+default = []
+test = ["value/string_path"]
 
 [build-dependencies]
 prost-build = { version = "0.13.4", default-features = false }

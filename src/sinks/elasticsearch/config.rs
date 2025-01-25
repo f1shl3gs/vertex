@@ -335,7 +335,7 @@ impl Config {
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let common = ElasticsearchCommon::parse_config(self).await?;
-        let http_client = HttpClient::new(&self.tls, cx.proxy())?;
+        let http_client = HttpClient::new(self.tls.as_ref(), cx.proxy())?;
         let batch_settings = self.batch.into_batcher_settings()?;
         let request_limits = self.request.into_settings();
         let http_request_builder = HttpRequestBuilder {
@@ -359,7 +359,7 @@ impl SinkConfig for Config {
             id_key_field: self.id_key.clone(),
         };
 
-        let client = HttpClient::new(&self.tls, cx.proxy())?;
+        let client = HttpClient::new(self.tls.as_ref(), cx.proxy())?;
         let healthcheck = common.healthcheck(client).boxed();
 
         Ok((Sink::Stream(Box::new(sink)), healthcheck))

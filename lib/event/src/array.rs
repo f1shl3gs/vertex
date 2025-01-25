@@ -208,6 +208,15 @@ impl Events {
         }
     }
 
+    pub fn merge(&mut self, other: Self) {
+        match (self, other) {
+            (Events::Logs(logs), Events::Logs(others)) => logs.extend(others),
+            (Events::Metrics(metrics), Events::Metrics(others)) => metrics.extend(others),
+            (Events::Traces(traces), Events::Traces(others)) => traces.extend(others),
+            _ => {}
+        }
+    }
+
     pub fn iter_events(&self) -> impl Iterator<Item = EventRef> {
         match self {
             Events::Logs(logs) => EventsIter::Logs(logs.iter()),

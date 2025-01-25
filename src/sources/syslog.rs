@@ -119,7 +119,7 @@ impl SourceConfig for Config {
                     address,
                     keepalive,
                     shutdown_timeout,
-                    tls,
+                    tls.as_ref(),
                     receive_buffer_bytes,
                     cx,
                     connection_limit,

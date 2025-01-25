@@ -1,7 +1,7 @@
 FROM debian:trixie-slim
 
-ADD target/release/vertex /
+RUN mkdir -p /var/lib/vertex && apt update && apt install -y ca-certificates
 
-RUN mkdir -p /var/lib/vertex
+ADD target/release/vertex /
 
 CMD ["/vertex", "-c", "/etc/vertex/vertex.yaml"]

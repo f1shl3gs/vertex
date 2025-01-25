@@ -68,7 +68,7 @@ where
     B::Error: Into<crate::Error>,
 {
     pub fn new(
-        tls_config: &Option<TlsConfig>,
+        tls_config: Option<&TlsConfig>,
         proxy_config: &ProxyConfig,
     ) -> Result<HttpClient<B>, HttpError> {
         HttpClient::new_with_custom_client(
@@ -99,7 +99,7 @@ where
     }
 
     pub fn new_with_custom_client(
-        tls_config: &Option<TlsConfig>,
+        tls_config: Option<&TlsConfig>,
         proxy_config: &ProxyConfig,
         client_builder: &mut hyper_util::client::legacy::Builder,
     ) -> Result<HttpClient<B>, HttpError> {
@@ -423,7 +423,7 @@ mod tests {
             ca: Some("tests/ca/intermediate/certs/ca-chain.cert.pem".into()),
             ..TlsConfig::default()
         });
-        let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(tls.as_ref(), &ProxyConfig::default()).unwrap();
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!("http://{}", addr))
@@ -434,7 +434,7 @@ mod tests {
         assert!(resp.status().is_success());
 
         // HTTP client
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!("http://{}", addr))
@@ -454,7 +454,7 @@ mod tests {
         });
 
         let addr = testify::next_addr();
-        let mut listener = MaybeTlsListener::bind(&addr, &tls).await.unwrap();
+        let mut listener = MaybeTlsListener::bind(&addr, tls.as_ref()).await.unwrap();
 
         tokio::spawn(async move {
             loop {
@@ -474,7 +474,7 @@ mod tests {
             ca: Some("tests/ca/intermediate/certs/ca-chain.cert.pem".into()),
             ..TlsConfig::default()
         });
-        let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(tls.as_ref(), &ProxyConfig::default()).unwrap();
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!("https://localhost:{}", addr.port()))

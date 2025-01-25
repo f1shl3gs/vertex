@@ -370,7 +370,7 @@ impl StreamSink for PrometheusExporter {
         let (trigger_shutdown, shutdown, _shutdown_done) = ShutdownSignal::new_wired();
 
         // HTTP server routine
-        let listener = MaybeTlsListener::bind(&self.endpoint, &self.tls)
+        let listener = MaybeTlsListener::bind(&self.endpoint, self.tls.as_ref())
             .await
             .map_err(|err| error!(message = "Server TLS error", %err))?;
         let http_states = Arc::clone(&states);

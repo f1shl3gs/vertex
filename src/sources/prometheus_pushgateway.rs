@@ -35,8 +35,8 @@ impl SourceConfig for Config {
             Method::POST,
             "/metrics/job",
             false,
-            &self.tls,
-            &self.auth,
+            self.tls.as_ref(),
+            self.auth.as_ref(),
             cx,
         )
     }
@@ -418,7 +418,7 @@ jobs_summary_count{type="a"} 1.0 1612411506789
 
         // post metrics
         let client = HttpClient::new(
-            &Some(TlsConfig::test_client_config()),
+            Some(&TlsConfig::test_client_config()),
             &ProxyConfig::default(),
         )
         .unwrap();

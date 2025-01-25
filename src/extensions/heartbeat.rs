@@ -64,7 +64,7 @@ impl ExtensionConfig for Config {
         status.kernel = sysinfo::kernel().unwrap_or_default();
         status.tags = self.tags.clone();
 
-        let client = HttpClient::new(&self.tls, &ProxyConfig::default())?;
+        let client = HttpClient::new(self.tls.as_ref(), &ProxyConfig::default())?;
 
         Ok(Box::pin(run(
             self.endpoint.clone(),

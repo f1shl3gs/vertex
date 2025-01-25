@@ -79,7 +79,7 @@ impl SourceConfig for Config {
             .collect::<Vec<_>>();
 
         let auth = self.auth.clone();
-        let client = HttpClient::new(&self.tls, &proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &proxy)?;
         let mut ticker = tokio::time::interval(self.interval);
 
         Ok(Box::pin(async move {
@@ -1076,13 +1076,13 @@ mod integration_tests {
         let uri = format!("http://127.0.0.1:{}/stats?stats;csv", uncorrect_port)
             .parse()
             .unwrap();
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let metrics = gather(&client, &uri, &None).await;
         assert_eq!(metrics.len(), 2);
 
         // test health gather
         let uri = format!("http://{}/stats?stats;csv", addr).parse().unwrap();
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let metrics = gather(&client, &uri, &None).await;
         assert_ne!(metrics.len(), 2);
     }

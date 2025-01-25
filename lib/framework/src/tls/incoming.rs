@@ -25,7 +25,7 @@ pub struct MaybeTlsListener {
 }
 
 impl MaybeTlsListener {
-    pub async fn bind(addr: &SocketAddr, tls: &Option<TlsConfig>) -> Result<Self, TlsError> {
+    pub async fn bind(addr: &SocketAddr, tls: Option<&TlsConfig>) -> Result<Self, TlsError> {
         let listener = TcpListener::bind(addr).await.map_err(TlsError::TcpBind)?;
 
         let acceptor = match tls {

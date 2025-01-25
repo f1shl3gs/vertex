@@ -51,6 +51,7 @@ pub struct Config {
     #[configurable(required)]
     pub encoding: EncodingConfigWithFraming,
 
+    #[serde(default)]
     pub acknowledgements: bool,
 }
 
@@ -78,7 +79,7 @@ impl SinkConfig for Config {
             }
         };
         let content_encoding = self.compression.content_encoding();
-        let client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
 
         let encoder = HttpEncoder::new(encoder, transformer);
         let request_builder = HttpRequestBuilder::new(self.compression, encoder);

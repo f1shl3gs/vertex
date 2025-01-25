@@ -117,7 +117,8 @@ auth:
     tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
     let proxy = ProxyConfig::default();
-    let client = HttpClient::new(&config.tls, &proxy).expect("Could not create http client");
+    let client =
+        HttpClient::new(config.tls.as_ref(), &proxy).expect("Could not create http client");
 
     healthcheck(config.endpoint, config.auth, client)
         .await

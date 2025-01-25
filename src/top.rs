@@ -118,7 +118,7 @@ struct Throughput {
 }
 
 async fn fetch(uri: &str) -> framework::Result<TopStats> {
-    let client = HttpClient::new(&None, &ProxyConfig::default())?;
+    let client = HttpClient::new(None, &ProxyConfig::default())?;
 
     let req = Request::builder()
         .method(Method::GET)

@@ -35,7 +35,7 @@ struct Config {
 #[typetag::serde(name = "clickhouse_metrics")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
 
         Ok(Box::pin(run(
             client,

@@ -1,9 +1,11 @@
+use std::io::Read;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
-use bytes::Bytes;
+use bytes::{Buf, Bytes};
 use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
-use http::header::AUTHORIZATION;
+use flate2::read::{MultiGzDecoder, ZlibDecoder};
+use http::header::{AUTHORIZATION, CONTENT_ENCODING};
 use http::{HeaderMap, Method, Request, Response, StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
 use hyper::body::Incoming;
@@ -26,22 +28,62 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         body: Bytes,
     ) -> Result<Events, ErrorMessage>;
 
+    fn decompress(&self, encodings: Option<&str>, mut body: Bytes) -> Result<Bytes, ErrorMessage> {
+        if let Some(encodings) = encodings {
+            for encoding in encodings.rsplit(',').map(str::trim) {
+                body = match encoding {
+                    "identity" => body,
+                    "gzip" => {
+                        let mut decoded = Vec::new();
+                        MultiGzDecoder::new(body.reader())
+                            .read_to_end(&mut decoded)
+                            .map_err(|err| handle_decode_error(encoding, err))?;
+                        decoded.into()
+                    }
+                    "deflate" => {
+                        let mut decoded = Vec::new();
+                        ZlibDecoder::new(body.reader())
+                            .read_to_end(&mut decoded)
+                            .map_err(|err| handle_decode_error(encoding, err))?;
+
+                        decoded.into()
+                    }
+                    "snappy" => snap::raw::Decoder::new()
+                        .decompress_vec(&body)
+                        .map_err(|err| handle_decode_error(encoding, err))?
+                        .into(),
+                    "zstd" => zstd::decode_all(body.reader())
+                        .map_err(|err| handle_decode_error(encoding, err))?
+                        .into(),
+                    _ => {
+                        return Err(ErrorMessage::new(
+                            StatusCode::UNSUPPORTED_MEDIA_TYPE,
+                            format!("unsupported encoding {}", encoding),
+                        ))
+                    }
+                }
+            }
+        }
+
+        Ok(body)
+    }
+
     fn run(
         self,
         address: SocketAddr,
         method: Method,
         path: &str,
         strict_path: bool,
-        tls: &Option<TlsConfig>,
-        auth: &Option<HttpSourceAuthConfig>,
+        tls: Option<&TlsConfig>,
+        auth: Option<&HttpSourceAuthConfig>,
         cx: SourceContext,
     ) -> crate::Result<Source> {
-        let auth = HttpSourceAuth::try_from(auth.as_ref())?;
+        let auth = HttpSourceAuth::try_from(auth)?;
         let acknowledgements = cx.acknowledgements();
         let shutdown = cx.shutdown;
         let output = cx.output;
         let builder = self.clone();
-        let tls = tls.clone();
+        let tls = tls.cloned();
         let inner = Arc::new(Inner {
             method,
             path: path.to_string(),
@@ -88,20 +130,36 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
                     return Ok(resp);
                 }
 
-                let peer_addr = parts
+                let body = incoming.collect().await?.to_bytes();
+                let body = if let Ok(encoding) = parts
+                    .headers
+                    .get(CONTENT_ENCODING)
+                    .map(|v| v.to_str())
+                    .transpose()
+                {
+                    match builder.decompress(encoding, body) {
+                        Ok(body) => body,
+                        Err(err) => {
+                            return Ok(err.into());
+                        }
+                    }
+                } else {
+                    body
+                };
+
+                let peer = parts
                     .extensions
                     .get::<SocketAddr>()
                     .expect("hyper service ConnectInfo is already applied");
-                let body = incoming.collect().await?.to_bytes();
-                let data = builder.build_events(&parts.uri, &parts.headers, peer_addr, body);
-                let resp = handle_request(data, acknowledgements, &mut output).await;
+                let result = builder.build_events(&parts.uri, &parts.headers, peer, body);
+                let resp = handle_request(result, acknowledgements, &mut output).await;
 
                 Ok::<Response<Full<Bytes>>, hyper::Error>(resp)
             }
         });
 
         Ok(Box::pin(async move {
-            let listener = MaybeTlsListener::bind(&address, &tls)
+            let listener = MaybeTlsListener::bind(&address, tls.as_ref())
                 .await
                 .map_err(|err| {
                     error!(
@@ -119,6 +177,20 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
     }
 }
 
+fn handle_decode_error(encoding: &str, err: impl std::error::Error) -> ErrorMessage {
+    warn!(
+        message = "Failed decompressing payload",
+        %err,
+        encoding,
+        internal_log_rate_secs = 30
+    );
+
+    ErrorMessage::new(
+        StatusCode::UNPROCESSABLE_ENTITY,
+        format!("Failed decompressing payload with {} decoder.", encoding),
+    )
+}
+
 struct Inner {
     method: Method,
     path: String,
@@ -126,11 +198,11 @@ struct Inner {
 }
 
 async fn handle_request(
-    events: Result<Events, ErrorMessage>,
+    result: Result<Events, ErrorMessage>,
     acknowledgements: bool,
     output: &mut Pipeline,
 ) -> Response<Full<Bytes>> {
-    match events {
+    match result {
         Ok(mut events) => {
             let (batch, receiver) = BatchNotifier::maybe_new_with_receiver(acknowledgements);
             if let Some(batch) = batch {
