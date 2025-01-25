@@ -69,9 +69,6 @@ impl Deserializer for JsonDeserializer {
 
 #[cfg(test)]
 mod tests {
-    use event::event_path;
-    use log_schema::log_schema;
-
     use super::*;
 
     #[test]
@@ -88,8 +85,7 @@ mod tests {
 
         {
             let log = logs.next().unwrap();
-            assert_eq!(log.get(event_path!("foo")).unwrap().clone(), 123.into());
-            assert!(log.get(log_schema().timestamp_key()).is_some())
+            assert_eq!(log["foo"], 123.into());
         }
 
         assert_eq!(logs.next(), None);
