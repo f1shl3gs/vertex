@@ -1,4 +1,4 @@
-#[cfg(any(feature = "sources-http"))]
+#[cfg(feature = "sources-http")]
 pub mod http;
 #[cfg(any(
     feature = "sinks-prometheus_remote_write",
