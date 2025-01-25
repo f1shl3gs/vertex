@@ -599,9 +599,9 @@ mod tests {
         assert_eq!(counter, 2);
     }
 
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(unix)]
     #[tokio::test]
-    async fn run_command_on_unix_like() {
+    async fn run_command_on_unix() {
         let command = vec!["echo".into(), "hello".into()];
         let hostname = "localhost";
         let decoder = Default::default();

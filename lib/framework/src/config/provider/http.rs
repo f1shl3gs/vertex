@@ -94,7 +94,7 @@ impl ProviderConfig for Config {
 async fn http_request(
     url: &Url,
     headers: &IndexMap<String, String>,
-    tls_config: &Option<TlsConfig>,
+    tls_config: Option<&TlsConfig>,
     proxy: &ProxyConfig,
 ) -> Result<Response<Incoming>, crate::Error> {
     let client = HttpClient::new(tls_config, proxy)?;
@@ -144,7 +144,7 @@ fn poll_http(
             // Retry loop to fetch config
             let mut backoff = ExponentialBackoff::from_secs(10).max_delay(5 * interval);
             let (parts, incoming) = loop {
-                let resp = match http_request(&url, &headers, &tls_config, &proxy).await {
+                let resp = match http_request(&url, &headers, tls_config.as_ref(), &proxy).await {
                     Ok(resp) => resp,
                     Err(err) => {
                         warn!(

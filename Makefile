@@ -165,5 +165,11 @@ images: x86_64-unknown-linux-gnu
 kind_load: images
 	kind load docker-image f1shl3gs/vertex:nightly-distroless
 
+.PHONY: regression
+regression: build
+	docker build -f regression/Dockerfile  -t vertex:regression .
+	cd regression/$(CASE) && docker-compose -f ../docker-compose.yaml --abort-on-container-exit up
+
+
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30

@@ -161,6 +161,7 @@ sources-filestats = []
 sources-fluent = []
 sources-grpc_check = ["tonic/channel", "dep:tonic-health"]
 sources-haproxy = []
+sources-http = []
 sources-http_check = []
 sources-internal_logs = []
 sources-internal_metrics = []
@@ -207,6 +208,7 @@ sources = [
     "sources-fluent",
     "sources-grpc_check",
     "sources-haproxy",
+    "sources-http",
     "sources-http_check",
     "sources-internal_logs",
     "sources-internal_metrics",
@@ -335,7 +337,7 @@ prost-build = { version = "0.13.4", default-features = false }
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
-event = { path = "lib/event", features = ["string_path"] }
+event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.1", default-features = false, features = ["std"] }
 serde_path_to_error = { version = "0.1.16", default-features = false }

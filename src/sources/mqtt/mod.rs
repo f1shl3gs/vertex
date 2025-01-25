@@ -30,7 +30,7 @@ impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let output = cx.output;
         let shutdown = cx.shutdown;
-        let listener = MaybeTlsListener::bind(&self.listen, &self.tls).await?;
+        let listener = MaybeTlsListener::bind(&self.listen, self.tls.as_ref()).await?;
 
         Ok(Box::pin(run(listener, self.keepalive, output, shutdown)))
     }

@@ -65,7 +65,7 @@ impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.into_settings();
-        let client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
 
         let sink = BatchedHttpSink::with_logic(
             self.clone(),

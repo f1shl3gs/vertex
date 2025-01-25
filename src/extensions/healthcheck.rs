@@ -35,7 +35,7 @@ pub struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let shutdown = cx.shutdown;
-        let listener = MaybeTlsListener::bind(&self.endpoint, &None).await?;
+        let listener = MaybeTlsListener::bind(&self.endpoint, None).await?;
 
         Ok(Box::pin(async move {
             info!(

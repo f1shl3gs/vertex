@@ -51,7 +51,7 @@ labels:
 
     // 3. Query label values
     let endpoint = format!("http://{}/loki/api/v1/label/foo/values", address);
-    let client: HttpClient<Full<Bytes>> = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+    let client: HttpClient<Full<Bytes>> = HttpClient::new(None, &ProxyConfig::default()).unwrap();
     let req = http::Request::get(endpoint).body(Full::default()).unwrap();
     let resp = client.send(req).await.unwrap();
 

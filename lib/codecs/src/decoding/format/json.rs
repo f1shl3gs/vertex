@@ -1,15 +1,13 @@
 use bytes::Bytes;
-use chrono::Utc;
 use configurable::Configurable;
 use event::{Events, LogRecord};
-use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 
 use super::{DeserializeError, Deserializer};
 use crate::serde::{default_lossy, skip_serializing_if_default};
 
 /// Config used to build a `JsonDeserializer`
-#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
 pub struct JsonDeserializerConfig {
     /// Determines whether or not to replace invalid UTF-8 sequences instead of failing.
     ///
@@ -51,7 +49,7 @@ impl Deserializer for JsonDeserializer {
         } else {
             serde_json::from_slice(&buf)
         }?;
-        let mut logs = match json {
+        let logs = match json {
             serde_json::Value::Array(array) => array
                 .into_iter()
                 .map(|jv| {
@@ -65,22 +63,12 @@ impl Deserializer for JsonDeserializer {
             }
         };
 
-        let timestamp = Utc::now();
-        let timestamp_key = log_schema().timestamp_key();
-        for log in &mut logs {
-            if !log.contains(timestamp_key) {
-                log.insert(timestamp_key, timestamp);
-            }
-        }
-
         Ok(logs.into())
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use event::event_path;
-
     use super::*;
 
     #[test]
@@ -97,8 +85,7 @@ mod tests {
 
         {
             let log = logs.next().unwrap();
-            assert_eq!(log.get(event_path!("foo")).unwrap().clone(), 123.into());
-            assert!(log.get(log_schema().timestamp_key()).is_some())
+            assert_eq!(log["foo"], 123.into());
         }
 
         assert_eq!(logs.next(), None);

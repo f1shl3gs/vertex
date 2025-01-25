@@ -76,7 +76,7 @@ where
 async fn make_listener(
     addr: SocketListenAddr,
     mut listenfd: ListenFd,
-    tls: &Option<TlsConfig>,
+    tls: Option<&TlsConfig>,
 ) -> Option<MaybeTlsListener> {
     match addr {
         SocketListenAddr::SocketAddr(addr) => match MaybeTlsListener::bind(&addr, tls).await {
@@ -164,16 +164,17 @@ where
         addr: SocketListenAddr,
         keepalive: Option<TcpKeepaliveConfig>,
         shutdown_timeout: Duration,
-        tls: Option<TlsConfig>,
+        tls: Option<&TlsConfig>,
         receive_buffer_bytes: Option<usize>,
         cx: SourceContext,
         max_connections: Option<usize>,
     ) -> crate::Result<crate::Source> {
+        let tls = tls.cloned();
         let listenfd = ListenFd::from_env();
         let acknowledgements = cx.acknowledgements();
 
         Ok(Box::pin(async move {
-            let listener = match make_listener(addr, listenfd, &tls).await {
+            let listener = match make_listener(addr, listenfd, tls.as_ref()).await {
                 None => return Err(()),
                 Some(listener) => listener,
             };

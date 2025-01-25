@@ -37,7 +37,7 @@ pub struct HttpSinkConfig {
 impl HttpSinkConfig {
     pub fn build(&self, proxy: ProxyConfig) -> framework::Result<(Sink, Healthcheck)> {
         let request_settings = self.request.into_settings();
-        let client = HttpClient::new(&self.tls, &proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &proxy)?;
         let batch = self.batch.into_batch_settings()?;
 
         let sink = BatchedHttpSink::with_logic(

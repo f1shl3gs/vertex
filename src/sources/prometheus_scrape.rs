@@ -53,7 +53,7 @@ impl SourceConfig for Config {
             .iter()
             .map(|s| s.parse::<Uri>())
             .collect::<Result<Vec<Uri>, _>>()?;
-        let client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
 
         let shutdown = cx.shutdown;
         let output = cx.output;

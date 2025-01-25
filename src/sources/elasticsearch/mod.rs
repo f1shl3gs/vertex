@@ -48,7 +48,7 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         let interval = tokio::time::interval(self.interval);
-        let http_client = HttpClient::new(&self.tls, &cx.proxy)?;
+        let http_client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
         let es = Elasticsearch {
             endpoint: self.endpoint.clone(),
             http_client,
@@ -162,7 +162,7 @@ mod tests {
 
     #[tokio::test]
     async fn collect() {
-        let http_client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let http_client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let es = Elasticsearch {
             endpoint: "http://localhost:9200".to_string(),
             http_client,

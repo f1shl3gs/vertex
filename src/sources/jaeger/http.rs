@@ -44,7 +44,7 @@ pub async fn serve(
     acknowledgements: bool,
 ) -> crate::Result<()> {
     let output = Arc::new(Mutex::new(output));
-    let listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
+    let listener = MaybeTlsListener::bind(&config.endpoint, config.tls.as_ref()).await?;
     let service = service_fn(move |req: Request<Incoming>| {
         let output = Arc::clone(&output);
         async move { handle(output, req, acknowledgements).await }

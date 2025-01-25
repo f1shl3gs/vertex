@@ -102,7 +102,7 @@ impl Config {
             SocketListenAddr::SocketAddr(self.address),
             self.keepalive,
             self.shutdown_timeout,
-            self.tls.clone(),
+            self.tls.as_ref(),
             self.receive_buffer_bytes,
             cx,
             self.connection_limit,

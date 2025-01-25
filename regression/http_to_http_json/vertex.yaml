@@ -1,0 +1,28 @@
+sources:
+  selfstat:
+    type: selfstat
+    interval: 5s
+
+  http_source:
+    type:             http
+    acknowledgements: false
+    listen:           0.0.0.0:8282
+
+sinks:
+  prometheus:
+    type:    "prometheus_exporter"
+    inputs: [ "selfstat" ]
+    endpoint: 0.0.0.0:9100
+
+  http_sink:
+    type: http
+    inputs: [ "http_source" ]
+    uri:  "http://lading:8080"
+    method: POST
+    encoding:
+      codec: "text"
+    healthcheck:
+      enabled: false
+    buffer:
+      type:       "memory"
+      max_events: 50000  # buffer 50 payloads at a time

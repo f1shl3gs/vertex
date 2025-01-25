@@ -874,7 +874,7 @@ mod integration_tests {
         let input_addr = container.get_mapped_addr(listen_port);
         wait_for_tcp(input_addr).await;
 
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let tag = random_string(8);
         let value = random_string(16);
         let payload = format!(r#"{{ "key": "{value}" }}"#);
@@ -991,7 +991,7 @@ mod integration_tests {
         // wait for source ready
         wait_for_tcp(source_addr).await;
 
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let tag = random_string(8);
         let value = random_string(16);
         let payload = format!(r#"{{ "key": "{value}" }}"#);

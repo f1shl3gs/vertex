@@ -39,8 +39,8 @@ impl SourceConfig for Config {
             Method::POST,
             "/write",
             true,
-            &self.tls,
-            &self.auth,
+            self.tls.as_ref(),
+            self.auth.as_ref(),
             cx,
         )
     }
@@ -287,7 +287,7 @@ mod tests {
         tokio::time::sleep(Duration::from_secs(1)).await;
 
         let client = HttpClient::new(
-            &Some(TlsConfig::test_client_config()),
+            Some(&TlsConfig::test_client_config()),
             &ProxyConfig::default(),
         )
         .unwrap();

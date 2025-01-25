@@ -75,7 +75,7 @@ struct Config {
 #[typetag::serde(name = "redfish")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let client = HttpClient::new(&None, &cx.proxy)?;
+        let client = HttpClient::new(None, &cx.proxy)?;
 
         Ok(Box::pin(run(
             client,
@@ -1496,7 +1496,7 @@ mod integration_tests {
 
         for target in targets {
             let client = Client {
-                client: HttpClient::new(&None, &ProxyConfig::default()).unwrap(),
+                client: HttpClient::new(None, &ProxyConfig::default()).unwrap(),
                 target: format!("http://{}", target),
                 auth: None,
             };

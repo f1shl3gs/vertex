@@ -20,6 +20,8 @@ mod fluent;
 mod grpc_check;
 #[cfg(feature = "sources-haproxy")]
 pub mod haproxy;
+#[cfg(feature = "sources-http")]
+mod http;
 #[cfg(feature = "sources-http_check")]
 mod http_check;
 #[cfg(feature = "sources-internal_logs")]

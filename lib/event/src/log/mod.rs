@@ -109,6 +109,24 @@ impl From<Value> for LogRecord {
     }
 }
 
+#[cfg(any(test, feature = "test"))]
+impl<K> std::ops::Index<K> for LogRecord
+where
+    K: AsRef<str>,
+{
+    type Output = Value;
+
+    fn index(&self, index: K) -> &Self::Output {
+        use value::parse_target_path;
+
+        parse_target_path(index.as_ref())
+            .map(|path| self.get(&path))
+            .ok()
+            .flatten()
+            .unwrap_or_else(|| panic!("Key is not found: {:?}", index.as_ref()))
+    }
+}
+
 impl AddBatchNotifier for LogRecord {
     fn add_batch_notifier(&mut self, batch: BatchNotifier) {
         let finalizer = EventFinalizer::new(batch);
@@ -121,6 +139,11 @@ impl LogRecord {
     #[inline]
     pub fn into_parts(self) -> (EventMetadata, Value) {
         (self.metadata, self.fields)
+    }
+
+    #[inline]
+    pub fn from_parts(metadata: EventMetadata, fields: Value) -> Self {
+        Self { metadata, fields }
     }
 
     #[inline]

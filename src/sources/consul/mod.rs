@@ -47,7 +47,7 @@ impl SourceConfig for Config {
             ..
         } = cx;
         let mut ticker = tokio::time::interval(self.interval);
-        let http_client = HttpClient::new(&self.tls, &proxy)?;
+        let http_client = HttpClient::new(self.tls.as_ref(), &proxy)?;
         let health_summary = self.health_summary;
         let opts = self.query_options.clone();
 

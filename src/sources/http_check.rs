@@ -90,7 +90,7 @@ impl SourceConfig for Config {
         let interval = self.interval;
 
         for target in &self.targets {
-            let client = HttpClient::new(&target.tls, &cx.proxy)?;
+            let client = HttpClient::new(target.tls.as_ref(), &cx.proxy)?;
             targets.push((client, target.clone()));
         }
 
@@ -299,7 +299,7 @@ mod tests {
         ] {
             let (output, receiver) = Pipeline::new_test();
             let shutdown = ShutdownSignal::noop();
-            let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+            let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
             let target = Target {
                 method: Method::Get,
                 url: Url::parse(format!("{endpoint}/{code}").as_str()).unwrap(),

@@ -9,7 +9,7 @@ default = []
 syslog = ["syslog_loose"]
 
 [dev-dependencies]
-event = { path = "../event", features = ["string_path"] }
+event = { path = "../event", features = ["test"] }
 futures-util = { version = "0.3.31", default-features = false, features = ["async-await"] }
 serde_yaml = { version = "0.9.34", default-features = false }
 serde_path_to_error = { version = "0.1.16" }
