@@ -36,6 +36,7 @@ where
     P: Provider,
 {
     pub provider: P,
+    pub scan_minimum_cooldown: Duration,
     pub read_from: ReadFrom,
     pub max_read_bytes: usize,
     pub handle: tokio::runtime::Handle,
@@ -109,75 +110,81 @@ where
         //
         // We have to do a lot of cloning here to convince the compiler that we aren't
         // going to get away with anything, but none of it should have any perf impact.
-
-        let sleep_duration = Duration::from_secs(1);
         let checkpoint_task_handle = self.handle.spawn(checkpoint_writer(
             checkpointer,
-            sleep_duration,
+            self.scan_minimum_cooldown,
             shutdown_checkpointer,
         ));
 
+        // How does this work.
+        //
+        // We want to avoid burning up users' CPUs. To do this we sleep after reading lines
+        // out of files. But! we want to be responsive as well. We keep track of a
+        // `backoff_cap` to decide how long we'll wait in any given loop. this cap grows
+        // each time we fail to read lines in an exponential fashion to some hard-coded cap.
+        // To reduce time using glob, we do not re-scan for major file changes(new files,
+        // moves, deletes), or write new checkpoints, on every iteration.
         let mut next_scan = Instant::now();
         loop {
             // Find files to follow, but not too often
             let now = Instant::now();
             if next_scan <= now {
                 // Schedule the next scan time.
-                next_scan = now.checked_add(Duration::from_secs(1)).unwrap();
+                next_scan = now.checked_add(self.scan_minimum_cooldown).unwrap();
 
-                // Start scan
+                // scan for files to detect major file changes
                 for watcher in watchers.values_mut() {
                     watcher.set_findable(false); // assume not findable until found
                 }
 
                 for path in self.provider.scan() {
-                    if let Ok(fp) = Fingerprint::try_from(&path) {
-                        if let Some(watcher) = watchers.get_mut(&fp) {
-                            // file fingerprint matches a watched file
-                            let was_found_this_cycle = watcher.file_findable();
-                            watcher.set_findable(true);
-                            if watcher.path == path {
-                                trace!(message = "Continue watching file", ?path);
-                            } else {
-                                // matches a file with a different path
-                                if !was_found_this_cycle {
+                    let Ok(fp) = Fingerprint::try_from(&path) else {
+                        continue;
+                    };
+
+                    if let Some(watcher) = watchers.get_mut(&fp) {
+                        // file fingerprint matches a watched file
+                        let was_found_this_cycle = watcher.file_findable();
+                        watcher.set_findable(true);
+                        if watcher.path == path {
+                            trace!(message = "Continue watching file", ?path);
+                        } else if !was_found_this_cycle {
+                            // matches a file with a different path
+                            info!(
+                                message = "Watched file has been renamed",
+                                ?path,
+                                old_path = ?watcher.path
+                            );
+
+                            // ok if this fails: it might be fixed next cycle
+                            watcher.update_path(path).ok();
+                        } else {
+                            info!(
+                                message = "More than one file has the same fingerprint",
+                                ?path,
+                                old_path = ?watcher.path
+                            );
+
+                            let (old, new) = (&watcher.path, &path);
+                            if let (Ok(old_modified_time), Ok(new_modified_time)) = (
+                                std::fs::metadata(old).and_then(|m| m.modified()),
+                                std::fs::metadata(new).and_then(|m| m.modified()),
+                            ) {
+                                if old_modified_time < new_modified_time {
                                     info!(
-                                        message = "Watched file has been renamed",
-                                        ?path,
-                                        old_path = ?watcher.path
+                                        message = "Switching to watch most recently modified file",
+                                        ?new_modified_time,
+                                        ?old_modified_time
                                     );
 
-                                    // ok if this fails: it might be fixed next cycle
+                                    // ok if this fails: it might be fix next cycle
                                     watcher.update_path(path).ok();
-                                } else {
-                                    info!(
-                                        message = "More than one file has the same fingerprint",
-                                        ?path,
-                                        old_path = ?watcher.path
-                                    );
-
-                                    let (old, new) = (&watcher.path, &path);
-                                    if let (Ok(old_modified_time), Ok(new_modified_time)) = (
-                                        std::fs::metadata(old).and_then(|m| m.modified()),
-                                        std::fs::metadata(new).and_then(|m| m.modified()),
-                                    ) {
-                                        if old_modified_time < new_modified_time {
-                                            info!(
-                                                message = "Switching to watch most recently modified file",
-                                                ?new_modified_time,
-                                                ?old_modified_time
-                                            );
-
-                                            // ok if this fails: it might be fix next cycle
-                                            watcher.update_path(path).ok();
-                                        }
-                                    }
                                 }
                             }
-                        } else {
-                            // untracked file fingerprint
-                            self.watch_new_file(path, fp, &mut watchers, &checkpoints, false);
                         }
+                    } else {
+                        // untracked file fingerprint
+                        self.watch_new_file(path, fp, &mut watchers, &checkpoints, false);
                     }
                 }
             }
@@ -188,6 +195,7 @@ where
             for (&fingerprint, watcher) in &mut watchers {
                 while let Ok(Some(line)) = watcher.read_line() {
                     bytes_read += line.len();
+
                     lines.push(Line {
                         text: line,
                         fingerprint,
@@ -252,6 +260,10 @@ where
             futures::pin_mut!(sleep);
             match self.handle.block_on(select(shutdown, sleep)) {
                 Either::Left((_, _)) => {
+                    self.handle
+                        .block_on(output.close())
+                        .expect("error closing tail server data channel");
+
                     let checkpointer = self
                         .handle
                         .block_on(checkpoint_task_handle)
@@ -303,7 +315,7 @@ where
             Ok(mut watcher) => {
                 watcher.set_findable(true);
                 watchers.insert(fp, watcher);
-                debug!(message = "Staring watch file", path = ?path);
+                debug!(message = "Staring watch file", ?path);
             }
             Err(err) => {
                 error!(

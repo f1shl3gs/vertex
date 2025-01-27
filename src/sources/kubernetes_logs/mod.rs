@@ -222,6 +222,7 @@ impl LogSource {
         let checkpointer = Checkpointer::new(&data_dir);
         let harvester = tail::Harvester {
             provider,
+            scan_minimum_cooldown: Duration::from_secs(1),
             read_from: Default::default(),
             max_read_bytes,
             handle: tokio::runtime::Handle::current(),

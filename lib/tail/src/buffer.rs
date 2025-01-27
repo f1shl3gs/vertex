@@ -41,8 +41,8 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
     loop {
         let available: &[u8] = match reader.fill_buf() {
             Ok(n) => n,
-            Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
-            Err(e) => return Err(e),
+            Err(ref err) if err.kind() == io::ErrorKind::Interrupted => continue,
+            Err(err) => return Err(err),
         };
 
         let (done, used) = {
