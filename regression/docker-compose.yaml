@@ -3,15 +3,16 @@ services:
     image: vertex:regression
     ports:
       - 9100:9100 # prometheus exporter
+    environment:
+      VERTEX_LOG: debug,tail=debug
     deploy:
       resources:
         limits:
           cpus: 4
           memory: 512M
     volumes:
-      - type: bind
-        source: ${PWD}/vertex.yaml
-        target: /etc/vertex/vertex.yaml
+      - ${PWD}/vertex.yaml:/etc/vertex/vertex.yaml
+      - data:/data
 
   lading:
     image: ghcr.io/datadog/lading:0.25.4
@@ -21,11 +22,12 @@ services:
       resources:
         limits:
           cpus: 4
-          memory: 8G
+          memory: 2G
     ports:
       - 9101:9101
     volumes:
       - ${PWD}/lading.yaml:/lading.yaml:ro
+      - data:/data
     command:
       - --config-path
       - /lading.yaml
@@ -34,3 +36,9 @@ services:
       - --no-target
       - --experiment-duration-seconds
       - "600"
+
+volumes:
+  data:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs

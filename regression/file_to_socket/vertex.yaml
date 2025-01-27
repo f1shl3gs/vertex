@@ -1,0 +1,30 @@
+sources:
+  selfstat:
+    type: selfstat
+    interval: 5s
+  internal_metrics:
+    type: internal_metrics
+    interval: 5s
+  file:
+    type: tail
+    glob_interval: 1s
+    include:
+      - /data/file-gen-*.log
+
+sinks:
+  prometheus:
+    type:    prometheus_exporter
+    inputs:
+      - selfstat
+      - internal_metrics
+    endpoint: 0.0.0.0:9100
+
+  socket:
+    type:    socket
+    inputs:
+      - file
+    mode:    tcp
+    address: lading:8080
+    healthcheck: false
+    encoding:
+      codec: text

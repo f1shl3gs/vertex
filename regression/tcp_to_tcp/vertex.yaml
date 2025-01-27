@@ -2,6 +2,9 @@ sources:
   selfstat:
     type: selfstat
     interval: 5s
+  internal_metrics:
+    type: internal_metrics
+    interval: 5s
   socket:
     type: socket
     address: 0.0.0.0:8282
@@ -13,6 +16,7 @@ sinks:
     type: prometheus_exporter
     inputs:
       - selfstat
+      - internal_metrics
   output:
     type: socket
     inputs:

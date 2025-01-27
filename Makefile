@@ -168,8 +168,7 @@ kind_load: images
 .PHONY: regression
 regression: build
 	docker build -f regression/Dockerfile  -t vertex:regression .
-	cd regression/$(CASE) && docker-compose -f ../docker-compose.yaml --abort-on-container-exit up
-
+	cd regression/$(CASE) && docker-compose -f ../docker-compose.yaml up --abort-on-container-exit
 
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30
