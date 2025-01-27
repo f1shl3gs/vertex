@@ -96,8 +96,9 @@ impl Serialize for SecretString {
 }
 
 impl SecretString {
+    #[inline]
     pub fn inner(&self) -> &str {
-        self
+        self.0.as_str()
     }
 }
 
