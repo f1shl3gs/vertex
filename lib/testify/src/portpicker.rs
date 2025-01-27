@@ -25,7 +25,7 @@
 
 // For more information, please refer to <http://unlicense.org>
 
-use rand::{thread_rng, Rng};
+use rand::{rng, Rng};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpListener, ToSocketAddrs, UdpSocket};
 
 pub type Port = u16;
@@ -67,12 +67,12 @@ fn ask_free_tcp_port(ip: IpAddr) -> Option<Port> {
 /// let port: u16 = pick_unused_port(IpAddr::V4(Ipv4Addr::LOCALHOST));
 /// ```
 pub fn pick_unused_port(ip: IpAddr) -> Port {
-    let mut rng = thread_rng();
+    let mut tr = rng();
 
     loop {
         // Try random port first
         for _ in 0..10 {
-            let port = rng.gen_range(15000..25000);
+            let port = tr.random_range(15000..25000);
             if is_free(ip, port) {
                 return port;
             }

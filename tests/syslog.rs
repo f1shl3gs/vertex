@@ -8,7 +8,7 @@ use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
 use codecs::EncodingConfigWithFraming;
 use framework::sink::util::tcp::TcpSinkConfig;
 use framework::testing::CountReceiver;
-use rand::{thread_rng, Rng};
+use rand::Rng;
 use serde::Deserialize;
 use testify::next_addr;
 use testify::random::{random_maps, random_string};
@@ -99,7 +99,7 @@ impl SyslogMessageRfc5424 {
             host: "localhost.localdomain".to_owned(),
             source_type: "syslog".to_owned(),
             appname: "harry".to_owned(),
-            procid: thread_rng().gen_range(0..32768),
+            procid: rand::rng().random_range(0..32768),
             structured_data,
             message: msg,
         }
@@ -150,7 +150,7 @@ fn random_structured_data(
     max_children: usize,
     field_len: usize,
 ) -> StructuredData {
-    let amount = thread_rng().gen_range(0..max_children);
+    let amount = rand::rng().random_range(0..max_children);
 
     random_maps(max_map_size, field_len)
         .filter(|m| !m.is_empty()) //syslog_rfc5424 ignores empty maps, tested separately

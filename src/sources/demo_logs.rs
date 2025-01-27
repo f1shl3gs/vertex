@@ -8,8 +8,7 @@ use configurable::{configurable_component, Configurable};
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures_util::StreamExt;
-use rand::seq::SliceRandom;
-use rand::{thread_rng, Rng};
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;
 
@@ -115,11 +114,11 @@ static USER_AGENTS: [&str; 50] = [
 ];
 
 fn random_from_slice(s: &'static [&'static str]) -> &'static str {
-    s[thread_rng().gen_range(0..s.len())]
+    s[rand::rng().random_range(0..s.len())]
 }
 
 fn random_number(min: usize, max: usize) -> usize {
-    thread_rng().gen_range(min..max)
+    rand::rng().random_range(min..max)
 }
 
 fn random_domain() -> String {
@@ -129,25 +128,25 @@ fn random_domain() -> String {
 }
 
 fn random_ipv4() -> String {
-    let mut rnd = thread_rng();
+    let mut rnd = rand::rng();
 
     loop {
-        let a = rnd.gen_range(1..255);
+        let a = rnd.random_range(1..255);
 
         // 1.0.0.0 – 9.255.255.255
         if a > 0 && a < 10 {
-            let b = rnd.gen_range(0..255);
-            let c = rnd.gen_range(0..255);
-            let d = rnd.gen_range(0..255);
+            let b = rnd.random_range(0..255);
+            let c = rnd.random_range(0..255);
+            let d = rnd.random_range(0..255);
 
             return format!("{}.{}.{}.{}", a, b, c, d);
         }
 
         // 11.0.0.0 – 126.255.255.255
         if (11..=126).contains(&a) {
-            let b = rnd.gen_range(0..255);
-            let c = rnd.gen_range(0..255);
-            let d = rnd.gen_range(0..255);
+            let b = rnd.random_range(0..255);
+            let c = rnd.random_range(0..255);
+            let d = rnd.random_range(0..255);
 
             return format!("{}.{}.{}.{}", a, b, c, d);
         }
@@ -155,13 +154,13 @@ fn random_ipv4() -> String {
         // 129.0.0.0 – 169.253.255.255
         if (129..=169).contains(&a) {
             let b = if a == 169 {
-                rnd.gen_range(1..253)
+                rnd.random_range(1..253)
             } else {
-                rnd.gen_range(1..255)
+                rnd.random_range(1..255)
             };
 
-            let c = rnd.gen_range(0..255);
-            let d = rnd.gen_range(0..255);
+            let c = rnd.random_range(0..255);
+            let d = rnd.random_range(0..255);
 
             return format!("{}.{}.{}.{}", a, b, c, d);
         }
@@ -169,15 +168,15 @@ fn random_ipv4() -> String {
         // 169.255.0.0 – 172.15.255.255
         if (169..=172).contains(&a) {
             let b = if a == 172 {
-                rnd.gen_range(1..15)
+                rnd.random_range(1..15)
             } else if a == 169 {
                 255
             } else {
-                rnd.gen_range(1..255)
+                rnd.random_range(1..255)
             };
 
-            let c = rnd.gen_range(0..255);
-            let d = rnd.gen_range(0..255);
+            let c = rnd.random_range(0..255);
+            let d = rnd.random_range(0..255);
 
             return format!("{}.{}.{}.{}", a, b, c, d);
         }
@@ -185,15 +184,15 @@ fn random_ipv4() -> String {
         // 172.32.0.0 – 191.0.1.255
         if (172..=191).contains(&a) {
             let b = if a == 172 {
-                rnd.gen_range(32..255)
+                rnd.random_range(32..255)
             } else if a == 191 {
                 0
             } else {
-                rnd.gen_range(1..255)
+                rnd.random_range(1..255)
             };
 
-            let c = rnd.gen_range(0..255);
-            let d = rnd.gen_range(0..255);
+            let c = rnd.random_range(0..255);
+            let d = rnd.random_range(0..255);
 
             return format!("{}.{}.{}.{}", a, b, c, d);
         }
@@ -202,17 +201,17 @@ fn random_ipv4() -> String {
         // 192.88.100.0 – 192.167.255.255
         // 192.169.0.0 – 198.17.255.255
         if a == 192 {
-            let b = rnd.gen_range(0..88);
+            let b = rnd.random_range(0..88);
 
             // 192.0.3.0 – 192.88.98.255
             if b < 88 {
                 let c = if b == 88 {
-                    rnd.gen_range(0..98)
+                    rnd.random_range(0..98)
                 } else {
-                    rnd.gen_range(0..255)
+                    rnd.random_range(0..255)
                 };
 
-                let d = rnd.gen_range(0..255);
+                let d = rnd.random_range(0..255);
 
                 return format!("{}.{}.{}.{}", a, b, c, d);
             }
@@ -220,19 +219,19 @@ fn random_ipv4() -> String {
             // 192.88.100.0 – 192.167.255.255
             if (88..167).contains(&b) {
                 let c = if b == 88 {
-                    rnd.gen_range(100..255)
+                    rnd.random_range(100..255)
                 } else {
-                    rnd.gen_range(0..255)
+                    rnd.random_range(0..255)
                 };
 
-                let d = rnd.gen_range(0..255);
+                let d = rnd.random_range(0..255);
 
                 return format!("{}.{}.{}.{}", a, b, c, d);
             }
 
             if b == 169 {
-                let c = rnd.gen_range(0..255);
-                let d = rnd.gen_range(0..255);
+                let c = rnd.random_range(0..255);
+                let d = rnd.random_range(0..255);
 
                 return format!("{}.{}.{}.{}", a, b, c, d);
             }
@@ -243,13 +242,13 @@ fn random_ipv4() -> String {
         // part of 192.169.0.0 – 198.17.255.255
         if a > 192 && a <= 198 {
             let b = if a == 198 {
-                rnd.gen_range(0..17)
+                rnd.random_range(0..17)
             } else {
-                rnd.gen_range(0..255)
+                rnd.random_range(0..255)
             };
 
-            let c = rnd.gen_range(0..255);
-            let d = rnd.gen_range(0..255);
+            let c = rnd.random_range(0..255);
+            let d = rnd.random_range(0..255);
 
             return format!("{}.{}.{}.{}", a, b, c, d);
         }
@@ -257,13 +256,13 @@ fn random_ipv4() -> String {
         // 198.20.0.0 – 223.255.255.255
         if (198..=223).contains(&a) {
             let b = if a == 198 {
-                rnd.gen_range(20..255)
+                rnd.random_range(20..255)
             } else {
-                rnd.gen_range(0..255)
+                rnd.random_range(0..255)
             };
 
-            let c = rnd.gen_range(0..255);
-            let d = rnd.gen_range(0..255);
+            let c = rnd.random_range(0..255);
+            let d = rnd.random_range(0..255);
 
             return format!("{}.{}.{}.{}", a, b, c, d);
         }
@@ -271,11 +270,11 @@ fn random_ipv4() -> String {
 }
 
 fn internal_ipv4() -> String {
-    let mut rnd = thread_rng();
+    let mut rnd = rand::rng();
 
-    let b = rnd.gen_range(1..5);
-    let c = rnd.gen_range(1..255);
-    let d = rnd.gen_range(1..255);
+    let b = rnd.random_range(1..5);
+    let c = rnd.random_range(1..255);
+    let d = rnd.random_range(1..255);
 
     format!("10.{}.{}.{}", b, c, d)
 }
@@ -345,8 +344,10 @@ impl OutputFormat {
     fn generate_line(&self, n: usize) -> String {
         match self {
             OutputFormat::Shuffle { sequence, lines } => {
+                use rand::prelude::IndexedRandom;
+
                 // unwrap can be called here because `lines` can't be empty.
-                let line = lines.choose(&mut thread_rng()).unwrap();
+                let line = lines.choose(&mut rand::rng()).unwrap();
 
                 if *sequence {
                     format!("{} {}", n, line)
