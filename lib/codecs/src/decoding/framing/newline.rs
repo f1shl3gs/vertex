@@ -12,7 +12,7 @@ pub struct NewlineDelimitedDecoderConfig {
     ///
     /// This length does *not* include the trailing delimiter
     #[serde(skip_serializing_if = "Option::is_none")]
-    max_length: Option<usize>,
+    pub max_length: Option<usize>,
 }
 
 impl NewlineDelimitedDecoderConfig {

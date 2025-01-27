@@ -1,8 +1,7 @@
 use std::net::SocketAddr;
 use std::time::Duration;
 
-use codecs::decoding::DecodeError;
-use codecs::decoding::{DeserializerConfig, FramingConfig};
+use codecs::decoding::{DecodeError, DeserializerConfig, FramingConfig};
 use codecs::{Decoder, DecodingConfig};
 use configurable::Configurable;
 use event::Events;
@@ -57,6 +56,7 @@ pub struct Config {
     /// The maximum number of TCP connections that are allowed at any given time.
     connection_limit: Option<usize>,
 
+    #[serde(default)]
     framing: Option<FramingConfig>,
 
     #[serde(default = "default_decoding")]
