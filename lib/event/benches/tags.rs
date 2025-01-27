@@ -1,16 +1,15 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use event::tags::Tags;
 use rand::seq::SliceRandom;
-use rand::thread_rng;
 
 fn bench_insert(c: &mut Criterion) {
     let mut group = c.benchmark_group("tags");
-    let mut rng = thread_rng();
+    let mut tr = rand::rng();
     let mut keys = [
         "key1", "key2", "key3", "key4", "key5", "key6", "key7", "key8", "key9", "key10", "key11",
         "key12", "key13", "key14", "key15", "key16", "key17", "key18", "key19", "key20",
     ];
-    keys.shuffle(&mut rng);
+    keys.shuffle(&mut tr);
 
     group.bench_function("insert/1", |b| b.iter(|| insert_keys(&keys, 1)));
 

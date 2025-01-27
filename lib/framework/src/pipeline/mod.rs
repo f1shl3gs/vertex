@@ -312,7 +312,7 @@ mod tests {
     use super::*;
     use chrono::{DateTime, TimeDelta, Utc};
     use event::LogRecord;
-    use rand::{thread_rng, Rng};
+    use rand::Rng;
 
     #[tokio::test]
     async fn emits_lag_time_for_log() {
@@ -326,7 +326,7 @@ mod tests {
 
     async fn emit_and_test(make_event: impl FnOnce(DateTime<Utc>) -> Events) {
         let (mut sender, _stream) = Pipeline::new_test();
-        let millis = thread_rng().gen_range(10..10000);
+        let millis = rand::rng().random_range(10..10000);
         let timestamp = Utc::now() - TimeDelta::try_milliseconds(millis).unwrap();
         let _expected = millis as f64 / 1000.0;
 
