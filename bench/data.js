@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737964348708,
+  "lastUpdate": 1737964372564,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ad251d7252fbe038e71f8718545abfd844e7fe47",
-          "message": "cargo update (#2038)",
-          "timestamp": "2024-12-11T11:25:33+08:00",
-          "tree_id": "0210b9b70070fe8b66600643ca05e464a035d0d2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ad251d7252fbe038e71f8718545abfd844e7fe47"
-        },
-        "date": 1733887693688,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.321,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 145.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 318.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 630.91,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c709092ffe3c8462b78f3d3c5fe35e0a8bb4dc48",
           "message": "sources/flow: add more counters (#2037)\n\n* add more counters",
           "timestamp": "2024-12-11T11:25:55+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 651.81,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da71a4340e93496334655a0c27d4bccff0d1f079",
+          "message": "sources/tail: config scan minimum cooldown (#2154)",
+          "timestamp": "2025-01-27T15:50:04+08:00",
+          "tree_id": "e9a25cdb081cb3d3f91bce2fa907843cd705eaa2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da71a4340e93496334655a0c27d4bccff0d1f079"
+        },
+        "date": 1737964354591,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.488,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 137.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 319.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 628.2,
             "unit": "ns/op"
           }
         ]
