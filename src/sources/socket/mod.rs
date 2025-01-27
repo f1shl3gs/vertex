@@ -3,6 +3,7 @@ pub mod udp;
 #[cfg(unix)]
 mod unix;
 
+use codecs::DecodingConfig;
 use configurable::{configurable_component, Configurable};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::Source;
@@ -16,6 +17,10 @@ enum Mode {
     /// Listen on TCP
     Tcp(tcp::Config),
     Udp(udp::Config),
+    #[cfg(unix)]
+    UnixDatagram(unix::Config),
+    #[cfg(unix)]
+    UnixStream(unix::Config),
 }
 
 #[configurable_component(source, name = "socket")]
@@ -39,6 +44,28 @@ impl SourceConfig for Config {
         match &self.mode {
             Mode::Tcp(config) => config.run(cx),
             Mode::Udp(config) => config.run(cx),
+            #[cfg(unix)]
+            Mode::UnixDatagram(config) => {
+                let decoding = config.decoding.clone();
+                let framing = config
+                    .framing
+                    .clone()
+                    .unwrap_or_else(|| decoding.default_message_based_framing());
+                let decoder = DecodingConfig::new(framing, decoding).build();
+
+                config.run_datagram(decoder, cx)
+            }
+            #[cfg(unix)]
+            Mode::UnixStream(config) => {
+                let decoding = config.decoding.clone();
+                let framing = config
+                    .framing
+                    .clone()
+                    .unwrap_or_else(|| decoding.default_stream_framing());
+                let decoder = DecodingConfig::new(framing, decoding).build();
+
+                config.run_stream(decoder, cx)
+            }
         }
     }
 
@@ -52,6 +79,9 @@ impl SourceConfig for Config {
                 vec![config.resource()]
             }
             Mode::Udp(config) => {
+                vec![config.resource()]
+            }
+            Mode::UnixDatagram(config) | Mode::UnixStream(config) => {
                 vec![config.resource()]
             }
         }

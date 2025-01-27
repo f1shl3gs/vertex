@@ -11,12 +11,13 @@ use super::FramingError;
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct CharacterDelimitedDecoderConfig {
     /// The character that delimits byte sequences
-    delimiter: u8,
+    pub delimiter: u8,
+
     /// The maximum length of the byte buffer
     ///
     /// This length does *not* include the trailing delimiter.
     #[serde(skip_serializing_if = "Option::is_none")]
-    max_length: Option<usize>,
+    pub max_length: Option<usize>,
 }
 
 impl CharacterDelimitedDecoderConfig {

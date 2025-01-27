@@ -85,6 +85,12 @@ impl DeserializerConfig {
             }
         }
     }
+
+    /// Returns an appropriate default framing config for the given deserializer with
+    /// message based inputs.
+    pub fn default_message_based_framing(&self) -> FramingConfig {
+        FramingConfig::Bytes
+    }
 }
 
 /// Config used to build a `Decoder`.

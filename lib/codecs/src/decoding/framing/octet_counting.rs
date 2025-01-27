@@ -11,8 +11,9 @@ use super::FramingError;
 /// Config used to build a `OctetCountingDecoder`
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct OctetCountingDecoderConfig {
+    /// The maximum length of the byte buffer.
     #[serde(skip_serializing_if = "Option::is_none")]
-    max_length: Option<usize>,
+    pub max_length: Option<usize>,
 }
 
 impl OctetCountingDecoderConfig {

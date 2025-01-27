@@ -145,13 +145,13 @@ impl SourceConfig for Config {
                     SyslogDeserializer::default().into(),
                 );
 
-                Ok(build_unix_stream_source(
+                build_unix_stream_source(
                     path,
                     decoder,
-                    move |events, byte_size| handle_events(events, &host_key, None, byte_size),
+                    move |events, _received_from| handle_events(events, &host_key, None),
                     cx.shutdown,
                     cx.output,
-                ))
+                )
             }
         }
     }
@@ -193,9 +193,11 @@ impl TcpSource for SyslogTcpSource {
         )
     }
 
-    fn handle_events(&self, batch: &mut [Events], peer: SocketAddr, size: usize) {
+    fn handle_events(&self, batch: &mut [Events], peer: SocketAddr, _size: usize) {
+        let default_host = Some(peer);
+
         for events in batch {
-            handle_events(events, &self.host_key, Some(peer), size)
+            handle_events(events, &self.host_key, default_host)
         }
     }
 
@@ -246,8 +248,8 @@ fn udp(
 
             async move {
                 match frame {
-                    Ok(((mut events, byte_size), received_from)) => {
-                        handle_events(&mut events, &host_key, Some(received_from), byte_size);
+                    Ok(((mut events, _byte_size), received_from)) => {
+                        handle_events(&mut events, &host_key, Some(received_from));
                         Some(events)
                     }
                     Err(err) => {
@@ -282,12 +284,7 @@ fn udp(
 }
 
 #[inline]
-fn handle_events(
-    events: &mut Events,
-    host_key: &OwnedValuePath,
-    default_host: Option<SocketAddr>,
-    _byte_size: usize,
-) {
+fn handle_events(events: &mut Events, host_key: &OwnedValuePath, default_host: Option<SocketAddr>) {
     // TODO: handle the byte_size
     events.for_each_log(|log| {
         enrich_syslog_log(log, host_key, default_host);
@@ -412,11 +409,10 @@ address: 127.0.0.1:12345
     }
 
     fn event_from_bytes(host_key: &str, bytes: Bytes) -> Option<LogRecord> {
-        let byte_size = bytes.len();
         let parser = SyslogDeserializer::default();
         let mut events = parser.parse(bytes).ok()?;
         let host_key = parse_value_path(host_key).unwrap();
-        handle_events(&mut events, &host_key, None, byte_size);
+        handle_events(&mut events, &host_key, None);
 
         let log = events.into_logs().unwrap().remove(0);
 
