@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::fs::File;
 use std::path::{Path, PathBuf};
-use std::sync::{LazyLock, Mutex};
+use std::sync::Mutex;
 
 use tracing::error;
 
@@ -9,7 +9,7 @@ use super::env::interpolate;
 use super::{format, validation, Builder, Config, ConfigPath, Format, FormatHint};
 use crate::signal;
 
-pub static CONFIG_PATHS: LazyLock<Mutex<Vec<ConfigPath>>> = LazyLock::new(Mutex::default);
+pub static CONFIG_PATHS: Mutex<Vec<ConfigPath>> = Mutex::new(Vec::new());
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider
