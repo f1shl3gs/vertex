@@ -1,0 +1,13 @@
+extensions:
+  zpages:
+    type: zpages
+
+sources:
+  selfstat:
+    type: selfstat
+
+sinks:
+  blackhole:
+    type: blackhole
+    inputs:
+      - selfstat

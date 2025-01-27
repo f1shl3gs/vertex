@@ -136,7 +136,7 @@ extensions-jemalloc = [
     "tikv-jemallocator/profiling",
 ]
 extensions-pprof = ["dep:pprof"]
-extensions-zpages = []
+extensions-zpages = ["dep:parking_lot"]
 
 # Extensions
 extensions = [

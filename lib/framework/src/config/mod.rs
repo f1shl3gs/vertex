@@ -12,6 +12,7 @@ mod loading;
 mod provider;
 mod proxy;
 mod resource;
+mod secret;
 mod sink;
 mod source;
 mod transform;
@@ -43,6 +44,7 @@ pub use loading::load_from_paths_with_provider;
 pub use loading::{load, load_builder_from_paths, load_from_str, merge_path_lists, process_paths};
 pub use proxy::ProxyConfig;
 pub use resource::{Protocol, Resource};
+pub use secret::SecretString;
 pub use sink::SinkOuter;
 pub use sink::{SinkConfig, SinkContext};
 use source::SourceOuter;
@@ -235,20 +237,20 @@ impl<'a> From<&'a ConfigPath> for &'a PathBuf {
     }
 }
 
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Default, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     pub global: GlobalOptions,
+
+    pub healthcheck: HealthcheckOptions,
+
+    pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
     pub sources: IndexMap<ComponentKey, SourceOuter>,
 
     pub transforms: IndexMap<ComponentKey, TransformOuter<OutputId>>,
 
     pub sinks: IndexMap<ComponentKey, SinkOuter<OutputId>>,
-
-    pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
-
-    pub healthcheck: HealthcheckOptions,
 }
 
 impl Config {

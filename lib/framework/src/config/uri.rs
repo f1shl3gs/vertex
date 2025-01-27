@@ -170,7 +170,8 @@ fn get_basic_auth(authority: &Authority) -> (Authority, Option<Auth>) {
         let password = url.password().unwrap_or("");
         let password = percent_decode_str(password)
             .decode_utf8_lossy()
-            .into_owned();
+            .to_string()
+            .into();
 
         // These methods have the same failure condition as `username`,
         // because we have a non-empty username, they cannot fail here.
@@ -225,7 +226,7 @@ mod tests {
                 want_auth.map(|(user, password)| {
                     Auth::Basic {
                         user: user.to_owned(),
-                        password: password.to_owned(),
+                        password: password.to_owned().into(),
                     }
                 })
             );

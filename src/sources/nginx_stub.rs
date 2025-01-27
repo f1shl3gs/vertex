@@ -387,7 +387,7 @@ mod integration_tests {
             &format!("http://{}/basic_status_auth", address),
             Some(&Auth::Basic {
                 user: "tom".to_string(),
-                password: "123456".to_string(),
+                password: "123456".into(),
             }),
         )
         .await
