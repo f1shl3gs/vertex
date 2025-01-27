@@ -129,7 +129,7 @@ all-integration-tests = [
     "redfish-integration-tests",
 ]
 
-extensions-heartbeat = ["dep:uuid", "dep:sysinfo"]
+extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "dep:parking_lot"]
 extensions-healthcheck = []
 extensions-jemalloc = [
     "tikv-jemalloc-ctl/stats",
