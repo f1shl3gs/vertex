@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738012158439,
+  "lastUpdate": 1738012240817,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2bad8a696e7c43dbd3df8b2abea79fef64fd675b",
-          "message": "chore(deps): bump tower from 0.5.1 to 0.5.2 (#2042)\n\nBumps [tower](https://github.com/tower-rs/tower) from 0.5.1 to 0.5.2.\r\n- [Release notes](https://github.com/tower-rs/tower/releases)\r\n- [Commits](https://github.com/tower-rs/tower/compare/tower-0.5.1...tower-0.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tower\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-12T16:31:45+08:00",
-          "tree_id": "5562ca5c591a942e03f601e50270521e345f9044",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2bad8a696e7c43dbd3df8b2abea79fef64fd675b"
-        },
-        "date": 1733992430333,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532460,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 521700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "be05406d9deb2ab408a19155080d32a7ee0960ac",
+          "message": "chore(deps): bump rand from 0.8.5 to 0.9.0 (#2158)\n\n* chore(deps): bump rand from 0.8.5 to 0.9.0\n\nBumps [rand](https://github.com/rust-random/rand) from 0.8.5 to 0.9.0.\n- [Release notes](https://github.com/rust-random/rand/releases)\n- [Changelog](https://github.com/rust-random/rand/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/rust-random/rand/compare/0.8.5...0.9.0)\n\n---\nupdated-dependencies:\n- dependency-name: rand\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* fix compatible errors\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2025-01-28T05:08:17+08:00",
+          "tree_id": "4a22c0798cdd95a936ba63d6a887f727e9e698f8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/be05406d9deb2ab408a19155080d32a7ee0960ac"
+        },
+        "date": 1738012222463,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 523930,
             "unit": "ns/op"
           }
         ]
