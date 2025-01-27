@@ -41,7 +41,7 @@ impl ElasticsearchCommon {
         let auth = match &config.auth {
             Some(ElasticsearchAuth::Basic { user, password }) => Some(Auth::Basic {
                 user: user.clone(),
-                password: password.clone(),
+                password: password.to_string().into(),
             }),
             _ => None,
         };

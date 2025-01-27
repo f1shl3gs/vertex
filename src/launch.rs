@@ -14,6 +14,8 @@ use vertex::built_info::{GIT_HASH, PKG_VERSION, RUSTC_VERSION, TARGET};
 use vertex::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
 use vertex::extensions::heartbeat;
+#[cfg(feature = "extensions-zpages")]
+use vertex::extensions::zpages;
 
 use crate::{top, validate, vtl};
 
@@ -202,6 +204,8 @@ impl RootCommand {
 
             #[cfg(feature = "extensions-heartbeat")]
             heartbeat::report_config(topology.config());
+            #[cfg(feature = "extensions-zpages")]
+            zpages::update_config(topology.config());
 
             // run
             let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
@@ -223,6 +227,8 @@ impl RootCommand {
                                             Ok(true) => {
                                                 #[cfg(feature = "extensions-heartbeat")]
                                                 heartbeat::report_config(topology.config());
+                                                #[cfg(feature = "extensions-zpages")]
+                                                zpages::update_config(topology.config());
 
                                                 info!(message = "Vertex reloaded");
                                             },
@@ -255,6 +261,11 @@ impl RootCommand {
                                     new_config.healthcheck.set_require_healthy(true);
                                     match topology.reload_config_and_respawn(new_config).await {
                                         Ok(true) => {
+                                            #[cfg(feature = "extensions-heartbeat")]
+                                            heartbeat::report_config(topology.config());
+                                            #[cfg(feature = "extensions-zpages")]
+                                            zpages::update_config(topology.config());
+
                                             info!(message = "Reload config successes");
                                         },
                                         Ok(false) => {

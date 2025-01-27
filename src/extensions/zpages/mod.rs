@@ -2,7 +2,6 @@ mod statsz;
 
 use std::net::{Ipv4Addr, SocketAddr};
 
-use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
@@ -13,7 +12,15 @@ use http::{Method, Request, Response, StatusCode};
 use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
+use parking_lot::RwLock;
 use statsz::Statsz;
+
+static CURRENT_CONFIG: RwLock<String> = RwLock::new(String::new());
+
+pub fn update_config(config: &framework::config::Config) {
+    let content = serde_yaml::to_string(config).unwrap();
+    *CURRENT_CONFIG.write() = content;
+}
 
 fn default_endpoint() -> SocketAddr {
     SocketAddr::from((Ipv4Addr::UNSPECIFIED, 56888))
@@ -31,7 +38,7 @@ struct Config {
     endpoint: SocketAddr,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "zpages")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
@@ -57,27 +64,49 @@ async fn http_handle(req: Request<Incoming>) -> framework::Result<Response<Full<
         return Ok(resp);
     }
 
-    match req.uri().path() {
+    let resp = match req.uri().path() {
         "/statsz" => {
             let stats = Statsz::snapshot();
             let data = serde_json::to_vec(&stats.metrics)?;
 
-            let resp = Response::builder()
+            Response::builder()
                 .header(CONTENT_TYPE, "application/json")
                 .status(StatusCode::OK)
-                .body(Full::new(data.into()))?;
-
-            Ok(resp)
+                .body(Full::new(data.into()))?
         }
-        _ => {
-            let resp = Response::builder()
-                .status(StatusCode::NOT_FOUND)
-                .body(Full::default())
-                .expect("build ok");
+        "/config" => {
+            let text = CURRENT_CONFIG.read().to_string();
 
-            Ok(resp)
+            Response::builder()
+                .header(CONTENT_TYPE, "text/yaml")
+                .status(StatusCode::OK)
+                .body(Full::new(text.into()))?
         }
-    }
+        "/" => {
+            let text = r##"<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Zpages</title>
+</head>
+<body>
+<p><a href="/config">config</a></p>
+<p><a href="/statsz">statsz</a></p>
+</body>
+</html>
+"##;
+            Response::builder()
+                .header(CONTENT_TYPE, "text/html")
+                .status(StatusCode::OK)
+                .body(Full::new(text.into()))?
+        }
+        _ => Response::builder()
+            .status(StatusCode::NOT_FOUND)
+            .body(Full::default())
+            .expect("build ok"),
+    };
+
+    Ok(resp)
 }
 
 #[cfg(test)]

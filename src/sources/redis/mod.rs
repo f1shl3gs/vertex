@@ -11,7 +11,7 @@ use client::{Client, RespErr};
 use configurable::configurable_component;
 use event::tags::Tags;
 use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, Output, SecretString, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
@@ -258,7 +258,7 @@ struct Config {
     #[serde(default)]
     username: Option<String>,
     #[serde(default)]
-    password: Option<String>,
+    password: Option<SecretString>,
 
     #[serde(default)]
     client_name: Option<String>,
@@ -274,7 +274,7 @@ impl SourceConfig for Config {
 
         let src = RedisSource {
             username: self.username.clone(),
-            password: self.password.clone(),
+            password: self.password.as_ref().map(|p| p.inner().to_string()),
 
             address: self.endpoint,
             interval: self.interval,

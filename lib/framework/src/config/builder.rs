@@ -28,6 +28,10 @@ pub struct Builder {
     #[serde(default)]
     pub healthcheck: HealthcheckOptions,
 
+    /// All configured extensions
+    #[serde(default)]
+    pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
+
     /// All configured sources.
     #[serde(default)]
     pub sources: IndexMap<ComponentKey, SourceOuter>,
@@ -39,10 +43,6 @@ pub struct Builder {
     /// All configured sinks
     #[serde(default)]
     pub sinks: IndexMap<ComponentKey, SinkOuter<String>>,
-
-    /// All configured extensions
-    #[serde(default)]
-    pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 }
 
 impl Builder {
