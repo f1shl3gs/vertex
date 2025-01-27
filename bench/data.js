@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738010277885,
+  "lastUpdate": 1738010713834,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2bad8a696e7c43dbd3df8b2abea79fef64fd675b",
-          "message": "chore(deps): bump tower from 0.5.1 to 0.5.2 (#2042)\n\nBumps [tower](https://github.com/tower-rs/tower) from 0.5.1 to 0.5.2.\r\n- [Release notes](https://github.com/tower-rs/tower/releases)\r\n- [Commits](https://github.com/tower-rs/tower/compare/tower-0.5.1...tower-0.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tower\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-12T16:31:45+08:00",
-          "tree_id": "5562ca5c591a942e03f601e50270521e345f9044",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2bad8a696e7c43dbd3df8b2abea79fef64fd675b"
-        },
-        "date": 1733992920078,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 519,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35546.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "809ba3244dd093fdddd361bde68a17636b74d80b",
           "message": "chore(deps): bump thiserror from 2.0.6 to 2.0.7 (#2045)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.6 to 2.0.7.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.6...2.0.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-14T12:36:58+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37343.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce522e9ee10e5281c5fa456eb28fccf67ada1eee",
+          "message": "misc/update (#2156)",
+          "timestamp": "2025-01-28T04:34:11+08:00",
+          "tree_id": "2cee5456a21d5016c66bec261999f581844be85e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ce522e9ee10e5281c5fa456eb28fccf67ada1eee"
+        },
+        "date": 1738010695641,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37343,
             "unit": "KiB"
           }
         ]
