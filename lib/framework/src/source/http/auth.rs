@@ -4,15 +4,17 @@ use http::header::AUTHORIZATION;
 use http::{HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
 
+use crate::config::SecretString;
+
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct HttpSourceAuthConfig {
-    /// The basic authentication user name.
+    /// The basic authentication username.
     #[configurable(required)]
     pub username: String,
 
     /// The basic authentication password.
     #[configurable(required)]
-    pub password: String,
+    pub password: SecretString,
 }
 
 impl TryFrom<Option<&HttpSourceAuthConfig>> for HttpSourceAuth {

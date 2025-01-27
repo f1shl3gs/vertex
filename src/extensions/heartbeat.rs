@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 use std::fmt::Debug;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
-use std::ops::Deref;
 use std::sync::LazyLock;
 use std::time::Duration;
 
@@ -15,7 +14,7 @@ use framework::tls::TlsConfig;
 use framework::{Extension, ShutdownSignal};
 use http::Request;
 use http_body_util::Full;
-use parking_lot::Mutex;
+use parking_lot::RwLock;
 use serde::Serialize;
 
 static UUID: LazyLock<String> = LazyLock::new(|| uuid::Uuid::new_v4().to_string());
@@ -46,7 +45,7 @@ pub struct Config {
 #[typetag::serde(name = "heartbeat")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
-        let mut status = STATUS.lock();
+        let mut status = STATUS.write();
 
         status.uuid = match std::fs::read_to_string("/etc/machine-id") {
             Ok(mut content) => {
@@ -83,7 +82,7 @@ struct Resource {
     port: u16,
 }
 
-#[derive(Default, Debug, Serialize)]
+#[derive(Debug, Serialize)]
 struct Status {
     uuid: String,
     hostname: String,
@@ -101,7 +100,25 @@ struct Status {
     resources: Vec<Resource>,
 }
 
-static STATUS: LazyLock<Mutex<Status>> = LazyLock::new(Default::default);
+impl Status {
+    pub const fn new() -> Self {
+        Self {
+            uuid: String::new(),
+            hostname: String::new(),
+            version: String::new(),
+            address: String::new(),
+            lease: String::new(),
+            os: String::new(),
+            uptime: String::new(),
+            tags: BTreeMap::new(),
+            #[cfg(unix)]
+            kernel: String::new(),
+            resources: Vec::new(),
+        }
+    }
+}
+
+static STATUS: RwLock<Status> = RwLock::new(Status::new());
 
 pub fn report_config(config: &framework::config::Config) {
     let mut resources = vec![];
@@ -145,7 +162,7 @@ pub fn report_config(config: &framework::config::Config) {
         }));
     }
 
-    STATUS.lock().resources = resources;
+    STATUS.write().resources = resources;
 }
 
 async fn run(
@@ -162,7 +179,7 @@ async fn run(
             _ = ticker.tick() => {}
         }
 
-        let data = serde_json::to_vec(STATUS.lock().deref())
+        let data = serde_json::to_vec(&STATUS.read().resources)
             .expect("status serialize should always success");
 
         let req = Request::post(&endpoint.uri)
