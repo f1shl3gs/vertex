@@ -37,7 +37,7 @@ impl Provider for Glob {
             .iter()
             .flat_map(|include| {
                 glob::glob(include.as_str())
-                    .expect("failed to read flob pattern")
+                    .expect("failed to read glob pattern")
                     .flat_map(|result| result.ok())
             })
             .filter(|candidate: &PathBuf| -> bool {
@@ -46,6 +46,8 @@ impl Provider for Glob {
                     pattern.matches(s)
                 })
             })
+            // only files should be returned
+            .filter(|path| path.is_file())
             .collect()
     }
 }

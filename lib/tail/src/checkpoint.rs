@@ -32,6 +32,7 @@ impl TryFrom<&PathBuf> for Fingerprint {
 
     fn try_from(path: &PathBuf) -> Result<Self, Self::Error> {
         let metadata = path.metadata()?;
+
         Ok(Self {
             dev: metadata.dev(),
             inode: metadata.ino(),

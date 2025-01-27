@@ -1,8 +1,6 @@
 mod encoding_transcode;
 
-use std::collections::HashSet;
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use bytes::Bytes;
@@ -19,8 +17,6 @@ use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 use tokio::sync::oneshot;
 use value::{owned_value_path, OwnedValuePath, Value};
-
-const POISONED_FAILED_LOCK: &str = "Poisoned lock on failed files set";
 
 /// File position to use when reading a new file.
 #[derive(Configurable, Debug, Deserialize, Serialize, Default)]
@@ -132,7 +128,7 @@ const fn default_ignore_older_than() -> Option<Duration> {
 }
 
 const fn default_glob_interval() -> Duration {
-    Duration::from_secs(3)
+    Duration::from_secs(1)
 }
 
 const fn default_max_read_bytes() -> usize {
@@ -213,14 +209,6 @@ fn tail_source(
         key
     });
 
-    // The `failed_files` set contains `Fingerprint`s, provided by
-    // the file server, of all files that have received a negative
-    // acknowledgements. This set is shared between the finalizer task,
-    // which both holds back checkpointer updates if an identifier is
-    // present and adds entries on negative acknowledgements, and the
-    // main file server handling task, which holds back further events
-    // from files in the set.
-    let failed_files: Arc<Mutex<HashSet<Fingerprint>>> = Default::default();
     let (finalizer, shutdown_checkpointer) = if acknowledgements {
         // The shutdown sent in to the finalizer is the global
         // shutdown handle used to tell it to stop accepting new batch
@@ -233,24 +221,10 @@ fn tail_source(
         // all the acks have come in.
         let (send_shutdown, shutdown2) = oneshot::channel::<()>();
         let checkpoints = checkpointer.view();
-        let failed_files = Arc::clone(&failed_files);
         tokio::spawn(async move {
             while let Some((status, entry)) = ack_stream.next().await {
-                // Don't update the checkpointer on file streams after failed acks
-                let mut failed_files = failed_files.lock().expect(POISONED_FAILED_LOCK);
-
-                // Hold back updates for failed files
-                if !failed_files.contains(&entry.fingerprint) {
-                    if status == BatchStatus::Delivered {
-                        checkpoints.update(entry.fingerprint, entry.offset);
-                    } else {
-                        error!(
-                            message =
-                                "Event received a negative acknowledgment, file has been stopped."
-                        );
-
-                        failed_files.insert(entry.fingerprint);
-                    }
+                if status == BatchStatus::Delivered {
+                    checkpoints.update(entry.fingerprint, entry.offset);
                 }
             }
 
@@ -272,6 +246,7 @@ fn tail_source(
 
     let harvester = Harvester {
         provider,
+        scan_minimum_cooldown: config.glob_interval,
         read_from,
         max_read_bytes: config.max_read_bytes,
         handle: tokio::runtime::Handle::current(),
@@ -281,7 +256,12 @@ fn tail_source(
     };
 
     Ok(Box::pin(async move {
-        info!(message = "Starting harvest files", ?include, ?exclude);
+        info!(
+            message = "Starting harvest files",
+            ?include,
+            ?exclude,
+            acknowledgements
+        );
 
         let mut encoding_decoder = charset.map(Decoder::new);
 
@@ -291,24 +271,14 @@ fn tail_source(
             .map(futures::stream::iter)
             .flatten()
             .map(move |mut line| {
-                let failed = failed_files
-                    .lock()
-                    .expect(POISONED_FAILED_LOCK)
-                    .contains(&line.fingerprint);
+                // transcode each line from the file's encoding charset to utf8
+                line.text = match encoding_decoder.as_mut() {
+                    Some(decoder) => decoder.decode_to_utf8(line.text),
+                    None => line.text,
+                };
 
-                // Drop the incoming data if the file received a negative acknowledgement.
-                (!failed).then(|| {
-                    // transcode each line from the file's encoding charset to utf8
-                    line.text = match encoding_decoder.as_mut() {
-                        Some(decoder) => decoder.decode_to_utf8(line.text),
-                        None => line.text,
-                    };
-
-                    line
-                })
-            })
-            .map(futures::stream::iter)
-            .flatten();
+                line
+            });
 
         let messages: Box<dyn Stream<Item = Line> + Send + Unpin> =
             if let Some(ref multiline_config) = multiline {
@@ -424,7 +394,20 @@ fn tail_source(
             log
         });
 
-        tokio::spawn(async move { output.send_stream(&mut messages).await });
+        tokio::spawn(async move {
+            match output.send_stream(&mut messages).await {
+                Ok(_) => {
+                    debug!(message = "finish sending");
+                }
+                Err(_) => {
+                    error!(
+                        message = "failed to send logs",
+                        events = messages.size_hint().0,
+                        internal_log_rate_limit = true,
+                    )
+                }
+            }
+        });
 
         tokio::task::spawn_blocking(move || {
             let result = harvester.run(tx, shutdown, shutdown_checkpointer, checkpointer);
@@ -451,7 +434,7 @@ mod tests {
     use std::io::Write;
 
     use encoding_rs::UTF_16LE;
-    use event::log::{path, Value};
+    use event::log::Value;
     use event::EventStatus;
     use framework::{Pipeline, ShutdownSignal};
     use multiline::Mode;
@@ -509,27 +492,11 @@ mod tests {
         };
 
         let rx = rx
-            .filter_map(|item| async { item.into_logs() })
-            .flat_map(|logs| futures::stream::iter(logs.into_iter()));
+            .filter_map(|events| async move { events.into_logs() })
+            .flat_map(futures::stream::iter);
 
         let (trigger_shutdown, shutdown, shutdown_done) = ShutdownSignal::new_wired();
         let acks = !matches!(acking_mode, AckingMode::No);
-
-        // Run the collector concurrent to the file source, to execute finalizers.
-        let collector = if acking_mode == AckingMode::Unfinalized {
-            tokio::spawn(
-                rx.take_until(sleep(Duration::from_secs(5)))
-                    .collect::<Vec<_>>(),
-            )
-        } else {
-            tokio::spawn(async {
-                timeout(Duration::from_secs(5), rx.collect::<Vec<_>>())
-                    .await
-                    .expect(
-                        "Unclosed channel: may indicate harvester could not shutdown gracefully.",
-                    )
-            })
-        };
 
         tokio::spawn(tail_source(config, data_dir, shutdown, tx, acks).unwrap());
 
@@ -537,11 +504,21 @@ mod tests {
 
         drop(trigger_shutdown);
 
+        let result = if acking_mode == AckingMode::Unfinalized {
+            rx.take_until(sleep(Duration::from_secs(5)))
+                .collect::<Vec<_>>()
+                .await
+        } else {
+            timeout(Duration::from_secs(5), rx.collect::<Vec<_>>())
+                .await
+                .expect("Unclosed channel: my indicate file source could not shutdown gracefully")
+        };
+
         if wait_shutdown {
             shutdown_done.await;
         }
 
-        collector.await.expect("Collector task failed")
+        result
     }
 
     async fn sleep_500_millis() {
@@ -635,8 +612,9 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore = "This test ignored for now, it need to be test and pass"]
     async fn file_rotate() {
+        trace_init();
+
         let n = 5;
 
         let dir = temp_dir();
@@ -646,7 +624,7 @@ mod tests {
         };
 
         let path = dir.join("file");
-        let archive_path = dir.join("file");
+        let archive_path = dir.join("file.bak");
         let received = run_tail(&config, dir.to_path_buf(), false, AckingMode::No, async {
             let mut file = File::create(&path).unwrap();
 
@@ -682,13 +660,13 @@ mod tests {
             assert_eq!(
                 log.metadata_mut()
                     .value_mut()
-                    .get(path!("filename"))
+                    .get("tail.file")
                     .unwrap()
-                    .to_string(),
+                    .to_string_lossy(),
                 path.to_str().unwrap()
             );
 
-            let line = log.get(".").unwrap().to_string_lossy();
+            let line = log["."].to_string_lossy();
             if pre_rot {
                 assert_eq!(line, format!("prerot {}", i));
             } else {
