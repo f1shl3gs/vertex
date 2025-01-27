@@ -432,7 +432,7 @@ md-5 = { version = "0.10.6", default-features = false, optional = true }
 parking_lot = { version = "0.12.3", default-features = false, optional = true }
 percent-encoding = { version = "2.3.1", default-features = false }
 quick-xml = { version = "0.37.2", default-features = false, features = ["serialize"], optional = true }
-rand = { version = "0.8.5", default-features = false }
+rand = { version = "0.9.0", default-features = false }
 regex = { version = "1.11.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "5f23b85b71dfeedebad5e5843ff1c29477d091c6", optional = true, features = ["transport-tls"] }
 snap = { version = "1.1.1", default-features = false, optional = true }
