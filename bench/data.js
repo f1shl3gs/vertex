@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738119325871,
+  "lastUpdate": 1738119343866,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a862ab545a5676526a742373a8308f7d32bb1349",
-          "message": "chore(deps): bump proptest from 1.5.0 to 1.6.0 (#2048)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.5.0 to 1.6.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-16T18:42:59+08:00",
-          "tree_id": "299c2d30aa745e5a7fd0f3641553266b7eb5bc27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a862ab545a5676526a742373a8308f7d32bb1349"
-        },
-        "date": 1734345934762,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.577,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 140.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 305.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 611.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0ce48c47826fb67f755470605757ca492cebc292",
           "message": "chore(deps): bump crossbeam-utils from 0.8.20 to 0.8.21 (#2046)\n\nBumps [crossbeam-utils](https://github.com/crossbeam-rs/crossbeam) from 0.8.20 to 0.8.21.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-utils-0.8.20...crossbeam-utils-0.8.21)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-utils\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-16T19:25:42+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 583.13,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9",
+          "message": "chore(deps): bump serde_json from 1.0.137 to 1.0.138 (#2161)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.137 to 1.0.138.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.137...v1.0.138)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-29T10:52:52+08:00",
+          "tree_id": "bf7b717630c94fc8ab03d1139313e0c9c1ebe702",
+          "url": "https://github.com/f1shl3gs/vertex/commit/64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9"
+        },
+        "date": 1738119325603,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.632,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 137,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 310.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 650.47,
             "unit": "ns/op"
           }
         ]
