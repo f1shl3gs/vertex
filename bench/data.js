@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738119753532,
+  "lastUpdate": 1738119768411,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a862ab545a5676526a742373a8308f7d32bb1349",
-          "message": "chore(deps): bump proptest from 1.5.0 to 1.6.0 (#2048)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.5.0 to 1.6.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-16T18:42:59+08:00",
-          "tree_id": "299c2d30aa745e5a7fd0f3641553266b7eb5bc27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a862ab545a5676526a742373a8308f7d32bb1349"
-        },
-        "date": 1734346414514,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 529,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35546.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0ce48c47826fb67f755470605757ca492cebc292",
           "message": "chore(deps): bump crossbeam-utils from 0.8.20 to 0.8.21 (#2046)\n\nBumps [crossbeam-utils](https://github.com/crossbeam-rs/crossbeam) from 0.8.20 to 0.8.21.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-utils-0.8.20...crossbeam-utils-0.8.21)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-utils\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-16T19:25:42+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37429.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6bfda0394a96549316ff943546b523980f80d7ca",
+          "message": "chore(deps): bump hyper from 1.5.2 to 1.6.0 (#2160)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.2 to 1.6.0.\n- [Release notes](https://github.com/hyperium/hyper/releases)\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.2...v1.6.0)\n\n---\nupdated-dependencies:\n- dependency-name: hyper\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-29T10:51:53+08:00",
+          "tree_id": "841fb744cfce9c56d2b3e9587d206f6456af3a4f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6bfda0394a96549316ff943546b523980f80d7ca"
+        },
+        "date": 1738119750055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 551,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37433.5,
             "unit": "KiB"
           }
         ]
