@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738119322667,
+  "lastUpdate": 1738119325871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "809ba3244dd093fdddd361bde68a17636b74d80b",
-          "message": "chore(deps): bump thiserror from 2.0.6 to 2.0.7 (#2045)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.6 to 2.0.7.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.6...2.0.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-14T12:36:58+08:00",
-          "tree_id": "2213df2d248d233e2d931e194a46fff7e8f2a5b2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/809ba3244dd093fdddd361bde68a17636b74d80b"
-        },
-        "date": 1734151215205,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 201.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 19997,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 102010,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 201080,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 129.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 12865,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 64864,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 129380,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e4bf4e7a195c5d5768a7d2a6d3b8675797afda12",
           "message": "chore(deps): bump crossbeam-queue from 0.3.11 to 0.3.12 (#2047)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.11 to 0.3.12.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.11...crossbeam-queue-0.3.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-16T18:42:45+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 125600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6bfda0394a96549316ff943546b523980f80d7ca",
+          "message": "chore(deps): bump hyper from 1.5.2 to 1.6.0 (#2160)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.2 to 1.6.0.\n- [Release notes](https://github.com/hyperium/hyper/releases)\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.2...v1.6.0)\n\n---\nupdated-dependencies:\n- dependency-name: hyper\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-29T10:51:53+08:00",
+          "tree_id": "841fb744cfce9c56d2b3e9587d206f6456af3a4f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6bfda0394a96549316ff943546b523980f80d7ca"
+        },
+        "date": 1738119307559,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 200.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 20496,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 99715,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 200540,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 128.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12778,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 64509,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 125770,
             "unit": "ns/op"
           }
         ]
