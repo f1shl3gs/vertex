@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738119279487,
+  "lastUpdate": 1738119284315,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "809ba3244dd093fdddd361bde68a17636b74d80b",
-          "message": "chore(deps): bump thiserror from 2.0.6 to 2.0.7 (#2045)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.6 to 2.0.7.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.6...2.0.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-14T12:36:58+08:00",
-          "tree_id": "2213df2d248d233e2d931e194a46fff7e8f2a5b2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/809ba3244dd093fdddd361bde68a17636b74d80b"
-        },
-        "date": 1734151175897,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.638,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 140.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 311.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 632.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e4bf4e7a195c5d5768a7d2a6d3b8675797afda12",
           "message": "chore(deps): bump crossbeam-queue from 0.3.11 to 0.3.12 (#2047)\n\nBumps [crossbeam-queue](https://github.com/crossbeam-rs/crossbeam) from 0.3.11 to 0.3.12.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-queue-0.3.11...crossbeam-queue-0.3.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-queue\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-16T18:42:45+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 628.31,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6bfda0394a96549316ff943546b523980f80d7ca",
+          "message": "chore(deps): bump hyper from 1.5.2 to 1.6.0 (#2160)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.2 to 1.6.0.\n- [Release notes](https://github.com/hyperium/hyper/releases)\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.2...v1.6.0)\n\n---\nupdated-dependencies:\n- dependency-name: hyper\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-29T10:51:53+08:00",
+          "tree_id": "841fb744cfce9c56d2b3e9587d206f6456af3a4f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6bfda0394a96549316ff943546b523980f80d7ca"
+        },
+        "date": 1738119265932,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.497,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 132.39,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 307.28,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 634.6,
             "unit": "ns/op"
           }
         ]
