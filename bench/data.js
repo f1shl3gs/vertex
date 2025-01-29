@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738119287398,
+  "lastUpdate": 1738119312716,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a862ab545a5676526a742373a8308f7d32bb1349",
-          "message": "chore(deps): bump proptest from 1.5.0 to 1.6.0 (#2048)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.5.0 to 1.6.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-16T18:42:59+08:00",
-          "tree_id": "299c2d30aa745e5a7fd0f3641553266b7eb5bc27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a862ab545a5676526a742373a8308f7d32bb1349"
-        },
-        "date": 1734345904189,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 533610,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 539670,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9",
+          "message": "chore(deps): bump serde_json from 1.0.137 to 1.0.138 (#2161)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.137 to 1.0.138.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.137...v1.0.138)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-29T10:52:52+08:00",
+          "tree_id": "bf7b717630c94fc8ab03d1139313e0c9c1ebe702",
+          "url": "https://github.com/f1shl3gs/vertex/commit/64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9"
+        },
+        "date": 1738119294350,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527180,
             "unit": "ns/op"
           }
         ]
