@@ -15,7 +15,7 @@ hostname = { path = "../hostname" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "duration"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
 regex = { version = "1.11.1", default-features = false, features = ["unicode"] }
 serde = { version = "1.0.217", default-features = false }
-serde_json = { version = "1.0.137", default-features = false }
+serde_json = { version = "1.0.138", default-features = false }
 twox-hash = { version = "2.1.0", default-features = false, features = ["xxhash3_64"] }
 url = { version = "2.5.4", default-features = false }
 value = { path = "../value", features = ["string_path"] }
