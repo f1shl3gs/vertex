@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738119833180,
+  "lastUpdate": 1738119840458,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a862ab545a5676526a742373a8308f7d32bb1349",
-          "message": "chore(deps): bump proptest from 1.5.0 to 1.6.0 (#2048)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.5.0 to 1.6.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-16T18:42:59+08:00",
-          "tree_id": "299c2d30aa745e5a7fd0f3641553266b7eb5bc27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a862ab545a5676526a742373a8308f7d32bb1349"
-        },
-        "date": 1734346379188,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27692000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 706520,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.704,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0ce48c47826fb67f755470605757ca492cebc292",
           "message": "chore(deps): bump crossbeam-utils from 0.8.20 to 0.8.21 (#2046)\n\nBumps [crossbeam-utils](https://github.com/crossbeam-rs/crossbeam) from 0.8.20 to 0.8.21.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-utils-0.8.20...crossbeam-utils-0.8.21)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-utils\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2024-12-16T19:25:42+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.636,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3b72c4f72fc744d9e2dc358750a07b43a6f8ca8e",
+          "message": "chore(deps): bump lru from 0.12.5 to 0.13.0 (#2162)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.5 to 0.13.0.\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.5...0.13.0)\n\n---\nupdated-dependencies:\n- dependency-name: lru\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-29T10:52:18+08:00",
+          "tree_id": "48b2b85f920ec3c95eacd182e2d96d0c192e831d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3b72c4f72fc744d9e2dc358750a07b43a6f8ca8e"
+        },
+        "date": 1738119820492,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29168000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 721130,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.932,
             "unit": "ns/op"
           }
         ]
