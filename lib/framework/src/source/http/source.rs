@@ -1,10 +1,8 @@
-use std::io::Read;
 use std::net::SocketAddr;
 use std::sync::Arc;
 
-use bytes::{Buf, Bytes};
+use bytes::Bytes;
 use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
-use flate2::read::{MultiGzDecoder, ZlibDecoder};
 use http::header::{AUTHORIZATION, CONTENT_ENCODING};
 use http::{HeaderMap, Method, Request, Response, StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
@@ -13,7 +11,7 @@ use hyper::service::service_fn;
 
 use super::auth::HttpSourceAuth;
 use super::error::ErrorMessage;
-use super::HttpSourceAuthConfig;
+use super::{decode, HttpSourceAuthConfig};
 use crate::config::SourceContext;
 use crate::pipeline::Pipeline;
 use crate::tls::{MaybeTlsListener, TlsConfig};
@@ -27,46 +25,6 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         peer_addr: &SocketAddr,
         body: Bytes,
     ) -> Result<Events, ErrorMessage>;
-
-    fn decompress(&self, encodings: Option<&str>, mut body: Bytes) -> Result<Bytes, ErrorMessage> {
-        if let Some(encodings) = encodings {
-            for encoding in encodings.rsplit(',').map(str::trim) {
-                body = match encoding {
-                    "identity" => body,
-                    "gzip" => {
-                        let mut decoded = Vec::new();
-                        MultiGzDecoder::new(body.reader())
-                            .read_to_end(&mut decoded)
-                            .map_err(|err| handle_decode_error(encoding, err))?;
-                        decoded.into()
-                    }
-                    "deflate" => {
-                        let mut decoded = Vec::new();
-                        ZlibDecoder::new(body.reader())
-                            .read_to_end(&mut decoded)
-                            .map_err(|err| handle_decode_error(encoding, err))?;
-
-                        decoded.into()
-                    }
-                    "snappy" => snap::raw::Decoder::new()
-                        .decompress_vec(&body)
-                        .map_err(|err| handle_decode_error(encoding, err))?
-                        .into(),
-                    "zstd" => zstd::decode_all(body.reader())
-                        .map_err(|err| handle_decode_error(encoding, err))?
-                        .into(),
-                    _ => {
-                        return Err(ErrorMessage::new(
-                            StatusCode::UNSUPPORTED_MEDIA_TYPE,
-                            format!("unsupported encoding {}", encoding),
-                        ))
-                    }
-                }
-            }
-        }
-
-        Ok(body)
-    }
 
     fn run(
         self,
@@ -137,7 +95,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
                     .map(|v| v.to_str())
                     .transpose()
                 {
-                    match builder.decompress(encoding, body) {
+                    match decode(encoding, body) {
                         Ok(body) => body,
                         Err(err) => {
                             return Ok(err.into());
@@ -175,20 +133,6 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
                 .map_err(|_err| ())
         }))
     }
-}
-
-fn handle_decode_error(encoding: &str, err: impl std::error::Error) -> ErrorMessage {
-    warn!(
-        message = "Failed decompressing payload",
-        %err,
-        encoding,
-        internal_log_rate_secs = 30
-    );
-
-    ErrorMessage::new(
-        StatusCode::UNPROCESSABLE_ENTITY,
-        format!("Failed decompressing payload with {} decoder.", encoding),
-    )
 }
 
 struct Inner {

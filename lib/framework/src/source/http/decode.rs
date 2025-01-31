@@ -45,14 +45,15 @@ pub fn decode(encodings: Option<&str>, mut body: Bytes) -> Result<Bytes, ErrorMe
 
 #[inline]
 fn handle_decode_error(encoding: &str, err: impl std::error::Error) -> ErrorMessage {
-    // TODO: metrics
-    // counter!("http_decompress_error_total", 1, "encoding" => encoding.to_string());
+    warn!(
+        message = "Failed decompressing payload",
+        %err,
+        encoding,
+        internal_log_rate_secs = 30
+    );
 
     ErrorMessage::new(
         StatusCode::UNPROCESSABLE_ENTITY,
-        format!(
-            "Failed decompressing payload with {} decoder, err: {}.",
-            encoding, err
-        ),
+        format!("Failed decompressing payload with {} decoder.", encoding),
     )
 }
