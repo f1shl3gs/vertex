@@ -1,10 +1,8 @@
+use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering};
 use std::sync::Arc;
-use std::{
-    fmt, io, mem,
-    path::PathBuf,
-    sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering},
-    time::Instant,
-};
+use std::time::Instant;
+use std::{fmt, io, mem};
 
 use crossbeam_utils::atomic::AtomicCell;
 use finalize::OrderedFinalizer;
@@ -42,10 +40,8 @@ pub enum LedgerLoadCreateError {
     /// Advisory locking is used to prevent other Vertex processes from concurrently opening the
     /// same buffer, but bear in mind that this does not prevent other processes or users from
     /// modifying the ledger file in a way that could cause undefined behavior during buffer operation.
-    #[error(
-        "failed to lock buffer.lock; is another Vertex process running and using this buffer?"
-    )]
-    LedgerLockAlreadyHeld,
+    #[error("failed to lock {path:?}; is another Vertex process running and using this buffer?")]
+    LedgerLockAlreadyHeld { path: PathBuf },
 
     /// The ledger state was unable to be deserialized.
     ///
@@ -591,7 +587,9 @@ where
         let ledger_lock_path = config.data_dir.join("buffer.lock");
         let mut ledger_lock = LockFile::open(&ledger_lock_path)?;
         if !ledger_lock.try_lock()? {
-            return Err(LedgerLoadCreateError::LedgerLockAlreadyHeld);
+            return Err(LedgerLoadCreateError::LedgerLockAlreadyHeld {
+                path: ledger_lock_path,
+            });
         }
 
         // Open the ledger file, which may involve creating it if it doesn't yet exist.

@@ -1,11 +1,7 @@
-use std::{
-    cmp, fmt,
-    pin::Pin,
-    sync::{
-        atomic::{AtomicUsize, Ordering::SeqCst},
-        Arc,
-    },
-};
+use std::pin::Pin;
+use std::sync::atomic::{AtomicUsize, Ordering::SeqCst};
+use std::sync::Arc;
+use std::{cmp, fmt};
 
 use async_stream::stream;
 use crossbeam_queue::ArrayQueue;

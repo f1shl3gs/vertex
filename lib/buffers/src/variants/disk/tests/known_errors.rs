@@ -1,7 +1,5 @@
-use std::{
-    io::{self, SeekFrom},
-    sync::atomic::{AtomicU32, Ordering},
-};
+use std::io::{self, SeekFrom};
+use std::sync::atomic::{AtomicU32, Ordering};
 
 use bytes::{Buf, BufMut};
 use bytesize::ByteSizeOf;

@@ -1,8 +1,6 @@
-use std::{
-    mem,
-    pin::Pin,
-    task::{Context, Poll},
-};
+use std::mem;
+use std::pin::Pin;
+use std::task::{Context, Poll};
 
 use futures::{ready, Stream};
 use tokio::select;
