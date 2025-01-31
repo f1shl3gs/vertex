@@ -8,6 +8,7 @@ use rand::Rng;
 
 pub fn random_string(len: usize) -> String {
     rand::rng()
+        .reseed()
         .sample_iter(&Alphanumeric)
         .take(len)
         .map(char::from)
