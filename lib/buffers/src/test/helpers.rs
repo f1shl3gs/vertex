@@ -1,4 +1,5 @@
 use std::future::Future;
+use std::io::ErrorKind;
 use std::path::Path;
 use std::str::FromStr;
 use std::sync::atomic::{AtomicU32, Ordering};
@@ -61,6 +62,16 @@ where
 
         if let Ok(_n) = std::fs::create_dir_all(&path) {
             break path;
+        }
+
+        match std::fs::create_dir(&path) {
+            Ok(()) => break path,
+            Err(err) if err.kind() == ErrorKind::AlreadyExists => {
+                // dir already exists, just retry
+            },
+            Err(err) => {
+                panic!("Failed to create temp dir {:?}: {}", path, err);
+            }
         }
     };
 
