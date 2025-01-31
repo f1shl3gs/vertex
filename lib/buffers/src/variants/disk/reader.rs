@@ -1,29 +1,26 @@
-use std::{
-    cmp, fmt,
-    io::{self, ErrorKind},
-    marker::PhantomData,
-    num::NonZeroU64,
-    path::PathBuf,
-    sync::Arc,
-};
+use std::io::{self, ErrorKind};
+use std::marker::PhantomData;
+use std::num::NonZeroU64;
+use std::path::PathBuf;
+use std::sync::Arc;
+use std::{cmp, fmt};
 
 use crc32fast::Hasher;
 use finalize::{BatchNotifier, OrderedFinalizer};
 use thiserror::Error;
 use tokio::io::{AsyncBufReadExt, AsyncRead, BufReader};
 
-use super::{
-    common::create_crc32c_hasher,
-    ledger::Ledger,
-    record::{validate_record_archive, ArchivedRecord, RecordStatus},
-    Filesystem,
+use super::common::create_crc32c_hasher;
+use super::ledger::Ledger;
+use super::record::{validate_record_archive, ArchivedRecord, RecordStatus};
+use super::Filesystem;
+
+use crate::encoding::{AsMetadata, Encodable};
+use crate::topology::acks::{
+    EligibleMarker, EligibleMarkerLength, MarkerError, OrderedAcknowledgements,
 };
-use crate::{
-    encoding::{AsMetadata, Encodable},
-    topology::acks::{EligibleMarker, EligibleMarkerLength, MarkerError, OrderedAcknowledgements},
-    variants::disk::io::AsyncFile,
-    Bufferable,
-};
+use crate::variants::disk::io::AsyncFile;
+use crate::Bufferable;
 
 pub(super) struct ReadToken {
     record_id: u64,

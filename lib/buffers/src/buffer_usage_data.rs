@@ -1,11 +1,7 @@
 use std::borrow::Cow;
-use std::{
-    sync::{
-        atomic::{AtomicU64, Ordering},
-        Arc,
-    },
-    time::Duration,
-};
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::Arc;
+use std::time::Duration;
 
 use tokio::time::interval;
 use tracing::{Instrument, Span};

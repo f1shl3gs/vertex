@@ -1,7 +1,5 @@
-use std::{
-    num::{NonZeroU16, NonZeroU64, NonZeroUsize},
-    path::PathBuf,
-};
+use std::num::{NonZeroU16, NonZeroU64, NonZeroUsize};
+use std::path::PathBuf;
 
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};

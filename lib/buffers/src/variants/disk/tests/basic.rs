@@ -89,8 +89,12 @@ async fn reader_exits_cleanly_when_writer_done_and_in_flight_acks() {
             assert_buffer_records!(ledger, 1);
 
             // And read that single value.
-            let first_read = reader.next().await.expect("read should not fail");
-            assert_eq!(first_read, Some(SizedRecord::new(32)));
+            let first_read = reader
+                .next()
+                .await
+                .expect("read should not fail")
+                .expect("read should produce a record");
+            assert_eq!(first_read, SizedRecord::new(32));
             assert_buffer_records!(ledger, 1);
 
             // Now, we haven't acknowledged that read yet, so our next read should see the writer as
@@ -122,7 +126,7 @@ async fn reader_exits_cleanly_when_writer_done_and_in_flight_acks() {
             }
 
             // Now acknowledge the first read, which should wake up our blocked read.
-            acknowledge(first_read.unwrap()).await;
+            acknowledge(first_read).await;
 
             // Our blocked read should be woken up, and when we poll it, it should be also be ready,
             // albeit with a return value of `None`... because the writer is closed, and we read all

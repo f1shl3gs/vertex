@@ -1,12 +1,8 @@
-use std::{
-    collections::{HashMap, VecDeque},
-    io::Cursor,
-    sync::{
-        atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering},
-        Arc,
-    },
-    task::Poll,
-};
+use std::collections::{HashMap, VecDeque};
+use std::io::Cursor;
+use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering};
+use std::sync::Arc;
+use std::task::Poll;
 
 use crossbeam_queue::SegQueue;
 use parking_lot::Mutex;

@@ -1,7 +1,5 @@
-use std::{
-    sync::Arc,
-    time::{Duration, Instant},
-};
+use std::sync::Arc;
+use std::time::{Duration, Instant};
 
 use tokio::{pin, sync::Barrier, time::sleep};
 

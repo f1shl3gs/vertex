@@ -1,11 +1,9 @@
-use std::{
-    cmp::Ordering,
-    fmt,
-    io::{self, ErrorKind},
-    marker::PhantomData,
-    num::NonZeroUsize,
-    sync::Arc,
-};
+use std::cmp::Ordering;
+use std::fmt;
+use std::io::{self, ErrorKind};
+use std::marker::PhantomData;
+use std::num::NonZeroUsize;
+use std::sync::Arc;
 
 use bytes::BufMut;
 use crc32fast::Hasher;

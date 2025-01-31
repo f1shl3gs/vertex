@@ -1,11 +1,9 @@
 mod common;
 
-use std::{
-    mem,
-    num::{NonZeroU64, NonZeroUsize},
-    path::PathBuf,
-    time::Duration,
-};
+use std::mem;
+use std::num::{NonZeroU64, NonZeroUsize};
+use std::path::PathBuf;
+use std::time::Duration;
 
 use buffers::{BufferType, WhenFull};
 use common::{init_instrumentation, war_measurement, wtr_measurement};

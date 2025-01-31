@@ -1,7 +1,5 @@
-use std::{
-    path::{Path, PathBuf},
-    time::Duration,
-};
+use std::path::{Path, PathBuf};
+use std::time::Duration;
 
 use crc32fast::Hasher;
 use thiserror::Error;
@@ -48,7 +46,7 @@ pub(crate) const fn align16(amount: usize) -> usize {
         "`amount` must be less than `MAX_ALIGNABLE_AMOUNT`"
     );
 
-    amount.div_ceil(SERIALIZER_ALIGNMENT)
+    amount.div_ceil(SERIALIZER_ALIGNMENT) * SERIALIZER_ALIGNMENT
 }
 
 // We specifically limit ourselves to 0-31 for file IDs in test, because it lets us more quickly

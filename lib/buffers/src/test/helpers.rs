@@ -1,10 +1,11 @@
 use std::future::Future;
+use std::io::ErrorKind;
 use std::path::Path;
 use std::str::FromStr;
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::LazyLock;
 
 use event::{EventStatus, Finalizable};
-use testify::temp_dir;
 use tracing_fluent_assertions::{AssertionRegistry, AssertionsLayer};
 use tracing_subscriber::{filter::LevelFilter, layer::SubscriberExt, Layer, Registry};
 
@@ -42,12 +43,39 @@ macro_rules! await_timeout {
     }};
 }
 
+pub static INTERNAL_COUNTER: AtomicU32 = AtomicU32::new(0);
+
 pub async fn with_temp_dir<F, Fut, V>(f: F) -> V
 where
     F: FnOnce(&Path) -> Fut,
     Fut: Future<Output = V>,
 {
-    f(temp_dir().as_path()).await
+    let prefix = "vertex-buffers";
+
+    let tmp_dir = loop {
+        let path = std::env::temp_dir().join(format!(
+            "{}/{:x}-{:x}",
+            prefix,
+            std::process::id(),
+            INTERNAL_COUNTER.fetch_add(1, Ordering::AcqRel)
+        ));
+
+        if let Ok(_n) = std::fs::create_dir_all(&path) {
+            break path;
+        }
+
+        match std::fs::create_dir(&path) {
+            Ok(()) => break path,
+            Err(err) if err.kind() == ErrorKind::AlreadyExists => {
+                // dir already exists, just retry
+            }
+            Err(err) => {
+                panic!("Failed to create temp dir {:?}: {}", path, err);
+            }
+        }
+    };
+
+    f(tmp_dir.as_path()).await
 }
 
 pub fn install_tracing_helpers() -> AssertionRegistry {
