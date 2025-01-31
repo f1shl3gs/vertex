@@ -68,7 +68,7 @@ where
             Ok(()) => break path,
             Err(err) if err.kind() == ErrorKind::AlreadyExists => {
                 // dir already exists, just retry
-            },
+            }
             Err(err) => {
                 panic!("Failed to create temp dir {:?}: {}", path, err);
             }
