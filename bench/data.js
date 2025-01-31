@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738319416513,
+  "lastUpdate": 1738319433741,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2d60b7b7efa924f7738610335b97c85bc6d44176",
-          "message": "chore(deps): bump hyper from 1.5.1 to 1.5.2 (#2049)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.1 to 1.5.2.\r\n- [Release notes](https://github.com/hyperium/hyper/releases)\r\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.1...v1.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-17T11:56:14+08:00",
-          "tree_id": "7a9bc4973a39d7c70803f600afb932ef0fec766d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2d60b7b7efa924f7738610335b97c85bc6d44176"
-        },
-        "date": 1734407935735,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.507,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 141.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 308.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 639.75,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 605.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0c21ecb6d77161411175a15dca4665d145e75fa",
+          "message": "chore(deps): bump rustls from 0.23.21 to 0.23.22 (#2163)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.21 to 0.23.22.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.21...v/0.23.22)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-31T18:27:28+08:00",
+          "tree_id": "398e437cead6a8825b90e5dd8cce4ee5cdbd1d39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e0c21ecb6d77161411175a15dca4665d145e75fa"
+        },
+        "date": 1738319415337,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.481,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 135.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 667.14,
             "unit": "ns/op"
           }
         ]
