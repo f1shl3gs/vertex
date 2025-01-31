@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738319898514,
+  "lastUpdate": 1738319899786,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8b4853e8a3193b87cd2a50ab0c1aef105d549168",
-          "message": "add sources/filestats (#2054)\n\n* add sources/filestats",
-          "timestamp": "2024-12-18T17:51:48+08:00",
-          "tree_id": "6174d84f38c994f08dbeda3d20750ab7e95ddc46",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b4853e8a3193b87cd2a50ab0c1aef105d549168"
-        },
-        "date": 1734516123636,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 521,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35730.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37433.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0c21ecb6d77161411175a15dca4665d145e75fa",
+          "message": "chore(deps): bump rustls from 0.23.21 to 0.23.22 (#2163)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.21 to 0.23.22.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.21...v/0.23.22)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-31T18:27:28+08:00",
+          "tree_id": "398e437cead6a8825b90e5dd8cce4ee5cdbd1d39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e0c21ecb6d77161411175a15dca4665d145e75fa"
+        },
+        "date": 1738319880035,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 541,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37433.6,
             "unit": "KiB"
           }
         ]
