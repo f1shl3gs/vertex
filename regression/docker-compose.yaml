@@ -3,8 +3,7 @@ services:
     image: vertex:regression
     ports:
       - 9100:9100 # prometheus exporter
-    environment:
-      VERTEX_LOG: debug,tail=debug
+      - 9091:9090 # pprof
     deploy:
       resources:
         limits:
@@ -22,7 +21,7 @@ services:
       resources:
         limits:
           cpus: 4
-          memory: 2G
+          memory: 4G # prebuild cache could be very large
     ports:
       - 9101:9101
     volumes:
