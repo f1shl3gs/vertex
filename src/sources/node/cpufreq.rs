@@ -9,15 +9,13 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::with_capacity(stats.len() * 6);
 
     for stat in stats {
-        let cpu = stat.name;
-
         if let Some(v) = stat.current_frequency {
             metrics.push(Metric::gauge_with_tags(
                 "node_cpu_frequency_hertz",
                 "Current cpu thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => cpu.clone(),
+                    Key::from_static("cpu") => stat.index,
                 ),
             ));
         }
@@ -28,7 +26,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum cpu thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => cpu.clone(),
+                    Key::from_static("cpu") => stat.index,
                 ),
             ));
         }
@@ -39,7 +37,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Maximum CPU thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => cpu.clone(),
+                    Key::from_static("cpu") => stat.index,
                 ),
             ))
         }
@@ -50,7 +48,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current scaled CPU thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => cpu.clone(),
+                    Key::from_static("cpu") => stat.index,
                 ),
             ))
         }
@@ -61,7 +59,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => cpu.clone(),
+                    Key::from_static("cpu") => stat.index,
                 ),
             ));
         }
@@ -72,7 +70,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Maximum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => cpu.clone(),
+                    Key::from_static("cpu") => stat.index,
                 ),
             ));
         }
@@ -84,7 +82,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                     "Current enabled CPU frequency governor",
                     governor == stat.governor,
                     tags!(
-                        "cpu" => cpu.clone(),
+                        "cpu" => stat.index,
                         "governor" =>  governor
                     ),
                 ))
@@ -97,7 +95,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
 #[derive(Default, Debug, PartialEq)]
 struct Stat {
-    name: String,
+    index: usize,
 
     current_frequency: Option<u64>,
     minimum_frequency: Option<u64>,
@@ -130,14 +128,17 @@ async fn get_cpu_freq_stat(sys_path: PathBuf) -> Result<Vec<Stat>, Error> {
 }
 
 async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
+    let index = root
+        .file_name()
+        .unwrap()
+        .to_string_lossy()
+        .strip_prefix("cpu")
+        .map(|x| x.parse())
+        .transpose()?
+        .unwrap_or(0);
+
     let mut stat = Stat {
-        // this looks terrible
-        name: root
-            .file_name()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .replace("cpu", ""),
+        index,
         ..Default::default()
     };
 
@@ -173,7 +174,7 @@ mod tests {
         assert_eq!(
             stats[0],
             Stat {
-                name: "0".to_string(),
+                index: 0,
                 current_frequency: None,
                 minimum_frequency: Some(800000),
                 maximum_frequency: Some(2400000),
@@ -192,7 +193,7 @@ mod tests {
         assert_eq!(
             stats[1],
             Stat {
-                name: "1".to_string(),
+                index: 1,
                 current_frequency: Some(1200195),
                 minimum_frequency: Some(1200000),
                 maximum_frequency: Some(3300000),
