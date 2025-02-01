@@ -3848,6 +3848,7 @@ dependencies = [
  "flate2",
  "futures",
  "glob",
+ "memchr",
  "quickcheck",
  "serde",
  "serde_json",
