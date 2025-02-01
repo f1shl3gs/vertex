@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738385436135,
+  "lastUpdate": 1738385437826,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "699ec34e91f29b81a5e6e74d9c6dbf8290c3b8a4",
-          "message": "chore(deps): bump hyper-rustls from 0.27.3 to 0.27.4 (#2060)\n\nBumps [hyper-rustls](https://github.com/rustls/hyper-rustls) from 0.27.3 to 0.27.4.\n- [Release notes](https://github.com/rustls/hyper-rustls/releases)\n- [Commits](https://github.com/rustls/hyper-rustls/compare/v/0.27.3...v/0.27.4)\n\n---\nupdated-dependencies:\n- dependency-name: hyper-rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-19T19:39:39+08:00",
-          "tree_id": "31131d504f6e7cabaa9f902005e35b0a9281c138",
-          "url": "https://github.com/f1shl3gs/vertex/commit/699ec34e91f29b81a5e6e74d9c6dbf8290c3b8a4"
-        },
-        "date": 1734608500545,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536830,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531130,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db",
+          "message": "chore(deps): bump async-trait from 0.1.85 to 0.1.86 (#2170)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.85 to 0.1.86.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.85...0.1.86)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-01T12:48:00+08:00",
+          "tree_id": "0f0bf8e8be0084980399afea4cf537f01888c3b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db"
+        },
+        "date": 1738385417563,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530040,
             "unit": "ns/op"
           }
         ]
