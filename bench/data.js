@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738413830102,
+  "lastUpdate": 1738414249883,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "83b78b6f5b8b85ff935211126e1d8a2c8463bebc",
-          "message": "chore(deps): bump libc from 0.2.168 to 0.2.169 (#2062)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.168 to 0.2.169.\n- [Release notes](https://github.com/rust-lang/libc/releases)\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.169/CHANGELOG.md)\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.168...0.2.169)\n\n---\nupdated-dependencies:\n- dependency-name: libc\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-19T22:46:24+08:00",
-          "tree_id": "0f9430ad758209247dc3a50b56378870c105f105",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83b78b6f5b8b85ff935211126e1d8a2c8463bebc"
-        },
-        "date": 1734620201241,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28134000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 721750,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.766,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.831,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c47e6a286174f7828e2740b905bda8496d042173",
+          "message": "change name to cpu index (#2172)",
+          "timestamp": "2025-02-01T20:40:11+08:00",
+          "tree_id": "4db6a26c0864c1467d288344dbe2624d0d9c7c5a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c47e6a286174f7828e2740b905bda8496d042173"
+        },
+        "date": 1738414231151,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28050000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 618580,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.594,
             "unit": "ns/op"
           }
         ]
