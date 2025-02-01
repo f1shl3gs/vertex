@@ -62,7 +62,7 @@ impl Elasticsearch {
                     ));
                 }
 
-                metrics.extend_from_slice(&[
+                metrics.extend([
                     Metric::sum(
                         "elasticsearch_slm_stats_retention_runs_total",
                         "Total retention runs",
@@ -110,7 +110,7 @@ impl Elasticsearch {
                         "policy" => policy.policy
                     );
 
-                    metrics.extend_from_slice(&[
+                    metrics.extend([
                         Metric::sum_with_tags(
                             "elasticsearch_slm_stats_snapshot_taken_total",
                             "Total snapshots taken",

@@ -121,7 +121,7 @@ async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError
             slabs,
             items,
         }) => {
-            metrics.extend_from_slice(&[Metric::gauge_with_tags(
+            metrics.push(Metric::gauge_with_tags(
                 "memcached_version",
                 "The version of this memcached server.",
                 1,
@@ -129,13 +129,13 @@ async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError
                     "version" => version,
                     "libevent" => libevent
                 ),
-            )]);
+            ));
 
             for op in ["get", "delete", "inc", "decr", "cas", "touch"] {
                 let hits = get_value!(stats, (op.to_owned() + "_hits").as_str());
                 let misses = get_value!(stats, (op.to_owned() + "_misses").as_str());
 
-                metrics.extend_from_slice(&[
+                metrics.extend([
                     Metric::sum_with_tags(
                         "memcached_commands_total",
                         "Total number of all requests broken down by command (get, set, etc.) and status.",
@@ -157,7 +157,7 @@ async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError
                 ])
             }
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::sum(
                     "memcached_uptime_seconds",
                     "Number of seconds since the server started.",
@@ -203,7 +203,7 @@ async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError
                 ),
             ));
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::sum(
                     "memcached_process_user_cpu_seconds_total",
                     "Accumulated user time for this process",
@@ -354,7 +354,7 @@ async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError
                     ),
                 ));
 
-                metrics.extend_from_slice(&[
+                metrics.extend([
                     Metric::gauge_with_tags(
                         "memcached_slab_chunk_size_bytes",
                         "Number of bytes allocated to each chunk within this slab class.",
@@ -423,7 +423,7 @@ async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError
             }
 
             for (slab, stats) in items {
-                metrics.extend_from_slice(&[
+                metrics.extend([
                     Metric::gauge_with_tags(
                         "memcached_slab_current_items",
                         "Number of items currently stored in this slab class",
@@ -633,7 +633,7 @@ async fn fetch_settings_metric(addr: SocketAddr) -> Result<Vec<Metric>, ParseErr
 
             if let Some(value) = stats.get("lru_crawler") {
                 if value == "yes" {
-                    metrics.extend_from_slice(&[
+                    metrics.extend([
                         Metric::gauge(
                             "memcached_lru_crawler_enabled",
                             "Whether the LRU crawler is enabled",
@@ -702,7 +702,7 @@ async fn gather(addr: SocketAddr) -> Vec<Metric> {
     let mut metrics = stats.unwrap_or_default();
     metrics.extend(settings.unwrap_or_default());
 
-    metrics.extend_from_slice(&[
+    metrics.extend([
         Metric::gauge(
             "memcached_up",
             "Could the memcached server be reached.",

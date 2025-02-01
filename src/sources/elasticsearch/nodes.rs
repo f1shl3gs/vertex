@@ -523,7 +523,7 @@ impl Elasticsearch {
             }
         };
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "elasticsearch_node_stats_up",
                 "Was the last scrape of the Elasticsearch nodes endpoint successful",

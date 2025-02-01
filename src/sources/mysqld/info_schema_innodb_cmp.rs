@@ -29,7 +29,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     for record in records {
         let page_size = &record.page_size.to_string();
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::sum_with_tags(
                 "mysql_info_schema_innodb_cmp_compress_ops_total",
                 "Number of times a B-tree page of the size PAGE_SIZE has been compressed",

@@ -70,7 +70,7 @@ impl Elasticsearch {
                 .map(|snap| snap.start_time_in_millis / 1000)
                 .unwrap_or_default();
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "elasticsearch_snapshot_stats_number_of_snapshots",
                     "Number of snapshots in a repository",
@@ -101,7 +101,7 @@ impl Elasticsearch {
                 "state" => last_snapshot.state.clone(),
                 "version" => last_snapshot.version.clone(),
             );
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "elasticsearch_snapshot_stats_snapshot_number_of_indices",
                     "Number of indices in the last snapshot",

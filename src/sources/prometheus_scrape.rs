@@ -123,7 +123,7 @@ impl SourceConfig for Config {
                             }
                         };
 
-                        metrics.extend_from_slice(&[
+                        metrics.extend([
                             Metric::gauge("up", "", success),
                             Metric::gauge("scrape_duration_seconds", "", elapsed),
                             Metric::gauge("scrape_samples_scraped", "", metrics.len()),

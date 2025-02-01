@@ -63,7 +63,7 @@ async fn run(
         let mut metrics = match fetch_stats(target).await {
             Ok((version, state, peer_state, stats)) => {
                 let mut metrics = Vec::with_capacity(stats.len() + 2);
-                metrics.extend_from_slice(&[
+                metrics.extend([
                     Metric::gauge_with_tags(
                         "zk_up",
                         "",

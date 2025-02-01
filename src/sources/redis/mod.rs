@@ -484,7 +484,7 @@ async fn slowlog_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    metrics.extend_from_slice(&[
+    metrics.extend([
         Metric::gauge("slowlog_last_id", "Last id of slowlog", last_id as f64),
         Metric::gauge(
             "last_slow_execution_duration_seconds",
@@ -506,7 +506,7 @@ async fn latency_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
         let spike_last = parts[1].parse::<f64>()?;
         let spike_duration = parts[2].parse::<f64>()?;
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "latency_spike_last",
                 "When the latency spike last occurred",
@@ -641,7 +641,7 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
 
             "Keyspace" => {
                 if let Ok((keys, expired, avg_ttl)) = parse_db_keyspace(key, value) {
-                    metrics.extend_from_slice(&[
+                    metrics.extend([
                         Metric::gauge_with_tags(
                             "db_keys",
                             "Total number of keys by DB",
@@ -691,7 +691,7 @@ fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::i
     for i in 0..dbcount {
         let name = format!("db{}", i);
         if handled_dbs.contains(name.as_str()) {
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "db_keys",
                     "Total number of keys by DB",
