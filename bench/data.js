@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738385508956,
+  "lastUpdate": 1738385932000,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "83b78b6f5b8b85ff935211126e1d8a2c8463bebc",
-          "message": "chore(deps): bump libc from 0.2.168 to 0.2.169 (#2062)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.168 to 0.2.169.\n- [Release notes](https://github.com/rust-lang/libc/releases)\n- [Changelog](https://github.com/rust-lang/libc/blob/0.2.169/CHANGELOG.md)\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.168...0.2.169)\n\n---\nupdated-dependencies:\n- dependency-name: libc\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-19T22:46:24+08:00",
-          "tree_id": "0f9430ad758209247dc3a50b56378870c105f105",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83b78b6f5b8b85ff935211126e1d8a2c8463bebc"
-        },
-        "date": 1734620217170,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 531,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35731.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 565,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37403.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db",
+          "message": "chore(deps): bump async-trait from 0.1.85 to 0.1.86 (#2170)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.85 to 0.1.86.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.85...0.1.86)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-01T12:48:00+08:00",
+          "tree_id": "0f0bf8e8be0084980399afea4cf537f01888c3b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db"
+        },
+        "date": 1738385913645,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 539,
             "unit": "s"
           },
           {
