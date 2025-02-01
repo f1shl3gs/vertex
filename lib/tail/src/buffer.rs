@@ -1,6 +1,7 @@
 use std::io::{self, BufRead};
 
 use bytes::BytesMut;
+use memchr::memmem::Finder;
 
 use super::Position;
 
@@ -36,6 +37,7 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
 ) -> io::Result<Option<usize>> {
     let mut total_read = 0;
     let mut discarding = false;
+    let delim_finder = Finder::new(delim);
     let delim_len = delim.len();
 
     loop {
@@ -46,7 +48,7 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
         };
 
         let (done, used) = {
-            match available.windows(delim_len).position(|w| w == delim) {
+            match delim_finder.find(available) {
                 Some(i) => {
                     if !discarding {
                         buf.extend_from_slice(&available[..i]);
@@ -70,7 +72,11 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
         total_read += used;
 
         if !discarding && buf.len() > max_size {
-            warn!(message = "Found line that exceeds max_line_bytes; discarding");
+            warn!(
+                message = "discarding line that exceeds max_line_bytes",
+                internal_log_rate_secs = 30
+            );
+
             discarding = true;
         }
 
