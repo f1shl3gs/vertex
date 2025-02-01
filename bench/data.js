@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738424447268,
+  "lastUpdate": 1738424867905,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cd518dbbb02dab8f0cb913539953859d6267b24f",
-          "message": "use UNSPECIFIED ip address (#2065)",
-          "timestamp": "2024-12-20T23:25:00+08:00",
-          "tree_id": "60049a20103667c51fa03da54124f59f9788372e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cd518dbbb02dab8f0cb913539953859d6267b24f"
-        },
-        "date": 1734708930160,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 526,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35723,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4140d1f34eb356fe6ee9c41565aa629624772076",
           "message": "update hyper-rustls to 0.27.5 (#2066)",
           "timestamp": "2024-12-21T01:40:46+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37393.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "524a161b8db432515c3fd0d7ec30125706a0cd8b",
+          "message": "Fix regression tests (#2174)",
+          "timestamp": "2025-02-01T23:37:02+08:00",
+          "tree_id": "a1691d7f8acd28979f3b1f7276e4dc0d470678de",
+          "url": "https://github.com/f1shl3gs/vertex/commit/524a161b8db432515c3fd0d7ec30125706a0cd8b"
+        },
+        "date": 1738424849437,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 537,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37393.4,
             "unit": "KiB"
           }
         ]
