@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738385940106,
+  "lastUpdate": 1738385946765,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cbed936e5238b163cff18526f0fc43d25191cc99",
-          "message": "deps: update GCRA (#2061)\n\n* update GCRA",
-          "timestamp": "2024-12-20T00:31:10+08:00",
-          "tree_id": "a585ae25f0989beac1334dde99dd91d2463a0c8d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cbed936e5238b163cff18526f0fc43d25191cc99"
-        },
-        "date": 1734626487977,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 526,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35731.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "56966fa9df62320686958c0793fc49d42530ab43",
           "message": "bump inventory and typetag (#2063)",
           "timestamp": "2024-12-20T14:54:08+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 539,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37403.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1576b7733fddca333c5a9841ecfaa4cce7f7c1e8",
+          "message": "chore(deps): bump dyn-clone from 1.0.17 to 1.0.18 (#2169)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.17 to 1.0.18.\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.17...1.0.18)\n\n---\nupdated-dependencies:\n- dependency-name: dyn-clone\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-01T12:48:12+08:00",
+          "tree_id": "58f9fda056d3fc7af42e7e9d6234d33f2fbd3f1f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1576b7733fddca333c5a9841ecfaa4cce7f7c1e8"
+        },
+        "date": 1738385928316,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 546,
             "unit": "s"
           },
           {
