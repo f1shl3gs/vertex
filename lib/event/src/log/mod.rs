@@ -10,7 +10,7 @@ use bytesize::ByteSizeOf;
 use chrono::Utc;
 use finalize::AddBatchNotifier;
 use log_schema::log_schema;
-use serde::Serialize;
+use serde::{Serialize, Serializer};
 use value::path::{PathPrefix, ValuePath};
 pub use value::{
     event_path, metadata_path, owned_value_path, parse_value_path, path, path::TargetPath,
@@ -26,13 +26,20 @@ use crate::{
 /// The type alias for an array of `LogRecord` elements
 pub type Logs = Vec<LogRecord>;
 
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct LogRecord {
-    #[serde(skip)]
     metadata: EventMetadata,
 
-    #[serde(flatten)]
     fields: Value,
+}
+
+impl Serialize for LogRecord {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        self.value().serialize(serializer)
+    }
 }
 
 impl Default for LogRecord {

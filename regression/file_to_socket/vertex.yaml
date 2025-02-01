@@ -1,3 +1,8 @@
+extensions:
+  pprof:
+    type: pprof
+    listen: 0.0.0.0:9090
+
 sources:
   selfstat:
     type: selfstat
@@ -27,4 +32,4 @@ sinks:
     address: lading:8080
     healthcheck: false
     encoding:
-      codec: text
+      codec: json

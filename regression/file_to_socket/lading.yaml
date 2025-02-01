@@ -6,7 +6,7 @@ generator:
         path_template: "/data/file-gen-%NNN%.log"
         duplicates: 4
         variant: "ascii"
-        bytes_per_second: "10Mb"
+        bytes_per_second: "20Mb"
         maximum_bytes_per_file: "100Mb"
         maximum_prebuild_cache_size_bytes: "400Mb"
 
