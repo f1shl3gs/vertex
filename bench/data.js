@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738347982101,
+  "lastUpdate": 1738380650422,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fe81ec1435ef557ec3c2f43ca1849436077b6469",
-          "message": "chore(deps): bump thiserror from 2.0.7 to 2.0.8 (#2056)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.7 to 2.0.8.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.7...2.0.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-18T18:03:20+08:00",
-          "tree_id": "2f489247ded6b8d2e5eb2c76be655406ea265c27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe81ec1435ef557ec3c2f43ca1849436077b6469"
-        },
-        "date": 1734516324774,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534800,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531410,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "644a4faf7e7496955f7b08005c82b22a46097f66",
+          "message": "chore(deps): bump inventory from 0.3.18 to 0.3.19 (#2168)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.18 to 0.3.19.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.18...0.3.19)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-01T11:28:20+08:00",
+          "tree_id": "8af94c5f851334435b0a732bcd061a4725dc8b0b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/644a4faf7e7496955f7b08005c82b22a46097f66"
+        },
+        "date": 1738380632386,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 526580,
             "unit": "ns/op"
           }
         ]
