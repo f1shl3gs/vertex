@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738385437826,
+  "lastUpdate": 1738385442743,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "699ec34e91f29b81a5e6e74d9c6dbf8290c3b8a4",
-          "message": "chore(deps): bump hyper-rustls from 0.27.3 to 0.27.4 (#2060)\n\nBumps [hyper-rustls](https://github.com/rustls/hyper-rustls) from 0.27.3 to 0.27.4.\n- [Release notes](https://github.com/rustls/hyper-rustls/releases)\n- [Commits](https://github.com/rustls/hyper-rustls/compare/v/0.27.3...v/0.27.4)\n\n---\nupdated-dependencies:\n- dependency-name: hyper-rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-19T19:39:39+08:00",
-          "tree_id": "31131d504f6e7cabaa9f902005e35b0a9281c138",
-          "url": "https://github.com/f1shl3gs/vertex/commit/699ec34e91f29b81a5e6e74d9c6dbf8290c3b8a4"
-        },
-        "date": 1734608510757,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.23,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.722,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.11,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 186.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1576b7733fddca333c5a9841ecfaa4cce7f7c1e8",
+          "message": "chore(deps): bump dyn-clone from 1.0.17 to 1.0.18 (#2169)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.17 to 1.0.18.\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.17...1.0.18)\n\n---\nupdated-dependencies:\n- dependency-name: dyn-clone\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-01T12:48:12+08:00",
+          "tree_id": "58f9fda056d3fc7af42e7e9d6234d33f2fbd3f1f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1576b7733fddca333c5a9841ecfaa4cce7f7c1e8"
+        },
+        "date": 1738385424039,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.293,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.058,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 186.4,
             "unit": "ns/op"
           }
         ]
