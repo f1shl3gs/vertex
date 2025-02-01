@@ -25,7 +25,7 @@ const fn default_interval() -> Duration {
 
 #[configurable_component(extension, name = "heartbeat")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// POST some state of vertex to remote endpoint.
     /// then we can do much more, e.g. service discovery.
     #[configurable(required)]

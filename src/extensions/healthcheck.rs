@@ -23,11 +23,11 @@ fn default_endpoint() -> SocketAddr {
 
 #[configurable_component(extension, name = "healthcheck")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// Which address to listen for.
     #[serde(default = "default_endpoint")]
     #[configurable(required)]
-    pub endpoint: SocketAddr,
+    endpoint: SocketAddr,
 }
 
 #[async_trait::async_trait]

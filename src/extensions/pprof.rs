@@ -19,10 +19,10 @@ const DEFAULT_FREQUENCY: u32 = 1000;
 
 #[configurable_component(extension, name = "pprof")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// Which address the pprof server will listen
     #[configurable(required)]
-    pub listen: SocketAddr,
+    listen: SocketAddr,
 }
 
 #[async_trait::async_trait]
