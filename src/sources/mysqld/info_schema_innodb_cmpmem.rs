@@ -37,7 +37,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
         let page_size = &page_size.to_string();
         let buffer_pool = &buffer_pool_instance.to_string();
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::sum_with_tags(
                 "mysql_info_schema_innodb_cmpmem_pages_used_total",
                 "Number of blocks of the size PAGE_SIZe that are currently in use",

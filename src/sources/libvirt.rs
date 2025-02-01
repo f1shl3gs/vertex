@@ -57,7 +57,7 @@ impl SourceConfig for Config {
                 let up = result.is_ok();
 
                 let mut metrics = result.unwrap_or_default();
-                metrics.extend_from_slice(&[
+                metrics.extend([
                     Metric::gauge(
                         "libvirt_up",
                         "Whether scraping libvirt's metrics was successful",
@@ -120,7 +120,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
         let schema::Domain { devices, metadata } = quick_xml::de::from_str::<schema::Domain>(&xml)
             .map_err(|err| Error::IO(std::io::Error::new(std::io::ErrorKind::InvalidData, err)))?;
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "libvirt_domain_info_meta",
                 "Domain metadata",
@@ -187,7 +187,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     let vcpu_num = vcpu.number.to_string();
                     let (delay, wait) = stat.vcpu_delay_and_wait(vcpu.number);
 
-                    metrics.extend_from_slice(&[
+                    metrics.extend([
                         Metric::gauge_with_tags(
                             "libvirt_domain_vcpu_state",
                             "VCPU state. 0: offline, 1: running, 2: blocked",
@@ -274,7 +274,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 &dev.source.name
             };
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "libvirt_domain_block_meta",
                     "Block device metadata info. Device name, source file, serial.",
@@ -408,7 +408,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     }
                     _ => return Err(err),
                 },
-                Ok(params) => metrics.extend_from_slice(&[
+                Ok(params) => metrics.extend([
                     Metric::gauge_with_tags(
                         "libvirt_domain_block_stats_limit_total_bytes",
                         "Total throughput limit in bytes per second",
@@ -593,7 +593,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 ));
             }
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::sum_with_tags(
                     "libvirt_domain_interface_stats_receive_bytes_total",
                     "Number of bytes received on a network interface, in bytes",
@@ -677,7 +677,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
             0.0
         };
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::sum_with_tags(
                 "libvirt_domain_memory_stats_major_fault_total",
                 "Page faults occur when a process makes a valid access to virtual memory that is not available.\
@@ -765,7 +765,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
     let pools = cli.storage_pools().await?;
     for info in pools {
         let name = info.name;
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "libvirt_pool_info_capacity_bytes",
                 "Pool capacity, in bytes",

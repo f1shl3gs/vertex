@@ -176,7 +176,7 @@ impl SourceConfig for Config {
                 let up = result.is_ok();
 
                 let mut metrics = result.unwrap_or_default();
-                metrics.extend_from_slice(&[
+                metrics.extend([
                     Metric::gauge("mysql_up", "Whether the MySQL server is up.", up),
                     Metric::gauge("mysql_scrape_duration_seconds", "", elapsed),
                 ]);

@@ -104,7 +104,7 @@ async fn gather(path: &Path) -> Result<Vec<Metric>, Error> {
             "uuid" => &gpu.uuid,
         );
 
-        metrics.extend_from_slice(&[
+        metrics.extend([
             Metric::gauge_with_tags(
                 "nvidia_gpu_info",
                 "",

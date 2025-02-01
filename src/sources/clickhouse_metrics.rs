@@ -239,7 +239,7 @@ impl Collector {
                 "endpoint" => self.endpoint.clone(),
             );
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "clickhouse_table_parts_bytes",
                     "Table size in bytes",

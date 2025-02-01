@@ -184,7 +184,7 @@ async fn gather(client: &HttpClient, uri: &Uri, auth: &Option<Auth>) -> Vec<Metr
     let elapsed = start.elapsed();
     let up = i32::from(!metrics.is_empty());
     let instance = format!("{}:{}", uri.host().unwrap(), uri.port_u16().unwrap());
-    metrics.extend_from_slice(&[
+    metrics.extend([
         Metric::gauge(
             "haproxy_up",
             "Was the last scrape of HAProxy successful.",

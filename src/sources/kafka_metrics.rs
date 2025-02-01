@@ -177,7 +177,7 @@ async fn scrape(client: &Client, topic_filter: &Regex) -> framework::Result<Vec<
                 }
             }
 
-            metrics.extend_from_slice(&[
+            metrics.extend([
                 Metric::gauge_with_tags(
                     "kafka_topic_partition_leader",
                     "Leader Broker ID of this Topic/Partition",
