@@ -2,14 +2,12 @@ use std::borrow::Cow;
 use std::iter::Cloned;
 use std::slice::Iter;
 
-use super::ValuePath;
+use super::{ValuePath, OwnedSegment};
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum BorrowedSegment<'a> {
     Field(Cow<'a, str>),
     Index(isize),
-    CoalesceField(Cow<'a, str>),
-    CoalesceEnd(Cow<'a, str>),
     Invalid,
 }
 
@@ -28,6 +26,15 @@ impl BorrowedSegment<'_> {
     }
     pub fn is_invalid(&self) -> bool {
         matches!(self, BorrowedSegment::Invalid)
+    }
+}
+
+impl<'a> From<&'a OwnedSegment> for BorrowedSegment<'a> {
+    fn from(segment: &'a OwnedSegment) -> Self {
+        match segment {
+            OwnedSegment::Field(field) => BorrowedSegment::Field(Cow::Borrowed(field)),
+            OwnedSegment::Index(index) => BorrowedSegment::Index(*index),
+        }
     }
 }
 
@@ -92,18 +99,6 @@ impl quickcheck::Arbitrary for BorrowedSegment<'static> {
             BorrowedSegment::Invalid => Box::new(std::iter::empty()),
             BorrowedSegment::Index(index) => Box::new(index.shrink().map(BorrowedSegment::Index)),
             BorrowedSegment::Field(field) => Box::new(
-                field
-                    .to_string()
-                    .shrink()
-                    .map(|f| BorrowedSegment::Field(f.into())),
-            ),
-            BorrowedSegment::CoalesceField(field) => Box::new(
-                field
-                    .to_string()
-                    .shrink()
-                    .map(|f| BorrowedSegment::Field(f.into())),
-            ),
-            BorrowedSegment::CoalesceEnd(field) => Box::new(
                 field
                     .to_string()
                     .shrink()

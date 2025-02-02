@@ -8,8 +8,10 @@ default = []
 string_path = []
 
 [dev-dependencies]
-quickcheck = { version = "1.0.3", default-features = false }
 chrono = { version = "0.4.39", default-features = false, features = ["now"] }
+proptest = { version = "1.6.0", default-features = false, features = ["std"] }
+proptest-derive = { version = "0.5.1", default-features = false }
+quickcheck = { version = "1.0.3", default-features = false }
 
 [dependencies]
 bytes = { version = "1.9.0", default-features = false }

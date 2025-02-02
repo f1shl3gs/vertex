@@ -1,4 +1,4 @@
-use crate::crud::{get_matching_coalesce_key, ValueCollection};
+use crate::crud::ValueCollection;
 use crate::path::BorrowedSegment;
 use crate::Value;
 
@@ -12,15 +12,6 @@ pub fn remove<'a, T: ValueCollection>(
         (_, None) => value.remove_value(key),
         (Some(Value::Object(map)), Some(BorrowedSegment::Field(field))) => {
             let (prev, empty) = remove(map, field.as_ref(), path_iter, prune)?;
-            if prune && empty {
-                value.remove_value(key);
-            }
-
-            Some(prev)
-        }
-        (Some(Value::Object(map)), Some(BorrowedSegment::CoalesceField(field))) => {
-            let matched_key = get_matching_coalesce_key(field, map, &mut path_iter).ok()?;
-            let (prev, empty) = remove(map, matched_key.as_ref(), path_iter, prune)?;
             if prune && empty {
                 value.remove_value(key);
             }
@@ -43,34 +34,8 @@ pub fn remove<'a, T: ValueCollection>(
 
 #[cfg(test)]
 mod test {
-    use serde_json::json;
-
     use crate::Value;
-
-    #[test]
-    fn remove_coalesce() {
-        let mut value = Value::from(json!({
-            "field": 123,
-            "field2": 321
-        }));
-        assert_eq!(value.remove("(foo|bar)", false), None);
-        assert_eq!(value.remove("(foo|field2)", false), Some(Value::from(321)));
-        assert_eq!(
-            value.remove(".(field|field2)", false),
-            Some(Value::from(123))
-        );
-        assert_eq!(value.remove("(field|field2)", false), None);
-    }
-
-    #[test]
-    fn remove_coalesce_2() {
-        let mut value = Value::from(json!({
-            "x": true,
-            "y": {"z": true}
-        }));
-        assert_eq!(value.remove("(x|y).z", false), None);
-        assert_eq!(value.remove("(x|y).z", false), None);
-    }
+    use serde_json::json;
 
     #[test]
     fn array_remove_from_middle() {
