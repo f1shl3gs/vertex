@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738499532292,
+  "lastUpdate": 1738499542897,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4140d1f34eb356fe6ee9c41565aa629624772076",
-          "message": "update hyper-rustls to 0.27.5 (#2066)",
-          "timestamp": "2024-12-21T01:40:46+08:00",
-          "tree_id": "7c5f43058ef63868440231aaad2ab2c6de3f99a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4140d1f34eb356fe6ee9c41565aa629624772076"
-        },
-        "date": 1734716598423,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.222,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.187,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 182.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1289129367a116040dbf44a65f1c6eac2cdd98b0",
+          "message": "remove unused dependencies (#2178)",
+          "timestamp": "2025-02-02T20:29:49+08:00",
+          "tree_id": "f60a12c24afbea66d76ae93b56ddcb6af62f38ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1289129367a116040dbf44a65f1c6eac2cdd98b0"
+        },
+        "date": 1738499524217,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.317,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 108.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.63,
             "unit": "ns/op"
           }
         ]
