@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738472198110,
+  "lastUpdate": 1738472620693,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4140d1f34eb356fe6ee9c41565aa629624772076",
-          "message": "update hyper-rustls to 0.27.5 (#2066)",
-          "timestamp": "2024-12-21T01:40:46+08:00",
-          "tree_id": "7c5f43058ef63868440231aaad2ab2c6de3f99a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4140d1f34eb356fe6ee9c41565aa629624772076"
-        },
-        "date": 1734717058696,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 523,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35723,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "45e9a96ceede6b5d4eb88aeadedbf23e2e56c0e0",
           "message": "Do not reload config after every pull (#2067)\n\n* track config hash and yield config only when it changed",
           "timestamp": "2024-12-21T03:50:21+08:00",
@@ -16595,6 +16561,40 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/f1shl3gs/vertex/commit/524a161b8db432515c3fd0d7ec30125706a0cd8b"
         },
         "date": 1738424849437,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 537,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37393.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99a0b60c73818bb075a11bb8feb0007441439846",
+          "message": "remove unnecessary pub (#2175)",
+          "timestamp": "2025-02-02T12:52:51+08:00",
+          "tree_id": "a2b1418b75b571c1fcea2076a8c7300514f89837",
+          "url": "https://github.com/f1shl3gs/vertex/commit/99a0b60c73818bb075a11bb8feb0007441439846"
+        },
+        "date": 1738472601845,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
