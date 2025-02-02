@@ -11,7 +11,7 @@ path = "benches/tags.rs"
 
 [features]
 default = []
-test = ["value/string_path"]
+test-util = ["value/string_path"]
 
 [build-dependencies]
 prost-build = { version = "0.13.4", default-features = false }

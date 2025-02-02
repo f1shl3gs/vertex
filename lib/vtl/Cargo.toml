@@ -5,6 +5,7 @@ edition = "2021"
 
 [dev-dependencies]
 glob = { version = "0.3.2", default-features = false }
+value = { path = "../value", features = ["string_path"] }
 
 [dependencies]
 base64 = { version = "0.22.1", default-features = false, features = ["alloc"] }
@@ -18,5 +19,5 @@ serde = { version = "1.0.217", default-features = false }
 serde_json = { version = "1.0.138", default-features = false }
 twox-hash = { version = "2.1.0", default-features = false, features = ["xxhash3_64"] }
 url = { version = "2.5.4", default-features = false }
-value = { path = "../value", features = ["string_path"] }
+value = { path = "../value", default-features = false }
 woothee = { version = "0.13.0", default-features = false }

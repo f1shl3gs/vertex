@@ -49,7 +49,7 @@ macro_rules! assert_event_data_eq {
                     panic!(
                         "assertion failed: {}\n\n{}\n",
                         $message,
-                        pretty_assertions::Comparison::new(left, right)
+                        testify::pretty_assertions::Comparison::new(left, right)
                     );
                 }
             }

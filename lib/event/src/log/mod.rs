@@ -116,7 +116,7 @@ impl From<Value> for LogRecord {
     }
 }
 
-#[cfg(any(test, feature = "test"))]
+#[cfg(any(test, feature = "test-util"))]
 impl<K> std::ops::Index<K> for LogRecord
 where
     K: AsRef<str>,

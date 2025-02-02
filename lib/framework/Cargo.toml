@@ -13,7 +13,7 @@ test-util = []
 tokio-console = ["console-subscriber", "tokio/tracing"]
 
 [dev-dependencies]
-event = { path = "../event", features = ["test"] }
+event = { path = "../event" }
 proptest = { version = "1.6.0", default-features = false, features = ["std"] }
 rand = { version = "0.9.0", default-features = false }
 rand_distr = { version = "0.5.0", default-features = false }
