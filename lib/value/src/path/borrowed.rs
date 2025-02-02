@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::iter::Cloned;
 use std::slice::Iter;
 
-use super::{ValuePath, OwnedSegment};
+use super::{OwnedSegment, ValuePath};
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum BorrowedSegment<'a> {
