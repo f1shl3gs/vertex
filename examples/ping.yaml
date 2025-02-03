@@ -1,0 +1,11 @@
+sources:
+  ping:
+    type: ping
+    targets:
+      - 127.0.0.1
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - ping
