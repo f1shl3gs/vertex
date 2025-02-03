@@ -414,7 +414,7 @@ argh = { version = "0.1.13", default-features = false, features = ["help"] }
 ahash = { version = "0.8.11", default-features = false, optional = true }
 base64 = { version = "0.22.1", default-features = false, optional = true }
 bloomy = { version = "1.2.0", default-features = false, optional = true }
-bytes = { version = "1.9.0", default-features = false }
+bytes = { version = "1.10.0", default-features = false }
 chrono = { version = "0.4.39", default-features = false }
 encoding_rs = { version = "0.8.35", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
