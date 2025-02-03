@@ -4571,6 +4571,7 @@ dependencies = [
  "serde_path_to_error",
  "serde_yaml",
  "snap",
+ "socket2",
  "sqlx",
  "sysinfo",
  "tail",

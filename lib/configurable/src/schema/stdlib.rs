@@ -1,5 +1,5 @@
 use std::collections::{BTreeMap, HashMap};
-use std::net::SocketAddr;
+use std::net::{IpAddr, SocketAddr};
 use std::path::PathBuf;
 use std::time::Duration;
 
@@ -243,6 +243,19 @@ impl Configurable for SocketAddr {
                 ..Default::default()
             })),
             instance_type: Some(InstanceType::String.into()),
+            ..Default::default()
+        }
+    }
+}
+
+impl Configurable for IpAddr {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
+            metadata: Some(Box::new(Metadata {
+                description: Some("IPv4 or IPv6 Address"),
+                examples: vec![Value::String("192.168.0.1".to_owned())],
+                ..Default::default()
+            })),
             ..Default::default()
         }
     }

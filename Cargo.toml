@@ -183,6 +183,7 @@ sources-nginx_stub = []
 sources-node_metrics = ["dep:libc"]
 sources-ntp = ["dep:ntp"]
 sources-nvidia_smi = ["dep:quick-xml"]
+sources-ping = ["dep:socket2", "dep:parking_lot"]
 sources-prometheus_pushgateway = ["dep:base64"]
 sources-prometheus_scrape = ["dep:prometheus"]
 sources-prometheus_remote_write = ["dep:snap"]
@@ -230,6 +231,7 @@ sources = [
     "sources-node_metrics",
     "sources-ntp",
     "sources-nvidia_smi",
+    "sources-ping",
     "sources-prometheus_pushgateway",
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",
@@ -279,7 +281,7 @@ sinks-influxdb = []
 sinks-jaeger = ["dep:jaeger"]
 sinks-kafka = ["dep:rskafka"]
 sinks-loki = ["dep:snap", "dep:buffers"]
-sinks-prometheus_exporter = ["dep:flate2"]
+sinks-prometheus_exporter = ["dep:flate2", "dep:parking_lot"]
 sinks-prometheus_remote_write = ["dep:snap"]
 sinks-socket = []
 
@@ -436,6 +438,7 @@ rand = { version = "0.9.0", default-features = false }
 regex = { version = "1.11.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "5f23b85b71dfeedebad5e5843ff1c29477d091c6", optional = true, features = ["transport-tls"] }
 snap = { version = "1.1.1", default-features = false, optional = true }
+socket2 = { version = "0.5.8", optional = true, default-features = false}
 sqlx = { version = "0.8.3", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "2.0.11", default-features = false }
 tonic = { version = "0.12.3", default-features = false, optional = true }
