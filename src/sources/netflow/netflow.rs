@@ -8,7 +8,6 @@
 use std::io::Cursor;
 
 use bytes::Buf;
-use xdr::XDRReader;
 
 use super::decode::{
     decode_data_records, decode_options_data_records, decode_template_records, Error,
@@ -68,12 +67,12 @@ impl<'a> NetFlow<'a> {
     ) -> Result<NetFlow<'a>, Error> {
         let mut buf = Cursor::new(data);
 
-        let version = buf.read_u16()?;
-        let count = buf.read_u16()?;
-        let system_uptime = buf.read_u32()?;
-        let unix_seconds = buf.read_u32()?;
-        let sequence_number = buf.read_u32()?;
-        let source_id = buf.read_u32()?;
+        let version = buf.try_get_u16()?;
+        let count = buf.try_get_u16()?;
+        let system_uptime = buf.try_get_u32()?;
+        let unix_seconds = buf.try_get_u32()?;
+        let sequence_number = buf.try_get_u32()?;
+        let source_id = buf.try_get_u32()?;
 
         let mut flow_sets = Vec::with_capacity(count as usize);
         while buf.remaining() > 0 {
@@ -97,8 +96,8 @@ fn decode_flow_set<'a, T: TemplateSystem>(
     odid: u32,
     templates: &mut T,
 ) -> Result<FlowSet<'a>, Error> {
-    let id = buf.read_u16()?;
-    let length = buf.read_u16()?;
+    let id = buf.try_get_u16()?;
+    let length = buf.try_get_u16()?;
 
     let payload = buf.get_ref();
     let start = buf.position() as usize;
@@ -170,14 +169,14 @@ fn decode_options_template_records(
     let mut records = vec![];
 
     while buf.remaining() >= 4 {
-        let id = buf.read_u16()?;
-        let scope_length = buf.read_u16()?;
-        let option_length = buf.read_u16()?;
+        let id = buf.try_get_u16()?;
+        let scope_length = buf.try_get_u16()?;
+        let option_length = buf.try_get_u16()?;
 
         let mut scopes = vec![];
         for _ in 0..scope_length / 4 {
-            let typ = buf.read_u16()?;
-            let length = buf.read_u16()?;
+            let typ = buf.try_get_u16()?;
+            let length = buf.try_get_u16()?;
 
             scopes.push(Field {
                 typ,
@@ -188,8 +187,8 @@ fn decode_options_template_records(
 
         let mut options = vec![];
         for _ in 0..option_length / 4 {
-            let typ = buf.read_u16()?;
-            let length = buf.read_u16()?;
+            let typ = buf.try_get_u16()?;
+            let length = buf.try_get_u16()?;
 
             options.push(Field {
                 typ,
