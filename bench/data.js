@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738580517733,
+  "lastUpdate": 1738621642358,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "edad0947569c28f5d8970ce96b8dbeeb7fe8b98f",
-          "message": "support multiple targets to check (#2070)",
-          "timestamp": "2024-12-21T22:53:32+08:00",
-          "tree_id": "73b32a0ecd25bfdbf84f83068748c803f063f645",
-          "url": "https://github.com/f1shl3gs/vertex/commit/edad0947569c28f5d8970ce96b8dbeeb7fe8b98f"
-        },
-        "date": 1734792930497,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542130,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525540,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8d2901d6ecc5d11152af0c14b63f6d345c11462f",
+          "message": "chore(deps): bump bytes from 1.9.0 to 1.10.0 (#2182)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.9.0 to 1.10.0.\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.9.0...v1.10.0)\n\n---\nupdated-dependencies:\n- dependency-name: bytes\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-04T06:24:50+08:00",
+          "tree_id": "1e560fd254710c9ba15aca8445d317ace8bcfc1f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8d2901d6ecc5d11152af0c14b63f6d345c11462f"
+        },
+        "date": 1738621623973,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527570,
             "unit": "ns/op"
           }
         ]
