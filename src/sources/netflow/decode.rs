@@ -1,7 +1,6 @@
 use std::io::{BufRead, Cursor};
 
-use bytes::Buf;
-use xdr::XDRReader;
+use bytes::{Buf, TryGetError};
 
 use super::ipfix::{DataRecord, OptionsDataRecord};
 use super::template::{Field, TemplateRecord};
@@ -33,6 +32,12 @@ impl From<std::io::Error> for Error {
     }
 }
 
+impl From<TryGetError> for Error {
+    fn from(err: TryGetError) -> Self {
+        Error::Io(err.into())
+    }
+}
+
 #[derive(Debug)]
 pub struct DataField<'a> {
     pub typ: u16,
@@ -47,20 +52,20 @@ pub fn decode_template_records(
     let mut templates = Vec::new();
 
     while buf.remaining() >= 4 {
-        let template_id = buf.read_u16()?;
-        let field_count = buf.read_u16()?;
+        let template_id = buf.try_get_u16()?;
+        let field_count = buf.try_get_u16()?;
         if field_count == 0 {
             return Err(Error::NoFieldInTemplate);
         }
 
         let mut fields = vec![];
         for _ in 0..field_count {
-            let mut field_type = buf.read_u16()?;
-            let field_length = buf.read_u16()?;
+            let mut field_type = buf.try_get_u16()?;
+            let field_length = buf.try_get_u16()?;
 
             let pen = if version == 10 && field_type & 0x8000 != 0 {
                 field_type ^= 0x8000;
-                let pen = buf.read_u32()?;
+                let pen = buf.try_get_u32()?;
                 Some(pen)
             } else {
                 None

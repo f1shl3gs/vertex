@@ -188,7 +188,6 @@ use std::io::{Cursor, Read};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 use bytes::Buf;
-use xdr::XDRReader;
 
 // Opaque sample_data types according to https://sflow.org/SFLOW-DATAGRAM5.txt
 const SAMPLE_FORMAT_FLOW: u32 = 1;
@@ -286,6 +285,12 @@ pub enum Error {
 impl From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Error {
         Error::Io(err)
+    }
+}
+
+impl From<bytes::TryGetError> for Error {
+    fn from(err: bytes::TryGetError) -> Error {
+        Error::Io(err.into())
     }
 }
 
@@ -956,7 +961,7 @@ pub struct Datagram {
 }
 
 fn decode_ipaddr(buf: &mut Cursor<&[u8]>) -> Result<IpAddr, Error> {
-    let version = buf.read_u32()?;
+    let version = buf.try_get_u32()?;
     let ip_addr = if version == 1 {
         let mut octets = [0u8; 4];
         buf.read_exact(&mut octets)?;
@@ -985,30 +990,30 @@ fn decode_mac(buf: &mut Cursor<&[u8]>) -> Result<[u8; 6], Error> {
 // https://sflow.org/developers/structures.php
 fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error> {
     // read header first
-    let data_format = buf.read_u32()?;
-    let length = buf.read_u32()?;
+    let data_format = buf.try_get_u32()?;
+    let length = buf.try_get_u32()?;
 
     let data = match data_format {
         COUNTER_TYPE_INTERFACE => {
-            let index = buf.read_u32()?;
-            let typ = buf.read_u32()?;
-            let speed = buf.read_u64()?;
-            let direction = buf.read_u32()?;
-            let status = buf.read_u32()?;
-            let in_octets = buf.read_u64()?;
-            let in_ucast_pkts = buf.read_u32()?;
-            let in_multicast_pkts = buf.read_u32()?;
-            let in_broadcast_pkts = buf.read_u32()?;
-            let in_discards = buf.read_u32()?;
-            let in_errors = buf.read_u32()?;
-            let in_unknown_protos = buf.read_u32()?;
-            let out_octets = buf.read_u64()?;
-            let out_ucast_pkts = buf.read_u32()?;
-            let out_multicast_pkts = buf.read_u32()?;
-            let out_broadcast_pkts = buf.read_u32()?;
-            let out_discards = buf.read_u32()?;
-            let out_errors = buf.read_u32()?;
-            let promiscuous_mode = buf.read_u32()?;
+            let index = buf.try_get_u32()?;
+            let typ = buf.try_get_u32()?;
+            let speed = buf.try_get_u64()?;
+            let direction = buf.try_get_u32()?;
+            let status = buf.try_get_u32()?;
+            let in_octets = buf.try_get_u64()?;
+            let in_ucast_pkts = buf.try_get_u32()?;
+            let in_multicast_pkts = buf.try_get_u32()?;
+            let in_broadcast_pkts = buf.try_get_u32()?;
+            let in_discards = buf.try_get_u32()?;
+            let in_errors = buf.try_get_u32()?;
+            let in_unknown_protos = buf.try_get_u32()?;
+            let out_octets = buf.try_get_u64()?;
+            let out_ucast_pkts = buf.try_get_u32()?;
+            let out_multicast_pkts = buf.try_get_u32()?;
+            let out_broadcast_pkts = buf.try_get_u32()?;
+            let out_discards = buf.try_get_u32()?;
+            let out_errors = buf.try_get_u32()?;
+            let promiscuous_mode = buf.try_get_u32()?;
 
             CounterRecordData::Interface(IfCounters {
                 index,
@@ -1033,19 +1038,19 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_ETHERNET => {
-            let dot3_stats_alignment_errors = buf.read_u32()?;
-            let dot3_stats_fcs_errors = buf.read_u32()?;
-            let dot3_stats_single_collision_frames = buf.read_u32()?;
-            let dot3_stats_multiple_collision_frames = buf.read_u32()?;
-            let dot3_stats_sqe_test_errors = buf.read_u32()?;
-            let dot3_stats_deferred_transmissions = buf.read_u32()?;
-            let dot3_stats_late_collisions = buf.read_u32()?;
-            let dot3_stats_excessive_collisions = buf.read_u32()?;
-            let dot3_stats_internal_mac_transmit_errors = buf.read_u32()?;
-            let dot3_stats_carrier_sense_errors = buf.read_u32()?;
-            let dot3_stats_frame_too_longs = buf.read_u32()?;
-            let dot3_stats_internal_mac_receive_errors = buf.read_u32()?;
-            let dot3_stats_symbol_errors = buf.read_u32()?;
+            let dot3_stats_alignment_errors = buf.try_get_u32()?;
+            let dot3_stats_fcs_errors = buf.try_get_u32()?;
+            let dot3_stats_single_collision_frames = buf.try_get_u32()?;
+            let dot3_stats_multiple_collision_frames = buf.try_get_u32()?;
+            let dot3_stats_sqe_test_errors = buf.try_get_u32()?;
+            let dot3_stats_deferred_transmissions = buf.try_get_u32()?;
+            let dot3_stats_late_collisions = buf.try_get_u32()?;
+            let dot3_stats_excessive_collisions = buf.try_get_u32()?;
+            let dot3_stats_internal_mac_transmit_errors = buf.try_get_u32()?;
+            let dot3_stats_carrier_sense_errors = buf.try_get_u32()?;
+            let dot3_stats_frame_too_longs = buf.try_get_u32()?;
+            let dot3_stats_internal_mac_receive_errors = buf.try_get_u32()?;
+            let dot3_stats_symbol_errors = buf.try_get_u32()?;
 
             CounterRecordData::Ethernet(EthernetCounters {
                 dot3_stats_alignment_errors,
@@ -1064,24 +1069,24 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_TOKEN_RING => {
-            let dot5_stats_line_errors = buf.read_u32()?;
-            let dot5_stats_burst_errors = buf.read_u32()?;
-            let dot5_stats_ac_errors = buf.read_u32()?;
-            let dot5_stats_abort_trans_errors = buf.read_u32()?;
-            let dot5_stats_internal_errors = buf.read_u32()?;
-            let dot5_stats_lost_frame_errors = buf.read_u32()?;
-            let dot5_stats_receive_congestions = buf.read_u32()?;
-            let dot5_stats_frame_copied_errors = buf.read_u32()?;
-            let dot5_stats_token_errors = buf.read_u32()?;
-            let dot5_stats_soft_errors = buf.read_u32()?;
-            let dot5_stats_hard_errors = buf.read_u32()?;
-            let dot5_stats_signal_loss = buf.read_u32()?;
-            let dot5_stats_transmit_beacons = buf.read_u32()?;
-            let dot5_stats_recoverys = buf.read_u32()?;
-            let dot5_stats_lobe_wires = buf.read_u32()?;
-            let dot5_stats_removes = buf.read_u32()?;
-            let dot5_stats_singles = buf.read_u32()?;
-            let dot5_stats_freq_errors = buf.read_u32()?;
+            let dot5_stats_line_errors = buf.try_get_u32()?;
+            let dot5_stats_burst_errors = buf.try_get_u32()?;
+            let dot5_stats_ac_errors = buf.try_get_u32()?;
+            let dot5_stats_abort_trans_errors = buf.try_get_u32()?;
+            let dot5_stats_internal_errors = buf.try_get_u32()?;
+            let dot5_stats_lost_frame_errors = buf.try_get_u32()?;
+            let dot5_stats_receive_congestions = buf.try_get_u32()?;
+            let dot5_stats_frame_copied_errors = buf.try_get_u32()?;
+            let dot5_stats_token_errors = buf.try_get_u32()?;
+            let dot5_stats_soft_errors = buf.try_get_u32()?;
+            let dot5_stats_hard_errors = buf.try_get_u32()?;
+            let dot5_stats_signal_loss = buf.try_get_u32()?;
+            let dot5_stats_transmit_beacons = buf.try_get_u32()?;
+            let dot5_stats_recoverys = buf.try_get_u32()?;
+            let dot5_stats_lobe_wires = buf.try_get_u32()?;
+            let dot5_stats_removes = buf.try_get_u32()?;
+            let dot5_stats_singles = buf.try_get_u32()?;
+            let dot5_stats_freq_errors = buf.try_get_u32()?;
 
             CounterRecordData::TokenRing(TokenRingCounters {
                 dot5_stats_line_errors,
@@ -1105,20 +1110,20 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_VG => {
-            let dot12_in_high_priority_frames = buf.read_u32()?;
-            let dot12_in_high_priority_octets = buf.read_u64()?;
-            let dot12_in_norm_priority_frames = buf.read_u32()?;
-            let dot12_in_norm_priority_octets = buf.read_u64()?;
-            let dot12_in_ipm_errors = buf.read_u32()?;
-            let dot12_in_oversize_frame_errors = buf.read_u32()?;
-            let dot12_in_data_errors = buf.read_u32()?;
-            let dot12_in_null_addressed_frames = buf.read_u32()?;
-            let dot12_out_high_priority_frames = buf.read_u32()?;
-            let dot12_out_high_priority_octets = buf.read_u64()?;
-            let dot12_transition_into_trainings = buf.read_u32()?;
-            let dot12_hc_in_high_priority_octets = buf.read_u64()?;
-            let dot12_hc_in_norm_priority_octets = buf.read_u64()?;
-            let dot12_hc_out_high_priority_octets = buf.read_u64()?;
+            let dot12_in_high_priority_frames = buf.try_get_u32()?;
+            let dot12_in_high_priority_octets = buf.try_get_u64()?;
+            let dot12_in_norm_priority_frames = buf.try_get_u32()?;
+            let dot12_in_norm_priority_octets = buf.try_get_u64()?;
+            let dot12_in_ipm_errors = buf.try_get_u32()?;
+            let dot12_in_oversize_frame_errors = buf.try_get_u32()?;
+            let dot12_in_data_errors = buf.try_get_u32()?;
+            let dot12_in_null_addressed_frames = buf.try_get_u32()?;
+            let dot12_out_high_priority_frames = buf.try_get_u32()?;
+            let dot12_out_high_priority_octets = buf.try_get_u64()?;
+            let dot12_transition_into_trainings = buf.try_get_u32()?;
+            let dot12_hc_in_high_priority_octets = buf.try_get_u64()?;
+            let dot12_hc_in_norm_priority_octets = buf.try_get_u64()?;
+            let dot12_hc_out_high_priority_octets = buf.try_get_u64()?;
 
             CounterRecordData::VgCounters(VgCounters {
                 dot12_in_high_priority_frames,
@@ -1138,12 +1143,12 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_VLAN => {
-            let vlan_id = buf.read_u32()?;
-            let octets = buf.read_u64()?;
-            let ucast_pkts = buf.read_u32()?;
-            let multicast_pkts = buf.read_u32()?;
-            let broadcast_pkts = buf.read_u32()?;
-            let discards = buf.read_u32()?;
+            let vlan_id = buf.try_get_u32()?;
+            let octets = buf.try_get_u64()?;
+            let ucast_pkts = buf.try_get_u32()?;
+            let multicast_pkts = buf.try_get_u32()?;
+            let broadcast_pkts = buf.try_get_u32()?;
+            let discards = buf.try_get_u32()?;
 
             CounterRecordData::Vlan(Vlan {
                 vlan_id,
@@ -1155,23 +1160,23 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_SFP => {
-            let id = buf.read_u32()?;
-            let total_lanes = buf.read_u32()?;
-            let supply_voltage = buf.read_u32()?;
-            let temperature = buf.read_i32()?;
-            let length = buf.read_u32()?;
+            let id = buf.try_get_u32()?;
+            let total_lanes = buf.try_get_u32()?;
+            let supply_voltage = buf.try_get_u32()?;
+            let temperature = buf.try_get_i32()?;
+            let length = buf.try_get_u32()?;
             let mut lanes = Vec::with_capacity(length as usize);
             for _ in 0..length {
-                let lane_index = buf.read_u32()?;
-                let tx_bias_current = buf.read_u32()?;
-                let tx_power = buf.read_u32()?;
-                let tx_power_min = buf.read_u32()?;
-                let tx_power_max = buf.read_u32()?;
-                let tx_wavelength = buf.read_u32()?;
-                let rx_power = buf.read_u32()?;
-                let rx_power_min = buf.read_u32()?;
-                let rx_power_max = buf.read_u32()?;
-                let rx_wavelength = buf.read_u32()?;
+                let lane_index = buf.try_get_u32()?;
+                let tx_bias_current = buf.try_get_u32()?;
+                let tx_power = buf.try_get_u32()?;
+                let tx_power_min = buf.try_get_u32()?;
+                let tx_power_max = buf.try_get_u32()?;
+                let tx_wavelength = buf.try_get_u32()?;
+                let rx_power = buf.try_get_u32()?;
+                let rx_power_min = buf.try_get_u32()?;
+                let rx_power_max = buf.try_get_u32()?;
+                let rx_wavelength = buf.try_get_u32()?;
 
                 lanes.push(Lane {
                     lane_index,
@@ -1196,28 +1201,28 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_HOST_CPU => {
-            let load_one = buf.read_f32()?;
-            let load_five = buf.read_f32()?;
-            let load_fifteen = buf.read_f32()?;
+            let load_one = buf.try_get_f32()?;
+            let load_five = buf.try_get_f32()?;
+            let load_fifteen = buf.try_get_f32()?;
 
-            let proc_run = buf.read_u32()?;
-            let proc_total = buf.read_u32()?;
-            let cpu_num = buf.read_u32()?;
-            let cpu_speed = buf.read_u32()?;
-            let uptime = buf.read_u32()?;
-            let cpu_user = buf.read_u32()?;
-            let cpu_nice = buf.read_u32()?;
-            let cpu_system = buf.read_u32()?;
-            let cpu_idle = buf.read_u32()?;
-            let cpu_wio = buf.read_u32()?;
-            let cpu_intr = buf.read_u32()?;
-            let cpu_sintr = buf.read_u32()?;
-            let interrupts = buf.read_u32()?;
-            let contexts = buf.read_u32()?;
+            let proc_run = buf.try_get_u32()?;
+            let proc_total = buf.try_get_u32()?;
+            let cpu_num = buf.try_get_u32()?;
+            let cpu_speed = buf.try_get_u32()?;
+            let uptime = buf.try_get_u32()?;
+            let cpu_user = buf.try_get_u32()?;
+            let cpu_nice = buf.try_get_u32()?;
+            let cpu_system = buf.try_get_u32()?;
+            let cpu_idle = buf.try_get_u32()?;
+            let cpu_wio = buf.try_get_u32()?;
+            let cpu_intr = buf.try_get_u32()?;
+            let cpu_sintr = buf.try_get_u32()?;
+            let interrupts = buf.try_get_u32()?;
+            let contexts = buf.try_get_u32()?;
 
-            let cpu_steal = buf.read_u32()?;
-            let cpu_guest = buf.read_u32()?;
-            let cpu_guest_nice = buf.read_u32()?;
+            let cpu_steal = buf.try_get_u32()?;
+            let cpu_guest = buf.try_get_u32()?;
+            let cpu_guest_nice = buf.try_get_u32()?;
 
             CounterRecordData::HostCPU(HostCPU {
                 load_one,
@@ -1244,11 +1249,11 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_PROCESSOR => {
-            let five_sec_cpu = buf.read_u32()?;
-            let one_min_cpu = buf.read_u32()?;
-            let five_min_cpu = buf.read_u32()?;
-            let total_memory = buf.read_u64()?;
-            let free_memory = buf.read_u64()?;
+            let five_sec_cpu = buf.try_get_u32()?;
+            let one_min_cpu = buf.try_get_u32()?;
+            let five_min_cpu = buf.try_get_u32()?;
+            let total_memory = buf.try_get_u64()?;
+            let free_memory = buf.try_get_u64()?;
 
             CounterRecordData::Processor(Processor {
                 five_sec_cpu,
@@ -1259,19 +1264,19 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_PORT_NAME => {
-            let name = buf.read_string()?;
+            let name = try_read_string(buf)?;
             CounterRecordData::PortName(PortName { name })
         }
         COUNTER_TYPE_HOST_DESCRIPTION => {
-            let host = buf.read_string()?;
+            let host = try_read_string(buf)?;
 
             let mut uuid = [0u8; 16];
             buf.read_exact(&mut uuid)?;
 
-            let machine_type = buf.read_u32()?;
-            let os_name = buf.read_u32()?;
+            let machine_type = buf.try_get_u32()?;
+            let os_name = buf.try_get_u32()?;
 
-            let os_release = buf.read_string()?;
+            let os_release = try_read_string(buf)?;
 
             CounterRecordData::HostDescription(HostDescription {
                 host,
@@ -1282,12 +1287,12 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_HOST_ADAPTERS => {
-            let length = buf.read_u32()?;
+            let length = buf.try_get_u32()?;
             let mut adapters = Vec::with_capacity(length as usize);
             for _ in 0..length {
-                let if_index = buf.read_u32()?;
+                let if_index = buf.try_get_u32()?;
 
-                let count = buf.read_u32()?;
+                let count = buf.try_get_u32()?;
                 let mut mac_addresses = Vec::with_capacity(count as usize);
                 for _ in 0..count {
                     mac_addresses.push(decode_mac(buf)?);
@@ -1302,8 +1307,8 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             CounterRecordData::HostAdapters(HostAdapters { length, adapters })
         }
         COUNTER_TYPE_HOST_PARENT => {
-            let container_type = buf.read_u32()?;
-            let container_index = buf.read_u32()?;
+            let container_type = buf.try_get_u32()?;
+            let container_index = buf.try_get_u32()?;
 
             CounterRecordData::HostParent(HostParent {
                 container_type,
@@ -1311,17 +1316,17 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_HOST_MEMORY => {
-            let mem_total = buf.read_u64()?;
-            let mem_free = buf.read_u64()?;
-            let mem_shared = buf.read_u64()?;
-            let mem_buffers = buf.read_u64()?;
-            let mem_cached = buf.read_u64()?;
-            let swap_total = buf.read_u64()?;
-            let swap_free = buf.read_u64()?;
-            let page_in = buf.read_u32()?;
-            let page_out = buf.read_u32()?;
-            let swap_in = buf.read_u32()?;
-            let swap_out = buf.read_u32()?;
+            let mem_total = buf.try_get_u64()?;
+            let mem_free = buf.try_get_u64()?;
+            let mem_shared = buf.try_get_u64()?;
+            let mem_buffers = buf.try_get_u64()?;
+            let mem_cached = buf.try_get_u64()?;
+            let swap_total = buf.try_get_u64()?;
+            let swap_free = buf.try_get_u64()?;
+            let page_in = buf.try_get_u32()?;
+            let page_out = buf.try_get_u32()?;
+            let swap_in = buf.try_get_u32()?;
+            let swap_out = buf.try_get_u32()?;
 
             CounterRecordData::HostMemory(HostMemory {
                 mem_total,
@@ -1338,15 +1343,15 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_HOST_DISK_IO => {
-            let disk_total = buf.read_u64()?;
-            let disk_free = buf.read_u64()?;
-            let part_max_used = buf.read_u32()?;
-            let reads = buf.read_u32()?;
-            let bytes_read = buf.read_u64()?;
-            let read_time = buf.read_u32()?;
-            let writes = buf.read_u32()?;
-            let bytes_written = buf.read_u64()?;
-            let write_time = buf.read_u32()?;
+            let disk_total = buf.try_get_u64()?;
+            let disk_free = buf.try_get_u64()?;
+            let part_max_used = buf.try_get_u32()?;
+            let reads = buf.try_get_u32()?;
+            let bytes_read = buf.try_get_u64()?;
+            let read_time = buf.try_get_u32()?;
+            let writes = buf.try_get_u32()?;
+            let bytes_written = buf.try_get_u64()?;
+            let write_time = buf.try_get_u32()?;
 
             CounterRecordData::HostDiskIO(HostDiskIO {
                 disk_total,
@@ -1361,14 +1366,14 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_HOST_NET_IO => {
-            let bytes_in = buf.read_u64()?;
-            let packets_in = buf.read_u32()?;
-            let errs_in = buf.read_u32()?;
-            let drops_in = buf.read_u32()?;
-            let bytes_out = buf.read_u64()?;
-            let packets_out = buf.read_u32()?;
-            let errs_out = buf.read_u32()?;
-            let drops_out = buf.read_u32()?;
+            let bytes_in = buf.try_get_u64()?;
+            let packets_in = buf.try_get_u32()?;
+            let errs_in = buf.try_get_u32()?;
+            let drops_in = buf.try_get_u32()?;
+            let bytes_out = buf.try_get_u64()?;
+            let packets_out = buf.try_get_u32()?;
+            let errs_out = buf.try_get_u32()?;
+            let drops_out = buf.try_get_u32()?;
 
             CounterRecordData::HostNetIO(HostNetIO {
                 bytes_in,
@@ -1382,25 +1387,25 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_MIB2_IP_GROUP => {
-            let forwarding = buf.read_u32()?;
-            let default_ttl = buf.read_u32()?;
-            let in_receives = buf.read_u32()?;
-            let in_hdr_errors = buf.read_u32()?;
-            let in_addr_errors = buf.read_u32()?;
-            let forw_datagrams = buf.read_u32()?;
-            let in_unknown_protos = buf.read_u32()?;
-            let in_discards = buf.read_u32()?;
-            let in_delivers = buf.read_u32()?;
-            let out_requests = buf.read_u32()?;
-            let out_discards = buf.read_u32()?;
-            let out_no_routes = buf.read_u32()?;
-            let reasm_timeout = buf.read_u32()?;
-            let reasm_reqds = buf.read_u32()?;
-            let reasm_oks = buf.read_u32()?;
-            let reasm_fails = buf.read_u32()?;
-            let frag_oks = buf.read_u32()?;
-            let frag_fails = buf.read_u32()?;
-            let frag_creates = buf.read_u32()?;
+            let forwarding = buf.try_get_u32()?;
+            let default_ttl = buf.try_get_u32()?;
+            let in_receives = buf.try_get_u32()?;
+            let in_hdr_errors = buf.try_get_u32()?;
+            let in_addr_errors = buf.try_get_u32()?;
+            let forw_datagrams = buf.try_get_u32()?;
+            let in_unknown_protos = buf.try_get_u32()?;
+            let in_discards = buf.try_get_u32()?;
+            let in_delivers = buf.try_get_u32()?;
+            let out_requests = buf.try_get_u32()?;
+            let out_discards = buf.try_get_u32()?;
+            let out_no_routes = buf.try_get_u32()?;
+            let reasm_timeout = buf.try_get_u32()?;
+            let reasm_reqds = buf.try_get_u32()?;
+            let reasm_oks = buf.try_get_u32()?;
+            let reasm_fails = buf.try_get_u32()?;
+            let frag_oks = buf.try_get_u32()?;
+            let frag_fails = buf.try_get_u32()?;
+            let frag_creates = buf.try_get_u32()?;
 
             CounterRecordData::Mib2IpGroup(Mib2IpGroup {
                 forwarding,
@@ -1425,31 +1430,31 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_MIB2_ICMP_GROUP => {
-            let in_msgs = buf.read_u32()?;
-            let in_errors = buf.read_u32()?;
-            let in_dest_unreachs = buf.read_u32()?;
-            let in_time_excds = buf.read_u32()?;
-            let in_param_probs = buf.read_u32()?;
-            let in_src_quenchs = buf.read_u32()?;
-            let in_redirects = buf.read_u32()?;
-            let in_echos = buf.read_u32()?;
-            let in_echo_reps = buf.read_u32()?;
-            let in_timestamps = buf.read_u32()?;
-            let in_addr_masks = buf.read_u32()?;
-            let in_addr_mask_reps = buf.read_u32()?;
-            let out_msgs = buf.read_u32()?;
-            let out_errors = buf.read_u32()?;
-            let out_dest_unreachs = buf.read_u32()?;
-            let out_time_excds = buf.read_u32()?;
-            let out_param_probs = buf.read_u32()?;
-            let out_src_quenchs = buf.read_u32()?;
-            let out_redirects = buf.read_u32()?;
-            let out_echos = buf.read_u32()?;
-            let out_echo_reps = buf.read_u32()?;
-            let out_timestamps = buf.read_u32()?;
-            let out_timestamp_reps = buf.read_u32()?;
-            let out_addr_masks = buf.read_u32()?;
-            let out_addr_mask_reps = buf.read_u32()?;
+            let in_msgs = buf.try_get_u32()?;
+            let in_errors = buf.try_get_u32()?;
+            let in_dest_unreachs = buf.try_get_u32()?;
+            let in_time_excds = buf.try_get_u32()?;
+            let in_param_probs = buf.try_get_u32()?;
+            let in_src_quenchs = buf.try_get_u32()?;
+            let in_redirects = buf.try_get_u32()?;
+            let in_echos = buf.try_get_u32()?;
+            let in_echo_reps = buf.try_get_u32()?;
+            let in_timestamps = buf.try_get_u32()?;
+            let in_addr_masks = buf.try_get_u32()?;
+            let in_addr_mask_reps = buf.try_get_u32()?;
+            let out_msgs = buf.try_get_u32()?;
+            let out_errors = buf.try_get_u32()?;
+            let out_dest_unreachs = buf.try_get_u32()?;
+            let out_time_excds = buf.try_get_u32()?;
+            let out_param_probs = buf.try_get_u32()?;
+            let out_src_quenchs = buf.try_get_u32()?;
+            let out_redirects = buf.try_get_u32()?;
+            let out_echos = buf.try_get_u32()?;
+            let out_echo_reps = buf.try_get_u32()?;
+            let out_timestamps = buf.try_get_u32()?;
+            let out_timestamp_reps = buf.try_get_u32()?;
+            let out_addr_masks = buf.try_get_u32()?;
+            let out_addr_mask_reps = buf.try_get_u32()?;
 
             CounterRecordData::Mib2IcmpGroup(Mib2IcmpGroup {
                 in_msgs,
@@ -1480,21 +1485,21 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_MIB2_TCP_GROUP => {
-            let rto_algorithm = buf.read_u32()?;
-            let rto_min = buf.read_u32()?;
-            let rto_max = buf.read_u32()?;
-            let max_conn = buf.read_u32()?;
-            let active_opens = buf.read_u32()?;
-            let passive_opens = buf.read_u32()?;
-            let attempt_fails = buf.read_u32()?;
-            let estab_resets = buf.read_u32()?;
-            let curr_estab = buf.read_u32()?;
-            let in_segs = buf.read_u32()?;
-            let out_segs = buf.read_u32()?;
-            let retrans_segs = buf.read_u32()?;
-            let in_errs = buf.read_u32()?;
-            let out_rsts = buf.read_u32()?;
-            let in_csum_errs = buf.read_u32()?;
+            let rto_algorithm = buf.try_get_u32()?;
+            let rto_min = buf.try_get_u32()?;
+            let rto_max = buf.try_get_u32()?;
+            let max_conn = buf.try_get_u32()?;
+            let active_opens = buf.try_get_u32()?;
+            let passive_opens = buf.try_get_u32()?;
+            let attempt_fails = buf.try_get_u32()?;
+            let estab_resets = buf.try_get_u32()?;
+            let curr_estab = buf.try_get_u32()?;
+            let in_segs = buf.try_get_u32()?;
+            let out_segs = buf.try_get_u32()?;
+            let retrans_segs = buf.try_get_u32()?;
+            let in_errs = buf.try_get_u32()?;
+            let out_rsts = buf.try_get_u32()?;
+            let in_csum_errs = buf.try_get_u32()?;
 
             CounterRecordData::Mib2TcpGroup(Mib2TcpGroup {
                 rto_algorithm,
@@ -1515,13 +1520,13 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_MIB2_UDP_GROUP => {
-            let in_datagrams = buf.read_u32()?;
-            let no_ports = buf.read_u32()?;
-            let in_errors = buf.read_u32()?;
-            let out_datagrams = buf.read_u32()?;
-            let rcvbuf_errors = buf.read_u32()?;
-            let sndbuf_errors = buf.read_u32()?;
-            let in_csum_errors = buf.read_u32()?;
+            let in_datagrams = buf.try_get_u32()?;
+            let no_ports = buf.try_get_u32()?;
+            let in_errors = buf.try_get_u32()?;
+            let out_datagrams = buf.try_get_u32()?;
+            let rcvbuf_errors = buf.try_get_u32()?;
+            let sndbuf_errors = buf.try_get_u32()?;
+            let in_csum_errors = buf.try_get_u32()?;
 
             CounterRecordData::Mib2UdpGroup(Mib2UdpGroup {
                 in_datagrams,
@@ -1534,11 +1539,11 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_VIRT_NODE => {
-            let mhz = buf.read_u32()?;
-            let cpus = buf.read_u32()?;
-            let memory = buf.read_u64()?;
-            let memory_free = buf.read_u64()?;
-            let num_domains = buf.read_u32()?;
+            let mhz = buf.try_get_u32()?;
+            let cpus = buf.try_get_u32()?;
+            let memory = buf.try_get_u64()?;
+            let memory_free = buf.try_get_u64()?;
+            let num_domains = buf.try_get_u32()?;
 
             CounterRecordData::VirtNode(VirtNode {
                 mhz,
@@ -1549,9 +1554,9 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_VIRT_CPU => {
-            let state = buf.read_u32()?;
-            let cpu_time = buf.read_u32()?;
-            let nr_virt_cpu = buf.read_u32()?;
+            let state = buf.try_get_u32()?;
+            let cpu_time = buf.try_get_u32()?;
+            let nr_virt_cpu = buf.try_get_u32()?;
 
             CounterRecordData::VirtCpu(VirtCpu {
                 state,
@@ -1560,20 +1565,20 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_VIRT_MEMORY => {
-            let memory = buf.read_u64()?;
-            let max_memory = buf.read_u64()?;
+            let memory = buf.try_get_u64()?;
+            let max_memory = buf.try_get_u64()?;
 
             CounterRecordData::VirtMemory(VirtMemory { memory, max_memory })
         }
         COUNTER_TYPE_VIRT_DISK_IO => {
-            let capacity = buf.read_u64()?;
-            let allocation = buf.read_u64()?;
-            let available = buf.read_u64()?;
-            let rd_req = buf.read_u32()?;
-            let rd_bytes = buf.read_u64()?;
-            let wr_req = buf.read_u32()?;
-            let wr_bytes = buf.read_u64()?;
-            let errs = buf.read_u32()?;
+            let capacity = buf.try_get_u64()?;
+            let allocation = buf.try_get_u64()?;
+            let available = buf.try_get_u64()?;
+            let rd_req = buf.try_get_u32()?;
+            let rd_bytes = buf.try_get_u64()?;
+            let wr_req = buf.try_get_u32()?;
+            let wr_bytes = buf.try_get_u64()?;
+            let errs = buf.try_get_u32()?;
 
             CounterRecordData::VirtDisk(VirtDiskIO {
                 capacity,
@@ -1588,14 +1593,14 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
         }
 
         COUNTER_TYPE_VIRT_NET_IO => {
-            let rx_bytes = buf.read_u64()?;
-            let rx_packets = buf.read_u32()?;
-            let rx_errs = buf.read_u32()?;
-            let rx_drop = buf.read_u32()?;
-            let tx_bytes = buf.read_u64()?;
-            let tx_packets = buf.read_u32()?;
-            let tx_errs = buf.read_u32()?;
-            let tx_drop = buf.read_u32()?;
+            let rx_bytes = buf.try_get_u64()?;
+            let rx_packets = buf.try_get_u32()?;
+            let rx_errs = buf.try_get_u32()?;
+            let rx_drop = buf.try_get_u32()?;
+            let tx_bytes = buf.try_get_u64()?;
+            let tx_packets = buf.try_get_u32()?;
+            let tx_errs = buf.try_get_u32()?;
+            let tx_drop = buf.try_get_u32()?;
 
             CounterRecordData::VirtNetIO(VirtNetIO {
                 rx_bytes,
@@ -1610,16 +1615,16 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
         }
 
         COUNTER_TYPE_NVIDIA_GPU => {
-            let device_count = buf.read_u32()?;
-            let processes = buf.read_u32()?;
-            let gpu_time = buf.read_u32()?;
-            let mem_time = buf.read_u32()?;
-            let mem_total = buf.read_u64()?;
-            let mem_free = buf.read_u64()?;
-            let ecc_errors = buf.read_u32()?;
-            let energy = buf.read_u32()?;
-            let temperature = buf.read_u32()?;
-            let fan_speed = buf.read_u32()?;
+            let device_count = buf.try_get_u32()?;
+            let processes = buf.try_get_u32()?;
+            let gpu_time = buf.try_get_u32()?;
+            let mem_time = buf.try_get_u32()?;
+            let mem_total = buf.try_get_u64()?;
+            let mem_free = buf.try_get_u64()?;
+            let ecc_errors = buf.try_get_u32()?;
+            let energy = buf.try_get_u32()?;
+            let temperature = buf.try_get_u32()?;
+            let fan_speed = buf.try_get_u32()?;
 
             CounterRecordData::NvidiaGpu(NvidiaGpu {
                 device_count,
@@ -1636,42 +1641,42 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
         }
 
         COUNTER_TYPE_BCM_TABLES => {
-            let host_entries = buf.read_u32()?;
-            let host_entries_max = buf.read_u32()?;
-            let ipv4_entries = buf.read_u32()?;
-            let ipv4_entries_max = buf.read_u32()?;
-            let ipv6_entries = buf.read_u32()?;
-            let ipv6_entries_max = buf.read_u32()?;
-            let ipv4_ipv6_entries = buf.read_u32()?;
-            let ipv4_ipv6_entries_max = buf.read_u32()?;
-            let long_ipv6_entries = buf.read_u32()?;
-            let long_ipv6_entries_max = buf.read_u32()?;
-            let total_routes = buf.read_u32()?;
-            let total_routes_max = buf.read_u32()?;
-            let ecmp_nexthops = buf.read_u32()?;
-            let ecmp_nexthops_max = buf.read_u32()?;
-            let mac_entries = buf.read_u32()?;
-            let mac_entries_max = buf.read_u32()?;
-            let ipv4_neighbors = buf.read_u32()?;
-            let ipv6_neighbors = buf.read_u32()?;
-            let ipv4_routes = buf.read_u32()?;
-            let ipv6_routes = buf.read_u32()?;
-            let acl_ingress_entries = buf.read_u32()?;
-            let acl_ingress_entries_max = buf.read_u32()?;
-            let acl_ingress_counters = buf.read_u32()?;
-            let acl_ingress_counters_max = buf.read_u32()?;
-            let acl_ingress_meters = buf.read_u32()?;
-            let acl_ingress_meters_max = buf.read_u32()?;
-            let acl_ingress_slices = buf.read_u32()?;
-            let acl_ingress_slices_max = buf.read_u32()?;
-            let acl_egress_entries = buf.read_u32()?;
-            let acl_egress_entries_max = buf.read_u32()?;
-            let acl_egress_counters = buf.read_u32()?;
-            let acl_egress_counters_max = buf.read_u32()?;
-            let acl_egress_meters = buf.read_u32()?;
-            let acl_egress_meters_max = buf.read_u32()?;
-            let acl_egress_slices = buf.read_u32()?;
-            let acl_egress_slices_max = buf.read_u32()?;
+            let host_entries = buf.try_get_u32()?;
+            let host_entries_max = buf.try_get_u32()?;
+            let ipv4_entries = buf.try_get_u32()?;
+            let ipv4_entries_max = buf.try_get_u32()?;
+            let ipv6_entries = buf.try_get_u32()?;
+            let ipv6_entries_max = buf.try_get_u32()?;
+            let ipv4_ipv6_entries = buf.try_get_u32()?;
+            let ipv4_ipv6_entries_max = buf.try_get_u32()?;
+            let long_ipv6_entries = buf.try_get_u32()?;
+            let long_ipv6_entries_max = buf.try_get_u32()?;
+            let total_routes = buf.try_get_u32()?;
+            let total_routes_max = buf.try_get_u32()?;
+            let ecmp_nexthops = buf.try_get_u32()?;
+            let ecmp_nexthops_max = buf.try_get_u32()?;
+            let mac_entries = buf.try_get_u32()?;
+            let mac_entries_max = buf.try_get_u32()?;
+            let ipv4_neighbors = buf.try_get_u32()?;
+            let ipv6_neighbors = buf.try_get_u32()?;
+            let ipv4_routes = buf.try_get_u32()?;
+            let ipv6_routes = buf.try_get_u32()?;
+            let acl_ingress_entries = buf.try_get_u32()?;
+            let acl_ingress_entries_max = buf.try_get_u32()?;
+            let acl_ingress_counters = buf.try_get_u32()?;
+            let acl_ingress_counters_max = buf.try_get_u32()?;
+            let acl_ingress_meters = buf.try_get_u32()?;
+            let acl_ingress_meters_max = buf.try_get_u32()?;
+            let acl_ingress_slices = buf.try_get_u32()?;
+            let acl_ingress_slices_max = buf.try_get_u32()?;
+            let acl_egress_entries = buf.try_get_u32()?;
+            let acl_egress_entries_max = buf.try_get_u32()?;
+            let acl_egress_counters = buf.try_get_u32()?;
+            let acl_egress_counters_max = buf.try_get_u32()?;
+            let acl_egress_meters = buf.try_get_u32()?;
+            let acl_egress_meters_max = buf.try_get_u32()?;
+            let acl_egress_slices = buf.try_get_u32()?;
+            let acl_egress_slices_max = buf.try_get_u32()?;
 
             CounterRecordData::BcmTables(BcmTables {
                 host_entries,
@@ -1731,15 +1736,15 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
 
 fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
     // read header first
-    let data_format = buf.read_u32()?;
-    let length = buf.read_u32()?;
+    let data_format = buf.try_get_u32()?;
+    let length = buf.try_get_u32()?;
 
     let record = match data_format {
         FLOW_TYPE_RAW => {
-            let protocol = buf.read_u32()?;
-            let frame_length = buf.read_u32()?;
-            let stripped = buf.read_u32()?;
-            let original_length = buf.read_u32()?;
+            let protocol = buf.try_get_u32()?;
+            let frame_length = buf.try_get_u32()?;
+            let stripped = buf.try_get_u32()?;
+            let original_length = buf.try_get_u32()?;
 
             let mut header_bytes = vec![0; length as usize - 4 * 4];
             buf.read_exact(&mut header_bytes)?;
@@ -1753,16 +1758,16 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_EXT_LINUX_REASON => {
-            let reason = buf.read_string()?;
+            let reason = try_read_string(buf)?;
             FlowRecord::ExtendedLinuxReason(ExtendedLinuxReason { reason })
         }
         FLOW_TYPE_ETH => {
-            let length = buf.read_u32()?;
+            let length = buf.try_get_u32()?;
             let mut src_mac = [0u8; 6];
             buf.read_exact(&mut src_mac)?;
             let mut dst_mac = [0u8; 6];
             buf.read_exact(&mut dst_mac)?;
-            let eth_type = buf.read_u32()?;
+            let eth_type = buf.try_get_u32()?;
 
             FlowRecord::SampledEthernet(FlowRecordSampleEthernet {
                 length,
@@ -1772,18 +1777,18 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_IPV4 => {
-            let length = buf.read_u32()?;
-            let protocol = buf.read_u32()?;
+            let length = buf.try_get_u32()?;
+            let protocol = buf.try_get_u32()?;
             let mut data = [0u8; 4];
             buf.read_exact(&mut data)?;
             let src_ip = Ipv4Addr::from(data);
             let mut data = [0u8; 4];
             buf.read_exact(&mut data)?;
             let dst_ip = Ipv4Addr::from(data);
-            let src_port = buf.read_u32()?;
-            let dst_port = buf.read_u32()?;
-            let tcp_flags = buf.read_u32()?;
-            let tos = buf.read_u32()?;
+            let src_port = buf.try_get_u32()?;
+            let dst_port = buf.try_get_u32()?;
+            let tcp_flags = buf.try_get_u32()?;
+            let tos = buf.try_get_u32()?;
 
             FlowRecord::SampledIpv4(SampledIpv4 {
                 length,
@@ -1797,18 +1802,18 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_IPV6 => {
-            let length = buf.read_u32()?;
-            let protocol = buf.read_u32()?;
+            let length = buf.try_get_u32()?;
+            let protocol = buf.try_get_u32()?;
             let mut data = [0u8; 16];
             buf.read_exact(&mut data)?;
             let src_ip = Ipv6Addr::from(data);
             let mut data = [0u8; 16];
             buf.read_exact(&mut data)?;
             let dst_ip = Ipv6Addr::from(data);
-            let src_port = buf.read_u32()?;
-            let dst_port = buf.read_u32()?;
-            let tcp_flags = buf.read_u32()?;
-            let priority = buf.read_u32()?;
+            let src_port = buf.try_get_u32()?;
+            let dst_port = buf.try_get_u32()?;
+            let tcp_flags = buf.try_get_u32()?;
+            let priority = buf.try_get_u32()?;
 
             FlowRecord::SampledIpv6(SampledIpv6 {
                 length,
@@ -1822,10 +1827,10 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_EXT_SWITCH => {
-            let src_vlan = buf.read_u32()?;
-            let src_priority = buf.read_u32()?;
-            let dst_vlan = buf.read_u32()?;
-            let dst_priority = buf.read_u32()?;
+            let src_vlan = buf.try_get_u32()?;
+            let src_priority = buf.try_get_u32()?;
+            let dst_vlan = buf.try_get_u32()?;
+            let dst_priority = buf.try_get_u32()?;
 
             FlowRecord::ExtendedSwitch(ExtendedSwitch {
                 src_vlan,
@@ -1836,8 +1841,8 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
         }
         FLOW_TYPE_EXT_ROUTER => {
             let next_hop = decode_ipaddr(buf)?;
-            let src_mask_len = buf.read_u32()?;
-            let dst_mask_len = buf.read_u32()?;
+            let src_mask_len = buf.try_get_u32()?;
+            let dst_mask_len = buf.try_get_u32()?;
 
             FlowRecord::ExtendedRouter(ExtendedRouter {
                 next_hop,
@@ -1847,14 +1852,14 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
         }
         FLOW_TYPE_EXT_GATEWAY => {
             let next_hop = decode_ipaddr(buf)?;
-            let r#as = buf.read_u32()?;
-            let src_as = buf.read_u32()?;
-            let src_peer_as = buf.read_u32()?;
-            let as_destinations = buf.read_u32()?;
+            let r#as = buf.try_get_u32()?;
+            let src_as = buf.try_get_u32()?;
+            let src_peer_as = buf.try_get_u32()?;
+            let as_destinations = buf.try_get_u32()?;
 
             let (as_path_type, as_path_length, as_path) = if as_destinations != 0 {
-                let as_path_type = buf.read_u32()?;
-                let as_path_length = buf.read_u32()?;
+                let as_path_type = buf.try_get_u32()?;
+                let as_path_length = buf.try_get_u32()?;
 
                 // protection for as-path length
                 if as_path_length > 1000 {
@@ -1865,7 +1870,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
                 }
                 let mut as_path: Vec<u32> = Vec::with_capacity(as_path_length as usize);
                 for _ in 0..as_path_length {
-                    as_path.push(buf.read_u32()?);
+                    as_path.push(buf.try_get_u32()?);
                 }
 
                 (as_path_type, as_path_length, as_path)
@@ -1873,7 +1878,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
                 (0, 0, vec![])
             };
 
-            let communities_length = buf.read_u32()?;
+            let communities_length = buf.try_get_u32()?;
             // protection for communities length
             if communities_length > 1000 {
                 return Err(Error::TooManyCommunities);
@@ -1883,10 +1888,10 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             }
             let mut communities = Vec::with_capacity(communities_length as usize);
             for _ in 0..communities_length {
-                communities.push(buf.read_u32()?);
+                communities.push(buf.try_get_u32()?);
             }
 
-            let local_pref = buf.read_u32()?;
+            let local_pref = buf.try_get_u32()?;
 
             FlowRecord::ExtendedGateway(ExtendedGateway {
                 next_hop,
@@ -1903,12 +1908,12 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_EGRESS_QUEUE => FlowRecord::EgressQueue(EgressQueue {
-            queue: buf.read_u32()?,
+            queue: buf.try_get_u32()?,
         }),
         FLOW_TYPE_EXT_ACL => {
-            let number = buf.read_u32()?;
-            let name = buf.read_string()?;
-            let direction = buf.read_u32()?;
+            let number = buf.try_get_u32()?;
+            let name = try_read_string(buf)?;
+            let direction = buf.try_get_u32()?;
 
             FlowRecord::ExtendedACL(ExtendedACL {
                 number,
@@ -1917,23 +1922,23 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_EXT_FUNCTION => {
-            let symbol = buf.read_string()?;
+            let symbol = try_read_string(buf)?;
 
             FlowRecord::ExtendedFunction(ExtendedFunction { symbol })
         }
         FLOW_TYPE_EXT_TCP_INFO => {
-            let direction = buf.read_u32()?;
-            let snd_mss = buf.read_u32()?;
-            let rcv_mss = buf.read_u32()?;
-            let unacked = buf.read_u32()?;
-            let lost = buf.read_u32()?;
-            let retrans = buf.read_u32()?;
-            let pmtu = buf.read_u32()?;
-            let rtt = buf.read_u32()?;
-            let rttvar = buf.read_u32()?;
-            let snd_cwnd = buf.read_u32()?;
-            let reordering = buf.read_u32()?;
-            let min_rtt = buf.read_u32()?;
+            let direction = buf.try_get_u32()?;
+            let snd_mss = buf.try_get_u32()?;
+            let rcv_mss = buf.try_get_u32()?;
+            let unacked = buf.try_get_u32()?;
+            let lost = buf.try_get_u32()?;
+            let retrans = buf.try_get_u32()?;
+            let pmtu = buf.try_get_u32()?;
+            let rtt = buf.try_get_u32()?;
+            let rttvar = buf.try_get_u32()?;
+            let snd_cwnd = buf.try_get_u32()?;
+            let reordering = buf.try_get_u32()?;
+            let min_rtt = buf.try_get_u32()?;
 
             FlowRecord::ExtendedTCPInfo(ExtendedTCPInfo {
                 direction,
@@ -1961,32 +1966,32 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
 
 fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
     // sample header
-    let format = buf.read_u32()?;
-    let length = buf.read_u32()?;
-    let sample_sequence_number = buf.read_u32()?;
+    let format = buf.try_get_u32()?;
+    let length = buf.try_get_u32()?;
+    let sample_sequence_number = buf.try_get_u32()?;
 
     let (source_id_type, source_id_value) = match format {
         SAMPLE_FORMAT_FLOW | SAMPLE_FORMAT_COUNTER => {
             // Interlaced data-source format
-            let source_id = buf.read_u32()?;
+            let source_id = buf.try_get_u32()?;
 
             (source_id >> 24, source_id & 0x00FF_FFFF)
         }
         SAMPLE_FORMAT_EXPANDED_FLOW | SAMPLE_FORMAT_EXPANDED_COUNTER | SAMPLE_FORMAT_DROP => {
             // Explicit data-source format
-            (buf.read_u32()?, buf.read_u32()?)
+            (buf.try_get_u32()?, buf.try_get_u32()?)
         }
         _ => return Err(Error::UnknownSampleFormat(format)),
     };
 
     let data = match format {
         SAMPLE_FORMAT_FLOW => {
-            let sampling_rate = buf.read_u32()?;
-            let sample_pool = buf.read_u32()?;
-            let drops = buf.read_u32()?;
-            let input = buf.read_u32()?;
-            let output = buf.read_u32()?;
-            let flow_records_count = buf.read_u32()?;
+            let sampling_rate = buf.try_get_u32()?;
+            let sample_pool = buf.try_get_u32()?;
+            let drops = buf.try_get_u32()?;
+            let input = buf.try_get_u32()?;
+            let output = buf.try_get_u32()?;
+            let flow_records_count = buf.try_get_u32()?;
 
             if flow_records_count > 1000 {
                 // protection against ddos
@@ -2007,7 +2012,7 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
             }
         }
         SAMPLE_FORMAT_COUNTER | SAMPLE_FORMAT_EXPANDED_COUNTER => {
-            let counter_records_count = buf.read_u32()?;
+            let counter_records_count = buf.try_get_u32()?;
             if counter_records_count > 1000 {
                 return Err(Error::TooManyFlowRecords);
             }
@@ -2020,15 +2025,15 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
             SampleData::Counter { records }
         }
         SAMPLE_FORMAT_EXPANDED_FLOW => {
-            let sampling_rate = buf.read_u32()?;
-            let sample_pool = buf.read_u32()?;
-            let drops = buf.read_u32()?;
-            let input_if_format = buf.read_u32()?;
-            let input_if_value = buf.read_u32()?;
-            let output_if_format = buf.read_u32()?;
-            let output_if_value = buf.read_u32()?;
+            let sampling_rate = buf.try_get_u32()?;
+            let sample_pool = buf.try_get_u32()?;
+            let drops = buf.try_get_u32()?;
+            let input_if_format = buf.try_get_u32()?;
+            let input_if_value = buf.try_get_u32()?;
+            let output_if_format = buf.try_get_u32()?;
+            let output_if_value = buf.try_get_u32()?;
 
-            let flow_records_count = buf.read_u32()?;
+            let flow_records_count = buf.try_get_u32()?;
             if flow_records_count > 1000 {
                 // protection against ddos
                 return Err(Error::TooManyFlowRecords);
@@ -2050,12 +2055,12 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
             }
         }
         SAMPLE_FORMAT_DROP => {
-            let drops = buf.read_u32()?;
-            let input = buf.read_u32()?;
-            let output = buf.read_u32()?;
-            let reason = buf.read_u32()?;
+            let drops = buf.try_get_u32()?;
+            let input = buf.try_get_u32()?;
+            let output = buf.try_get_u32()?;
+            let reason = buf.try_get_u32()?;
 
-            let flow_records_count = buf.read_u32()?;
+            let flow_records_count = buf.try_get_u32()?;
             if flow_records_count > 1000 {
                 // protection against ddos
                 return Err(Error::TooManyFlowRecords);
@@ -2088,20 +2093,31 @@ fn decode_sample(buf: &mut Cursor<&[u8]>) -> Result<Sample, Error> {
     })
 }
 
+fn try_read_string(buf: &mut Cursor<&[u8]>) -> Result<String, Error> {
+    let len = buf.try_get_u32()?;
+    let aligned_len = (len + 3) & (!3); // align to 4
+
+    let mut data = vec![0u8; aligned_len as usize];
+    buf.read_exact(&mut data)?;
+    data.truncate(len as usize);
+
+    Ok(unsafe { String::from_utf8_unchecked(data) })
+}
+
 impl Datagram {
     pub fn decode(data: impl AsRef<[u8]>) -> Result<Datagram, Error> {
         let mut buf = Cursor::new(data.as_ref());
-        let version = buf.read_u32()?;
+        let version = buf.try_get_u32()?;
         if version != 5 {
             return Err(Error::IncompatibleVersion);
         }
 
         let agent_ip = decode_ipaddr(&mut buf)?;
-        let sub_agent_id = buf.read_u32()?;
-        let sequence_number = buf.read_u32()?;
-        let uptime = buf.read_u32()?;
+        let sub_agent_id = buf.try_get_u32()?;
+        let sequence_number = buf.try_get_u32()?;
+        let uptime = buf.try_get_u32()?;
 
-        let samples_count = buf.read_u32()?;
+        let samples_count = buf.try_get_u32()?;
         if samples_count > 1000 {
             return Err(Error::TooManySamples);
         }
