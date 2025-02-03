@@ -80,7 +80,8 @@ fn generate_struct_like(
     let maybe_description = type_attrs
         .description
         .as_ref()
-        .map(|desc| quote!( schema.metadata().description = Some(#desc); ));
+        .map(|desc| quote!( Some(#desc) ))
+        .unwrap_or_else(|| quote!(None));
 
     let mut any_flatten = false;
     let mut mapped_fields = Vec::with_capacity(fields.named.len());
@@ -119,6 +120,7 @@ fn generate_struct_like(
             let mut schema = ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
+                None,
             );
 
             if !flattened_subschemas.is_empty() {
@@ -131,6 +133,8 @@ fn generate_struct_like(
                     flattened_subschemas,
                 );
             }
+
+            schema
         )
     } else {
         quote!(
@@ -138,10 +142,11 @@ fn generate_struct_like(
 
             #maybe_tag_schema
 
-            let mut schema = ::configurable::schema::generate_struct_schema(
+            ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
-            );
+                #maybe_description
+            )
         )
     };
 
@@ -150,10 +155,6 @@ fn generate_struct_like(
         let mut required = ::std::collections::BTreeSet::new();
 
         #generated
-
-        #maybe_description
-
-        schema
     ))
 }
 
@@ -317,6 +318,7 @@ fn generate_enum_variant_schema(
                         ::configurable::schema::generate_struct_schema(
                             properties,
                             required,
+                            None
                         )
                     }
                 }
@@ -370,6 +372,7 @@ fn generate_enum_unamed_variant_schema(
             ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
+                None
             )
         )
     } else {

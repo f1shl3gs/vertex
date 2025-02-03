@@ -26,6 +26,7 @@ pub type Set<V> = BTreeSet<V>;
 pub fn generate_struct_schema(
     properties: IndexMap<&'static str, SchemaObject>,
     required: BTreeSet<&'static str>,
+    description: Option<&'static str>,
 ) -> SchemaObject {
     let properties = properties
         .into_iter()
@@ -39,6 +40,10 @@ pub fn generate_struct_schema(
             required,
             ..Default::default()
         })),
+        metadata: Some(Box::new(Metadata {
+            description,
+            ..Default::default()
+        })),
         ..Default::default()
     }
 }
@@ -47,10 +52,13 @@ pub fn generate_struct_schema(
 pub fn generate_empty_struct_schema() -> SchemaObject {
     SchemaObject {
         instance_type: Some(InstanceType::Object.into()),
-        object: Some(Box::new(ObjectValidation {
-            properties: Default::default(),
-            ..Default::default()
-        })),
+        object: Some(
+            ObjectValidation {
+                properties: Default::default(),
+                ..Default::default()
+            }
+            .into(),
+        ),
         ..Default::default()
     }
 }
@@ -200,5 +208,5 @@ pub fn generate_internal_tagged_variant_schema(
     let mut required = BTreeSet::new();
     required.insert(tag);
 
-    generate_struct_schema(properties, required)
+    generate_struct_schema(properties, required, None)
 }

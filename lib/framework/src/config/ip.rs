@@ -24,7 +24,7 @@ impl Configurable for IpAccessConfig {
         properties.insert("allow", generate_ipnet_list_schema());
         properties.insert("deny", generate_ipnet_list_schema());
 
-        configurable::schema::generate_struct_schema(properties, BTreeSet::new())
+        configurable::schema::generate_struct_schema(properties, BTreeSet::new(), None)
     }
 }
 

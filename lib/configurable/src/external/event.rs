@@ -50,7 +50,7 @@ impl Configurable for Bucket {
         };
         let requirement = BTreeSet::from(["upper", "count"]);
 
-        generate_struct_schema(properties, requirement)
+        generate_struct_schema(properties, requirement, None)
     }
 }
 
@@ -62,7 +62,7 @@ impl Configurable for Quantile {
         };
         let requirement = BTreeSet::from(["quantile", "value"]);
 
-        generate_struct_schema(properties, requirement)
+        generate_struct_schema(properties, requirement, None)
     }
 }
 
@@ -84,8 +84,8 @@ impl Configurable for MetricValue {
 
         generate_one_of_schema(vec![
             f64::generate_schema(gen),
-            generate_struct_schema(histogram_properties, histogram_requirement),
-            generate_struct_schema(summary_properties, summary_requirement),
+            generate_struct_schema(histogram_properties, histogram_requirement, None),
+            generate_struct_schema(summary_properties, summary_requirement, None),
         ])
     }
 }
