@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738683948878,
+  "lastUpdate": 1738684370216,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "8493f3774a264e63d8fce721655a38d9c65627d9",
-          "message": "bump kube & k8s-openapi",
-          "timestamp": "2024-12-24T01:58:26+08:00",
-          "tree_id": "3b45f6efbfaccc403a0ff4b5c06e6a3804f134ad",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8493f3774a264e63d8fce721655a38d9c65627d9"
-        },
-        "date": 1734977329076,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 528,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35780.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37469.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "428c8f4ab08e40b920f08d6b1ded22384453166e",
+          "message": "try remove tokio::sync::Mutex (#2186)",
+          "timestamp": "2025-02-04T23:42:00+08:00",
+          "tree_id": "b5c9669f52bb32228b64e7dd15160bcc83cdb85e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/428c8f4ab08e40b920f08d6b1ded22384453166e"
+        },
+        "date": 1738684351923,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 539,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37469.7,
             "unit": "KiB"
           }
         ]
