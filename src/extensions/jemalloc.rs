@@ -4,7 +4,7 @@ compile_error!("jemalloc-extension requires feature `jemalloc`");
 use std::env::temp_dir;
 use std::net::SocketAddr;
 use std::num::ParseIntError;
-use std::sync::OnceLock;
+use std::sync::Mutex;
 use std::time::Duration;
 
 use bytes::Bytes;
@@ -21,7 +21,6 @@ use hyper::{Method, Request, Response, StatusCode};
 use hyper_util::rt::{TokioExecutor, TokioIo};
 use tikv_jemalloc_ctl::stats;
 use tokio::net::TcpListener;
-use tokio::sync::Mutex;
 
 const DEFAULT_PROFILE_SECONDS: u64 = 30;
 
@@ -29,7 +28,7 @@ const DEFAULT_PROFILE_SECONDS: u64 = 30;
 const PROF_ACTIVE: &[u8] = b"prof.active\0";
 const PROF_DUMP: &[u8] = b"prof.dump\0";
 
-static PROFILE_MUTEX: OnceLock<Mutex<()>> = OnceLock::new();
+static PROFILE_MUTEX: Mutex<()> = Mutex::new(());
 
 fn default_listen() -> SocketAddr {
     "0.0.0.0:10911".parse().unwrap()
@@ -94,6 +93,7 @@ async fn handler(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error>
             let resident = stats::resident::read()?;
             let mapped = stats::mapped::read()?;
             let retained = stats::retained::read()?;
+
             let body = format!(
                 "allocated: {}\nactive: {}\nmetadata: {}\nresident: {}\nmapped: {}\nretained: {}\n",
                 allocated, active, metadata, resident, mapped, retained
@@ -102,21 +102,24 @@ async fn handler(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error>
             Ok(Response::new(Full::new(Bytes::from(body))))
         }
 
-        (&Method::GET, "/profile") => {
-            let mutex = PROFILE_MUTEX.get_or_init(Default::default);
-            match mutex.try_lock() {
-                Ok(_guard) => profiling(req).await,
-                Err(_err) => {
-                    let mut resp = Response::new(Bytes::from("Already in Profiling").into());
-                    *resp.status_mut() = StatusCode::TOO_MANY_REQUESTS;
-                    Ok(resp)
-                }
+        (&Method::GET, "/profile") => match PROFILE_MUTEX.try_lock() {
+            Ok(_guard) => profiling(req).await,
+            Err(_err) => {
+                let resp = Response::builder()
+                    .status(StatusCode::TOO_MANY_REQUESTS)
+                    .body(Full::new(Bytes::from("Already in profiling")))
+                    .unwrap();
+
+                Ok(resp)
             }
-        }
+        },
 
         _ => {
-            let mut resp = Response::new(Full::default());
-            *resp.status_mut() = StatusCode::NOT_FOUND;
+            let resp = Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .body(Full::new(Bytes::from("Not found")))
+                .unwrap();
+
             Ok(resp)
         }
     }

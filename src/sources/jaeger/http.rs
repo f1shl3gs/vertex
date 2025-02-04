@@ -1,5 +1,4 @@
 use std::net::SocketAddr;
-use std::sync::Arc;
 
 use bytes::Bytes;
 use configurable::Configurable;
@@ -13,7 +12,6 @@ use hyper::body::Incoming;
 use hyper::service::service_fn;
 use jaeger::agent::deserialize_binary_batch;
 use serde::{Deserialize, Serialize};
-use tokio::sync::Mutex;
 
 fn default_thrift_http_endpoint() -> SocketAddr {
     SocketAddr::new([0, 0, 0, 0].into(), 14268)
@@ -43,11 +41,12 @@ pub async fn serve(
     output: Pipeline,
     acknowledgements: bool,
 ) -> crate::Result<()> {
-    let output = Arc::new(Mutex::new(output));
     let listener = MaybeTlsListener::bind(&config.endpoint, config.tls.as_ref()).await?;
+
     let service = service_fn(move |req: Request<Incoming>| {
-        let output = Arc::clone(&output);
-        async move { handle(output, req, acknowledgements).await }
+        let output = output.clone();
+
+        async move { handle(req, output, acknowledgements).await }
     });
 
     framework::http::serve(listener, service)
@@ -56,8 +55,8 @@ pub async fn serve(
 }
 
 async fn handle(
-    output: Arc<Mutex<Pipeline>>,
     req: Request<Incoming>,
+    mut output: Pipeline,
     acknowledgements: bool,
 ) -> Result<Response<Full<Bytes>>, hyper::Error> {
     if req.method() != Method::POST {
@@ -86,7 +85,7 @@ async fn handle(
                 events.add_batch_notifier(batch);
             }
 
-            if let Err(err) = output.lock().await.send(events).await {
+            if let Err(err) = output.send(events).await {
                 error!(message = "Error sending batch", ?err);
 
                 let status = if let Some(receiver) = receiver {
