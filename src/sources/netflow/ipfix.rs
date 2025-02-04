@@ -7,6 +7,7 @@
 use std::io::Cursor;
 
 use bytes::Buf;
+use xdr::XDRReader;
 
 use super::decode::{
     decode_data_records, decode_options_data_records, decode_template_records, DataField, Error,
@@ -78,15 +79,15 @@ impl IpFix<'_> {
     ) -> Result<IpFix<'a>, Error> {
         let mut buf = Cursor::new(data);
 
-        let version = buf.try_get_u16()?;
-        let length = buf.try_get_u16()?;
+        let version = buf.read_u16()?;
+        let length = buf.read_u16()?;
         if data.len() != length as usize {
             return Err(Error::DatagramTooShort);
         }
 
-        let export_time = buf.try_get_u32()?;
-        let sequence_number = buf.try_get_u32()?;
-        let observation_domain_id = buf.try_get_u32()?;
+        let export_time = buf.read_u32()?;
+        let sequence_number = buf.read_u32()?;
+        let observation_domain_id = buf.read_u32()?;
         let flow_sets = decode_flow_sets(&mut buf, version, observation_domain_id, templates)?;
 
         Ok(IpFix {
@@ -125,9 +126,9 @@ fn decode_flow_set<'a, T: TemplateSystem>(
     observation_domain_id: u32,
     templates: &mut T,
 ) -> Result<FlowSet<'a>, Error> {
-    let id = buf.try_get_u16()?;
+    let id = buf.read_u16()?;
     // the length is the bytes length, not records array length
-    let length = buf.try_get_u16()?;
+    let length = buf.read_u16()?;
 
     let payload = buf.get_ref();
     let start = buf.position() as usize;
@@ -208,16 +209,16 @@ fn decode_options_template_records(
     let mut records = Vec::new();
 
     while buf.remaining() >= 4 {
-        let id = buf.try_get_u16()?;
-        let field_count = buf.try_get_u16()?;
-        let scope_field_count = buf.try_get_u16()?;
+        let id = buf.read_u16()?;
+        let field_count = buf.read_u16()?;
+        let scope_field_count = buf.read_u16()?;
 
         let mut scopes = Vec::with_capacity(scope_field_count as usize);
         for _ in 0..scope_field_count {
-            let typ = buf.try_get_u16()?;
-            let length = buf.try_get_u16()?;
+            let typ = buf.read_u16()?;
+            let length = buf.read_u16()?;
             let pen = if typ & 0x8000 != 0 {
-                let pen = buf.try_get_u32()?;
+                let pen = buf.read_u32()?;
                 Some(pen)
             } else {
                 None
@@ -228,10 +229,10 @@ fn decode_options_template_records(
 
         let mut options = Vec::with_capacity(field_count as usize);
         for _ in 0..field_count {
-            let typ = buf.try_get_u16()?;
-            let length = buf.try_get_u16()?;
+            let typ = buf.read_u16()?;
+            let length = buf.read_u16()?;
             let pen = if typ & 0x8000 != 0 {
-                let pen = buf.try_get_u32()?;
+                let pen = buf.read_u32()?;
                 Some(pen)
             } else {
                 None
@@ -522,10 +523,10 @@ mod tests {
         let mut buf = Cursor::new(data.as_slice());
         while buf.remaining() > 0 {
             let start = buf.position();
-            let version = buf.try_get_u16().unwrap();
+            let version = buf.read_u16().unwrap();
             assert_eq!(version, 10);
 
-            let length = buf.try_get_u16().unwrap();
+            let length = buf.read_u16().unwrap();
             let end = start + length as u64;
             buf.set_position(end);
 
