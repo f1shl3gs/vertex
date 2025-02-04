@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738666964842,
+  "lastUpdate": 1738666990946,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "655deed5499029b30676c37a8483989a9a48bd90",
-          "message": "refine `configurable` macro generation process",
-          "timestamp": "2024-12-23T00:33:54+08:00",
-          "tree_id": "133cc66e463ff332802df120d82f9a8c8e91d4bd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/655deed5499029b30676c37a8483989a9a48bd90"
-        },
-        "date": 1734885390892,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.933,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 146.96,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 302.88,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 593.91,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "28a0604b3411cc9aa61dba1f0fcb53f726e2836e",
           "message": "bump thiserror, serde_json and syn to latest (#2075)",
           "timestamp": "2024-12-23T19:50:22+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 629.46,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bd287bc72f85da88802b90fe60899b5661824fa9",
+          "message": "Revert \"remove lib/xdr (#2184)\" (#2185)\n\nThis reverts commit 08a320e83baf016bb240f036b494dafd1a503c0b.",
+          "timestamp": "2025-02-04T19:00:14+08:00",
+          "tree_id": "4efdc46b6bc3b17e7fba3c2ed83fac5567dddea4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bd287bc72f85da88802b90fe60899b5661824fa9"
+        },
+        "date": 1738666972630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.348,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 136.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 316.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 631.87,
             "unit": "ns/op"
           }
         ]
