@@ -12,9 +12,9 @@ use event::{AddBatchNotifier, BatchNotifier, BatchStatus, LogRecord};
 use flate2::read::MultiGzDecoder;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::tcp::TcpKeepaliveConfig;
-use framework::{tcp, Source};
+use framework::tls::{MaybeTlsListener, TlsConfig};
+use framework::Source;
 use tokio::io::AsyncWriteExt;
-use tokio::net::TcpListener;
 use tokio_stream::StreamExt;
 use tokio_util::codec::FramedRead;
 
@@ -31,22 +31,23 @@ struct Config {
     #[serde(default = "default_address")]
     address: SocketAddr,
 
+    tls: Option<TlsConfig>,
+
     /// The maximum number of TCP connections that are allowed at any given time.
     connection_limit: Option<usize>,
 
     keepalive: Option<TcpKeepaliveConfig>,
 
     /// The size of the received buffer used for each connection.
-    #[serde(with = "humanize::bytes::serde_option")]
+    #[serde(default, with = "humanize::bytes::serde_option")]
     receive_buffer: Option<usize>,
-    // tls: Option<TlsConfig>,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "fluent")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let listener = TcpListener::bind(&self.address).await?;
+        let mut listener = MaybeTlsListener::bind(&self.address, self.tls.as_ref()).await?;
 
         let mut shutdown = cx.shutdown;
         let output = cx.output;
@@ -63,7 +64,11 @@ impl SourceConfig for Config {
                 let (mut stream, peer) = tokio::select! {
                     result = listener.accept() => {
                         match result {
-                            Ok(pair) => pair,
+                            Ok(stream) => {
+                                let peer = stream.peer_addr();
+
+                                (stream, peer)
+                            },
                             Err(err) => {
                                 warn!(
                                     message = "tcp listener accept error",
@@ -85,7 +90,7 @@ impl SourceConfig for Config {
                 );
 
                 if let Some(config) = &keepalive {
-                    if let Err(err) = config.apply_to(&stream) {
+                    if let Err(err) = stream.set_keepalive(config) {
                         warn!(
                             message = "Failed configuring TCP keepalive",
                             %err
@@ -94,7 +99,7 @@ impl SourceConfig for Config {
                 }
 
                 if let Some(buffer_bytes) = receive_buffer {
-                    if let Err(err) = tcp::set_receive_buffer_size(&stream, buffer_bytes) {
+                    if let Err(err) = stream.set_receive_buffer_bytes(buffer_bytes) {
                         warn!(
                             message = "Failed configuring receive buffer size on TCP socket",
                             %err
@@ -105,8 +110,7 @@ impl SourceConfig for Config {
                 let mut shutdown = shutdown.clone();
                 let mut output = output.clone();
                 tokio::spawn(async move {
-                    let (rh, mut writer) = stream.split();
-                    let mut reader = FramedRead::new(rh, Decoder::new(peer.ip()));
+                    let mut reader = FramedRead::new(stream, Decoder::new(peer.ip()));
 
                     loop {
                         let (chunk, mut logs) = tokio::select! {
@@ -154,6 +158,8 @@ impl SourceConfig for Config {
                             if ack == 1 {
                                 let resp = encode_ack_resp(&chunk);
 
+                                // TCP is full-duplex, so this is fine
+                                let writer = reader.get_mut();
                                 if let Err(err) = writer.write_all(&resp).await {
                                     error!(
                                         message = "write acknowledgement failed",
@@ -916,7 +922,7 @@ mod integration_tests {
                 connection_limit: None,
                 keepalive: None,
                 receive_buffer: None,
-                // tls: None,
+                tls: None,
             };
 
             let source = config

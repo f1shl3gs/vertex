@@ -60,7 +60,7 @@ pub struct Config {
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let batch_settings = self.batch.validate()?.into_batcher_settings()?;
-        let (framer, serializer) = self.encoding.build(SinkType::MessageBased);
+        let (framer, serializer) = self.encoding.build(SinkType::StreamBased);
         let encoder = Encoder::<Framer>::new(framer, serializer);
         let transformer = self.encoding.transformer();
         let content_type = {

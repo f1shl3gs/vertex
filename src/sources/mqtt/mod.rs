@@ -67,7 +67,7 @@ async fn run(
                         let remote_addr = stream.peer_addr();
 
                         if let Some(keepalive) = &keepalive {
-                            if let Err(err) = stream.set_keepalive(*keepalive) {
+                            if let Err(err) = stream.set_keepalive(keepalive) {
                                 error!(
                                     message = "set keepalive failed",
                                     ?err

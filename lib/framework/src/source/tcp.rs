@@ -290,7 +290,7 @@ async fn handle_stream<T>(
         }
     }
 
-    if let Some(keepalive) = keepalive {
+    if let Some(keepalive) = keepalive.as_ref() {
         if let Err(err) = socket.set_keepalive(keepalive) {
             warn!(
                 message = "Failed configuring TCP keepalive",

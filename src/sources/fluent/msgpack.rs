@@ -272,16 +272,6 @@ pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
             let len = mark & 0x0f;
             decode_map_with_length(reader, len as usize)?
         }
-        // map 16
-        0xde => {
-            let len = reader.read_u16()?;
-            decode_map_with_length(reader, len as usize)?
-        }
-        // map 32
-        0xdf => {
-            let len = reader.read_u32()?;
-            decode_map_with_length(reader, len as usize)?
-        }
 
         // bin 8
         0xc4 => {
@@ -457,6 +447,17 @@ pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
 
             Value::Object(map)
         }
+
+        // map 16
+        0xde => {
+            let len = reader.read_u16()?;
+            decode_map_with_length(reader, len as usize)?
+        }
+        // map 32
+        0xdf => {
+            let len = reader.read_u32()?;
+            decode_map_with_length(reader, len as usize)?
+        }
         _ => return Err(Error::UnknownType(mark)),
     };
 
@@ -574,11 +575,11 @@ pub fn decode_entry<R: Read>(reader: &mut R) -> Result<(DateTime<Utc>, Value), E
             let len = typ & 0x0f;
             decode_map_with_length(reader, len as usize)?
         }
-        0xdc => {
+        0xde => {
             let len = reader.read_u16()?;
             decode_map_with_length(reader, len as usize)?
         }
-        0xdd => {
+        0xdf => {
             let len = reader.read_u32()?;
             decode_map_with_length(reader, len as usize)?
         }

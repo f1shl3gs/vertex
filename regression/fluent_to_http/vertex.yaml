@@ -1,0 +1,28 @@
+sources:
+  internal_metrics:
+    type: "internal_metrics"
+    interval: 5s
+  selfstat:
+    type: selfstat
+    interval: 5s
+
+  fluent:
+    type:    "fluent"
+    address: 0.0.0.0:8282
+
+sinks:
+  prometheus:
+    type:    "prometheus_exporter"
+    inputs:
+      - internal_metrics
+      - selfstat
+
+  http:
+    type: http
+    inputs:
+      - fluent
+    uri: http://lading:8080
+    method: POST
+    encoding:
+      codec: json
+    healthcheck: true
