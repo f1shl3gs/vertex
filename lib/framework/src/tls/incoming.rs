@@ -200,8 +200,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
         Ok(())
     }
 
-    #[cfg(feature = "sources-utils-tcp-keepalive")]
-    pub fn set_keepalive(&mut self, keepalive: TcpKeepaliveConfig) -> io::Result<()> {
+    pub fn set_keepalive(&mut self, keepalive: &TcpKeepaliveConfig) -> io::Result<()> {
         let stream = self.get_ref().ok_or_else(|| {
             Error::new(
                 ErrorKind::NotConnected,
@@ -218,7 +217,6 @@ impl MaybeTlsIncomingStream<TcpStream> {
         Ok(())
     }
 
-    #[cfg(feature = "sources-utils-tcp-socket")]
     pub fn set_receive_buffer_bytes(&mut self, bytes: usize) -> io::Result<()> {
         let stream = self.get_ref().ok_or_else(|| {
             Error::new(

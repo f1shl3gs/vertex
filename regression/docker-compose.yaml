@@ -3,12 +3,12 @@ services:
     image: vertex:regression
     ports:
       - 9100:9100 # prometheus exporter
-      - 9091:9090 # pprof
+      - 9091:9091 # pprof
     deploy:
       resources:
         limits:
           cpus: 4
-          memory: 512M
+          memory: 1G
     volumes:
       - ${PWD}/vertex.yaml:/etc/vertex/vertex.yaml
       - data:/data
@@ -35,6 +35,8 @@ services:
       - --no-target
       - --experiment-duration-seconds
       - "600"
+      - --warmup-duration-seconds
+      - "5"
 
 volumes:
   data:

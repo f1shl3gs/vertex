@@ -37,7 +37,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         cx: SourceContext,
     ) -> crate::Result<Source> {
         let auth = HttpSourceAuth::try_from(auth)?;
-        let acknowledgements = cx.acknowledgements();
+        let acknowledgements = cx.acknowledgements;
         let shutdown = cx.shutdown;
         let output = cx.output;
         let builder = self.clone();

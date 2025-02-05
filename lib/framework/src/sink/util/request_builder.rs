@@ -36,7 +36,7 @@ impl RequestMetadata {
 }
 
 pub struct EncodeResult<P> {
-    pub payload: P,
+    pub data: P,
     pub uncompressed_byte_size: usize,
     pub compressed_byte_size: Option<usize>,
 }
@@ -45,21 +45,21 @@ impl<P> EncodeResult<P>
 where
     P: AsRef<[u8]>,
 {
-    pub fn uncompressed(payload: P) -> Self {
-        let uncompressed_byte_size = payload.as_ref().len();
+    pub fn uncompressed(data: P) -> Self {
+        let uncompressed_byte_size = data.as_ref().len();
 
         Self {
-            payload,
+            data,
             uncompressed_byte_size,
             compressed_byte_size: None,
         }
     }
 
-    pub fn compressed(payload: P, uncompressed_byte_size: usize) -> Self {
-        let compressed_byte_size = payload.as_ref().len();
+    pub fn compressed(data: P, uncompressed_byte_size: usize) -> Self {
+        let compressed_byte_size = data.as_ref().len();
 
         Self {
-            payload,
+            data,
             uncompressed_byte_size,
             compressed_byte_size: Some(compressed_byte_size),
         }
@@ -70,7 +70,7 @@ impl<P> EncodeResult<P> {
     // Can't be `const` because you can't (yet?) run deconstructors in a const context, which is what this function does
     // by dropping the (un)compressed sizes.
     pub fn into_payload(self) -> P {
-        self.payload
+        self.data
     }
 }
 

@@ -149,7 +149,7 @@ impl<T, B, RL> BatchedHttpSink<T, B, RL>
 where
     B: Batch,
     B::Output: ByteSizeOf + Clone + Send + 'static,
-    RL: RetryLogic<Response = http::Response<Bytes>, Error = HttpError> + Send + 'static,
+    RL: RetryLogic<Response = Response<Bytes>, Error = HttpError> + Send + 'static,
     T: HttpSink<Input = B::Input, Output = B::Output>,
 {
     pub fn with_logic(

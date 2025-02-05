@@ -48,6 +48,6 @@ impl RequestBuilder<Vec<Event>> for HttpRequestBuilder {
         metadata: Self::Metadata,
         payload: EncodeResult<Self::Payload>,
     ) -> Self::Request {
-        HttpRequest::new(payload.payload, metadata.0, metadata.1, metadata.2, ())
+        HttpRequest::new(payload.data, metadata.0, metadata.1, metadata.2, ())
     }
 }

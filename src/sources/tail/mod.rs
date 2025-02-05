@@ -157,7 +157,7 @@ impl SourceConfig for Config {
         // within the same given data_dir(e.g. the global one) without the file
         // servers' checkpointers interfering with each other
         let data_dir = cx.globals.make_subdir(cx.key.id())?;
-        let acknowledgements = cx.acknowledgements();
+        let acknowledgements = cx.acknowledgements;
 
         tail_source(self, data_dir, cx.shutdown, cx.output, acknowledgements)
     }

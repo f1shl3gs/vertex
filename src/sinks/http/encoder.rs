@@ -24,7 +24,9 @@ impl HttpEncoder {
 impl Encoder<Vec<Event>> for HttpEncoder {
     fn encode(&self, events: Vec<Event>, writer: &mut dyn Write) -> std::io::Result<usize> {
         let mut encoder = self.encoder.clone();
-        let mut buf = BytesMut::new();
+
+        let data_size: usize = events.iter().map(|event| event.size_of()).sum();
+        let mut buf = BytesMut::with_capacity(data_size * 2);
 
         for mut event in events {
             self.transformer.transform(&mut event);
