@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738754154981,
+  "lastUpdate": 1738754160395,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "8493f3774a264e63d8fce721655a38d9c65627d9",
-          "message": "bump kube & k8s-openapi",
-          "timestamp": "2024-12-24T01:58:26+08:00",
-          "tree_id": "3b45f6efbfaccc403a0ff4b5c06e6a3804f134ad",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8493f3774a264e63d8fce721655a38d9c65627d9"
-        },
-        "date": 1734976838109,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 104.6,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 188.13,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 189.23,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ba6a3324af589982a745edebed6c789a882265c8",
+          "message": "chore(deps): bump uuid from 1.12.1 to 1.13.1 (#2189)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.12.1 to 1.13.1.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.12.1...1.13.1)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-05T19:13:36+08:00",
+          "tree_id": "fed474bfbc35690096f7de75d0bfccf2d33c00ad",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ba6a3324af589982a745edebed6c789a882265c8"
+        },
+        "date": 1738754141964,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.383,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 107.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.13,
             "unit": "ns/op"
           }
         ]
