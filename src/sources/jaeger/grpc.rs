@@ -8,7 +8,6 @@ use futures_util::FutureExt;
 use jaeger::proto::collector_service_server::CollectorServiceServer;
 use jaeger::proto::{CollectorService, PostSpansRequest, PostSpansResponse};
 use serde::{Deserialize, Serialize};
-use tokio::sync::Mutex;
 use tonic::{transport::Server, Request, Response, Status};
 
 fn default_grpc_endpoint() -> SocketAddr {
@@ -27,7 +26,7 @@ pub struct GrpcServerConfig {
 }
 
 struct JaegerCollector {
-    output: Mutex<Pipeline>,
+    output: Pipeline,
 
     acknowledgements: bool,
 }
@@ -47,9 +46,7 @@ impl CollectorService for JaegerCollector {
                 events.add_batch_notifier(batch);
             }
 
-            let mut output = self.output.lock().await;
-
-            if let Err(err) = output.send(events).await {
+            if let Err(err) = self.output.clone().send(events).await {
                 warn!(message = "Error sending trace", %err);
                 return Err(Status::internal(err.to_string()));
             }
@@ -76,7 +73,7 @@ pub(super) async fn serve(
     acknowledgements: bool,
 ) -> crate::Result<()> {
     let service = CollectorServiceServer::new(JaegerCollector {
-        output: Mutex::new(output),
+        output,
         acknowledgements,
     });
 
