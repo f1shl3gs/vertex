@@ -158,8 +158,15 @@ impl RootCommand {
         runtime.block_on(async move {
             let mut config_paths = config::process_paths(&config_paths).ok_or(exitcode::CONFIG)?;
 
+            let allocator = if cfg!(feature = "jemalloc") {
+                "jemalloc"
+            } else {
+                "system"
+            };
+
             info!(
                 message = "Start vertex",
+                allocator,
                 threads = self.threads,
                 max_blocking_threads = self.max_blocking_threads,
                 configs = ?config_paths

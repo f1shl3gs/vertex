@@ -12,9 +12,9 @@ use crate::tls::MaybeTlsListener;
 use crate::{Error, ShutdownSignal};
 
 /// Serve the service with the supplied listener.
-pub fn serve<S>(listener: MaybeTlsListener, service: S) -> Serve<S>
+pub fn serve<R, S>(listener: MaybeTlsListener, service: S) -> Serve<S>
 where
-    S: Service<Request<Incoming>> + Clone + Send + 'static,
+    S: Service<R> + Clone + Send + 'static,
     S::Future: Send,
 {
     Serve { listener, service }

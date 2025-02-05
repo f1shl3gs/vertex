@@ -53,11 +53,13 @@ impl SourceConfig for Config {
         let output = cx.output;
         let keepalive = self.keepalive;
         let receive_buffer = self.receive_buffer;
+        let acknowledgements = cx.acknowledgements;
 
         Ok(Box::pin(async move {
             info!(
                 message = "Listening for connections",
-                addr = %listener.local_addr().unwrap()
+                addr = %listener.local_addr().unwrap(),
+                acknowledgements
             );
 
             loop {
@@ -110,7 +112,8 @@ impl SourceConfig for Config {
                 let mut shutdown = shutdown.clone();
                 let mut output = output.clone();
                 tokio::spawn(async move {
-                    let mut reader = FramedRead::new(stream, Decoder::new(peer.ip()));
+                    let mut reader =
+                        FramedRead::with_capacity(stream, Decoder::new(peer.ip()), 64 * 1024);
 
                     loop {
                         let (chunk, mut logs) = tokio::select! {
@@ -134,28 +137,29 @@ impl SourceConfig for Config {
                             _ = &mut shutdown => break,
                         };
 
-                        let (batch, receiver) = BatchNotifier::new_with_receiver();
-
-                        for log in logs.iter_mut() {
-                            log.add_batch_notifier(batch.clone());
+                        let (batch, receiver) =
+                            BatchNotifier::maybe_new_with_receiver(acknowledgements);
+                        if let Some(batch) = batch {
+                            for log in logs.iter_mut() {
+                                log.add_batch_notifier(batch.clone());
+                            }
+                            drop(batch);
                         }
-                        drop(batch);
 
                         if let Err(_err) = output.send(logs).await {
-                            warn!(message = "send logs failed",);
+                            warn!(message = "send logs failed");
 
                             return;
                         }
 
-                        let ack = match receiver.await {
-                            BatchStatus::Delivered => 1,
-                            BatchStatus::Errored => -1,
-                            BatchStatus::Failed => -2,
+                        let ack = match receiver {
+                            Some(receiver) => receiver.await,
+                            None => BatchStatus::Delivered,
                         };
 
                         // build ack resp
                         if let Some(chunk) = chunk {
-                            if ack == 1 {
+                            if ack == BatchStatus::Delivered {
                                 let resp = encode_ack_resp(&chunk);
 
                                 // TCP is full-duplex, so this is fine
@@ -206,6 +210,9 @@ impl Decoder {
         &self,
         reader: &mut R,
     ) -> Result<Option<(Option<Vec<u8>>, Vec<LogRecord>)>, DecodeError> {
+        // all the received events is an array
+        //
+        // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#event-modes
         let len = match reader.read_u8()? {
             // fixarray
             typ @ 0x90..=0x9f => (typ & 0x0f) as usize,
@@ -217,7 +224,7 @@ impl Decoder {
             // heartbeat
             0xc0 => return Ok(None),
 
-            typ => return Err(MsgPackError::UnknownType(typ).into()),
+            typ => return Err(MsgPackError::UnknownType(typ, "message").into()),
         };
 
         if !(2..=4).contains(&len) {
@@ -315,7 +322,7 @@ impl Decoder {
 
                 let mut cursor = std::io::Cursor::new(buf);
                 let mut logs = Vec::new();
-                loop {
+                while cursor.remaining() > 0 {
                     let (timestamp, value) = decode_entry(&mut cursor)?;
 
                     let mut log = LogRecord::from(value);
@@ -325,10 +332,6 @@ impl Decoder {
                     metadata.insert("fluent.host", self.peer.to_string());
 
                     logs.push(log);
-
-                    if cursor.remaining() == 0 {
-                        break;
-                    }
                 }
 
                 match option {
@@ -362,7 +365,7 @@ impl Decoder {
                 }
             }
 
-            typ => Err(MsgPackError::UnknownType(typ).into()),
+            typ => Err(MsgPackError::UnknownType(typ, "entries").into()),
         }
     }
 }
@@ -371,14 +374,16 @@ impl tokio_util::codec::Decoder for Decoder {
     type Item = (Option<Vec<u8>>, Vec<LogRecord>);
     type Error = DecodeError;
 
-    // all the received events is an array
-    //
-    // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#event-modes
     fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         if src.is_empty() {
             return Ok(None);
         }
 
+        // fluent's Forward protocol do not have a length header, or something like that,
+        // so we can't frame the input stream, and we can't tell if the buf have any message.
+        //
+        // The only way to figure out if we have got a whole message is parse/deserialize it,
+        // That's the reason why we use Cursor here, and it may hurt performance too.
         let mut cursor = std::io::Cursor::new(&src[..]);
         match self.decode_internal(&mut cursor) {
             Ok(result) => {
@@ -387,10 +392,12 @@ impl tokio_util::codec::Decoder for Decoder {
                 Ok(result)
             }
             Err(err) => match err {
-                DecodeError::IO(_err) => {
-                    // IO error should never happen with std::io::Cursor,
-                    // so the only possible is leak of data to read
-                    Ok(None)
+                DecodeError::IO(err) => {
+                    if err.kind() == std::io::ErrorKind::UnexpectedEof {
+                        Ok(None)
+                    } else {
+                        Err(DecodeError::IO(err))
+                    }
                 }
                 _ => Err(err),
             },

@@ -4,7 +4,7 @@ generator:
              59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131]
       addr: vertex:8282
       variant: "fluent"
-      bytes_per_second: 10M
+      bytes_per_second: 50M
       maximum_prebuild_cache_size_bytes: "256 Mb"
 
 blackhole:

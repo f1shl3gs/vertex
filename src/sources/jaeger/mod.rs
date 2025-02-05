@@ -23,7 +23,7 @@ struct Config {
 #[typetag::serde(name = "jaeger")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let acknowledgements = cx.acknowledgements();
+        let acknowledgements = cx.acknowledgements;
         let shutdown = cx.shutdown;
         let source = cx.key.to_string();
 

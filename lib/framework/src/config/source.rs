@@ -18,11 +18,6 @@ pub struct SourceContext {
 }
 
 impl SourceContext {
-    #[inline]
-    pub fn acknowledgements(&self) -> bool {
-        self.acknowledgements || self.globals.acknowledgements
-    }
-
     #[cfg(any(test, feature = "test-util"))]
     pub fn new_test(output: Pipeline) -> Self {
         Self {

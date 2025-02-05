@@ -78,7 +78,7 @@ impl<T: Read> ReadExt for T {}
 #[derive(Debug)]
 pub enum Error {
     IO(std::io::Error),
-    UnknownType(u8),
+    UnknownType(u8, &'static str),
     InvalidStringType(u8),
     Timestamp,
     Utf8(Utf8Error),
@@ -98,7 +98,9 @@ impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Error::IO(err) => err.fmt(f),
-            Error::UnknownType(v) => write!(f, "Unknown type mark 0x{:x}", v),
+            Error::UnknownType(v, when) => {
+                write!(f, "Unknown type mark 0x{:x} found when parse {}", v, when)
+            }
             Error::InvalidStringType(v) => write!(f, "Invalid string type: 0x{:x}", v),
             Error::Timestamp => write!(f, "Invalid timestamp"),
             Error::Utf8(err) => err.fmt(f),
@@ -154,70 +156,18 @@ impl std::fmt::Display for Error {
 pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
     let mark = reader.read_u8()?;
     let value = match mark {
-        // nil
-        0xc0 => Value::Null,
-
-        // bool
-        0xc2 => Value::Boolean(false),
-        0xc3 => Value::Boolean(true),
-
-        0x00..=0x7f => {
-            // positive fixint
-            Value::Integer(mark as i64)
+        // positive fixint
+        0x00..=0x7f => Value::Integer(mark as i64),
+        // fixmap
+        0x80..=0x8f => {
+            let len = mark & 0x0f;
+            decode_map_with_length(reader, len as usize)?
         }
-        0xe0..=0xff => {
-            // negative fixint
-            Value::Integer(mark as i8 as i64)
+        // fixarray
+        0x90..=0x9f => {
+            let len = mark & 0x0f;
+            decode_array_with_length(reader, len as usize)?.into()
         }
-
-        // unsigned integers
-        0xcc => {
-            // uint8
-            let value = reader.read_u8()?;
-            Value::Integer(value as i64)
-        }
-        // uint 16
-        0xcd => {
-            let value = reader.read_u16()?;
-            Value::Integer(value as i64)
-        }
-        // uint 32
-        0xce => {
-            let value = reader.read_u32()?;
-            Value::Integer(value as i64)
-        }
-        // uint 64
-        0xcf => {
-            let value = reader.read_u64()?;
-            Value::Integer(value as i64)
-        }
-
-        // signed integers
-        // int 8
-        0xd0 => {
-            let value = reader.read_i8()?;
-            Value::Integer(value as i64)
-        }
-        // int 16
-        0xd1 => {
-            let value = reader.read_i16()?;
-            Value::Integer(value as i64)
-        }
-        // int 32
-        0xd2 => {
-            let value = reader.read_i32()?;
-            Value::Integer(value as i64)
-        }
-        // int 64
-        0xd3 => {
-            let value = reader.read_i64()?;
-            Value::Integer(value)
-        }
-
-        // float
-        0xca => Value::Float(reader.read_f32()? as f64),
-        0xcb => Value::Float(reader.read_f64()?),
-
         // fixstr
         0xa0..=0xbf => {
             let len = mark & 0x1f;
@@ -226,52 +176,16 @@ pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
 
             Value::Bytes(Bytes::from(buf))
         }
-        // str 8
-        0xd9 => {
-            let len = reader.read_u8()?;
-            let mut buf = vec![0u8; len as usize];
-            reader.read_exact(&mut buf)?;
 
-            Value::Bytes(buf.into())
-        }
-        // str 16
-        0xda => {
-            let len = reader.read_u16()?;
-            let mut buf = vec![0u8; len as usize];
-            reader.read_exact(&mut buf)?;
+        // nil
+        0xc0 => Value::Null,
 
-            Value::Bytes(buf.into())
-        }
-        // str 32
-        0xdb => {
-            let len = reader.read_u32()?;
-            let mut buf = vec![0u8; len as usize];
-            reader.read_exact(&mut buf)?;
+        // 0xc1 is never used
 
-            Value::Bytes(buf.into())
-        }
-
-        // fixarray
-        0x90..=0x9f => {
-            let len = mark & 0x0f;
-            decode_array_with_length(reader, len as usize)?.into()
-        }
-        // array 16
-        0xdc => {
-            let len = reader.read_u16()?;
-            decode_array_with_length(reader, len as usize)?.into()
-        }
-        // array 32
-        0xdd => {
-            let len = reader.read_u32()?;
-            decode_array_with_length(reader, len as usize)?.into()
-        }
-
-        // fixmap
-        0x80..=0x8f => {
-            let len = mark & 0x0f;
-            decode_map_with_length(reader, len as usize)?
-        }
+        // false
+        0xc2 => Value::Boolean(false),
+        // true
+        0xc3 => Value::Boolean(true),
 
         // bin 8
         0xc4 => {
@@ -298,6 +212,112 @@ pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
             Value::Bytes(buf.into())
         }
 
+        // ext 8
+        0xc7 => {
+            let len = reader.read_u8()?;
+            let typ = reader.read_i8()?;
+
+            // https://github.com/msgpack/msgpack/blob/master/spec.md#timestamp-extension-type
+            if typ == -1 {
+                let nanos = reader.read_u32()?;
+                let secs = reader.read_i64()?;
+
+                let timestamp =
+                    DateTime::<Utc>::from_timestamp(secs, nanos).ok_or(Error::Timestamp)?;
+                Value::Timestamp(timestamp)
+            } else if typ == 0 {
+                // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1.5#eventtime-ext-format
+                let secs = reader.read_i32()?;
+                let nanos = reader.read_i32()?;
+
+                let timestamp = DateTime::<Utc>::from_timestamp(secs as i64, nanos as u32)
+                    .ok_or(Error::Timestamp)?;
+                Value::Timestamp(timestamp)
+            } else {
+                let mut data = vec![0u8; len as usize];
+                reader.read_exact(&mut data)?;
+
+                let mut map = BTreeMap::new();
+                map.insert("type".to_string(), typ.into());
+                map.insert("data".to_string(), Bytes::from(data).into());
+
+                Value::Object(map)
+            }
+        }
+        // ext 16
+        0xc8 => {
+            let len = reader.read_u16()?;
+            let typ = reader.read_i8()?;
+            let mut data = vec![0u8; len as usize];
+            reader.read_exact(&mut data)?;
+
+            let mut map = BTreeMap::new();
+            map.insert("type".to_string(), typ.into());
+            map.insert("data".to_string(), Bytes::from(data).into());
+
+            Value::Object(map)
+        }
+        // ext 32
+        0xc9 => {
+            let len = reader.read_u32()?;
+            let typ = reader.read_i8()?;
+            let mut data = vec![0u8; len as usize];
+            reader.read_exact(&mut data)?;
+
+            let mut map = BTreeMap::new();
+            map.insert("type".to_string(), typ.into());
+            map.insert("data".to_string(), Bytes::from(data).into());
+
+            Value::Object(map)
+        }
+
+        // float 32
+        0xca => Value::Float(reader.read_f32()? as f64),
+        // float 64
+        0xcb => Value::Float(reader.read_f64()?),
+
+        // uint8
+        0xcc => {
+            let value = reader.read_u8()?;
+            Value::Integer(value as i64)
+        }
+        // uint 16
+        0xcd => {
+            let value = reader.read_u16()?;
+            Value::Integer(value as i64)
+        }
+        // uint 32
+        0xce => {
+            let value = reader.read_u32()?;
+            Value::Integer(value as i64)
+        }
+        // uint 64
+        0xcf => {
+            let value = reader.read_u64()?;
+            Value::Integer(value as i64)
+        }
+
+        // int 8
+        0xd0 => {
+            let value = reader.read_i8()?;
+            Value::Integer(value as i64)
+        }
+        // int 16
+        0xd1 => {
+            let value = reader.read_i16()?;
+            Value::Integer(value as i64)
+        }
+        // int 32
+        0xd2 => {
+            let value = reader.read_i32()?;
+            Value::Integer(value as i64)
+        }
+        // int 64
+        0xd3 => {
+            let value = reader.read_i64()?;
+            Value::Integer(value)
+        }
+
         // fixext 1
         0xd4 => {
             let typ = reader.read_i8()?;
@@ -322,7 +342,6 @@ pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
 
             Value::Object(map)
         }
-
         // fixext 4
         0xd6 => {
             let typ = reader.read_i8()?;
@@ -389,63 +408,40 @@ pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
             Value::Object(map)
         }
 
-        // ext 8
-        0xc7 => {
+        // str 8
+        0xd9 => {
             let len = reader.read_u8()?;
-            let typ = reader.read_i8()?;
+            let mut buf = vec![0u8; len as usize];
+            reader.read_exact(&mut buf)?;
 
-            // https://github.com/msgpack/msgpack/blob/master/spec.md#timestamp-extension-type
-            if typ == -1 {
-                let nanos = reader.read_u32()?;
-                let secs = reader.read_i64()?;
-
-                let timestamp =
-                    DateTime::<Utc>::from_timestamp(secs, nanos).ok_or(Error::Timestamp)?;
-                Value::Timestamp(timestamp)
-            } else if typ == 0 {
-                // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1.5#eventtime-ext-format
-                let secs = reader.read_i32()?;
-                let nanos = reader.read_i32()?;
-
-                let timestamp = DateTime::<Utc>::from_timestamp(secs as i64, nanos as u32)
-                    .ok_or(Error::Timestamp)?;
-                Value::Timestamp(timestamp)
-            } else {
-                let mut data = vec![0u8; len as usize];
-                reader.read_exact(&mut data)?;
-
-                let mut map = BTreeMap::new();
-                map.insert("type".to_string(), typ.into());
-                map.insert("data".to_string(), Bytes::from(data).into());
-
-                Value::Object(map)
-            }
+            Value::Bytes(buf.into())
         }
-        // ext 16
-        0xc8 => {
+        // str 16
+        0xda => {
             let len = reader.read_u16()?;
-            let typ = reader.read_i8()?;
-            let mut data = vec![0u8; len as usize];
-            reader.read_exact(&mut data)?;
+            let mut buf = vec![0u8; len as usize];
+            reader.read_exact(&mut buf)?;
 
-            let mut map = BTreeMap::new();
-            map.insert("type".to_string(), typ.into());
-            map.insert("data".to_string(), Bytes::from(data).into());
-
-            Value::Object(map)
+            Value::Bytes(buf.into())
         }
-        // ext 32
-        0xc9 => {
+        // str 32
+        0xdb => {
             let len = reader.read_u32()?;
-            let typ = reader.read_i8()?;
-            let mut data = vec![0u8; len as usize];
-            reader.read_exact(&mut data)?;
+            let mut buf = vec![0u8; len as usize];
+            reader.read_exact(&mut buf)?;
 
-            let mut map = BTreeMap::new();
-            map.insert("type".to_string(), typ.into());
-            map.insert("data".to_string(), Bytes::from(data).into());
+            Value::Bytes(buf.into())
+        }
 
-            Value::Object(map)
+        // array 16
+        0xdc => {
+            let len = reader.read_u16()?;
+            decode_array_with_length(reader, len as usize)?.into()
+        }
+        // array 32
+        0xdd => {
+            let len = reader.read_u32()?;
+            decode_array_with_length(reader, len as usize)?.into()
         }
 
         // map 16
@@ -458,7 +454,10 @@ pub fn decode_value<R: Read>(reader: &mut R) -> Result<Value, Error> {
             let len = reader.read_u32()?;
             decode_map_with_length(reader, len as usize)?
         }
-        _ => return Err(Error::UnknownType(mark)),
+
+        // negative fixint
+        0xe0..=0xff => Value::Integer(mark as i8 as i64),
+        _ => return Err(Error::UnknownType(mark, "value")),
     };
 
     Ok(value)
@@ -518,7 +517,7 @@ pub fn decode_entry<R: Read>(reader: &mut R) -> Result<(DateTime<Utc>, Value), E
         0xdc => reader.read_u16()? as usize,
         // array 32
         0xdd => reader.read_u32()? as usize,
-        typ => return Err(Error::UnknownType(typ)),
+        typ => return Err(Error::UnknownType(typ, "entry")),
     };
 
     if len != 2 {
@@ -566,7 +565,7 @@ pub fn decode_entry<R: Read>(reader: &mut R) -> Result<(DateTime<Utc>, Value), E
             DateTime::from_timestamp(secs as i64, 0).ok_or(Error::Timestamp)?
         }
 
-        typ => return Err(Error::UnknownType(typ)),
+        typ => return Err(Error::UnknownType(typ, "timestamp in entry")),
     };
 
     // decode map
@@ -583,7 +582,7 @@ pub fn decode_entry<R: Read>(reader: &mut R) -> Result<(DateTime<Utc>, Value), E
             let len = reader.read_u32()?;
             decode_map_with_length(reader, len as usize)?
         }
-        typ => return Err(Error::UnknownType(typ)),
+        typ => return Err(Error::UnknownType(typ, "map in entry")),
     };
 
     Ok((ts, value))
@@ -604,7 +603,7 @@ pub fn decode_options<R: Read>(reader: &mut R) -> Result<Options, Error> {
         typ @ 0x80..0x8f => (typ & 0x0f) as usize,
         0xde => reader.read_u16()? as usize,
         0xdf => reader.read_u32()? as usize,
-        typ => return Err(Error::UnknownType(typ)),
+        typ => return Err(Error::UnknownType(typ, "options")),
     };
 
     let mut size = 0;
@@ -621,7 +620,7 @@ pub fn decode_options<R: Read>(reader: &mut R) -> Result<Options, Error> {
                     0xcd => reader.read_u16()? as usize,
                     0xce => reader.read_u32()? as usize,
                     0xcf => reader.read_u64()? as usize,
-                    typ => return Err(Error::UnknownType(typ)),
+                    typ => return Err(Error::UnknownType(typ, "size in options")),
                 }
             }
             "chunk" => {
@@ -630,7 +629,7 @@ pub fn decode_options<R: Read>(reader: &mut R) -> Result<Options, Error> {
                     0xd9 => reader.read_u8()? as usize,
                     0xda => reader.read_u16()? as usize,
                     0xdb => reader.read_u32()? as usize,
-                    typ => return Err(Error::UnknownType(typ)),
+                    typ => return Err(Error::UnknownType(typ, "chunk in options")),
                 };
 
                 let mut buf = vec![0u8; len];
@@ -652,7 +651,7 @@ pub fn decode_options<R: Read>(reader: &mut R) -> Result<Options, Error> {
                     0xcd => reader.read_u16()? as usize,
                     0xce => reader.read_u32()? as usize,
                     0xcf => reader.read_u64()? as usize,
-                    typ => return Err(Error::UnknownType(typ)),
+                    typ => return Err(Error::UnknownType(typ, "fluent_signal in options")),
                 };
             }
             _ => return Err(Error::UnknownOptionField(key)),
@@ -676,7 +675,7 @@ pub fn decode_binary<R: Read>(reader: &mut R) -> Result<Vec<u8>, Error> {
         0xc6 => reader.read_u32()? as usize,
         // fixint
         typ @ 0x00..=0x7f => typ as usize,
-        typ => return Err(Error::UnknownType(typ)),
+        typ => return Err(Error::UnknownType(typ, "binary")),
     };
 
     let mut buf = vec![0u8; len];

@@ -58,7 +58,7 @@ members = [
 
 [features]
 default = [
-    # "jemalloc",
+    "jemalloc",
 
     "extensions",
     "sources",
@@ -131,10 +131,6 @@ all-integration-tests = [
 
 extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "dep:parking_lot"]
 extensions-healthcheck = []
-extensions-jemalloc = [
-    "tikv-jemalloc-ctl/stats",
-    "tikv-jemallocator/profiling",
-]
 extensions-pprof = ["dep:pprof"]
 extensions-zpages = ["dep:parking_lot"]
 
@@ -142,7 +138,6 @@ extensions-zpages = ["dep:parking_lot"]
 extensions = [
     "extensions-healthcheck",
     "extensions-heartbeat",
-    # "extensions-jemalloc",
     # Musl does not provide "pthread_getname_np" in current release.
     # https://github.com/tikv/pprof-rs/issues/41
     "extensions-pprof",
@@ -306,7 +301,11 @@ tokio-console = ["framework/tokio-console", "tokio/tracing"]
 # Allocator
 # mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
 # need to declare it again.
-jemalloc = ["dep:tikv-jemallocator", "tikv-jemalloc-ctl/stats"]
+jemalloc = [
+    "dep:tikv-jemallocator",
+    "tikv-jemalloc-ctl/stats",
+    "tikv-jemalloc-ctl/profiling"
+]
 
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.

@@ -171,7 +171,7 @@ where
     ) -> crate::Result<crate::Source> {
         let tls = tls.cloned();
         let listenfd = ListenFd::from_env();
-        let acknowledgements = cx.acknowledgements();
+        let acknowledgements = cx.acknowledgements;
 
         Ok(Box::pin(async move {
             let listener = match make_listener(addr, listenfd, tls.as_ref()).await {
