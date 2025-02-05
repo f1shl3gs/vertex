@@ -58,7 +58,7 @@ members = [
 
 [features]
 default = [
-    "jemalloc",
+    # "jemalloc",
 
     "extensions",
     "sources",
