@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738759515592,
+  "lastUpdate": 1738759942813,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1cc67b48d3b629300fce39e58d13830366c94c80",
-          "message": "sources/clickhouse_metrics: add more tests and integration tests for clickhouse_metrics (#2081)",
-          "timestamp": "2024-12-26T04:00:08+08:00",
-          "tree_id": "aead2df0061cd67b4ae2a4a47aafd3eb33e64671",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1cc67b48d3b629300fce39e58d13830366c94c80"
-        },
-        "date": 1735157414099,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 524,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35753.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "575d4d356c25d3a785a5c73f2e179f0f7a205c4b",
           "message": "sinks/prometheus: optimize metrics store and write output (#2083)",
           "timestamp": "2024-12-26T07:43:10+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38810.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ccf23f7e1c041d5b1409697b8d275a18feacceee",
+          "message": "disable jemalloc by default (#2190)",
+          "timestamp": "2025-02-05T20:41:24+08:00",
+          "tree_id": "0e5690b33a633f74c5d45bde86c50655f127ee94",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ccf23f7e1c041d5b1409697b8d275a18feacceee"
+        },
+        "date": 1738759924476,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 550,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37482.7,
             "unit": "KiB"
           }
         ]
