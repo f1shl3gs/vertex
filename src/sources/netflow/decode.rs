@@ -1,10 +1,10 @@
 use std::io::{BufRead, Cursor};
 
 use bytes::Buf;
-use xdr::XDRReader;
 
 use super::ipfix::{DataRecord, OptionsDataRecord};
 use super::template::{Field, TemplateRecord};
+use crate::common::read::ReadExt;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {

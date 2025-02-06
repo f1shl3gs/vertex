@@ -188,7 +188,8 @@ use std::io::{Cursor, Read};
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 
 use bytes::Buf;
-use xdr::XDRReader;
+
+use crate::common::read::ReadExt;
 
 // Opaque sample_data types according to https://sflow.org/SFLOW-DATAGRAM5.txt
 const SAMPLE_FORMAT_FLOW: u32 = 1;
@@ -256,6 +257,17 @@ const COUNTER_TYPE_HUMIDITY: u32 = 3002;
 const COUNTER_TYPE_FANS: u32 = 3003;
 const COUNTER_TYPE_NVIDIA_GPU: u32 = (5703 << 12) + 1;
 const COUNTER_TYPE_BCM_TABLES: u32 = (4413 << 12) + 3;
+
+fn read_string<R: ReadExt>(reader: &mut R) -> std::io::Result<String> {
+    let len = reader.read_u32()?;
+    let aligned_len = (len + 3) & (!3); // align to 4
+
+    let mut data = vec![0u8; aligned_len as usize];
+    reader.read_exact(&mut data)?;
+    data.truncate(len as usize);
+
+    Ok(unsafe { String::from_utf8_unchecked(data) })
+}
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -1259,11 +1271,11 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             })
         }
         COUNTER_TYPE_PORT_NAME => {
-            let name = buf.read_string()?;
+            let name = read_string(buf)?;
             CounterRecordData::PortName(PortName { name })
         }
         COUNTER_TYPE_HOST_DESCRIPTION => {
-            let host = buf.read_string()?;
+            let host = read_string(buf)?;
 
             let mut uuid = [0u8; 16];
             buf.read_exact(&mut uuid)?;
@@ -1271,7 +1283,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let machine_type = buf.read_u32()?;
             let os_name = buf.read_u32()?;
 
-            let os_release = buf.read_string()?;
+            let os_release = read_string(buf)?;
 
             CounterRecordData::HostDescription(HostDescription {
                 host,
@@ -1753,7 +1765,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_EXT_LINUX_REASON => {
-            let reason = buf.read_string()?;
+            let reason = read_string(buf)?;
             FlowRecord::ExtendedLinuxReason(ExtendedLinuxReason { reason })
         }
         FLOW_TYPE_ETH => {
@@ -1907,7 +1919,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
         }),
         FLOW_TYPE_EXT_ACL => {
             let number = buf.read_u32()?;
-            let name = buf.read_string()?;
+            let name = read_string(buf)?;
             let direction = buf.read_u32()?;
 
             FlowRecord::ExtendedACL(ExtendedACL {
@@ -1917,7 +1929,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             })
         }
         FLOW_TYPE_EXT_FUNCTION => {
-            let symbol = buf.read_string()?;
+            let symbol = read_string(buf)?;
 
             FlowRecord::ExtendedFunction(ExtendedFunction { symbol })
         }
