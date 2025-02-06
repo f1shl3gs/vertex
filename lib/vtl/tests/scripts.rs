@@ -4,7 +4,7 @@ use value::Value;
 use vtl::{compile, Diagnostic, TargetValue};
 
 fn run(content: String) {
-    let mut program = match compile(&content) {
+    let program = match compile(&content) {
         Ok(program) => program,
         Err(err) => {
             let diagnostic = Diagnostic::new(content);

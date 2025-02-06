@@ -25,7 +25,7 @@ impl Vtl {
             Err(_err) => return Err(exitcode::OSFILE),
         };
 
-        let mut program = match vtl::compile(&script) {
+        let program = match vtl::compile(&script) {
             Ok(program) => program,
             Err(err) => {
                 let snippets = Diagnostic::new(script).snippets(err);

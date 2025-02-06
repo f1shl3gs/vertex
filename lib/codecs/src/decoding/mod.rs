@@ -18,7 +18,7 @@ pub use config::{DecodingConfig, DeserializerConfig, FramingConfig};
 pub use error::{DecodeError, StreamDecodingError};
 #[cfg(feature = "syslog")]
 pub use format::SyslogDeserializer;
-use format::{BytesDeserializer, JsonDeserializer, LogfmtDeserializer};
+use format::{BytesDeserializer, JsonDeserializer, LogfmtDeserializer, VtlDeserializer};
 pub use framing::{
     BytesDeserializerDecoder, CharacterDelimitedDecoder, NewlineDelimitedDecoder,
     OctetCountingDecoder,
@@ -85,6 +85,9 @@ pub enum Deserializer {
     #[cfg(feature = "syslog")]
     /// Uses a `SyslogDeserializer` for deserialization.
     Syslog(SyslogDeserializer),
+
+    /// Uses a `VTLDeserializer` for deserialization
+    VTL(VtlDeserializer),
 }
 
 #[cfg(feature = "syslog")]
@@ -102,6 +105,7 @@ impl format::Deserializer for Deserializer {
             Deserializer::Logfmt(d) => d.parse(buf),
             #[cfg(feature = "syslog")]
             Deserializer::Syslog(d) => d.parse(buf),
+            Deserializer::VTL(d) => d.parse(buf),
         }
     }
 }

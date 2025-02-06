@@ -84,19 +84,17 @@ impl Config {
         Resource::tcp(self.address)
     }
 
-    fn decoder(&self) -> Decoder {
+    pub fn run(&self, cx: SourceContext) -> crate::Result<Source> {
         let decoding = self.decoding.clone();
-        DecodingConfig::new(
+        let decoder = DecodingConfig::new(
             self.framing
                 .clone()
                 .unwrap_or_else(|| decoding.default_stream_framing()),
             decoding,
         )
-        .build()
-    }
+        .build()?;
 
-    pub fn run(&self, cx: SourceContext) -> crate::Result<Source> {
-        let source = RawTcpSource::new(self.decoder(), self.port_key.clone());
+        let source = RawTcpSource::new(decoder, self.port_key.clone());
 
         source.run(
             SocketListenAddr::SocketAddr(self.address),

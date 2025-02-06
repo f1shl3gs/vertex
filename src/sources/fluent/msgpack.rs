@@ -509,6 +509,8 @@ pub fn decode_string<R: Read>(reader: &mut R) -> Result<String, Error> {
     String::from_utf8(buf).map_err(|err| Error::Utf8(err.utf8_error()))
 }
 
+// https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v0#entry
+// https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#entry
 pub fn decode_entry<R: Read>(reader: &mut R) -> Result<(DateTime<Utc>, Value), Error> {
     let len = match reader.read_u8()? {
         // fixarray
@@ -541,6 +543,7 @@ pub fn decode_entry<R: Read>(reader: &mut R) -> Result<(DateTime<Utc>, Value), E
         }
         // ext 8
         //
+        // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v0#eventtime-ext-format
         // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#eventtime-ext-format
         0xc7 => {
             let len = reader.read_u8()?;

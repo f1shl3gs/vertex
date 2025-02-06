@@ -51,7 +51,7 @@ impl SourceConfig for Config {
                     .framing
                     .clone()
                     .unwrap_or_else(|| decoding.default_message_based_framing());
-                let decoder = DecodingConfig::new(framing, decoding).build();
+                let decoder = DecodingConfig::new(framing, decoding).build()?;
 
                 config.run_datagram(decoder, cx)
             }
@@ -62,7 +62,7 @@ impl SourceConfig for Config {
                     .framing
                     .clone()
                     .unwrap_or_else(|| decoding.default_stream_framing());
-                let decoder = DecodingConfig::new(framing, decoding).build();
+                let decoder = DecodingConfig::new(framing, decoding).build()?;
 
                 config.run_stream(decoder, cx)
             }

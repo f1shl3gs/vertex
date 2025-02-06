@@ -3,12 +3,15 @@ use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "syslog")]
 use super::format::SyslogDeserializerConfig;
-use super::format::{BytesDeserializer, JsonDeserializerConfig, LogfmtDeserializer};
+use super::format::{
+    BytesDeserializer, JsonDeserializerConfig, LogfmtDeserializer, VtlDeserializerConfig,
+};
 use super::framing::{
     BytesDeserializerDecoder, CharacterDelimitedDecoderConfig, NewlineDelimitedDecoderConfig,
     OctetCountingDecoderConfig,
 };
 use super::{Decoder, Deserializer, Framer};
+use crate::error::BuildError;
 
 /// Configuration for building a `Framer`.
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
@@ -56,18 +59,24 @@ pub enum DeserializerConfig {
     #[cfg(feature = "syslog")]
     /// Configures the `SyslogDeserializer`
     Syslog(SyslogDeserializerConfig),
+
+    /// Configures the `VtlDeserializerConfig`
+    VTL(VtlDeserializerConfig),
 }
 
 impl DeserializerConfig {
     /// Build `Deserializer` with this configuration.
-    pub fn build(&self) -> Deserializer {
-        match self {
+    pub fn build(&self) -> Result<Deserializer, BuildError> {
+        let deserializer = match self {
             DeserializerConfig::Bytes => Deserializer::Bytes(BytesDeserializer),
             DeserializerConfig::Json(config) => Deserializer::Json(config.build()),
             DeserializerConfig::Logfmt => Deserializer::Logfmt(LogfmtDeserializer),
             #[cfg(feature = "syslog")]
             DeserializerConfig::Syslog(config) => Deserializer::Syslog(config.build()),
-        }
+            DeserializerConfig::VTL(config) => config.build().map(Deserializer::VTL)?,
+        };
+
+        Ok(deserializer)
     }
 
     /// Return an appropriate default framer for the given deserializer
@@ -83,6 +92,7 @@ impl DeserializerConfig {
             DeserializerConfig::Syslog(_) => {
                 FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default())
             }
+            DeserializerConfig::VTL(_) => FramingConfig::Bytes,
         }
     }
 
@@ -110,10 +120,13 @@ impl DecodingConfig {
     }
 
     /// Build `Decoder` with this configuration.
-    pub fn build(&self) -> Decoder {
-        Decoder {
-            framer: self.framing.build(),
-            deserializer: self.decoding.build(),
-        }
+    pub fn build(&self) -> Result<Decoder, BuildError> {
+        let framer = self.framing.build();
+        let deserializer = self.decoding.build()?;
+
+        Ok(Decoder {
+            framer,
+            deserializer,
+        })
     }
 }

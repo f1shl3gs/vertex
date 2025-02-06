@@ -143,7 +143,7 @@ impl SourceConfig for Config {
             .framing
             .clone()
             .unwrap_or_else(|| self.decoding.default_stream_framing());
-        let decoder = DecodingConfig::new(framing, self.decoding.clone()).build();
+        let decoder = DecodingConfig::new(framing, self.decoding.clone()).build()?;
 
         match &self.mode {
             Mode::Scheduled(config) => Ok(Box::pin(run_scheduled(

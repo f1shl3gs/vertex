@@ -34,7 +34,7 @@ impl Config {
             .framing
             .clone()
             .unwrap_or_else(|| decoding.default_stream_framing());
-        let decoder = DecodingConfig::new(framing, decoding).build();
+        let decoder = DecodingConfig::new(framing, decoding).build()?;
 
         Ok(udp(
             self.address,

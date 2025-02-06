@@ -55,9 +55,9 @@ impl Encoder<Event> for JsonSerializer {
 
 #[cfg(test)]
 mod tests {
-    use event::fields;
-
     use super::*;
+    use event::fields;
+    use value::value;
 
     #[test]
     fn serialize() {
@@ -70,5 +70,17 @@ mod tests {
         serializer.encode(event, &mut bytes).unwrap();
         let encoded = bytes.freeze();
         assert_eq!(encoded, r#"{"foo":"bar"}"#);
+    }
+
+    #[test]
+    fn map() {
+        let value = value!({
+            "foo": "bar"
+        });
+
+        let mut buf = BytesMut::new().writer();
+        serde_json::to_writer(&mut buf, &value).unwrap();
+
+        println!("{:#?}", std::str::from_utf8(buf.get_ref().as_ref()));
     }
 }

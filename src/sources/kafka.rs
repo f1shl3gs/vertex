@@ -163,7 +163,7 @@ impl SourceConfig for Config {
             .await?;
 
         let keys = Arc::new(Keys::from(self));
-        let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build();
+        let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build()?;
 
         Ok(Box::pin(
             run(

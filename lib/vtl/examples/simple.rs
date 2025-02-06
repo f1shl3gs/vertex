@@ -89,7 +89,7 @@ fn main() {
 
     let diagnostic = Diagnostic::new(script.to_string());
 
-    let mut program = match compile(script) {
+    let program = match compile(script) {
         Ok(program) => program,
         Err(err) => {
             let output = diagnostic.snippets(err);

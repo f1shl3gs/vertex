@@ -66,7 +66,14 @@ impl Serialize for Value {
             Value::Integer(i) => serializer.serialize_i64(*i),
             Value::Boolean(b) => serializer.serialize_bool(*b),
             Value::Timestamp(ts) => serializer.serialize_str(&timestamp_to_string(ts)),
-            Value::Object(o) => serializer.collect_map(o),
+            Value::Object(map) => {
+                use serde::ser::SerializeMap;
+                let mut s = serializer.serialize_map(Some(map.len()))?;
+                for (key, value) in map {
+                    s.serialize_entry(key, value)?;
+                }
+                s.end()
+            }
             Value::Array(a) => serializer.collect_seq(a),
             Value::Null => serializer.serialize_none(),
         }

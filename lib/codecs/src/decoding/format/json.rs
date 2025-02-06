@@ -70,9 +70,10 @@ impl Deserializer for JsonDeserializer {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use value::value;
 
     #[test]
-    fn deserialize() {
+    fn single() {
         let input = Bytes::from(r#"{"foo":123}"#);
         let deserializer = JsonDeserializer::new(true);
 
@@ -89,6 +90,27 @@ mod tests {
         }
 
         assert_eq!(logs.next(), None);
+    }
+
+    #[test]
+    fn multiple() {
+        let input = Bytes::from(
+            r#"
+[
+{"foo":123},
+{"foo":456}
+]
+"#,
+        );
+
+        let deserializer = JsonDeserializer::new(true);
+        let output = deserializer.parse(input).unwrap();
+
+        assert_eq!(output.len(), 2);
+        let mut logs = output.into_logs().unwrap().into_iter();
+
+        assert_eq!(logs.next().unwrap().value(), &value!({ "foo": 123 }));
+        assert_eq!(logs.next().unwrap().value(), &value!({ "foo": 456 }));
     }
 
     #[test]
