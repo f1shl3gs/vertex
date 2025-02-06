@@ -24,6 +24,6 @@ pub fn assert_ok(input: &str, want: Value) {
 }
 
 pub fn run(input: &str, target: &mut TargetValue) -> Result<Value, ExpressionError> {
-    let mut program = Compiler::compile(input).unwrap();
+    let program = Compiler::compile(input).unwrap();
     program.run(target)
 }

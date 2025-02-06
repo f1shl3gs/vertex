@@ -407,7 +407,7 @@ impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         self.format.validate()?;
 
-        let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build();
+        let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build()?;
         let format = self.format.clone();
 
         let count = self.count;

@@ -33,3 +33,18 @@ impl Display for FramingError {
         }
     }
 }
+
+#[derive(Debug)]
+pub enum BuildError {
+    Vtl(::vtl::SyntaxError),
+}
+
+impl Display for BuildError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BuildError::Vtl(err) => Display::fmt(err, f),
+        }
+    }
+}
+
+impl std::error::Error for BuildError {}

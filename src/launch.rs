@@ -160,6 +160,12 @@ impl RootCommand {
 
             let allocator = if cfg!(feature = "jemalloc") {
                 "jemalloc"
+            } else if cfg!(feature = "snmalloc") {
+                "snmalloc"
+            } else if cfg!(feature = "mimalloc") {
+                "mimalloc"
+            } else if cfg!(feature = "scudo") {
+                "scudo"
             } else {
                 "system"
             };

@@ -6,6 +6,7 @@ mod json;
 mod logfmt;
 #[cfg(feature = "syslog")]
 mod syslog;
+mod vtl;
 
 use std::fmt::Debug;
 use std::str::Utf8Error;
@@ -18,6 +19,7 @@ pub use json::{JsonDeserializer, JsonDeserializerConfig};
 pub use logfmt::LogfmtDeserializer;
 #[cfg(feature = "syslog")]
 pub use syslog::{SyslogDeserializer, SyslogDeserializerConfig};
+pub use vtl::{VtlDeserializer, VtlDeserializerConfig};
 
 /// An error that occurred while decoding structured events from a byte stream /
 /// byte messages.
@@ -28,6 +30,9 @@ pub enum DeserializeError {
 
     /// The error occurred while deserializing it from JSON
     Json(serde_json::Error),
+
+    /// The error occurred while running the VTL program
+    Vtl(::vtl::ExpressionError),
 
     /// The error occurred while deserializing
     Other(Box<dyn std::error::Error + Send + Sync + 'static>),
@@ -42,6 +47,12 @@ impl From<Utf8Error> for DeserializeError {
 impl From<serde_json::Error> for DeserializeError {
     fn from(err: serde_json::Error) -> Self {
         Self::Json(err)
+    }
+}
+
+impl From<::vtl::ExpressionError> for DeserializeError {
+    fn from(err: ::vtl::ExpressionError) -> Self {
+        Self::Vtl(err)
     }
 }
 

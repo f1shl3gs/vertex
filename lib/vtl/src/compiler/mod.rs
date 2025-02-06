@@ -52,10 +52,13 @@ pub struct Program {
 }
 
 impl Program {
-    pub fn run<T: Target>(&mut self, target: &mut T) -> Result<Value, ExpressionError> {
+    pub fn run<T: Target>(&self, target: &mut T) -> Result<Value, ExpressionError> {
+        // TODO: find a better way to handle this
+        let mut variables = self.variables.clone();
+
         let mut cx = Context {
             target,
-            variables: &mut self.variables,
+            variables: &mut variables,
         };
 
         self.statements.resolve(&mut cx)

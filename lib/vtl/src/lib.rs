@@ -5,7 +5,7 @@ mod diagnostic;
 #[cfg(test)]
 mod tests;
 
-pub use compiler::{Program, SyntaxError};
+pub use compiler::{ExpressionError, Program, SyntaxError};
 pub use context::{Error as ContextError, Target, TargetValue};
 pub use diagnostic::Diagnostic;
 

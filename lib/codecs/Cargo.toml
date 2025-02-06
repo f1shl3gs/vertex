@@ -13,6 +13,7 @@ event = { path = "../event", features = ["test"] }
 futures-util = { version = "0.3.31", default-features = false, features = ["async-await"] }
 serde_yaml = { version = "0.9.34", default-features = false }
 tokio = { version = "1.43.0", default-features = false, features = ["test-util", "macros"] }
+value = { path = "../value" }
 
 [dependencies]
 bytes = { version = "1.10.0", default-features = false }
@@ -23,11 +24,12 @@ futures = { version = "0.3.31", default-features = false }
 futures-util = { version = "0.3.31", default-features = false }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.7.4", default-features = false }
+serde = { version = "1.0.217", default-features = false }
 serde_json = { version = "1.0.138", default-features = false, features = ["std"] }
 tokio = { version = "1.43.0", default-features = false }
 tokio-util = { version = "0.7.13", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.41", default-features = false }
-serde = { version = "1.0.217", default-features = false }
+vtl = { path = "../vtl" }
 
 # Optional
 syslog_loose = { version = "0.21.0", default-features = false, optional = true }
