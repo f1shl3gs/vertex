@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738878804647,
+  "lastUpdate": 1738879240832,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f18d07ae75911aa59f64328886f92697e4ae46ac",
-          "message": "refine source routine (#2080)",
-          "timestamp": "2024-12-26T10:27:35+08:00",
-          "tree_id": "aa58512b81ca257d1051cee94d3c332a3caf3749",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f18d07ae75911aa59f64328886f92697e4ae46ac"
-        },
-        "date": 1735180663411,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 524,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35761.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4aba10abc3fced4da23234d9fcba70edabb482d4",
           "message": "fix metrics update (#2084)",
           "timestamp": "2024-12-26T12:06:47+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37830.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc",
+          "message": "lib/codecs: add metadata support for VTL deserializer (#2193)",
+          "timestamp": "2025-02-07T05:49:48+08:00",
+          "tree_id": "7151d8f0ee0c2ca9238b6fa316faafab11ea8852",
+          "url": "https://github.com/f1shl3gs/vertex/commit/81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc"
+        },
+        "date": 1738879222492,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37835,
             "unit": "KiB"
           }
         ]
