@@ -4,7 +4,7 @@ use bytes::Bytes;
 use configurable::Configurable;
 use event::log::path::PathPrefix;
 use event::log::{OwnedTargetPath, Value};
-use event::{Events, LogRecord};
+use event::{EventMetadata, Events, LogRecord};
 use serde::{Deserialize, Serialize};
 use vtl::{ContextError, Program, Target};
 
@@ -49,11 +49,39 @@ impl Deserializer for VtlDeserializer {
 
         match target.data {
             Value::Array(values) => {
-                let logs = values.into_iter().map(LogRecord::from).collect::<Vec<_>>();
+                let metadata = target.metadata;
+                let mut logs = Vec::with_capacity(values.len());
+
+                let last = values.len() - 1;
+                for (index, value) in values.into_iter().enumerate() {
+                    if index == last {
+                        logs.push(LogRecord::from_parts(
+                            EventMetadata::default_with_value(metadata),
+                            value,
+                        ));
+
+                        // `break` is not necessary for human, cause this is the last element,
+                        // and it's safe to put it to EventMetadata
+                        //
+                        // But the compiler can't understand
+                        break;
+                    } else {
+                        logs.push(LogRecord::from_parts(
+                            EventMetadata::default_with_value(metadata.clone()),
+                            value,
+                        ))
+                    };
+                }
 
                 Ok(Events::Logs(logs))
             }
-            value => Ok(Events::Logs(vec![value.into()])),
+            value => {
+                let metadata = target.metadata;
+                Ok(Events::Logs(vec![LogRecord::from_parts(
+                    EventMetadata::default_with_value(metadata),
+                    value,
+                )]))
+            }
         }
     }
 }
@@ -61,6 +89,7 @@ impl Deserializer for VtlDeserializer {
 #[derive(Debug)]
 struct BytesTarget {
     data: Value,
+    metadata: Value,
 }
 
 impl BytesTarget {
@@ -68,6 +97,7 @@ impl BytesTarget {
     fn new(data: Bytes) -> Self {
         Self {
             data: Value::Bytes(data),
+            metadata: Value::Object(Default::default()),
         }
     }
 }
@@ -75,29 +105,29 @@ impl BytesTarget {
 impl Target for BytesTarget {
     fn insert(&mut self, path: &OwnedTargetPath, value: Value) -> Result<(), ContextError> {
         match path.prefix {
-            PathPrefix::Event => {
-                let _ = self.data.insert(&path.path, value);
-            }
-            PathPrefix::Metadata => {}
-        }
+            PathPrefix::Event => self.data.insert(&path.path, value),
+            PathPrefix::Metadata => self.metadata.insert(&path.path, value),
+        };
 
         Ok(())
     }
 
     fn get(&mut self, path: &OwnedTargetPath) -> Result<Option<&Value>, ContextError> {
-        if let PathPrefix::Event = path.prefix {
-            Ok(self.data.get(&path.path))
-        } else {
-            Ok(None)
-        }
+        let value = match path.prefix {
+            PathPrefix::Event => self.data.get(&path.path),
+            PathPrefix::Metadata => self.metadata.get(&path.path),
+        };
+
+        Ok(value)
     }
 
     fn get_mut(&mut self, path: &OwnedTargetPath) -> Result<Option<&mut Value>, ContextError> {
-        if let PathPrefix::Event = path.prefix {
-            Ok(self.data.get_mut(&path.path))
-        } else {
-            Ok(None)
-        }
+        let value = match path.prefix {
+            PathPrefix::Event => self.data.get_mut(&path.path),
+            PathPrefix::Metadata => self.metadata.get_mut(&path.path),
+        };
+
+        Ok(value)
     }
 
     fn remove(
@@ -105,11 +135,12 @@ impl Target for BytesTarget {
         path: &OwnedTargetPath,
         compact: bool,
     ) -> Result<Option<Value>, ContextError> {
-        if let PathPrefix::Event = path.prefix {
-            Ok(self.data.remove(&path.path, compact))
-        } else {
-            Ok(None)
-        }
+        let value = match path.prefix {
+            PathPrefix::Event => self.data.remove(&path.path, compact),
+            PathPrefix::Metadata => self.metadata.remove(&path.path, compact),
+        };
+
+        Ok(value)
     }
 }
 
@@ -161,5 +192,58 @@ mod tests {
 
         assert_eq!(logs.next().unwrap().value(), &value!({ "foo": 123 }));
         assert_eq!(logs.next().unwrap().value(), &value!({ "foo": 456 }));
+    }
+
+    #[test]
+    fn metadata() {
+        let input = Bytes::from(r#"{"foo":123}"#);
+        let config = VtlDeserializerConfig {
+            source: r#"
+., err = parse_json(.)
+%bar = 456
+"#
+            .into(),
+        };
+        let deserializer = config.build().unwrap();
+
+        let output = deserializer.parse(input).unwrap();
+
+        assert_eq!(output.len(), 1);
+        let log = output.into_logs().unwrap().pop().unwrap();
+        assert_eq!(log.value(), &value!({ "foo": 123 }));
+        assert_eq!(log.metadata().value(), &value!({ "bar": 456 }));
+    }
+
+    #[test]
+    fn multiple_event_with_metadata() {
+        let input = Bytes::from(
+            r#"
+[
+{"foo":123},
+{"foo":456}
+]
+"#,
+        );
+        let config = VtlDeserializerConfig {
+            source: r#"
+., err = parse_json(.)
+%bar = 456
+"#
+            .into(),
+        };
+        let deserializer = config.build().unwrap();
+
+        let output = deserializer.parse(input).unwrap();
+
+        assert_eq!(output.len(), 2);
+        let mut logs = output.into_logs().unwrap().into_iter();
+
+        let log1 = logs.next().unwrap();
+        assert_eq!(log1.value(), &value!({ "foo": 123 }));
+        assert_eq!(log1.metadata().value(), &value!({ "bar": 456 }));
+
+        let log2 = logs.next().unwrap();
+        assert_eq!(log2.value(), &value!({ "foo": 456 }));
+        assert_eq!(log2.metadata().value(), &value!({ "bar": 456 }));
     }
 }
