@@ -7,12 +7,12 @@
 use std::io::Cursor;
 
 use bytes::Buf;
-use xdr::XDRReader;
 
 use super::decode::{
     decode_data_records, decode_options_data_records, decode_template_records, DataField, Error,
 };
 use super::template::{Field, Template, TemplateRecord, TemplateSystem};
+use crate::common::read::ReadExt;
 
 #[derive(Debug)]
 pub struct DataRecord<'a> {

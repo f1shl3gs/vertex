@@ -1,10 +1,18 @@
-//! RFC 4506 - XDR: External Data Representation Standard
-//!
-//! https://datatracker.ietf.org/doc/html/rfc4506
-
 use std::io::{Read, Result};
 
-pub trait XDRReader: Read {
+pub trait ReadExt: Read {
+    fn read_i8(&mut self) -> Result<i8> {
+        let mut buf = [0; 1];
+        self.read_exact(&mut buf)?;
+        Ok(buf[0] as i8)
+    }
+
+    fn read_i16(&mut self) -> Result<i16> {
+        let mut buf = [0; 2];
+        self.read_exact(&mut buf)?;
+        Ok(i16::from_be_bytes(buf))
+    }
+
     fn read_i32(&mut self) -> Result<i32> {
         let mut buf = [0; 4];
         self.read_exact(&mut buf)?;
@@ -47,16 +55,11 @@ pub trait XDRReader: Read {
         Ok(f32::from_be_bytes(buf))
     }
 
-    fn read_string(&mut self) -> Result<String> {
-        let len = self.read_u32()?;
-        let aligned_len = (len + 3) & (!3); // align to 4
-
-        let mut data = vec![0u8; aligned_len as usize];
-        self.read_exact(&mut data)?;
-        data.truncate(len as usize);
-
-        Ok(unsafe { String::from_utf8_unchecked(data) })
+    fn read_f64(&mut self) -> Result<f64> {
+        let mut buf = [0; 8];
+        self.read_exact(&mut buf)?;
+        Ok(f64::from_be_bytes(buf))
     }
 }
 
-impl<T> XDRReader for T where T: Read {}
+impl<T> ReadExt for T where T: Read {}

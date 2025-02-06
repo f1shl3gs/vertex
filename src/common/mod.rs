@@ -6,6 +6,12 @@ pub mod http;
 ))]
 pub mod prometheus;
 #[cfg(any(
+    feature = "sources-netflow",
+    feature = "sources-sflow",
+    feature = "sources-fluent"
+))]
+pub mod read;
+#[cfg(any(
     feature = "transforms-rewrite",
     feature = "transforms-route",
     feature = "transforms-filter"
