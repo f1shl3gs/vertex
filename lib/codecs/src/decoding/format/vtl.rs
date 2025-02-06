@@ -229,7 +229,7 @@ mod tests {
 ., err = parse_json(.)
 %bar = 456
 "#
-                .into(),
+            .into(),
         };
         let deserializer = config.build().unwrap();
 
