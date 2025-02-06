@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738879240832,
+  "lastUpdate": 1738879249225,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "548cc93fbbd82de59305469b5d974573edb726e6",
-          "message": "remove unnecessary derive for config (#2082)",
-          "timestamp": "2024-12-26T03:59:39+08:00",
-          "tree_id": "d1c01745c3d3c7b20525d2dfa2ec0f6199c00457",
-          "url": "https://github.com/f1shl3gs/vertex/commit/548cc93fbbd82de59305469b5d974573edb726e6"
-        },
-        "date": 1735157391076,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28162000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1916,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.993,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1cc67b48d3b629300fce39e58d13830366c94c80",
           "message": "sources/clickhouse_metrics: add more tests and integration tests for clickhouse_metrics (#2081)",
           "timestamp": "2024-12-26T04:00:08+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.705,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc",
+          "message": "lib/codecs: add metadata support for VTL deserializer (#2193)",
+          "timestamp": "2025-02-07T05:49:48+08:00",
+          "tree_id": "7151d8f0ee0c2ca9238b6fa316faafab11ea8852",
+          "url": "https://github.com/f1shl3gs/vertex/commit/81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc"
+        },
+        "date": 1738879230249,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29256000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 591110,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.251,
             "unit": "ns/op"
           }
         ]
