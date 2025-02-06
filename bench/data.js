@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738876486502,
+  "lastUpdate": 1738878729922,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1cc67b48d3b629300fce39e58d13830366c94c80",
-          "message": "sources/clickhouse_metrics: add more tests and integration tests for clickhouse_metrics (#2081)",
-          "timestamp": "2024-12-26T04:00:08+08:00",
-          "tree_id": "aead2df0061cd67b4ae2a4a47aafd3eb33e64671",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1cc67b48d3b629300fce39e58d13830366c94c80"
-        },
-        "date": 1735156925887,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 530410,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537950,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc",
+          "message": "lib/codecs: add metadata support for VTL deserializer (#2193)",
+          "timestamp": "2025-02-07T05:49:48+08:00",
+          "tree_id": "7151d8f0ee0c2ca9238b6fa316faafab11ea8852",
+          "url": "https://github.com/f1shl3gs/vertex/commit/81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc"
+        },
+        "date": 1738878711501,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 532050,
             "unit": "ns/op"
           }
         ]
