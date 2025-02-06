@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1738885885942,
+  "lastUpdate": 1738885925250,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1cc67b48d3b629300fce39e58d13830366c94c80",
-          "message": "sources/clickhouse_metrics: add more tests and integration tests for clickhouse_metrics (#2081)",
-          "timestamp": "2024-12-26T04:00:08+08:00",
-          "tree_id": "aead2df0061cd67b4ae2a4a47aafd3eb33e64671",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1cc67b48d3b629300fce39e58d13830366c94c80"
-        },
-        "date": 1735157403941,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28554000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1931.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.626,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "575d4d356c25d3a785a5c73f2e179f0f7a205c4b",
           "message": "sinks/prometheus: optimize metrics store and write output (#2083)",
           "timestamp": "2024-12-26T07:43:10+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.251,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dd9d551398630df009bced7180b9e8053551616a",
+          "message": "remove lib/xdr (#2194)",
+          "timestamp": "2025-02-07T07:40:43+08:00",
+          "tree_id": "ab702fd07f4654621bb847ebb5e9f7f0f6499ba6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dd9d551398630df009bced7180b9e8053551616a"
+        },
+        "date": 1738885905616,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29655000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 591980,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 46.324,
             "unit": "ns/op"
           }
         ]
