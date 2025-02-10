@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739197006947,
+  "lastUpdate": 1739197018005,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f18d07ae75911aa59f64328886f92697e4ae46ac",
-          "message": "refine source routine (#2080)",
-          "timestamp": "2024-12-26T10:27:35+08:00",
-          "tree_id": "aa58512b81ca257d1051cee94d3c332a3caf3749",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f18d07ae75911aa59f64328886f92697e4ae46ac"
-        },
-        "date": 1735180200807,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.308,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 104.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 187.78,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 187.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "54103e7c53bf7a3c509dfb6412ea2083958f8c24",
+          "message": "source/fluent: implement with TcpSource (#2195)",
+          "timestamp": "2025-02-10T22:13:38+08:00",
+          "tree_id": "96225dd628bdb53be6d28b3f9cebafa49ff4d51e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/54103e7c53bf7a3c509dfb6412ea2083958f8c24"
+        },
+        "date": 1739196998081,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.324,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 107.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.18,
             "unit": "ns/op"
           }
         ]
