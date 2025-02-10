@@ -52,12 +52,13 @@ members = [
     "lib/tripwire",
     "lib/value",
     "lib/virt",
-    "lib/vtl"
+    "lib/vtl",
+    "lib/tracked_alloc"
 ]
 
 [features]
 default = [
-    "mimalloc",
+    # "snmalloc",
 
     "extensions",
     "sources",
@@ -67,7 +68,7 @@ default = [
 
 target-x86_64-unknown-linux-musl = [
     # The default allocator of musl will consume more cpu than jemalloc.
-    "jemalloc",
+    "mimalloc",
 
     "extensions",
     "sinks",
@@ -306,6 +307,7 @@ jemalloc = [
     "tikv-jemalloc-ctl/profiling"
 ]
 snmalloc = [ "dep:snmalloc-rs" ]
+tracked_alloc = [ "dep:tracked_alloc", "dep:snmalloc-rs" ]
 
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.
@@ -364,6 +366,7 @@ ntp = { path = "lib/ntp", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 sysinfo = { path = "lib/sysinfo", optional = true }
 tail = { path = "lib/tail", optional = true }
+tracked_alloc = { path = "lib/tracked_alloc", optional = true }
 tripwire = { path = "lib/tripwire" }
 value = { path = "lib/value" }
 virt = { path = "lib/virt", optional = true }

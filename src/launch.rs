@@ -166,6 +166,8 @@ impl RootCommand {
                 "mimalloc"
             } else if cfg!(feature = "scudo") {
                 "scudo"
+            } else if cfg!(feature = "tracked_alloc") {
+                "tracked_alloc"
             } else {
                 "system"
             };

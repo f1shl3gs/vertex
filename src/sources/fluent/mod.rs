@@ -2,22 +2,20 @@ mod msgpack;
 
 use std::fmt::Formatter;
 use std::io::Read;
-use std::net::{IpAddr, SocketAddr};
+use std::net::SocketAddr;
+use std::time::Duration;
 
-use bytes::{Buf, BytesMut};
+use bytes::{Buf, Bytes, BytesMut};
 use chrono::DateTime;
 use codecs::decoding::StreamDecodingError;
 use configurable::configurable_component;
-use event::{AddBatchNotifier, BatchNotifier, BatchStatus, LogRecord};
+use event::{Events, LogRecord};
 use flate2::read::MultiGzDecoder;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::source::tcp::{SocketListenAddr, TcpSource, TcpSourceAck, TcpSourceAcker};
 use framework::tcp::TcpKeepaliveConfig;
-use framework::tls::{MaybeTlsListener, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::Source;
-use tokio::io::AsyncWriteExt;
-use tokio_stream::StreamExt;
-use tokio_util::codec::FramedRead;
-
 use msgpack::{decode_binary, decode_entry, decode_options, decode_value};
 use msgpack::{decode_string, Error as MsgPackError, ReadExt};
 
@@ -47,140 +45,17 @@ struct Config {
 #[typetag::serde(name = "fluent")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut listener = MaybeTlsListener::bind(&self.address, self.tls.as_ref()).await?;
+        let source = ForwardSource;
 
-        let mut shutdown = cx.shutdown;
-        let output = cx.output;
-        let keepalive = self.keepalive;
-        let receive_buffer = self.receive_buffer;
-        let acknowledgements = cx.acknowledgements;
-
-        Ok(Box::pin(async move {
-            info!(
-                message = "Listening for connections",
-                addr = %listener.local_addr().unwrap(),
-                acknowledgements
-            );
-
-            loop {
-                let (mut stream, peer) = tokio::select! {
-                    result = listener.accept() => {
-                        match result {
-                            Ok(stream) => {
-                                let peer = stream.peer_addr();
-
-                                (stream, peer)
-                            },
-                            Err(err) => {
-                                warn!(
-                                    message = "tcp listener accept error",
-                                    %err
-                                );
-
-                                continue
-                            }
-                        }
-                    },
-                    _ = &mut shutdown => {
-                        break
-                    }
-                };
-
-                debug!(
-                    message = "accept new connection",
-                    %peer
-                );
-
-                if let Some(config) = &keepalive {
-                    if let Err(err) = stream.set_keepalive(config) {
-                        warn!(
-                            message = "Failed configuring TCP keepalive",
-                            %err
-                        );
-                    }
-                }
-
-                if let Some(buffer_bytes) = receive_buffer {
-                    if let Err(err) = stream.set_receive_buffer_bytes(buffer_bytes) {
-                        warn!(
-                            message = "Failed configuring receive buffer size on TCP socket",
-                            %err
-                        );
-                    }
-                }
-
-                let mut shutdown = shutdown.clone();
-                let mut output = output.clone();
-                tokio::spawn(async move {
-                    let mut reader =
-                        FramedRead::with_capacity(stream, Decoder::new(peer.ip()), 64 * 1024);
-
-                    loop {
-                        let (chunk, mut logs) = tokio::select! {
-                            result = reader.next() => match result {
-                                Some(Ok(item)) => item,
-                                Some(Err(err)) => {
-                                    if err.can_continue() {
-                                        continue;
-                                    }
-
-                                    warn!(
-                                        message = "decode fluent events failed",
-                                        %err,
-                                        %peer,
-                                    );
-
-                                    break;
-                                }
-                                None => break,
-                            },
-                            _ = &mut shutdown => break,
-                        };
-
-                        let (batch, receiver) =
-                            BatchNotifier::maybe_new_with_receiver(acknowledgements);
-                        if let Some(batch) = batch {
-                            for log in logs.iter_mut() {
-                                log.add_batch_notifier(batch.clone());
-                            }
-                            drop(batch);
-                        }
-
-                        if let Err(_err) = output.send(logs).await {
-                            warn!(message = "send logs failed");
-
-                            return;
-                        }
-
-                        let ack = match receiver {
-                            Some(receiver) => receiver.await,
-                            None => BatchStatus::Delivered,
-                        };
-
-                        // build ack resp
-                        if let Some(chunk) = chunk {
-                            if ack == BatchStatus::Delivered {
-                                let resp = encode_ack_resp(&chunk);
-
-                                // TCP is full-duplex, so this is fine
-                                let writer = reader.get_mut();
-                                if let Err(err) = writer.write_all(&resp).await {
-                                    error!(
-                                        message = "write acknowledgement failed",
-                                        %err,
-                                        %peer,
-                                    );
-
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            Ok(())
-        }))
+        source.run(
+            SocketListenAddr::SocketAddr(self.address),
+            self.keepalive,
+            Duration::from_secs(30),
+            self.tls.as_ref(),
+            self.receive_buffer,
+            cx,
+            None,
+        )
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -193,215 +68,6 @@ impl SourceConfig for Config {
 
     fn can_acknowledge(&self) -> bool {
         true
-    }
-}
-
-struct Decoder {
-    peer: IpAddr,
-}
-
-impl Decoder {
-    #[inline]
-    fn new(peer: IpAddr) -> Self {
-        Decoder { peer }
-    }
-
-    fn decode_internal<R: Read>(
-        &self,
-        reader: &mut R,
-    ) -> Result<Option<(Option<Vec<u8>>, Vec<LogRecord>)>, DecodeError> {
-        // all the received events is an array
-        //
-        // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#event-modes
-        let len = match reader.read_u8()? {
-            // fixarray
-            typ @ 0x90..=0x9f => (typ & 0x0f) as usize,
-            // array 16
-            0xdc => reader.read_u16()? as usize,
-            // array 32
-            0xdd => reader.read_u32()? as usize,
-
-            // heartbeat
-            0xc0 => return Ok(None),
-
-            typ => return Err(MsgPackError::UnknownType(typ, "message").into()),
-        };
-
-        if !(2..=4).contains(&len) {
-            return Err(MsgPackError::IO(std::io::ErrorKind::InvalidData.into()).into());
-        }
-
-        // the first part
-        let tag = decode_string(reader)?;
-
-        let typ = reader.read_u8()?;
-        match typ {
-            // Forward Mode's second part is array
-            //
-            // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#forward-mode
-            0x90..=0x9f | 0xdc | 0xdd => {
-                // array
-                let arr_len = match typ {
-                    0x90..=0x9f => (typ & 0x0f) as usize,
-                    0xdc => reader.read_u16()? as usize,
-                    0xdd => reader.read_u32()? as usize,
-                    _ => unreachable!(),
-                };
-
-                let mut logs = Vec::with_capacity(arr_len);
-                for _ in 0..arr_len {
-                    let (timestamp, value) = decode_entry(reader)?;
-                    let mut log = LogRecord::from(value);
-
-                    let metadata = log.metadata_mut().value_mut();
-
-                    metadata.insert("fluent.timestamp", timestamp);
-                    metadata.insert("fluent.tag", tag.clone());
-                    metadata.insert("fluent.host", self.peer.to_string());
-
-                    logs.push(log);
-                }
-
-                if len == 3 {
-                    // options
-                    let options = decode_options(reader)?;
-
-                    Ok(Some((options.chunk, logs)))
-                } else {
-                    Ok(Some((None, logs)))
-                }
-            }
-
-            // PackedForward
-            0xa0..=0xbf | 0xd9..=0xdb | 0xc4..=0xc6 => {
-                let data = match typ {
-                    // PackedForward's second part could be str
-                    //
-                    // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#packedforward-mode
-                    0xa0..=0xbf | 0xd9..=0xdb => {
-                        // Client may send a `MessagePackEventStream` as msgpack `str` format
-                        // for compatibility reasons.
-                        let str_len = match typ {
-                            // fix str
-                            0xa0..=0xbf => (typ & 0x1f) as usize,
-                            // str 8
-                            0xd9 => reader.read_u8()? as usize,
-                            // str 16
-                            0xda => reader.read_u16()? as usize,
-                            // str 32
-                            0xdb => reader.read_u32()? as usize,
-                            _ => unreachable!(),
-                        };
-
-                        let mut data = vec![0; str_len];
-                        reader.read_exact(&mut data)?;
-
-                        data
-                    }
-                    // bin
-                    0xc4..=0xd6 => decode_binary(reader)?,
-                    _ => unreachable!(),
-                };
-
-                let option = if len == 3 {
-                    Some(decode_options(reader)?)
-                } else {
-                    None
-                };
-                let compressed = option.as_ref().map(|o| o.compressed).unwrap_or_default();
-
-                let buf = if compressed {
-                    let mut buf = Vec::new();
-                    MultiGzDecoder::new(data.as_slice())
-                        .read_to_end(&mut buf)
-                        .map(|_| buf)
-                        .map_err(|_err| DecodeError::Decompression)?
-                } else {
-                    data
-                };
-
-                let mut cursor = std::io::Cursor::new(buf);
-                let mut logs = Vec::new();
-                while cursor.remaining() > 0 {
-                    let (timestamp, value) = decode_entry(&mut cursor)?;
-
-                    let mut log = LogRecord::from(value);
-                    let metadata = log.metadata_mut().value_mut();
-                    metadata.insert("fluent.timestamp", timestamp);
-                    metadata.insert("fluent.tag", tag.clone());
-                    metadata.insert("fluent.host", self.peer.to_string());
-
-                    logs.push(log);
-                }
-
-                match option {
-                    Some(opt) => Ok(Some((opt.chunk, logs))),
-                    None => Ok(Some((None, logs))),
-                }
-            }
-
-            // Message Mode
-            //
-            // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#message-modes
-            0xce => {
-                // uint 32
-                let secs = reader.read_u32()?;
-                let ts = DateTime::from_timestamp(secs as i64, 0).ok_or(MsgPackError::Timestamp)?;
-
-                let value = decode_value(reader)?;
-
-                let mut log = LogRecord::from(value);
-                let metadata = log.metadata_mut().value_mut();
-                metadata.insert("fluent.timestamp", ts);
-                metadata.insert("fluent.tag", tag);
-                metadata.insert("fluent.host", self.peer.to_string());
-
-                if len == 4 {
-                    // only `size` or `chunk`
-                    let option = decode_options(reader)?;
-                    Ok(Some((option.chunk, vec![log])))
-                } else {
-                    Ok(Some((None, vec![log])))
-                }
-            }
-
-            typ => Err(MsgPackError::UnknownType(typ, "entries").into()),
-        }
-    }
-}
-
-impl tokio_util::codec::Decoder for Decoder {
-    type Item = (Option<Vec<u8>>, Vec<LogRecord>);
-    type Error = DecodeError;
-
-    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
-        if src.is_empty() {
-            return Ok(None);
-        }
-
-        // fluent's Forward protocol do not have a length header, or something like that,
-        // so we can't frame the input stream, and we can't tell if the buf have any message.
-        //
-        // The only way to figure out if we have got a whole message is parse/deserialize it,
-        // That's the reason why we use Cursor here, and it may hurt performance too.
-        let mut cursor = std::io::Cursor::new(&src[..]);
-        match self.decode_internal(&mut cursor) {
-            Ok(result) => {
-                src.advance(cursor.position() as usize);
-
-                Ok(result)
-            }
-            Err(err) => match err {
-                DecodeError::IO(err) => {
-                    if err.kind() == std::io::ErrorKind::UnexpectedEof {
-                        Ok(None)
-                    } else {
-                        Err(DecodeError::IO(err))
-                    }
-                }
-                _ => Err(err),
-            },
-        }
     }
 }
 
@@ -474,17 +140,297 @@ impl std::fmt::Display for DecodeError {
 impl StreamDecodingError for DecodeError {
     fn can_continue(&self) -> bool {
         match self {
-            DecodeError::IO(_) => true,
+            DecodeError::IO(_) => false,
             DecodeError::Decode(_) => false,
-            DecodeError::Decompression => true,
+            DecodeError::Decompression => false,
         }
+    }
+}
+
+struct ForwardDecoder;
+
+impl ForwardDecoder {
+    fn decode_internal<R: Read>(
+        &self,
+        reader: &mut R,
+    ) -> Result<Option<ForwardFrame>, DecodeError> {
+        // all the received events is an array
+        //
+        // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#event-modes
+        let len = match reader.read_u8()? {
+            // fixarray
+            typ @ 0x90..=0x9f => (typ & 0x0f) as usize,
+            // array 16
+            0xdc => reader.read_u16()? as usize,
+            // array 32
+            0xdd => reader.read_u32()? as usize,
+
+            // heartbeat
+            0xc0 => return Ok(None),
+
+            typ => return Err(MsgPackError::UnknownType(typ, "message").into()),
+        };
+
+        if !(2..=4).contains(&len) {
+            return Err(MsgPackError::IO(std::io::ErrorKind::InvalidData.into()).into());
+        }
+
+        // the first part
+        let tag = decode_string(reader)?;
+
+        let typ = reader.read_u8()?;
+        match typ {
+            // Forward Mode's second part is array
+            //
+            // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#forward-mode
+            0x90..=0x9f | 0xdc | 0xdd => {
+                // array
+                let arr_len = match typ {
+                    0x90..=0x9f => (typ & 0x0f) as usize,
+                    0xdc => reader.read_u16()? as usize,
+                    0xdd => reader.read_u32()? as usize,
+                    _ => unreachable!(),
+                };
+
+                let mut logs = Vec::with_capacity(arr_len);
+                for _ in 0..arr_len {
+                    let (timestamp, value) = decode_entry(reader)?;
+                    let mut log = LogRecord::from(value);
+
+                    let metadata = log.metadata_mut().value_mut();
+
+                    metadata.insert("fluent.timestamp", timestamp);
+                    metadata.insert("fluent.tag", tag.clone());
+
+                    logs.push(log);
+                }
+
+                if len == 3 {
+                    // options
+                    let options = decode_options(reader)?;
+
+                    Ok(Some(ForwardFrame {
+                        logs,
+                        chunk: options.chunk,
+                    }))
+                } else {
+                    Ok(Some(ForwardFrame { logs, chunk: None }))
+                }
+            }
+
+            // PackedForward
+            0xa0..=0xbf | 0xd9..=0xdb | 0xc4..=0xc6 => {
+                let data = match typ {
+                    // PackedForward's second part could be str
+                    //
+                    // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#packedforward-mode
+                    0xa0..=0xbf | 0xd9..=0xdb => {
+                        // Client may send a `MessagePackEventStream` as msgpack `str` format
+                        // for compatibility reasons.
+                        let str_len = match typ {
+                            // fix str
+                            0xa0..=0xbf => (typ & 0x1f) as usize,
+                            // str 8
+                            0xd9 => reader.read_u8()? as usize,
+                            // str 16
+                            0xda => reader.read_u16()? as usize,
+                            // str 32
+                            0xdb => reader.read_u32()? as usize,
+                            _ => unreachable!(),
+                        };
+
+                        let mut data = vec![0; str_len];
+                        reader.read_exact(&mut data)?;
+
+                        data
+                    }
+                    // bin
+                    0xc4..=0xd6 => decode_binary(reader)?,
+                    _ => unreachable!(),
+                };
+
+                let option = if len == 3 {
+                    Some(decode_options(reader)?)
+                } else {
+                    None
+                };
+                let compressed = option.as_ref().map(|o| o.compressed).unwrap_or_default();
+
+                let buf = if compressed {
+                    let mut buf = Vec::new();
+                    MultiGzDecoder::new(data.as_slice())
+                        .read_to_end(&mut buf)
+                        .map(|_| buf)
+                        .map_err(|_err| DecodeError::Decompression)?
+                } else {
+                    data
+                };
+
+                let mut cursor = std::io::Cursor::new(buf);
+                let mut logs = Vec::new();
+                while cursor.remaining() > 0 {
+                    let (timestamp, value) = decode_entry(&mut cursor)?;
+
+                    let mut log = LogRecord::from(value);
+                    let metadata = log.metadata_mut().value_mut();
+                    metadata.insert("fluent.timestamp", timestamp);
+                    metadata.insert("fluent.tag", tag.clone());
+
+                    logs.push(log);
+                }
+
+                match option {
+                    Some(options) => Ok(Some(ForwardFrame {
+                        logs,
+                        chunk: options.chunk,
+                    })),
+                    None => Ok(Some(ForwardFrame { logs, chunk: None })),
+                }
+            }
+
+            // Message Mode
+            //
+            // https://github.com/fluent/fluentd/wiki/Forward-Protocol-Specification-v1#message-modes
+            0xce => {
+                // uint 32
+                let secs = reader.read_u32()?;
+                let ts = DateTime::from_timestamp(secs as i64, 0).ok_or(MsgPackError::Timestamp)?;
+
+                let value = decode_value(reader)?;
+
+                let mut log = LogRecord::from(value);
+                let metadata = log.metadata_mut().value_mut();
+                metadata.insert("fluent.timestamp", ts);
+                metadata.insert("fluent.tag", tag);
+
+                if len == 4 {
+                    // only `size` or `chunk`
+                    let options = decode_options(reader)?;
+                    Ok(Some(ForwardFrame {
+                        logs: vec![log],
+                        chunk: options.chunk,
+                    }))
+                } else {
+                    Ok(Some(ForwardFrame {
+                        logs: vec![log],
+                        chunk: None,
+                    }))
+                }
+            }
+
+            typ => Err(MsgPackError::UnknownType(typ, "entries").into()),
+        }
+    }
+}
+
+impl tokio_util::codec::Decoder for ForwardDecoder {
+    type Item = (ForwardFrame, usize);
+    type Error = DecodeError;
+
+    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+        if src.is_empty() {
+            return Ok(None);
+        }
+
+        // fluent's Forward protocol do not have a length header, or something like that,
+        // so we can't frame the input stream, and we can't tell if the buf have any message.
+        //
+        // The only way to figure out if we have got a whole message is parse/deserialize it,
+        // That's the reason why we use Cursor here, and it may hurt performance too.
+        let mut cursor = std::io::Cursor::new(&src[..]);
+        match self.decode_internal(&mut cursor) {
+            Ok(result) => {
+                let size = cursor.position() as usize;
+                src.advance(size);
+
+                Ok(result.map(|frame| (frame, size)))
+            }
+            Err(err) => match err {
+                DecodeError::IO(err) => {
+                    if err.kind() == std::io::ErrorKind::UnexpectedEof {
+                        Ok(None)
+                    } else {
+                        Err(DecodeError::IO(err))
+                    }
+                }
+                _ => Err(err),
+            },
+        }
+    }
+}
+
+struct ForwardAcker {
+    chunks: Vec<Vec<u8>>,
+}
+
+impl TcpSourceAcker for ForwardAcker {
+    fn build_ack(self, ack: TcpSourceAck) -> Option<Bytes> {
+        if self.chunks.is_empty() {
+            return None;
+        }
+
+        if TcpSourceAck::Ack != ack {
+            return None;
+        }
+
+        let mut resp = Vec::new();
+        for chunk in &self.chunks {
+            resp.extend(encode_ack_resp(chunk));
+        }
+
+        Some(Bytes::from(resp))
+    }
+}
+
+struct ForwardFrame {
+    logs: Vec<LogRecord>,
+    chunk: Option<Vec<u8>>,
+}
+
+impl From<ForwardFrame> for Events {
+    fn from(frame: ForwardFrame) -> Self {
+        Events::Logs(frame.logs)
+    }
+}
+
+#[derive(Clone)]
+struct ForwardSource;
+
+impl TcpSource for ForwardSource {
+    type Error = DecodeError;
+    type Item = ForwardFrame;
+    type Decoder = ForwardDecoder;
+    type Acker = ForwardAcker;
+
+    fn decoder(&self) -> Self::Decoder {
+        ForwardDecoder
+    }
+
+    fn handle_events(&self, batch: &mut [Events], peer: SocketAddr, _size: usize) {
+        for events in batch {
+            events.for_each_log(|log| {
+                log.metadata_mut()
+                    .value_mut()
+                    .insert("fluent.host", peer.ip().to_string());
+            })
+        }
+    }
+
+    fn build_acker(&self, items: &[Self::Item]) -> Self::Acker {
+        let mut chunks = Vec::new();
+        for frame in items {
+            if let Some(chunk) = &frame.chunk {
+                chunks.push(chunk.clone());
+            }
+        }
+
+        ForwardAcker { chunks }
     }
 }
 
 #[cfg(test)]
 mod tests {
     use std::io::Cursor;
-    use std::net::{IpAddr, Ipv4Addr};
 
     use bytes::BytesMut;
     use chrono::DateTime;
@@ -492,8 +438,8 @@ mod tests {
     use tokio_util::codec::Decoder as _;
     use value::Value;
 
-    use super::{encode_ack_resp, Config, Decoder};
-    use crate::sources::fluent::msgpack::decode_value;
+    use super::msgpack::decode_value;
+    use super::{encode_ack_resp, Config, ForwardDecoder, ForwardFrame};
 
     #[test]
     fn generate_config() {
@@ -513,12 +459,15 @@ mod tests {
             0xa5, 0x62, 0x61, 0x73, 0x69, 0x63, 0xc3, 0xa5, 0x62, 0x75, 0x64, 0x64, 0x79, 0xff,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
 
-        let (_chunk, logs) = decoder.decode(&mut data).unwrap().unwrap();
+        let (ForwardFrame { logs, chunk }, size) = decoder.decode(&mut data).unwrap().unwrap();
 
+        assert!(chunk.is_none());
+        assert_eq!(size, input.len());
         assert_eq!(logs.len(), 1);
+
         let log = &logs[0];
         let metadata = log.metadata().value();
         let value = log.value();
@@ -532,7 +481,6 @@ mod tests {
                 "fluent": {
                     "tag": "test",
                     "timestamp": timestamp,
-                    "host": "127.0.0.1",
                 }
             })
         );
@@ -573,7 +521,7 @@ mod tests {
             78, 82, 106, 120, 84, 119, 61, 61, 10,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
 
         decoder.decode(&mut data).unwrap();
@@ -588,7 +536,6 @@ mod tests {
         metadata.insert("fluent.tag", "tag.name");
         let timestamp = DateTime::parse_from_rfc3339(timestamp).unwrap().to_utc();
         metadata.insert("fluent.timestamp", timestamp);
-        metadata.insert("fluent.host", "127.0.0.1");
 
         log
     }
@@ -605,15 +552,14 @@ mod tests {
             101, 115, 115, 97, 103, 101, 163, 98, 97, 114,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
 
-        let logs = decoder.decode(&mut data).unwrap();
+        let (ForwardFrame { logs, chunk }, size) = decoder.decode(&mut data).unwrap().unwrap();
 
-        assert_eq!(
-            Some((None, vec![mock_event("2015-09-07T01:23:04Z", "bar")])),
-            logs
-        );
+        assert_eq!(logs, vec![mock_event("2015-09-07T01:23:04Z", "bar")]);
+        assert!(chunk.is_none());
+        assert_eq!(size, input.len());
     }
 
     #[test]
@@ -629,15 +575,14 @@ mod tests {
             101, 115, 115, 97, 103, 101, 163, 98, 97, 114, 129, 164, 115, 105, 122, 101, 1,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
 
-        let logs = decoder.decode(&mut data).unwrap();
+        let (ForwardFrame { logs, chunk }, size) = decoder.decode(&mut data).unwrap().unwrap();
 
-        assert_eq!(
-            Some((None, vec![mock_event("2015-09-07T01:23:04Z", "bar")])),
-            logs
-        );
+        assert_eq!(logs, vec![mock_event("2015-09-07T01:23:04Z", "bar")]);
+        assert!(chunk.is_none());
+        assert_eq!(size, input.len());
     }
 
     #[test]
@@ -657,22 +602,21 @@ mod tests {
             250, 129, 167, 109, 101, 115, 115, 97, 103, 101, 163, 98, 97, 122,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
 
-        let logs = decoder.decode(&mut data).unwrap();
+        let (ForwardFrame { logs, chunk }, size) = decoder.decode(&mut data).unwrap().unwrap();
 
         assert_eq!(
-            Some((
-                None,
-                vec![
-                    mock_event("2015-09-07T01:23:04Z", "foo"),
-                    mock_event("2015-09-07T01:23:05Z", "bar"),
-                    mock_event("2015-09-07T01:23:06Z", "baz"),
-                ]
-            )),
-            logs
+            logs,
+            vec![
+                mock_event("2015-09-07T01:23:04Z", "foo"),
+                mock_event("2015-09-07T01:23:05Z", "bar"),
+                mock_event("2015-09-07T01:23:06Z", "baz"),
+            ]
         );
+        assert!(chunk.is_none());
+        assert_eq!(size, input.len());
     }
 
     #[test]
@@ -693,22 +637,21 @@ mod tests {
             122, 101, 3,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
 
-        let logs = decoder.decode(&mut data).unwrap();
+        let (ForwardFrame { logs, chunk }, size) = decoder.decode(&mut data).unwrap().unwrap();
 
         assert_eq!(
-            Some((
-                None,
-                vec![
-                    mock_event("2015-09-07T01:23:04Z", "foo"),
-                    mock_event("2015-09-07T01:23:05Z", "bar"),
-                    mock_event("2015-09-07T01:23:06Z", "baz"),
-                ]
-            )),
-            logs
+            logs,
+            vec![
+                mock_event("2015-09-07T01:23:04Z", "foo"),
+                mock_event("2015-09-07T01:23:05Z", "bar"),
+                mock_event("2015-09-07T01:23:06Z", "baz"),
+            ]
         );
+        assert!(chunk.is_none());
+        assert_eq!(size, input.len());
     }
 
     #[test]
@@ -737,21 +680,20 @@ mod tests {
             163, 102, 111, 111,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
-        let logs = decoder.decode(&mut data).unwrap();
+        let (ForwardFrame { logs, chunk }, size) = decoder.decode(&mut data).unwrap().unwrap();
 
         assert_eq!(
-            Some((
-                None,
-                vec![
-                    mock_event("2015-09-07T01:23:04Z", "foo"),
-                    mock_event("2015-09-07T01:23:05Z", "bar"),
-                    mock_event("2015-09-07T01:23:06Z", "baz"),
-                ]
-            )),
-            logs
+            logs,
+            vec![
+                mock_event("2015-09-07T01:23:04Z", "foo"),
+                mock_event("2015-09-07T01:23:05Z", "bar"),
+                mock_event("2015-09-07T01:23:06Z", "baz"),
+            ]
         );
+        assert!(chunk.is_none());
+        assert_eq!(size, input.len());
     }
 
     #[test]
@@ -774,21 +716,20 @@ mod tests {
             164, 103, 122, 105, 112,
         ];
 
-        let mut decoder = Decoder::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
+        let mut decoder = ForwardDecoder;
         let mut data = BytesMut::from(input.as_slice());
-        let logs = decoder.decode(&mut data).unwrap();
+        let (ForwardFrame { logs, chunk }, size) = decoder.decode(&mut data).unwrap().unwrap();
 
         assert_eq!(
-            Some((
-                None,
-                vec![
-                    mock_event("2015-09-07T01:23:04Z", "foo"),
-                    mock_event("2015-09-07T01:23:05Z", "bar"),
-                    mock_event("2015-09-07T01:23:06Z", "baz"),
-                ]
-            )),
-            logs
+            logs,
+            vec![
+                mock_event("2015-09-07T01:23:04Z", "foo"),
+                mock_event("2015-09-07T01:23:05Z", "bar"),
+                mock_event("2015-09-07T01:23:06Z", "baz"),
+            ]
         );
+        assert!(chunk.is_none());
+        assert_eq!(size, input.len());
     }
 
     #[test]
