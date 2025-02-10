@@ -58,7 +58,7 @@ members = [
 
 [features]
 default = [
-    "snmalloc",
+    # "snmalloc",
 
     "extensions",
     "sources",
@@ -68,7 +68,7 @@ default = [
 
 target-x86_64-unknown-linux-musl = [
     # The default allocator of musl will consume more cpu than jemalloc.
-    "snmalloc",
+    "mimalloc",
 
     "extensions",
     "sinks",
