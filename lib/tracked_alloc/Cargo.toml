@@ -1,0 +1,7 @@
+[package]
+name = "tracked_alloc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+backtrace = { version = "0.3.74" }
