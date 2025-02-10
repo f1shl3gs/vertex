@@ -100,6 +100,48 @@ async fn handle(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error> 
     }
 
     match req.uri().path() {
+        #[cfg(feature = "tracked_alloc")]
+        "/debug/pprof/allocs/inuse" => {
+            use std::fmt::Write;
+
+            let mut infos = vec![];
+            let mut allocations = 0;
+            let mut allocated_bytes = 0;
+            let mut frees = 0;
+            let mut freed_bytes = 0;
+            tracked_alloc::report(|info| {
+                if info.allocated_bytes - info.freed_bytes == 0 {
+                    return;
+                }
+
+                allocations += info.allocations;
+                allocated_bytes += info.allocated_bytes;
+                frees += info.frees;
+                freed_bytes += info.freed_bytes;
+
+                infos.push(info.clone());
+            });
+
+            infos.sort_by(|a, b| {
+                (b.allocated_bytes - b.freed_bytes).cmp(&(a.allocated_bytes - a.freed_bytes))
+            });
+
+            let mut output = bytes::BytesMut::new();
+            output.write_fmt(format_args!("allocations: {}\nfreed: {}\nallocated_bytes: {}\nfreed_bytes: {}\ninuse: {}\n\n", allocations, frees, allocated_bytes, freed_bytes, allocated_bytes - freed_bytes))
+                .unwrap();
+            for info in infos {
+                output.write_fmt(format_args!("allocations: {}, freed: {}, allocated_bytes: {}, freed_bytes: {}, inuse: {}\n", info.allocations, info.frees, info.allocated_bytes, info.freed_bytes, info.allocated_bytes - info.freed_bytes))
+                    .unwrap();
+                write!(output, "{}\n\n", info).unwrap();
+            }
+
+            let resp = Response::builder()
+                .status(StatusCode::OK)
+                .body(Full::from(output.freeze()))
+                .unwrap();
+
+            Ok(resp)
+        }
         #[cfg(feature = "jemalloc")]
         "/debug/pprof/allocs" => heap::allocs(req).await,
         #[cfg(feature = "jemalloc")]
