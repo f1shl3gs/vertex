@@ -481,7 +481,6 @@ mod tests {
                 "fluent": {
                     "tag": "test",
                     "timestamp": timestamp,
-                    "host": "127.0.0.1",
                 }
             })
         );
