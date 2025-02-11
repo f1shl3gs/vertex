@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::ops::ControlFlow;
 use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
@@ -19,7 +20,7 @@ fn default_socket_path() -> PathBuf {
 
 #[configurable_component(source, name = "dpdk")]
 struct Config {
-    /// DPDK Telemetry path
+    /// DPDK Telemetry path, vertex might need privilege to access this UnixSeqPacket
     #[serde(default = "default_socket_path")]
     socket_path: PathBuf,
 
@@ -59,7 +60,6 @@ impl SourceConfig for Config {
                     }
                     Err(err) => {
                         warn!(message = "gather metrics failed", ?err);
-
                         collect_metrics
                     }
                 };
@@ -96,134 +96,13 @@ async fn gather(path: &PathBuf) -> std::io::Result<Vec<Metric>> {
                 "version" => &info.version,
             ),
         ),
-        Metric::gauge("dpdk_pid", "", info.pid),
+        Metric::gauge("dpdk_process_pid", "", info.pid),
         Metric::gauge("dpdk_max_output_len", "", info.max_output_len),
     ];
 
-    // get stats
-    let heap_info = query::<HeapInfo>(&mut stream, "/eal/heap_info,0").await?;
-    metrics.extend([
-        Metric::gauge_with_tags(
-            "dpdk_heap_id",
-            "",
-            heap_info.heap_id,
-            tags!(
-                "name" => &heap_info.name,
-            ),
-        ),
-        Metric::gauge_with_tags(
-            "dpdk_heap_size",
-            "",
-            heap_info.heap_size,
-            tags!(
-                "name" => &heap_info.name,
-            ),
-        ),
-        Metric::gauge_with_tags(
-            "dpdk_free_size",
-            "",
-            heap_info.free_size,
-            tags!(
-                "name" => &heap_info.name,
-            ),
-        ),
-        Metric::gauge_with_tags(
-            "dpdk_alloc_size",
-            "",
-            heap_info.alloc_size,
-            tags!(
-                "name" => &heap_info.name,
-            ),
-        ),
-        Metric::gauge_with_tags(
-            "dpdk_greatest_free_size",
-            "",
-            heap_info.greatest_free_size,
-            tags!(
-                "name" => &heap_info.name,
-            ),
-        ),
-        Metric::gauge_with_tags(
-            "dpdk_alloc_count",
-            "",
-            heap_info.alloc_count,
-            tags!(
-                "name" => &heap_info.name,
-            ),
-        ),
-        Metric::gauge_with_tags(
-            "dpdk_free_count",
-            "",
-            heap_info.free_count,
-            tags!(
-                "name" => heap_info.name,
-            ),
-        ),
-    ]);
-
-    let eth_devices = query::<Vec<i64>>(&mut stream, "/ethdev/list").await?;
-    for id in eth_devices {
-        let device = query::<EthDeviceInfo>(&mut stream, format!("/eth/device_info,{id}")).await?;
-
-        let xstats = query::<BTreeMap<String, f64>>(&mut stream, "/ethdev/xstats,{id}").await?;
-        for (key, value) in xstats {
-            metrics.push(Metric::sum_with_tags(
-                format!("dpdk_interface_{key}"),
-                "DP-Service interface statistic",
-                value,
-                tags!(
-                    "interface" => &device.name
-                ),
-            ));
-        }
-    }
-
-    if let Some(nat_port_counts) =
-        query::<Option<BTreeMap<String, i64>>>(&mut stream, "/dp_service/nat/used_port_count")
-            .await?
-    {
-        for (key, value) in nat_port_counts {
-            metrics.push(Metric::sum_with_tags(
-                "dpdk_interface_nat_used_port_count",
-                "DP-Service interface statistic",
-                value,
-                tags!(
-                    "interface" => key
-                ),
-            ));
-        }
-    }
-
-    if let Some(virt_svc_used_port_counts) =
-        query::<Option<BTreeMap<String, i64>>>(&mut stream, "/dp_service/virtsvc/used_port_count")
-            .await?
-    {
-        for (key, value) in virt_svc_used_port_counts {
-            metrics.push(Metric::sum_with_tags(
-                "dpdk_interface_virtsvc_used_port_count",
-                "DP-Service interface statistic",
-                value,
-                tags!(
-                    "interface" => key
-                ),
-            ));
-        }
-    }
-
-    if let Some(call_count) =
-        query::<Option<GraphCallCount>>(&mut stream, "/dp_service/graph/call_count").await?
-    {
-        for (key, value) in call_count.node_data {
-            metrics.push(Metric::sum_with_tags(
-                format!("dpdk_interface_call_count_{key}"),
-                "",
-                value,
-                tags!(
-                    "interface" => key
-                ),
-            ));
-        }
-    }
+    metrics.extend(cpu(&mut stream).await?);
+    metrics.extend(memory(&mut stream).await?);
+    metrics.extend(ethdev(&mut stream).await?);
 
     Ok(metrics)
 }
@@ -236,34 +115,253 @@ struct Info {
 }
 
 #[derive(Deserialize)]
-struct HeapInfo {
-    #[serde(rename = "Heap_id")]
-    pub heap_id: i64,
-    #[serde(rename = "Name")]
-    pub name: String,
-    #[serde(rename = "Heap_size")]
-    pub heap_size: i64,
-    #[serde(rename = "Free_size")]
-    pub free_size: i64,
-    #[serde(rename = "Alloc_size")]
-    pub alloc_size: i64,
-    #[serde(rename = "Greatest_free_size")]
-    pub greatest_free_size: i64,
-    #[serde(rename = "Alloc_count")]
-    pub alloc_count: i64,
-    #[serde(rename = "Free_count")]
-    pub free_count: i64,
+struct LCoreInfo {
+    socket: i64,
+    role: String,
+    cpuset: Vec<i64>,
+    #[serde(default)]
+    total_cycles: i64,
+    #[serde(default)]
+    busy_cycles: i64,
 }
 
+async fn cpu(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
+    let ids = query::<Vec<i64>>(stream, "/eal/lcore/list").await?;
+
+    let mut metrics = Vec::with_capacity(ids.len() * 2);
+    for id in ids {
+        let info = query::<LCoreInfo>(stream, format!("/eal/lcore/info,{id}")).await?;
+        if info.cpuset.is_empty() {
+            continue;
+        }
+
+        let cpu = info
+            .cpuset
+            .iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+        metrics.extend([
+            Metric::sum_with_tags(
+                "dpdk_cpu_total_cycles",
+                "Total number of CPU cycles",
+                info.total_cycles,
+                tags!(
+                    "numa" => info.socket,
+                    "cpu" => cpu.clone(),
+                    "role" => info.role.clone(),
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_cpu_busy_cycles",
+                "Number of busy CPU cycles",
+                info.busy_cycles,
+                tags!(
+                    "numa" => info.socket,
+                    "cpu" => cpu,
+                    "role" => info.role,
+                ),
+            ),
+        ])
+    }
+
+    Ok(metrics)
+}
+
+#[allow(dead_code)]
+#[derive(Deserialize)]
+struct MemZone {
+    #[serde(rename = "Zone")]
+    zone: i64,
+    #[serde(rename = "Name")]
+    name: String,
+    #[serde(rename = "Length")]
+    length: i64,
+    #[serde(rename = "Address")]
+    address: String,
+    #[serde(rename = "Socket")]
+    socket: i64,
+    #[serde(rename = "Flags")]
+    flags: i64,
+    #[serde(rename = "Hugepage_size")]
+    hugepage_size: i64,
+    #[serde(rename = "Hugepage_base")]
+    hugepage_base: String,
+    #[serde(rename = "Hugepage_used")]
+    hugepage_used: i64,
+}
+
+async fn memory(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
+    let ids = query::<Vec<i64>>(stream, "/eal/memzone_list").await?;
+
+    let mut used = 0;
+    let mut zones = BTreeMap::new();
+
+    for id in ids {
+        let zone = query::<MemZone>(stream, format!("/eal/memzone_info,{id}")).await?;
+
+        let start = i64::from_str_radix(&zone.hugepage_base[2..], 16)
+            .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?;
+        let end = start + zone.hugepage_size * zone.hugepage_used;
+        used += zone.length;
+
+        if let ControlFlow::Continue(_) = zones.clone().into_iter().try_for_each(|(s, e)| {
+            if s < start && start < e && e < end {
+                zones.insert(s, end);
+                return ControlFlow::Break(());
+            }
+
+            if start < s && s < end && end < e {
+                zones.remove(&s);
+                zones.insert(start, e);
+                return ControlFlow::Break(());
+            }
+
+            ControlFlow::Continue(())
+        }) {
+            zones.insert(start, end);
+        }
+    }
+
+    Ok(vec![
+        Metric::gauge(
+            "dpdk_memory_total_bytes",
+            "The total size of reserved memory in bytes.",
+            zones
+                .into_iter()
+                .map(|(start, end)| end - start)
+                .sum::<i64>(),
+        ),
+        Metric::gauge(
+            "dpdk_memory_used_bytes",
+            "The currently used memory in bytes",
+            used,
+        ),
+    ])
+}
+
+#[allow(dead_code)]
 #[derive(Deserialize)]
 struct EthDeviceInfo {
     name: String,
+    state: i64,
+    nb_rx_queues: i64,
+    nb_tx_queues: i64,
+    port_id: i64,
+    mtu: i64,
+    rx_mbuf_size_min: i64,
+    mac_addr: String,
+    promiscuous: i64,
+    scattered_rx: i64,
+    all_multicast: i64,
+    dev_started: i64,
+    lro: i64,
+    dev_configured: i64,
+    rxq_state: Vec<i64>,
+    txq_state: Vec<i64>,
+    numa_node: i64,
+    dev_flags: String,
+    ethdev_rss_hf: String,
 }
 
 #[derive(Deserialize)]
-struct GraphCallCount {
-    #[serde(rename = "Node_0_to_255")]
-    node_data: BTreeMap<String, f64>,
+struct EthDeviceStats {
+    ipackets: i64,
+    opackets: i64,
+    ibytes: i64,
+    obytes: i64,
+    imissed: i64,
+    ierrors: i64,
+    oerrors: i64,
+    rx_nombuf: i64,
+}
+
+async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
+    let ids = query::<Vec<i64>>(stream, "/ethdev/list").await?;
+
+    let mut metrics = Vec::with_capacity(ids.len());
+    for id in ids {
+        let info = query::<EthDeviceInfo>(stream, format!("/ethdev/info,{id}")).await?;
+        let stats = query::<EthDeviceStats>(stream, format!("/ethdev/stats,{id}")).await?;
+
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "dpdk_eth_device_info",
+                "Ethernet device info",
+                1,
+                tags!(
+                    "port" => &info.name,
+                    "mtu" => info.mtu,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_receive_packets",
+                "Number of successfully received packets.",
+                stats.ipackets,
+                tags!(
+                    "port" => &info.name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_transmit_packets",
+                "Number of successfully transmitted packets.",
+                stats.opackets,
+                tags!(
+                    "port" => &info.name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_receive_bytes",
+                "Number of successfully received bytes.",
+                stats.ibytes,
+                tags!(
+                    "port" => &info.name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_transmit_bytes",
+                "Number of successfully transmitted bytes.",
+                stats.obytes,
+                tags!(
+                    "port" => &info.name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_receive_missed_packets",
+                "Number of packets dropped by the HW because Rx queues are full.",
+                stats.imissed,
+                tags!(
+                    "port" => &info.name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_receive_errors",
+                "Number of erroneous received packets.",
+                stats.ierrors,
+                tags!(
+                    "port" => &info.name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_transmit_errors",
+                "Number of packet transmission failures.",
+                stats.oerrors,
+                tags!(
+                    "port" => &info.name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "dpdk_eth_device_receive_nombuf",
+                "Number of Rx mbuf allocation failures.",
+                stats.rx_nombuf,
+                tags!(
+                    "port" => info.name
+                ),
+            ),
+        ])
+    }
+
+    Ok(metrics)
 }
 
 struct UnixSeqStream {
