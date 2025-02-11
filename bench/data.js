@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739304464852,
+  "lastUpdate": 1739304475683,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3f22a159110c6b69d1ea1d7f97646125fa9e5e78",
-          "message": "chore(deps): bump quote from 1.0.37 to 1.0.38 (#2086)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.37 to 1.0.38.\n- [Release notes](https://github.com/dtolnay/quote/releases)\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.37...1.0.38)\n\n---\nupdated-dependencies:\n- dependency-name: quote\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2024-12-27T18:31:51+08:00",
-          "tree_id": "950865deb5e4dce64d3771e9dbcec64484dacf2e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f22a159110c6b69d1ea1d7f97646125fa9e5e78"
-        },
-        "date": 1735295665049,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.432,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 138.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 304.28,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 629.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 641.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "38c773b3e6f18d31a6f5ce3583206f213b1399da",
+          "message": "sources/dpdk: init (#2198)",
+          "timestamp": "2025-02-12T04:04:51+08:00",
+          "tree_id": "9fadfb367bd77789b174874732a36bf2e66a24ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/38c773b3e6f18d31a6f5ce3583206f213b1399da"
+        },
+        "date": 1739304456298,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.579,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 148.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 311.33,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 687.47,
             "unit": "ns/op"
           }
         ]
