@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739266591077,
+  "lastUpdate": 1739266607825,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5026cb5ee39f5324c2b541e2fe4c7b248e8800a6",
-          "message": "add `process_network_receive_bytes_total`, `process_virtual_memory_max_bytes` and `process_network_transmit_bytes_total` (#2085)",
-          "timestamp": "2024-12-26T12:08:06+08:00",
-          "tree_id": "e11f803419f0e1e306b3667d7770a1036f22a37f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5026cb5ee39f5324c2b541e2fe4c7b248e8800a6"
-        },
-        "date": 1735186245475,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.534,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 136.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 309.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 619.05,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 648.55,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7fbe024ef178833f0bb12ff297992de2dbd022d0",
+          "message": "chore(deps): bump hickory-proto from 0.24.2 to 0.24.3 (#2196)\n\nBumps [hickory-proto](https://github.com/hickory-dns/hickory-dns) from 0.24.2 to 0.24.3.\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/v0.24.3/CHANGELOG.md)\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.2...v0.24.3)\n\n---\nupdated-dependencies:\n- dependency-name: hickory-proto\n  dependency-type: indirect\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-11T17:33:49+08:00",
+          "tree_id": "9ca30cc73efba96577fa5879cb873ea88ff341b0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7fbe024ef178833f0bb12ff297992de2dbd022d0"
+        },
+        "date": 1739266587516,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.353,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 135,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 301.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 641.92,
             "unit": "ns/op"
           }
         ]
