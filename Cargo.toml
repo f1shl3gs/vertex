@@ -149,6 +149,7 @@ sources-bind = []
 sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
+sources-dpdk = []
 sources-exec = ["tokio/process"]
 sources-clickhouse_metrics = []
 sources-elasticsearch = []
@@ -198,6 +199,7 @@ sources = [
     "sources-consul",
     "sources-clickhouse_metrics",
     "sources-demo_logs",
+    "sources-dpdk",
     "sources-elasticsearch",
     "sources-exec",
     "sources-filestats",

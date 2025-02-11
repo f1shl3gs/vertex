@@ -8,6 +8,8 @@ mod clickhouse_metrics;
 mod consul;
 #[cfg(feature = "sources-demo_logs")]
 mod demo_logs;
+#[cfg(feature = "sources-dpdk")]
+mod dpdk;
 #[cfg(feature = "sources-elasticsearch")]
 mod elasticsearch;
 #[cfg(feature = "sources-exec")]
