@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739357495563,
+  "lastUpdate": 1739357516533,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f6df52c9d5c588d16fba54b8014f08f45d3865f1",
-          "message": "bump serde to 1.0.217 (#2090)",
-          "timestamp": "2024-12-28T08:24:21+08:00",
-          "tree_id": "6d65c2c70f23a199ef8cc695209b4c033af60636",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f6df52c9d5c588d16fba54b8014f08f45d3865f1"
-        },
-        "date": 1735346098716,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 533,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35819.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e7eed794c7e5e8304b4f581fa67f494e823b2fdc",
           "message": "sources/node: reduce tokio io calls (#2091)",
           "timestamp": "2024-12-29T08:45:30+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37782.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6308c531f64ac61a7f30e93d5ff2f355b0bad5af",
+          "message": "add dpdk_memzone_info (#2200)",
+          "timestamp": "2025-02-12T18:40:05+08:00",
+          "tree_id": "c4c64747eddb317e1f03c9a758c31a4e7d42cdb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6308c531f64ac61a7f30e93d5ff2f355b0bad5af"
+        },
+        "date": 1739357497853,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 597,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37778.2,
             "unit": "KiB"
           }
         ]
