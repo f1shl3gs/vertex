@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739356984173,
+  "lastUpdate": 1739356986455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7c756333bb658447144244b3d3fe68e8afcd28fc",
-          "message": "fix offset test (#2088)",
-          "timestamp": "2024-12-27T20:06:11+08:00",
-          "tree_id": "ef80cf940eb76a04aa84bff06682f5c45adc8a85",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c756333bb658447144244b3d3fe68e8afcd28fc"
-        },
-        "date": 1735301299288,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.497,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.756,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 186.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 182.37,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6308c531f64ac61a7f30e93d5ff2f355b0bad5af",
+          "message": "add dpdk_memzone_info (#2200)",
+          "timestamp": "2025-02-12T18:40:05+08:00",
+          "tree_id": "c4c64747eddb317e1f03c9a758c31a4e7d42cdb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6308c531f64ac61a7f30e93d5ff2f355b0bad5af"
+        },
+        "date": 1739356966772,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.354,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 108.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 192.77,
             "unit": "ns/op"
           }
         ]
