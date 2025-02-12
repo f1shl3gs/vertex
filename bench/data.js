@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739357817278,
+  "lastUpdate": 1739358252626,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7c756333bb658447144244b3d3fe68e8afcd28fc",
-          "message": "fix offset test (#2088)",
-          "timestamp": "2024-12-27T20:06:11+08:00",
-          "tree_id": "ef80cf940eb76a04aa84bff06682f5c45adc8a85",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c756333bb658447144244b3d3fe68e8afcd28fc"
-        },
-        "date": 1735301775124,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29116000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1964.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.784,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b1a0a7682261465fbbf2f1818946309af56bbbb",
           "message": "sources/node: add missing metrics which added by node_exporter (#2089)",
           "timestamp": "2024-12-28T08:18:33+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.994,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3d4c3079defd78bdeb9f79d160d722816a58257",
+          "message": "chore(deps): bump the prost group with 3 updates (#2201)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\n\n\nUpdates `prost` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-types` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-build` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\n---\nupdated-dependencies:\n- dependency-name: prost\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-types\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-build\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-12T18:52:58+08:00",
+          "tree_id": "a34cdc6d9a946a1903774bdabb814dbafdfb77b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f3d4c3079defd78bdeb9f79d160d722816a58257"
+        },
+        "date": 1739358233444,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 30328000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 716370,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.018,
             "unit": "ns/op"
           }
         ]
