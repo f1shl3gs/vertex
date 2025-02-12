@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739357516533,
+  "lastUpdate": 1739357733101,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8b1a0a7682261465fbbf2f1818946309af56bbbb",
-          "message": "sources/node: add missing metrics which added by node_exporter (#2089)",
-          "timestamp": "2024-12-28T08:18:33+08:00",
-          "tree_id": "321e891bb70c1b835fd4e6563e9d53ec9cfac5d7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b1a0a7682261465fbbf2f1818946309af56bbbb"
-        },
-        "date": 1735345249357,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.415,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.659,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 192.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 192.77,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3d4c3079defd78bdeb9f79d160d722816a58257",
+          "message": "chore(deps): bump the prost group with 3 updates (#2201)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\n\n\nUpdates `prost` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-types` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-build` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\n---\nupdated-dependencies:\n- dependency-name: prost\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-types\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-build\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-12T18:52:58+08:00",
+          "tree_id": "a34cdc6d9a946a1903774bdabb814dbafdfb77b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f3d4c3079defd78bdeb9f79d160d722816a58257"
+        },
+        "date": 1739357713878,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.394,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 107.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.02,
             "unit": "ns/op"
           }
         ]
