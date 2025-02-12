@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739358252626,
+  "lastUpdate": 1739358256901,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e7eed794c7e5e8304b4f581fa67f494e823b2fdc",
-          "message": "sources/node: reduce tokio io calls (#2091)",
-          "timestamp": "2024-12-29T08:45:30+08:00",
-          "tree_id": "895f04f79b662c01418e4e2fcf93d706a8d4ee6b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e7eed794c7e5e8304b4f581fa67f494e823b2fdc"
-        },
-        "date": 1735433766796,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 518,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35733.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e30971b2adb4f1ff4b91c989b70b6f081cebc6e8",
           "message": "bump glob to 0.3.2 (#2092)",
           "timestamp": "2024-12-29T14:19:49+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 597,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37778.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3d4c3079defd78bdeb9f79d160d722816a58257",
+          "message": "chore(deps): bump the prost group with 3 updates (#2201)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\n\n\nUpdates `prost` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-types` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-build` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\n---\nupdated-dependencies:\n- dependency-name: prost\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-types\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-build\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-12T18:52:58+08:00",
+          "tree_id": "a34cdc6d9a946a1903774bdabb814dbafdfb77b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f3d4c3079defd78bdeb9f79d160d722816a58257"
+        },
+        "date": 1739358237001,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
             "unit": "s"
           },
           {
