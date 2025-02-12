@@ -119,6 +119,8 @@ struct LCoreInfo {
     socket: i64,
     role: String,
     cpuset: Vec<i64>,
+
+    // those two fields only available when `record-core-cycles` enabled
     #[serde(default)]
     total_cycles: i64,
     #[serde(default)]
@@ -168,7 +170,6 @@ async fn cpu(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
     Ok(metrics)
 }
 
-#[allow(dead_code)]
 #[derive(Deserialize)]
 struct MemZone {
     #[serde(rename = "Zone")]
@@ -177,8 +178,6 @@ struct MemZone {
     name: String,
     #[serde(rename = "Length")]
     length: i64,
-    #[serde(rename = "Address")]
-    address: String,
     #[serde(rename = "Socket")]
     socket: i64,
     #[serde(rename = "Flags")]
@@ -197,8 +196,20 @@ async fn memory(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
     let mut used = 0;
     let mut zones = BTreeMap::new();
 
+    let mut metrics = Vec::with_capacity(ids.len() + 2);
     for id in ids {
         let zone = query::<MemZone>(stream, format!("/eal/memzone_info,{id}")).await?;
+        metrics.push(Metric::gauge_with_tags(
+            "dpdk_memzone_info",
+            "DPDK memzone information",
+            1,
+            tags!(
+                "zone" => zone.zone,
+                "name" => zone.name,
+                "socket" => zone.socket,
+                "flags" => zone.flags,
+            ),
+        ));
 
         let start = i64::from_str_radix(&zone.hugepage_base[2..], 16)
             .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?;
@@ -223,7 +234,7 @@ async fn memory(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
         }
     }
 
-    Ok(vec![
+    metrics.extend([
         Metric::gauge(
             "dpdk_memory_total_bytes",
             "The total size of reserved memory in bytes.",
@@ -237,7 +248,9 @@ async fn memory(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
             "The currently used memory in bytes",
             used,
         ),
-    ])
+    ]);
+
+    Ok(metrics)
 }
 
 #[allow(dead_code)]
