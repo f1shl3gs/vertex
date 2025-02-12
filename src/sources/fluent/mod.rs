@@ -18,6 +18,7 @@ use framework::tls::TlsConfig;
 use framework::Source;
 use msgpack::{decode_binary, decode_entry, decode_options, decode_value};
 use msgpack::{decode_string, Error as MsgPackError, ReadExt};
+use value::path;
 
 fn default_address() -> SocketAddr {
     SocketAddr::from(([127, 0, 0, 1], 24224))
@@ -199,8 +200,8 @@ impl ForwardDecoder {
 
                     let metadata = log.metadata_mut().value_mut();
 
-                    metadata.insert("fluent.timestamp", timestamp);
-                    metadata.insert("fluent.tag", tag.clone());
+                    metadata.insert(path!("fluent", "timestamp"), timestamp);
+                    metadata.insert(path!("fluent", "tag"), tag.clone());
 
                     logs.push(log);
                 }
@@ -273,8 +274,8 @@ impl ForwardDecoder {
 
                     let mut log = LogRecord::from(value);
                     let metadata = log.metadata_mut().value_mut();
-                    metadata.insert("fluent.timestamp", timestamp);
-                    metadata.insert("fluent.tag", tag.clone());
+                    metadata.insert(path!("fluent", "timestamp"), timestamp);
+                    metadata.insert(path!("fluent", "tag"), tag.clone());
 
                     logs.push(log);
                 }
@@ -300,8 +301,8 @@ impl ForwardDecoder {
 
                 let mut log = LogRecord::from(value);
                 let metadata = log.metadata_mut().value_mut();
-                metadata.insert("fluent.timestamp", ts);
-                metadata.insert("fluent.tag", tag);
+                metadata.insert(path!("fluent", "timestamp"), ts);
+                metadata.insert(path!("fluent", "tag"), tag);
 
                 if len == 4 {
                     // only `size` or `chunk`
