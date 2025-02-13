@@ -1,0 +1,4 @@
+. {
+  dnstap tcp://127.0.0.1:3053 full
+  forward . 1.1.1.1
+}

@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
 use std::hash::Hash;
 use std::net::SocketAddr;
+use std::path::PathBuf;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Protocol {
@@ -22,7 +23,7 @@ impl Display for Protocol {
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Resource {
     Port(SocketAddr, Protocol),
-    UnixSocket(String),
+    UnixSocket(PathBuf),
     SystemFd(usize),
     DiskBuffer(String),
 }
@@ -83,7 +84,7 @@ impl Display for Resource {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Resource::Port(addr, proto) => write!(f, "{} {}", proto, addr),
-            Resource::UnixSocket(path) => write!(f, "{}", path),
+            Resource::UnixSocket(path) => write!(f, "{:?}", path),
             Resource::SystemFd(index) => write!(f, "systemd {}th socket", index + 1),
             Resource::DiskBuffer(name) => write!(f, "disk buffer {:?}", name),
         }

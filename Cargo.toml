@@ -147,11 +147,12 @@ extensions = [
 # Sources
 sources-bind = []
 sources-chrony = []
+sources-clickhouse_metrics = []
 sources-consul = []
 sources-demo_logs = []
 sources-dpdk = []
+sources-dnstap = ["dep:libc", "dep:prost"]
 sources-exec = ["tokio/process"]
-sources-clickhouse_metrics = []
 sources-elasticsearch = []
 sources-filestats = []
 sources-fluent = ["dep:flate2"]
@@ -199,6 +200,7 @@ sources = [
     "sources-consul",
     "sources-clickhouse_metrics",
     "sources-demo_logs",
+    "sources-dnstap",
     "sources-dpdk",
     "sources-elasticsearch",
     "sources-exec",
@@ -275,9 +277,9 @@ sinks-console = ["tokio/io-std"]
 sinks-elasticsearch = []
 sinks-http = []
 sinks-influxdb = []
-sinks-jaeger = ["dep:jaeger"]
+sinks-jaeger = ["dep:jaeger", "tonic/server"]
 sinks-kafka = ["dep:rskafka"]
-sinks-loki = ["dep:snap", "dep:buffers"]
+sinks-loki = ["dep:snap"]
 sinks-prometheus_exporter = ["dep:flate2", "dep:parking_lot"]
 sinks-prometheus_remote_write = ["dep:snap"]
 sinks-socket = []
@@ -315,26 +317,38 @@ tracked_alloc = [ "dep:tracked_alloc", "dep:snmalloc-rs" ]
 # transforms and sinks should depend on this feature.
 kubernetes = ["dep:k8s-openapi", "dep:kube"]
 
-bench = [
-    "sinks-loki",
-    "sources-haproxy",
-    "sources-node_metrics",
-]
-
 [[bench]]
 name = "loki"
 harness = false
 path = "benches/loki.rs"
+required-features = ["sinks-loki"]
 
 [[bench]]
 name = "hwmon_gather"
 harness = false
 path = "benches/node_source_hwmon.rs"
+required-features = ["sources-node_metrics"]
 
 [[bench]]
 name = "haproxy"
 harness = false
 path = "benches/haproxy.rs"
+required-features = ["sources-haproxy"]
+
+[[test]]
+name = "socket"
+path = "tests/socket.rs"
+required-features = ["sources-socket"]
+
+[[test]]
+name = "syslog"
+path = "tests/syslog.rs"
+required-features = ["sources-syslog"]
+
+[[test]]
+name = "topology"
+path = "tests/topology.rs"
+required-features = []
 
 [build-dependencies]
 prost-build = { version = "0.13.5", default-features = false }
@@ -352,7 +366,7 @@ tonic = { version = "0.12.3", default-features = false, features = ["server"]}
 
 [dependencies]
 # Workspaces
-buffers = { path = "lib/buffers", optional = true }
+buffers = { path = "lib/buffers" }
 codecs = { path = "lib/codecs" }
 configurable = { path = "lib/configurable" }
 event = { path = "lib/event" }
@@ -408,7 +422,7 @@ serde_yaml = { version = "0.9.34", default-features = false }
 serde_json = { version = "1.0.138", default-features = false }
 
 # Protobuf
-prost = { version = "0.13.5", default-features = false, features = ["std"] }
+prost = { version = "0.13.5", default-features = false, optional = true, features = ["std"] }
 prost-types = { version = "0.13.5", default-features = false }
 
 # Profile
