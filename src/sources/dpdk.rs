@@ -115,16 +115,20 @@ struct Info {
 }
 
 #[derive(Deserialize)]
+struct Cycles {
+    total_cycles: i64,
+    busy_cycles: i64,
+}
+
+#[derive(Deserialize)]
 struct LCoreInfo {
     socket: i64,
     role: String,
     cpuset: Vec<i64>,
 
     // those two fields only available when `record-core-cycles` enabled
-    #[serde(default)]
-    total_cycles: i64,
-    #[serde(default)]
-    busy_cycles: i64,
+    #[serde(flatten)]
+    cycles: Option<Cycles>,
 }
 
 async fn cpu(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
@@ -137,34 +141,36 @@ async fn cpu(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
             continue;
         }
 
-        let cpu = info
-            .cpuset
-            .iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<_>>()
-            .join(",");
-        metrics.extend([
-            Metric::sum_with_tags(
-                "dpdk_cpu_total_cycles",
-                "Total number of CPU cycles",
-                info.total_cycles,
-                tags!(
-                    "numa" => info.socket,
-                    "cpu" => cpu.clone(),
-                    "role" => info.role.clone(),
+        if let Some(cycle) = info.cycles {
+            let cpu = info
+                .cpuset
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<_>>()
+                .join(",");
+            metrics.extend([
+                Metric::sum_with_tags(
+                    "dpdk_cpu_total_cycles",
+                    "Total number of CPU cycles",
+                    cycle.total_cycles,
+                    tags!(
+                        "numa" => info.socket,
+                        "cpu" => cpu.clone(),
+                        "role" => info.role.clone(),
+                    ),
                 ),
-            ),
-            Metric::sum_with_tags(
-                "dpdk_cpu_busy_cycles",
-                "Number of busy CPU cycles",
-                info.busy_cycles,
-                tags!(
-                    "numa" => info.socket,
-                    "cpu" => cpu,
-                    "role" => info.role,
+                Metric::sum_with_tags(
+                    "dpdk_cpu_busy_cycles",
+                    "Number of busy CPU cycles",
+                    cycle.busy_cycles,
+                    tags!(
+                        "numa" => info.socket,
+                        "cpu" => cpu,
+                        "role" => info.role,
+                    ),
                 ),
-            ),
-        ])
+            ])
+        }
     }
 
     Ok(metrics)
