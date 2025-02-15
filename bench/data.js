@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739661529687,
+  "lastUpdate": 1739661533188,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e7eed794c7e5e8304b4f581fa67f494e823b2fdc",
-          "message": "sources/node: reduce tokio io calls (#2091)",
-          "timestamp": "2024-12-29T08:45:30+08:00",
-          "tree_id": "895f04f79b662c01418e4e2fcf93d706a8d4ee6b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e7eed794c7e5e8304b4f581fa67f494e823b2fdc"
-        },
-        "date": 1735433749429,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28342000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1883.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.499,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e30971b2adb4f1ff4b91c989b70b6f081cebc6e8",
           "message": "bump glob to 0.3.2 (#2092)",
           "timestamp": "2024-12-29T14:19:49+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.091,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5cf8bd712ff743e150ea9b1a896a477b9ff7dbed",
+          "message": "fix fd leak (#2205)",
+          "timestamp": "2025-02-16T07:07:38+08:00",
+          "tree_id": "436abe5c1c80cd86a2a28feaa4d916519265de53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5cf8bd712ff743e150ea9b1a896a477b9ff7dbed"
+        },
+        "date": 1739661512624,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28272000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 712480,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.112,
             "unit": "ns/op"
           }
         ]
