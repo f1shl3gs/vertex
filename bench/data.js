@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739661000138,
+  "lastUpdate": 1739661027525,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e30971b2adb4f1ff4b91c989b70b6f081cebc6e8",
-          "message": "bump glob to 0.3.2 (#2092)",
-          "timestamp": "2024-12-29T14:19:49+08:00",
-          "tree_id": "61d93b57081e5fc021219e6085470ade1f32e205",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e30971b2adb4f1ff4b91c989b70b6f081cebc6e8"
-        },
-        "date": 1735453341733,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.34,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 134.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 307.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 588.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6f30629e22f998fc7a32a03862cf00e8cefeac03",
           "message": "bump syn to 2.0.92 (#2093)",
           "timestamp": "2024-12-29T14:24:22+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 648.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5cf8bd712ff743e150ea9b1a896a477b9ff7dbed",
+          "message": "fix fd leak (#2205)",
+          "timestamp": "2025-02-16T07:07:38+08:00",
+          "tree_id": "436abe5c1c80cd86a2a28feaa4d916519265de53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5cf8bd712ff743e150ea9b1a896a477b9ff7dbed"
+        },
+        "date": 1739661008785,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.508,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 135.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 298.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 605.18,
             "unit": "ns/op"
           }
         ]
