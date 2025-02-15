@@ -60,15 +60,10 @@ members = [
 default = [
     # "snmalloc",
 
-    # "extensions",
-    # "sources",
-    # "transforms",
-    # "sinks",
-
-    "dep:libc",
-    "sources-dnstap",
-    "sources-fluent",
-    "sinks-console"
+    "extensions",
+    "sources",
+    "transforms",
+    "sinks",
 ]
 
 target-x86_64-unknown-linux-musl = [
@@ -108,6 +103,7 @@ integration-tests-ntp = []
 integration-tests-prometheus_exporter = []
 integration-tests-prometheus_remote_write = []
 integration-tests-prometheus_scrape = []
+dnstap-integration-tests = []
 redis-integration-tests = []
 integration-tests-zookeeper = []
 clickhouse-integration-tests = []
@@ -127,6 +123,7 @@ all-integration-tests = [
     "integration-tests-prometheus_exporter",
     "integration-tests-prometheus_remote_write",
     "integration-tests-prometheus_scrape",
+    "dnstap-integration-tests",
     "redis-integration-tests",
     "integration-tests-zookeeper",
     "clickhouse-integration-tests",

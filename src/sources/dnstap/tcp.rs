@@ -87,4 +87,14 @@ impl Config {
     pub fn resource(&self) -> Resource {
         Resource::tcp(self.address)
     }
+
+    #[cfg(all(test, feature = "dnstap-integration-tests"))]
+    pub fn simple(address: SocketAddr) -> Self {
+        Self {
+            address,
+            tls: None,
+            keepalive: None,
+            receive_buffer_bytes: None,
+        }
+    }
 }
