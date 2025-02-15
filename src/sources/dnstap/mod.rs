@@ -113,7 +113,7 @@ const FINISH_FRAME: [u8; 12] = [
 /// FStrm
 ///
 /// https://github.com/farsightsec/fstrm
-///
+/// ```text
 ///       Client                            Server
 ///              Ready with ContentType
 ///           -------------------------------->
@@ -133,6 +133,7 @@ const FINISH_FRAME: [u8; 12] = [
 ///           -------------------------------->
 ///              Finish Frame
 ///           <--------------------------------
+/// ```
 pub async fn serve_conn<S: AsyncRead + AsyncWrite + Unpin>(
     mut stream: S,
     bidirectional: bool,
