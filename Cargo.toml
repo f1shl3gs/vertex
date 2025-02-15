@@ -106,6 +106,7 @@ integration-tests-prometheus_scrape = []
 redis-integration-tests = []
 integration-tests-zookeeper = []
 clickhouse-integration-tests = []
+dnstap-integration-tests = []
 fluent-integration-tests = []
 redfish-integration-tests = []
 
@@ -125,6 +126,7 @@ all-integration-tests = [
     "redis-integration-tests",
     "integration-tests-zookeeper",
     "clickhouse-integration-tests",
+    "dnstap-integration-tests",
     "fluent-integration-tests",
     "redfish-integration-tests",
 ]

@@ -47,12 +47,11 @@ struct Config {
     #[serde(default = "default_max_frame_length")]
     max_frame_length: usize,
 
-    /// Whether to skip parsing or decoding of DNSTAP frames.
-    ///
-    /// If set to `true`, frames are not parsed or decoded. The raw frame data is
-    /// set as a field on the event(called `rawData`) and encoded as a base64 string.
-    raw_data_only: bool,
-
+    // /// Whether to skip parsing or decoding of DNSTAP frames.
+    // ///
+    // /// If set to `true`, frames are not parsed or decoded. The raw frame data is
+    // /// set as a field on the event(called `rawData`) and encoded as a base64 string.
+    // raw_data_only: bool,
     #[serde(flatten)]
     mode: Mode,
 }
@@ -151,12 +150,7 @@ pub async fn serve_conn<S: AsyncRead + AsyncWrite + Unpin>(
     assert_frame(&mut stream, CONTROL_START).await?;
 
     // reading data
-    let reader = Framed::new(
-        stream,
-        LengthDelimitedCodec {
-            limit: max_frame_length,
-        },
-    );
+    let reader = Framed::new(stream, FStrmDecoder::new(max_frame_length));
     let mut reader = ReadyFrames::new(reader);
 
     loop {
@@ -183,7 +177,7 @@ pub async fn serve_conn<S: AsyncRead + AsyncWrite + Unpin>(
                 }
             }
             Some(Err(err)) => match err {
-                DecoderError::ControlFrame => break,
+                DecoderError::Stopped => break,
                 DecoderError::LimitExceed(got) => {
                     warn!(
                         message = "frame size is exceeded the limit",
@@ -198,6 +192,11 @@ pub async fn serve_conn<S: AsyncRead + AsyncWrite + Unpin>(
             None => break,
         }
     }
+
+    // NOTE:
+    // STOP frame is already read from socket, and stored in the buffer `Framed` holds,
+    // so actually, we can't handle the STOP frame here, cause we cannot make sure
+    // the whole ControlFrame is read and saved to the BytesMut
 
     if bidirectional {
         let stream = reader.get_mut().get_mut();
@@ -214,13 +213,14 @@ pub async fn serve_conn<S: AsyncRead + AsyncWrite + Unpin>(
 
 // const CONTROL_ACCEPT: u32 = 0x01;
 const CONTROL_START: u32 = 0x02;
-// const CONTROL_STOP: u32 = 0x03;
+const CONTROL_STOP: u32 = 0x03;
 const CONTROL_READY: u32 = 0x04;
 // const CONTROL_FINISH: u32 = 0x05;
 
 const CONTROL_FIELD_CONTENT_TYPE: u32 = 0x01;
 const CONTROL_FRAME_LENGTH_MAX: usize = 512;
 
+/// Read a ControlFrame and assert ControlType and ContentType(if provided)
 async fn assert_frame<R: AsyncRead + Unpin>(stream: &mut R, typ: u32) -> std::io::Result<()> {
     // decode zero
     let zero = stream.read_u32().await?;
@@ -239,6 +239,11 @@ async fn assert_frame<R: AsyncRead + Unpin>(stream: &mut R, typ: u32) -> std::io
     }
 
     len -= 4;
+    if len == 0 {
+        return Ok(());
+    }
+
+    // validate ContentType of `protobuf:dnstap.Dnstap`
     let mut found = false;
     let mut buf = [0u8; 512];
     while len > 0 {
@@ -280,13 +285,13 @@ fn tap_to_value(tap: Dnstap) -> Value {
     }
 
     if let Some(msg) = tap.message {
-        map.insert("message".to_string(), tap_message_to_value(msg));
+        map.insert("message".to_string(), message_to_value(msg));
     }
 
     Value::Object(map)
 }
 
-fn tap_message_to_value(msg: Message) -> Value {
+fn message_to_value(msg: Message) -> Value {
     let mut map = BTreeMap::new();
 
     let type_str = match msg.r#type {
@@ -488,7 +493,7 @@ fn policy_to_value(policy: Policy) -> Value {
 
 enum DecoderError {
     LimitExceed(usize),
-    ControlFrame,
+    Stopped,
     Io(std::io::Error),
 }
 
@@ -498,11 +503,21 @@ impl From<std::io::Error> for DecoderError {
     }
 }
 
-struct LengthDelimitedCodec {
+struct FStrmDecoder {
     limit: usize,
+    expect_stop: bool,
 }
 
-impl tokio_util::codec::Decoder for LengthDelimitedCodec {
+impl FStrmDecoder {
+    fn new(limit: usize) -> Self {
+        FStrmDecoder {
+            limit,
+            expect_stop: false,
+        }
+    }
+}
+
+impl tokio_util::codec::Decoder for FStrmDecoder {
     type Item = (Bytes, usize);
     type Error = DecoderError;
 
@@ -513,7 +528,8 @@ impl tokio_util::codec::Decoder for LengthDelimitedCodec {
 
         let len = u32::from_be_bytes(src[..4].try_into().unwrap()) as usize;
         if len == 0 {
-            return Err(DecoderError::ControlFrame);
+            self.expect_stop = true;
+            return Ok(None);
         }
 
         if self.limit < len {
@@ -525,7 +541,26 @@ impl tokio_util::codec::Decoder for LengthDelimitedCodec {
         }
 
         src.advance(4);
-        let frame = src.split_to(len).freeze();
+        let mut frame = src.split_to(len).freeze();
+
+        if self.expect_stop {
+            return match frame.try_get_u32() {
+                Ok(typ) => {
+                    if typ == CONTROL_STOP {
+                        return Err(DecoderError::Stopped);
+                    }
+
+                    Err(DecoderError::Io(std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        format!("want STOP control frame, but got {}", typ),
+                    )))
+                }
+                Err(err) => Err(DecoderError::Io(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    err,
+                ))),
+            };
+        }
 
         Ok(Some((frame, len)))
     }
@@ -542,5 +577,131 @@ mod tests {
     #[test]
     fn generate_config() {
         crate::testing::generate_config::<Config>();
+    }
+}
+
+#[cfg(all(test, feature = "dnstap-integration-tests"))]
+mod integration_tests {
+    use std::net::SocketAddr;
+
+    use event::Events;
+    use futures::Stream;
+    use testify::{collect_ready, next_addr};
+    use tokio::net::UdpSocket;
+
+    use super::*;
+    use crate::testing::{trace_init, ContainerBuilder, WaitFor};
+
+    const IMAGE: &str = "coredns/coredns";
+
+    async fn query(target: SocketAddr) {
+        #[rustfmt::skip]
+        let query = [
+            0xb2, 0xcc, 0x01, 0x20, 0x00, 0x01, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x01, 0x04, 0x62, 0x6c, 0x6f,
+            0x67, 0x09, 0x72, 0x75, 0x73, 0x74, 0x2d, 0x6c,
+            0x61, 0x6e, 0x67, 0x03, 0x6f, 0x72, 0x67, 0x00,
+            0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x29, 0x04,
+            0xd0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0c, 0x00,
+            0x0a, 0x00, 0x08, 0xd6, 0x33, 0xfe, 0x88, 0x66,
+            0x54, 0x3c, 0x51,
+        ];
+
+        let bind = next_addr();
+        let socket = UdpSocket::bind(bind).await.unwrap();
+
+        socket.connect(target).await.unwrap();
+
+        socket.send(&query).await.unwrap();
+
+        let mut buf = [0; 1024];
+        let size = socket.recv(&mut buf).await.unwrap();
+
+        assert!(size > 0);
+    }
+
+    async fn start_source(addr: SocketAddr) -> impl Stream<Item = Events> + Unpin {
+        let (pipeline, recv) = Pipeline::new_test();
+
+        let config = tcp::Config::simple(addr);
+        let source = config
+            .build(4 * 1024, SourceContext::new_test(pipeline))
+            .await
+            .unwrap();
+
+        tokio::spawn(async move {
+            source.await.unwrap();
+        });
+
+        // wait_for_tcp(addr).await;
+        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+
+        recv
+    }
+
+    async fn run(version: &str) {
+        trace_init();
+
+        let source_input = next_addr();
+
+        let output = start_source(source_input).await;
+
+        let config = format!(
+            r#"
+. {{
+  log
+  dnstap tcp://192.168.88.254:{} full
+  forward . 1.1.1.1
+}}
+"#,
+            source_input.port()
+        );
+
+        let temp_dir = testify::temp_dir().join("Corefile");
+        std::fs::write(&temp_dir, &config).unwrap();
+
+        let container = ContainerBuilder::new(format!("{}:{}", IMAGE, version))
+            .with_udp_port(53)
+            .with_port(53)
+            .with_volume(temp_dir.to_string_lossy(), "/Corefile")
+            .with_extra_args(["--add-host=host.docker.internal:host-gateway"])
+            .run()
+            .unwrap();
+
+        container.wait(WaitFor::Stdout("CoreDNS-")).unwrap();
+        info!("container ready");
+
+        let target_addr = container.get_udp_port(53);
+        // wait_for_tcp(target_addr).await;
+
+        query(target_addr).await;
+
+        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+
+        // check output
+        let mut batch = collect_ready(output).await;
+        assert!(!batch.is_empty());
+        let events = batch.pop().unwrap();
+
+        assert_query(events);
+    }
+
+    fn assert_query(events: Events) {
+        match events {
+            Events::Logs(logs) => {
+                assert!(logs
+                    .iter()
+                    .any(|log| log.get("type") == Some(&Value::from("Message"))));
+                assert!(logs
+                    .iter()
+                    .any(|log| log.get("message.type") == Some(&Value::from("ClientQuery"))));
+            }
+            _ => panic!("Expected logs"),
+        }
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn coredns_to_tcp() {
+        run("1.12.0").await;
     }
 }

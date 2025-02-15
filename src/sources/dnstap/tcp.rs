@@ -37,6 +37,11 @@ impl Config {
         let receive_buffer_bytes = self.receive_buffer_bytes;
 
         Ok(Box::pin(async move {
+            info!(
+                message = "Listening.",
+                addr = ?listener.local_addr().unwrap(),
+            );
+
             loop {
                 let mut stream = tokio::select! {
                     result = listener.accept() => match result {
@@ -77,7 +82,17 @@ impl Config {
 
                 let shutdown = shutdown.clone();
                 let output = output.clone();
-                tokio::spawn(serve_conn(stream, true, max_frame_length, shutdown, output));
+                tokio::spawn(async move {
+                    if let Err(err) =
+                        serve_conn(stream, true, max_frame_length, shutdown, output).await
+                    {
+                        warn!(
+                            message = "serve TCP connection failed",
+                            ?err,
+                            internal_log_rate_secs = 30,
+                        );
+                    }
+                });
             }
 
             Ok(())
@@ -86,5 +101,15 @@ impl Config {
 
     pub fn resource(&self) -> Resource {
         Resource::tcp(self.address)
+    }
+
+    #[cfg(test)]
+    pub fn simple(address: SocketAddr) -> Self {
+        Self {
+            address,
+            tls: None,
+            keepalive: None,
+            receive_buffer_bytes: None,
+        }
     }
 }
