@@ -8,7 +8,7 @@ use crate::Error;
 mod inotify {
     use std::ffi::{c_void, CString, OsStr};
     use std::io;
-    use std::os::fd::{AsRawFd, RawFd};
+    use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
     use std::os::unix::ffi::OsStrExt;
     use std::path::Path;
     use std::pin::Pin;
@@ -21,8 +21,8 @@ mod inotify {
     const EVENT_SIZE: usize = 16;
 
     pub struct Watcher {
-        fd: AsyncFd<libc::c_int>,
-        wds: Vec<RawFd>,
+        fd: AsyncFd<OwnedFd>,
+        wds: Vec<OwnedFd>,
     }
 
     impl Watcher {
@@ -33,7 +33,7 @@ mod inotify {
                     return Err(io::Error::last_os_error());
                 }
 
-                ret
+                OwnedFd::from_raw_fd(ret)
             };
 
             Ok(Watcher {
@@ -55,7 +55,7 @@ mod inotify {
                     return Err(io::Error::last_os_error());
                 }
 
-                ret
+                OwnedFd::from_raw_fd(ret)
             };
 
             self.wds.push(wd);
@@ -74,8 +74,8 @@ mod inotify {
 
     #[allow(dead_code)]
     pub struct EventStream<'a> {
-        fd: AsyncFd<RawFd>,
-        wds: Vec<RawFd>,
+        fd: AsyncFd<OwnedFd>,
+        wds: Vec<OwnedFd>,
         buf: &'a [u8],
     }
 

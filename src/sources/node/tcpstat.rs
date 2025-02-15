@@ -1,5 +1,5 @@
 use std::io;
-use std::os::fd::AsRawFd;
+use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
 use std::pin::Pin;
 use std::task::{ready, Context, Poll};
 
@@ -116,7 +116,7 @@ pub const TCP_CLOSING: u8 = 11;
 const NETLINK_HEADER_LEN: usize = 16;
 
 struct NetlinkSocket {
-    inner: AsyncFd<libc::c_int>,
+    inner: AsyncFd<OwnedFd>,
 }
 
 impl NetlinkSocket {
@@ -132,7 +132,7 @@ impl NetlinkSocket {
                 return Err(io::Error::last_os_error());
             }
 
-            ret
+            OwnedFd::from_raw_fd(ret)
         };
 
         Ok(NetlinkSocket {
