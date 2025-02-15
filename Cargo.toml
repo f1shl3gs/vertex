@@ -60,10 +60,15 @@ members = [
 default = [
     # "snmalloc",
 
-    "extensions",
-    "sources",
-    "transforms",
-    "sinks",
+    # "extensions",
+    # "sources",
+    # "transforms",
+    # "sinks",
+
+    "dep:libc",
+    "sources-dnstap",
+    "sources-fluent",
+    "sinks-console"
 ]
 
 target-x86_64-unknown-linux-musl = [
@@ -149,6 +154,7 @@ sources-bind = []
 sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
+sources-dnstap = []
 sources-dpdk = []
 sources-exec = ["tokio/process"]
 sources-clickhouse_metrics = []
@@ -199,6 +205,7 @@ sources = [
     "sources-consul",
     "sources-clickhouse_metrics",
     "sources-demo_logs",
+    "sources-dnstap",
     "sources-dpdk",
     "sources-elasticsearch",
     "sources-exec",
