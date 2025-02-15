@@ -93,6 +93,10 @@ integration-test-kafka:
 integration-test-elasticsearch:
 	cargo test -p vertex --lib sinks::elasticsearch::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: dnstap-integration-tests
+dnstap-integration-tests:
+	cargo test -p vertex --lib sources::dnstap::integration_tests --features all-integration-tests --no-fail-fast
+
 .PHONY: redfish-integration-tests
 redfish-integration-tests:
 	bash ./scripts/redfish_prepare.sh

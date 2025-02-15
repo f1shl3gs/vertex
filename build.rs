@@ -131,6 +131,19 @@ fn main() {
     // Emit the aforementioned stanzas
     tracker.emit_rerun_stanzas();
 
+    #[cfg(feature = "sources-dnstap")]
+    {
+        // Generate proto if needed
+        let src = std::path::PathBuf::from("src/sources/dnstap");
+        let include = &[src.clone()];
+
+        println!("cargo:rerun-if-changed=src/sources/dnstap/dnstap.proto");
+        let mut config = prost_build::Config::new();
+        config
+            .compile_protos(&[src.join("dnstap.proto")], include)
+            .unwrap();
+    }
+
     #[cfg(feature = "sinks-loki")]
     {
         // Generate proto if needed

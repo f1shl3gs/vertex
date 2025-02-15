@@ -103,6 +103,7 @@ integration-tests-ntp = []
 integration-tests-prometheus_exporter = []
 integration-tests-prometheus_remote_write = []
 integration-tests-prometheus_scrape = []
+dnstap-integration-tests = []
 redis-integration-tests = []
 integration-tests-zookeeper = []
 clickhouse-integration-tests = []
@@ -122,6 +123,7 @@ all-integration-tests = [
     "integration-tests-prometheus_exporter",
     "integration-tests-prometheus_remote_write",
     "integration-tests-prometheus_scrape",
+    "dnstap-integration-tests",
     "redis-integration-tests",
     "integration-tests-zookeeper",
     "clickhouse-integration-tests",
@@ -149,6 +151,7 @@ sources-bind = []
 sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
+sources-dnstap = []
 sources-dpdk = []
 sources-exec = ["tokio/process"]
 sources-clickhouse_metrics = []
@@ -199,6 +202,7 @@ sources = [
     "sources-consul",
     "sources-clickhouse_metrics",
     "sources-demo_logs",
+    "sources-dnstap",
     "sources-dpdk",
     "sources-elasticsearch",
     "sources-exec",
