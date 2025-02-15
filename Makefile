@@ -102,6 +102,10 @@ redfish-integration-tests:
 clickhouse-integration-tests:
 	cargo test -p vertex --lib sources::clickhouse_metrics::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
 
+.PONHY: dnstap-integration-tests
+dnstap-integration-tests:
+	cargo test -p vertex --lib sources::dnstap::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
+
 .PHONY: fluent-integration-tests
 fluent-integration-tests:
 	cargo test -p vertex --lib sources::fluent::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
@@ -142,7 +146,7 @@ bench-event:
 
 .PHONY: bench-vertex
 bench-vertex:
-	cargo bench --no-default-features --features benches
+	cargo bench --no-default-features
 
 .PHONY: bench-prometheus
 bench-prometheus:

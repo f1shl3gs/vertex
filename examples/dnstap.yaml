@@ -1,0 +1,14 @@
+sources:
+  dnstap:
+    type: dnstap
+    mode: tcp
+    address: 127.0.0.1:3053
+
+sinks:
+  console:
+    type: console
+    inputs:
+      - dnstap
+    encoding:
+      codec: json
+      pretty: true
