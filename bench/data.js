@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739663245841,
+  "lastUpdate": 1739666883967,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "06918e2896e2dbd4b2cb6d614f8bbe2ba7183955",
-          "message": "optimize read_to_string, less allocation, less syscall (#2096)",
-          "timestamp": "2025-01-01T17:06:27+08:00",
-          "tree_id": "69fd5876ea377f7430cdc136d1c6f55a62a837a1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/06918e2896e2dbd4b2cb6d614f8bbe2ba7183955"
-        },
-        "date": 1735722994693,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 523,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35716.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e03949902df61878c48f16cc197455073d62b757",
           "message": "bump syn to 2.0.94 (#2097)",
           "timestamp": "2025-01-02T10:05:13+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 558,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37958.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2aa3e8db1ba72adb0d2cbc5fe5b89408537cc5f4",
+          "message": "add missing source (#2207)",
+          "timestamp": "2025-02-16T08:36:51+08:00",
+          "tree_id": "e2489821ba3d401cfb50f930f8b2ff111b0cb88f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2aa3e8db1ba72adb0d2cbc5fe5b89408537cc5f4"
+        },
+        "date": 1739666865301,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 557,
             "unit": "s"
           },
           {
