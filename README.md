@@ -25,6 +25,8 @@ has already been ported.
 | clickhouse_metrics      | Scrapes ClickHouse metrics periodically                           | &check; | &cross; | &cross; |
 | consul                  | Scrapes metrics from consul                                       | &check; | &cross; | &cross; |
 | demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
+| dnstap                  | Receive dnstap message for bind, coredns and etc                  | &cross; | &check; | &cross; |
+| dpdk                    | Gathering DPDK metrics from it's telemetry socket                 | &check; | &cross; | &cross; |
 | exec                    | Execute a command and capture stdout as logs                      | &cross; | &check; | &cross; |
 | filestats               | Monitor files and send metadata metrics                           | &check; | &cross; | &cross; |
 | fluent                  | Receive logs from fluent-bit or fluentd                           | &cross; | &check; | &cross; |
