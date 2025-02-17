@@ -161,6 +161,10 @@ impl Compression {
         Compression::Zlib(CompressionLevel::Default)
     }
 
+    pub const fn snappy_default() -> Compression {
+        Compression::Snappy
+    }
+
     pub fn compression_level(&self) -> CompressionLevel {
         match self {
             Compression::None | Compression::Snappy => CompressionLevel::None,

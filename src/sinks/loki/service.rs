@@ -115,15 +115,15 @@ impl Service<LokiRequest> for LokiService {
         Box::pin(async move {
             match client.call(req).in_current_span().await {
                 Ok(resp) => {
-                    let status = resp.status();
+                    let (parts, _incoming) = resp.into_parts();
 
-                    if status.is_success() {
+                    if parts.status.is_success() {
                         Ok(LokiResponse {
                             batch_size,
                             events_byte_size,
                         })
                     } else {
-                        Err(LokiError::Server(status))
+                        Err(LokiError::Server(parts.status))
                     }
                 }
 

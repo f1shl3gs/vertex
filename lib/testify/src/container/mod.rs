@@ -3,11 +3,10 @@ mod docker;
 use std::collections::HashMap;
 use std::future::Future;
 
+use docker::{HostConfig, LogOutput, PortBinding};
 use futures_util::{StreamExt, TryStreamExt};
 use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
-
-use docker::{HostConfig, LogOutput, PortBinding};
 
 pub struct Container {
     image: String,
@@ -17,6 +16,7 @@ pub struct Container {
     environments: Vec<String>,
     volumes: Vec<String>,
     ports: HashMap<String, Vec<PortBinding>>,
+    tail_logs: bool,
 }
 
 impl Container {
@@ -28,27 +28,37 @@ impl Container {
             environments: vec![],
             volumes: vec![],
             ports: HashMap::new(),
+            tail_logs: false,
         }
     }
 
-    pub fn with_tcp(mut self, port: u16, publish: u16) -> Self {
+    pub fn with_tcp(mut self, port: u16, host_port: u16) -> Self {
         let key = format!("{port}/tcp");
         let pb = PortBinding {
-            host_ip: "".to_string(),
-            host_port: publish.to_string(),
+            host_ip: None,
+            host_port: Some(host_port.to_string()),
         };
 
         self.ports.insert(key, vec![pb]);
         self
     }
 
-    pub fn with_volume<S, T>(mut self, orig: S, dest: T) -> Self
+    pub fn with_udp(mut self, port: u16, host_port: u16) -> Self {
+        let key = format!("{port}/udp");
+        let pb = PortBinding {
+            host_ip: None,
+            host_port: Some(host_port.to_string()),
+        };
+
+        self.ports.insert(key, vec![pb]);
+        self
+    }
+
+    pub fn with_volume<S>(mut self, orig: S, dest: &str) -> Self
     where
-        S: Into<String>,
-        T: Into<String>,
+        S: std::fmt::Display,
     {
-        self.volumes
-            .push(format!("{}:{}", orig.into(), dest.into()));
+        self.volumes.push(format!("{}:{}", orig, dest));
         self
     }
 
@@ -70,15 +80,32 @@ impl Container {
         self
     }
 
+    pub fn tail_logs(mut self, tail_logs: bool) -> Self {
+        self.tail_logs = tail_logs;
+        self
+    }
+
     pub async fn run<T>(self, f: impl Future<Output = T>) -> T {
         let client = docker::Client::default();
 
         client.pull(&self.image, &self.tag).await.unwrap();
 
+        let exposed_ports = if self.ports.is_empty() {
+            None
+        } else {
+            Some(
+                self.ports
+                    .keys()
+                    .map(|k| (k.to_string(), Default::default()))
+                    .collect(),
+            )
+        };
+
         let options = docker::CreateOptions {
             image: format!("{}:{}", self.image, self.tag),
             env: self.environments,
             cmd: self.args,
+            exposed_ports,
             host_config: HostConfig {
                 extra_hosts: vec!["host.docker.internal:host-gateway".into()],
                 binds: self.volumes,
@@ -88,17 +115,18 @@ impl Container {
 
         let id = client.create(options).await.unwrap();
 
-        client.start(&id).await.unwrap();
-
         // tail logs
-        let cid = id.clone();
-        let mc = client.clone();
-        tokio::spawn(async move {
-            let reader = mc.tail_logs(&cid).await.unwrap();
+        if self.tail_logs {
+            let cid = id.clone();
+            let mc = client.clone();
+            tokio::spawn(async move {
+                let reader = mc.tail_logs(&cid).await.unwrap();
 
-            let mut reader = FramedRead::new(
-                StreamReader::new(
-                    Box::pin(reader.try_filter_map(|frame| async { Ok(frame.into_data().ok()) }))
+                let mut reader = FramedRead::new(
+                    StreamReader::new(
+                        Box::pin(
+                            reader.try_filter_map(|frame| async { Ok(frame.into_data().ok()) }),
+                        )
                         .map_err(|err| {
                             if err.is_timeout() {
                                 return std::io::Error::new(std::io::ErrorKind::TimedOut, err);
@@ -106,21 +134,24 @@ impl Container {
 
                             std::io::Error::new(std::io::ErrorKind::Other, err)
                         }),
-                ),
-                docker::NewlineLogOutputDecoder::default(),
-            );
+                    ),
+                    docker::NewlineLogOutputDecoder::default(),
+                );
 
-            while let Some(Ok(log)) = reader.next().await {
-                match log {
-                    LogOutput::Stdout(msg) => {
-                        println!("stdout | {}", String::from_utf8_lossy(&msg))
-                    }
-                    LogOutput::Stderr(msg) => {
-                        println!("stderr | {}", String::from_utf8_lossy(&msg))
+                while let Some(Ok(log)) = reader.next().await {
+                    match log {
+                        LogOutput::Stdout(msg) => {
+                            println!("stdout | {}", String::from_utf8_lossy(&msg))
+                        }
+                        LogOutput::Stderr(msg) => {
+                            println!("stderr | {}", String::from_utf8_lossy(&msg))
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+
+        client.start(&id).await.unwrap();
 
         let result = f.await;
 
@@ -133,6 +164,14 @@ impl Container {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
+    use http_body_util::Full;
+    use hyper::body::Bytes;
+    use hyper::Uri;
+    use hyper_util::client::legacy::connect::HttpConnector;
+    use hyper_util::rt::TokioExecutor;
+
     use super::*;
     use crate::next_addr;
     use crate::wait::wait_for_tcp;
@@ -144,7 +183,18 @@ mod tests {
         Container::new("nginx", "1.21.3")
             .with_tcp(80, output.port())
             .run(async {
+                tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+
                 wait_for_tcp(output).await;
+
+                let client: hyper_util::client::legacy::Client<HttpConnector, Full<Bytes>> =
+                    hyper_util::client::legacy::Client::builder(TokioExecutor::default())
+                        .build(HttpConnector::new());
+
+                let uri = Uri::from_str(&format!("http://{}", output)).unwrap();
+                let resp = client.get(uri).await.unwrap();
+
+                assert_eq!(resp.status(), 200);
             })
             .await;
     }

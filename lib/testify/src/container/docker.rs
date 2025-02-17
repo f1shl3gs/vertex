@@ -143,27 +143,34 @@ impl From<serde_json::Error> for Error {
 }
 
 #[derive(Debug, Serialize)]
-#[serde(rename_all = "PascalCase")]
 pub struct PortBinding {
-    pub host_ip: String,
-    pub host_port: String,
+    #[serde(rename = "HostIp")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub host_ip: Option<String>,
+
+    #[serde(rename = "HostPort")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub host_port: Option<String>,
 }
 
-#[derive(Serialize)]
-#[serde(rename_all = "PascalCase")]
+#[derive(Debug, Serialize)]
 pub struct HostConfig {
+    #[serde(rename = "ExtraHosts")]
     pub extra_hosts: Vec<String>,
+    #[serde(rename = "Binds")]
     pub binds: Vec<String>,
+    #[serde(rename = "PortBindings")]
     pub port_bindings: HashMap<String, Vec<PortBinding>>,
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct CreateOptions {
     pub image: String,
     pub env: Vec<String>,
     pub cmd: Vec<String>,
-
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub exposed_ports: Option<HashMap<String, HashMap<(), ()>>>,
     pub host_config: HostConfig,
 }
 
@@ -223,7 +230,7 @@ impl Client {
             return Ok(());
         }
 
-        info!("pulling: {}:{}", image, tag);
+        info!(message = "image not found locally", image, tag);
 
         let uri = format!(
             "http://localhost/images/create?fromImage={}&tag={}",
