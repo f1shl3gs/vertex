@@ -3948,9 +3948,16 @@ dependencies = [
  "futures-util",
  "http-body-util",
  "hyper",
+ "hyper-util",
+ "percent-encoding",
+ "pin-project-lite",
  "rand 0.9.0",
+ "serde",
+ "serde_json",
  "tokio",
  "tokio-util",
+ "tower 0.5.2",
+ "tracing",
 ]
 
 [[package]]

@@ -104,6 +104,7 @@ integration-tests-prometheus_exporter = []
 integration-tests-prometheus_remote_write = []
 integration-tests-prometheus_scrape = []
 dnstap-integration-tests = []
+loki-integration-tests = []
 redis-integration-tests = []
 integration-tests-zookeeper = []
 clickhouse-integration-tests = []
@@ -115,7 +116,6 @@ all-integration-tests = [
     "integration-tests-elasticsearch",
     "integration-tests-haproxy",
     "integration-tests-kafka",
-    "integration-tests-loki",
     "integration-tests-memcached",
     "integration-tests-mysql",
     "integration-tests-nginx_stub",
@@ -124,6 +124,7 @@ all-integration-tests = [
     "integration-tests-prometheus_remote_write",
     "integration-tests-prometheus_scrape",
     "dnstap-integration-tests",
+    "loki-integration-tests",
     "redis-integration-tests",
     "integration-tests-zookeeper",
     "clickhouse-integration-tests",

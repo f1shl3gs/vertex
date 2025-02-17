@@ -12,7 +12,7 @@ use framework::tls::TlsConfig;
 use framework::Sink;
 use framework::{template::Template, Healthcheck};
 use futures_util::FutureExt;
-use http_body_util::Full;
+use http_body_util::{BodyExt, Full};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -97,7 +97,7 @@ pub struct Config {
     #[serde(default)]
     pub out_of_order_action: OutOfOrderAction,
 
-    #[serde(default = "Compression::gzip_default")]
+    #[serde(default = "Compression::snappy_default")]
     pub compression: Compression,
 
     #[serde(default)]
@@ -157,7 +157,17 @@ pub async fn healthcheck(
     let resp = client.send(req).await?;
     match resp.status() {
         http::StatusCode::OK => Ok(()),
-        _ => Err(format!("A non-successful status returned: {}", resp.status()).into()),
+        _ => {
+            let (parts, incoming) = resp.into_parts();
+            let data = incoming.collect().await?.to_bytes();
+
+            Err(format!(
+                "A non-successful status returned: {}, body: {}",
+                parts.status,
+                String::from_utf8_lossy(&data)
+            )
+            .into())
+        }
     }
 }
 

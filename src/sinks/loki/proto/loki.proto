@@ -1,9 +1,9 @@
-// This file is modified from https://github.com/grafana/loki/blob/main/pkg/logproto/logproto.proto
+// This file is modified from https://github.com/grafana/loki/blob/main/pkg/push/push.proto
 // and all we need is just PushRequest
 
 syntax = "proto3";
 
-package loki;
+package logproto;
 
 import "google/protobuf/timestamp.proto";
 
@@ -14,9 +14,17 @@ message PushRequest {
 message StreamAdapter {
   string labels = 1;
   repeated EntryAdapter entries = 2;
+  // hash contains the original hash of the stream.
+  uint64 hash = 3;
+}
+
+message LabelPairAdapter {
+  string name = 1;
+  string value = 2;
 }
 
 message EntryAdapter {
   google.protobuf.Timestamp timestamp = 1;
   string line = 2;
+  repeated LabelPairAdapter structuredMetadata = 3;
 }
