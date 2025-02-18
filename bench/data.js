@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739853009230,
+  "lastUpdate": 1739853017128,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1fe49611064ac3bc8545ddce157b1b3072e6f331",
-          "message": "deps: bump async-trait to 0.1.84 (#2099)",
-          "timestamp": "2025-01-03T13:47:28+08:00",
-          "tree_id": "60821dd4f6f6ba61b42a205ff4020f3d457ba84a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1fe49611064ac3bc8545ddce157b1b3072e6f331"
-        },
-        "date": 1735883858724,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 530,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35716.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c161b6d26298a64fa1cf59f4f008a582ed9dd294",
           "message": "sources/node: simplify and fix tests (#2098)",
           "timestamp": "2025-01-03T13:56:09+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 554,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37962.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49e7b6a5dda6040e4db07e797c273da38a315ff7",
+          "message": "chore(deps): bump uuid from 1.13.1 to 1.13.2 (#2209)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.13.1 to 1.13.2.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.13.1...v1.13.2)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-18T12:18:37+08:00",
+          "tree_id": "1ae1a6aeaa564965c29024981f62e547045ce58e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49e7b6a5dda6040e4db07e797c273da38a315ff7"
+        },
+        "date": 1739852997649,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 582,
             "unit": "s"
           },
           {
