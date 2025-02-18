@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739853017128,
+  "lastUpdate": 1739857940392,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c161b6d26298a64fa1cf59f4f008a582ed9dd294",
-          "message": "sources/node: simplify and fix tests (#2098)",
-          "timestamp": "2025-01-03T13:56:09+08:00",
-          "tree_id": "1c43472a5f2282eee82d8c60bfe70e716b1bb395",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c161b6d26298a64fa1cf59f4f008a582ed9dd294"
-        },
-        "date": 1735884392688,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 529,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35708.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fcae8e76b7a63a21894de7182f604f54714652c0",
           "message": "add GPU clk (#2100)",
           "timestamp": "2025-01-03T15:03:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 582,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37962.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9356036bf9cc69cd552a90e3c9024f5354595152",
+          "message": "remove unused feature (#2210)",
+          "timestamp": "2025-02-18T13:41:06+08:00",
+          "tree_id": "ac9548bc86379bc81f6266cf81823423e1fb62e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9356036bf9cc69cd552a90e3c9024f5354595152"
+        },
+        "date": 1739857921556,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 556,
             "unit": "s"
           },
           {
