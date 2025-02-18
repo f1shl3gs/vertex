@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739852145459,
+  "lastUpdate": 1739852161492,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6f30629e22f998fc7a32a03862cf00e8cefeac03",
-          "message": "bump syn to 2.0.92 (#2093)",
-          "timestamp": "2024-12-29T14:24:22+08:00",
-          "tree_id": "47000a140dfec055f3aa01d37e484f5468dab427",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6f30629e22f998fc7a32a03862cf00e8cefeac03"
-        },
-        "date": 1735454115363,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28623000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1883.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.021,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ff9491c7f4e1114959afb218aac892f8d12d23c8",
           "message": "bump quick-xml to 0.37.2 (#2094)",
           "timestamp": "2024-12-30T12:25:45+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.722,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99",
+          "message": "lib/testify: add async docker implement (#2208)",
+          "timestamp": "2025-02-18T12:04:49+08:00",
+          "tree_id": "c4f47cc484385662884c40d736897f6a67d3f084",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99"
+        },
+        "date": 1739852142320,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29035000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 739560,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.752,
             "unit": "ns/op"
           }
         ]
