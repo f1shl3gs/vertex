@@ -244,12 +244,14 @@ impl Client {
             .unwrap();
 
         let resp = self.client.request(req).await?;
+
         let (parts, incoming) = resp.into_parts();
+        let data = incoming.collect().await?.to_bytes();
+
         if parts.status.is_success() {
             return Ok(());
         }
 
-        let data = incoming.collect().await?.to_bytes();
         let resp = serde_json::from_slice::<ErrResp>(&data)?;
 
         Err(Error::Api(parts.status, resp.message))

@@ -180,7 +180,7 @@ mod tests {
     async fn nginx() {
         let output = next_addr();
 
-        Container::new("nginx", "1.21.3")
+        Container::new("nginx", "1.27.4")
             .with_tcp(80, output.port())
             .run(async {
                 tokio::time::sleep(std::time::Duration::from_secs(1)).await;
