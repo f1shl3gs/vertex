@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739852462179,
+  "lastUpdate": 1739852487731,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "527c71aa34c90b7973f4e19cf1ff87101dbabd84",
-          "message": "fix test path (#2095)",
-          "timestamp": "2024-12-30T20:17:53+08:00",
-          "tree_id": "a9196127ead3c96ff7c240e3b279677032a75231",
-          "url": "https://github.com/f1shl3gs/vertex/commit/527c71aa34c90b7973f4e19cf1ff87101dbabd84"
-        },
-        "date": 1735561232608,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.416,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 142.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 306.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 624.35,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "06918e2896e2dbd4b2cb6d614f8bbe2ba7183955",
           "message": "optimize read_to_string, less allocation, less syscall (#2096)",
           "timestamp": "2025-01-01T17:06:27+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 594.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49e7b6a5dda6040e4db07e797c273da38a315ff7",
+          "message": "chore(deps): bump uuid from 1.13.1 to 1.13.2 (#2209)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.13.1 to 1.13.2.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.13.1...v1.13.2)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-18T12:18:37+08:00",
+          "tree_id": "1ae1a6aeaa564965c29024981f62e547045ce58e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49e7b6a5dda6040e4db07e797c273da38a315ff7"
+        },
+        "date": 1739852469391,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.352,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 145.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 336.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 683.23,
             "unit": "ns/op"
           }
         ]
