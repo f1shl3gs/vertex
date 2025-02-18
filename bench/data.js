@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739852161492,
+  "lastUpdate": 1739852452831,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "527c71aa34c90b7973f4e19cf1ff87101dbabd84",
-          "message": "fix test path (#2095)",
-          "timestamp": "2024-12-30T20:17:53+08:00",
-          "tree_id": "a9196127ead3c96ff7c240e3b279677032a75231",
-          "url": "https://github.com/f1shl3gs/vertex/commit/527c71aa34c90b7973f4e19cf1ff87101dbabd84"
-        },
-        "date": 1735561203318,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539340,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 536420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49e7b6a5dda6040e4db07e797c273da38a315ff7",
+          "message": "chore(deps): bump uuid from 1.13.1 to 1.13.2 (#2209)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.13.1 to 1.13.2.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.13.1...v1.13.2)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-18T12:18:37+08:00",
+          "tree_id": "1ae1a6aeaa564965c29024981f62e547045ce58e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49e7b6a5dda6040e4db07e797c273da38a315ff7"
+        },
+        "date": 1739852434591,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 526040,
             "unit": "ns/op"
           }
         ]
