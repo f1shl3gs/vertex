@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739851636679,
+  "lastUpdate": 1739851671702,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff9491c7f4e1114959afb218aac892f8d12d23c8",
-          "message": "bump quick-xml to 0.37.2 (#2094)",
-          "timestamp": "2024-12-30T12:25:45+08:00",
-          "tree_id": "d59dfb3039eb01b68ac93b15dee12fb38c3f6fde",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff9491c7f4e1114959afb218aac892f8d12d23c8"
-        },
-        "date": 1735532915897,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 137.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 290.96,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 593.38,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "527c71aa34c90b7973f4e19cf1ff87101dbabd84",
           "message": "fix test path (#2095)",
           "timestamp": "2024-12-30T20:17:53+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 664.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99",
+          "message": "lib/testify: add async docker implement (#2208)",
+          "timestamp": "2025-02-18T12:04:49+08:00",
+          "tree_id": "c4f47cc484385662884c40d736897f6a67d3f084",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99"
+        },
+        "date": 1739851653040,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 20.426,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 134.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 297.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 594.29,
             "unit": "ns/op"
           }
         ]
