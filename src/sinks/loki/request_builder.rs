@@ -10,6 +10,10 @@ use serde::{ser::SerializeSeq, Serialize, Serializer};
 
 use super::sanitize::{sanitize_label_key, sanitize_label_value};
 
+pub mod proto {
+    include!(concat!(env!("OUT_DIR"), "/logproto.rs"));
+}
+
 pub type Labels = Vec<(String, String)>;
 
 #[derive(Clone, Debug)]
@@ -138,18 +142,30 @@ impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {
                 let seconds = record.event.timestamp / 1_000_000_000;
                 let nanos = (record.event.timestamp % 1_000_000_000) as i32;
                 let line = String::from_utf8_lossy(&record.event.event).to_string();
-                super::proto::EntryAdapter {
+                let structured_metadata = record
+                    .labels
+                    .into_iter()
+                    .map(|(name, value)| proto::LabelPairAdapter { name, value })
+                    .collect::<Vec<_>>();
+
+                proto::EntryAdapter {
                     timestamp: Some(prost_types::Timestamp { seconds, nanos }),
                     line,
+                    structured_metadata,
                 }
             })
             .collect::<Vec<_>>();
 
-        let pr = super::proto::PushRequest {
-            streams: vec![super::proto::StreamAdapter { labels, entries }],
+        let pr = proto::PushRequest {
+            streams: vec![proto::StreamAdapter {
+                labels,
+                entries,
+                hash: 0,
+            }],
         };
 
         let buf = pr.encode_to_vec();
+
         writer.write_all(&buf).map(|_| buf.len())
     }
 }

@@ -584,14 +584,16 @@ mod tests {
 #[cfg(all(test, feature = "dnstap-integration-tests"))]
 mod integration_tests {
     use std::net::SocketAddr;
+    use std::time::Duration;
 
     use event::Events;
     use futures::Stream;
+    use testify::container::Container;
     use testify::{collect_ready, next_addr};
     use tokio::net::UdpSocket;
 
     use super::*;
-    use crate::testing::{trace_init, wait_for_tcp, ContainerBuilder, WaitFor};
+    use crate::testing::{trace_init, wait_for_tcp};
 
     const IMAGE: &str = "coredns/coredns";
 
@@ -634,8 +636,8 @@ mod integration_tests {
             source.await.unwrap();
         });
 
-        // wait_for_tcp(addr).await;
-        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+        wait_for_tcp(addr).await;
+        // tokio::time::sleep(Duration::from_secs(2)).await;
 
         recv
     }
@@ -643,46 +645,44 @@ mod integration_tests {
     async fn run(version: &str) {
         trace_init();
 
-        let source_input = next_addr();
+        let src_addr = next_addr();
+        let svc_addr = next_addr();
 
-        let output = start_source(source_input).await;
+        let output = start_source(src_addr).await;
 
         let config = format!(
             r#"
 . {{
   log
-  dnstap tcp://192.168.88.254:{} full
+  dnstap tcp://host.docker.internal:{} full
   forward . 1.1.1.1
 }}
 "#,
-            source_input.port()
+            src_addr.port()
         );
-
         let temp_dir = testify::temp_dir().join("Corefile");
         std::fs::write(&temp_dir, &config).unwrap();
 
-        let container = ContainerBuilder::new(format!("{}:{}", IMAGE, version))
-            .with_udp_port(53)
-            .with_volume(temp_dir.to_string_lossy(), "/Corefile")
-            .with_extra_args(["--add-host=host.docker.internal:host-gateway"])
-            .run()
-            .unwrap();
+        let mut batch = Container::new(IMAGE, version)
+            .with_tcp(53, svc_addr.port())
+            .with_udp(53, svc_addr.port())
+            .with_volume(temp_dir.display(), "/Corefile")
+            .tail_logs(true)
+            .run(async move {
+                wait_for_tcp(svc_addr).await;
 
-        container.wait(WaitFor::Stdout("CoreDNS-")).unwrap();
-        info!("container ready");
+                tokio::time::sleep(Duration::from_secs(5)).await;
 
-        let target_addr = container.get_udp_port(53);
-        wait_for_tcp(target_addr).await;
+                query(svc_addr).await;
 
-        query(target_addr).await;
+                tokio::time::sleep(Duration::from_secs(5)).await;
 
-        tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+                collect_ready(output).await
+            })
+            .await;
 
-        // check output
-        let mut batch = collect_ready(output).await;
         assert!(!batch.is_empty());
         let events = batch.pop().unwrap();
-
         assert_query(events);
     }
 
@@ -700,7 +700,7 @@ mod integration_tests {
         }
     }
 
-    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    #[tokio::test]
     async fn coredns_to_tcp() {
         run("1.12.0").await;
     }

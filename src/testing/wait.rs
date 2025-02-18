@@ -5,7 +5,7 @@ use tokio::net::TcpStream;
 
 pub async fn wait_for_tcp(addr: SocketAddr) {
     let start = Instant::now();
-    let timeout = Duration::from_secs(60);
+    let timeout = Duration::from_secs(10);
 
     loop {
         tokio::select! {
