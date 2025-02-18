@@ -391,7 +391,7 @@ async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.86", default-features = false }
 futures = { version = "0.3.31", default-features = false }
 futures-util = { version = "0.3.31", default-features = false }
-tokio = { version = "1.43.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.43.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-stream = { version = "0.1.17", default-features = false }
 tokio-util = { version = "0.7.13", default-features = false, features = ["codec", "time", "net"] }
 
