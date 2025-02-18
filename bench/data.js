@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739851718176,
+  "lastUpdate": 1739852145459,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e03949902df61878c48f16cc197455073d62b757",
-          "message": "bump syn to 2.0.94 (#2097)",
-          "timestamp": "2025-01-02T10:05:13+08:00",
-          "tree_id": "acc2b69b05aa4d62d125dd62e7cdada85ed637cf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e03949902df61878c48f16cc197455073d62b757"
-        },
-        "date": 1735784125504,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 523,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35716.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1fe49611064ac3bc8545ddce157b1b3072e6f331",
           "message": "deps: bump async-trait to 0.1.84 (#2099)",
           "timestamp": "2025-01-03T13:47:28+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37958.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99",
+          "message": "lib/testify: add async docker implement (#2208)",
+          "timestamp": "2025-02-18T12:04:49+08:00",
+          "tree_id": "c4f47cc484385662884c40d736897f6a67d3f084",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99"
+        },
+        "date": 1739852127190,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 554,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37962.2,
             "unit": "KiB"
           }
         ]
