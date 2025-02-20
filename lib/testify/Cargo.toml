@@ -14,7 +14,7 @@ futures-util = { version = "0.3.31", default-features = false }
 percent-encoding = { version = "2.3.1", default-features = false }
 pin-project-lite = { version = "0.2.16", default-features = false }
 rand = { version = "0.9.0", default-features = false }
-serde = { version = "1.0.217", default-features = false }
+serde = { version = "1.0.218", default-features = false }
 serde_json = { version = "1.0.139", default-features = false, features = ["std"] }
 tokio = { version = "1.43.0", default-features = false, features = ["fs", "rt-multi-thread"] }
 tokio-util = { version = "0.7.13", default-features = false }
