@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740064867733,
+  "lastUpdate": 1740064869366,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e03949902df61878c48f16cc197455073d62b757",
-          "message": "bump syn to 2.0.94 (#2097)",
-          "timestamp": "2025-01-02T10:05:13+08:00",
-          "tree_id": "acc2b69b05aa4d62d125dd62e7cdada85ed637cf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e03949902df61878c48f16cc197455073d62b757"
-        },
-        "date": 1735784142873,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28830000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 638950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.17,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1fe49611064ac3bc8545ddce157b1b3072e6f331",
           "message": "deps: bump async-trait to 0.1.84 (#2099)",
           "timestamp": "2025-01-03T13:47:28+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.581,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "06aa2b1f26f162ff83b37e22d9e433162cfb44f7",
+          "message": "chore(deps): bump rand_distr from 0.5.0 to 0.5.1 (#2215)\n\nBumps [rand_distr](https://github.com/rust-random/rand_distr) from 0.5.0 to 0.5.1.\n- [Release notes](https://github.com/rust-random/rand_distr/releases)\n- [Changelog](https://github.com/rust-random/rand_distr/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/rust-random/rand_distr/compare/0.5.0...0.5.1)\n\n---\nupdated-dependencies:\n- dependency-name: rand_distr\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-20T23:09:33+08:00",
+          "tree_id": "6a1928d3a27cb1d23e311593c3a0f001e9c1fa58",
+          "url": "https://github.com/f1shl3gs/vertex/commit/06aa2b1f26f162ff83b37e22d9e433162cfb44f7"
+        },
+        "date": 1740064849280,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29548000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 600850,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.873,
             "unit": "ns/op"
           }
         ]
