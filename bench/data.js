@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740025402744,
+  "lastUpdate": 1740026335085,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8a9a7ecfa09596aaa46d47dcd0223554070b2965",
-          "message": "refine logs (#2101)",
-          "timestamp": "2025-01-03T17:39:18+08:00",
-          "tree_id": "fb0694e51bea4a2e65fcb75aef7beabf835dea7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a9a7ecfa09596aaa46d47dcd0223554070b2965"
-        },
-        "date": 1735897780737,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 527,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35712.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1f1bd5b6e9a8774c361048fb4f59773e7dc2f2bd",
           "message": "bump sqlx to 0.8.3 (#2102)",
           "timestamp": "2025-01-05T13:05:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37962.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f39f07f5c9a82fb7ee063590d80ffa509039d0cf",
+          "message": "chore(deps): bump serde_json from 1.0.138 to 1.0.139 (#2212)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.138 to 1.0.139.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.138...v1.0.139)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-20T12:27:23+08:00",
+          "tree_id": "8f6e1fc6d0a311a71a8c894364733e045b1b05f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f39f07f5c9a82fb7ee063590d80ffa509039d0cf"
+        },
+        "date": 1740026316648,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37962.2,
             "unit": "KiB"
           }
         ]
