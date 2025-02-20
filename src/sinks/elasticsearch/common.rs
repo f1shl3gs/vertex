@@ -1,18 +1,18 @@
 use std::collections::HashMap;
 
-use super::config::{Config, ElasticsearchAuth};
-use super::encoder::ElasticsearchEncoder;
-use super::request_builder::ElasticsearchRequestBuilder;
-use super::ElasticsearchCommonMode;
-use super::ParseError;
-use bytes::Bytes;
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient, MaybeAuth};
 use framework::sink::util::service::RequestConfig;
 use framework::tls::TlsConfig;
 use framework::HealthcheckError;
-use http::{Request, StatusCode, Uri};
-use http_body_util::Full;
+use http::{Method, Request, StatusCode, Uri};
+use http_body_util::{BodyExt, Full};
+
+use super::config::{Config, ElasticsearchAuth};
+use super::encoder::ElasticsearchEncoder;
+use super::request_builder::ElasticsearchRequestBuilder;
+use super::ElasticsearchCommonMode;
+use super::ParseError;
 
 #[derive(Clone, Debug)]
 pub struct ElasticsearchCommon {
@@ -92,20 +92,29 @@ impl ElasticsearchCommon {
             query_params,
         })
     }
+}
 
-    pub async fn healthcheck(self, client: HttpClient) -> crate::Result<()> {
-        let mut builder = Request::get(format!("{}/_cluster/health", self.base_url));
-
-        if let Some(auth) = &self.http_auth {
-            builder = auth.apply_builder(builder);
-        }
-
-        let req = builder.body(Bytes::new())?;
-        let resp = client.send(req.map(Full::new)).await?;
-
-        match resp.status() {
-            StatusCode::OK => Ok(()),
-            code => Err(HealthcheckError::UnexpectedStatus(code).into()),
-        }
+pub async fn healthcheck(client: HttpClient, uri: String, auth: Option<Auth>) -> crate::Result<()> {
+    let mut req = Request::builder()
+        .method(Method::GET)
+        .uri(format!("{}/_cluster/health", uri))
+        .body(Full::default())?;
+    if let Some(auth) = auth {
+        auth.apply(&mut req);
     }
+
+    let resp = client.send(req).await?;
+    let (parts, incoming) = resp.into_parts();
+
+    if parts.status != StatusCode::OK {
+        let data = incoming.collect().await?.to_bytes();
+
+        return Err(HealthcheckError::UnexpectedStatus(
+            parts.status,
+            String::from_utf8_lossy(&data).to_string(),
+        )
+        .into());
+    }
+
+    Ok(())
 }

@@ -7,7 +7,7 @@ use framework::sink::util::retries::{RetryAction, RetryLogic};
 use framework::HealthcheckError;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{Request, StatusCode, Uri};
-use http_body_util::Full;
+use http_body_util::{BodyExt, Full};
 
 use super::config::Config;
 
@@ -72,12 +72,19 @@ pub async fn healthcheck(client: HttpClient, config: Config) -> crate::Result<()
         auth.apply(&mut request);
     }
 
-    let response = client.send(request).await?;
+    let resp = client.send(request).await?;
+    let (parts, incoming) = resp.into_parts();
+    if parts.status != StatusCode::OK {
+        let data = incoming.collect().await?.to_bytes();
 
-    match response.status() {
-        StatusCode::OK => Ok(()),
-        status => Err(HealthcheckError::UnexpectedStatus(status).into()),
+        return Err(HealthcheckError::UnexpectedStatus(
+            parts.status,
+            String::from_utf8_lossy(&data).to_string(),
+        )
+        .into());
     }
+
+    Ok(())
 }
 
 fn set_uri_query(

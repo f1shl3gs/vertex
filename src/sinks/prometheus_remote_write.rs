@@ -128,11 +128,19 @@ async fn healthcheck(endpoint: Uri, client: HttpClient) -> crate::Result<()> {
     let req = http::Request::get(endpoint).body(Full::<Bytes>::default())?;
 
     let resp = client.send(req).await?;
+    let (parts, incoming) = resp.into_parts();
 
-    match resp.status() {
-        StatusCode::OK => Ok(()),
-        other => Err(HealthcheckError::UnexpectedStatus(other).into()),
+    if parts.status != StatusCode::OK {
+        let data = incoming.collect().await?.to_bytes();
+
+        return Err(HealthcheckError::UnexpectedStatus(
+            parts.status,
+            String::from_utf8_lossy(&data).to_string(),
+        )
+        .into());
     }
+
+    Ok(())
 }
 
 #[derive(Clone)]

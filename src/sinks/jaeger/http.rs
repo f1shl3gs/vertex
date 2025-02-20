@@ -11,7 +11,7 @@ use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures_util::{FutureExt, SinkExt};
 use http::header::CONTENT_TYPE;
-use http::Request;
+use http::{Request, StatusCode};
 use http_body_util::{BodyExt, Full};
 use serde::{Deserialize, Serialize};
 
@@ -107,12 +107,16 @@ pub async fn healthcheck(client: HttpClient, endpoint: String) -> framework::Res
 
     let resp = client.send(req).await?;
     let (parts, incoming) = resp.into_parts();
-    let status = parts.status;
-    if !status.is_success() {
-        return Err(HealthcheckError::UnexpectedStatus(status).into());
+    let data = incoming.collect().await?.to_bytes();
+
+    if parts.status != StatusCode::OK {
+        return Err(HealthcheckError::UnexpectedStatus(
+            parts.status,
+            String::from_utf8_lossy(&data).to_string(),
+        )
+        .into());
     }
 
-    let data = incoming.collect().await?.to_bytes();
     let resp: HealthcheckResponse = serde_json::from_slice(&data)?;
     if resp.status != "Server available" {
         return Err(format!("unexpected status {}", resp.status).into());

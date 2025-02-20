@@ -18,7 +18,7 @@ use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tower::ServiceBuilder;
 
-use super::common::ElasticsearchCommon;
+use super::common::{healthcheck, ElasticsearchCommon};
 use super::retry::ElasticsearchRetryLogic;
 use super::service::{ElasticsearchService, HttpRequestBuilder};
 use super::sink::ElasticsearchSink;
@@ -360,7 +360,7 @@ impl SinkConfig for Config {
         };
 
         let client = HttpClient::new(self.tls.as_ref(), cx.proxy())?;
-        let healthcheck = common.healthcheck(client).boxed();
+        let healthcheck = healthcheck(client, common.base_url, common.http_auth.clone()).boxed();
 
         Ok((Sink::Stream(Box::new(sink)), healthcheck))
     }
