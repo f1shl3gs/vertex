@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1739857940392,
+  "lastUpdate": 1740025402744,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fcae8e76b7a63a21894de7182f604f54714652c0",
-          "message": "add GPU clk (#2100)",
-          "timestamp": "2025-01-03T15:03:14+08:00",
-          "tree_id": "e20909db5e046bfed2e39b3c58044354eb592d04",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fcae8e76b7a63a21894de7182f604f54714652c0"
-        },
-        "date": 1735888420972,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 527,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35712.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a9a7ecfa09596aaa46d47dcd0223554070b2965",
           "message": "refine logs (#2101)",
           "timestamp": "2025-01-03T17:39:18+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37962.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a202d7c636cfa8d0ad420dcd9ed5f062b625d725",
+          "message": "chore(deps): bump hickory-resolver from 0.24.3 to 0.24.4 (#2211)\n\n* chore(deps): bump hickory-resolver from 0.24.3 to 0.24.4\n\nBumps [hickory-resolver](https://github.com/hickory-dns/hickory-dns) from 0.24.3 to 0.24.4.\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.3...v0.24.4)\n\n---\nupdated-dependencies:\n- dependency-name: hickory-resolver\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* add necessary features\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2025-02-20T12:11:59+08:00",
+          "tree_id": "de4d461737aa564d3417463bf92955093e038d20",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a202d7c636cfa8d0ad420dcd9ed5f062b625d725"
+        },
+        "date": 1740025384146,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37962.3,
             "unit": "KiB"
           }
         ]
