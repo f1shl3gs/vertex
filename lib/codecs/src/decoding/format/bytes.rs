@@ -19,7 +19,6 @@ impl Deserializer for BytesDeserializer {
 
 #[cfg(test)]
 mod tests {
-    use event::event_path;
     use event::log::Value;
 
     use super::*;
@@ -32,7 +31,7 @@ mod tests {
         let logs = deserializer.parse(input).unwrap().into_logs().unwrap();
         assert_eq!(logs.len(), 1);
         assert_eq!(
-            logs[0].get(event_path!("message")).unwrap(),
+            logs[0].value(),
             &Value::from("foo")
         );
     }
