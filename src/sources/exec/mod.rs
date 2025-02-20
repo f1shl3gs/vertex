@@ -601,7 +601,7 @@ mod tests {
 
     #[cfg(unix)]
     #[tokio::test]
-    async fn run_command_on_unix() {
+    async fn exec_command() {
         let command = vec!["echo".into(), "hello".into()];
         let hostname = "localhost";
         let decoder = Default::default();
@@ -631,6 +631,8 @@ mod tests {
 
         if let Poll::Ready(Some(events)) = futures::poll!(rx.next()) {
             let log = events.into_logs().unwrap().remove(0);
+
+            println!("{:?}", log);
 
             assert_eq!(log.get(COMMAND_KEY).unwrap(), &Value::from(command));
             assert_eq!(log.get(STREAM_KEY).unwrap(), &Value::from(STDOUT));
