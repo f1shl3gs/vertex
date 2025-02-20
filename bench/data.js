@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740064349977,
+  "lastUpdate": 1740064397421,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1fe49611064ac3bc8545ddce157b1b3072e6f331",
-          "message": "deps: bump async-trait to 0.1.84 (#2099)",
-          "timestamp": "2025-01-03T13:47:28+08:00",
-          "tree_id": "60821dd4f6f6ba61b42a205ff4020f3d457ba84a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1fe49611064ac3bc8545ddce157b1b3072e6f331"
-        },
-        "date": 1735883438061,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 203.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 21236,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 103840,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 209440,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 125.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 12394,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 62510,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 124920,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c161b6d26298a64fa1cf59f4f008a582ed9dd294",
           "message": "sources/node: simplify and fix tests (#2098)",
           "timestamp": "2025-01-03T13:56:09+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 124150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "06aa2b1f26f162ff83b37e22d9e433162cfb44f7",
+          "message": "chore(deps): bump rand_distr from 0.5.0 to 0.5.1 (#2215)\n\nBumps [rand_distr](https://github.com/rust-random/rand_distr) from 0.5.0 to 0.5.1.\n- [Release notes](https://github.com/rust-random/rand_distr/releases)\n- [Changelog](https://github.com/rust-random/rand_distr/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/rust-random/rand_distr/compare/0.5.0...0.5.1)\n\n---\nupdated-dependencies:\n- dependency-name: rand_distr\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-20T23:09:33+08:00",
+          "tree_id": "6a1928d3a27cb1d23e311593c3a0f001e9c1fa58",
+          "url": "https://github.com/f1shl3gs/vertex/commit/06aa2b1f26f162ff83b37e22d9e433162cfb44f7"
+        },
+        "date": 1740064378745,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 207.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 20358,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 102680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 195050,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 127.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12756,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 63805,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 127900,
             "unit": "ns/op"
           }
         ]
