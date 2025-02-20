@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740035121279,
+  "lastUpdate": 1740035169092,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1f1bd5b6e9a8774c361048fb4f59773e7dc2f2bd",
-          "message": "bump sqlx to 0.8.3 (#2102)",
-          "timestamp": "2025-01-05T13:05:22+08:00",
-          "tree_id": "6ca3e13ea800bf8879e2ea4dde7723c5b57225cc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1f1bd5b6e9a8774c361048fb4f59773e7dc2f2bd"
-        },
-        "date": 1736054143740,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 527,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35609,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f798132a712673d73df1698c290b2e0e3ad8576e",
           "message": "bump rskafka to latest version (#2103)",
           "timestamp": "2025-01-05T14:10:23+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37962.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef52655683a7e2f89a5dbf48f6e81c8624c8b683",
+          "message": "sinks/skywalking: init (#2213)",
+          "timestamp": "2025-02-20T14:54:46+08:00",
+          "tree_id": "95cba6f77d86818af6b32d240b531e9d744474c9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef52655683a7e2f89a5dbf48f6e81c8624c8b683"
+        },
+        "date": 1740035150458,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 568,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38110.1,
             "unit": "KiB"
           }
         ]
