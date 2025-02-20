@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740064397421,
+  "lastUpdate": 1740064867733,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "85f021f23a2487fa567df3b1ca8e3c383241d044",
-          "message": "bump syn to 2.0.95 (#2104)",
-          "timestamp": "2025-01-05T20:59:04+08:00",
-          "tree_id": "e2eef4e15c725fd801537e5fad7d7ca191eb3d77",
-          "url": "https://github.com/f1shl3gs/vertex/commit/85f021f23a2487fa567df3b1ca8e3c383241d044"
-        },
-        "date": 1736082575566,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 533,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35609,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 583,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38110.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "06aa2b1f26f162ff83b37e22d9e433162cfb44f7",
+          "message": "chore(deps): bump rand_distr from 0.5.0 to 0.5.1 (#2215)\n\nBumps [rand_distr](https://github.com/rust-random/rand_distr) from 0.5.0 to 0.5.1.\n- [Release notes](https://github.com/rust-random/rand_distr/releases)\n- [Changelog](https://github.com/rust-random/rand_distr/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/rust-random/rand_distr/compare/0.5.0...0.5.1)\n\n---\nupdated-dependencies:\n- dependency-name: rand_distr\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-20T23:09:33+08:00",
+          "tree_id": "6a1928d3a27cb1d23e311593c3a0f001e9c1fa58",
+          "url": "https://github.com/f1shl3gs/vertex/commit/06aa2b1f26f162ff83b37e22d9e433162cfb44f7"
+        },
+        "date": 1740064849029,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
             "unit": "s"
           },
           {
