@@ -20,8 +20,8 @@ pub type Healthcheck = BoxFuture<'static, crate::Result<()>>;
 /// Common healthcheck errors
 #[derive(Debug, Error)]
 pub enum HealthcheckError {
-    #[error("Unexpected status: {0}")]
-    UnexpectedStatus(http::StatusCode),
+    #[error("Unexpected status: {0}, {1}")]
+    UnexpectedStatus(http::StatusCode, String),
 }
 
 #[async_trait]

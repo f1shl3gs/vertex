@@ -1,0 +1,27 @@
+sources:
+  logs:
+    type: demo_logs
+    format:
+      type: json
+    decoding:
+      codec: json
+
+
+sinks:
+  console:
+    type: console
+    inputs:
+      - logs
+    encoding:
+      codec: json
+
+  skywalking:
+    type: skywalking
+    inputs:
+      - logs
+    endpoint: http://127.0.0.1:11800 # OAP
+    compression: gzip
+    service: vertex
+    service_instance: fedora
+    healthcheck:
+      uri: http://127.0.0.0.1:12800 # OAP

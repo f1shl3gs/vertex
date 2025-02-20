@@ -156,6 +156,17 @@ fn main() {
             .compile_protos(&[src.join("loki.proto")], include)
             .unwrap();
     }
+
+    #[cfg(feature = "sinks-skywalking")]
+    {
+        println!("cargo:rerun-if-changed=src/sinks/skywalking/logging.proto");
+
+        tonic_build::configure()
+            .build_client(true)
+            .build_server(false)
+            .compile_protos(&["src/sinks/skywalking/logging.proto"], &["proto"])
+            .unwrap()
+    }
 }
 
 fn rustc_info() -> (String, String) {

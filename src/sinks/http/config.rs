@@ -12,7 +12,7 @@ use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{future, FutureExt};
 use http::{Method, Request, StatusCode, Uri};
-use http_body_util::Full;
+use http_body_util::{BodyExt, Full};
 use tower::ServiceBuilder;
 
 use super::encoder::HttpEncoder;
@@ -121,11 +121,18 @@ async fn healthcheck(uri: Uri, auth: Option<Auth>, client: HttpClient) -> crate:
     }
 
     let resp = client.send(req).await?;
+    let (parts, incoming) = resp.into_parts();
+    if parts.status != StatusCode::OK {
+        let data = incoming.collect().await?.to_bytes();
 
-    match resp.status() {
-        StatusCode::OK => Ok(()),
-        status => Err(HealthcheckError::UnexpectedStatus(status).into()),
+        return Err(HealthcheckError::UnexpectedStatus(
+            parts.status,
+            String::from_utf8_lossy(&data).to_string(),
+        )
+        .into());
     }
+
+    Ok(())
 }
 
 #[cfg(test)]

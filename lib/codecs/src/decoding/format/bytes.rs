@@ -22,8 +22,8 @@ impl Deserializer for BytesDeserializer {
 
 #[cfg(test)]
 mod tests {
-    use event::event_path;
     use event::log::Value;
+    use value::event_path;
 
     use super::*;
 

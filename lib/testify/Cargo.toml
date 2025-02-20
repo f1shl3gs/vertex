@@ -16,7 +16,7 @@ pin-project-lite = { version = "0.2.16", default-features = false }
 rand = { version = "0.9.0", default-features = false }
 serde = { version = "1.0.217", default-features = false }
 serde_json = { version = "1.0.139", default-features = false, features = ["std"] }
-tokio = { version = "1.43.0", default-features = false, features = ["rt-multi-thread"] }
+tokio = { version = "1.43.0", default-features = false, features = ["fs", "rt-multi-thread"] }
 tokio-util = { version = "0.7.13", default-features = false }
 tower = { version = "0.5.2", default-features = false }
 tracing = { version = "0.1.41", default-features = false }
