@@ -86,4 +86,4 @@ tripwire = { path = "../tripwire" }
 twox-hash = { version = "2.1.0", default-features = false, features = ["xxhash64"] }
 typetag = { version = "0.2.19" }
 url = { version = "2.5.4", features = ["serde"] }
-zstd = { version = "0.13.2", default-features = false }
+zstd = { version = "0.13.3", default-features = false }
