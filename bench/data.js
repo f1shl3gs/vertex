@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740119372866,
+  "lastUpdate": 1740119407825,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c161b6d26298a64fa1cf59f4f008a582ed9dd294",
-          "message": "sources/node: simplify and fix tests (#2098)",
-          "timestamp": "2025-01-03T13:56:09+08:00",
-          "tree_id": "1c43472a5f2282eee82d8c60bfe70e716b1bb395",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c161b6d26298a64fa1cf59f4f008a582ed9dd294"
-        },
-        "date": 1735883919131,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.421,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 148,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 321.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 638.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fcae8e76b7a63a21894de7182f604f54714652c0",
           "message": "add GPU clk (#2100)",
           "timestamp": "2025-01-03T15:03:14+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 608.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b70fe409490e181c1ca5e95b141cdff980a1149a",
+          "message": "chore(deps): bump zstd from 0.13.2 to 0.13.3 (#2217)\n\nBumps [zstd](https://github.com/gyscos/zstd-rs) from 0.13.2 to 0.13.3.\n- [Release notes](https://github.com/gyscos/zstd-rs/releases)\n- [Commits](https://github.com/gyscos/zstd-rs/compare/v0.13.2...v0.13.3)\n\n---\nupdated-dependencies:\n- dependency-name: zstd\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-21T14:26:50+08:00",
+          "tree_id": "46ede5d4645dcb67d66a6d9f7f2a2a5ea1697ca1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b70fe409490e181c1ca5e95b141cdff980a1149a"
+        },
+        "date": 1740119388435,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.777,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 144.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 297.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 603.15,
             "unit": "ns/op"
           }
         ]
