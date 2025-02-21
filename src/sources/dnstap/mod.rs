@@ -667,7 +667,7 @@ mod integration_tests {
             .with_tcp(53, svc_addr.port())
             .with_udp(53, svc_addr.port())
             .with_volume(temp_dir.display(), "/Corefile")
-            .tail_logs(true)
+            .tail_logs(false, true)
             .run(async move {
                 wait_for_tcp(svc_addr).await;
 

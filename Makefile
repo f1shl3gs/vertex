@@ -85,6 +85,10 @@ integration-test-prometheus_remote_write:
 loki-integration-tests:
 	cargo test -p vertex --lib sinks::loki::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: pulsar-integration-tests
+pulsar-integration-tests:
+	cargo test -p vertex --lib sources::pulsar::integration_tests --features all-integration-tests --no-fail-fast
+
 .PHONY: integration-test-kafka
 integration-test-kafka:
 	cargo test -p vertex --lib sources::kafka::integration_tests --features all-integration-tests --no-fail-fast
@@ -111,7 +115,7 @@ fluent-integration-tests:
 	cargo test -p vertex --lib sources::fluent::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
 
 .PHONY: integration-tests
-integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub redis-integration-tests integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch redfish-integration-tests fluent-integration-tests loki-integration-tests
+integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub redis-integration-tests integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch redfish-integration-tests fluent-integration-tests loki-integration-tests pulsar-integration-tests
 
 .PHONY: udeps
 udeps:

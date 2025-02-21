@@ -353,10 +353,15 @@ impl Client {
         Err(Error::Api(parts.status, resp.message))
     }
 
-    pub async fn tail_logs(&self, id: &str) -> Result<BodyStream<Incoming>, Error> {
+    pub async fn tail_logs(
+        &self,
+        id: &str,
+        stdout: bool,
+        stderr: bool,
+    ) -> Result<BodyStream<Incoming>, Error> {
         let req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://localhost/containers/{id}/logs?stdout=true&stderr=true&follow=true&tail=all"))
+            .uri(format!("http://localhost/containers/{id}/logs?stdout={stdout}&stderr={stderr}&follow=true&tail=all"))
             .body(Full::default())?;
 
         let resp = self.client.request(req).await?;

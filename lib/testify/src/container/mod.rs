@@ -16,7 +16,9 @@ pub struct Container {
     environments: Vec<String>,
     volumes: Vec<String>,
     ports: HashMap<String, Vec<PortBinding>>,
-    tail_logs: bool,
+
+    stdout: bool,
+    stderr: bool,
 }
 
 impl Container {
@@ -28,7 +30,8 @@ impl Container {
             environments: vec![],
             volumes: vec![],
             ports: HashMap::new(),
-            tail_logs: false,
+            stdout: false,
+            stderr: false,
         }
     }
 
@@ -80,8 +83,9 @@ impl Container {
         self
     }
 
-    pub fn tail_logs(mut self, tail_logs: bool) -> Self {
-        self.tail_logs = tail_logs;
+    pub fn tail_logs(mut self, stdout: bool, stderr: bool) -> Self {
+        self.stdout = stdout;
+        self.stderr = stderr;
         self
     }
 
@@ -116,11 +120,12 @@ impl Container {
         let id = client.create(options).await.unwrap();
 
         // tail logs
-        if self.tail_logs {
+        if self.stdout || self.stderr {
             let cid = id.clone();
             let mc = client.clone();
+
             tokio::spawn(async move {
-                let reader = mc.tail_logs(&cid).await.unwrap();
+                let reader = mc.tail_logs(&cid, self.stdout, self.stderr).await.unwrap();
 
                 let mut reader = FramedRead::new(
                     StreamReader::new(

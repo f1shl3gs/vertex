@@ -412,7 +412,7 @@ pub async fn build_pieces(
                     fanout.send(events).await;
                 }
                 debug!(message = "Source pump finished");
-                Ok(TaskOutput::Source)
+                Ok::<TaskOutput, ()>(TaskOutput::Source)
             };
 
             pumps.push(pump.instrument(span.clone()));
