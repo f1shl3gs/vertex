@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740119887529,
+  "lastUpdate": 1740119894311,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1fe49611064ac3bc8545ddce157b1b3072e6f331",
-          "message": "deps: bump async-trait to 0.1.84 (#2099)",
-          "timestamp": "2025-01-03T13:47:28+08:00",
-          "tree_id": "60821dd4f6f6ba61b42a205ff4020f3d457ba84a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1fe49611064ac3bc8545ddce157b1b3072e6f331"
-        },
-        "date": 1735883870757,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28456000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 689840,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.459,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c161b6d26298a64fa1cf59f4f008a582ed9dd294",
           "message": "sources/node: simplify and fix tests (#2098)",
           "timestamp": "2025-01-03T13:56:09+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.873,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "557fc0ef6aab3715aa7fc356c905e369300c2b5b",
+          "message": "chore(deps): bump uuid from 1.13.2 to 1.14.0 (#2216)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.13.2 to 1.14.0.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/v1.13.2...v1.14.0)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-21T14:27:01+08:00",
+          "tree_id": "06e7805f0149cc53b7c3f2aa0532311e458e420e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/557fc0ef6aab3715aa7fc356c905e369300c2b5b"
+        },
+        "date": 1740119874300,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28161000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 661120,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.624,
             "unit": "ns/op"
           }
         ]
