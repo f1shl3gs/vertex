@@ -29,7 +29,7 @@ async fn write_and_query() {
 
     Container::new("grafana/loki", "3.0.1")
         .with_tcp(3100, service_addr.port())
-        .tail_logs(false)
+        .tail_logs(false, true)
         .run(async move {
             // wait for loki get ready
             wait_for_duration(

@@ -74,6 +74,8 @@ mod prometheus_pushgateway;
 mod prometheus_remote_write;
 #[cfg(feature = "sources-prometheus_scrape")]
 mod prometheus_scrape;
+#[cfg(feature = "sources-pulsar")]
+mod pulsar;
 #[cfg(feature = "sources-redfish")]
 mod redfish;
 #[cfg(feature = "sources-redis")]
