@@ -226,7 +226,7 @@ struct Header {
 impl Header {
     fn set_client(&mut self) {
         let mut lvm = 3u8; // set mode to client
-        lvm = (lvm & 0xc7) | 4u8 << 3; // set version to v4
+        lvm = (lvm & 0xc7) | (4u8 << 3); // set version to v4
         lvm &= 0x3f; // set leap to LeapNoWarning
 
         self.lvm = lvm;

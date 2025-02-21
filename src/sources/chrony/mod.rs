@@ -180,7 +180,7 @@ impl Client {
             }
         }
 
-        TrackingResponse::decode(Cursor::new(buf)).map_err(Into::into)
+        TrackingResponse::decode(Cursor::new(buf))
     }
 }
 
