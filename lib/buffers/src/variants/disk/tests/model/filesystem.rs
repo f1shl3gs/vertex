@@ -9,8 +9,8 @@ use parking_lot::Mutex;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 
 use crate::variants::disk::{
-    io::{AsyncFile, Metadata, ReadableMemoryMap, WritableMemoryMap},
     Filesystem,
+    io::{AsyncFile, Metadata, ReadableMemoryMap, WritableMemoryMap},
 };
 
 fn io_err_already_exists() -> io::Error {

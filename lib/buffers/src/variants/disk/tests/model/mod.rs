@@ -1,7 +1,7 @@
 use std::collections::{HashMap, VecDeque};
 use std::io::Cursor;
-use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering};
 use std::task::Poll;
 
 use crossbeam_queue::SegQueue;
@@ -11,24 +11,24 @@ use testify::temp_dir;
 use tokio::runtime::Builder;
 
 use crate::{
+    EventCount,
     buffer_usage_data::BufferUsageHandle,
     encoding::FixedEncodable,
     test::install_tracing_helpers,
     variants::disk::{
-        common::MAX_FILE_ID, record::RECORD_HEADER_LEN, writer::RecordWriter, Buffer,
-        DiskBufferConfig, WriterError,
+        Buffer, DiskBufferConfig, WriterError, common::MAX_FILE_ID, record::RECORD_HEADER_LEN,
+        writer::RecordWriter,
     },
-    EventCount,
 };
 
 mod action;
 use self::{
-    action::{arb_actions, Action},
+    action::{Action, arb_actions},
     record::EncodeError,
 };
 
 mod common;
-use self::common::{arb_buffer_config, Progress};
+use self::common::{Progress, arb_buffer_config};
 
 mod filesystem;
 use self::filesystem::TestFilesystem;

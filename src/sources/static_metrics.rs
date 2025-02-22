@@ -2,10 +2,10 @@ use std::time::Duration;
 
 use async_trait::async_trait;
 use chrono::Utc;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::tags::Tags;
 use event::{Metric, MetricValue};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 use serde::{Deserialize, Serialize};
 
@@ -106,8 +106,8 @@ async fn run(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::testing::components::{run_and_assert_source_compliance, SOURCE_TAGS};
-    use event::{tags, Bucket, Quantile};
+    use crate::testing::components::{SOURCE_TAGS, run_and_assert_source_compliance};
+    use event::{Bucket, Quantile, tags};
 
     #[test]
     fn generate_config() {

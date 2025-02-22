@@ -1,10 +1,9 @@
 use std::fmt::Write as _;
-use std::future::Future;
 use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use bytes::{buf::Buf, BytesMut};
+use bytes::{BytesMut, buf::Buf};
 use http::HeaderMap;
 use hyper::rt::{Read, Write};
 

@@ -2,14 +2,14 @@ use std::collections::{BTreeMap, HashMap};
 
 use async_trait::async_trait;
 use codecs::encoding::Transformer;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::log::{OwnedValuePath, Value};
-use event::{event_path, EventRef, LogRecord};
+use event::{EventRef, LogRecord, event_path};
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
-use framework::config::{skip_serializing_if_default, DataType, SinkConfig, SinkContext};
+use framework::config::{DataType, SinkConfig, SinkContext, skip_serializing_if_default};
 use framework::http::HttpClient;
-use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
 use framework::sink::util::Compression;
+use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
@@ -18,7 +18,7 @@ use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tower::ServiceBuilder;
 
-use super::common::{healthcheck, ElasticsearchCommon};
+use super::common::{ElasticsearchCommon, healthcheck};
 use super::retry::ElasticsearchRetryLogic;
 use super::service::{ElasticsearchService, HttpRequestBuilder};
 use super::sink::ElasticsearchSink;

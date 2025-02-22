@@ -1,17 +1,17 @@
 use std::num::{NonZeroU64, NonZeroUsize};
 use std::{fmt, path::PathBuf};
 
-use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de, ser};
 use thiserror::Error;
 use tracing::Span;
 
 use crate::{
+    Bufferable, WhenFull,
     topology::{
         builder::{TopologyBuilder, TopologyError},
         channel::{BufferReceiver, BufferSender},
     },
     variants::{disk::DiskBuffer, memory::MemoryBuffer},
-    Bufferable, WhenFull,
 };
 
 #[derive(Debug, Error)]
@@ -240,7 +240,9 @@ impl BufferType {
                 when_full,
                 max_size,
             } => {
-                warn!(message = "!!!! The `disk` buffer type is not yet stable.  Data loss may be encountered. !!!!");
+                warn!(
+                    message = "!!!! The `disk` buffer type is not yet stable.  Data loss may be encountered. !!!!"
+                );
                 let data_dir = data_dir.ok_or(BufferBuildError::RequiresDataDir)?;
                 builder.stage(DiskBuffer::new(id, data_dir, max_size), when_full);
             }

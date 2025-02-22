@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 
-use super::{read_into, read_string, Error};
+use super::{Error, read_into, read_string};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path).await?;

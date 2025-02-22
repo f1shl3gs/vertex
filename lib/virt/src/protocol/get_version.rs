@@ -1,6 +1,6 @@
 use std::io::{Read, Write};
 
-use super::{impl_procedure, version_num_to_string, Pack, ReadExt, Result, Unpack};
+use super::{Pack, ReadExt, Result, Unpack, impl_procedure, version_num_to_string};
 
 pub struct GetVersionRequest {}
 

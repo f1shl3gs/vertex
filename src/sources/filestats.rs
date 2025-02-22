@@ -3,8 +3,8 @@ use std::path::Path;
 use std::time::{Duration, SystemTime};
 
 use configurable::configurable_component;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 use glob::glob;
 

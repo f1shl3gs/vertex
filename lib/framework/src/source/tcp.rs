@@ -4,15 +4,15 @@ use std::net::SocketAddr;
 use std::time::Duration;
 
 use bytes::Bytes;
-use codecs::decoding::StreamDecodingError;
 use codecs::ReadyFrames;
+use codecs::decoding::StreamDecodingError;
 use configurable::Configurable;
 use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
 use futures::StreamExt;
-use futures_util::future::BoxFuture;
 use futures_util::FutureExt;
+use futures_util::future::BoxFuture;
 use listenfd::ListenFd;
-use serde::{de, Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, de};
 use socket2::SockRef;
 use tokio::io::AsyncWriteExt;
 use tokio::net::{TcpListener, TcpStream};
@@ -36,7 +36,7 @@ pub enum SocketListenAddr {
 impl std::fmt::Display for SocketListenAddr {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::SocketAddr(ref addr) => addr.fmt(f),
+            Self::SocketAddr(addr) => addr.fmt(f),
             Self::SystemFd(index) => write!(f, "system socket ${}", index),
         }
     }

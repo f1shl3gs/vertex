@@ -3,14 +3,14 @@ use std::pin::pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use futures::{ready, Future};
+use futures::{Future, ready};
 use futures_util::future::BoxFuture;
 use tokio::sync::OwnedSemaphorePermit;
 use tower::Service;
 
+use super::AdaptiveConcurrencySettings;
 use super::controller::Controller;
 use super::future::ResponseFuture;
-use super::AdaptiveConcurrencySettings;
 use crate::sink::util::retries::RetryLogic;
 
 enum State {
@@ -106,7 +106,7 @@ impl Debug for State {
                 .debug_tuple("State::Waiting")
                 .field(&format_args!("..."))
                 .finish(),
-            State::Ready(ref r) => f.debug_tuple("State::Ready").field(&r).finish(),
+            State::Ready(r) => f.debug_tuple("State::Ready").field(&r).finish(),
             State::Empty => f.debug_tuple("State::Empty").finish(),
         }
     }
@@ -125,7 +125,7 @@ mod tests {
     use tower_test::{
         assert_request_eq,
         mock::{
-            self, future::ResponseFuture as MockResponseFuture, Handle, Mock, SendResponse, Spawn,
+            self, Handle, Mock, SendResponse, Spawn, future::ResponseFuture as MockResponseFuture,
         },
     };
 

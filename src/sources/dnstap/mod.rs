@@ -7,7 +7,7 @@ use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
 use bytes::{Buf, Bytes, BytesMut};
 use chrono::DateTime;
 use codecs::ReadyFrames;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::LogRecord;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -689,12 +689,14 @@ mod integration_tests {
     fn assert_query(events: Events) {
         match events {
             Events::Logs(logs) => {
-                assert!(logs
-                    .iter()
-                    .any(|log| log.get("type") == Some(&Value::from("Message"))));
-                assert!(logs
-                    .iter()
-                    .any(|log| log.get("message.type") == Some(&Value::from("ClientQuery"))));
+                assert!(
+                    logs.iter()
+                        .any(|log| log.get("type") == Some(&Value::from("Message")))
+                );
+                assert!(
+                    logs.iter()
+                        .any(|log| log.get("message.type") == Some(&Value::from("ClientQuery")))
+                );
             }
             _ => panic!("Expected logs"),
         }

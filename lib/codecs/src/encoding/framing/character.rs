@@ -2,8 +2,8 @@ use bytes::{BufMut, BytesMut};
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::Encoder;
 
-use crate::serde::ascii_char;
 use crate::FramingError;
+use crate::serde::ascii_char;
 
 /// Config used to build a `CharacterDelimitedEncoder`
 #[derive(Clone, Debug, Deserialize, Serialize)]

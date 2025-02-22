@@ -7,9 +7,9 @@
 
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::{read_into, read_string, Error};
+use super::{Error, read_into, read_string};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path).await?;

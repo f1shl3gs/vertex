@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use argh::FromArgs;
 use exitcode::ExitCode;
-use framework::{config, signal, topology, SignalTo};
+use framework::{SignalTo, config, signal, topology};
 use futures::StreamExt;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tracing::{error, info, warn};

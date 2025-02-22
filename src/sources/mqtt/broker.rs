@@ -3,8 +3,8 @@ use std::net::SocketAddr;
 
 use bytes::{Buf, BytesMut};
 use event::LogRecord;
-use framework::tls::MaybeTlsIncomingStream;
 use framework::Pipeline;
+use framework::tls::MaybeTlsIncomingStream;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use value::path;

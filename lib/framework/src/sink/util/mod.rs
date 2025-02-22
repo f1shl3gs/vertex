@@ -21,10 +21,10 @@ mod zstd;
 pub mod testing;
 
 pub use buffer::{
+    Buffer, Compression,
     metrics::{MetricNormalize, MetricNormalizer, MetricSet, MetricsBuffer},
     partition::{Partition, PartitionBuffer, PartitionInnerBuffer},
     vec::{EncodedLength, VecBuffer},
-    Buffer, Compression,
 };
 pub use compressor::Compressor;
 pub use encoding::*;

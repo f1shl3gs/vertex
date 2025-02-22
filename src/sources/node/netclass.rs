@@ -1,11 +1,11 @@
 use std::path::PathBuf;
 
 use event::tags::Key;
-use event::{tags, Metric};
+use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{read_string, Error};
+use super::{Error, read_string};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Config {

@@ -7,7 +7,7 @@ use bytesize::ByteSizeOf;
 use event::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
 use quickcheck::{Arbitrary, Gen};
 
-use crate::{encoding::FixedEncodable, EventCount};
+use crate::{EventCount, encoding::FixedEncodable};
 
 macro_rules! message_wrapper {
     ($id:ident: $ty:ty, $event_count:expr) => {

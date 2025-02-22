@@ -1,7 +1,6 @@
 #![allow(clippy::redundant_pattern_matching)]
 
 use std::env;
-use std::future::Future;
 use std::sync::LazyLock;
 use std::time::Duration;
 

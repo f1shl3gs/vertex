@@ -4,11 +4,11 @@ use std::time::{Duration, Instant};
 
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{Bucket, Metric, Quantile, EXPORTED_INSTANCE_KEY, INSTANCE_KEY};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Bucket, EXPORTED_INSTANCE_KEY, INSTANCE_KEY, Metric, Quantile};
+use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
-use framework::Source;
 use http::{StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
 use prometheus::{GroupKind, MetricGroup};

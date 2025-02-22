@@ -334,8 +334,10 @@ impl Table {
         }
 
         // header
-        println!("\x1b[7m{:key_width$}{:typ_width$}{:events_in_width$}{:events_out_width$}{:bytes_in_width$}{:bytes_out_width$}\x1b[0m",
-                 "ID", "Type", "Events In", "Events Out", "Bytes In", "Bytes Out");
+        println!(
+            "\x1b[7m{:key_width$}{:typ_width$}{:events_in_width$}{:events_out_width$}{:bytes_in_width$}{:bytes_out_width$}\x1b[0m",
+            "ID", "Type", "Events In", "Events Out", "Bytes In", "Bytes Out"
+        );
 
         rows.iter().for_each(|row| {
             println!(
@@ -383,7 +385,7 @@ impl Table {
 mod termsize {
     use std::io::IsTerminal;
 
-    use libc::{c_ushort, ioctl, STDOUT_FILENO, TIOCGWINSZ};
+    use libc::{STDOUT_FILENO, TIOCGWINSZ, c_ushort, ioctl};
 
     /// A representation of the size of the current terminal
     #[repr(C)]

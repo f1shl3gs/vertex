@@ -22,7 +22,7 @@ mod unary;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
-use dyn_clone::{clone_trait_object, DynClone};
+use dyn_clone::{DynClone, clone_trait_object};
 use state::TypeState;
 use value::{OwnedTargetPath, Value};
 
@@ -33,9 +33,9 @@ pub use template::Template;
 pub use type_def::TypeDef;
 pub use value::Kind;
 
+use crate::Target;
 use crate::context::Context;
 use crate::diagnostic::{DiagnosticMessage, Label};
-use crate::Target;
 
 #[derive(Clone)]
 pub struct Program {

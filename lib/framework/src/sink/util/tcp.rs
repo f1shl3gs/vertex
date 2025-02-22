@@ -10,7 +10,7 @@ use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use configurable::Configurable;
 use event::{Event, EventContainer, Events};
-use futures::{stream::BoxStream, task::noop_waker_ref, SinkExt, StreamExt};
+use futures::{SinkExt, StreamExt, stream::BoxStream, task::noop_waker_ref};
 use rustls::ClientConfig;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -21,11 +21,11 @@ use tokio_util::codec::Encoder;
 use super::{SinkBuildError, SocketMode};
 use crate::batch::EncodedEvent;
 use crate::dns::Resolver;
-use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::sink::VecSinkExt;
+use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsStream, TlsConfig, TlsError};
-use crate::{dns, Healthcheck, Sink, StreamSink};
+use crate::{Healthcheck, Sink, StreamSink, dns};
 
 #[derive(Debug, Error)]
 enum TcpError {
@@ -81,10 +81,10 @@ impl TcpSinkConfig {
         &self,
         transformer: Transformer,
         encoder: impl Encoder<Event, Error = codecs::encoding::EncodingError>
-            + Clone
-            + Send
-            + Sync
-            + 'static,
+        + Clone
+        + Send
+        + Sync
+        + 'static,
     ) -> crate::Result<(Sink, Healthcheck)> {
         let uri = self.address.parse::<http::Uri>()?;
         let host = uri.host().ok_or(SinkBuildError::MissingHost)?.to_string();

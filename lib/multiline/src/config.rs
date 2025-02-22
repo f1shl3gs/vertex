@@ -4,8 +4,8 @@ use std::time::Duration;
 use humanize::duration::parse_duration;
 use regex::bytes::Regex;
 use serde::{
-    de::{Error, MapAccess, Unexpected},
     Deserialize, Deserializer, Serialize, Serializer,
+    de::{Error, MapAccess, Unexpected},
 };
 
 use super::aggregate::Mode;
@@ -262,7 +262,7 @@ impl<'de> Deserialize<'de> for MultilineConfig {
                                             "halt_before",
                                             "halt_with",
                                         ],
-                                    ))
+                                    ));
                                 }
                             });
                         }
@@ -425,11 +425,10 @@ mod tests {
                     parser: Parser::Custom {
                         condition_pattern: Regex::new(".*").unwrap(),
                         start_pattern: Regex::new(".*").unwrap(),
-                        mode: Mode::ContinueThrough
+                        mode: Mode::ContinueThrough,
                     },
                 }),
             ),
-
             // Errors
             //
             // Note: the serde_yaml cannot indicate error position which is horrible,
@@ -438,22 +437,26 @@ mod tests {
             // unknown parser
             (
                 "parser: abc",
-                Err("unknown variant `parser`, expected one of `cri`, `docker`, `go`, `java`, `custom`")
+                Err(
+                    "unknown variant `parser`, expected one of `cri`, `docker`, `go`, `java`, `custom`",
+                ),
             ),
             // unknown mode
             (
                 "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: foo\ntimeout: 6s",
-                Err("unknown variant `mode`, expected one of `continue_through`, `continue_past`, `halt_before`, `halt_with`")
+                Err(
+                    "unknown variant `mode`, expected one of `continue_through`, `continue_past`, `halt_before`, `halt_with`",
+                ),
             ),
             // invalid timeout
             (
                 "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: continue_through\ntimeout: 100",
-                Err("invalid value: string \"100\", expected something like 5s, 10s")
+                Err("invalid value: string \"100\", expected something like 5s, 10s"),
             ),
             // missing start_pattern
             (
                 "parser: custom\ncondition_pattern: .*\nmode: continue_through\ntimeout: 6s",
-                Err("missing field `start_pattern`")
+                Err("missing field `start_pattern`"),
             ),
             // missing condition_pattern
             (
@@ -463,8 +466,8 @@ mod tests {
             // missing mode
             (
                 "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\ntimeout: 6s",
-                Err("missing field `mode`")
-            )
+                Err("missing field `mode`"),
+            ),
         ];
 
         for (input, want) in tests {

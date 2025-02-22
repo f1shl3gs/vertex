@@ -178,7 +178,7 @@ impl TaskTransform for Throttle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{fields, Event};
+    use event::{Event, fields};
     use futures_util::{SinkExt, StreamExt};
     use std::task::Poll;
 

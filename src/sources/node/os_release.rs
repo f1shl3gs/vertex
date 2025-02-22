@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use chrono::NaiveDate;
-use event::{tags, Metric};
+use event::{Metric, tags};
 
 use super::Error;
 
@@ -11,27 +11,25 @@ const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let infos = release_infos()?;
 
-    let mut metrics = vec![
-        Metric::gauge_with_tags(
-            "node_os_info",
-            "A metric with a constant '1' value labeled by build_id, id, id_like, image_id, image_version, name, pretty_name, variant, variant_id, version, version_codename, version_id.",
-            1,
-            tags!(
-                "name" => infos.get("NAME").cloned().unwrap_or_default(),
-                "id" => infos.get("ID").cloned().unwrap_or_default(),
-                "id_like" => infos.get("ID_LIKE").cloned().unwrap_or_default(),
-                "pretty_name" => infos.get("PRETTY_NAME").cloned().unwrap_or_default(),
-                "variant" => infos.get("VARIANT").cloned().unwrap_or_default(),
-                "variant_id" => infos.get("VARIANT_ID").cloned().unwrap_or_default(),
-                "version" => infos.get("VERSION").cloned().unwrap_or_default(),
-                "version_id" => infos.get("VERSION_ID").cloned().unwrap_or_default(),
-                "version_codename" => infos.get("VERSION_CODENAME").cloned().unwrap_or_default(),
-                "build_id" => infos.get("BUILD_ID").cloned().unwrap_or_default(),
-                "image_id" => infos.get("IMAGE_ID").cloned().unwrap_or_default(),
-                "image_version" => infos.get("IMAGE_VERSION").cloned().unwrap_or_default()
-            ),
+    let mut metrics = vec![Metric::gauge_with_tags(
+        "node_os_info",
+        "A metric with a constant '1' value labeled by build_id, id, id_like, image_id, image_version, name, pretty_name, variant, variant_id, version, version_codename, version_id.",
+        1,
+        tags!(
+            "name" => infos.get("NAME").cloned().unwrap_or_default(),
+            "id" => infos.get("ID").cloned().unwrap_or_default(),
+            "id_like" => infos.get("ID_LIKE").cloned().unwrap_or_default(),
+            "pretty_name" => infos.get("PRETTY_NAME").cloned().unwrap_or_default(),
+            "variant" => infos.get("VARIANT").cloned().unwrap_or_default(),
+            "variant_id" => infos.get("VARIANT_ID").cloned().unwrap_or_default(),
+            "version" => infos.get("VERSION").cloned().unwrap_or_default(),
+            "version_id" => infos.get("VERSION_ID").cloned().unwrap_or_default(),
+            "version_codename" => infos.get("VERSION_CODENAME").cloned().unwrap_or_default(),
+            "build_id" => infos.get("BUILD_ID").cloned().unwrap_or_default(),
+            "image_id" => infos.get("IMAGE_ID").cloned().unwrap_or_default(),
+            "image_version" => infos.get("IMAGE_VERSION").cloned().unwrap_or_default()
         ),
-    ];
+    )];
 
     if let Some(version) = infos.get("VERSION") {
         let version: f64 = version.parse().unwrap_or_default();

@@ -1,7 +1,7 @@
 use std::io::{Read, Write};
 
 use super::constants::VIR_NET_MESSAGE_STRING_MAX;
-use super::{impl_procedure, unpack_string, Domain, Pack, Result, Unpack};
+use super::{Domain, Pack, Result, Unpack, impl_procedure, unpack_string};
 
 pub struct DomainGetXmlDescRequest<'a> {
     pub domain: &'a Domain,

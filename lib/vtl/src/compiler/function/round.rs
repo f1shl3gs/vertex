@@ -1,12 +1,12 @@
 use value::Value;
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct Round;
 
@@ -64,7 +64,7 @@ impl Expression for RoundFunc {
                                 want: Kind::INTEGER,
                                 got: value.kind(),
                                 span: expr.span,
-                            })
+                            });
                         }
                     },
                     None => 0,
@@ -78,7 +78,7 @@ impl Expression for RoundFunc {
                     want: Kind::NUMERIC,
                     got: value.kind(),
                     span: self.value.span,
-                })
+                });
             }
         };
 

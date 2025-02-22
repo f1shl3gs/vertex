@@ -24,7 +24,7 @@ pub use finalize::{
     AddBatchNotifier, BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer,
     EventFinalizers, EventStatus, Finalizable,
 };
-pub use log::{event_path, LogRecord};
+pub use log::{LogRecord, event_path};
 pub use metadata::EventMetadata;
 pub use metric::*;
 pub use trace::{Trace, Traces};

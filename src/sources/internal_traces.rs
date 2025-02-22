@@ -3,10 +3,10 @@ use std::fmt::Debug;
 
 use async_trait::async_trait;
 use configurable::configurable_component;
-use event::{tags, Trace};
+use event::{Trace, tags};
+use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::trace::SpanSubscription;
-use framework::Source;
 use futures::StreamExt;
 use log_schema::log_schema;
 

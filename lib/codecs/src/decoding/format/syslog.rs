@@ -5,7 +5,7 @@ use bytes::Bytes;
 use chrono::{DateTime, Datelike, Utc};
 use configurable::Configurable;
 use event::log::Value;
-use event::{event_path, Events, LogRecord};
+use event::{Events, LogRecord, event_path};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use syslog_loose::{IncompleteDate, Message, ProcId, Protocol, Variant};

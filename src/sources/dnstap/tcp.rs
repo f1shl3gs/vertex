@@ -1,10 +1,10 @@
 use std::net::SocketAddr;
 
 use configurable::Configurable;
+use framework::Source;
 use framework::config::{Resource, SourceContext};
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::{MaybeTlsListener, TlsConfig};
-use framework::Source;
 use serde::{Deserialize, Serialize};
 
 use super::serve_conn;

@@ -1,6 +1,6 @@
 use std::pin::Pin;
-use std::sync::atomic::{AtomicUsize, Ordering::SeqCst};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicUsize, Ordering::SeqCst};
 use std::{cmp, fmt};
 
 use async_stream::stream;
@@ -144,7 +144,7 @@ impl<T: Bufferable> LimitedSender<T> {
                 return match err {
                     TryAcquireError::NoPermits => Err(TrySendError::InsufficientCapacity(item)),
                     TryAcquireError::Closed => Err(TrySendError::Disconnected(item)),
-                }
+                };
             }
         };
 

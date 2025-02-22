@@ -1,10 +1,10 @@
 use http::{Method, Uri};
 
-use crate::schema::{
-    generate_const_string_schema, generate_one_of_schema, InstanceType, SchemaGenerator,
-    SchemaObject,
-};
 use crate::Configurable;
+use crate::schema::{
+    InstanceType, SchemaGenerator, SchemaObject, generate_const_string_schema,
+    generate_one_of_schema,
+};
 
 impl Configurable for Uri {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {

@@ -96,7 +96,7 @@ impl Expression for ContainsFunc {
                         want: Kind::BOOLEAN,
                         got: value.kind(),
                         span: expr.span,
-                    })
+                    });
                 }
             },
             // default value

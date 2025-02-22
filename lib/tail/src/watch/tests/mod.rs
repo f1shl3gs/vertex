@@ -7,8 +7,8 @@ use bytes::Bytes;
 use quickcheck::{Arbitrary, Gen, QuickCheck, TestResult};
 use testify::temp_dir;
 
-use crate::watch::Watcher;
 use crate::ReadFrom;
+use crate::watch::Watcher;
 
 #[derive(Clone, Debug)]
 enum FileWatcherAction {

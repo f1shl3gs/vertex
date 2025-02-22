@@ -5,12 +5,12 @@ use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use chrono::Utc;
+use codecs::DecodingConfig;
 use codecs::decoding::StreamDecodingError;
 use codecs::decoding::{DeserializerConfig, FramingConfig};
-use codecs::DecodingConfig;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::log::path::TargetPath;
-use event::{event_path, Events};
+use event::{Events, event_path};
 use framework::async_read::VecAsyncReadExt;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio::io::{AsyncRead, BufReader};
 use tokio::process::Command;
-use tokio::sync::mpsc::{channel, Sender};
+use tokio::sync::mpsc::{Sender, channel};
 use tokio_util::codec::FramedRead;
 
 const EXEC: &str = "exec";

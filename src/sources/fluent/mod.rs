@@ -11,13 +11,13 @@ use codecs::decoding::StreamDecodingError;
 use configurable::configurable_component;
 use event::{Events, LogRecord};
 use flate2::read::MultiGzDecoder;
+use framework::Source;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::tcp::{SocketListenAddr, TcpSource, TcpSourceAck, TcpSourceAcker};
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::TlsConfig;
-use framework::Source;
+use msgpack::{Error as MsgPackError, ReadExt, decode_string};
 use msgpack::{decode_binary, decode_entry, decode_options, decode_value};
-use msgpack::{decode_string, Error as MsgPackError, ReadExt};
 use value::path;
 
 fn default_address() -> SocketAddr {
@@ -440,7 +440,7 @@ mod tests {
     use value::Value;
 
     use super::msgpack::decode_value;
-    use super::{encode_ack_resp, Config, ForwardDecoder, ForwardFrame};
+    use super::{Config, ForwardDecoder, ForwardFrame, encode_ack_resp};
 
     #[test]
     fn generate_config() {
@@ -758,9 +758,9 @@ mod tests {
 mod integration_tests {
     use bytes::Bytes;
     use event::{EventStatus, Events};
+    use framework::Pipeline;
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
-    use framework::Pipeline;
     use futures::Stream;
     use http::Request;
     use http_body_util::Full;
@@ -770,7 +770,7 @@ mod integration_tests {
 
     use super::*;
 
-    use crate::testing::{trace_init, wait_for_tcp, ContainerBuilder, WaitFor};
+    use crate::testing::{ContainerBuilder, WaitFor, trace_init, wait_for_tcp};
 
     const FLUENT_BIT_IMAGE: &str = "fluent/fluent-bit";
     const FLUENT_BIT_TAG: &str = "3.2.4";

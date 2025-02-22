@@ -3,9 +3,9 @@ use std::collections::BTreeMap;
 use chrono::TimeZone;
 
 use super::proto_event::{
-    metric::Value as PMetricValue, tag_value::Value as PValue, Bucket as PBucket,
-    Histogram as PHistogram, Metric as PMetric, Quantile as PQuantile, Summary as PSummary,
-    TagValue as PTagValue, TagValueArray as PTagValueArray,
+    Bucket as PBucket, Histogram as PHistogram, Metric as PMetric, Quantile as PQuantile,
+    Summary as PSummary, TagValue as PTagValue, TagValueArray as PTagValueArray,
+    metric::Value as PMetricValue, tag_value::Value as PValue,
 };
 use crate::tags::{Array, Key, Tags, Value as TagValue};
 use crate::{Metric, MetricValue};

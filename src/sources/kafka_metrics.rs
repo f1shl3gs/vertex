@@ -2,11 +2,11 @@ use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use configurable::configurable_component;
-use event::{tags, Metric};
-use framework::config::{default_interval, serde_regex, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval, serde_regex};
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
+use futures_util::stream::FuturesUnordered;
 use regex::Regex;
 use rskafka::client::partition::{OffsetAt, UnknownTopicHandling};
 use rskafka::client::{Client, ClientBuilder};

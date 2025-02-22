@@ -2,13 +2,13 @@ use std::collections::BTreeMap;
 
 use value::Value;
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct Compact;
 
@@ -63,7 +63,7 @@ impl Expression for CompactFunc {
                     want: Kind::ARRAY_OR_OBJECT,
                     got: value.kind(),
                     span: self.value.span,
-                })
+                });
             }
         };
 
@@ -159,12 +159,14 @@ mod tests {
     #[test]
     fn object() {
         compile_and_run(
-            vec![value!({
-                "foo": 1,
-                "null": null,
-                "array": []
-            })
-            .into()],
+            vec![
+                value!({
+                    "foo": 1,
+                    "null": null,
+                    "array": []
+                })
+                .into(),
+            ],
             Compact,
             TypeDef::object(),
             Ok(value!({

@@ -3,7 +3,7 @@ use std::fmt;
 use std::task::Poll;
 
 use event::{EventStatus, Finalizable};
-use futures::{poll, FutureExt, Stream, StreamExt, TryFutureExt};
+use futures::{FutureExt, Stream, StreamExt, TryFutureExt, poll};
 use futures_util::future::poll_fn;
 use tokio::{pin, select};
 use tower::Service;
@@ -208,18 +208,17 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::future::Future;
     use std::pin::Pin;
-    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::task::{Context, Poll};
     use std::time::Duration;
 
     use event::{BatchNotifier, EventFinalizer, EventFinalizers};
     use futures::ready;
     use futures_util::stream;
-    use rand::rngs::StdRng;
     use rand::SeedableRng;
+    use rand::rngs::StdRng;
     use rand_distr::Distribution;
     use rand_distr::Pareto;
     use tokio::sync::{OwnedSemaphorePermit, Semaphore};

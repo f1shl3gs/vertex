@@ -1,14 +1,14 @@
-use event::Event;
-use futures::FutureExt;
-use futures::{ready, Stream, StreamExt, TryStreamExt};
-use std::future::Future;
 use std::net::SocketAddr;
 use std::path::Path;
 use std::pin::Pin;
+use std::sync::Arc;
 use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering;
-use std::sync::Arc;
 use std::task::{Context, Poll};
+
+use event::Event;
+use futures::FutureExt;
+use futures::{Stream, StreamExt, TryStreamExt, ready};
 use tokio::io::{AsyncRead, AsyncWrite};
 use tokio::net::TcpListener;
 use tokio::sync::oneshot;

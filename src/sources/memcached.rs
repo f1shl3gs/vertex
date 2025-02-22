@@ -5,9 +5,9 @@ use std::time::{Duration, Instant};
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::Key;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
 use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use thiserror::Error;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
@@ -482,7 +482,7 @@ async fn fetch_stats_metrics(addr: SocketAddr) -> Result<Vec<Metric>, ParseError
                     (
                         "crawler_reclaimed",
                         "memcached_slab_items_crawler_reclaimed_total",
-                        "Number of items freed by the LRU Crawler."
+                        "Number of items freed by the LRU Crawler.",
                     ),
                     (
                         "evicted",

@@ -3,10 +3,10 @@ use std::sync::{Arc, Mutex};
 
 use buffers::channel::BufferSender;
 use event::Events;
-use futures::{future, Future, FutureExt};
+use futures::{Future, FutureExt, future};
 use tokio::sync::{mpsc, watch};
-use tokio::time::{interval, sleep_until};
 use tokio::time::{Duration, Instant};
+use tokio::time::{interval, sleep_until};
 use tracing::Instrument;
 
 use crate::config::{ComponentKey, Config, ConfigDiff, HealthcheckOptions, OutputId, Resource};
@@ -14,8 +14,8 @@ use crate::shutdown::ShutdownCoordinator;
 use crate::topology::builder::Pieces;
 use crate::topology::task::TaskOutput;
 use crate::topology::{
-    build_or_log_errors, handle_errors, retain, take_healthchecks, BuiltBuffer, ControlChannel,
-    ControlMessage, Outputs, TaskHandle,
+    BuiltBuffer, ControlChannel, ControlMessage, Outputs, TaskHandle, build_or_log_errors,
+    handle_errors, retain, take_healthchecks,
 };
 use crate::trigger::DisabledTrigger;
 
@@ -124,11 +124,16 @@ impl RunningTopology {
         let reporter = async move {
             loop {
                 interval.tick().await;
+
                 // Remove all tasks that have shutdown.
                 check_handles.retain(|_key, handles| {
                     retain(handles, |handle| handle.peek().is_none());
                     !handles.is_empty()
                 });
+                if check_handles.is_empty() {
+                    break;
+                }
+
                 let remaining_components = check_handles
                     .keys()
                     .map(|item| item.to_string())
@@ -153,11 +158,8 @@ impl RunningTopology {
 
         // Aggregate future that ends once anything detects that all tasks have
         // shutdown.
-        let shutdown_complete_future = future::select_all(vec![
-            Box::pin(timeout) as future::BoxFuture<'static, ()>,
-            Box::pin(reporter) as future::BoxFuture<'static, ()>,
-            Box::pin(success) as future::BoxFuture<'static, ()>,
-        ]);
+        let shutdown_complete_future =
+            future::select_all(vec![timeout.boxed(), reporter.boxed(), success.boxed()]);
 
         // Now kick off the shutdown process by shutting down the sources.
         let source_shutdown_complete = self.shutdown_coordinator.shutdown_all(deadline);
@@ -170,9 +172,9 @@ impl RunningTopology {
     pub async fn reload_config_and_respawn(&mut self, new_config: Config) -> Result<bool, ()> {
         if self.config.global != new_config.global {
             error!(
-                message =
-                "Global options can't be changed while reloading config file; reload aborted. Please restart Vertex to reload the configuration file."
+                message = "Global options can't be changed while reloading config file; reload aborted. Please restart Vertex to reload the configuration file."
             );
+
             return Ok(false);
         }
 

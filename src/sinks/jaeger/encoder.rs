@@ -3,7 +3,7 @@ use std::io::Write;
 use bytes::{BufMut, BytesMut};
 use codecs::encoding::{EncodingError, SerializeError};
 use event::Event;
-use jaeger::agent::{serialize_batch, BufferClient, UDP_PACKET_MAX_LENGTH};
+use jaeger::agent::{BufferClient, UDP_PACKET_MAX_LENGTH, serialize_batch};
 
 #[derive(Clone, Debug)]
 pub struct ThriftEncoder {}

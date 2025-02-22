@@ -92,7 +92,7 @@ where
                     } else {
                         self.error_slot = Some(err);
                         Poll::Ready(Some(Ok(self.flush())))
-                    }
+                    };
                 }
 
                 Poll::Ready(None) => {
@@ -100,7 +100,7 @@ where
                         Poll::Ready(Some(Ok(self.flush())))
                     } else {
                         Poll::Ready(None)
-                    }
+                    };
                 }
 
                 Poll::Pending => {
@@ -108,7 +108,7 @@ where
                         Poll::Ready(Some(Ok(self.flush())))
                     } else {
                         Poll::Pending
-                    }
+                    };
                 }
             }
         }
@@ -117,7 +117,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use futures::{channel::mpsc, SinkExt};
+    use futures::{SinkExt, channel::mpsc};
     use futures_util::poll;
 
     use super::*;

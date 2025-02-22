@@ -46,11 +46,7 @@ impl Expression for Query {
                 match target_path.prefix {
                     PathPrefix::Event => {
                         let kind = state.target.kind(value_path);
-                        if kind == Kind::NULL {
-                            Kind::ANY
-                        } else {
-                            kind
-                        }
+                        if kind == Kind::NULL { Kind::ANY } else { kind }
                     }
                     PathPrefix::Metadata => state.metadata.kind(value_path),
                 }

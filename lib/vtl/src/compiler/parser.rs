@@ -3,14 +3,16 @@ use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 
 use bytes::Bytes;
-use value::{parse_target_path, parse_value_path, OwnedTargetPath, PathParseError, Value};
+use value::{OwnedTargetPath, PathParseError, Value, parse_target_path, parse_value_path};
 
+use super::Kind;
+use super::Program;
 use super::assignment::{Assignment, AssignmentTarget};
 use super::binary::{Binary, BinaryOp};
 use super::block::Block;
 use super::expr::Expr;
 use super::for_statement::ForStatement;
-use super::function::{builtin_functions, ArgumentList, Function, FunctionCompileContext};
+use super::function::{ArgumentList, Function, FunctionCompileContext, builtin_functions};
 use super::if_statement::IfStatement;
 use super::levenshtein::distance;
 use super::lex::{LexError, Lexer, Token};
@@ -18,8 +20,6 @@ use super::query::Query;
 use super::state::TypeState;
 use super::statement::Statement;
 use super::unary::{Unary, UnaryError, UnaryOp};
-use super::Kind;
-use super::Program;
 use super::{BinaryError, Expression};
 use super::{Span, Spanned};
 use crate::diagnostic::{DiagnosticMessage, Label};
@@ -604,7 +604,7 @@ impl Compiler<'_> {
                             got: token.to_string(),
                             want: Some("comma or equal".to_string()),
                             span,
-                        })
+                        });
                     }
                 };
 
@@ -801,7 +801,7 @@ impl Compiler<'_> {
                                         path: path.to_string(),
                                     },
                                     span,
-                                })
+                                });
                             }
                         }
                     };
@@ -931,7 +931,7 @@ impl Compiler<'_> {
                             got: token.to_string(),
                             want: Some("comma or right paren".to_string()),
                             span,
-                        })
+                        });
                     }
                 },
                 None => return Err(SyntaxError::UnexpectedEof),
@@ -951,11 +951,7 @@ impl Compiler<'_> {
             func.parameters().iter().fold(
                 0usize,
                 |acc, param| {
-                    if param.required {
-                        acc + 1
-                    } else {
-                        acc
-                    }
+                    if param.required { acc + 1 } else { acc }
                 },
             );
         if arguments.len() < at_least {
@@ -1054,7 +1050,7 @@ impl Compiler<'_> {
                         got: token.to_string(),
                         want: Some("identifier".to_string()),
                         span,
-                    })
+                    });
                 }
             },
             None => return Err(SyntaxError::UnexpectedEof),
@@ -1073,7 +1069,7 @@ impl Compiler<'_> {
                         got: token.to_string(),
                         want: Some("identifier".to_string()),
                         span,
-                    })
+                    });
                 }
             },
             None => return Err(SyntaxError::UnexpectedEof),
@@ -1177,7 +1173,7 @@ impl Compiler<'_> {
                         got: token.to_string(),
                         want: Some("string, colon or right brace".to_string()),
                         span,
-                    })
+                    });
                 }
             };
 
@@ -1203,7 +1199,7 @@ impl Compiler<'_> {
                             got: token.to_string(),
                             want: Some("comma or colon".to_string()),
                             span,
-                        })
+                        });
                     }
                 },
                 None => return Err(SyntaxError::UnexpectedEof),

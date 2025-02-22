@@ -6,12 +6,12 @@ use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Events, Metric, Quantile};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
-use framework::source::http::{decode, ErrorMessage};
+use framework::source::http::{ErrorMessage, decode};
 use framework::source::http::{HttpSource, HttpSourceAuthConfig};
-use framework::{tls::TlsConfig, Source};
+use framework::{Source, tls::TlsConfig};
 use http::header::CONTENT_ENCODING;
 use http::{HeaderMap, Method, StatusCode, Uri};
-use prometheus::{proto, GroupKind, MetricGroup};
+use prometheus::{GroupKind, MetricGroup, proto};
 use prost::Message;
 
 /// Start a HTTP server and receive Protobuf encoded metrics.
@@ -200,7 +200,7 @@ mod tests {
 
     use bytes::BytesMut;
     use chrono::{SubsecRound, Utc};
-    use event::{tags, EventStatus, Metric};
+    use event::{EventStatus, Metric, tags};
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
     use framework::pipeline::Pipeline;

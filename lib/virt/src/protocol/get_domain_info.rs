@@ -1,6 +1,6 @@
 use std::io::{Read, Write};
 
-use super::{impl_procedure, Domain, Pack, ReadExt, Result, Unpack};
+use super::{Domain, Pack, ReadExt, Result, Unpack, impl_procedure};
 
 pub struct GetDomainInfoRequest<'a> {
     pub domain: &'a Domain,

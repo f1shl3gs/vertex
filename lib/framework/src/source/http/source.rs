@@ -11,11 +11,11 @@ use hyper::service::service_fn;
 
 use super::auth::HttpSourceAuth;
 use super::error::ErrorMessage;
-use super::{decode, HttpSourceAuthConfig};
+use super::{HttpSourceAuthConfig, decode};
+use crate::Source;
 use crate::config::SourceContext;
 use crate::pipeline::Pipeline;
 use crate::tls::{MaybeTlsListener, TlsConfig};
-use crate::Source;
 
 pub trait HttpSource: Clone + Send + Sync + 'static {
     fn build_events(

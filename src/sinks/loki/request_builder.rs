@@ -6,7 +6,7 @@ use bytesize::ByteSizeOf;
 use event::{EventFinalizers, Finalizable};
 use framework::sink::util::encoding::Encoder;
 use prost::Message;
-use serde::{ser::SerializeSeq, Serialize, Serializer};
+use serde::{Serialize, Serializer, ser::SerializeSeq};
 
 use super::sanitize::{sanitize_label_key, sanitize_label_value};
 

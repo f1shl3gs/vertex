@@ -1,12 +1,12 @@
 use value::Value;
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct ToUnixTimestamp;
 
@@ -71,7 +71,7 @@ impl TryFrom<Spanned<String>> for Unit {
                     want: "seconds, milliseconds, microseconds or nanoseconds".to_string(),
                     got: value.node,
                     span: value.span,
-                })
+                });
             }
         };
 
@@ -94,7 +94,7 @@ impl Expression for ToUnixTimestampFunc {
                     want: Kind::TIMESTAMP,
                     got: value.kind(),
                     span: self.value.span,
-                })
+                });
             }
         };
 

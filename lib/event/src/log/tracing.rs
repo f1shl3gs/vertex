@@ -3,7 +3,7 @@ use std::sync::OnceLock;
 
 use chrono::Utc;
 use tracing::field::Field;
-use value::{event_path, owned_value_path, OwnedTargetPath, Value};
+use value::{OwnedTargetPath, Value, event_path, owned_value_path};
 
 use super::LogRecord;
 

@@ -7,7 +7,7 @@ use async_stream::stream;
 use backoff::ExponentialBackoff;
 use bytes::{Buf, Bytes};
 use chunk::ChunkedDecoder;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use futures::{Stream, StreamExt};
 use futures_util::TryStreamExt;
 use http::header::{ACCEPT, TRANSFER_ENCODING};
@@ -21,10 +21,10 @@ use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
 use url::Url;
 
-use crate::config::{provider::ProviderConfig, Builder, ProxyConfig};
+use crate::SignalHandler;
+use crate::config::{Builder, ProxyConfig, provider::ProviderConfig};
 use crate::http::HttpClient;
 use crate::tls::TlsConfig;
-use crate::SignalHandler;
 use crate::{config, signal};
 
 const fn default_interval() -> Duration {

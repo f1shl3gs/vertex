@@ -1,7 +1,7 @@
 use std::fmt::Formatter;
 
-use configurable::schema::{SchemaGenerator, SchemaObject};
 use configurable::Configurable;
+use configurable::schema::{SchemaGenerator, SchemaObject};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Clone, Debug)]
@@ -72,7 +72,7 @@ impl Serialize for HttpParamKind {
 }
 
 impl Configurable for HttpParamKind {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        gen.subschema_for::<String>()
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        generator.subschema_for::<String>()
     }
 }

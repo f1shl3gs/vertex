@@ -6,10 +6,10 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytesize::ByteSizeOf;
-use futures::{ready, Stream};
+use futures::{Stream, ready};
 use pin_project_lite::pin_project;
-use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
+use tokio_util::time::delay_queue::Key;
 
 use super::batcher::{
     config::BatchConfigParts,

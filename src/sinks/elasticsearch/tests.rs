@@ -2,16 +2,16 @@ use std::collections::BTreeMap;
 
 use chrono::{TimeZone, Utc};
 use codecs::encoding::Transformer;
-use event::log::{parse_value_path, Value};
-use event::{fields, LogRecord};
+use event::log::{Value, parse_value_path};
+use event::{LogRecord, fields};
 use framework::sink::util::Encoder;
 use framework::template::Template;
 
+use super::BulkAction;
 use super::common::ElasticsearchCommon;
 use super::config::{BulkConfig, Config};
 use super::config::{DataStreamConfig, ElasticsearchMode};
 use super::sink::process_log;
-use super::BulkAction;
 
 #[tokio::test]
 async fn sets_create_action_when_configured() {

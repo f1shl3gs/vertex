@@ -1,4 +1,3 @@
-use std::future::Future;
 use std::time::Duration;
 
 use bytes::Bytes;
@@ -13,7 +12,7 @@ use hyper_util::rt::TokioIo;
 use testify::{http::file_send, http::not_found};
 use tokio::net::TcpListener;
 
-use super::{client, statistics_to_metrics, Config};
+use super::{Config, client, statistics_to_metrics};
 
 #[test]
 fn generate_config() {

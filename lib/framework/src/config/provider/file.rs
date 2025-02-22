@@ -1,7 +1,7 @@
 use configurable::configurable_component;
 
-use crate::config::{provider::ProviderConfig, Builder};
 use crate::SignalHandler;
+use crate::config::{Builder, provider::ProviderConfig};
 
 #[configurable_component(provider, name = "file")]
 #[derive(Clone)]

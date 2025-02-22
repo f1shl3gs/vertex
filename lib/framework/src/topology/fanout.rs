@@ -406,11 +406,11 @@ mod tests {
     use std::num::NonZeroUsize;
 
     use buffers::{
+        WhenFull,
         topology::{
             builder::TopologyBuilder,
             channel::{BufferReceiver, BufferSender},
         },
-        WhenFull,
     };
     use event::{Event, EventContainer, Events, LogRecord};
     use futures::poll;

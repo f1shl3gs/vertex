@@ -4,20 +4,20 @@ use std::num::NonZeroUsize;
 
 use bytes::{Bytes, BytesMut};
 use bytesize::ByteSizeOf;
-use codecs::encoding::Transformer;
 use codecs::Encoder;
-use event::log::path::parse_target_path;
+use codecs::encoding::Transformer;
 use event::log::Value;
+use event::log::path::parse_target_path;
 use event::{Event, EventContainer, EventFinalizers, Events, Finalizable};
+use framework::StreamSink;
 use framework::http::HttpClient;
 use framework::partition::Partitioner;
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::{Compression, EncodeResult, KeyPartitioner, RequestBuilder};
 use framework::stream::BatcherSettings;
 use framework::template::Template;
-use framework::StreamSink;
-use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
+use futures_util::stream::BoxStream;
 use thiserror::Error;
 use tokio_util::codec::Encoder as _;
 
@@ -436,8 +436,10 @@ mod tests {
         log.insert(log_schema().timestamp_key(), chrono::Utc::now());
 
         let record = encoder.encode_event(event);
-        assert!(String::from_utf8_lossy(&record.event.event)
-            .contains(&log_schema().timestamp_key().path.to_string()));
+        assert!(
+            String::from_utf8_lossy(&record.event.event)
+                .contains(&log_schema().timestamp_key().path.to_string())
+        );
         assert_eq!(record.labels.len(), 1);
         assert_eq!(
             record.labels[0],
@@ -473,8 +475,10 @@ mod tests {
         log.insert("name", "k2");
         log.insert("value", "v2");
         let record = encoder.encode_event(event);
-        assert!(String::from_utf8_lossy(&record.event.event)
-            .contains(&log_schema().timestamp_key().path.to_string()));
+        assert!(
+            String::from_utf8_lossy(&record.event.event)
+                .contains(&log_schema().timestamp_key().path.to_string())
+        );
         assert_eq!(record.labels.len(), 2);
         let labels: HashMap<String, String> = record.labels.into_iter().collect();
         assert_eq!(labels["k1"], "v1".to_string());
@@ -496,8 +500,10 @@ mod tests {
         let log = event.as_mut_log();
         log.insert(log_schema().timestamp_key(), chrono::Utc::now());
         let record = encoder.encode_event(event);
-        assert!(!String::from_utf8_lossy(&record.event.event)
-            .contains(&log_schema().timestamp_key().to_string()));
+        assert!(
+            !String::from_utf8_lossy(&record.event.event)
+                .contains(&log_schema().timestamp_key().to_string())
+        );
     }
 
     #[test]

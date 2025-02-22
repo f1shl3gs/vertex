@@ -1,13 +1,13 @@
 use std::path::PathBuf;
 
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{SyncTransform, Transform, TransformOutputsBuf};
 use serde::{Deserialize, Serialize};
 use vtl::{Diagnostic, Program};
 
-use crate::common::vtl::{precompute_metric_value, LogTarget, MetricTarget};
+use crate::common::vtl::{LogTarget, MetricTarget, precompute_metric_value};
 
 #[derive(Configurable, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]

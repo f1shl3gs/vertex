@@ -3,7 +3,7 @@
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 use regex::Regex;
 
 use super::Error;
@@ -262,11 +262,7 @@ fn recovery_line(input: &str) -> Result<(f64, i64, f64, f64), Error> {
 }
 
 fn state_metric_value(key: &str, state: &str) -> f64 {
-    if key == state {
-        1.0
-    } else {
-        0.0
-    }
+    if key == state { 1.0 } else { 0.0 }
 }
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {

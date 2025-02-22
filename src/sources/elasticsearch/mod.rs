@@ -10,7 +10,7 @@ use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::configurable_component;
 use event::Metric;
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::sink::Response;
 use framework::tls::TlsConfig;

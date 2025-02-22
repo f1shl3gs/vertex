@@ -3,9 +3,9 @@
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::{read_string, Error};
+use super::{Error, read_string};
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {

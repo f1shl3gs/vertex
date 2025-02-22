@@ -4,7 +4,7 @@ use configurable::Configurable;
 use serde::Serialize;
 
 #[allow(clippy::print_stdout)]
-fn gen<T: Configurable + Serialize + Sized>() {
+fn generate<T: Configurable + Serialize + Sized>() {
     let schema = configurable::schema::generate_root_schema::<T>();
 
     let json = serde_json::to_string_pretty(&schema)
@@ -68,5 +68,5 @@ fn derive_gen() {
         // Tuple((i32, i32))
     }
 
-    gen::<Foo>();
+    generate::<Foo>();
 }

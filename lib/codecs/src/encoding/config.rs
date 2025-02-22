@@ -2,8 +2,8 @@ use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
 use super::{
-    transformer::Transformer, BytesEncoder, CharacterDelimitedEncoder, Framer,
-    LengthDelimitedEncoder, NewlineDelimitedEncoder, Serializer, SerializerConfig,
+    BytesEncoder, CharacterDelimitedEncoder, Framer, LengthDelimitedEncoder,
+    NewlineDelimitedEncoder, Serializer, SerializerConfig, transformer::Transformer,
 };
 
 /// Configuration for building a `Framer`.
@@ -174,8 +174,8 @@ mod tests {
     use event::log::parse_value_path;
 
     use super::*;
-    use crate::encoding::format::json::JsonSerializerConfig;
     use crate::encoding::TimestampFormat;
+    use crate::encoding::format::json::JsonSerializerConfig;
 
     #[test]
     fn json() {

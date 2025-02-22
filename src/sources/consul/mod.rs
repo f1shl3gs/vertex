@@ -7,11 +7,11 @@ use std::time::{Duration, Instant};
 
 use chrono::Utc;
 use configurable::configurable_component;
-use event::{tags, Metric};
-use framework::config::{default_interval, default_true, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
+use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval, default_true};
 use framework::http::HttpClient;
 use framework::tls::TlsConfig;
-use framework::Source;
 
 use client::{Client, ConsulError, QueryOptions};
 

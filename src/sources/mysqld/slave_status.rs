@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::sync::LazyLock;
 
 use chrono::NaiveDateTime;
-use event::{tags, Metric};
+use event::{Metric, tags};
 use regex::Regex;
 use sqlx::mysql::MySqlRow;
 use sqlx::{Column, FromRow, MySqlPool, Row, ValueRef};

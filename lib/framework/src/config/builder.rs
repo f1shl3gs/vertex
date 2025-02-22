@@ -10,7 +10,7 @@ use super::graph::Graph;
 use super::provider::ProviderConfig;
 use super::sink::SinkOuter;
 use super::source::SourceOuter;
-use super::transform::{get_transform_output_ids, TransformOuter};
+use super::transform::{TransformOuter, get_transform_output_ids};
 use super::validation;
 use super::{ComponentKey, Config, GlobalOptions, HealthcheckOptions, OutputId};
 use super::{SinkConfig, SourceConfig, TransformConfig};

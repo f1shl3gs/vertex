@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
 use super::{read_into, read_string};
 

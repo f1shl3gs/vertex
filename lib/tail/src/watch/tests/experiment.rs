@@ -9,8 +9,8 @@ use quickcheck::{QuickCheck, TestResult};
 use testify::temp_dir;
 
 use crate::{
-    watch::{tests::*, Watcher},
     ReadFrom,
+    watch::{Watcher, tests::*},
 };
 
 // Interpret all FWActions, including truncation

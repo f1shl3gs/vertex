@@ -1,4 +1,3 @@
-use std::future::Future;
 use std::sync::{Arc, Mutex, MutexGuard};
 use std::time::{Duration, Instant};
 
@@ -10,9 +9,9 @@ use tokio::time::error::Elapsed;
 use crate::http::HttpError;
 use crate::stats::{EwmaVar, Mean, MeanVariance};
 
-use super::semaphore::ShrinkableSemaphore;
 use super::AdaptiveConcurrencySettings;
 use super::MAX_CONCURRENCY;
+use super::semaphore::ShrinkableSemaphore;
 use crate::sink::util::retries::{RetryAction, RetryLogic};
 
 /// Shared class for `tokio::sync::Semaphore` that manages adjusting the

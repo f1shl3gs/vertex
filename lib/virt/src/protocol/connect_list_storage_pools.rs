@@ -1,6 +1,6 @@
 use std::io::{Read, Write};
 
-use super::{impl_procedure, unpack_flex, Pack, Pool, Result, Unpack};
+use super::{Pack, Pool, Result, Unpack, impl_procedure, unpack_flex};
 
 pub const REMOTE_STORAGE_POOL_LIST_MAX: usize = 4096;
 

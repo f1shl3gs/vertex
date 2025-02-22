@@ -9,7 +9,7 @@ use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use super::{
-    skip_serializing_if_default, ComponentKey, DataType, GlobalOptions, ProxyConfig, Resource,
+    ComponentKey, DataType, GlobalOptions, ProxyConfig, Resource, skip_serializing_if_default,
 };
 
 #[derive(Clone, Debug)]

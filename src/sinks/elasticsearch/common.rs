@@ -1,18 +1,18 @@
 use std::collections::HashMap;
 
+use framework::HealthcheckError;
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient, MaybeAuth};
 use framework::sink::util::service::RequestConfig;
 use framework::tls::TlsConfig;
-use framework::HealthcheckError;
 use http::{Method, Request, StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
 
+use super::ElasticsearchCommonMode;
+use super::ParseError;
 use super::config::{Config, ElasticsearchAuth};
 use super::encoder::ElasticsearchEncoder;
 use super::request_builder::ElasticsearchRequestBuilder;
-use super::ElasticsearchCommonMode;
-use super::ParseError;
 
 #[derive(Clone, Debug)]
 pub struct ElasticsearchCommon {

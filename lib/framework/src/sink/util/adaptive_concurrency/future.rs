@@ -1,4 +1,3 @@
-use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
@@ -8,7 +7,7 @@ use futures::ready;
 use pin_project_lite::pin_project;
 use tokio::sync::OwnedSemaphorePermit;
 
-use super::controller::{instant_now, Controller};
+use super::controller::{Controller, instant_now};
 use crate::sink::util::retries::RetryLogic;
 
 pin_project! {

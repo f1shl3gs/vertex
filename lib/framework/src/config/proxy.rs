@@ -240,8 +240,10 @@ mod tests {
             https: Some("https://2.3.4.5:6789".into()),
             ..Default::default()
         };
-        std::env::set_var("HTTP_PROXY", "http://remote.proxy");
-        std::env::remove_var("HTTPS_PROXY");
+        unsafe {
+            std::env::set_var("HTTP_PROXY", "http://remote.proxy");
+            std::env::remove_var("HTTPS_PROXY");
+        }
 
         let result = ProxyConfig::merge_with_env(&global_proxy, &component_proxy);
 

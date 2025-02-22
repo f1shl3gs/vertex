@@ -2,7 +2,7 @@ use std::convert::TryFrom;
 use std::convert::TryInto;
 use std::path::{Path, PathBuf};
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
 use super::Error;
 

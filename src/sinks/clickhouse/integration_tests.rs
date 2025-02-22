@@ -5,8 +5,8 @@ use event::{BatchNotifier, BatchStatus, BatchStatusReceiver, Event, LogRecord};
 use framework::batch::BatchConfig;
 use framework::config::{ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
-use framework::sink::util::service::RequestConfig;
 use framework::sink::util::Compression;
+use framework::sink::util::service::RequestConfig;
 use futures_util::future::ready;
 use futures_util::stream;
 use http::{Method, Request};
@@ -17,7 +17,7 @@ use serde_json::Value;
 use testify::random::random_string;
 
 use crate::sinks::clickhouse::config::Config;
-use crate::testing::components::{run_and_assert_sink_compliance, HTTP_SINK_TAGS};
+use crate::testing::components::{HTTP_SINK_TAGS, run_and_assert_sink_compliance};
 use crate::testing::trace_init;
 
 fn clickhouse_address() -> String {

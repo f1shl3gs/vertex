@@ -32,7 +32,7 @@ where
     ///
     /// If an error occurs while generating the schema, an error variant will
     /// be returned describing the issue.
-    fn generate_schema(gen: &mut schema::SchemaGenerator) -> schema::SchemaObject;
+    fn generate_schema(generator: &mut schema::SchemaGenerator) -> schema::SchemaObject;
 }
 
 pub trait ConfigurableString: Configurable {}

@@ -1,6 +1,6 @@
 use configurable::Configurable;
-use event::log::{owned_value_path, path, OwnedValuePath};
 use event::LogRecord;
+use event::log::{OwnedValuePath, owned_value_path, path};
 use k8s_openapi::{
     api::core::v1::{Container, ContainerStatus, Pod, PodSpec, PodStatus},
     apimachinery::pkg::apis::meta::v1::ObjectMeta,
@@ -235,7 +235,10 @@ mod tests {
                 "/var/log/pods/sandbox0-ns_sandbox0-name_sandbox0-uid/sandbox0-container0-name/1.log",
                 {
                     let mut log = LogRecord::default();
-                    log.insert_metadata(path!("kubernetes", "container_name"), "sandbox0-container0-name");
+                    log.insert_metadata(
+                        path!("kubernetes", "container_name"),
+                        "sandbox0-container0-name",
+                    );
                     log
                 },
             ),
@@ -250,7 +253,7 @@ mod tests {
                     log.insert_metadata(path!("container_name"), "sandbox0-container0-name");
                     log
                 },
-            )
+            ),
         ];
 
         for (fields_spec, file, expected) in cases.into_iter() {

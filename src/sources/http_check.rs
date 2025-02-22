@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
-use configurable::{configurable_component, Configurable};
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use configurable::{Configurable, configurable_component};
+use event::{Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Error, Pipeline, ShutdownSignal, Source};
-use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
+use futures_util::stream::FuturesUnordered;
 use http::{HeaderName, HeaderValue, Request, StatusCode};
 use http_body_util::Full;
 use serde::{Deserialize, Serialize};

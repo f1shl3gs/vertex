@@ -68,7 +68,7 @@ impl Expression for ExistsFunc {
                         return Err(ExpressionError::Error {
                             message: err.to_string(),
                             span: self.query.span,
-                        })
+                        });
                     }
                 },
             },

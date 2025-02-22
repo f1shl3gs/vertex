@@ -8,7 +8,7 @@
 
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
 use super::Error;
 

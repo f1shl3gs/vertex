@@ -1,9 +1,9 @@
 use std::ffi::CStr;
 use std::path::{Path, PathBuf};
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 
-use super::{read_string, Error};
+use super::{Error, read_string};
 
 /// Exposes the current system time
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {

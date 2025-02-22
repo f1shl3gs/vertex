@@ -1,4 +1,4 @@
-use event::{fields, Event};
+use event::{Event, fields};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use framework::sink::util::testing::{build_test_server, load_sink};
@@ -6,7 +6,7 @@ use futures_util::StreamExt;
 use http::header::AUTHORIZATION;
 use url::Url;
 
-use super::config::{healthcheck, Config};
+use super::config::{Config, healthcheck};
 use super::sink::LokiSink;
 
 #[test]

@@ -1,6 +1,6 @@
 use std::io::{Read, Write};
 
-use super::{impl_procedure, Pack, Result, Unpack};
+use super::{Pack, Result, Unpack, impl_procedure};
 
 pub struct Pool {
     pub name: String,

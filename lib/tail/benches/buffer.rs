@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 use std::io::Cursor;
 
 use bytes::BytesMut;
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
+use criterion::{BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
 use tail::read_until_with_max_size;
 
 struct Parameters {

@@ -1,10 +1,10 @@
 use std::fmt::{Debug, Display, Formatter};
 use std::str::FromStr;
 
-use configurable::schema::{SchemaGenerator, SchemaObject};
 use configurable::Configurable;
-use http::uri::{Authority, PathAndQuery, Scheme};
+use configurable::schema::{SchemaGenerator, SchemaObject};
 use http::Uri;
+use http::uri::{Authority, PathAndQuery, Scheme};
 use percent_encoding::percent_decode_str;
 use serde::de::Visitor;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -22,8 +22,8 @@ pub struct UriSerde {
 }
 
 impl Configurable for UriSerde {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        let mut schema = String::generate_schema(gen);
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = String::generate_schema(generator);
         schema.format = Some("uri");
 
         let metadata = schema.metadata();

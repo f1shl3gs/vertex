@@ -1,17 +1,16 @@
 use std::io::Cursor;
 
 use event::Finalizable;
-use futures::{stream, StreamExt};
+use futures::{StreamExt, stream};
 use tokio_test::{assert_pending, assert_ready, task::spawn};
 use tracing::Instrument;
 
 use super::create_default_buffer;
 use crate::{
-    assert_buffer_is_empty, assert_buffer_records,
+    EventCount, assert_buffer_is_empty, assert_buffer_records,
     test::acknowledge,
-    test::{install_tracing_helpers, with_temp_dir, MultiEventRecord, SizedRecord},
+    test::{MultiEventRecord, SizedRecord, install_tracing_helpers, with_temp_dir},
     variants::disk::{tests::create_default_buffer_with_usage, writer::RecordWriter},
-    EventCount,
 };
 
 #[tokio::test]

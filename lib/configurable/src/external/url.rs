@@ -1,5 +1,5 @@
-use crate::schema::{InstanceType, SchemaGenerator, SchemaObject};
 use crate::Configurable;
+use crate::schema::{InstanceType, SchemaGenerator, SchemaObject};
 
 impl Configurable for url::Url {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {

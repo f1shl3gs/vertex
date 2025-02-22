@@ -3,8 +3,9 @@ use std::io::{self, Read, Write};
 use std::ops::Deref;
 
 use super::{
+    Error, Pack, ReadExt, Result, Unpack, WriteExt,
     constants::{MESSAGE_STATUS_OK, MESSAGE_TYPE_CALL, VIR_NET_MESSAGE_STRING_MAX},
-    pack_flex, Error, Pack, ReadExt, Result, Unpack, WriteExt,
+    pack_flex,
 };
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]

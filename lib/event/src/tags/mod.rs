@@ -5,13 +5,13 @@ mod value;
 pub use key::Key;
 pub use value::{Array, Value};
 
-use std::alloc::{alloc, dealloc, Layout};
+use std::alloc::{Layout, alloc, dealloc};
 use std::cmp::Ordering::{Greater, Less};
 use std::collections::BTreeMap;
 use std::fmt::{Debug, Formatter};
 use std::hash::{Hash, Hasher};
 use std::marker::PhantomData;
-use std::ptr::{drop_in_place, slice_from_raw_parts_mut, NonNull};
+use std::ptr::{NonNull, drop_in_place, slice_from_raw_parts_mut};
 
 use bytesize::ByteSizeOf;
 use serde::de::{MapAccess, Visitor};
@@ -439,6 +439,7 @@ impl Tags {
         }
     }
 
+    #[allow(unsafe_op_in_unsafe_fn)]
     unsafe fn remove_by_index(&mut self, index: usize) -> Entry {
         let ptr = self.data.as_ptr().add(index);
         let entry = std::ptr::read(ptr);
@@ -500,9 +501,9 @@ mod tests {
     use super::*;
 
     use chrono::Utc;
+    use rand::SeedableRng;
     use rand::rngs::StdRng;
     use rand::seq::SliceRandom;
-    use rand::SeedableRng;
 
     #[test]
     fn align() {

@@ -11,7 +11,7 @@ mod variants;
 mod test;
 
 // re-export
-pub use config::{memory_buffer_default_max_events, BufferBuildError, BufferConfig, BufferType};
+pub use config::{BufferBuildError, BufferConfig, BufferType, memory_buffer_default_max_events};
 pub use encoding::Encodable;
 pub use topology::{builder, channel};
 

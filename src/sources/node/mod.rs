@@ -66,11 +66,11 @@ use std::time::Duration;
 
 use configurable::configurable_component;
 use error::Error;
-use event::{tags, tags::Key, Metric};
-use framework::config::{default_interval, default_true, Output, SourceConfig, SourceContext};
+use event::{Metric, tags, tags::Key};
+use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval, default_true};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::Source;
 use serde::{Deserialize, Serialize};
 use tokio::task::JoinSet;
 

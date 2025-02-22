@@ -14,12 +14,11 @@ use tracing::Instrument;
 use super::{create_buffer_with_max_data_file_size, create_default_buffer};
 use crate::variants::disk::record::ArchivedRecord;
 use crate::{
-    assert_buffer_size, assert_enough_bytes_written, assert_file_does_not_exist_async,
+    EventCount, assert_buffer_size, assert_enough_bytes_written, assert_file_does_not_exist_async,
     assert_file_exists_async, assert_reader_writer_file_positions, await_timeout,
     encoding::Encodable,
-    test::{acknowledge, install_tracing_helpers, with_temp_dir, SizedRecord, UndecodableRecord},
+    test::{SizedRecord, UndecodableRecord, acknowledge, install_tracing_helpers, with_temp_dir},
     variants::disk::ReaderError,
-    EventCount,
 };
 
 #[tokio::test]

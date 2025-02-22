@@ -10,7 +10,7 @@ use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, Utc};
 use flate2::bufread::MultiGzDecoder;
 
-use super::{read_until_with_max_size, Position, ReadFrom};
+use super::{Position, ReadFrom, read_until_with_max_size};
 
 /// The `Watcher` struct defines the polling based state machine which reads from a file
 /// path, transparently updating the underlying file descriptor when the file has been rolled

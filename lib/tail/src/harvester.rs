@@ -1,19 +1,18 @@
 use std::collections::BTreeMap;
-use std::future::Future;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
-use futures::future::{select, Either};
+use futures::future::{Either, select};
 use futures::{Sink, SinkExt};
 use tokio::time::sleep;
 
 use super::checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
 use super::watch::Watcher;
-use crate::provider::Provider;
 use crate::ReadFrom;
+use crate::provider::Provider;
 
 /// A sentinel type to signal that file server was gracefully shut down.
 ///

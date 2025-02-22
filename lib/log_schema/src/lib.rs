@@ -1,7 +1,7 @@
 use std::sync::OnceLock;
 
 use serde::{Deserialize, Serialize};
-use value::{owned_value_path, OwnedTargetPath};
+use value::{OwnedTargetPath, owned_value_path};
 
 static LOG_SCHEMA: OnceLock<LogSchema> = OnceLock::new();
 

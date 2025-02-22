@@ -5,14 +5,14 @@ use codecs::decoding::{DecodeError, DeserializerConfig, FramingConfig};
 use codecs::{Decoder, DecodingConfig};
 use configurable::Configurable;
 use event::Events;
+use framework::Source;
 use framework::config::{IpAccessConfig, Resource, SourceContext};
 use framework::source::tcp::{SocketListenAddr, TcpNullAcker, TcpSource};
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::TlsConfig;
-use framework::Source;
 use serde::{Deserialize, Serialize};
 use value::path::PathPrefix;
-use value::{value, OwnedValuePath};
+use value::{OwnedValuePath, value};
 
 use crate::sources::default_decoding;
 

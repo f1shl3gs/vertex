@@ -4,8 +4,8 @@ use std::{
 };
 
 use serde::{
-    de::{self, Visitor},
     Deserialize, Deserializer, Serialize, Serializer,
+    de::{self, Visitor},
 };
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, Serialize, PartialEq)]

@@ -1,9 +1,9 @@
 use std::io::ErrorKind;
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::{read_string, Error};
+use super::{Error, read_string};
 
 /// `DesktopManagementInterface` contains info from files in /sys/class/dmi/id
 #[derive(Default)]

@@ -5,9 +5,9 @@ use std::{
     task::{Context, Poll},
 };
 
-use futures::{future, ready, Future, FutureExt};
+use futures::{Future, FutureExt, future, ready};
 use pin_project_lite::pin_project;
-use tokio::time::{timeout_at, Instant};
+use tokio::time::{Instant, timeout_at};
 use tripwire::{Trigger, Tripwire};
 
 use crate::config::ComponentKey;
@@ -158,7 +158,7 @@ impl ShutdownCoordinator {
         &mut self,
         name: &ComponentKey,
         deadline: Instant,
-    ) -> impl Future<Output = bool> {
+    ) -> impl Future<Output = bool> + use<> {
         let begin_trigger = self.begun_triggers.remove(name).unwrap_or_else(|| {
             panic!(
                 "begun_trigger for source '{}' not found in the ShutdownCoordinator",

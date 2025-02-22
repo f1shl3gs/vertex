@@ -1,12 +1,12 @@
 use value::{Kind, Value};
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 // ICE Sizes, kibis of bits
 const BYTE: usize = 1;
@@ -76,7 +76,7 @@ impl Function for ParseBytes {
                             want: "b, k, kib, m, mib...".to_string(),
                             got: unit.to_string(),
                             span,
-                        })
+                        });
                     }
                 };
 

@@ -1,15 +1,15 @@
 use std::net::SocketAddr;
 
-use base64::prelude::BASE64_URL_SAFE;
 use base64::Engine;
+use base64::prelude::BASE64_URL_SAFE;
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Events, Metric, Quantile};
+use framework::Source;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
 use framework::tls::TlsConfig;
-use framework::Source;
 use http::{HeaderMap, Method, StatusCode, Uri};
 use prometheus::{GroupKind, MetricGroup};
 
@@ -200,7 +200,7 @@ fn parse_path_labels(path: &str) -> Result<Vec<(String, String)>, ErrorMessage> 
                 return Err(ErrorMessage::new(
                     StatusCode::BAD_REQUEST,
                     "Request path must have an even number of segments to form grouping key",
-                ))
+                ));
             }
         };
 
@@ -281,10 +281,10 @@ mod tests {
     use std::time::Duration;
 
     use chrono::{TimeZone, Timelike};
-    use event::{tags, EventStatus};
+    use event::{EventStatus, tags};
+    use framework::Pipeline;
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
-    use framework::Pipeline;
     use http::Request;
     use http_body_util::{BodyExt, Full};
     use testify::collect_ready;

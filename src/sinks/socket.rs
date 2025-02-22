@@ -1,6 +1,6 @@
 use codecs::encoding::{Framer, FramingConfig, SerializerConfig, SinkType};
 use codecs::{Encoder, EncodingConfig, EncodingConfigWithFraming};
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use framework::config::{DataType, SinkConfig, SinkContext};
 #[cfg(unix)]
 use framework::sink::util::unix::UnixSinkConfig;

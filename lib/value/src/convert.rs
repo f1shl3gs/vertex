@@ -164,7 +164,7 @@ impl Value {
     ///
     /// This function will panic if self is anything other than `Value::Array`
     pub fn as_array_unwrap(&self) -> &[Self] {
-        if let Self::Array(ref array) = self {
+        if let Self::Array(array) = self {
             array
         } else {
             panic!("Tried to call `Value::as_array_unwrap` on a non-array value")

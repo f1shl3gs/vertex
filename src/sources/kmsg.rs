@@ -6,9 +6,9 @@ use std::time;
 
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{fields, LogRecord};
-use framework::config::{Output, SourceConfig, SourceContext};
+use event::{LogRecord, fields};
 use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext};
 use tokio::io::AsyncReadExt;
 
 #[configurable_component(source, name = "kmsg")]

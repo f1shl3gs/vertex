@@ -7,8 +7,8 @@ use std::sync::Arc;
 use ahash::AHashMap;
 use futures::Stream;
 use futures_util::TryStreamExt;
-use kube::runtime::watcher;
 use kube::Resource;
+use kube::runtime::watcher;
 use parking_lot::RwLock;
 
 #[derive(Clone)]

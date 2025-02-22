@@ -2,9 +2,9 @@ use std::collections::HashMap;
 use std::iter;
 
 use event::{BatchNotifier, Event, Events, LogRecord};
-use futures::{stream, Stream, StreamExt};
-use rand::distr::Alphanumeric;
+use futures::{Stream, StreamExt, stream};
 use rand::Rng;
+use rand::distr::Alphanumeric;
 
 pub fn random_string(len: usize) -> String {
     rand::rng()

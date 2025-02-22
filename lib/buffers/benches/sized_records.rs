@@ -8,8 +8,8 @@ use std::time::Duration;
 use buffers::{BufferType, WhenFull};
 use common::{init_instrumentation, war_measurement, wtr_measurement};
 use criterion::{
-    criterion_group, criterion_main, measurement::WallTime, BatchSize, BenchmarkGroup, BenchmarkId,
-    Criterion, SamplingMode, Throughput,
+    BatchSize, BenchmarkGroup, BenchmarkId, Criterion, SamplingMode, Throughput, criterion_group,
+    criterion_main, measurement::WallTime,
 };
 use tokio::runtime::{Handle, Runtime};
 

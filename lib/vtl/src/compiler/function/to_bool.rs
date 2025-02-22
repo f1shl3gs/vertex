@@ -64,7 +64,7 @@ impl Expression for ToBoolFunc {
                                 return Err(ExpressionError::Error {
                                     message: "convert string value to bool".to_string(),
                                     span: self.expr.span,
-                                })
+                                });
                             }
                         }
                     }
@@ -75,7 +75,7 @@ impl Expression for ToBoolFunc {
                     want: Kind::BOOLEAN | Kind::INTEGER | Kind::FLOAT | Kind::NULL | Kind::BYTES,
                     got: value.kind(),
                     span: self.expr.span,
-                })
+                });
             }
         };
 

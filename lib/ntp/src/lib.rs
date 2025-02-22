@@ -462,11 +462,7 @@ fn min_err(org: u64, rec: u64, xmt: u64, dst: u64) -> u64 {
         err1 = xmt - dst;
     }
 
-    if err0 > err1 {
-        err0
-    } else {
-        err1
-    }
+    if err0 > err1 { err0 } else { err1 }
 }
 
 fn kiss_code(id: u32) -> String {

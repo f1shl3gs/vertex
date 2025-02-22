@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_into, Error};
+use super::{Error, read_into};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let (avail, pool_size) = read_random(proc_path).await?;

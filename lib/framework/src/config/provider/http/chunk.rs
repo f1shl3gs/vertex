@@ -35,7 +35,7 @@ impl Decoder for ChunkedDecoder {
                                 return Err(std::io::Error::new(
                                     std::io::ErrorKind::InvalidData,
                                     err,
-                                ))
+                                ));
                             }
                         };
 

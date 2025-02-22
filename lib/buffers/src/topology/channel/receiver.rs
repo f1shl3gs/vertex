@@ -2,13 +2,13 @@ use std::mem;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::{ready, Stream};
+use futures::{Stream, ready};
 use tokio::select;
 use tokio_util::sync::ReusableBoxFuture;
 
 use super::limited_queue::LimitedReceiver;
 use crate::variants::disk::{ProductionFilesystem, Reader};
-use crate::{buffer_usage_data::BufferUsageHandle, Bufferable};
+use crate::{Bufferable, buffer_usage_data::BufferUsageHandle};
 
 /// Adapter for papering over various receiver backends by providing a [`Stream`] interface.
 #[derive(Debug)]

@@ -1,7 +1,6 @@
 mod docker;
 
 use std::collections::HashMap;
-use std::future::Future;
 
 use docker::{HostConfig, LogOutput, PortBinding};
 use futures_util::{StreamExt, TryStreamExt};
@@ -167,8 +166,8 @@ mod tests {
     use std::str::FromStr;
 
     use http_body_util::Full;
-    use hyper::body::Bytes;
     use hyper::Uri;
+    use hyper::body::Bytes;
     use hyper_util::client::legacy::connect::HttpConnector;
     use hyper_util::rt::TokioExecutor;
 

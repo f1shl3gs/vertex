@@ -6,7 +6,7 @@ use tokio_test::{assert_pending, assert_ready, task::spawn};
 use crate::{
     buffer_usage_data::BufferUsageHandle,
     test::with_temp_dir,
-    variants::disk::{ledger::Ledger, DiskBufferConfigBuilder},
+    variants::disk::{DiskBufferConfigBuilder, ledger::Ledger},
 };
 
 pub(crate) async fn acknowledge(batch: BatchNotifier) {

@@ -12,7 +12,7 @@ use super::{
 use crate::{
     assert_buffer_is_empty, assert_buffer_size, assert_enough_bytes_written,
     assert_reader_writer_file_positions,
-    test::{acknowledge, install_tracing_helpers, with_temp_dir, SizedRecord},
+    test::{SizedRecord, acknowledge, install_tracing_helpers, with_temp_dir},
 };
 
 #[tokio::test]

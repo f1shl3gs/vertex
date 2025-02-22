@@ -5,14 +5,14 @@ use event::{Bucket, MetricValue, Quantile};
 use indexmap::indexmap;
 
 use crate::schema::{
-    generate_number_schema, generate_one_of_schema, generate_struct_schema, InstanceType,
-    SchemaGenerator, SchemaObject,
+    InstanceType, SchemaGenerator, SchemaObject, generate_number_schema, generate_one_of_schema,
+    generate_struct_schema,
 };
 use crate::{Configurable, ConfigurableString};
 
 impl Configurable for Key {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        String::generate_schema(gen)
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        String::generate_schema(generator)
     }
 }
 
@@ -37,8 +37,8 @@ impl Configurable for Value {
 }
 
 impl Configurable for Tags {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        BTreeMap::<Key, Value>::generate_schema(gen)
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        BTreeMap::<Key, Value>::generate_schema(generator)
     }
 }
 
@@ -67,23 +67,23 @@ impl Configurable for Quantile {
 }
 
 impl Configurable for MetricValue {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         let histogram_properties = indexmap! {
-            "count" => u64::generate_schema(gen),
-            "sum" => f64::generate_schema(gen),
-            "buckets" => Vec::<Bucket>::generate_schema(gen),
+            "count" => u64::generate_schema(generator),
+            "sum" => f64::generate_schema(generator),
+            "buckets" => Vec::<Bucket>::generate_schema(generator),
         };
         let histogram_requirement = BTreeSet::from(["count", "sum", "buckets"]);
 
         let summary_properties = indexmap! {
-            "count" => u64::generate_schema(gen),
-            "sum" => f64::generate_schema(gen),
-            "quantiles" => Vec::<Quantile>::generate_schema(gen),
+            "count" => u64::generate_schema(generator),
+            "sum" => f64::generate_schema(generator),
+            "quantiles" => Vec::<Quantile>::generate_schema(generator),
         };
         let summary_requirement = BTreeSet::from(["count", "sum", "quantiles"]);
 
         generate_one_of_schema(vec![
-            f64::generate_schema(gen),
+            f64::generate_schema(generator),
             generate_struct_schema(histogram_properties, histogram_requirement, None),
             generate_struct_schema(summary_properties, summary_requirement, None),
         ])

@@ -1,7 +1,9 @@
-use crate::sources::elasticsearch::Elasticsearch;
-use event::{tags, Metric};
-use serde::Deserialize;
 use std::collections::BTreeMap;
+
+use event::{Metric, tags};
+use serde::Deserialize;
+
+use super::Elasticsearch;
 
 #[derive(Deserialize)]
 struct Shard {

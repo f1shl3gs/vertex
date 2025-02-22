@@ -4,8 +4,8 @@ use bytes::Buf;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Key, Tags};
-use event::{tags, Kind as MetricKind, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Kind as MetricKind, Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Error, Source};
@@ -474,7 +474,6 @@ const SERVER_METRIC_INFOS: [MetricInfo; 32] = [
         desc: "Total of HTTP responses.",
         kind: MetricKind::Sum,
         tags: &[("code", "4xx")],
-
     },
     MetricInfo {
         index: 43,

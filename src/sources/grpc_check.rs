@@ -2,15 +2,15 @@ use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use configurable::configurable_component;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
+use futures_util::stream::FuturesUnordered;
 use tonic::Code;
+use tonic_health::pb::HealthCheckRequest;
 use tonic_health::pb::health_check_response::ServingStatus;
 use tonic_health::pb::health_client::HealthClient;
-use tonic_health::pb::HealthCheckRequest;
 
 const fn default_timeout() -> Duration {
     Duration::from_secs(5)

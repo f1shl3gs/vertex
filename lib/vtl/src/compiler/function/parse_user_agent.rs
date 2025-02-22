@@ -1,13 +1,13 @@
 use bytes::Bytes;
 use value::{Kind, Value};
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct ParseUserAgent;
 

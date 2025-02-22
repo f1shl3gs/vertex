@@ -1,6 +1,6 @@
 use std::task::Poll;
 
-use futures::task::{noop_waker_ref, Context};
+use futures::task::{Context, noop_waker_ref};
 use futures::{Stream, StreamExt};
 
 pub async fn collect_ready<S>(mut rx: S) -> Vec<S::Item>

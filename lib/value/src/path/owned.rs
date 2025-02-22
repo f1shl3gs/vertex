@@ -3,8 +3,8 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use super::{parse_target_path, parse_value_path};
 use super::{BorrowedSegment, PathParseError, PathPrefix, ValuePath};
+use super::{parse_target_path, parse_value_path};
 
 /// A lookup path.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]

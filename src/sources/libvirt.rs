@@ -2,9 +2,9 @@ use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
 use event::tags::Key;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
 use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use virt::{Client, Error};
 
 const DOMAIN_KEY: Key = Key::from_static("domain");

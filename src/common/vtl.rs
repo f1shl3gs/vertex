@@ -203,7 +203,7 @@ impl Target for MetricTarget {
                                         _ => {
                                             return Err(ContextError::InvalidValue {
                                                 expected: "integer, float, boolean or bytes",
-                                            })
+                                            });
                                         }
                                     }
                                 }
@@ -231,7 +231,7 @@ impl Target for MetricTarget {
                                 _ => {
                                     return Err(ContextError::InvalidValue {
                                         expected: "integer, float, boolean or string",
-                                    })
+                                    });
                                 }
                             }
 
@@ -247,7 +247,7 @@ impl Target for MetricTarget {
                                 _ => {
                                     return Err(ContextError::InvalidValue {
                                         expected: "timestamp",
-                                    })
+                                    });
                                 }
                             }
                             self.value.insert(path, value);
@@ -262,7 +262,7 @@ impl Target for MetricTarget {
                                 _ => {
                                     return Err(ContextError::InvalidValue {
                                         expected: "gauge, count or sum",
-                                    })
+                                    });
                                 }
                             },
                             "sum" | "count" => match self.metric.value {
@@ -274,19 +274,19 @@ impl Target for MetricTarget {
                                 _ => {
                                     return Err(ContextError::InvalidValue {
                                         expected: "gauge, count or sum",
-                                    })
+                                    });
                                 }
                             },
                             _ => {
                                 return Err(ContextError::InvalidValue {
                                     expected: "gauge, count or sum",
-                                })
+                                });
                             }
                         },
                         _ => {
                             return Err(ContextError::InvalidPath {
                                 expected: VALID_METRIC_PATHS_SET,
-                            })
+                            });
                         }
                     }
                 }
@@ -344,7 +344,7 @@ impl Target for MetricTarget {
                         _ => {
                             return Err(ContextError::InvalidPath {
                                 expected: VALID_METRIC_PATHS_SET,
-                            })
+                            });
                         }
                     }
                 }
@@ -397,7 +397,7 @@ impl Target for MetricTarget {
                         _ => {
                             return Err(ContextError::InvalidPath {
                                 expected: VALID_METRIC_PATHS_SET,
-                            })
+                            });
                         }
                     }
 

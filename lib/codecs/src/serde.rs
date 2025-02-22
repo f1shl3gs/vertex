@@ -12,7 +12,7 @@ pub fn skip_serializing_if_default<T: Default + PartialEq>(e: &T) -> bool {
 
 /// Handling of ASCII characters in `u8` fields via `serde`s `with` attribute.
 pub mod ascii_char {
-    use serde::{de, Deserialize, Deserializer, Serializer};
+    use serde::{Deserialize, Deserializer, Serializer, de};
 
     pub fn deserialize<'de, D>(deserializer: D) -> Result<u8, D::Error>
     where

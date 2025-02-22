@@ -6,7 +6,7 @@ use std::sync::Mutex;
 use tracing::error;
 
 use super::env::interpolate;
-use super::{format, validation, Builder, Config, ConfigPath, Format, FormatHint};
+use super::{Builder, Config, ConfigPath, Format, FormatHint, format, validation};
 use crate::signal;
 
 pub static CONFIG_PATHS: Mutex<Vec<ConfigPath>> = Mutex::new(Vec::new());

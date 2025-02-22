@@ -3,11 +3,11 @@ use std::sync::{Arc, OnceLock};
 
 use parking_lot::Mutex;
 
-use crate::attributes::{assert_legal_key, Attributes};
-use crate::metric::{Metric, MetricObserver, Observation};
 use crate::Counter;
 use crate::Gauge;
 use crate::Histogram;
+use crate::attributes::{Attributes, assert_legal_key};
+use crate::metric::{Metric, MetricObserver, Observation};
 
 pub(crate) static GLOBAL_REGISTRY: OnceLock<Registry> = OnceLock::new();
 

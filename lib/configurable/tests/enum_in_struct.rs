@@ -1,5 +1,5 @@
 use configurable::schema::generate_root_schema;
-use configurable::{configurable_component, generate_config_with_schema, Configurable};
+use configurable::{Configurable, configurable_component, generate_config_with_schema};
 use serde::{Deserialize, Serialize};
 
 #[derive(Configurable, Debug, Deserialize, Serialize, Default)]

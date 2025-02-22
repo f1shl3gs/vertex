@@ -1,4 +1,4 @@
-use std::pin::{pin, Pin};
+use std::pin::{Pin, pin};
 use std::task::{Context, Poll};
 
 use futures::{Stream, StreamExt};
@@ -161,7 +161,7 @@ impl Stream for Signals {
 
 /// Signals from OS/user
 pub fn os_signals() -> Signals {
-    use tokio::signal::unix::{signal, SignalKind};
+    use tokio::signal::unix::{SignalKind, signal};
 
     let sigint = signal(SignalKind::interrupt()).expect("Failed to set up SIGINT handle");
     let sigterm = signal(SignalKind::terminate()).expect("Failed to set up SIGTERM handle");

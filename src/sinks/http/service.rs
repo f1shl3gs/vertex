@@ -1,7 +1,7 @@
 use bytes::Bytes;
+use framework::Error;
 use framework::http::Auth;
 use framework::sink::util::http::{HttpRequest, HttpRequestBuilder};
-use framework::Error;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{HeaderMap, Method, Request, Uri};
 

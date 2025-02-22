@@ -3,9 +3,9 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use bytes::Bytes;
 use configurable::configurable_component;
+use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::tls::MaybeTlsListener;
-use framework::Extension;
 use http::{Request, Response, StatusCode};
 use http_body_util::Full;
 use hyper::body::Incoming;

@@ -276,11 +276,7 @@ impl_intof64!(usize, u64, i64, f64, u32, i32, f32, u16, i16, u8, i8);
 impl IntoF64 for bool {
     #[inline]
     fn into_f64(self) -> f64 {
-        if self {
-            1.0
-        } else {
-            0.0
-        }
+        if self { 1.0 } else { 0.0 }
     }
 }
 

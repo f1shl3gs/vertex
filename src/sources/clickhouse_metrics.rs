@@ -5,8 +5,8 @@ use std::time::Duration;
 use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::configurable_component;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -466,8 +466,8 @@ mod tests {
 #[cfg(all(test, feature = "clickhouse-integration-tests"))]
 mod integration_tests {
     use super::*;
-    use crate::testing::components::{run_and_assert_source_compliance, SOURCE_TAGS};
-    use crate::testing::{trace_init, ContainerBuilder, WaitFor};
+    use crate::testing::components::{SOURCE_TAGS, run_and_assert_source_compliance};
+    use crate::testing::{ContainerBuilder, WaitFor, trace_init};
 
     const PORT: u16 = 8123;
 

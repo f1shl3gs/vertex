@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::{read_string, Error};
+use super::{Error, read_string};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let dirs = std::fs::read_dir(sys_path.join("class/nvme"))?;

@@ -4,7 +4,7 @@ use event::Events;
 use tokio::net::UdpSocket;
 
 use crate::config::SourceContext;
-use crate::{udp, Source};
+use crate::{Source, udp};
 
 pub trait UdpSource: Sized + Send + Sync + 'static {
     fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, crate::Error>;

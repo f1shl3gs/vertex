@@ -8,7 +8,7 @@ use http_body_util::Full;
 use hyper::body::Incoming;
 use pprof::protos::Message;
 
-use super::{Error, DEFAULT_FREQUENCY, DEFAULT_PROFILE_SECONDS};
+use super::{DEFAULT_FREQUENCY, DEFAULT_PROFILE_SECONDS, Error};
 
 pub async fn handle(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, Error> {
     let mut seconds = DEFAULT_PROFILE_SECONDS;

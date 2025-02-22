@@ -4,8 +4,8 @@ use syn::parse::{Parse, ParseStream};
 use syn::spanned::Spanned;
 use syn::token::Comma;
 use syn::{
-    parse_quote, parse_quote_spanned, punctuated::Punctuated, DeriveInput, Expr, Lit, Meta,
-    MetaNameValue, Path, Token,
+    DeriveInput, Expr, Lit, Meta, MetaNameValue, Path, Token, parse_quote, parse_quote_spanned,
+    punctuated::Punctuated,
 };
 
 struct Args {
@@ -59,7 +59,10 @@ impl Parse for Args {
                 "no_deser" => no_deser = true,
 
                 _ => {
-                    return Err(syn::Error::new(meta.span(), "Expect `name`, `description`, `extension`, `provider`, `source`, `transforms` or `sink`"));
+                    return Err(syn::Error::new(
+                        meta.span(),
+                        "Expect `name`, `description`, `extension`, `provider`, `source`, `transforms` or `sink`",
+                    ));
                 }
             }
         }

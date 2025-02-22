@@ -1,9 +1,9 @@
-use std::collections::{btree_map::Entry, BTreeMap};
+use std::collections::{BTreeMap, btree_map::Entry};
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 use sqlx::MySqlPool;
 
-use super::{valid_name, MysqlError};
+use super::{MysqlError, valid_name};
 
 const GLOBAL_STATUS_QUERY: &str = r#"SHOW GLOBAL STATUS"#;
 

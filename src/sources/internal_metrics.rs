@@ -2,14 +2,14 @@ use std::time::Duration;
 
 use chrono::Utc;
 use configurable::configurable_component;
-use event::tags::Tags;
 use event::Bucket;
+use event::tags::Tags;
 use framework::config::Output;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{default_interval, SourceConfig, SourceContext},
     Source,
+    config::{SourceConfig, SourceContext, default_interval},
 };
 use metrics::{Attributes, Observation};
 

@@ -1,4 +1,4 @@
-use event::{tags, Metric};
+use event::{Metric, tags};
 use sqlx::MySqlPool;
 
 use super::MysqlError;

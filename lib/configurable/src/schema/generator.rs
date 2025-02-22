@@ -1,4 +1,4 @@
-use super::{visit::Visitor, Map, RootSchema, Schema, SchemaObject};
+use super::{Map, RootSchema, Schema, SchemaObject, visit::Visitor};
 use crate::Configurable;
 
 /// Settings to customize how schemas are generated.
@@ -109,7 +109,7 @@ impl SchemaGenerator {
     pub fn dereference(&self, schema: &Schema) -> Option<&Schema> {
         match schema {
             Schema::Object(SchemaObject {
-                reference: Some(ref schema_ref),
+                reference: Some(schema_ref),
                 ..
             }) => {
                 let definitions_path = &self.settings().definitions_path;

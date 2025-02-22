@@ -1,7 +1,7 @@
 use std::time::Instant;
 
 use value::Value;
-use vtl::{compile, Diagnostic, TargetValue};
+use vtl::{Diagnostic, TargetValue, compile};
 
 fn run(content: String) {
     let program = match compile(&content) {

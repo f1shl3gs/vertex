@@ -32,11 +32,7 @@ impl AsMetadata for u32 {
     }
 
     fn from_u32(value: u32) -> Option<Self> {
-        if value < 32 {
-            Some(value)
-        } else {
-            None
-        }
+        if value < 32 { Some(value) } else { None }
     }
 }
 

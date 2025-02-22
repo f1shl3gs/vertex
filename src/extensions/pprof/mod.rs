@@ -8,13 +8,13 @@ use std::sync::LazyLock;
 
 use bytes::Bytes;
 use configurable::configurable_component;
+use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::shutdown::ShutdownSignal;
-use framework::Extension;
 use http::{Method, StatusCode};
 use http_body_util::Full;
 use hyper::body::Incoming;
-use hyper::{service::service_fn, Request, Response};
+use hyper::{Request, Response, service::service_fn};
 use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 

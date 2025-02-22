@@ -6,10 +6,10 @@ use finalize::{AddBatchNotifier, BatchNotifier};
 
 use super::builder::TopologyBuilder;
 use crate::{
+    Bufferable, EventCount, WhenFull,
     buffer_usage_data::BufferUsageHandle,
     encoding::FixedEncodable,
     topology::channel::{BufferReceiver, BufferSender},
-    Bufferable, EventCount, WhenFull,
 };
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]

@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use metrics::{global_registry, Attributes, Observation, Reporter};
+use metrics::{Attributes, Observation, Reporter, global_registry};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]

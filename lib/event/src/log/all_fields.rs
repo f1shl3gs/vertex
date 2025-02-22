@@ -1,12 +1,12 @@
 use std::{
-    collections::{btree_map, BTreeMap},
+    collections::{BTreeMap, btree_map},
     fmt::Write as _,
     iter, slice,
 };
 
 use serde::{Serialize, Serializer};
-use value::path::PathPrefix;
 use value::Value;
+use value::path::PathPrefix;
 
 /// Iterates over all paths in form `a.b[0].c[1]` in alphabetical order
 /// and their corresponding values.

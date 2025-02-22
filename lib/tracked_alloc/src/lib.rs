@@ -93,6 +93,7 @@ thread_local! {
     static IN_ALLOC: Cell<bool> = const { Cell::new(false) };
 }
 
+#[allow(unsafe_op_in_unsafe_fn)]
 unsafe impl<T: GlobalAlloc> GlobalAlloc for TrackedAllocator<T> {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
         if IN_ALLOC.get() {

@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::future::Future;
 use std::path::PathBuf;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -356,7 +355,9 @@ impl Client {
     pub async fn tail_logs(&self, id: &str) -> Result<BodyStream<Incoming>, Error> {
         let req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://localhost/containers/{id}/logs?stdout=true&stderr=true&follow=true&tail=all"))
+            .uri(format!(
+                "http://localhost/containers/{id}/logs?stdout=true&stderr=true&follow=true&tail=all"
+            ))
             .body(Full::default())?;
 
         let resp = self.client.request(req).await?;

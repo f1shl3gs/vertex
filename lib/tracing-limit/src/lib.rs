@@ -2,9 +2,9 @@ use std::fmt::Debug;
 
 use dashmap::DashMap;
 use tracing_core::callsite::Identifier;
-use tracing_core::field::{display, Field, Value, Visit};
+use tracing_core::field::{Field, Value, Visit, display};
 use tracing_core::subscriber::Interest;
-use tracing_core::{span, Event, Metadata, Subscriber};
+use tracing_core::{Event, Metadata, Subscriber, span};
 use tracing_subscriber::layer::{Context, Layer};
 use tracing_subscriber::registry::LookupSpan;
 

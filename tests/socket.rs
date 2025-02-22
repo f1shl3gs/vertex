@@ -2,8 +2,8 @@ mod util;
 
 use std::str::FromStr;
 
-use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
 use codecs::EncodingConfigWithFraming;
+use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
 use framework::sink::util::tcp::TcpSinkConfig;
 use framework::testing::CountReceiver;
 use testify::wait::wait_for_tcp;

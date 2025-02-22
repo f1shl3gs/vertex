@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::{read_into, read_string, Error};
+use super::{Error, read_into, read_string};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let (procs, threads) = get_procs_and_threads(&proc_path).await?;

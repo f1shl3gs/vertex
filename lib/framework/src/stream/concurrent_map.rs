@@ -1,10 +1,9 @@
-use std::future::Future;
 use std::num::NonZeroUsize;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use futures::stream::{Fuse, FuturesOrdered};
-use futures::{ready, Stream, StreamExt};
+use futures::{Stream, StreamExt, ready};
 use pin_project_lite::pin_project;
 use tokio::task::JoinHandle;
 

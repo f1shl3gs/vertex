@@ -5,7 +5,7 @@ use bytes::{Bytes, BytesMut};
 use configurable::configurable_component;
 use event::{Event, Metric};
 use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
-use framework::config::{serde_uri, DataType, SinkConfig, SinkContext};
+use framework::config::{DataType, SinkConfig, SinkContext, serde_uri};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::http::HttpRetryLogic;
 use framework::sink::util::service::RequestConfig;
@@ -17,7 +17,7 @@ use framework::sink::util::{
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
-use futures::{future::BoxFuture, stream, FutureExt, SinkExt};
+use futures::{FutureExt, SinkExt, future::BoxFuture, stream};
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
@@ -224,7 +224,7 @@ mod tests {
     use crate::testing::trace_init;
     use chrono::Utc;
     use event::tags::Tags;
-    use event::{tags, Metric};
+    use event::{Metric, tags};
     use framework::sink::util::testing::build_test_server;
     use futures_util::StreamExt;
     use http::HeaderMap;

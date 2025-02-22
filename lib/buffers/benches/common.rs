@@ -1,12 +1,12 @@
 use std::{error, fmt, path::PathBuf};
 
 use buffers::{
+    BufferType, EventCount,
     encoding::FixedEncodable,
     topology::{
         builder::TopologyBuilder,
         channel::{BufferReceiver, BufferSender},
     },
-    BufferType, EventCount,
 };
 use bytes::{Buf, BufMut};
 use bytesize::ByteSizeOf;
