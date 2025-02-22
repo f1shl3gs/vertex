@@ -1,9 +1,9 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 
-use indexmap::{set::IndexSet, IndexMap};
+use indexmap::{IndexMap, set::IndexSet};
 
 use super::{
-    sink::SinkOuter, ComponentKey, DataType, Output, OutputId, SourceOuter, TransformOuter,
+    ComponentKey, DataType, Output, OutputId, SourceOuter, TransformOuter, sink::SinkOuter,
 };
 
 #[derive(Debug, Clone)]

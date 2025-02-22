@@ -5,10 +5,10 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use chrono::Utc;
 use configurable::configurable_component;
 use datagram::*;
-use event::{tags, LogRecord, Metric};
+use event::{LogRecord, Metric, tags};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::{Error, Source};
-use value::{value, Value};
+use value::{Value, value};
 
 fn default_listen() -> SocketAddr {
     SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 6343)
@@ -489,110 +489,85 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                     "sflow_interface_speed",
                     "the speed of this interface",
                     speed,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::gauge_with_tags(
                     "sflow_interface_direction",
                     "derived from MAU MIB(RFC 2668) 0 = unknown, 1=full-duplex, 2=half-duplex, 3=in, 4=out",
                     direction,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::gauge_with_tags(
                     "sflow_interface_admin_status",
                     "admin status of this interface, 0 = down, 1 = up",
                     (status & 0x1) != 0,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::gauge_with_tags(
                     "sflow_interface_oper_status",
                     "oper status of this interface, 0 = down, 1 = up",
                     (status & 0x2) != 0,
-                    tags.clone()
+                    tags.clone(),
                 ),
-                Metric::sum_with_tags(
-                    "sflow_interface_in_octets",
-                    "",
-                    in_octets,
-                    tags.clone()
-                ),
+                Metric::sum_with_tags("sflow_interface_in_octets", "", in_octets, tags.clone()),
                 Metric::sum_with_tags(
                     "sflow_interface_in_ucast_pkts",
                     "",
                     in_ucast_pkts,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::sum_with_tags(
                     "sflow_interface_in_multicast_pkts",
                     "",
                     in_multicast_pkts,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::sum_with_tags(
                     "sflow_interface_in_broadcast_pkts",
                     "",
                     in_broadcast_pkts,
-                    tags.clone()
+                    tags.clone(),
                 ),
-                Metric::sum_with_tags(
-                    "sflow_interface_in_discards",
-                    "",
-                    in_discards,
-                    tags.clone()
-                ),
-                Metric::sum_with_tags(
-                    "sflow_interface_in_errors",
-                    "",
-                    in_errors,
-                    tags.clone()
-                ),
+                Metric::sum_with_tags("sflow_interface_in_discards", "", in_discards, tags.clone()),
+                Metric::sum_with_tags("sflow_interface_in_errors", "", in_errors, tags.clone()),
                 Metric::sum_with_tags(
                     "sflow_interface_in_unknown_protos",
                     "",
                     in_unknown_protos,
-                    tags.clone()
+                    tags.clone(),
                 ),
-                Metric::sum_with_tags(
-                    "sflow_interface_out_octets",
-                    "",
-                    out_octets,
-                    tags.clone()
-                ),
+                Metric::sum_with_tags("sflow_interface_out_octets", "", out_octets, tags.clone()),
                 Metric::sum_with_tags(
                     "sflow_interface_out_ucast_pkts",
                     "",
                     out_ucast_pkts,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::sum_with_tags(
                     "sflow_interface_out_multicast_pkts",
                     "",
                     out_multicast_pkts,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::sum_with_tags(
                     "sflow_interface_out_broadcast_pkts",
                     "",
                     out_broadcast_pkts,
-                    tags.clone()
+                    tags.clone(),
                 ),
                 Metric::sum_with_tags(
                     "sflow_interface_out_discards",
                     "",
                     out_discards,
-                    tags.clone()
+                    tags.clone(),
                 ),
-                Metric::sum_with_tags(
-                    "sflow_interface_out_errors",
-                    "",
-                    out_errors,
-                    tags.clone()
-                ),
+                Metric::sum_with_tags("sflow_interface_out_errors", "", out_errors, tags.clone()),
                 Metric::sum_with_tags(
                     "sflow_interface_promiscuous_mode",
                     "",
                     promiscuous_mode,
-                    tags
-                )
+                    tags,
+                ),
             ]
         }
         CounterRecordData::Ethernet(EthernetCounters {
@@ -1502,16 +1477,56 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             fan_speed,
         }) => {
             vec![
-                Metric::gauge("sflow_nvidia_gpu_device_count", "the number of accessible devices", device_count),
-                Metric::gauge("sflow_nvidia_gpu_processes", "processes with a compute context on a device", processes),
-                Metric::sum("sflow_nvidia_gpu_time", "total milliseconds in which one or more kernels was executing on GPU sum across all devices", gpu_time),
-                Metric::gauge("sflow_nvidia_gpu_mem_time", "total milliseconds during which global device memory was being read/written sum across all devices", mem_time),
-                Metric::gauge("sflow_nvidia_gpu_mem_total", "sum of framebuffer memory across devices", mem_total),
-                Metric::gauge("sflow_nvidia_gpu_mem_free", "sum of free framebuffer memory across devices", mem_free),
-                Metric::gauge("sflow_nvidia_gpu_ecc_errors", "sum of volatile ECC errors across devices", ecc_errors),
-                Metric::gauge("sflow_nvidia_gpu_energy", "sum of millijoules across devices", energy),
-                Metric::gauge("sflow_nvidia_gpu_temperature", "maximum temperature in degrees Celsius across devices", temperature),
-                Metric::gauge("sflow_nvidia_gpu_fan_speed", "maximum fan speed in percent across devices", fan_speed),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_device_count",
+                    "the number of accessible devices",
+                    device_count,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_processes",
+                    "processes with a compute context on a device",
+                    processes,
+                ),
+                Metric::sum(
+                    "sflow_nvidia_gpu_time",
+                    "total milliseconds in which one or more kernels was executing on GPU sum across all devices",
+                    gpu_time,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_mem_time",
+                    "total milliseconds during which global device memory was being read/written sum across all devices",
+                    mem_time,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_mem_total",
+                    "sum of framebuffer memory across devices",
+                    mem_total,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_mem_free",
+                    "sum of free framebuffer memory across devices",
+                    mem_free,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_ecc_errors",
+                    "sum of volatile ECC errors across devices",
+                    ecc_errors,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_energy",
+                    "sum of millijoules across devices",
+                    energy,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_temperature",
+                    "maximum temperature in degrees Celsius across devices",
+                    temperature,
+                ),
+                Metric::gauge(
+                    "sflow_nvidia_gpu_fan_speed",
+                    "maximum fan speed in percent across devices",
+                    fan_speed,
+                ),
             ]
         }
         CounterRecordData::BcmTables(BcmTables {

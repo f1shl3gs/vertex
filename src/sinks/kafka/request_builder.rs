@@ -2,8 +2,8 @@ use std::collections::BTreeMap;
 
 use bytes::BytesMut;
 use chrono::{DateTime, Utc};
-use codecs::encoding::Transformer;
 use codecs::Encoder;
+use codecs::encoding::Transformer;
 use event::log::{OwnedTargetPath, Value};
 use event::{Event, Finalizable};
 use log_schema::LogSchema;

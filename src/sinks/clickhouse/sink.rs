@@ -1,10 +1,10 @@
 use bytes::{BufMut, Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use event::Event;
+use framework::HealthcheckError;
 use framework::http::{HttpClient, HttpError};
 use framework::sink::util::http::{HttpEventEncoder, HttpRetryLogic, HttpSink};
 use framework::sink::util::retries::{RetryAction, RetryLogic};
-use framework::HealthcheckError;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{Request, StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
@@ -175,7 +175,10 @@ mod tests {
             true,
         )
         .unwrap();
-        assert_eq!(uri.to_string(), "http://localhost:80/?input_format_import_nested_json=1&date_time_input_format=best_effort&query=INSERT+INTO+%22my_database%22.%22my_table%22+FORMAT+JSONEachRow");
+        assert_eq!(
+            uri.to_string(),
+            "http://localhost:80/?input_format_import_nested_json=1&date_time_input_format=best_effort&query=INSERT+INTO+%22my_database%22.%22my_table%22+FORMAT+JSONEachRow"
+        );
 
         let uri = set_uri_query(
             "http://localhost:80",
@@ -185,7 +188,10 @@ mod tests {
             false,
         )
         .unwrap();
-        assert_eq!(uri.to_string(), "http://localhost:80/?input_format_import_nested_json=1&query=INSERT+INTO+%22my_database%22.%22my_%5C%22table%5C%22%22+FORMAT+JSONEachRow");
+        assert_eq!(
+            uri.to_string(),
+            "http://localhost:80/?input_format_import_nested_json=1&query=INSERT+INTO+%22my_database%22.%22my_%5C%22table%5C%22%22+FORMAT+JSONEachRow"
+        );
     }
 
     #[test]

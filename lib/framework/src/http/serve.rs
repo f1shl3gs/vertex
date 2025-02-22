@@ -1,4 +1,3 @@
-use std::future::IntoFuture;
 use std::net::SocketAddr;
 
 use futures_util::future::BoxFuture;

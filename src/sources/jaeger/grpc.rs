@@ -8,7 +8,7 @@ use futures_util::FutureExt;
 use jaeger::proto::collector_service_server::CollectorServiceServer;
 use jaeger::proto::{CollectorService, PostSpansRequest, PostSpansResponse};
 use serde::{Deserialize, Serialize};
-use tonic::{transport::Server, Request, Response, Status};
+use tonic::{Request, Response, Status, transport::Server};
 
 fn default_grpc_endpoint() -> SocketAddr {
     SocketAddr::new([0, 0, 0, 0].into(), 14250)

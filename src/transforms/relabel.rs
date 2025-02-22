@@ -1,8 +1,8 @@
 use async_trait::async_trait;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
+use event::Events;
 use event::array::EventMutRef;
 use event::tags::{Key, Tags, Value};
-use event::Events;
 use framework::config::serde_regex;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
@@ -162,7 +162,7 @@ impl FunctionTransform for Relabel {
 
 #[cfg(test)]
 mod tests {
-    use event::{tags, Event, Metric};
+    use event::{Event, Metric, tags};
 
     use super::*;
     use crate::transforms::transform_one;

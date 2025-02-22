@@ -1,10 +1,10 @@
 use std::convert::{TryFrom, TryInto};
 use std::path::{Path, PathBuf};
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::nfs::{Network, V2Stats, V3Stats};
 use super::Error;
+use super::nfs::{Network, V2Stats, V3Stats};
 
 // ReplyCache models the "rc" line.
 #[derive(Debug, Default, PartialEq)]

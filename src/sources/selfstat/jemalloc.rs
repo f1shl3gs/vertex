@@ -1,4 +1,4 @@
-use event::{tags, Metric};
+use event::{Metric, tags};
 use tikv_jemalloc_ctl::stats;
 
 pub fn alloc_metrics() -> Vec<Metric> {
@@ -20,32 +20,32 @@ pub fn alloc_metrics() -> Vec<Metric> {
         Metric::sum(
             "jemalloc_allocated_bytes",
             "The number of bytes allocated by the application",
-            allocated as f64
+            allocated as f64,
         ),
         Metric::gauge(
             "jemalloc_active_bytes",
             "Total number of bytes in active pages allocated by the application",
-            active as f64
+            active as f64,
         ),
         Metric::gauge(
             "jemalloc_metadata_bytes",
             "Total number of bytes dedicated to jemalloc metadata",
-            metadata as f64
+            metadata as f64,
         ),
         Metric::gauge(
             "jemalloc_resident_bytes",
             "Total number of bytes in physically resident data pages mapped by the allocator",
-            resident as f64
+            resident as f64,
         ),
         Metric::gauge(
             "jemalloc_mapped_bytes",
             "Total number of bytes in active extents mapped by the allocator",
-            mapped as f64
+            mapped as f64,
         ),
         Metric::gauge(
             "jemalloc_retained_bytes",
             "Total number of bytes in virtual memory mappings that were retained rather than being returned to the operating system",
-            retained as f64
+            retained as f64,
         ),
         Metric::gauge_with_tags(
             "jemalloc_version",
@@ -53,22 +53,22 @@ pub fn alloc_metrics() -> Vec<Metric> {
             1,
             tags!(
                 "version" => version
-            )
+            ),
         ),
         Metric::gauge(
             "jemalloc_background_thread_total",
             "State of internal background worker threads",
-            background_thread
+            background_thread,
         ),
         Metric::gauge(
             "jemalloc_max_background_threads",
             "Maximum number of background threads that will be created",
-            max_background_threads
+            max_background_threads,
         ),
         Metric::gauge(
             "jemalloc_epoch",
             "Many of the statistics tracked by `jemalloc` are cached. The epoch control when they are refreshed",
-            epoch
-        )
+            epoch,
+        ),
     ]
 }

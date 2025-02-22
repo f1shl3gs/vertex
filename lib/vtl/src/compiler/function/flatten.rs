@@ -1,14 +1,14 @@
-use std::collections::{btree_map, BTreeMap};
+use std::collections::{BTreeMap, btree_map};
 
 use value::Value;
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct Flatten;
 
@@ -76,7 +76,7 @@ impl Expression for FlattenFunc {
                     want: Kind::ARRAY_OR_OBJECT,
                     got: value.kind(),
                     span: self.value.span,
-                })
+                });
             }
         };
 
@@ -255,11 +255,13 @@ mod tests {
     #[test]
     fn double_nested_array() {
         compile_and_run(
-            vec![vec![
-                1.into(),
-                vec![2.into(), 3.into(), vec![4.into(), 5.into()].into()].into(),
-            ]
-            .into()],
+            vec![
+                vec![
+                    1.into(),
+                    vec![2.into(), 3.into(), vec![4.into(), 5.into()].into()].into(),
+                ]
+                .into(),
+            ],
             Flatten,
             TypeDef::array(),
             Ok(value!([1, 2, 3, 4, 5])),
@@ -269,11 +271,13 @@ mod tests {
     #[test]
     fn two_array() {
         compile_and_run(
-            vec![vec![
-                vec![1.into(), 2.into()].into(),
-                vec![3.into(), 4.into()].into(),
-            ]
-            .into()],
+            vec![
+                vec![
+                    vec![1.into(), 2.into()].into(),
+                    vec![3.into(), 4.into()].into(),
+                ]
+                .into(),
+            ],
             Flatten,
             TypeDef::array(),
             Ok(value!([1, 2, 3, 4])),
@@ -283,10 +287,12 @@ mod tests {
     #[test]
     fn map() {
         compile_and_run(
-            vec![value!({
-                parent: "child",
-            })
-            .into()],
+            vec![
+                value!({
+                    parent: "child",
+                })
+                .into(),
+            ],
             Flatten,
             TypeDef::object(),
             Ok(value!({ parent: "child" })),
@@ -296,14 +302,16 @@ mod tests {
     #[test]
     fn nested_map() {
         compile_and_run(
-            vec![value!({
-                parent: {
-                    child1: 1,
-                    child2: 2
-                },
-                key: "val"
-            })
-            .into()],
+            vec![
+                value!({
+                    parent: {
+                        child1: 1,
+                        child2: 2
+                    },
+                    key: "val"
+                })
+                .into(),
+            ],
             Flatten,
             TypeDef::object(),
             Ok(value!({
@@ -341,14 +349,16 @@ mod tests {
     #[test]
     fn double_nested_map() {
         compile_and_run(
-            vec![value!({
-                parent: {
-                    child1: 1,
-                    child2: { grandchild1: 1, grandchild2: 2 },
-                },
-                key: "val",
-            })
-            .into()],
+            vec![
+                value!({
+                    parent: {
+                        child1: 1,
+                        child2: { grandchild1: 1, grandchild2: 2 },
+                    },
+                    key: "val",
+                })
+                .into(),
+            ],
             Flatten,
             TypeDef::object(),
             Ok(value!({
@@ -363,14 +373,16 @@ mod tests {
     #[test]
     fn map_and_array() {
         compile_and_run(
-            vec![value!({
-                parent: {
-                    child1: [1, [2, 3]],
-                    child2: {grandchild1: 1, grandchild2: [1, [2, 3], 4]},
-                },
-                key: "val",
-            })
-            .into()],
+            vec![
+                value!({
+                    parent: {
+                        child1: [1, [2, 3]],
+                        child2: {grandchild1: 1, grandchild2: [1, [2, 3], 4]},
+                    },
+                    key: "val",
+                })
+                .into(),
+            ],
             Flatten,
             TypeDef::object(),
             Ok(value!({
@@ -411,14 +423,16 @@ mod tests {
     #[test]
     fn root_array() {
         compile_and_run(
-            vec![value!([
-                { parent1: { child1: 1, child2: 2 } },
-                [
-                    { parent2: { child3: 3, child4: 4 } },
-                    { parent3: { child5: 5 } },
-                ],
-            ])
-            .into()],
+            vec![
+                value!([
+                    { parent1: { child1: 1, child2: 2 } },
+                    [
+                        { parent2: { child3: 3, child4: 4 } },
+                        { parent3: { child5: 5 } },
+                    ],
+                ])
+                .into(),
+            ],
             Flatten,
             TypeDef::array(),
             Ok(value!([
@@ -432,14 +446,16 @@ mod tests {
     #[test]
     fn triple_nested_map() {
         compile_and_run(
-            vec![value!({
-                parent1: {
-                    child1: { grandchild1: 1 },
-                    child2: { grandchild2: 2, grandchild3: 3 },
-                },
-                parent2: 4,
-            })
-            .into()],
+            vec![
+                value!({
+                    parent1: {
+                        child1: { grandchild1: 1 },
+                        child2: { grandchild2: 2, grandchild3: 3 },
+                    },
+                    parent2: 4,
+                })
+                .into(),
+            ],
             Flatten,
             TypeDef::object(),
             Ok(value!({

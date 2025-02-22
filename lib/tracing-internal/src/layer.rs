@@ -4,12 +4,12 @@ use std::marker::PhantomData;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 use event::trace::{EvictedHashMap, Link, Span, StatusCode, TraceId};
-use tracing::{span::Attributes, Subscriber};
+use tracing::{Subscriber, span::Attributes};
 use tracing_core::span::{Id, Record};
 use tracing_core::{Event, Field};
+use tracing_subscriber::Layer;
 use tracing_subscriber::layer::Context;
 use tracing_subscriber::registry::LookupSpan;
-use tracing_subscriber::Layer;
 
 use crate::context::{Context as TraceContext, WithContext};
 use crate::tracer::{PreSampledTracer, TraceData};
@@ -442,9 +442,7 @@ mod tests {
                 sleep(Duration::from_secs(1))
             }
 
-            {
-                sleep(Duration::from_millis(500))
-            }
+            sleep(Duration::from_millis(500))
         });
     }
 }

@@ -10,7 +10,7 @@ use std::io::Cursor;
 use bytes::Buf;
 
 use super::decode::{
-    decode_data_records, decode_options_data_records, decode_template_records, Error,
+    Error, decode_data_records, decode_options_data_records, decode_template_records,
 };
 use super::ipfix::{DataRecord, OptionsDataRecord};
 use super::template::{Field, Template, TemplateRecord, TemplateSystem};

@@ -1,5 +1,5 @@
 use proc_macro2::{Literal, TokenStream};
-use quote::{quote, ToTokens, TokenStreamExt};
+use quote::{ToTokens, TokenStreamExt, quote};
 use syn::spanned::Spanned;
 use syn::{Attribute, Expr, Lit, LitBool, LitStr, Path, Token, Type};
 
@@ -374,7 +374,7 @@ impl TypeAttrs {
                                     "Expected one of: `name`, `description`, `title`, `source`, ",
                                     "`transform`, `sink`, `provider`",
                                 ),
-                            ))
+                            ));
                         }
                     }
 

@@ -2,11 +2,11 @@
 name = "vertex"
 version = "0.1.0"
 authors = ["f1shl3gs"]
-edition = "2021"
+edition = "2024"
 description = "A lightweight and ultra-fast tool for building observability pipelines"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
-rust-version = "1.81"
+rust-version = "1.85"
 exclude = [
     "tests/node"
 ]

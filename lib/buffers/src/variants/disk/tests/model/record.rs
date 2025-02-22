@@ -5,9 +5,9 @@ use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers};
 
 use crate::{
+    EventCount,
     encoding::FixedEncodable,
     variants::disk::{record::RECORD_HEADER_LEN, tests::align16},
-    EventCount,
 };
 
 #[derive(Debug)]

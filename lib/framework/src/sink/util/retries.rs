@@ -8,7 +8,7 @@ use std::{
 };
 
 use futures::FutureExt;
-use tokio::time::{sleep, Sleep};
+use tokio::time::{Sleep, sleep};
 use tower::{retry::Policy, timeout::error::Elapsed};
 
 use crate::Error;
@@ -134,7 +134,10 @@ where
                         None
                     }
                 } else if err.downcast_ref::<Elapsed>().is_some() {
-                    warn!(message = "Request timed out. If this happens often while the events are actually reaching their destination, try decreasing `batch.max_bytes` and/or using `compression` if applicable. Alternatively `request.timeout_secs` can be increased.");
+                    warn!(
+                        message = "Request timed out. If this happens often while the events are actually reaching their destination, try decreasing `batch.max_bytes` and/or using `compression` if applicable. Alternatively `request.timeout_secs` can be increased."
+                    );
+
                     Some(self.build_retry())
                 } else {
                     error!(

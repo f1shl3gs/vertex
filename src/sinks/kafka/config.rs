@@ -10,7 +10,7 @@ use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rskafka::client::partition::Compression;
 
-use super::sink::{health_check, KafkaSink};
+use super::sink::{KafkaSink, health_check};
 
 mod compression_serde {
     use std::borrow::Cow;

@@ -12,7 +12,7 @@ use testify::random::random_string;
 use testify::wait::wait_for_duration;
 use url::Url;
 
-use super::config::{healthcheck, Config};
+use super::config::{Config, healthcheck};
 use crate::testing::trace_init;
 
 #[derive(Debug, Deserialize)]

@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::future::Future;
 use std::hash::Hash;
 use std::num::NonZeroUsize;
 use std::pin::Pin;
@@ -8,7 +7,7 @@ use std::sync::Arc;
 use bytesize::ByteSizeOf;
 use event::Finalizable;
 use futures::Stream;
-use futures_util::{stream::Map, StreamExt};
+use futures_util::{StreamExt, stream::Map};
 use tower::Service;
 
 use super::request_builder::{IncrementalRequestBuilder, RequestBuilder};

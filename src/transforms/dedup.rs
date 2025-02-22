@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use bytes::Bytes;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::log::path::parse_target_path;
 use event::log::{OwnedTargetPath, Value};
 use event::{Events, LogRecord};
@@ -197,7 +197,7 @@ impl FunctionTransform for Dedup {
 
 #[cfg(test)]
 mod tests {
-    use event::{fields, Event};
+    use event::{Event, fields};
 
     use super::*;
     use crate::transforms::transform_one;

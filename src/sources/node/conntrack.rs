@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_into, Error};
+use super::{Error, read_into};
 
 /// Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present)
 ///
@@ -57,7 +57,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_nf_conntrack_stat_ignore",
             "Number of packets seen which are already connected to a conntrack entry.",
-            statistic.ignore
+            statistic.ignore,
         ),
         Metric::gauge(
             "node_nf_conntrack_stat_insert",

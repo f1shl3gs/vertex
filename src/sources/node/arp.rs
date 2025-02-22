@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 
 use super::Error;
 

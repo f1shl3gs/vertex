@@ -5,7 +5,7 @@ use log_schema::LogSchema;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use super::{skip_serializing_if_default, ProxyConfig};
+use super::{ProxyConfig, skip_serializing_if_default};
 use crate::timezone;
 
 #[derive(Debug, Error)]

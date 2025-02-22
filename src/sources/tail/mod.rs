@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::{TimeDelta, Utc};
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use encoding_transcode::{Decoder, Encoder};
 use event::{BatchNotifier, BatchStatus, LogRecord};
 use framework::config::{Output, SourceConfig, SourceContext};
@@ -16,7 +16,7 @@ use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 use tokio::sync::oneshot;
-use value::{owned_value_path, OwnedValuePath, Value};
+use value::{OwnedValuePath, Value, owned_value_path};
 
 /// File position to use when reading a new file.
 #[derive(Configurable, Debug, Deserialize, Serialize, Default)]
@@ -430,12 +430,11 @@ fn tail_source(
 mod tests {
     use std::fs;
     use std::fs::File;
-    use std::future::Future;
     use std::io::Write;
 
     use encoding_rs::UTF_16LE;
-    use event::log::Value;
     use event::EventStatus;
+    use event::log::Value;
     use framework::{Pipeline, ShutdownSignal};
     use multiline::Mode;
     use testify::temp_dir;

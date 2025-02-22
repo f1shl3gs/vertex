@@ -11,18 +11,18 @@ use thiserror::Error;
 use tokio::io::{AsyncWrite, AsyncWriteExt};
 
 use super::{
-    common::{create_crc32c_hasher, DiskBufferConfig},
+    common::{DiskBufferConfig, create_crc32c_hasher},
     io::{AsyncFile, Filesystem},
     ledger::Ledger,
     reader::decode_record_payload,
     record::{
-        validate_record_archive_with_length, ArchivedRecord, Record, RecordStatus,
-        RECORD_HEADER_LEN,
+        ArchivedRecord, RECORD_HEADER_LEN, Record, RecordStatus,
+        validate_record_archive_with_length,
     },
 };
 use crate::{
-    encoding::{AsMetadata, Encodable},
     Bufferable,
+    encoding::{AsMetadata, Encodable},
 };
 
 /// Error that occurred during calls to [`Writer`].

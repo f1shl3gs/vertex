@@ -1,6 +1,6 @@
 use bytes::Bytes;
-use framework::http::HttpClient;
 use framework::HealthcheckError;
+use framework::http::HttpClient;
 use http::{HeaderValue, Method, Request, StatusCode};
 use http_body_util::{BodyExt, Full};
 use serde::Deserialize;

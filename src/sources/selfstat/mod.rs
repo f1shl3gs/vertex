@@ -11,10 +11,10 @@ use std::time::Duration;
 
 use configurable::configurable_component;
 use event::Metric;
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::Source;
 
 fn default_proc_path() -> PathBuf {
     PathBuf::from("/proc")

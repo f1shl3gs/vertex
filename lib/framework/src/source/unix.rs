@@ -14,10 +14,10 @@ use tokio::net::{UnixDatagram, UnixListener, UnixStream};
 use tokio_stream::wrappers::UnixListenerStream;
 use tokio_util::codec::FramedRead;
 
+use crate::Source;
 use crate::async_read::VecAsyncReadExt;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
-use crate::Source;
 
 pub const UNNAMED_SOCKET_HOST: &str = "(unnamed)";
 

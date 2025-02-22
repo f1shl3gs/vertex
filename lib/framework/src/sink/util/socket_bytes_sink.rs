@@ -6,7 +6,7 @@ use std::task::{Context, Poll};
 use bytes::Bytes;
 use codec::BytesCodec;
 use event::{EventFinalizers, EventStatus};
-use futures::{ready, Sink};
+use futures::{Sink, ready};
 use pin_project_lite::pin_project;
 use tokio::io::AsyncWrite;
 use tokio_util::codec::FramedWrite;

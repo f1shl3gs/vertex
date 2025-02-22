@@ -1,13 +1,12 @@
-use std::future::Future;
 use std::io::ErrorKind;
 use std::path::Path;
 use std::str::FromStr;
-use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::LazyLock;
+use std::sync::atomic::{AtomicU32, Ordering};
 
 use event::{EventStatus, Finalizable};
 use tracing_fluent_assertions::{AssertionRegistry, AssertionsLayer};
-use tracing_subscriber::{filter::LevelFilter, layer::SubscriberExt, Layer, Registry};
+use tracing_subscriber::{Layer, Registry, filter::LevelFilter, layer::SubscriberExt};
 
 #[macro_export]
 macro_rules! assert_file_does_not_exist_async {

@@ -1,7 +1,7 @@
 use ahash::RandomState;
 use configurable::configurable_component;
-use event::log::path::TargetPath;
 use event::log::OwnedTargetPath;
+use event::log::path::TargetPath;
 use event::{Event, EventContainer, Events};
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};

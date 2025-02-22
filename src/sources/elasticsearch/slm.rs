@@ -1,6 +1,7 @@
-use super::Elasticsearch;
-use event::{tags, Metric};
+use event::{Metric, tags};
 use serde::Deserialize;
+
+use super::Elasticsearch;
 
 /// `PolicyStats` is representation of SLM stats for specific policies.
 #[derive(Deserialize)]

@@ -4,8 +4,8 @@ mod udp;
 
 use async_trait::async_trait;
 use configurable::configurable_component;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::Source;
+use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use futures_util::stream::{FuturesUnordered, StreamExt};
 
 /// Jaeger components implement various APIs for saving or retrieving trace data.

@@ -6,13 +6,13 @@ use std::time::Duration;
 use async_stream::stream;
 use async_trait::async_trait;
 use chrono::Utc;
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::log::OwnedTargetPath;
 use event::tags::{Key, Tags};
 use event::{
-    log::Value, Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue,
+    Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue, log::Value,
 };
-use framework::config::{default_interval, DataType, Output, TransformConfig, TransformContext};
+use framework::config::{DataType, Output, TransformConfig, TransformContext, default_interval};
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
 use metrics::Counter;
@@ -285,7 +285,7 @@ impl Metricalize {
 #[cfg(test)]
 mod tests {
     use event::log::path::parse_target_path;
-    use event::{fields, tags, Bucket, LogRecord};
+    use event::{Bucket, LogRecord, fields, tags};
 
     use super::*;
 

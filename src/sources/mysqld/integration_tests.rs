@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
+use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 
 use super::{
     get_mysql_version, global_status, global_variables, info_schema_innodb_cmp,

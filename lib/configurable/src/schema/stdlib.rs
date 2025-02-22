@@ -5,13 +5,13 @@ use std::time::Duration;
 
 use serde_json::Value;
 
+use crate::Configurable;
 use crate::configurable::ConfigurableString;
 use crate::schema::{
-    assert_string_schema_for_map, generate_null_schema, generate_number_schema, ArrayValidation,
-    InstanceType, Metadata, ObjectValidation, Schema, SchemaGenerator, SchemaObject, SingleOrVec,
-    SubschemaValidation,
+    ArrayValidation, InstanceType, Metadata, ObjectValidation, Schema, SchemaGenerator,
+    SchemaObject, SingleOrVec, SubschemaValidation, assert_string_schema_for_map,
+    generate_null_schema, generate_number_schema,
 };
-use crate::Configurable;
 
 // Numbers.
 macro_rules! impl_configurable_numeric {
@@ -61,14 +61,14 @@ where
         false
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         // Make sure our key type is _truly_ a string schema.
-        assert_string_schema_for_map::<K, Self>(gen).expect("key must be string like");
+        assert_string_schema_for_map::<K, Self>(generator).expect("key must be string like");
 
         SchemaObject {
             instance_type: Some(InstanceType::Object.into()),
             object: Some(Box::new(ObjectValidation {
-                additional_properties: Some(Box::new(gen.subschema_for::<V>().into())),
+                additional_properties: Some(Box::new(generator.subschema_for::<V>().into())),
                 ..Default::default()
             })),
             ..Default::default()
@@ -87,14 +87,14 @@ where
         false
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         // Make sure our key type is _truly_ a string schema.
-        assert_string_schema_for_map::<K, Self>(gen).expect("key must be string like");
+        assert_string_schema_for_map::<K, Self>(generator).expect("key must be string like");
 
         SchemaObject {
             instance_type: Some(InstanceType::Object.into()),
             object: Some(Box::new(ObjectValidation {
-                additional_properties: Some(Box::new(gen.subschema_for::<V>().into())),
+                additional_properties: Some(Box::new(generator.subschema_for::<V>().into())),
                 ..Default::default()
             })),
             ..Default::default()
@@ -132,8 +132,8 @@ impl<T: Configurable> Configurable for Option<T> {
         false
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        let mut schema = T::generate_schema(gen);
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = T::generate_schema(generator);
 
         match schema.instance_type.as_mut() {
             None => match schema.subschemas.as_mut() {
@@ -189,9 +189,9 @@ impl<T> Configurable for Vec<T>
 where
     T: Configurable,
 {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         // Generate the actual schema for the element type `T`.
-        let element_schema = gen.subschema_for::<T>();
+        let element_schema = generator.subschema_for::<T>();
 
         SchemaObject {
             instance_type: Some(InstanceType::Array.into()),

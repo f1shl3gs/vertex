@@ -1,9 +1,9 @@
 use std::borrow::Borrow;
 use std::collections::BTreeMap;
 
+use crate::Value;
 use crate::crud::ValueCollection;
 use crate::path::BorrowedSegment;
-use crate::Value;
 
 pub fn insert<'a, T: ValueCollection>(
     value: &mut T,

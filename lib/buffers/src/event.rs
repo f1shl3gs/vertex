@@ -1,10 +1,10 @@
 use std::fmt::{Display, Formatter};
 
 use bytes::{Buf, BufMut};
-use event::{proto, Event, Events};
+use event::{Event, Events, proto};
 use prost::Message;
 
-use super::{encoding::AsMetadata, Encodable, EventCount};
+use super::{Encodable, EventCount, encoding::AsMetadata};
 
 impl EventCount for Event {
     fn event_count(&self) -> usize {

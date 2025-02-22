@@ -1,10 +1,10 @@
-use std::alloc::{alloc, Layout};
+use std::alloc::{Layout, alloc};
 use std::cmp::Ordering;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::mem::transmute;
 use std::ops::Deref;
-use std::ptr::{copy_nonoverlapping, NonNull};
+use std::ptr::{NonNull, copy_nonoverlapping};
 use std::slice::from_raw_parts;
 
 const TYPE_MASK: u8 = 0b1000_0000;
@@ -246,7 +246,7 @@ mod serde {
     use serde::de::{Error, Visitor};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-    use super::{Key, INLINE_CAP, MAX_LENGTH};
+    use super::{INLINE_CAP, Key, MAX_LENGTH};
 
     impl<'de> Deserialize<'de> for Key {
         fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>

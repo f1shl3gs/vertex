@@ -1,13 +1,13 @@
-use codecs::encoding::Transformer;
 use codecs::Encoder;
+use codecs::encoding::Transformer;
 use event::log::OwnedTargetPath;
 use event::{Event, EventContainer, Events};
-use framework::sink::util::builder::SinkBuilderExt;
+use framework::StreamSink;
 use framework::sink::util::KeyPartitioner;
+use framework::sink::util::builder::SinkBuilderExt;
 use framework::stream::BatcherSettings;
 use framework::template::{Template, TemplateParseError};
-use framework::StreamSink;
-use futures::{stream::BoxStream, StreamExt};
+use futures::{StreamExt, stream::BoxStream};
 use rskafka::client::ClientBuilder;
 use thiserror::Error;
 use tower::limit::ConcurrencyLimit;

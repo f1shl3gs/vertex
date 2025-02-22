@@ -226,7 +226,7 @@ struct Header {
 impl Header {
     fn set_client(&mut self) {
         let mut lvm = 3u8; // set mode to client
-        lvm = (lvm & 0xc7) | 4u8 << 3; // set version to v4
+        lvm = (lvm & 0xc7) | (4u8 << 3); // set version to v4
         lvm &= 0x3f; // set leap to LeapNoWarning
 
         self.lvm = lvm;
@@ -462,11 +462,7 @@ fn min_err(org: u64, rec: u64, xmt: u64, dst: u64) -> u64 {
         err1 = xmt - dst;
     }
 
-    if err0 > err1 {
-        err0
-    } else {
-        err1
-    }
+    if err0 > err1 { err0 } else { err1 }
 }
 
 fn kiss_code(id: u32) -> String {

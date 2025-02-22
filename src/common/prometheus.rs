@@ -2,7 +2,7 @@ use chrono::Utc;
 use event::tags::Tags;
 use event::{Metric, MetricValue};
 use indexmap::IndexMap;
-use prometheus::{proto, METRIC_NAME_LABEL};
+use prometheus::{METRIC_NAME_LABEL, proto};
 
 type Labels = Vec<proto::Label>;
 

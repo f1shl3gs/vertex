@@ -3,14 +3,15 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use chrono::Utc;
+use codecs::Decoder;
 use codecs::decoding::{
     BytesDeserializerDecoder, DecodeError, OctetCountingDecoder, SyslogDeserializer,
 };
-use codecs::Decoder;
-use configurable::{configurable_component, Configurable};
-use event::log::path::PathPrefix;
+use configurable::{Configurable, configurable_component};
 use event::log::OwnedValuePath;
-use event::{event_path, Events, LogRecord};
+use event::log::path::PathPrefix;
+use event::{Events, LogRecord, event_path};
+use framework::Source;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -18,7 +19,6 @@ use framework::source::tcp::{SocketListenAddr, TcpNullAcker, TcpSource};
 use framework::source::unix::build_unix_stream_source;
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::TlsConfig;
-use framework::Source;
 use futures_util::StreamExt;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
@@ -323,8 +323,8 @@ mod tests {
     use bytes::Bytes;
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
-    use event::log::{parse_value_path, Value};
-    use event::{fields, LogRecord};
+    use event::log::{Value, parse_value_path};
+    use event::{LogRecord, fields};
     use testify::assert_event_data_eq;
 
     use super::*;

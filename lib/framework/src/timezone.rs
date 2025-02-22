@@ -1,10 +1,10 @@
-use chrono::format::{parse, Parsed, StrftimeItems};
+use chrono::format::{Parsed, StrftimeItems, parse};
 use chrono::{DateTime, Local, ParseError, Utc};
 use chrono_tz::Tz;
-use configurable::schema::{
-    generate_const_string_schema, generate_one_of_schema, SchemaGenerator, SchemaObject,
-};
 use configurable::Configurable;
+use configurable::schema::{
+    SchemaGenerator, SchemaObject, generate_const_string_schema, generate_one_of_schema,
+};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Default)]
 pub enum TimeZone {
@@ -55,12 +55,12 @@ impl Configurable for TimeZone {
         Some(std::any::type_name::<Self>())
     }
 
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         let mut local_schema = generate_const_string_schema("local".to_string());
         let metadata = local_schema.metadata();
         metadata.description = Some("System local timezone.");
 
-        let mut tz_schema = gen.subschema_for::<Tz>();
+        let mut tz_schema = generator.subschema_for::<Tz>();
         let metadata = tz_schema.metadata();
         metadata.title = Some("A named timezone");
         metadata.description = Some(
@@ -81,7 +81,7 @@ impl Configurable for TimeZone {
 pub mod ser_de {
     use std::fmt::Formatter;
 
-    use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
     use super::*;
 

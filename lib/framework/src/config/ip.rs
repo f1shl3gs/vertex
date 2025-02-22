@@ -1,9 +1,9 @@
 use std::collections::BTreeSet;
 
+use configurable::Configurable;
 use configurable::schema::{
     ArrayValidation, InstanceType, Metadata, SchemaGenerator, SchemaObject, SingleOrVec,
 };
-use configurable::Configurable;
 use indexmap::IndexMap;
 use ipnet::IpNet;
 use serde::{Deserialize, Serialize};

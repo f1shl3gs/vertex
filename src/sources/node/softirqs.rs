@@ -2,7 +2,7 @@ use std::num::ParseIntError;
 use std::path::PathBuf;
 
 use event::tags::Key;
-use event::{tags, Metric};
+use event::{Metric, tags};
 
 use super::Error;
 

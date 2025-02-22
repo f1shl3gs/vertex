@@ -13,8 +13,8 @@ use log_schema::log_schema;
 use serde::{Serialize, Serializer};
 use value::path::{PathPrefix, ValuePath};
 pub use value::{
-    event_path, metadata_path, owned_value_path, parse_value_path, path, path::TargetPath,
-    OwnedTargetPath, OwnedValuePath, Value,
+    OwnedTargetPath, OwnedValuePath, Value, event_path, metadata_path, owned_value_path,
+    parse_value_path, path, path::TargetPath,
 };
 
 use crate::log::keys::{all_fields, keys};

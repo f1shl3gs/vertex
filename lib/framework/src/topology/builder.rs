@@ -16,10 +16,10 @@ use tokio::time::timeout;
 use tracing_futures::Instrument;
 use tripwire::{Trigger, Tripwire};
 
+use super::BuiltBuffer;
 use super::fanout;
 use super::fanout::Fanout;
 use super::task::{Task, TaskOutput};
-use super::BuiltBuffer;
 use crate::config::{
     ComponentKey, Config, ConfigDiff, DataType, ExtensionContext, Output, OutputId, ProxyConfig,
     SinkContext, SourceContext, TransformContext,

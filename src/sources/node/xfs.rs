@@ -5,7 +5,7 @@
 use std::num::ParseIntError;
 use std::path::PathBuf;
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 
 use super::Error;
 

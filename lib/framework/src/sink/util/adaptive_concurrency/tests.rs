@@ -3,7 +3,7 @@
 use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::Formatter;
-use std::fs::{read_dir, File};
+use std::fs::{File, read_dir};
 use std::io::Read;
 use std::path::PathBuf;
 use std::pin::Pin;
@@ -11,11 +11,11 @@ use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 use std::time::{Duration, Instant};
 
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::Event;
 use futures::FutureExt;
 use futures_util::future::BoxFuture;
-use futures_util::{stream, SinkExt};
+use futures_util::{SinkExt, stream};
 use rand::Rng;
 use rand_distr::Exp1;
 use serde::{Deserialize, Serialize};

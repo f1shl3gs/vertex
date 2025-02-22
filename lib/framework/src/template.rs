@@ -4,12 +4,12 @@ use std::fmt::Formatter;
 use std::sync::LazyLock;
 
 use bytes::Bytes;
-use chrono::format::{Item, StrftimeItems};
 use chrono::Utc;
+use chrono::format::{Item, StrftimeItems};
 use configurable::schema::{SchemaGenerator, SchemaObject};
 use configurable::{Configurable, ConfigurableString};
 use event::log::path::parse_target_path;
-use event::{log::Value, EventRef, Metric};
+use event::{EventRef, Metric, log::Value};
 use log_schema::log_schema;
 use regex::Regex;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -237,8 +237,8 @@ impl<'de> Deserialize<'de> for Template {
 }
 
 impl Configurable for Template {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        String::generate_schema(gen)
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        String::generate_schema(generator)
     }
 }
 
@@ -397,7 +397,7 @@ impl Template {
 mod tests {
     use chrono::TimeZone;
     use event::log::metadata_path;
-    use event::{tags, Event, LogRecord};
+    use event::{Event, LogRecord, tags};
 
     use super::*;
 
@@ -424,12 +424,16 @@ mod tests {
     fn is_dynamic() {
         assert!(Template::try_from("/kube-demo/%F").unwrap().is_dynamic());
         assert!(!Template::try_from("/kube-demo/echo").unwrap().is_dynamic());
-        assert!(Template::try_from("/kube-demo/{{ foo }}")
-            .unwrap()
-            .is_dynamic());
-        assert!(Template::try_from("/kube-demo/{{ foo }}/%F")
-            .unwrap()
-            .is_dynamic());
+        assert!(
+            Template::try_from("/kube-demo/{{ foo }}")
+                .unwrap()
+                .is_dynamic()
+        );
+        assert!(
+            Template::try_from("/kube-demo/{{ foo }}/%F")
+                .unwrap()
+                .is_dynamic()
+        );
     }
 
     #[test]
@@ -657,9 +661,9 @@ mod tests {
         let template = Template::try_from("namespace={{namespace}} name={{name}}").unwrap();
         let metric = sample_metric();
         assert_eq!(
-            Err(TemplateRenderingError::MissingKeys(
-                vec!["namespace".into()]
-            )),
+            Err(TemplateRenderingError::MissingKeys(vec![
+                "namespace".into()
+            ])),
             template.render(&metric)
         );
     }

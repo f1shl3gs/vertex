@@ -1,15 +1,15 @@
 use std::collections::BTreeMap;
-use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicI64, Ordering};
 use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
 use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::{Decoder, DecodingConfig};
-use configurable::{configurable_component, Configurable};
+use configurable::{Configurable, configurable_component};
 use event::log::{OwnedValuePath, TargetPath};
-use event::{log::Value, Events};
+use event::{Events, log::Value};
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;

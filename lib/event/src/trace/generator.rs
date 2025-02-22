@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::fmt;
 
-use rand::{rngs, Rng};
+use rand::{Rng, rngs};
 
 use super::{SpanId, TraceId};
 

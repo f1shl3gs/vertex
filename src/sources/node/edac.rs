@@ -3,9 +3,9 @@
 use std::path::{Path, PathBuf};
 
 use event::tags::Key;
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::{read_into, Error};
+use super::{Error, read_into};
 
 const CONTROLLER_KEY: Key = Key::from_static("controller");
 

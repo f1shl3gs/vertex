@@ -73,11 +73,11 @@ mod uppercase;
 mod values;
 mod xxhash;
 
+use super::Expression;
 use super::expr::Expr;
 use super::function_call::FunctionCall;
 use super::parser::SyntaxError;
 use super::state::TypeState;
-use super::Expression;
 use super::{Kind, Span, Spanned};
 
 pub struct ArgumentList {
@@ -313,10 +313,10 @@ pub fn compile_and_run<F: Function>(
     want: Result<value::Value, crate::compiler::ExpressionError>,
 ) {
     use chrono::{TimeZone, Utc};
-    use value::{value, Value};
+    use value::{Value, value};
 
-    use crate::context::Context;
     use crate::TargetValue;
+    use crate::context::Context;
 
     let state = TypeState::default();
     let func = Box::new(func);

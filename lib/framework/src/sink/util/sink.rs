@@ -7,12 +7,12 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use event::EventStatus;
-use futures::{ready, FutureExt, Sink, Stream, TryFutureExt};
+use futures::{FutureExt, Sink, Stream, TryFutureExt, ready};
 use futures_util::future::BoxFuture;
 use futures_util::stream::FuturesUnordered;
 use pin_project_lite::pin_project;
 use tokio::sync::oneshot;
-use tokio::time::{sleep, Sleep};
+use tokio::time::{Sleep, sleep};
 use tower::{Service, ServiceBuilder};
 use tracing_futures::Instrument;
 
@@ -526,18 +526,18 @@ mod tests {
     use std::sync::atomic::AtomicUsize;
     use std::{
         convert::Infallible,
-        sync::{atomic::Ordering::Relaxed, Arc, Mutex},
+        sync::{Arc, Mutex, atomic::Ordering::Relaxed},
     };
 
     use bytes::Bytes;
     use event::{BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers};
-    use futures::{future, stream, task::noop_waker_ref, SinkExt, StreamExt};
+    use futures::{SinkExt, StreamExt, future, stream, task::noop_waker_ref};
     use tokio::{task::yield_now, time::Instant};
 
     use super::*;
     use crate::batch::BatchSettings;
-    use crate::sink::util::buffer::vec::EncodedLength;
     use crate::sink::util::VecBuffer;
+    use crate::sink::util::buffer::vec::EncodedLength;
 
     const TIMEOUT: Duration = Duration::from_secs(10);
 

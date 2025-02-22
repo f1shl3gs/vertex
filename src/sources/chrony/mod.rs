@@ -6,9 +6,9 @@ use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use bytes::Buf;
-use configurable::{configurable_component, Configurable};
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use configurable::{Configurable, configurable_component};
+use event::{Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
@@ -180,7 +180,7 @@ impl Client {
             }
         }
 
-        TrackingResponse::decode(Cursor::new(buf)).map_err(Into::into)
+        TrackingResponse::decode(Cursor::new(buf))
     }
 }
 
@@ -200,13 +200,13 @@ async fn scrape(client: &Client) -> Result<Vec<Metric>, Error> {
             "chrony_time_correction_seconds",
             "The number of seconds difference between the system's clock and the reference clock",
             tracking.current_correction,
-            tags.clone()
+            tags.clone(),
         ),
         Metric::gauge_with_tags(
             "chrony_time_last_offset_seconds",
             "The estimated local offset on the last clock update",
             tracking.last_offset,
-            tags.clone()
+            tags.clone(),
         ),
         Metric::gauge_with_tags(
             "chrony_time_rms_offset_seconds",
@@ -218,7 +218,7 @@ async fn scrape(client: &Client) -> Result<Vec<Metric>, Error> {
             "chrony_frequency_offset_ppm",
             "The frequency is the rate by which the system s clock would be wrong if chronyd was not correcting it.",
             tracking.freq_ppm,
-            tags.clone()
+            tags.clone(),
         ),
         Metric::gauge_with_tags(
             "chrony_skew_ppm",
@@ -230,8 +230,8 @@ async fn scrape(client: &Client) -> Result<Vec<Metric>, Error> {
             "chrony_time_root_delay_seconds",
             "This is the total of the network path delays to the stratum-1 system from which the system is ultimately synchronised.",
             tracking.root_delay,
-            tags
-        )
+            tags,
+        ),
     ])
 }
 

@@ -1,11 +1,11 @@
 use std::io::ErrorKind;
 use std::path::PathBuf;
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 use humanize::bytes::parse_bytes;
 use serde::{Deserialize, Serialize};
 
-use super::{error::ParseError, read_string, Error};
+use super::{Error, error::ParseError, read_string};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Config {

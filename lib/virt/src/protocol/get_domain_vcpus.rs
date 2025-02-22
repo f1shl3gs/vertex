@@ -1,7 +1,7 @@
 use std::io::{Read, Write};
 
 use super::{
-    impl_procedure, unpack_flex, unpack_opaque_flex, Domain, Pack, ReadExt, Result, Unpack,
+    Domain, Pack, ReadExt, Result, Unpack, impl_procedure, unpack_flex, unpack_opaque_flex,
 };
 
 pub const REMOTE_VCPUINFO_MAX: usize = 16384;

@@ -1,4 +1,4 @@
-use event::{tags, Metric};
+use event::{Metric, tags};
 use serde::Deserialize;
 
 use super::Elasticsearch;
@@ -40,95 +40,95 @@ impl Elasticsearch {
                         "elasticsearch_cluster_health_active_primary_shards",
                         "The number of primary shards in your cluster, this is an aggregate total across all indices",
                         ch.active_primary_shards,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_active_shards",
                         "Aggregate total of all shards across all indices, which includes replica shards",
                         ch.active_shards,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_delayed_unassigned_shards",
                         "Shards delayed to reduce reallocation overhead",
                         ch.delayed_unassigned_shards,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_initializing_shards",
                         "Count of shards that are being freshly created",
                         ch.initializing_shards,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_number_of_data_nodes",
                         "Number of data nodes in the cluster",
                         ch.number_of_data_nodes,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_number_of_in_flight_fetch",
                         "The number of ongoing shard info requests",
                         ch.number_of_in_flight_fetch,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_task_max_waiting_in_queue_millis",
                         "Tasks max time waiting in queue",
                         ch.task_max_waiting_in_queue_millis,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_number_of_nodes",
                         "Number of nodes in the cluster",
                         ch.number_of_nodes,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_number_of_pending_tasks",
                         "Cluster level changes which have not yet been executed",
                         ch.number_of_pending_tasks,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_relocating_shards",
                         "The number of shards that are currently moving from one node to another node",
                         ch.relocating_shards,
-                        tags.clone()
+                        tags.clone(),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_unassigned_shards",
                         "The number of shards that exist in the cluster state, but cannot be found in the cluster itself",
                         ch.unassigned_shards,
-                        tags
+                        tags,
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_status",
                         "Whether all primary and replica shards are allocated",
                         ch.status == "green",
                         tags!(
-                    "cluster" => ch.cluster_name.clone(),
-                    "color" => "green",
-                ),
+                            "cluster" => ch.cluster_name.clone(),
+                            "color" => "green",
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_status",
                         "Whether all primary and replica shards are allocated",
                         ch.status == "yellow",
                         tags!(
-                    "cluster" => ch.cluster_name.clone(),
-                    "color" => "yellow",
-                ),
+                            "cluster" => ch.cluster_name.clone(),
+                            "color" => "yellow",
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "elasticsearch_cluster_health_status",
                         "Whether all primary and replica shards are allocated",
                         ch.status == "red",
                         tags!(
-                    "cluster" => ch.cluster_name,
-                    "color" => "red",
-                ),
-                    )
+                            "cluster" => ch.cluster_name,
+                            "color" => "red",
+                        ),
+                    ),
                 ]
             }
             Err(err) => {

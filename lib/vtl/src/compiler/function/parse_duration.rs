@@ -2,13 +2,13 @@ use std::time::Duration;
 
 use value::{Kind, Value};
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct ParseDuration;
 
@@ -55,7 +55,7 @@ impl Function for ParseDuration {
                     want: "ns, us, µs, ms, s, m, h or d".to_string(),
                     got: unit.to_string(),
                     span,
-                })
+                });
             }
         };
 

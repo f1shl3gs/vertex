@@ -14,7 +14,7 @@ use hyper::body::Incoming;
 use libc::c_char;
 use tikv_jemalloc_ctl::stats;
 
-use super::{Error, DEFAULT_PROFILE_SECONDS};
+use super::{DEFAULT_PROFILE_SECONDS, Error};
 
 #[derive(Debug, thiserror::Error)]
 pub enum HeapProfileError {

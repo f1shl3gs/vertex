@@ -5,8 +5,8 @@ use std::process::Command;
 use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::{Error, Source};
 use serde::{Deserialize, Deserializer};
 

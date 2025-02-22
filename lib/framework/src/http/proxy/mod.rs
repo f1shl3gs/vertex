@@ -4,23 +4,22 @@ mod tunnel;
 
 use std::env;
 use std::fmt::Formatter;
-use std::future::Future;
 use std::io::{Error, ErrorKind};
 use std::net::IpAddr;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use configurable::schema::{SchemaGenerator, SchemaObject};
 use configurable::Configurable;
+use configurable::schema::{SchemaGenerator, SchemaObject};
 use futures_util::TryFutureExt;
 use http::{HeaderMap, Uri};
 use hyper::rt::{Read, Write};
 use hyper_rustls::ConfigBuilderExt;
 use hyper_util::rt::TokioIo;
 use ipnet::IpNet;
-use rustls::pki_types::ServerName;
 use rustls::ClientConfig;
+use rustls::pki_types::ServerName;
 use serde::de::{SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -116,8 +115,8 @@ impl From<&str> for NoProxy {
 }
 
 impl Configurable for NoProxy {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        Vec::<String>::generate_schema(gen)
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        Vec::<String>::generate_schema(generator)
     }
 }
 

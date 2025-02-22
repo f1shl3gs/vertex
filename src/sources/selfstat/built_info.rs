@@ -1,4 +1,4 @@
-use event::{tags, Metric};
+use event::{Metric, tags};
 
 use crate::built_info;
 
@@ -15,6 +15,6 @@ pub fn built_info() -> Metric {
             "rustc_version" => built_info::RUSTC_VERSION,
             "rustc_channel" => built_info::RUSTC_CHANNEL,
             "revision" => built_info::GIT_HASH,
-        )
+        ),
     )
 }

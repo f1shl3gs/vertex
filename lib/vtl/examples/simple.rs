@@ -1,7 +1,7 @@
 #![allow(clippy::print_stdout)]
 
 use value::value;
-use vtl::{compile, Diagnostic, TargetValue};
+use vtl::{Diagnostic, TargetValue, compile};
 
 fn main() {
     let script = r#"

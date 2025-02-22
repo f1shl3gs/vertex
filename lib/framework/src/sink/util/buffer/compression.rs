@@ -1,11 +1,11 @@
 use std::fmt::{Debug, Display, Formatter};
 
-use configurable::schema::{SchemaGenerator, SchemaObject};
 use configurable::Configurable;
+use configurable::schema::{SchemaGenerator, SchemaObject};
 use serde::de::{Error, MapAccess};
 use serde::ser::SerializeMap;
-use serde::{de, ser, Serializer};
 use serde::{Deserializer, Serialize};
+use serde::{Serializer, de, ser};
 
 use crate::sink::util::zstd::ZstdCompressionLevel;
 
@@ -47,7 +47,7 @@ impl<'de> de::Deserialize<'de> for CompressionLevel {
                         return Err(de::Error::invalid_value(
                             de::Unexpected::Str(level),
                             &r#""none", "fast", "best" or "default""#,
-                        ))
+                        ));
                     }
                 };
 
@@ -194,8 +194,8 @@ impl Compression {
 }
 
 impl Configurable for Compression {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        String::generate_schema(gen)
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        String::generate_schema(generator)
     }
 }
 
@@ -286,7 +286,7 @@ impl<'de> de::Deserialize<'de> for Compression {
                             return Err(Error::unknown_variant(
                                 algorithm,
                                 &["none", "gzip", "zlib", "snappy"],
-                            ))
+                            ));
                         }
                     },
                     None => {

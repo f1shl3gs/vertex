@@ -2,9 +2,9 @@
 
 use std::path::{Path, PathBuf};
 
-use event::{tags, Metric};
+use event::{Metric, tags};
 
-use super::{read_into, read_string, Error};
+use super::{Error, read_into, read_string};
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>
 /// for a single <zone>

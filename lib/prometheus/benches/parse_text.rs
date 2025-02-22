@@ -1,4 +1,4 @@
-use criterion::{criterion_group, criterion_main, Criterion, Throughput};
+use criterion::{Criterion, Throughput, criterion_group, criterion_main};
 
 fn bench_parse_text(c: &mut Criterion) {
     let data = std::fs::read_to_string("fixtures/node_exporter.txt").unwrap();

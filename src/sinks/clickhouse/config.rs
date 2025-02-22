@@ -12,7 +12,7 @@ use framework::{Healthcheck, Sink};
 use futures_util::{FutureExt, SinkExt};
 use url::Url;
 
-use super::sink::{healthcheck, ClickhouseRetryLogic};
+use super::sink::{ClickhouseRetryLogic, healthcheck};
 
 fn default_database() -> String {
     "default".to_string()

@@ -44,7 +44,7 @@ impl Encoder<Event> for TextSerializer {
 
 #[cfg(test)]
 mod tests {
-    use event::{fields, tags, Metric};
+    use event::{Metric, fields, tags};
 
     use super::*;
 

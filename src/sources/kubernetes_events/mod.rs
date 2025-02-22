@@ -3,13 +3,13 @@ use std::collections::BTreeSet;
 use async_trait::async_trait;
 use chrono::Utc;
 use configurable::configurable_component;
-use event::{fields, LogRecord};
-use framework::config::{Output, SourceConfig, SourceContext};
+use event::{LogRecord, fields};
 use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext};
 use futures::StreamExt;
 use futures_util::stream;
 use k8s_openapi::api::core::v1::Event;
-use kube::runtime::{watcher, WatchStreamExt};
+use kube::runtime::{WatchStreamExt, watcher};
 use kube::{Api, Client};
 use log_schema::log_schema;
 

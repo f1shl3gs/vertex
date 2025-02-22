@@ -54,7 +54,7 @@ impl Expression for AbsFunc {
                     want: Kind::NUMERIC,
                     got: value.kind(),
                     span: self.value.span,
-                })
+                });
             }
         };
 

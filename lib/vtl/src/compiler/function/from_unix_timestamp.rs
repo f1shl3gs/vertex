@@ -2,13 +2,13 @@ use chrono::{TimeZone, Utc};
 use value::Value;
 
 use super::to_unix_timestamp::Unit;
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct FromUnixTimestamp;
 
@@ -67,7 +67,7 @@ impl Expression for FromUnixTimestampFunc {
                             return Err(ExpressionError::UnexpectedValue {
                                 msg: "invalid unix timestamp in seconds".to_string(),
                                 span: self.value.span,
-                            })
+                            });
                         }
                     },
                     Unit::Milliseconds => match Utc.timestamp_millis_opt(i).single() {
@@ -76,7 +76,7 @@ impl Expression for FromUnixTimestampFunc {
                             return Err(ExpressionError::UnexpectedValue {
                                 msg: "invalid unix timestamp in milliseconds".to_string(),
                                 span: self.value.span,
-                            })
+                            });
                         }
                     },
                     Unit::Microseconds => match Utc.timestamp_micros(i).single() {
@@ -85,7 +85,7 @@ impl Expression for FromUnixTimestampFunc {
                             return Err(ExpressionError::UnexpectedValue {
                                 msg: "invalid unix timestamp in microseconds".to_string(),
                                 span: self.value.span,
-                            })
+                            });
                         }
                     },
                     Unit::Nanoseconds => Utc.timestamp_nanos(i),

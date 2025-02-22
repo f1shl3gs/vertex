@@ -5,12 +5,12 @@ use std::sync::Arc;
 use tokio::io::DuplexStream;
 
 use super::{
-    io::{AsyncFile, Metadata, ProductionFilesystem, ReadableMemoryMap, WritableMemoryMap},
     Buffer, DiskBufferConfigBuilder, Ledger, Reader, Writer,
+    io::{AsyncFile, Metadata, ProductionFilesystem, ReadableMemoryMap, WritableMemoryMap},
 };
 use crate::encoding::FixedEncodable;
 use crate::variants::disk::{common::align16, record::RECORD_HEADER_LEN};
-use crate::{buffer_usage_data::BufferUsageHandle, Bufferable};
+use crate::{Bufferable, buffer_usage_data::BufferUsageHandle};
 
 type FilesystemUnderTest = ProductionFilesystem;
 

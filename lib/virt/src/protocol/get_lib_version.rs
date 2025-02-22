@@ -1,6 +1,6 @@
 use std::io::Write;
 
-use super::{impl_procedure, Pack, ReadExt, Result, Unpack};
+use super::{Pack, ReadExt, Result, Unpack, impl_procedure};
 
 pub struct GetLibVersionRequest {}
 

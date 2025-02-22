@@ -7,7 +7,7 @@ use std::sync::Arc;
 use http::{HeaderMap, HeaderName, HeaderValue};
 use std::time::Duration;
 
-pub use concurrency::{concurrency_is_none, Concurrency};
+pub use concurrency::{Concurrency, concurrency_is_none};
 use configurable::Configurable;
 use indexmap::IndexMap;
 pub use map::Map;
@@ -18,9 +18,9 @@ use tower::retry::Retry;
 use tower::timeout::Timeout;
 use tower::{Layer, Service, ServiceBuilder};
 
-use super::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
 use super::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
+use super::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
 use super::retries::{FixedRetryPolicy, RetryLogic};
 use super::service::map::MapLayer;
 use super::sink::{BatchSink, PartitionBatchSink, Response};

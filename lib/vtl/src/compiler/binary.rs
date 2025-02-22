@@ -541,8 +541,8 @@ impl Expression for Binary {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::compiler::statement::Statement;
     use crate::compiler::Compiler;
+    use crate::compiler::statement::Statement;
 
     fn assert_optimize(input: &str, want: impl Into<Expr>) {
         let program = Compiler::compile(input).unwrap();

@@ -12,8 +12,8 @@ mod registry;
 pub use attributes::Attributes;
 pub use counter::Counter;
 pub use gauge::Gauge;
-pub use histogram::{exponential_buckets, linear_buckets, Histogram, HistogramObservation};
+pub use histogram::{Histogram, HistogramObservation, exponential_buckets, linear_buckets};
 pub use metric::{Metric, Observation};
 pub use registry::{
-    global_registry, register_counter, register_gauge, register_histogram, Registry, Reporter,
+    Registry, Reporter, global_registry, register_counter, register_gauge, register_histogram,
 };

@@ -1,9 +1,9 @@
 use std::collections::BTreeMap;
 
-use value::{value, Value};
+use value::{Value, value};
 
-use crate::tests::run;
 use crate::TargetValue;
+use crate::tests::run;
 
 #[test]
 fn success() {

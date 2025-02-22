@@ -5,12 +5,12 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use configurable::configurable_component;
-use event::log::path::parse_target_path;
-use event::log::OwnedTargetPath;
 use event::Events;
+use event::log::OwnedTargetPath;
+use event::log::path::parse_target_path;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use value::{path, Value};
+use value::{Value, path};
 
 fn default_target() -> OwnedTargetPath {
     parse_target_path("geoip").unwrap()

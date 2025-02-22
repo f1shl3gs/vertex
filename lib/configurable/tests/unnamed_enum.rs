@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 #[allow(clippy::print_stdout)]
 #[allow(dead_code)]
 #[test]
-fn gen() {
+fn generate() {
     #[derive(Configurable, Deserialize, Serialize)]
     struct OneStruct {
         one: String,

@@ -6,7 +6,7 @@ use serde::Serialize;
 #[allow(dead_code)]
 #[allow(clippy::print_stdout)]
 #[test]
-fn gen() {
+fn generate() {
     #[derive(Configurable, Serialize)]
     struct Config {
         first: String,

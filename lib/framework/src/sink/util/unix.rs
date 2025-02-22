@@ -6,21 +6,21 @@ use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use configurable::Configurable;
 use event::{Event, EventContainer, Events};
-use futures::{stream::BoxStream, SinkExt, StreamExt};
+use futures::{SinkExt, StreamExt, stream::BoxStream};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio::net::UnixStream;
 use tokio_util::codec::Encoder;
 
 use crate::batch::EncodedEvent;
-use crate::{
-    sink::util::{
-        socket_bytes_sink::{BytesSink, ShutdownCheck},
-        SocketMode,
-    },
-    sink::VecSinkExt,
-};
 use crate::{Healthcheck, Sink, StreamSink};
+use crate::{
+    sink::VecSinkExt,
+    sink::util::{
+        SocketMode,
+        socket_bytes_sink::{BytesSink, ShutdownCheck},
+    },
+};
 
 #[derive(Debug, Error)]
 pub enum UnixError {
@@ -45,10 +45,10 @@ impl UnixSinkConfig {
         &self,
         transformer: Transformer,
         encoder: impl Encoder<Event, Error = codecs::encoding::EncodingError>
-            + Clone
-            + Send
-            + Sync
-            + 'static,
+        + Clone
+        + Send
+        + Sync
+        + 'static,
     ) -> crate::Result<(Sink, Healthcheck)> {
         let connector = UnixConnector::new(self.path.clone());
         let sink = UnixSink::new(connector.clone(), transformer, encoder);
@@ -202,8 +202,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use codecs::encoding::{Framer, NewlineDelimitedEncoder, Serializer, TextSerializer};
     use codecs::Encoder;
+    use codecs::encoding::{Framer, NewlineDelimitedEncoder, Serializer, TextSerializer};
     use testify::{random::random_lines_with_stream, temp_dir};
     use tokio::net::UnixListener;
 
@@ -218,26 +218,30 @@ mod tests {
     async fn unix_sink_healthcheck() {
         let good_path = temp_uds_path("valid_uds");
         let _listener = UnixListener::bind(&good_path).unwrap();
-        assert!(UnixSinkConfig::new(good_path)
-            .build(
-                Default::default(),
-                Encoder::<()>::new(Serializer::Text(TextSerializer::new()))
-            )
-            .unwrap()
-            .1
-            .await
-            .is_ok());
+        assert!(
+            UnixSinkConfig::new(good_path)
+                .build(
+                    Default::default(),
+                    Encoder::<()>::new(Serializer::Text(TextSerializer::new()))
+                )
+                .unwrap()
+                .1
+                .await
+                .is_ok()
+        );
 
         let bad_path = temp_uds_path("no_one_listening");
-        assert!(UnixSinkConfig::new(bad_path)
-            .build(
-                Default::default(),
-                Encoder::<()>::new(Serializer::Text(TextSerializer::new()))
-            )
-            .unwrap()
-            .1
-            .await
-            .is_err());
+        assert!(
+            UnixSinkConfig::new(bad_path)
+                .build(
+                    Default::default(),
+                    Encoder::<()>::new(Serializer::Text(TextSerializer::new()))
+                )
+                .unwrap()
+                .1
+                .await
+                .is_err()
+        );
     }
 
     #[tokio::test]

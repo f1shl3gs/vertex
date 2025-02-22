@@ -1,4 +1,4 @@
-use std::collections::{hash_map::Entry, HashMap};
+use std::collections::{HashMap, hash_map::Entry};
 use std::hash::Hash;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -10,8 +10,8 @@ use futures::StreamExt;
 use pin_project_lite::pin_project;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
+use tokio_util::time::delay_queue::Key;
 
 use super::serde_regex;
 

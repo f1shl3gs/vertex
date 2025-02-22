@@ -2,9 +2,9 @@ use std::collections::BTreeMap;
 use std::fmt::Formatter;
 
 use configurable::Configurable;
-use event::log::path::{parse_target_path, PathPrefix};
+use event::log::path::{PathPrefix, parse_target_path};
 use event::log::{OwnedValuePath, Value};
-use event::{event_path, Event, LogRecord, MaybeAsLogMut};
+use event::{Event, LogRecord, MaybeAsLogMut, event_path};
 use serde::de::MapAccess;
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};

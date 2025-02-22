@@ -1,9 +1,9 @@
 use serde_json::Value;
 
-use crate::schema::{
-    generate_root_schema, InstanceType, ObjectValidation, RootSchema, Schema, SchemaObject,
-};
 use crate::Configurable;
+use crate::schema::{
+    InstanceType, ObjectValidation, RootSchema, Schema, SchemaObject, generate_root_schema,
+};
 
 struct Buf {
     ident: u32,

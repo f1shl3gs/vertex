@@ -4,9 +4,9 @@ pub mod udp;
 mod unix;
 
 use codecs::DecodingConfig;
-use configurable::{configurable_component, Configurable};
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use configurable::{Configurable, configurable_component};
 use framework::Source;
+use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 

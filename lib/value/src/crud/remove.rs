@@ -1,6 +1,6 @@
+use crate::Value;
 use crate::crud::ValueCollection;
 use crate::path::BorrowedSegment;
-use crate::Value;
 
 pub fn remove<'a, T: ValueCollection>(
     value: &mut T,

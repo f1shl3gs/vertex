@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use criterion::{criterion_group, criterion_main, measurement::WallTime, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main, measurement::WallTime};
 use vertex::sources::node::hwmon::gather;
 
 pub fn hwmon_gather(c: &mut Criterion) -> &mut Criterion<WallTime> {

@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
 

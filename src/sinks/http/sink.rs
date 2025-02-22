@@ -2,10 +2,10 @@ use std::fmt::Debug;
 
 use async_trait::async_trait;
 use event::{EventContainer, Events};
+use framework::StreamSink;
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::http::HttpRequest;
 use framework::stream::{BatcherSettings, DriverResponse};
-use framework::StreamSink;
 use futures::StreamExt;
 use futures_util::stream::BoxStream;
 use tower::Service;

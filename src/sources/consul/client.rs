@@ -4,10 +4,10 @@ use bytes::Buf;
 use configurable::Configurable;
 use framework::config::default_true;
 use framework::http::HttpClient;
-use http::header::{CACHE_CONTROL, LOCATION};
 use http::StatusCode;
+use http::header::{CACHE_CONTROL, LOCATION};
 use http_body_util::{BodyExt, Full};
-use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
+use percent_encoding::{NON_ALPHANUMERIC, percent_encode};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 

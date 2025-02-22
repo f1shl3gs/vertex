@@ -1,6 +1,6 @@
 use event::tags::{Key, Tags};
 use event::{Bucket, Metric};
-use metrics::{global_registry, Attributes, Observation};
+use metrics::{Attributes, Observation, global_registry};
 
 pub fn capture_metrics() -> Vec<Metric> {
     let registry = global_registry();

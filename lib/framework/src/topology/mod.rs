@@ -7,7 +7,7 @@ mod task;
 pub mod test;
 
 // re-export
-pub use builder::{build_pieces, Pieces};
+pub use builder::{Pieces, build_pieces};
 pub use fanout::{ControlChannel, ControlMessage, Fanout};
 pub use running::RunningTopology;
 

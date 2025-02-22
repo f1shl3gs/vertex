@@ -33,26 +33,28 @@ impl Provider for KubernetesPathsProvider {
         self.store
             .state()
             .iter()
-            .flat_map(|pod| exclude_paths(list_pod_log_paths(real_glob, pod), &self.exclude_paths))
+            .flat_map(|pod| {
+                let pod_paths = list_pod_log_paths(pod, |pattern| {
+                    glob::glob_with(
+                        pattern,
+                        glob::MatchOptions {
+                            require_literal_separator: true,
+                            ..Default::default()
+                        },
+                    )
+                    .expect("the pattern is supposed to always be correct")
+                    .flat_map(|paths| paths.into_iter())
+                });
+
+                exclude_paths(pod_paths, &self.exclude_paths)
+            })
             .collect::<Vec<_>>()
     }
 }
 
-fn real_glob(pattern: &str) -> impl Iterator<Item = PathBuf> {
-    glob::glob_with(
-        pattern,
-        glob::MatchOptions {
-            require_literal_separator: true,
-            ..Default::default()
-        },
-    )
-    .expect("the pattern is supposed to always be correct")
-    .flat_map(|paths| paths.into_iter())
-}
-
 fn list_pod_log_paths<'a, G, GI>(
-    mut glob_impl: G,
     pod: &'a Pod,
+    mut glob_impl: G,
 ) -> impl Iterator<Item = PathBuf> + 'a
 where
     G: FnMut(&str) -> GI + 'a,
@@ -428,7 +430,7 @@ mod tests {
                 paths_to_return.into_iter().map(PathBuf::from)
             };
 
-            let got_paths = list_pod_log_paths(mock_glob, &input).collect::<Vec<_>>();
+            let got_paths = list_pod_log_paths(&input, mock_glob).collect::<Vec<_>>();
             let want_paths = want_paths
                 .into_iter()
                 .map(PathBuf::from)

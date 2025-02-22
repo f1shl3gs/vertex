@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use value::Value;
 
 use super::log::{decode_value, encode_value};
-use crate::proto::Metadata;
 use crate::EventMetadata;
+use crate::proto::Metadata;
 
 impl From<EventMetadata> for Metadata {
     fn from(value: EventMetadata) -> Self {

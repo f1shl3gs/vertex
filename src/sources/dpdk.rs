@@ -3,13 +3,13 @@ use std::ops::ControlFlow;
 use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
-use std::task::{ready, Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
+use event::{Metric, tags};
 use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use serde::Deserialize;
 use tokio::io::unix::AsyncFd;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt, ReadBuf};

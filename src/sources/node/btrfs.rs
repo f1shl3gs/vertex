@@ -1,9 +1,9 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use event::{tags, tags::Key, Metric};
+use event::{Metric, tags, tags::Key};
 
-use super::{read_into, read_string, Error};
+use super::{Error, read_into, read_string};
 
 const SECTOR_SIZE: u64 = 512;
 

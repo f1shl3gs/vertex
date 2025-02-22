@@ -4,8 +4,8 @@ use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
 
-use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
 use codecs::EncodingConfigWithFraming;
+use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
 use framework::sink::util::tcp::TcpSinkConfig;
 use framework::testing::CountReceiver;
 use rand::Rng;
@@ -16,7 +16,7 @@ use testify::send_lines;
 use testify::wait::wait_for_tcp;
 use vertex::sinks::socket;
 use vertex::sinks::socket::Config;
-use vertex::sources::syslog::{default_max_length, Config as SyslogConfig, Mode};
+use vertex::sources::syslog::{Config as SyslogConfig, Mode, default_max_length};
 
 use crate::util::{start_topology, trace_init};
 

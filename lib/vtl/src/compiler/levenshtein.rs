@@ -16,11 +16,7 @@ pub fn distance(s1: &[u8], s2: &[u8]) -> usize {
 
     #[inline]
     fn delta(x: u8, y: u8) -> usize {
-        if x == y {
-            0
-        } else {
-            1
-        }
+        if x == y { 0 } else { 1 }
     }
 
     let mut column: Vec<usize> = (0..s1len + 1).collect();

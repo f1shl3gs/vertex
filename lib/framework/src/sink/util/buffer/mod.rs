@@ -11,7 +11,7 @@ use flate2::write::{GzEncoder, ZlibEncoder};
 
 use super::snappy::SnappyEncoder;
 use super::zstd::ZstdEncoder;
-use crate::batch::{err_event_too_large, Batch, BatchSize, PushResult};
+use crate::batch::{Batch, BatchSize, PushResult, err_event_too_large};
 
 #[derive(Debug)]
 pub struct Buffer {

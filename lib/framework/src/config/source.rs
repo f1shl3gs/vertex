@@ -4,7 +4,7 @@ use configurable::NamedComponent;
 use serde::{Deserialize, Serialize};
 
 use super::{
-    skip_serializing_if_default, ComponentKey, GlobalOptions, Output, ProxyConfig, Resource,
+    ComponentKey, GlobalOptions, Output, ProxyConfig, Resource, skip_serializing_if_default,
 };
 use crate::{Pipeline, ShutdownSignal};
 

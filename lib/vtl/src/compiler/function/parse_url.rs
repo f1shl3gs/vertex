@@ -3,13 +3,13 @@ use std::collections::BTreeMap;
 use url::Url;
 use value::Value;
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct ParseUrl;
 
@@ -66,7 +66,7 @@ impl Expression for ParseURLFunc {
                     want: Kind::OBJECT,
                     got: value.kind(),
                     span: self.value.span,
-                })
+                });
             }
         };
 
@@ -78,7 +78,7 @@ impl Expression for ParseURLFunc {
                         want: Kind::BOOLEAN,
                         got: value.kind(),
                         span: expr.span,
-                    })
+                    });
                 }
             },
             None => false,

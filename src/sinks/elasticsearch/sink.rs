@@ -7,11 +7,11 @@ use codecs::encoding::Transformer;
 use event::log::path::PathPrefix;
 use event::log::{OwnedValuePath, Value};
 use event::{Event, EventContainer, Events, LogRecord};
+use framework::StreamSink;
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::stream::{BatcherSettings, DriverResponse};
-use framework::StreamSink;
-use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
+use futures_util::stream::BoxStream;
 use tower::Service;
 
 use super::encoder::ProcessedEvent;

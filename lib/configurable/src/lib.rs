@@ -17,4 +17,4 @@ pub use configurable::{Configurable, ConfigurableString};
 pub use indexmap::IndexMap;
 
 // Re-export of the `#[configurable_component]` and `#[derive(Configurable)]` proc macros.
-pub use configurable_derive::{configurable_component, Configurable};
+pub use configurable_derive::{Configurable, configurable_component};

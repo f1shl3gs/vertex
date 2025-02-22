@@ -78,7 +78,7 @@ impl<T> EvictedQueue<T> {
 
     /// Returns `true` if the `EvictedQueue` is empty
     pub fn is_empty(&self) -> bool {
-        self.queue.as_ref().map_or(true, |queue| queue.is_empty())
+        self.queue.as_ref().is_none_or(|queue| queue.is_empty())
     }
 
     /// Returns a front-to-back iterator.

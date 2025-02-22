@@ -136,7 +136,7 @@ impl SyncTransform for Route {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{fields, Event, LogRecord};
+    use event::{Event, LogRecord, fields};
 
     #[test]
     fn generate_config() {

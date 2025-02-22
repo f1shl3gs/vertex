@@ -1,12 +1,12 @@
 use chrono::Utc;
 use configurable::configurable_component;
-use event::log::path::parse_target_path;
 use event::log::OwnedTargetPath;
+use event::log::path::parse_target_path;
+use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::trace::TraceSubscription;
-use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
 use log_schema::log_schema;
@@ -98,8 +98,8 @@ async fn run(
 mod tests {
     use std::time::Duration;
 
-    use event::log::Value;
     use event::LogRecord;
+    use event::log::Value;
     use futures::Stream;
     use futures_util::StreamExt;
     use testify::collect_ready;

@@ -1,7 +1,7 @@
 use std::io::{Read, Write};
 
 use super::{
-    impl_procedure, pack_string, Pack, Result, Unpack, WriteExt, VIR_NET_MESSAGE_STRING_MAX,
+    Pack, Result, Unpack, VIR_NET_MESSAGE_STRING_MAX, WriteExt, impl_procedure, pack_string,
 };
 
 pub struct OpenRequest {

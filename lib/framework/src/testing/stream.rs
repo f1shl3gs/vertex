@@ -1,7 +1,7 @@
 use std::task::{Context, Poll};
 
 use event::{Event, EventContainer, Events};
-use futures::{task::noop_waker_ref, Stream, StreamExt};
+use futures::{Stream, StreamExt, task::noop_waker_ref};
 
 pub fn collect_ready<S>(mut rx: S) -> Vec<S::Item>
 where

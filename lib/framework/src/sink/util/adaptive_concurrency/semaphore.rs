@@ -2,14 +2,13 @@
 // clippy's warning that an AtomicUsize would work better is incorrect.
 #![allow(clippy::mutex_atomic)]
 
-use std::future::Future;
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 
 use futures::ready;
-use futures_util::future::BoxFuture;
 use futures_util::FutureExt;
+use futures_util::future::BoxFuture;
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 
 /// Wrapper for `tokio::sync::Semaphore` that allows for shrinking the semaphore safely

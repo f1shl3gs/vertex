@@ -9,10 +9,10 @@ mod slave_status;
 
 use std::time::{Duration, Instant};
 
-use configurable::{configurable_component, Configurable};
-use event::{Metric, INSTANCE_KEY};
-use framework::config::{default_interval, default_true, Output, SourceConfig, SourceContext};
-use framework::{tls::TlsConfig, Source};
+use configurable::{Configurable, configurable_component};
+use event::{INSTANCE_KEY, Metric};
+use framework::config::{Output, SourceConfig, SourceContext, default_interval, default_true};
+use framework::{Source, tls::TlsConfig};
 use serde::{Deserialize, Serialize};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};

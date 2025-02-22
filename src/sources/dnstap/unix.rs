@@ -3,8 +3,8 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::PathBuf;
 
 use configurable::Configurable;
-use framework::config::{Resource, SourceContext};
 use framework::Source;
+use framework::config::{Resource, SourceContext};
 use serde::{Deserialize, Serialize};
 use tokio::net::UnixListener;
 

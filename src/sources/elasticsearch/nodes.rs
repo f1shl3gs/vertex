@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use std::time::Instant;
 
 use event::tags::Tags;
-use event::{tags, Metric};
+use event::{Metric, tags};
 use serde::Deserialize;
 
 use super::Elasticsearch;
@@ -1376,7 +1376,7 @@ mod tests {
     use std::sync::Arc;
     use std::time::Duration;
 
-    use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine};
+    use base64::{Engine, engine::general_purpose::STANDARD as BASE64_STANDARD};
     use bytes::Bytes;
     use framework::config::ProxyConfig;
     use framework::http::Auth;

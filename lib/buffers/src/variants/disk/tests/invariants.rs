@@ -8,14 +8,14 @@ use crate::variants::disk::tests::{
     get_corrected_max_record_size, get_minimum_data_file_size_for_record_payload,
 };
 use crate::{
-    assert_buffer_is_empty, assert_buffer_records, assert_buffer_size, assert_enough_bytes_written,
-    assert_reader_writer_file_positions, await_timeout, set_data_file_length,
-    test::{acknowledge, install_tracing_helpers, with_temp_dir, MultiEventRecord, SizedRecord},
+    EventCount, assert_buffer_is_empty, assert_buffer_records, assert_buffer_size,
+    assert_enough_bytes_written, assert_reader_writer_file_positions, await_timeout,
+    set_data_file_length,
+    test::{MultiEventRecord, SizedRecord, acknowledge, install_tracing_helpers, with_temp_dir},
     variants::disk::{
         common::MAX_FILE_ID,
         tests::{create_buffer_with_write_buffer_size, create_default_buffer},
     },
-    EventCount,
 };
 
 #[tokio::test]

@@ -3,9 +3,9 @@ use std::fmt::{Debug, Formatter};
 
 use async_trait::async_trait;
 use bloomy::BloomFilter;
-use configurable::{configurable_component, Configurable};
-use event::tags::{Key, Value as TagValue};
+use configurable::{Configurable, configurable_component};
 use event::Events;
+use event::tags::{Key, Value as TagValue};
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::de::{Error, Visitor};
@@ -256,7 +256,7 @@ impl FunctionTransform for Cardinality {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{tags, Metric, MetricValue};
+    use event::{Metric, MetricValue, tags};
     use framework::config::TransformContext;
 
     // TODO: fix this

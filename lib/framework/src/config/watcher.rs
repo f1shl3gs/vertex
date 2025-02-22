@@ -6,13 +6,13 @@ use futures_util::StreamExt;
 use crate::Error;
 
 mod inotify {
-    use std::ffi::{c_void, CString, OsStr};
+    use std::ffi::{CString, OsStr, c_void};
     use std::io;
     use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
     use std::os::unix::ffi::OsStrExt;
     use std::path::Path;
     use std::pin::Pin;
-    use std::task::{ready, Context, Poll};
+    use std::task::{Context, Poll, ready};
 
     use futures::Stream;
     use tokio::io::unix::AsyncFd;
@@ -106,7 +106,7 @@ mod inotify {
                             buf: self.buf,
                             pos: 0,
                             len,
-                        })))
+                        })));
                     }
                     Ok(Err(err)) => return Poll::Ready(Some(Err(err))),
                     Err(_would_block) => continue,
@@ -294,7 +294,7 @@ mod tests {
     use std::io::Write;
 
     use testify::{temp_dir, temp_file};
-    use tokio::signal::unix::{signal, SignalKind};
+    use tokio::signal::unix::{SignalKind, signal};
 
     use super::*;
 

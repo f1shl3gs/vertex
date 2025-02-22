@@ -10,11 +10,11 @@ use bytes::{Buf, Bytes};
 use client::{Client, RespErr};
 use configurable::configurable_component;
 use event::tags::Tags;
-use event::{tags, Metric};
-use framework::config::{default_interval, Output, SecretString, SourceConfig, SourceContext};
+use event::{Metric, tags};
+use framework::Source;
+use framework::config::{Output, SecretString, SourceConfig, SourceContext, default_interval};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::Source;
 use thiserror::Error;
 
 static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock::new(|| {

@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use event::tags::Tags;
 use event::Metric;
+use event::tags::Tags;
 use serde::{Deserialize, Serialize};
 
 use super::Error;

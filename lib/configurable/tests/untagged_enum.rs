@@ -6,7 +6,7 @@ use serde::Serialize;
 #[allow(clippy::print_stdout)]
 #[allow(dead_code)]
 #[test]
-fn gen() {
+fn generate() {
     #[derive(Configurable, Serialize)]
     struct Inner {
         a: i32,

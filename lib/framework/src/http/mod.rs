@@ -13,14 +13,14 @@ use headers::{Authorization, HeaderMapExt};
 use http::header::{
     ACCEPT_ENCODING, AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION, SET_COOKIE, USER_AGENT,
 };
-use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
+use http::{HeaderMap, Request, header::HeaderValue, request::Builder, uri::InvalidUri};
 use http_body_util::Full;
 use hyper::body::{Body, Incoming};
 use hyper_rustls::{ConfigBuilderExt, HttpsConnector};
-use hyper_util::client::legacy::connect::HttpConnector;
 use hyper_util::client::legacy::Client;
+use hyper_util::client::legacy::connect::HttpConnector;
 use hyper_util::rt::TokioExecutor;
-use metrics::{exponential_buckets, Attributes};
+use metrics::{Attributes, exponential_buckets};
 use proxy::ProxyConnector;
 use rustls::ClientConfig;
 use serde::{Deserialize, Serialize};
@@ -31,7 +31,7 @@ use tracing_internal::SpanExt;
 use crate::config::{ProxyConfig, SecretString};
 use crate::dns::Resolver;
 use crate::tls::{TlsConfig, TlsError};
-pub use serve::{serve, Serve, WithGracefulShutdown};
+pub use serve::{Serve, WithGracefulShutdown, serve};
 
 #[derive(Debug, Error)]
 pub enum HttpError {

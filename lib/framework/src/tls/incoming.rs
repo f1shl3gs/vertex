@@ -1,16 +1,15 @@
-use std::future::Future;
 use std::io::{self, Error, ErrorKind};
 use std::net::SocketAddr;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use futures::{future::BoxFuture, stream, FutureExt, Stream};
+use futures::{FutureExt, Stream, future::BoxFuture, stream};
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
-use tokio_rustls::server::TlsStream;
 use tokio_rustls::TlsAcceptor;
+use tokio_rustls::server::TlsStream;
 
 use super::TlsError;
 #[cfg(feature = "sources-utils-tcp-socket")]

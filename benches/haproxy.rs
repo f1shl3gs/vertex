@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use criterion::{
-    criterion_group, criterion_main, measurement::WallTime, BenchmarkGroup, Criterion, Throughput,
+    BenchmarkGroup, Criterion, Throughput, criterion_group, criterion_main, measurement::WallTime,
 };
 
 pub fn parse_haproxy_csv(c: &mut Criterion) {

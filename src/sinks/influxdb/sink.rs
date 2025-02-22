@@ -2,14 +2,14 @@ use std::fmt::Debug;
 
 use async_trait::async_trait;
 use event::Events;
+use framework::StreamSink;
+use framework::sink::util::Compression;
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::http::HttpRequest;
-use framework::sink::util::Compression;
 use framework::stream::{BatcherSettings, DriverResponse};
 use framework::template::Template;
-use framework::StreamSink;
-use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
+use futures_util::stream::BoxStream;
 use tower::Service;
 
 use super::request_builder::{InfluxdbRequestBuilder, KeyPartitioner, PartitionKey};

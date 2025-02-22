@@ -1,6 +1,6 @@
 use std::path::PathBuf;
-use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering};
 use std::time::Instant;
 use std::{fmt, io, mem};
 
@@ -12,9 +12,9 @@ use thiserror::Error;
 use tokio::{fs, io::AsyncWriteExt, sync::Notify};
 
 use super::{
-    common::{align16, DiskBufferConfig, MAX_FILE_ID},
-    io::{AsyncFile, WritableMemoryMap},
     Filesystem,
+    common::{DiskBufferConfig, MAX_FILE_ID, align16},
+    io::{AsyncFile, WritableMemoryMap},
 };
 use crate::buffer_usage_data::BufferUsageHandle;
 
@@ -492,11 +492,7 @@ where
             Ordering::Release,
             Ordering::Relaxed,
             |n| {
-                if n == 0 {
-                    None
-                } else {
-                    Some(n - 1)
-                }
+                if n == 0 { None } else { Some(n - 1) }
             },
         );
 

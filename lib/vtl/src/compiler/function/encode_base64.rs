@@ -1,13 +1,13 @@
 use base64::Engine;
 use value::{Kind, Value};
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct EncodeBase64;
 
@@ -105,10 +105,15 @@ impl Expression for EncodeBase64Func {
                 match value.as_ref() {
                     "standard" => base64::alphabet::STANDARD,
                     "url_safe" => base64::alphabet::URL_SAFE,
-                    value => return Err(ExpressionError::UnexpectedValue {
-                        msg: format!("base64's charset should be \"standard\" or \"url_safe\", but found \"{}\"", value),
-                        span: spanned.span,
-                    })
+                    value => {
+                        return Err(ExpressionError::UnexpectedValue {
+                            msg: format!(
+                                "base64's charset should be \"standard\" or \"url_safe\", but found \"{}\"",
+                                value
+                            ),
+                            span: spanned.span,
+                        });
+                    }
                 }
             }
             None => base64::alphabet::STANDARD,
@@ -134,8 +139,8 @@ impl Expression for EncodeBase64Func {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::compiler::function::compile_and_run;
     use crate::compiler::Span;
+    use crate::compiler::function::compile_and_run;
 
     #[test]
     fn with_default() {

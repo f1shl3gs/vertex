@@ -9,10 +9,10 @@ use async_trait::async_trait;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Key, Value};
-use event::{tags, Bucket, Metric};
-use framework::config::{default_interval, Output, SourceConfig, SourceContext};
-use framework::http::HttpClient;
+use event::{Bucket, Metric, tags};
 use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::http::HttpClient;
 
 /// Make sure BIND was built with libxml2 support. You can check with the following command:
 ///    named -V | grep libxml2

@@ -60,7 +60,7 @@ impl Expression for ForStatement {
                     want: Kind::ARRAY_OR_OBJECT,
                     got: iterator.kind(),
                     span: self.iterator.span,
-                })
+                });
             }
         }
 

@@ -299,7 +299,7 @@ fn load_private_key(
                     io::ErrorKind::InvalidData,
                     "no private key found in PEM file",
                 ),
-            })
+            });
         }
     };
 

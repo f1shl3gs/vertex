@@ -28,7 +28,7 @@ impl Expression for IfStatement {
                     want: Kind::BOOLEAN,
                     got: value.kind(),
                     span: self.condition.span,
-                })
+                });
             }
         };
 

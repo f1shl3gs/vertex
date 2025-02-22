@@ -7,8 +7,8 @@ use std::path::PathBuf;
 use argh::FromArgs;
 use exitcode::ExitCode;
 use framework::config;
-use framework::config::{load_builder_from_paths, Config, ConfigDiff, ConfigPath};
-use framework::topology::{build_pieces, take_healthchecks, Pieces};
+use framework::config::{Config, ConfigDiff, ConfigPath, load_builder_from_paths};
+use framework::topology::{Pieces, build_pieces, take_healthchecks};
 use tracing::error;
 
 #[derive(FromArgs, Debug)]

@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
-use crate::{generate_config, Configurable};
+use crate::{Configurable, generate_config};
 
 #[derive(Debug, Clone)]
 pub enum ExampleError {

@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{read_string, Error};
+use super::{Error, read_string};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(proc_path).await?;

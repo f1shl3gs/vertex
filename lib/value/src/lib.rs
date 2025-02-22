@@ -14,8 +14,8 @@ pub use kind::Kind;
 use path::ValuePath;
 
 pub use path::{
-    parse_target_path, parse_value_path, OwnedSegment, OwnedTargetPath, OwnedValuePath,
-    PathParseError,
+    OwnedSegment, OwnedTargetPath, OwnedValuePath, PathParseError, parse_target_path,
+    parse_value_path,
 };
 
 /// The main value type used in Vertex events.
@@ -121,18 +121,17 @@ impl Value {
 #[macro_export]
 macro_rules! value {
     // arrays
-    ([]) => ({
+    ([]) => (
         $crate::Value::Array(vec![])
-    });
-    ([$($v:tt),+ $(,)?]) => ({
-        let vec: Vec<$crate::Value> = vec![$($crate::value!($v)),+];
-        $crate::Value::Array(vec)
-    });
+    );
+    ([$($v:tt),+ $(,)?]) => (
+        $crate::Value::Array(vec![$($crate::value!($v)),+])
+    );
 
     // maps
-    ({}) => ({
+    ({}) => (
         $crate::Value::Object(::std::collections::BTreeMap::default())
-    });
+    );
     ({$($($k1:literal)? $($k2:ident)?: $v:tt),+ $(,)?}) => ({
         let mut map = ::std::collections::BTreeMap::new();
         $(
@@ -142,12 +141,12 @@ macro_rules! value {
         $crate::Value::Object(map)
     });
 
-    (null) => ({
+    (null) => (
         $crate::Value::Null
-    });
-    ($k:expr) => ({
+    );
+    ($k:expr) => (
         $crate::Value::from($k)
-    });
+    );
 }
 
 #[cfg(test)]

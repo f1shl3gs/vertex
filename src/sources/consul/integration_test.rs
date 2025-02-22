@@ -1,11 +1,11 @@
-use event::{tags, MetricValue};
+use event::{MetricValue, tags};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use http::StatusCode;
 use http_body_util::Full;
 use serde::{Deserialize, Serialize};
 
-use super::{gather, Client, ConsulError};
+use super::{Client, ConsulError, gather};
 use crate::testing::{ContainerBuilder, WaitFor};
 
 #[tokio::test]
@@ -312,9 +312,11 @@ async fn test_gather() {
         for (name, mut tags, value) in wants {
             tags.insert("instance".to_string(), endpoint.clone());
 
-            assert!(metrics
-                .iter()
-                .any(|m| m.name() == "consul_scrape_duration_seconds"));
+            assert!(
+                metrics
+                    .iter()
+                    .any(|m| m.name() == "consul_scrape_duration_seconds")
+            );
 
             assert!(
                 metrics

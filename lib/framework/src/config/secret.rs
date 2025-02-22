@@ -1,8 +1,8 @@
 use std::fmt::Formatter;
 use std::ops::Deref;
 
-use configurable::schema::{SchemaGenerator, SchemaObject};
 use configurable::Configurable;
+use configurable::schema::{SchemaGenerator, SchemaObject};
 use serde::de::Error;
 use serde::{Deserialize, Serialize, Serializer};
 
@@ -31,8 +31,8 @@ impl From<SecretString> for String {
 }
 
 impl Configurable for SecretString {
-    fn generate_schema(gen: &mut SchemaGenerator) -> SchemaObject {
-        gen.subschema_for::<String>()
+    fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
+        generator.subschema_for::<String>()
     }
 }
 

@@ -1,4 +1,4 @@
-mod gen;
+mod generator;
 mod json_schema;
 mod num;
 mod stdlib;
@@ -10,7 +10,7 @@ use indexmap::IndexMap;
 use num::ConfigurableNumber;
 use serde_json::Value;
 
-pub use gen::{SchemaGenerator, SchemaSettings};
+pub use generator::{SchemaGenerator, SchemaSettings};
 pub use json_schema::{
     ArrayValidation, InstanceType, Metadata, ObjectValidation, RootSchema, Schema, SchemaObject,
     SingleOrVec, SubschemaValidation,
@@ -79,25 +79,27 @@ pub fn generate_root_schema<T>() -> RootSchema
 where
     T: Configurable,
 {
-    let mut gen = SchemaSettings::new().into_generator();
-    let schema = gen.subschema_for::<T>();
+    let mut generator = SchemaSettings::new().into_generator();
+    let schema = generator.subschema_for::<T>();
 
-    gen.into_root_schema(schema)
+    generator.into_root_schema(schema)
 }
 
 /// Asserts that the key type `K` generates a string-like schema, suitable for
 /// use in maps.
-pub fn assert_string_schema_for_map<K, M>(gen: &mut SchemaGenerator) -> Result<(), GenerateError>
+pub fn assert_string_schema_for_map<K, M>(
+    generator: &mut SchemaGenerator,
+) -> Result<(), GenerateError>
 where
     K: ConfigurableString,
 {
-    let key_schema = gen.subschema_for::<K>();
+    let key_schema = generator.subschema_for::<K>();
     let wrapped_schema = Schema::Object(key_schema);
 
     // Get a reference to the underlying schema if we're dealing with
     // a reference, or just use what we have if it's the actual definition.
     let underlying_schema = if wrapped_schema.is_ref() {
-        gen.dereference(&wrapped_schema)
+        generator.dereference(&wrapped_schema)
     } else {
         Some(&wrapped_schema)
     };

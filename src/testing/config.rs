@@ -1,5 +1,5 @@
 use configurable::schema::generate_root_schema;
-use configurable::{generate_config_with_schema, Configurable};
+use configurable::{Configurable, generate_config_with_schema};
 
 pub fn generate_config<T>()
 where

@@ -2,13 +2,13 @@ use std::collections::BTreeMap;
 
 use value::Value;
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct Merge;
 
@@ -69,7 +69,7 @@ impl Expression for MergeFunc {
                     want: Kind::OBJECT,
                     got: value.kind(),
                     span: self.from.span,
-                })
+                });
             }
         };
 
@@ -80,7 +80,7 @@ impl Expression for MergeFunc {
                     want: Kind::OBJECT,
                     got: value.kind(),
                     span: self.to.span,
-                })
+                });
             }
         };
 
@@ -100,7 +100,7 @@ impl Expression for MergeFunc {
 fn merge_maps(map1: &mut BTreeMap<String, Value>, map2: &BTreeMap<String, Value>, deep: bool) {
     for (key2, value2) in map2 {
         match (deep, map1.get_mut(key2), value2) {
-            (true, Some(Value::Object(ref mut child1)), Value::Object(ref child2)) => {
+            (true, Some(Value::Object(child1)), Value::Object(child2)) => {
                 // We are doing a deep merge and both fields are maps.
                 merge_maps(child1, child2, deep);
             }

@@ -1,17 +1,16 @@
 #![allow(clippy::module_name_repetitions)]
 
 use std::fmt::Debug;
-use std::future::Future;
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use event::{BatchStatus, BatchStatusReceiver};
 use futures::{FutureExt, Stream};
-use futures_util::stream::{BoxStream, FuturesOrdered, FuturesUnordered};
 use futures_util::StreamExt;
+use futures_util::stream::{BoxStream, FuturesOrdered, FuturesUnordered};
 use pin_project_lite::pin_project;
-use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
+use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 
 use crate::ShutdownSignal;
 

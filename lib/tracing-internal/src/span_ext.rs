@@ -1,5 +1,5 @@
-use crate::context::WithContext;
 use crate::Context;
+use crate::context::WithContext;
 
 /// Utility functions to allow tracing [`Span`]s to accept and return ours [`Context`]s.
 pub trait SpanExt {

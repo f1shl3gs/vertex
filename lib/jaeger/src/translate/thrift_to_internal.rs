@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
-use base64::prelude::{Engine as _, BASE64_STANDARD};
+use base64::prelude::{BASE64_STANDARD, Engine as _};
 use event::trace::{AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue};
 use event::trace::{Link, SpanContext, SpanKind, Status, StatusCode};
-use event::{tags::Value, Events, Trace};
+use event::{Events, Trace, tags::Value};
 
 use crate::thrift::jaeger::{Batch, Log, Span, SpanRef, Tag, TagType};
 use crate::translate::id::to_trace_id;

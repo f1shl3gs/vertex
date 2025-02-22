@@ -114,27 +114,27 @@ impl Display for PathParseError {
 /// Example: `path!("foo", 4, "bar")` is the pre-parsed path of `foo[4].bar`
 #[macro_export]
 macro_rules! path {
-    ($($segment:expr),*) => {{
+    ($($segment:expr),*) => {
            &[$($crate::path::BorrowedSegment::from($segment),)*]
-    }};
+    };
 }
 
 /// Syntactic sugar for creating a pre-parsed path.
 /// This path points at an event (as opposed to metadata).
 #[macro_export]
 macro_rules! event_path {
-    ($($segment:expr),*) => {{
+    ($($segment:expr),*) => {
            ($crate::path::PathPrefix::Event, &[$($crate::path::BorrowedSegment::from($segment),)*])
-    }};
+    };
 }
 
 /// Syntactic sugar for creating a pre-parsed path.
 /// This path points at metadata (as opposed to the event).
 #[macro_export]
 macro_rules! metadata_path {
-    ($($segment:expr),*) => {{
+    ($($segment:expr),*) => {
            ($crate::path::PathPrefix::Metadata, &[$($crate::path::BorrowedSegment::from($segment),)*])
-    }};
+    };
 }
 
 /// Syntactic sugar for creating a pre-parsed owned path.
@@ -145,9 +145,9 @@ macro_rules! metadata_path {
 /// Example: `owned_value_path!("foo", 4, "bar")` is the pre-parsed path of `foo[4].bar`
 #[macro_export]
 macro_rules! owned_value_path {
-    ($($segment:expr),*) => {{
+    ($($segment:expr),*) => {
            $crate::path::OwnedValuePath::from(vec![$($crate::path::OwnedSegment::from($segment),)*])
-    }};
+    };
 }
 
 /// Syntactic sugar for creating a pre-parsed owned event path.
@@ -319,10 +319,10 @@ pub enum PathPrefix {
 
 #[cfg(test)]
 mod test {
-    use crate::path::parse_target_path;
-    use crate::path::PathPrefix;
     use crate::path::TargetPath;
     use crate::path::ValuePath;
+    use crate::path::parse_target_path;
+    use crate::path::{BorrowedSegment, PathPrefix};
 
     #[test]
     fn test_parse_target_path() {
@@ -331,7 +331,10 @@ mod test {
 
     #[test]
     fn test_path_macro() {
-        assert!(ValuePath::eq(&path!("a", "b"), "a.b"))
+        assert!(ValuePath::eq(
+            &(&[BorrowedSegment::from("a"), BorrowedSegment::from("b")]),
+            "a.b"
+        ))
     }
 
     #[test]

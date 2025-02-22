@@ -4,9 +4,9 @@ use std::net::{Ipv4Addr, SocketAddr};
 
 use bytes::Bytes;
 use configurable::configurable_component;
+use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::tls::MaybeTlsListener;
-use framework::Extension;
 use http::header::CONTENT_TYPE;
 use http::{Method, Request, Response, StatusCode};
 use http_body_util::Full;

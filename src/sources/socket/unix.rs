@@ -1,13 +1,13 @@
 use std::path::PathBuf;
 
 use bytes::Bytes;
-use codecs::decoding::{DeserializerConfig, FramingConfig};
 use codecs::Decoder;
+use codecs::decoding::{DeserializerConfig, FramingConfig};
 use configurable::Configurable;
 use event::Events;
+use framework::Source;
 use framework::config::{Resource, SourceContext};
 use framework::source::unix::{build_unix_datagram_source, build_unix_stream_source};
-use framework::Source;
 use serde::{Deserialize, Serialize};
 
 use crate::sources::default_decoding;

@@ -1,10 +1,10 @@
 mod protocol;
 
 use bytes::Buf;
-use configurable::{configurable_component, Configurable};
-use event::{tags, Metric};
-use framework::config::{default_interval, default_true};
+use configurable::{Configurable, configurable_component};
+use event::{Metric, tags};
 use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, default_true};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::{Pipeline, ShutdownSignal, Source};
 use http_body_util::{BodyExt, Full};

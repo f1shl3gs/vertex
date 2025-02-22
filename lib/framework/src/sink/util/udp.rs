@@ -9,7 +9,7 @@ use bytes::BytesMut;
 use codecs::encoding::Transformer;
 use configurable::Configurable;
 use event::{Event, EventContainer, EventStatus, Events, Finalizable};
-use futures::{future::BoxFuture, ready, stream::BoxStream, FutureExt, StreamExt};
+use futures::{FutureExt, StreamExt, future::BoxFuture, ready, stream::BoxStream};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio::{net::UdpSocket, sync::oneshot};
@@ -17,7 +17,7 @@ use tokio_util::codec::Encoder;
 
 use super::SinkBuildError;
 use crate::dns::Resolver;
-use crate::{dns, udp, Healthcheck, Sink, StreamSink};
+use crate::{Healthcheck, Sink, StreamSink, dns, udp};
 
 #[derive(Debug, Error)]
 pub enum UdpError {
@@ -75,10 +75,10 @@ impl UdpSinkConfig {
         &self,
         transformer: Transformer,
         encoder: impl Encoder<Event, Error = codecs::encoding::EncodingError>
-            + Clone
-            + Send
-            + Sync
-            + 'static,
+        + Clone
+        + Send
+        + Sync
+        + 'static,
     ) -> crate::Result<(Sink, Healthcheck)> {
         let connector = self.build_connector()?;
         let sink = UdpSink::new(connector.clone(), transformer, encoder);

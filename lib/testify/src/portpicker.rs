@@ -25,7 +25,7 @@
 
 // For more information, please refer to <http://unlicense.org>
 
-use rand::{rng, Rng};
+use rand::{Rng, rng};
 use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpListener, ToSocketAddrs, UdpSocket};
 
 pub type Port = u16;

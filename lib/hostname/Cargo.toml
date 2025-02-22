@@ -1,7 +1,7 @@
 [package]
 name = "hostname"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [target.'cfg(unix)'.dependencies]
 libc = { version = "0.2.169", default-features = false }

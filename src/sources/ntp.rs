@@ -8,8 +8,8 @@ use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{default_interval, Output, SourceConfig, SourceContext},
     Source,
+    config::{Output, SourceConfig, SourceContext, default_interval},
 };
 use ntp::Client;
 

@@ -3,20 +3,20 @@ mod util;
 use std::collections::HashMap;
 use std::num::NonZeroU64;
 use std::sync::atomic::AtomicUsize;
-use std::sync::{atomic::Ordering, Arc};
+use std::sync::{Arc, atomic::Ordering};
 use std::time::Duration;
 
 use buffers::{BufferConfig, BufferType, WhenFull};
 use event::array::into_event_stream;
 use event::{Event, EventContainer, Events, LogRecord};
 use framework::config::{Config, SinkOuter};
-use framework::{topology, Pipeline};
-use futures_util::{stream, StreamExt};
+use framework::{Pipeline, topology};
+use futures_util::{StreamExt, stream};
 use log_schema::log_schema;
 use tokio::time::sleep;
 use util::{
-    sink, sink_failing_healthcheck, sink_with_data, source, source_with_data, start_topology,
-    trace_init, transform, MockSourceConfig,
+    MockSourceConfig, sink, sink_failing_healthcheck, sink_with_data, source, source_with_data,
+    start_topology, trace_init, transform,
 };
 
 fn into_message(event: Event) -> String {
@@ -237,10 +237,12 @@ async fn topology_remove_one_source() {
     config.add_source("in1", source().1);
     config.add_sink("out1", &["in1"], sink1);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     // Send an event into both source #1 and source #2:
     let event1 = Event::from("this");
@@ -277,10 +279,12 @@ async fn topology_remove_one_sink() {
     config.add_source("in1", source().1);
     config.add_sink("out1", &["in1"], sink(10).1);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     let event = Event::from("this");
 
@@ -323,10 +327,12 @@ async fn topology_remove_one_transform() {
     config.add_transform("t2", &["in1"], transform2);
     config.add_sink("out1", &["t2"], sink2);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     // Send the same event to both sources:
     let event = Event::from("this");
@@ -372,10 +378,12 @@ async fn topology_swap_source() {
     config.add_source("in2", source2);
     config.add_sink("out1", &["in2"], sink2);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     // Send an event into both source #1 and source #2:
     let event1 = Event::from("this");
@@ -430,10 +438,12 @@ async fn topology_swap_transform() {
     config.add_transform("t1", &["in1"], transform2);
     config.add_sink("out1", &["t1"], sink2);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     // Send an event into both source #1 and source #2:
     let event1 = Event::from("this");
@@ -482,10 +492,12 @@ async fn topology_swap_sink() {
     config.add_source("in1", source2);
     config.add_sink("out1", &["in1"], sink2);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     // Send an event into both source #1 and source #2:
     let event1 = Event::from("this");
@@ -532,10 +544,12 @@ async fn topology_rebuild_connected() {
     config.add_source("in1", source1);
     config.add_sink("out1", &["in1"], sink1);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     let event1 = Event::from("this");
     let event2 = Event::from("that");
@@ -578,10 +592,12 @@ async fn topology_rebuild_connected_transform() {
     config.add_transform("t2", &["t1"], transform2);
     config.add_sink("out1", &["t2"], sink2);
 
-    assert!(topology
-        .reload_config_and_respawn(config.build().unwrap())
-        .await
-        .unwrap());
+    assert!(
+        topology
+            .reload_config_and_respawn(config.build().unwrap())
+            .await
+            .unwrap()
+    );
 
     let event = Event::from("this");
     let h_out1 = tokio::spawn(out1.flat_map(into_event_stream).collect::<Vec<_>>());
@@ -609,9 +625,11 @@ async fn topology_required_healthcheck_fails_start() {
         .await
         .unwrap();
 
-    assert!(topology::start_validate(config, diff, pieces)
-        .await
-        .is_none());
+    assert!(
+        topology::start_validate(config, diff, pieces)
+            .await
+            .is_none()
+    );
 }
 
 #[tokio::test]
@@ -621,9 +639,11 @@ async fn topology_optional_healthcheck_does_not_fail_start() {
     let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new())
         .await
         .unwrap();
-    assert!(topology::start_validate(config, diff, pieces)
-        .await
-        .is_some());
+    assert!(
+        topology::start_validate(config, diff, pieces)
+            .await
+            .is_some()
+    );
 }
 
 #[tokio::test]

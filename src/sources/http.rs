@@ -5,10 +5,10 @@ use codecs::decoding::{DeserializerConfig, FramingConfig};
 use codecs::{Decoder, DecodingConfig};
 use configurable::configurable_component;
 use event::Events;
+use framework::Source;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
 use framework::tls::TlsConfig;
-use framework::Source;
 use glob::MatchOptions;
 use http::{HeaderMap, HeaderValue, Method, StatusCode, Uri};
 use tokio_util::codec::Decoder as _;
@@ -190,7 +190,7 @@ impl HttpSource for SimpleHttpSource {
                     return Err(ErrorMessage::new(
                         StatusCode::BAD_REQUEST,
                         format!("failed decoding body, {}", err),
-                    ))
+                    ));
                 }
             }
         }
@@ -208,12 +208,12 @@ mod tests {
     use codecs::decoding::framing::NewlineDelimitedDecoderConfig;
     use event::{EventMetadata, EventStatus, LogRecord};
     use flate2::{
-        write::{GzEncoder, ZlibEncoder},
         Compression,
+        write::{GzEncoder, ZlibEncoder},
     };
+    use framework::Pipeline;
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
-    use framework::Pipeline;
     use futures::Stream;
     use futures_util::StreamExt;
     use http::Request;

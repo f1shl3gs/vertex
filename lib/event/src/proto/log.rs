@@ -3,12 +3,12 @@ use std::collections::BTreeMap;
 use chrono::TimeZone;
 use tracing::error;
 
+use crate::LogRecord;
 use crate::log::Value;
 use crate::proto::{
-    proto_event::Log as PLog, value::Kind as PVKind, Value as PValue, ValueArray as PValueArray,
-    ValueMap as PValueMap,
+    Value as PValue, ValueArray as PValueArray, ValueMap as PValueMap, proto_event::Log as PLog,
+    value::Kind as PVKind,
 };
-use crate::LogRecord;
 
 fn encode_array(items: Vec<Value>) -> PValueArray {
     PValueArray {

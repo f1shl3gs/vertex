@@ -2,11 +2,11 @@ use std::time::Duration;
 
 use async_trait::async_trait;
 use chrono::{Local, SecondsFormat};
-use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::DecodingConfig;
-use configurable::{configurable_component, Configurable};
-use framework::config::{Output, SourceConfig, SourceContext};
+use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
+use configurable::{Configurable, configurable_component};
 use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext};
 use futures_util::StreamExt;
 use rand::Rng;
 use serde::{Deserialize, Serialize};

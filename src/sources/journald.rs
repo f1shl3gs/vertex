@@ -7,12 +7,12 @@ use std::{cmp, io, path::PathBuf, time::Duration};
 use bytes::{Buf, BytesMut};
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{event_path, log::Value, Event};
+use event::{Event, event_path, log::Value};
+use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::Source;
-use futures::{stream::BoxStream, StreamExt};
+use futures::{StreamExt, stream::BoxStream};
 use log_schema::log_schema;
 use tokio::fs::OpenOptions;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
@@ -616,7 +616,7 @@ mod tests {
     use chrono::TimeZone;
     use event::LogRecord;
     use futures::StreamExt;
-    use tokio::time::{sleep, timeout, Duration};
+    use tokio::time::{Duration, sleep, timeout};
 
     use super::*;
 

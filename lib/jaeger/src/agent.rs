@@ -7,9 +7,9 @@ use thrift::protocol::{
 };
 use thrift::transport::{ReadHalf, TIoChannel, WriteHalf};
 
+use crate::Batch;
 use crate::thrift::agent::{AgentEmitBatchArgs, AgentSyncClient, TAgentSyncClient};
 use crate::transport::{TBufferChannel, TNoopChannel};
-use crate::Batch;
 
 /// The max size of UDP packet we want to send, synced with jaeger-agent
 pub const UDP_PACKET_MAX_LENGTH: usize = 65000;

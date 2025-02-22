@@ -3,7 +3,7 @@ use quote::quote;
 use syn::spanned::Spanned;
 use syn::{DeriveInput, Fields, LitStr, Result};
 
-use crate::parse_attrs::{is_doc_attr, parse_attr_doc, Description, FieldAttrs, TypeAttrs};
+use crate::parse_attrs::{Description, FieldAttrs, TypeAttrs, is_doc_attr, parse_attr_doc};
 
 pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> Result<TokenStream> {
     let input = syn::parse::<DeriveInput>(input)?;
@@ -67,7 +67,7 @@ fn generate_struct_like(
             return Err(syn::Error::new(
                 fields.span(),
                 "`#[configurable_component(...)]` is not currently supported on tuple structs",
-            ))
+            ));
         }
         Fields::Unit => {
             // struct Empty

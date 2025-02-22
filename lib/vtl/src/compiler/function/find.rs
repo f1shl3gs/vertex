@@ -1,12 +1,12 @@
 use value::Value;
 
+use crate::SyntaxError;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
 use crate::context::Context;
-use crate::SyntaxError;
 
 pub struct Find;
 
@@ -72,7 +72,7 @@ impl Expression for FindFunc {
                     want: Kind::BYTES,
                     got: value.kind(),
                     span: self.value.span,
-                })
+                });
             }
         };
 
@@ -84,7 +84,7 @@ impl Expression for FindFunc {
                     want: Kind::BYTES,
                     got: value.kind(),
                     span: self.pattern.span,
-                })
+                });
             }
         };
 
@@ -105,7 +105,7 @@ impl Expression for FindFunc {
                         want: Kind::INTEGER,
                         got: value.kind(),
                         span: expr.span,
-                    })
+                    });
                 }
             },
             None => 0,

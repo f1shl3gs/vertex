@@ -4,7 +4,7 @@ use tokio::sync::Mutex;
 
 use super::limited_queue::LimitedSender;
 use crate::variants::disk::{ProductionFilesystem, Writer};
-use crate::{buffer_usage_data::BufferUsageHandle, Bufferable, WhenFull};
+use crate::{Bufferable, WhenFull, buffer_usage_data::BufferUsageHandle};
 
 /// Adapter for papering over various sender backends by providing a [`Sink`] interface.
 #[derive(Clone, Debug)]

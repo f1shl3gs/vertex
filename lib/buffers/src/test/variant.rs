@@ -6,12 +6,12 @@ use quickcheck::{Arbitrary, Gen};
 use tracing::Span;
 
 use crate::{
+    Bufferable, WhenFull,
     topology::{
         builder::TopologyBuilder,
         channel::{BufferReceiver, BufferSender},
     },
     variants::{disk::DiskBuffer, memory::MemoryBuffer},
-    Bufferable, WhenFull,
 };
 
 #[cfg(test)]
