@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740191280780,
+  "lastUpdate": 1740191306853,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8a9a7ecfa09596aaa46d47dcd0223554070b2965",
-          "message": "refine logs (#2101)",
-          "timestamp": "2025-01-03T17:39:18+08:00",
-          "tree_id": "fb0694e51bea4a2e65fcb75aef7beabf835dea7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a9a7ecfa09596aaa46d47dcd0223554070b2965"
-        },
-        "date": 1735897318061,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.501,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 144.97,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 636.81,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1f1bd5b6e9a8774c361048fb4f59773e7dc2f2bd",
           "message": "bump sqlx to 0.8.3 (#2102)",
           "timestamp": "2025-01-05T13:05:22+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 609.59,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ad0a92d4f3ef6378cee81ffd27a35d256a6fcc6",
+          "message": "chore(deps): bump pem from 3.0.4 to 3.0.5 (#2219)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.4 to 3.0.5.\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.4...v3.0.5)\n\n---\nupdated-dependencies:\n- dependency-name: pem\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-22T10:25:21+08:00",
+          "tree_id": "3f6302860a916bf1e46a8c3beac441d0ab148e78",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ad0a92d4f3ef6378cee81ffd27a35d256a6fcc6"
+        },
+        "date": 1740191287834,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.469,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 138.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 292,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 613.7,
             "unit": "ns/op"
           }
         ]
