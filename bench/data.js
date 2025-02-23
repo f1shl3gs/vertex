@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740317552467,
+  "lastUpdate": 1740317597883,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "956b9f8a9d2594ed1a7d309ddbb65bc18f6f1176",
-          "message": "chore(deps): bump tokio from 1.42.0 to 1.43.0 (#2112)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.42.0 to 1.43.0.\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.42.0...tokio-1.43.0)\n\n---\nupdated-dependencies:\n- dependency-name: tokio\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-09T12:03:48+08:00",
-          "tree_id": "779fa033a8dba46df8800ebece3af159b2831c97",
-          "url": "https://github.com/f1shl3gs/vertex/commit/956b9f8a9d2594ed1a7d309ddbb65bc18f6f1176"
-        },
-        "date": 1736396036614,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 519,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35661,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6841a9f9bcc3560407495c27e9a3811f74dba8e9",
           "message": "chore(deps): bump thiserror from 2.0.9 to 2.0.10 (#2113)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.9 to 2.0.10.\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.9...2.0.10)\n\n---\nupdated-dependencies:\n- dependency-name: thiserror\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <26081140+f1shl3gs@users.noreply.github.com>",
           "timestamp": "2025-01-09T13:03:10+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37964.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f301428aa2b1fc039a305d0b9e90e2c6b55f28d1",
+          "message": "cargo update (#2221)",
+          "timestamp": "2025-02-23T21:22:19+08:00",
+          "tree_id": "00ab77b5d33580beb10a4925115ecb9388586cb1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f301428aa2b1fc039a305d0b9e90e2c6b55f28d1"
+        },
+        "date": 1740317578695,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 550,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38009.9,
             "unit": "KiB"
           }
         ]
