@@ -1,9 +1,12 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::fmt::{Debug, Formatter};
+use std::hash::{Hash, Hasher};
+use std::marker::PhantomData;
+use std::sync::Arc;
 
 use async_trait::async_trait;
-use bloomy::BloomFilter;
 use configurable::{Configurable, configurable_component};
+use dashmap::DashMap;
 use event::Events;
 use event::tags::{Key, Value as TagValue};
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
@@ -124,8 +127,46 @@ impl TransformConfig for Config {
     }
 }
 
+struct BloomFilter<T: ?Sized> {
+    filter: sbbf::Filter,
+    count: usize,
+    _pd: PhantomData<T>,
+}
+
+unsafe impl<T> Send for BloomFilter<T> {}
+unsafe impl<T> Sync for BloomFilter<T> {}
+
+impl<T: Hash + ?Sized> BloomFilter<T> {
+    fn new(size: usize) -> Self {
+        let filter = sbbf::Filter::new(32, size);
+
+        Self {
+            filter,
+            count: 0,
+            _pd: PhantomData,
+        }
+    }
+
+    fn insert(&mut self, value: &T) {
+        let mut hasher = std::collections::hash_map::DefaultHasher::new();
+        value.hash(&mut hasher);
+        let hash = hasher.finish();
+
+        if !self.filter.insert(hash) {
+            self.count += 1;
+        }
+    }
+
+    fn contains(&self, value: &T) -> bool {
+        let mut hasher = std::collections::hash_map::DefaultHasher::new();
+        value.hash(&mut hasher);
+        let hash = hasher.finish();
+
+        self.filter.contains(hash)
+    }
+}
+
 /// Container for storing the set of accepted values for a given tag key.
-#[derive(Clone)]
 enum AcceptedTagValueSet {
     Set(HashSet<TagValue>),
     Bloom(BloomFilter<TagValue>),
@@ -137,7 +178,7 @@ impl AcceptedTagValueSet {
             Mode::Exact => Self::Set(HashSet::with_capacity(limit)),
             Mode::Probabilistic { cache_size_per_tag } => {
                 let num_bits = cache_size_per_tag / 8; // Convert bytes to bits
-                let bloom = BloomFilter::with_size(num_bits);
+                let bloom = BloomFilter::new(num_bits);
                 Self::Bloom(bloom)
             }
         }
@@ -153,7 +194,7 @@ impl AcceptedTagValueSet {
     fn len(&self) -> usize {
         match self {
             AcceptedTagValueSet::Set(set) => set.len(),
-            AcceptedTagValueSet::Bloom(bloom) => bloom.count(),
+            AcceptedTagValueSet::Bloom(bloom) => bloom.count,
         }
     }
 
@@ -172,7 +213,7 @@ struct Cardinality {
     limit: usize,
     action: LimitExceededAction,
     mode: Mode,
-    accepted_tags: HashMap<Key, AcceptedTagValueSet>,
+    accepted_tags: Arc<DashMap<Key, AcceptedTagValueSet>>,
 }
 
 impl Cardinality {
@@ -181,7 +222,7 @@ impl Cardinality {
             limit,
             action,
             mode,
-            accepted_tags: HashMap::new(),
+            accepted_tags: Arc::new(DashMap::new()),
         }
     }
 
@@ -199,7 +240,7 @@ impl Cardinality {
                 .insert(key.clone(), AcceptedTagValueSet::new(self.limit, self.mode));
         }
 
-        let set = self.accepted_tags.get_mut(key).expect("should exist");
+        let mut set = self.accepted_tags.get_mut(key).expect("should exist");
         if set.contains(value) {
             // Tag value has already been accepted, nothing more to do
             return true;
@@ -265,6 +306,24 @@ mod tests {
     // fn generate_config() {
     //     crate::testing::test_generate_config::<Config>()
     // }
+
+    #[test]
+    fn bloom_filter() {
+        let mut filter: BloomFilter<str> = BloomFilter::new(10);
+        assert_eq!(filter.count, 0);
+
+        filter.insert("foo");
+        assert!(filter.contains("foo"));
+        assert_eq!(filter.count, 1);
+
+        filter.insert("foo");
+        assert!(filter.contains("foo"));
+        assert_eq!(filter.count, 1);
+
+        filter.insert("bar");
+        assert!(filter.contains("bar"));
+        assert_eq!(filter.count, 2);
+    }
 
     #[test]
     fn hashset_accepted_tag_set() {

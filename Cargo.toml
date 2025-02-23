@@ -248,7 +248,7 @@ sources = [
     "sources-zookeeper",
 ]
 
-transforms-cardinality = ["dep:bloomy"]
+transforms-cardinality = ["dep:dashmap", "dep:sbbf"]
 transforms-dedup = ["dep:lru"]
 transforms-filter = []
 transforms-geoip = ["dep:maxminddb"]
@@ -428,9 +428,9 @@ argh = { version = "0.1.13", default-features = false, features = ["help"] }
 # External libs
 ahash = { version = "0.8.11", default-features = false, optional = true }
 base64 = { version = "0.22.1", default-features = false, optional = true }
-bloomy = { version = "1.2.0", default-features = false, optional = true }
 bytes = { version = "1.10.0", default-features = false }
 chrono = { version = "0.4.39", default-features = false }
+dashmap = { version = "6.1.0", default-features = false, optional = true }
 encoding_rs = { version = "0.8.35", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.35", optional = true }
@@ -450,6 +450,7 @@ quick-xml = { version = "0.37.2", default-features = false, features = ["seriali
 rand = { version = "0.9.0", default-features = false }
 regex = { version = "1.11.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "5f23b85b71dfeedebad5e5843ff1c29477d091c6", optional = true, features = ["transport-tls"] }
+sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d9e6fb1fa67f362491c0bd4da63fc727ef14f8f0", optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 socket2 = { version = "0.5.8", optional = true, default-features = false}
 sqlx = { version = "0.8.3", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
