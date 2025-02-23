@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740315531081,
+  "lastUpdate": 1740315955383,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1f1bd5b6e9a8774c361048fb4f59773e7dc2f2bd",
-          "message": "bump sqlx to 0.8.3 (#2102)",
-          "timestamp": "2025-01-05T13:05:22+08:00",
-          "tree_id": "6ca3e13ea800bf8879e2ea4dde7723c5b57225cc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1f1bd5b6e9a8774c361048fb4f59773e7dc2f2bd"
-        },
-        "date": 1736054192726,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28209000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 611650,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.953,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f798132a712673d73df1698c290b2e0e3ad8576e",
           "message": "bump rskafka to latest version (#2103)",
           "timestamp": "2025-01-05T14:10:23+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.695,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "faf7977ee7cd759c3a81c4ff6288c63df48a4db3",
+          "message": "replace bloomy with sbbf",
+          "timestamp": "2025-02-23T20:54:58+08:00",
+          "tree_id": "695dad64991bed5d0cf99105ae804e2a4453c442",
+          "url": "https://github.com/f1shl3gs/vertex/commit/faf7977ee7cd759c3a81c4ff6288c63df48a4db3"
+        },
+        "date": 1740315935804,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28256000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 622490,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 46.07,
             "unit": "ns/op"
           }
         ]
