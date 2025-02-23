@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740315458527,
+  "lastUpdate": 1740315484312,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f798132a712673d73df1698c290b2e0e3ad8576e",
-          "message": "bump rskafka to latest version (#2103)",
-          "timestamp": "2025-01-05T14:10:23+08:00",
-          "tree_id": "9c2dc59707ed1ea95d86f5a355ebe479c29cb3c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f798132a712673d73df1698c290b2e0e3ad8576e"
-        },
-        "date": 1736057575046,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.789,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 142.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.97,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 642.92,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "85f021f23a2487fa567df3b1ca8e3c383241d044",
           "message": "bump syn to 2.0.95 (#2104)",
           "timestamp": "2025-01-05T20:59:04+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 650.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "faf7977ee7cd759c3a81c4ff6288c63df48a4db3",
+          "message": "replace bloomy with sbbf",
+          "timestamp": "2025-02-23T20:54:58+08:00",
+          "tree_id": "695dad64991bed5d0cf99105ae804e2a4453c442",
+          "url": "https://github.com/f1shl3gs/vertex/commit/faf7977ee7cd759c3a81c4ff6288c63df48a4db3"
+        },
+        "date": 1740315465573,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.742,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 161.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 378.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 674.96,
             "unit": "ns/op"
           }
         ]
