@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740370075921,
+  "lastUpdate": 1740371463274,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9b952889ac680054411e54fd0be86a4a805501f5",
-          "message": "sources/redis: support auth (#2114)",
-          "timestamp": "2025-01-09T15:45:28+08:00",
-          "tree_id": "d820e73f4a26c2ff7cde818cadcfbfd69a8e44f2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9b952889ac680054411e54fd0be86a4a805501f5"
-        },
-        "date": 1736409356174,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 538,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 35661.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 551,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38009.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b101c4dc4eff15e9c7248db729407f4119e05a9f",
+          "message": "remove `--nocapture` so integration tests will not compile multiple times (#2223)",
+          "timestamp": "2025-02-24T12:19:54+08:00",
+          "tree_id": "0c26ee956ce4764160af8f274c999dc6484bce31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b101c4dc4eff15e9c7248db729407f4119e05a9f"
+        },
+        "date": 1740371443710,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 555,
             "unit": "s"
           },
           {
