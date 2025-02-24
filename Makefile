@@ -59,7 +59,7 @@ redis-integration-tests:
 
 .PHONY: integration-test-zookeeper
 integration-test-zookeeper:
-	cargo test -p vertex --lib sources::zookeeper::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
+	cargo test -p vertex --lib sources::zookeeper::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-memcached
 integration-test-memcached:
@@ -95,7 +95,7 @@ integration-test-elasticsearch:
 
 .PHONY: dnstap-integration-tests
 dnstap-integration-tests:
-	cargo test -p vertex --lib sources::dnstap::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
+	cargo test -p vertex --lib sources::dnstap::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: redfish-integration-tests
 redfish-integration-tests:
@@ -104,11 +104,11 @@ redfish-integration-tests:
 
 .PHONY: clickhouse-integration-tests
 clickhouse-integration-tests:
-	cargo test -p vertex --lib sources::clickhouse_metrics::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
+	cargo test -p vertex --lib sources::clickhouse_metrics::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: fluent-integration-tests
 fluent-integration-tests:
-	cargo test -p vertex --lib sources::fluent::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
+	cargo test -p vertex --lib sources::fluent::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-tests
 integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub redis-integration-tests integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch redfish-integration-tests fluent-integration-tests loki-integration-tests
