@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740317597883,
+  "lastUpdate": 1740369557137,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b564fd393243d1de54647212391366207fa9ac23",
-          "message": "chore(deps): bump pin-project-lite from 0.2.15 to 0.2.16 (#2105)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.15 to 0.2.16.\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.15...v0.2.16)\n\n---\nupdated-dependencies:\n- dependency-name: pin-project-lite\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-07T11:05:05+08:00",
-          "tree_id": "2c4a37a690329fa0c7824ac11b61230b4481f060",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b564fd393243d1de54647212391366207fa9ac23"
-        },
-        "date": 1736219250727,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.417,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.772,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 190.22,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 184.57,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "580fa69f2565594cf447f58cdd631e9bdd8eccc3",
+          "message": "bump libc to 0.2.170 (#2222)",
+          "timestamp": "2025-02-24T11:56:44+08:00",
+          "tree_id": "c7fcf3e47964f3e5f5d176ba46fb374eb36c9dfb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/580fa69f2565594cf447f58cdd631e9bdd8eccc3"
+        },
+        "date": 1740369538175,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.364,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.788,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 186.6,
             "unit": "ns/op"
           }
         ]
