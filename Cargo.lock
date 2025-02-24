@@ -658,6 +658,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
+name = "core2"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b49ba7ef1ad6107f8824dbe97de947cbaac53c44e7f9756a1fba0d37c1eec505"
+dependencies = [
+ "memchr",
+]
+
+[[package]]
 name = "cpufeatures"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3231,18 +3240,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "rsasl"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c8b534a23662bb559c5c73213be63ecd6524e774d291f3618c2b04b723d184eb"
+dependencies = [
+ "base64 0.22.1",
+ "core2",
+ "digest",
+ "hmac",
+ "pbkdf2",
+ "rand 0.8.5",
+ "serde",
+ "serde_json",
+ "sha2",
+ "stringprep",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "rskafka"
 version = "0.5.0"
-source = "git+https://github.com/f1shl3gs/rskafka?rev=5f23b85b71dfeedebad5e5843ff1c29477d091c6#5f23b85b71dfeedebad5e5843ff1c29477d091c6"
+source = "git+https://github.com/f1shl3gs/rskafka?rev=7ee5c942a83d8a391794913ed7a012f5c33b6efb#7ee5c942a83d8a391794913ed7a012f5c33b6efb"
 dependencies = [
- "bytes",
  "chrono",
  "crc32c",
  "flate2",
  "futures",
  "lz4",
  "parking_lot",
- "rand 0.8.5",
+ "rand 0.9.0",
+ "rsasl",
  "rustls",
  "snap",
  "thiserror 2.0.11",
