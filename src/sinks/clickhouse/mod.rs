@@ -1,4 +1,4 @@
 mod config;
-#[cfg(feature = "integration-tests-clickhouse")]
+#[cfg(all(test, feature = "clickhouse-integration-tests"))]
 mod integration_tests;
 mod sink;

@@ -1,6 +1,4 @@
-use std::io::read_to_string;
-
-use bytes::Buf;
+use bytes::Bytes;
 use event::{BatchNotifier, BatchStatus, BatchStatusReceiver, Event, LogRecord};
 use framework::batch::BatchConfig;
 use framework::config::{ProxyConfig, SinkConfig, SinkContext};
@@ -10,13 +8,12 @@ use framework::sink::util::service::RequestConfig;
 use futures_util::future::ready;
 use futures_util::stream;
 use http::{Method, Request};
-use http_body_util::BodyExt;
-use hyper::Body;
+use http_body_util::{BodyExt, Full};
 use serde::Deserialize;
 use serde_json::Value;
 use testify::random::random_string;
 
-use crate::sinks::clickhouse::config::Config;
+use super::config::Config;
 use crate::testing::components::{HTTP_SINK_TAGS, run_and_assert_sink_compliance};
 use crate::testing::trace_init;
 
@@ -28,6 +25,7 @@ fn gen_table() -> String {
     format!("test_{}", random_string(10).to_lowercase())
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct Stats {
     bytes_read: usize,
@@ -35,6 +33,7 @@ struct Stats {
     rows_read: usize,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Deserialize)]
 struct QueryResponse {
     data: Vec<Value>,
@@ -50,7 +49,7 @@ struct ClickhouseClient {
 
 impl ClickhouseClient {
     fn new(host: String) -> Self {
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 
         Self { host, client }
     }
@@ -59,21 +58,21 @@ impl ClickhouseClient {
         let req = Request::builder()
             .method(Method::POST)
             .uri(&self.host)
-            .body(Body::from(format!(
+            .body(Full::new(Bytes::from(format!(
                 "CREATE TABLE {}
                     ({})
                     ENGINE = MergeTree()
                     ORDER BY (host, timestamp);",
                 table, schema
-            )))
+            ))))
             .unwrap();
 
         let resp = self.client.send(req).await.unwrap();
         let (parts, incoming) = resp.into_parts();
 
         if !parts.status.is_success() {
-            let reader = incoming.collect().await.unwrap().aggregate();
-            let body = read_to_string(reader).unwrap();
+            let data = incoming.collect().await.unwrap().to_bytes();
+            let body = String::from_utf8_lossy(data.as_ref());
             panic!("create table failed, {}", body)
         }
     }
@@ -82,13 +81,16 @@ impl ClickhouseClient {
         let req = Request::builder()
             .method(Method::POST)
             .uri(&self.host)
-            .body(Body::from(format!("SELECT * FROM {} FORMAT JSON", table)))
+            .body(Full::new(Bytes::from(format!(
+                "SELECT * FROM {} FORMAT JSON",
+                table
+            ))))
             .unwrap();
 
         let resp = self.client.send(req).await.unwrap();
         let (parts, incoming) = resp.into_parts();
-        let reader = incoming.collect().await.unwrap().aggregate();
-        let body = read_to_string(reader).unwrap();
+        let data = incoming.collect().await.unwrap().to_bytes();
+        let body = String::from_utf8_lossy(data.as_ref());
 
         if !parts.status.is_success() {
             panic!("select all failed, {}", body);
@@ -103,9 +105,9 @@ impl ClickhouseClient {
 
 fn make_event() -> (Event, BatchStatusReceiver) {
     let (batch, receiver) = BatchNotifier::new_with_receiver();
-    let mut event = LogRecord::from("raw log line").with_batch_notifier(&batch);
-    event.insert_tag("host", "example.com");
-    (event.into(), receiver)
+    let mut log = LogRecord::from("raw log line").with_batch_notifier(&batch);
+    log.insert("host", "example.com");
+    (log.into(), receiver)
 }
 
 #[tokio::test]
@@ -129,7 +131,7 @@ async fn insert_events() {
         batch,
         auth: None,
         request: RequestConfig {
-            retry_attempts: Some(1),
+            retry_attempts: 1,
             ..Default::default()
         },
         tls: None,

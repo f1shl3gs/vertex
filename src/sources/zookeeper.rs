@@ -221,27 +221,33 @@ mod tests {
     }
 }
 
-#[cfg(all(test, feature = "integration-tests-zookeeper"))]
+#[cfg(all(test, feature = "zookeeper-integration-tests"))]
 mod integration_tests {
     use std::time::Duration;
 
+    use testify::container::Container;
+    use testify::next_addr;
+
     use super::fetch_stats;
-    use crate::testing::ContainerBuilder;
+    use crate::testing::trace_init;
 
     #[tokio::test]
     async fn test_fetch_stats() {
-        let container = ContainerBuilder::new("zookeeper:3.6.2")
-            .with_port(2181)
-            .with_env("ZOO_4LW_COMMANDS_WHITELIST", "*")
-            .run()
-            .unwrap();
-        tokio::time::sleep(Duration::from_secs(5)).await;
-        // container.wait(WaitFor::Stdout("- Started ")).unwrap();
-        let addr = container.get_mapped_addr(2181);
+        trace_init();
 
-        let (version, state, _peer_state, stats) = fetch_stats(addr).await.unwrap();
-        assert_eq!(version, "3.6.2--803c7f1a12f85978cb049af5e4ef23bd8b688715");
-        assert_eq!(state, "standalone");
-        assert!(*stats.get("zk_uptime").unwrap() > 0.0);
+        let service_addr = next_addr();
+
+        Container::new("zookeeper", "3.6.2")
+            .with_tcp(2181, service_addr.port())
+            .with_env("ZOO_4LW_COMMANDS_WHITELIST", "*")
+            .run(async move {
+                tokio::time::sleep(Duration::from_secs(5)).await;
+
+                let (version, state, _peer_state, stats) = fetch_stats(service_addr).await.unwrap();
+                assert_eq!(version, "3.6.2--803c7f1a12f85978cb049af5e4ef23bd8b688715");
+                assert_eq!(state, "standalone");
+                assert!(*stats.get("zk_uptime").unwrap() > 0.0);
+            })
+            .await;
     }
 }

@@ -134,37 +134,38 @@ fn main() {
     #[cfg(feature = "sources-dnstap")]
     {
         // Generate proto if needed
-        let src = std::path::PathBuf::from("src/sources/dnstap");
-        let include = &[src.clone()];
-
         println!("cargo:rerun-if-changed=src/sources/dnstap/dnstap.proto");
+
+        let src = std::path::PathBuf::from("src/sources/dnstap");
+
         let mut config = prost_build::Config::new();
         config
-            .compile_protos(&[src.join("dnstap.proto")], include)
+            .compile_protos(&[src.join("dnstap.proto")], &[src])
             .unwrap();
     }
 
     #[cfg(feature = "sinks-loki")]
     {
         // Generate proto if needed
-        let src = std::path::PathBuf::from("src/sinks/loki/proto");
-        let include = &[src.clone()];
+        println!("cargo:rerun-if-changed=src/sinks/loki/loki.proto");
 
-        println!("cargo:rerun-if-changed=src/sinks/loki/proto/loki.proto");
+        let src = std::path::PathBuf::from("src/sinks/loki");
         let mut config = prost_build::Config::new();
         config
-            .compile_protos(&[src.join("loki.proto")], include)
+            .compile_protos(&[src.join("loki.proto")], &[src])
             .unwrap();
     }
 
     #[cfg(feature = "sinks-skywalking")]
     {
-        println!("cargo:rerun-if-changed=src/sinks/skywalking/logging.proto");
+        // Generate proto if needed
+        println!("cargo:rerun-if-changed=src/sinks/skywalking");
+        let src = std::path::PathBuf::from("src/sinks/skywalking");
 
         tonic_build::configure()
             .build_client(true)
             .build_server(false)
-            .compile_protos(&["src/sinks/skywalking/logging.proto"], &["proto"])
+            .compile_protos(&[src.join("logging.proto")], &[src])
             .unwrap()
     }
 }

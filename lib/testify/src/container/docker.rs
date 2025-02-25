@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::net::IpAddr;
 use std::path::PathBuf;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -141,7 +142,7 @@ impl From<serde_json::Error> for Error {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct PortBinding {
     #[serde(rename = "HostIp")]
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -154,6 +155,8 @@ pub struct PortBinding {
 
 #[derive(Debug, Serialize)]
 pub struct HostConfig {
+    #[serde(rename = "Memory")]
+    pub memory: usize,
     #[serde(rename = "ExtraHosts")]
     pub extra_hosts: Vec<String>,
     #[serde(rename = "Binds")]
@@ -352,11 +355,50 @@ impl Client {
         Err(Error::Api(parts.status, resp.message))
     }
 
-    pub async fn tail_logs(&self, id: &str) -> Result<BodyStream<Incoming>, Error> {
+    pub async fn inspect_ip_address(&self, id: &str) -> Result<IpAddr, Error> {
+        let req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("http://localhost/containers/{id}/json"))
+            .body(Full::default())
+            .unwrap();
+
+        let resp = self.client.request(req).await?;
+        let (parts, incoming) = resp.into_parts();
+        let data = incoming.collect().await?.to_bytes();
+        if !parts.status.is_success() {
+            return Err(Error::Api(
+                parts.status,
+                String::from_utf8_lossy(&data).to_string(),
+            ));
+        }
+
+        #[derive(Deserialize)]
+        struct NetworkSettings {
+            #[serde(rename = "IPAddress")]
+            ip_address: IpAddr,
+        }
+
+        #[derive(Deserialize)]
+        struct InspectResponse {
+            #[serde(rename = "NetworkSettings")]
+            network_settings: NetworkSettings,
+        }
+
+        let resp = serde_json::from_slice::<InspectResponse>(&data)?;
+
+        Ok(resp.network_settings.ip_address)
+    }
+
+    pub async fn tail_logs(
+        &self,
+        id: &str,
+        stdout: bool,
+        stderr: bool,
+    ) -> Result<BodyStream<Incoming>, Error> {
         let req = Request::builder()
             .method(Method::GET)
             .uri(format!(
-                "http://localhost/containers/{id}/logs?stdout=true&stderr=true&follow=true&tail=all"
+                "http://localhost/containers/{id}/logs?stdout={stdout}&stderr={stderr}&follow=true&tail=all"
             ))
             .body(Full::default())?;
 

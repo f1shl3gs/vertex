@@ -377,68 +377,78 @@ mod tests {
     }
 }
 
-#[cfg(all(test, feature = "integration-tests-prometheus_remote_write"))]
+#[cfg(all(test, feature = "prometheus_remote_write_integration-tests"))]
 mod integration_tests {
     use std::time::Duration;
 
+    use super::Config;
+    use crate::testing::trace_init;
     use bytes::Bytes;
     use event::Metric;
     use framework::config::{ProxyConfig, SinkConfig, SinkContext};
     use framework::http::HttpClient;
     use http_body_util::{BodyExt, Full};
     use serde::{Deserialize, Serialize};
+    use testify::container::Container;
+    use testify::next_addr;
+    use testify::wait::wait_for_tcp;
 
-    use super::Config;
-    use crate::testing::{ContainerBuilder, WaitFor};
+    #[derive(Debug, Deserialize, Serialize)]
+    struct QueryResp {
+        status: String,
+        data: Vec<String>,
+    }
 
     #[tokio::test]
     async fn cortex_write_and_query() {
-        // 1. Setup Cortex
-        let container = ContainerBuilder::new("ubuntu/cortex:latest")
+        trace_init();
+
+        let service_addr = next_addr();
+
+        let resp = Container::new("ubuntu/cortex", "latest")
             .with_env("TZ", "UTC")
-            .with_port(9009)
-            .run()
-            .unwrap();
-        container.wait(WaitFor::Stderr("Cortex started")).unwrap();
-        let address = container.get_mapped_addr(9009);
+            .with_tcp(9009, service_addr.port())
+            .tail_logs(false, true)
+            .run(async move {
+                wait_for_tcp(service_addr).await;
 
-        // 2. Setup sink
-        let config = format!("endpoint: http://{}/api/v1/push", address);
-        let config: Config = serde_yaml::from_str(&config).unwrap();
-        let cx = SinkContext::new_test();
+                // Setup sink
+                let config = format!("endpoint: http://{}/api/v1/push", service_addr);
+                let config: Config = serde_yaml::from_str(&config).unwrap();
+                let cx = SinkContext::new_test();
 
-        let (sink, _healthcheck) = config.build(cx).await.unwrap();
-        sink.run_events(vec![Metric::gauge("foo", "", 1.1).into()])
-            .await
-            .unwrap();
+                let (sink, _healthcheck) = config.build(cx).await.unwrap();
+                sink.run_events(vec![Metric::gauge("foo", "", 1.1).into()])
+                    .await
+                    .unwrap();
 
-        // wait until all events flushed
-        tokio::time::sleep(Duration::from_secs(2)).await;
+                // wait until all events flushed
+                tokio::time::sleep(Duration::from_secs(2)).await;
 
-        // 3. Query label values
-        let endpoint = format!("http://{}/prometheus/api/v1/label/__name__/values", address);
-        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+                // Query label values
+                let endpoint = format!(
+                    "http://{}/prometheus/api/v1/label/__name__/values",
+                    service_addr
+                );
+                let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 
-        let req = http::Request::get(endpoint)
-            .body(Full::<Bytes>::default())
-            .unwrap();
+                let req = http::Request::get(endpoint)
+                    .body(Full::<Bytes>::default())
+                    .unwrap();
 
-        let resp = client.send(req).await.unwrap();
+                client.send(req).await.unwrap()
+            })
+            .await;
 
-        // 4. Assert response
+        // Assert response
         let (parts, incoming) = resp.into_parts();
         assert!(parts.status.is_success());
 
-        #[derive(Debug, Deserialize, Serialize)]
-        struct QueryResp {
-            status: String,
-            data: Vec<String>,
-        }
-
         let body = incoming.collect().await.unwrap().to_bytes();
-        let qr: QueryResp = serde_json::from_slice(body.as_ref()).unwrap();
-        assert_eq!(qr.status, "success".to_string());
-        assert_eq!(qr.data.len(), 1);
-        assert_eq!(qr.data[0], "foo");
+        let resp = serde_json::from_slice::<QueryResp>(body.as_ref()).unwrap();
+
+        assert_eq!(resp.status, "success".to_string());
+        assert_eq!(resp.data.len(), 1);
+        assert_eq!(resp.data[0], "foo");
     }
 }

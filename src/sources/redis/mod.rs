@@ -1059,8 +1059,11 @@ mod tests {
 
 #[cfg(all(test, feature = "redis-integration-tests"))]
 mod integration_tests {
+    use testify::container::Container;
+    use testify::next_addr;
+
     use super::*;
-    use crate::testing::{ContainerBuilder, WaitFor};
+    use crate::testing::trace_init;
 
     const REDIS_PORT: u16 = 6379;
 
@@ -1073,64 +1076,66 @@ mod integration_tests {
         }
     }
 
-    async fn run(password: Option<&str>, image: &str) {
-        let mut builder = ContainerBuilder::new(image).with_port(REDIS_PORT);
+    async fn run(password: Option<&str>, image: &str, tag: &str) {
+        trace_init();
+
+        let service_addr = next_addr();
+        let mut container = Container::new(image, tag).with_tcp(REDIS_PORT, service_addr.port());
         if let Some(password) = password {
-            builder = builder.args(["--requirepass", password]);
+            container = container.args(["--requirepass", password]);
         }
-        let container = builder.run().unwrap();
-        container
-            .wait(WaitFor::Stdout("Ready to accept connections"))
-            .unwrap();
 
-        let target = container.get_mapped_addr(REDIS_PORT);
-        let mut client = Client::connect(&target).await.unwrap();
-        if let Some(password) = password {
-            client.execute::<String>(&["auth", password]).await.unwrap();
-        }
-        write_testdata(&mut client).await;
+        let metrics = container
+            .run(async move {
+                let mut client = Client::connect(&service_addr).await.unwrap();
+                if let Some(password) = password {
+                    client.execute::<String>(&["auth", password]).await.unwrap();
+                }
+                write_testdata(&mut client).await;
 
-        let source = RedisSource {
-            username: None,
-            password: password.map(ToString::to_string),
+                let source = RedisSource {
+                    username: None,
+                    password: password.map(ToString::to_string),
 
-            address: target,
-            interval: Duration::from_secs(10),
-            client_name: None,
-        };
+                    address: service_addr,
+                    interval: Duration::from_secs(10),
+                    client_name: None,
+                };
 
-        let metrics = source.collect().await.unwrap();
+                source.collect().await.unwrap()
+            })
+            .await;
 
         assert!(!metrics.is_empty());
     }
 
     #[tokio::test]
     async fn with_auth_v5() {
-        run(Some("password"), "redis:5.0-alpine").await;
+        run(Some("password"), "redis", "5.0-alpine").await;
     }
 
     #[tokio::test]
     async fn without_auth_v5() {
-        run(None, "redis:5.0-alpine").await;
+        run(None, "redis", "5.0-alpine").await;
     }
 
     #[tokio::test]
     async fn with_auth_v6() {
-        run(Some("password"), "redis:6.0-alpine").await;
+        run(Some("password"), "redis", "6.0-alpine").await;
     }
 
     #[tokio::test]
     async fn without_auth_v6() {
-        run(None, "redis:6.0-alpine").await;
+        run(None, "redis", "6.0-alpine").await;
     }
 
     #[tokio::test]
     async fn with_auth_v7() {
-        run(Some("password"), "redis:7.0-alpine").await;
+        run(Some("password"), "redis", "7.0-alpine").await;
     }
 
     #[tokio::test]
     async fn without_auth_v7() {
-        run(None, "redis:7.0-alpine").await;
+        run(None, "redis", "7.0-alpine").await;
     }
 }

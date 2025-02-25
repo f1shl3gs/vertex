@@ -8,7 +8,7 @@ mod retry;
 mod service;
 mod sink;
 
-// #[cfg(all(test, feature = "integration-tests-elasticsearch"))]
+// #[cfg(all(test, feature = "elasticsearch-integration-tests"))]
 // mod integration_tests;
 
 #[cfg(test)]

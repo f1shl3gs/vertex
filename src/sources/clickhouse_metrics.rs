@@ -465,9 +465,12 @@ mod tests {
 
 #[cfg(all(test, feature = "clickhouse-integration-tests"))]
 mod integration_tests {
+    use testify::container::Container;
+    use testify::next_addr;
+
     use super::*;
     use crate::testing::components::{SOURCE_TAGS, run_and_assert_source_compliance};
-    use crate::testing::{ContainerBuilder, WaitFor, trace_init};
+    use crate::testing::trace_init;
 
     const PORT: u16 = 8123;
 
@@ -475,28 +478,25 @@ mod integration_tests {
     async fn run() {
         trace_init();
 
-        let container = ContainerBuilder::new("clickhouse/clickhouse-server:24.8-alpine")
-            .with_port(PORT)
-            .run()
-            .unwrap();
-        container
-            .wait(WaitFor::Stderr("Logging errors to /var/log"))
-            .unwrap();
+        let service_addr = next_addr();
 
-        tokio::time::sleep(Duration::from_secs(2)).await;
+        let batch = Container::new("clickhouse/clickhouse-server", "24.8-alpine")
+            .with_tcp(PORT, service_addr.port())
+            .tail_logs(false, true)
+            .run(async move {
+                tokio::time::sleep(Duration::from_secs(2)).await;
 
-        // TODO: make sure no warn or error log issued
-        let addr = container.get_mapped_addr(PORT);
-        let source = Config {
-            endpoint: format!("http://{}", addr).parse().unwrap(),
-            tls: None,
-            auth: None,
-            interval: Duration::from_secs(10),
-        };
+                let source = Config {
+                    endpoint: format!("http://{}", service_addr).parse().unwrap(),
+                    tls: None,
+                    auth: None,
+                    interval: Duration::from_secs(10),
+                };
+                run_and_assert_source_compliance(source, Duration::from_secs(10), &SOURCE_TAGS)
+                    .await
+            })
+            .await;
 
-        let events =
-            run_and_assert_source_compliance(source, Duration::from_secs(10), &SOURCE_TAGS).await;
-
-        println!("got {} events", events.len());
+        println!("got {} events", batch.len());
     }
 }
