@@ -938,12 +938,15 @@ mod tests {
     }
 }
 
-#[cfg(all(test, feature = "integration-tests-memcached"))]
+#[cfg(all(test, feature = "memcached-integration-tests"))]
 mod integration_tests {
     use std::net::SocketAddr;
 
+    use testify::container::Container;
+    use testify::next_addr;
+
     use super::*;
-    use crate::testing::ContainerBuilder;
+    use crate::testing::trace_init;
 
     async fn write_data(addr: SocketAddr, n: i32) {
         let mut socket = TcpStream::connect(addr).await.unwrap();
@@ -961,23 +964,28 @@ mod integration_tests {
 
     #[tokio::test]
     async fn query_stats() {
-        let container = ContainerBuilder::new("memcached:1.6.12-alpine3.14")
-            .with_port(11211)
-            .run()
-            .unwrap();
+        trace_init();
 
-        let addr = container.get_mapped_addr(11211);
+        let service_addr = next_addr();
 
-        write_data(addr, 1000).await;
+        let (stats, settings) = Container::new("memcached", "1.6.12-alpine3.14")
+            .with_tcp(11211, service_addr.port())
+            .run(async move {
+                write_data(service_addr, 1000).await;
 
-        let stats = fetch_stats(addr).await.unwrap();
+                let stats = fetch_stats(service_addr).await.unwrap();
+                let settings = stats_settings(service_addr).await.unwrap();
+
+                (stats, settings)
+            })
+            .await;
+
         assert_eq!(stats.stats.get("cmd_set").unwrap(), &1000.0);
         assert_eq!(stats.stats.get("cmd_get").unwrap(), &0.0);
 
-        let stats = stats_settings(addr).await.unwrap();
-        assert_eq!(stats.get("temporary_ttl").unwrap(), "61");
-        assert_eq!(stats.get("warm_max_factor").unwrap(), "2.00");
-        assert_eq!(stats.get("binding_protocol").unwrap(), "auto-negotiate");
-        assert_eq!(stats.get("ext_wbuf_size").unwrap(), "4194304");
+        assert_eq!(settings.get("temporary_ttl").unwrap(), "61");
+        assert_eq!(settings.get("warm_max_factor").unwrap(), "2.00");
+        assert_eq!(settings.get("binding_protocol").unwrap(), "auto-negotiate");
+        assert_eq!(settings.get("ext_wbuf_size").unwrap(), "4194304");
     }
 }

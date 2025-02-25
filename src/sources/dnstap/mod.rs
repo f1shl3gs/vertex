@@ -586,14 +586,14 @@ mod integration_tests {
     use std::net::SocketAddr;
     use std::time::Duration;
 
+    use super::*;
+    use crate::testing::trace_init;
     use event::Events;
     use futures::Stream;
     use testify::container::Container;
+    use testify::wait::wait_for_tcp;
     use testify::{collect_ready, next_addr};
     use tokio::net::UdpSocket;
-
-    use super::*;
-    use crate::testing::{trace_init, wait_for_tcp};
 
     const IMAGE: &str = "coredns/coredns";
 
@@ -667,7 +667,7 @@ mod integration_tests {
             .with_tcp(53, svc_addr.port())
             .with_udp(53, svc_addr.port())
             .with_volume(temp_dir.display(), "/Corefile")
-            .tail_logs(true)
+            .tail_logs(true, true)
             .run(async move {
                 wait_for_tcp(svc_addr).await;
 

@@ -1051,38 +1051,46 @@ mod tests {
     }
 }
 
-#[cfg(all(test, feature = "integration-tests-haproxy"))]
+#[cfg(all(test, feature = "haproxy-integration-tests"))]
 mod integration_tests {
     use super::*;
-    use crate::testing::ContainerBuilder;
+    use crate::testing::trace_init;
     use framework::config::ProxyConfig;
+    use testify::container::Container;
+    use testify::next_addr;
 
     #[tokio::test]
     async fn test_gather() {
+        trace_init();
+
         let pwd = std::env::current_dir().unwrap();
-        let container = ContainerBuilder::new("haproxy:2.4.7")
-            .with_port(8404)
+        let service_addr = next_addr();
+
+        Container::new("haproxy", "2.4.7")
+            .with_tcp(8404, service_addr.port())
             .with_volume(
                 format!("{}/tests/haproxy/haproxy.cfg", pwd.to_string_lossy()),
-                "/usr/local/etc/haproxy/haproxy.cfg".to_string(),
+                "/usr/local/etc/haproxy/haproxy.cfg",
             )
-            .run()
-            .unwrap();
-        let addr = container.get_mapped_addr(8404);
+            .tail_logs(false, true)
+            .run(async move {
+                // test unhealth gather
+                let uncorrect_port = 111; // dummy, but ok
+                let uri = format!("http://127.0.0.1:{}/stats?stats;csv", uncorrect_port)
+                    .parse()
+                    .unwrap();
+                let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+                let metrics = gather(&client, &uri, &None).await;
+                assert_eq!(metrics.len(), 2);
 
-        // test unhealth gather
-        let uncorrect_port = 111; // dummy, but ok
-        let uri = format!("http://127.0.0.1:{}/stats?stats;csv", uncorrect_port)
-            .parse()
-            .unwrap();
-        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
-        let metrics = gather(&client, &uri, &None).await;
-        assert_eq!(metrics.len(), 2);
-
-        // test health gather
-        let uri = format!("http://{}/stats?stats;csv", addr).parse().unwrap();
-        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
-        let metrics = gather(&client, &uri, &None).await;
-        assert_ne!(metrics.len(), 2);
+                // test health gather
+                let uri = format!("http://{}/stats?stats;csv", service_addr)
+                    .parse()
+                    .unwrap();
+                let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+                let metrics = gather(&client, &uri, &None).await;
+                assert_ne!(metrics.len(), 2);
+            })
+            .await;
     }
 }

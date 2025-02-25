@@ -1,6 +1,6 @@
 mod client;
-#[cfg(all(test, feature = "integration-tests-consul"))]
-mod integration_test;
+#[cfg(all(test, feature = "consul-integration-tests"))]
+mod integration_tests;
 
 use std::collections::HashSet;
 use std::time::{Duration, Instant};
