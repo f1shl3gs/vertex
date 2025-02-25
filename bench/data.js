@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740480272489,
+  "lastUpdate": 1740480688735,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b564fd393243d1de54647212391366207fa9ac23",
-          "message": "chore(deps): bump pin-project-lite from 0.2.15 to 0.2.16 (#2105)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.15 to 0.2.16.\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.15...v0.2.16)\n\n---\nupdated-dependencies:\n- dependency-name: pin-project-lite\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-07T11:05:05+08:00",
-          "tree_id": "2c4a37a690329fa0c7824ac11b61230b4481f060",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b564fd393243d1de54647212391366207fa9ac23"
-        },
-        "date": 1736219742229,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28736000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 700270,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.204,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "118b8748360407a2cb3db2e2a9e8821e3f9ac2b1",
           "message": "chore(deps): bump serde_json from 1.0.134 to 1.0.135 (#2107)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.134 to 1.0.135.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.134...v1.0.135)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-07T20:48:08+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 44.775,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "06220ed65b3eac66cf501e2afd12b5f859208b31",
+          "message": "chore(deps): bump flate2 from 1.0.35 to 1.1.0 (#2225)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.35 to 1.1.0.\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.35...1.1.0)\n\n---\nupdated-dependencies:\n- dependency-name: flate2\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-25T18:40:39+08:00",
+          "tree_id": "467d4cde531c71a0f8972f1273b71bf8d01e0699",
+          "url": "https://github.com/f1shl3gs/vertex/commit/06220ed65b3eac66cf501e2afd12b5f859208b31"
+        },
+        "date": 1740480669785,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27529000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 722720,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 45.825,
             "unit": "ns/op"
           }
         ]
