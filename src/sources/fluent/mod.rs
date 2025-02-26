@@ -764,13 +764,15 @@ mod integration_tests {
     use futures::Stream;
     use http::Request;
     use http_body_util::Full;
+    use testify::container::Container;
     use testify::random::random_string;
+    use testify::wait::wait_for_tcp;
     use testify::{collect_one, next_addr};
     use value::value;
 
     use super::*;
 
-    use crate::testing::{ContainerBuilder, WaitFor, trace_init, wait_for_tcp};
+    use crate::testing::trace_init;
 
     const FLUENT_BIT_IMAGE: &str = "fluent/fluent-bit";
     const FLUENT_BIT_TAG: &str = "3.2.4";
@@ -782,11 +784,6 @@ mod integration_tests {
         trace_init();
 
         let (source_addr, receiver) = start_source(status).await;
-
-        let input_addr = next_addr();
-        let listen_host = input_addr.ip();
-        let listen_port = input_addr.port();
-
         let source_port = source_addr.port();
 
         let config = format!(
@@ -798,8 +795,8 @@ mod integration_tests {
 
 [INPUT]
     Name       http
-    Host       {listen_host}
-    Port       {listen_port}
+    Host       0.0.0.0
+    Port       8080
 
 [OUTPUT]
     Name          forward
@@ -812,33 +809,28 @@ mod integration_tests {
         let temp_dir = testify::temp_dir().join("fluent-bit.conf");
         std::fs::write(&temp_dir, &config).unwrap();
 
-        let container = ContainerBuilder::new(format!("{}:{}", FLUENT_BIT_IMAGE, FLUENT_BIT_TAG))
+        let service_addr = next_addr();
+        let tag = random_string(8);
+        let value = random_string(16);
+        let payload = format!(r#"{{ "key": "{value}" }}"#);
+
+        let resp = Container::new(FLUENT_BIT_IMAGE, FLUENT_BIT_TAG)
             .with_volume(
                 temp_dir.to_string_lossy(),
                 "/fluent-bit/etc/fluent-bit.conf",
             )
-            .with_extra_args(["--add-host", "host.docker.internal:host-gateway"])
-            .with_port(listen_port)
-            .run()
-            .unwrap();
-        container
-            .wait(WaitFor::Stderr(r#"stream processor started"#))
-            .unwrap();
+            .with_tcp(8080, service_addr.port())
+            .run(async move {
+                let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+                let req = Request::post(format!("http://{}/{}", service_addr, tag))
+                    .header("content-type", "application/json")
+                    .body(Full::new(Bytes::from(payload.clone())))
+                    .unwrap();
 
-        // wait for container ready
-        let input_addr = container.get_mapped_addr(listen_port);
-        wait_for_tcp(input_addr).await;
+                client.send(req).await.unwrap()
+            })
+            .await;
 
-        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
-        let tag = random_string(8);
-        let value = random_string(16);
-        let payload = format!(r#"{{ "key": "{value}" }}"#);
-        let req = Request::post(format!("http://{}/{}", input_addr, tag))
-            .header("content-type", "application/json")
-            .body(Full::new(Bytes::from(payload.clone())))
-            .unwrap();
-
-        let resp = client.send(req).await.unwrap();
         assert_eq!(resp.status(), 201);
 
         let events = collect_one(receiver).await;
@@ -896,19 +888,13 @@ mod integration_tests {
         trace_init();
 
         let (source_addr, receiver) = start_source(status).await;
-
-        let input_addr = next_addr();
-        let input_host = input_addr.ip();
-        let input_port = input_addr.port();
-
         let source_port = source_addr.port();
-
         let config = format!(
             r#"
 <source>
   @type http
-  bind {input_host}
-  port {input_port}
+  bind 0.0.0.0
+  port 8080
 </source>
 
 <match *>
@@ -930,32 +916,25 @@ mod integration_tests {
         let temp_dir = testify::temp_dir().join("fluent.conf");
         std::fs::write(&temp_dir, &config).unwrap();
 
-        let container = ContainerBuilder::new(format!("{}:{}", FLUENTD_IMAGE, FLUENTD_TAG))
-            .with_volume(temp_dir.to_string_lossy(), "/fluentd/etc/fluent.conf")
-            .with_extra_args(["--add-host", "host.docker.internal:host-gateway"])
-            .with_port(input_port)
-            .run()
-            .unwrap();
-        container
-            .wait(WaitFor::Stdout(r#"fluentd worker is now running"#))
-            .unwrap();
-
-        // wait for HTTP input ready
-        let mapped = container.get_mapped_addr(input_port);
-        wait_for_tcp(mapped).await;
-        // wait for source ready
-        wait_for_tcp(source_addr).await;
-
-        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+        let service_addr = next_addr();
         let tag = random_string(8);
         let value = random_string(16);
         let payload = format!(r#"{{ "key": "{value}" }}"#);
-        let req = Request::post(format!("http://{}/{}", mapped, tag))
-            .header("content-type", "application/json")
-            .body(Full::new(Bytes::from(payload.clone())))
-            .unwrap();
 
-        let resp = client.send(req).await.unwrap();
+        let resp = Container::new(FLUENTD_IMAGE, FLUENTD_TAG)
+            .with_volume(temp_dir.to_string_lossy(), "/fluentd/etc/fluent.conf")
+            .with_tcp(8080, service_addr.port())
+            .run(async move {
+                let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+                let req = Request::post(format!("http://{}/{}", service_addr, tag))
+                    .header("content-type", "application/json")
+                    .body(Full::new(Bytes::from(payload.clone())))
+                    .unwrap();
+
+                client.send(req).await.unwrap()
+            })
+            .await;
+
         assert_eq!(resp.status(), 200);
 
         let events = collect_one(receiver).await;

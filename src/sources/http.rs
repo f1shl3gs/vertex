@@ -218,12 +218,13 @@ mod tests {
     use futures_util::StreamExt;
     use http::Request;
     use http_body_util::{BodyExt, Full};
+    use testify::wait::wait_for_tcp;
     use testify::{btreemap, collect_ready, next_addr};
     use tokio::pin;
     use value::Value;
 
     use super::*;
-    use crate::testing::{trace_init, wait_for_tcp};
+    use crate::testing::trace_init;
 
     #[test]
     fn generate_config() {

@@ -48,54 +48,50 @@ builder-x86_64-unknown-linux-musl:
 builder-x86_64-unknown-linux-gnu:
 	docker build -f ci/cross/x86_64-unknown-linux-gnu.dockerfile -t vertex-cross:x86_64-unknown-linux-gnu ci/cross
 
-## Integration tests
-.PHONY: integration-test-nginx_stub
-integration-test-nginx_stub:
-	cargo test -p vertex --lib sources::nginx_stub::integration_tests --features all-integration-tests --no-fail-fast
-
+# Integration tests
 .PHONY: redis-integration-tests
 redis-integration-tests:
 	cargo test -p vertex --lib sources::redis::integration_tests --features all-integration-tests --no-fail-fast
 
-.PHONY: integration-test-zookeeper
-integration-test-zookeeper:
-	cargo test -p vertex --lib sources::zookeeper::integration_tests --features all-integration-tests --no-fail-fast
-
-.PHONY: integration-test-memcached
-integration-test-memcached:
-	cargo test -p vertex --lib sources::memcached::integration_tests --features all-integration-tests --no-fail-fast
-
-.PHONY: integration-test-haproxy
-integration-test-haproxy:
+.PHONY: haproxy-integration-tests
+haproxy-integration-tests:
 	cargo test -p vertex --lib sources::haproxy::integration_tests --features all-integration-tests --no-fail-fast
 
-.PHONY: integration-test-mysql
-integration-test-mysql:
-	cargo test -p vertex --lib sources::mysqld::integration_tests --features all-integration-tests --no-fail-fast
-
-.PHONY: integration-test-consul
-integration-test-consul:
+.PHONY: consul-integration-tests
+consul-integration-tests:
 	cargo test -p vertex --lib sources::consul::integration_tests --features all-integration-tests --no-fail-fast
 
-.PHONY: integration-test-prometheus_remote_write
-integration-test-prometheus_remote_write:
+.PHONY: prometheus_remote_write-integration-tests
+prometheus_remote_write-integration-tests:
 	cargo test -p vertex --lib sinks::prometheus_remote_write::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: loki-integration-tests
 loki-integration-tests:
 	cargo test -p vertex --lib sinks::loki::integration_tests --features all-integration-tests --no-fail-fast
 
-.PHONY: integration-test-kafka
-integration-test-kafka:
+.PHONY: kafka-integration-tests
+kafka-integration-tests:
 	cargo test -p vertex --lib sources::kafka::integration_tests --features all-integration-tests --no-fail-fast
 
-.PHONY: integration-test-elasticsearch
-integration-test-elasticsearch:
+.PHONY: elasticsearch-integration-tests
+elasticsearch-integration-tests:
 	cargo test -p vertex --lib sinks::elasticsearch::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: dnstap-integration-tests
 dnstap-integration-tests:
 	cargo test -p vertex --lib sources::dnstap::integration_tests --features all-integration-tests --no-fail-fast
+
+.PHONY: memcached-integration-tests
+memcached-integration-tests:
+	cargo test -p vertex --lib sources::memcached::integration_tests --features all-integration-tests --no-fail-fast
+
+.PHONY: mysql-integration-tests
+mysql-integration-tests:
+	cargo test -p vertex --lib sources::mysqld::integration_tests --features all-integration-tests --no-fail-fast
+
+.PHONY: nginx_stub-integration-tests
+nginx_stub-integration-tests:
+	cargo test -p vertex --lib sources::nginx_stub::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: redfish-integration-tests
 redfish-integration-tests:
@@ -110,8 +106,16 @@ clickhouse-integration-tests:
 fluent-integration-tests:
 	cargo test -p vertex --lib sources::fluent::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: zookeeper-integration-tests
+zookeeper-integration-tests:
+	cargo test -p vertex --lib sources::zookeeper::integration_tests --features all-integration-tests --no-fail-fast
+
 .PHONY: integration-tests
-integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub redis-integration-tests integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch redfish-integration-tests fluent-integration-tests loki-integration-tests
+integration-tests: redis-integration-tests haproxy-integration-tests consul-integration-tests
+integration-tests: loki-integration-tests prometheus_remote_write-integration-tests kafka-integration-tests
+integration-tests: elasticsearch-integration-tests dnstap-integration-tests memcached-integration-tests
+integration-tests: mysql-integration-tests nginx_stub-integration-tests redfish-integration-tests
+integration-tests: clickhouse-integration-tests fluent-integration-tests zookeeper-integration-tests
 
 .PHONY: udeps
 udeps:

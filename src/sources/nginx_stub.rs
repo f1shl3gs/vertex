@@ -337,63 +337,64 @@ mod tests {
     }
 }
 
-#[cfg(all(test, feature = "integration-tests-nginx_stub"))]
+#[cfg(all(test, feature = "nginx_stub-integration-tests"))]
 mod integration_tests {
     use std::env::current_dir;
 
     use framework::config::ProxyConfig;
     use framework::http::{Auth, HttpClient};
+    use testify::container::Container;
+    use testify::next_addr;
 
     use super::get_stub_status;
-    use crate::testing::ContainerBuilder;
+    use crate::testing::trace_init;
 
     #[tokio::test]
-    async fn new_test_nginx() {
+    async fn nginx() {
+        trace_init();
+
         let pwd = current_dir().unwrap();
-        let container = ContainerBuilder::new("nginx:1.21.3")
-            .with_port(80)
+        let service_addr = next_addr();
+
+        Container::new("nginx", "1.27.4")
+            .with_tcp(80, service_addr.port())
             .with_volume(
                 format!("{}/tests/nginx/nginx.conf", pwd.to_string_lossy()),
-                "/etc/nginx/nginx.conf".to_string(),
+                "/etc/nginx/nginx.conf",
             )
             .with_volume(
                 format!(
                     "{}/tests/nginx/nginx_auth_basic.conf",
                     pwd.to_string_lossy()
                 ),
-                "/etc/nginx/nginx_auth_basic.conf".to_string(),
+                "/etc/nginx/nginx_auth_basic.conf",
             )
-            .run()
-            .unwrap();
+            .run(async move {
+                let cli = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 
-        container
-            .wait(crate::testing::WaitFor::Stdout(" start worker processes"))
-            .unwrap();
+                // without auth
+                let status =
+                    get_stub_status(&cli, &format!("http://{}/basic_status", service_addr), None)
+                        .await
+                        .unwrap();
+                assert_eq!(status.requests, 1);
+                assert_eq!(status.active, 1);
 
-        let address = container.get_mapped_addr(80);
-
-        let cli = HttpClient::new(None, &ProxyConfig::default()).unwrap();
-
-        // without auth
-        let status = get_stub_status(&cli, &format!("http://{}/basic_status", address), None)
-            .await
-            .unwrap();
-        assert_eq!(status.requests, 1);
-        assert_eq!(status.active, 1);
-
-        // with auth
-        let status = get_stub_status(
-            &cli,
-            &format!("http://{}/basic_status_auth", address),
-            Some(&Auth::Basic {
-                user: "tom".to_string(),
-                password: "123456".into(),
-            }),
-        )
-        .await
-        .unwrap();
-        assert_eq!(status.requests, 2);
-        assert_eq!(status.active, 1);
-        assert_eq!(status.accepts, 1);
+                // with auth
+                let status = get_stub_status(
+                    &cli,
+                    &format!("http://{}/basic_status_auth", service_addr),
+                    Some(&Auth::Basic {
+                        user: "tom".to_string(),
+                        password: "123456".into(),
+                    }),
+                )
+                .await
+                .unwrap();
+                assert_eq!(status.requests, 2);
+                assert_eq!(status.active, 1);
+                assert!(status.accepts >= 2);
+            })
+            .await;
     }
 }

@@ -1,11 +1,13 @@
 mod docker;
 
-use std::collections::HashMap;
-
+use crate::wait::wait_for_tcp;
 use docker::{HostConfig, LogOutput, PortBinding};
 use futures_util::{StreamExt, TryStreamExt};
+use std::collections::HashMap;
+use std::net::SocketAddr;
 use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
+use tracing::info;
 
 pub struct Container {
     image: String,
@@ -15,7 +17,9 @@ pub struct Container {
     environments: Vec<String>,
     volumes: Vec<String>,
     ports: HashMap<String, Vec<PortBinding>>,
-    tail_logs: bool,
+    stdout: bool,
+    stderr: bool,
+    memory_limit: usize,
 }
 
 impl Container {
@@ -27,7 +31,9 @@ impl Container {
             environments: vec![],
             volumes: vec![],
             ports: HashMap::new(),
-            tail_logs: false,
+            stdout: false,
+            stderr: false,
+            memory_limit: 0,
         }
     }
 
@@ -79,8 +85,14 @@ impl Container {
         self
     }
 
-    pub fn tail_logs(mut self, tail_logs: bool) -> Self {
-        self.tail_logs = tail_logs;
+    pub fn tail_logs(mut self, stdout: bool, stderr: bool) -> Self {
+        self.stdout = stdout;
+        self.stderr = stderr;
+        self
+    }
+
+    pub fn with_memory_limit(mut self, memory_limit: usize) -> Self {
+        self.memory_limit = memory_limit;
         self
     }
 
@@ -108,18 +120,22 @@ impl Container {
             host_config: HostConfig {
                 extra_hosts: vec!["host.docker.internal:host-gateway".into()],
                 binds: self.volumes,
-                port_bindings: self.ports,
+                port_bindings: self.ports.clone(),
+                memory: self.memory_limit,
             },
         };
 
         let id = client.create(options).await.unwrap();
 
         // tail logs
-        if self.tail_logs {
+        if self.stdout || self.stderr {
             let cid = id.clone();
             let mc = client.clone();
+            let stdout = self.stdout;
+            let stderr = self.stderr;
+
             tokio::spawn(async move {
-                let reader = mc.tail_logs(&cid).await.unwrap();
+                let reader = mc.tail_logs(&cid, stdout, stderr).await.unwrap();
 
                 let mut reader = FramedRead::new(
                     StreamReader::new(
@@ -152,6 +168,20 @@ impl Container {
 
         client.start(&id).await.unwrap();
 
+        if !self.ports.is_empty() {
+            let ip = client.inspect_ip_address(&id).await.unwrap();
+            for key in self.ports.keys() {
+                if let Some(ps) = key.strip_suffix("/tcp") {
+                    let port = ps.parse::<u16>().unwrap();
+                    let addr = SocketAddr::new(ip, port);
+
+                    info!("wait for tcp {}", addr);
+
+                    wait_for_tcp(SocketAddr::from((ip, port))).await;
+                }
+            }
+        }
+
         let result = f.await;
 
         let _ = client.stop(&id).await;
@@ -173,7 +203,6 @@ mod tests {
 
     use super::*;
     use crate::next_addr;
-    use crate::wait::wait_for_tcp;
 
     #[tokio::test]
     async fn nginx() {
@@ -181,11 +210,8 @@ mod tests {
 
         Container::new("nginx", "1.27.4")
             .with_tcp(80, output.port())
+            .tail_logs(true, true)
             .run(async {
-                tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-
-                wait_for_tcp(output).await;
-
                 let client: hyper_util::client::legacy::Client<HttpConnector, Full<Bytes>> =
                     hyper_util::client::legacy::Client::builder(TokioExecutor::default())
                         .build(HttpConnector::new());

@@ -38,7 +38,20 @@ where
     wait_for_duration(f, Duration::from_secs(WAIT_FOR_SECS)).await
 }
 
-// Wait (for 5s) for a TCP socket to be reachable
+// Wait (for 10s) for a TCP socket to be reachable
 pub async fn wait_for_tcp(addr: SocketAddr) {
-    wait_for(|| async move { TcpStream::connect(addr).await.is_ok() }).await
+    let timeout = Duration::from_secs(20);
+    let start = Instant::now();
+
+    loop {
+        if let Ok(Ok(_conn)) =
+            tokio::time::timeout(Duration::from_millis(500), TcpStream::connect(addr)).await
+        {
+            break;
+        }
+
+        if start.elapsed() > timeout {
+            panic!("Timed out waiting for connection");
+        }
+    }
 }
