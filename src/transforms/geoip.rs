@@ -283,7 +283,7 @@ impl FunctionTransform for Geoip {
 
 #[cfg(test)]
 mod tests {
-    use event::fields;
+    use value::value;
 
     use super::*;
     use crate::transforms::transform_one;
@@ -298,59 +298,59 @@ mod tests {
         let tests = vec![
             (
                 "lookup success",
-                fields!(
-                    "remote_addr" => "2.125.160.216",
-                    "request_path" => "/foo/bar"
-                ),
+                value!({
+                    "remote_addr": "2.125.160.216",
+                    "request_path": "/foo/bar"
+                }),
                 "tests/geoip/GeoIP2-City-Test.mmdb",
-                fields!(
-                    "city_name" => "Boxford",
-                    "country_code" => "GB",
-                    "continent_code" => "EU",
-                    "country_name" => "United Kingdom",
-                    "region_code" => "WBK",
-                    "region_name" => "West Berkshire",
-                    "timezone" => "Europe/London",
-                    "latitude" => 51.75,
-                    "longitude" => -1.25,
-                    "postal_code" => "OX1",
-                    "metro_code" => ""
-                ),
+                value!({
+                    "city_name": "Boxford",
+                    "country_code": "GB",
+                    "continent_code": "EU",
+                    "country_name": "United Kingdom",
+                    "region_code": "WBK",
+                    "region_name": "West Berkshire",
+                    "timezone": "Europe/London",
+                    "latitude": 51.75,
+                    "longitude": (-1.25),
+                    "postal_code": "OX1",
+                    "metro_code": ""
+                }),
             ),
             (
                 "partial result",
-                fields!(
-                    "remote_addr" => "67.43.156.9",
-                    "request_path" => "/foo/bar",
-                ),
+                value!({
+                    "remote_addr": "67.43.156.9",
+                    "request_path": "/foo/bar",
+                }),
                 "tests/geoip/GeoIP2-City-Test.mmdb",
-                fields!(
-                    "city_name" => "",
-                    "country_code" => "BT",
-                    "country_name" => "Bhutan",
-                    "continent_code" => "AS",
-                    "region_code" => "",
-                    "region_name" => "",
-                    "timezone" => "Asia/Thimphu",
-                    "latitude" => 27.5,
-                    "longitude" => 90.5,
-                    "postal_code" => "",
-                    "metro_code" => ""
-                ),
+                value!({
+                    "city_name": "",
+                    "country_code": "BT",
+                    "country_name": "Bhutan",
+                    "continent_code": "AS",
+                    "region_code": "",
+                    "region_name": "",
+                    "timezone": "Asia/Thimphu",
+                    "latitude": 27.5,
+                    "longitude": 90.5,
+                    "postal_code": "",
+                    "metro_code": ""
+                }),
             ),
             (
                 "no results",
-                fields!(
-                    "remote_addr" => "10.1.12.1",
-                    "request_path" => "/foo/bar",
-                ),
+                value!({
+                    "remote_addr": "10.1.12.1",
+                    "request_path": "/foo/bar",
+                }),
                 "tests/geoip/GeoLite2-ASN-Test.mmdb",
-                fields!(
-                    "autonomous_system_number" => 0,
-                    "autonomous_system_organization" => "",
-                    "isp" => "",
-                    "organization" => ""
-                ),
+                value!({
+                    "autonomous_system_number": 0,
+                    "autonomous_system_organization": "",
+                    "isp": "",
+                    "organization": ""
+                }),
             ),
         ];
 
@@ -367,17 +367,12 @@ mod tests {
             };
             let event = transform_one(&mut transform, input).unwrap();
 
-            for field in want.keys() {
-                let key = format!("geo.{}", field);
-                let got = event.as_log().get(key.as_str()).unwrap();
-                assert_eq!(
-                    got,
-                    want.get(field).expect("field exists"),
-                    "case: {}, field: {}",
-                    name,
-                    field
-                )
-            }
+            assert_eq!(
+                event.as_log().value().get("geo").unwrap(),
+                &want,
+                "test: {}",
+                name
+            );
         }
     }
 }

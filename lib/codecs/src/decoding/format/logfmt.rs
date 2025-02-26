@@ -111,7 +111,7 @@ impl Deserializer for LogfmtDeserializer {
 
 #[cfg(test)]
 mod tests {
-    use event::fields;
+    use value::value;
 
     use super::*;
 
@@ -120,67 +120,67 @@ mod tests {
         let tests = [
             (
                 "a",
-                fields!(
-                    "a" => true,
-                ),
+                value!({
+                    "a": true,
+                }),
             ),
             (
                 "a=",
-                fields!(
-                    "a" => true,
-                ),
+                value!({
+                    "a": true,
+                }),
             ),
             (
                 "a= ",
-                fields!(
-                    "a" => true,
-                ),
+                value!({
+                    "a": true,
+                }),
             ),
             (
                 "a=b",
-                fields!(
-                    "a" => "b",
-                ),
+                value!({
+                    "a": "b",
+                }),
             ),
             (
                 "a=\"b\"",
-                fields!(
-                    "a" => "b"
-                ),
+                value!({
+                    "a": "b"
+                }),
             ),
             (
                 "a=\"f(\\\"b\\\")",
-                fields!(
-                    "a" => "f(\"b\")"
-                ),
+                value!({
+                    "a": "f(\"b\")"
+                }),
             ),
             (
                 "a=\\b",
-                fields!(
-                    "a" => "\\b"
-                ),
+                value!({
+                    "a": "\\b"
+                }),
             ),
             (
                 "a=1 b=\"bar\" ƒ=2h3s r=\"esc\t\" d x=sf",
-                fields!(
-                    "a" => "1",
-                    "b" => "bar",
-                    "ƒ" => "2h3s",
-                    "r" => "esc\t",
-                    "d" => true,
-                    "x" => "sf"
-                ),
+                value!({
+                    "a": "1",
+                    "b": "bar",
+                    "ƒ": "2h3s",
+                    "r": "esc\t",
+                    "d": true,
+                    "x": "sf"
+                }),
             ),
             (
                 r#"foo=bar a=14 baz="hello kitty" cool%story=bro f %^asdf"#,
-                fields!(
-                    "foo" => "bar",
-                    "a" => "14",
-                    "baz" => "hello kitty",
-                    "cool%story" => "bro",
-                    "f" => true,
-                    "%^asdf" => true,
-                ),
+                value!({
+                    "foo": "bar",
+                    "a": "14",
+                    "baz": "hello kitty",
+                    "cool%story": "bro",
+                    "f": true,
+                    "%^asdf": true,
+                }),
             ),
         ];
 
@@ -194,17 +194,12 @@ mod tests {
             assert_eq!(logs.len(), 1);
 
             let log = logs.remove(0);
-            let got = log.value().as_object().unwrap();
-            assert_eq!(got.len(), want.len(), "input: {}\ngot: {:?}", input, got);
-            for (key, value) in got {
-                assert_eq!(
-                    value,
-                    want.get(key).expect("key not found in want"),
-                    "input: {:?}\nkey: {}",
-                    input,
-                    key
-                );
-            }
+            let got = log.value();
+            assert_eq!(
+                got, &want,
+                "input: {}\ngot:  {:?}\nwant: {:?}",
+                input, got, want
+            );
         }
     }
 }

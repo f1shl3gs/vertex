@@ -285,7 +285,8 @@ impl Metricalize {
 #[cfg(test)]
 mod tests {
     use event::log::path::parse_target_path;
-    use event::{Bucket, LogRecord, fields, tags};
+    use event::{Bucket, LogRecord, tags};
+    use value::value;
 
     use super::*;
 
@@ -308,7 +309,7 @@ mod tests {
                         increment_by_value: false,
                     },
                 },
-                vec![fields!("foo" => "bar")],
+                vec![value!({"foo": "bar"})],
                 vec![
                     // name, tags, value
                     ("sample_counter", tags!(), MetricValue::Sum(2.0)),
@@ -326,11 +327,11 @@ mod tests {
                 },
                 vec![
                     // This fields can't be extract, it should be ignored
-                    fields!("foo" => "bar"),
-                    fields!("foo" => "1.2"),
-                    fields!("foo" => 2i64),
-                    fields!("foo" => 3u64),
-                    fields!("foo" => 4.3),
+                    value!({"foo": "bar"}),
+                    value!({"foo": "1.2"}),
+                    value!({"foo": 2i64}),
+                    value!({"foo": 3u64}),
+                    value!({"foo": 4.3}),
                 ],
                 vec![("test", tags!(), MetricValue::Sum(10.5))],
             ),
@@ -353,17 +354,17 @@ mod tests {
                     },
                 },
                 vec![
-                    fields!(),
-                    fields!(
-                        "tag1" => "tv1",
-                        "tags" => fields!(
-                            "k1" => "v1",
-                            "k2" => "v2",
-                        ),
-                        "foo" => fields!(
-                            "bar" => 1.23
-                        )
-                    ),
+                    value!({}),
+                    value!({
+                        "tag1": "tv1",
+                        "tags": {
+                            "k1": "v1",
+                            "k2": "v2",
+                        },
+                        "foo": {
+                            "bar": 1.23
+                        }
+                    }),
                 ],
                 vec![(
                     "test",
@@ -383,7 +384,7 @@ mod tests {
                     tags: Default::default(),
                     typ: MetricType::Gauge,
                 },
-                vec![fields!("foo" => "1"), fields!("foo" => 2.1)],
+                vec![value!({"foo": "1"}), value!({"foo": 2.1})],
                 vec![("test", tags!(), MetricValue::Gauge(2.1))],
             ),
             (
@@ -396,7 +397,7 @@ mod tests {
                         buckets: default_buckets(),
                     },
                 },
-                vec![fields!("foo" => 0.0005), fields!("foo" => "5")],
+                vec![value!({"foo": 0.0005}), value!({"foo": "5"})],
                 vec![(
                     "test",
                     tags!(),
@@ -490,7 +491,7 @@ mod tests {
         };
 
         let (series, value) = config
-            .build_series_and_value(&LogRecord::from(fields!( "value" => "a")))
+            .build_series_and_value(&LogRecord::from(value!({ "value" : "a"})))
             .unwrap();
 
         assert_eq!(series.name, "name");
@@ -506,7 +507,7 @@ mod tests {
         };
 
         let (series, value) = config
-            .build_series_and_value(&LogRecord::from(fields!( "a" => fields!( "b" => 1))))
+            .build_series_and_value(&LogRecord::from(value!({ "a": { "b": 1 } })))
             .unwrap();
         assert_eq!(series.name, "name");
         assert_eq!(value, 1.0);

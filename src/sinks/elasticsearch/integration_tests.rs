@@ -151,12 +151,12 @@ fn structures_events_correctly() {
             hc.await.expect("Health check failed");
 
             let (batch, mut receiver) = BatchNotifier::new_with_receiver();
-            let input = LogRecord::from(fields!(
-                log_schema().message_key() => "raw log line",
-                log_schema().timestamp_key() => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
-                "my_id" => "42",
-                "foo" => "bar"
-            ))
+            let input = LogRecord::from(value!({
+                log_schema().message_key(): "raw log line",
+                log_schema().timestamp_key(): Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
+                "my_id": "42",
+                "foo": "bar"
+            }))
             .with_batch_notifier(&batch);
 
             drop(batch);

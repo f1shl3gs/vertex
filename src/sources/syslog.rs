@@ -323,9 +323,10 @@ mod tests {
     use bytes::Bytes;
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
+    use event::LogRecord;
     use event::log::{Value, parse_value_path};
-    use event::{LogRecord, fields};
     use testify::assert_event_data_eq;
+    use value::value;
 
     use super::*;
 
@@ -431,24 +432,24 @@ address: 127.0.0.1:12345
         );
 
         let want = {
-            let mut log = LogRecord::from(fields!(
-                "host" => "74794bfb6795",
-                "hostname" => "74794bfb6795",
-                "meta" => fields!(
-                    "sequenceId" => "1",
-                    "sysUpTime" => "37",
-                    "language" => "EN",
-                ),
-                "origin" => fields!(
-                    "software" => "test",
-                    "ip" => "192.168.0.1",
-                ),
-                "severity" => "notice",
-                "facility" => "user",
-                "version" => 1,
-                "appname" => "root",
-                "procid" => 8449,
-            ));
+            let mut log = LogRecord::from(value!({
+                "host": "74794bfb6795",
+                "hostname": "74794bfb6795",
+                "meta": {
+                    "sequenceId": "1",
+                    "sysUpTime": "37",
+                    "language": "EN",
+                },
+                "origin": {
+                    "software": "test",
+                    "ip": "192.168.0.1",
+                },
+                "severity": "notice",
+                "facility": "user",
+                "version": 1,
+                "appname": "root",
+                "procid": 8449,
+            }));
 
             log.insert(log_schema().message_key(), msg);
             log.insert(
@@ -573,13 +574,13 @@ address: 127.0.0.1:12345
             .into();
 
         let want = {
-            let mut log = LogRecord::from(fields!(
-                "hostname" => "74794bfb6795",
-                "severity" => "notice",
-                "facility" => "user",
-                "appname" => "root",
-                "procid" => 8539,
-            ));
+            let mut log = LogRecord::from(value!({
+                "hostname": "74794bfb6795",
+                "severity": "notice",
+                "facility": "user",
+                "appname": "root",
+                "procid": 8539,
+            }));
 
             log.insert(log_schema().timestamp_key(), date);
             log.insert(log_schema().host_key(), "74794bfb6795");
@@ -609,19 +610,19 @@ address: 127.0.0.1:12345
             .into();
 
         let want = {
-            let mut log = LogRecord::from(fields!(
-                "host" => "74794bfb6795",
-                "hostname" => "74794bfb6795",
-                "severity" => "info",
-                "facility" => "local7",
-                "appname" => "liblogging-stdlog",
-                "origin" => fields!(
-                    "software" => "rsyslogd",
-                    "swVersion" => "8.24.0",
-                    "x-pid" => "8979",
-                    "x-info" => "http://www.rsyslog.com",
-                )
-            ));
+            let mut log = LogRecord::from(value!({
+                "host": "74794bfb6795",
+                "hostname": "74794bfb6795",
+                "severity": "info",
+                "facility": "local7",
+                "appname": "liblogging-stdlog",
+                "origin": {
+                    "software": "rsyslogd",
+                    "swVersion": "8.24.0",
+                    "x-pid": "8979",
+                    "x-info": "http://www.rsyslog.com",
+                }
+            }));
 
             log.insert(log_schema().timestamp_key(), date);
             log.insert(log_schema().message_key(), msg);
@@ -648,19 +649,19 @@ address: 127.0.0.1:12345
             .unwrap();
 
         let want = {
-            let mut log = LogRecord::from(fields!(
-                "host" => "74794bfb6795",
-                "hostname" => "74794bfb6795",
-                "severity" => "info",
-                "facility" => "local7",
-                "appname" => "liblogging-stdlog",
-                "origin" => fields!(
-                    "software" => "rsyslogd",
-                    "swVersion" => "8.24.0",
-                    "x-pid" => "9043",
-                    "x-info" => "http://www.rsyslog.com",
-                )
-            ));
+            let mut log = LogRecord::from(value!({
+                "host": "74794bfb6795",
+                "hostname": "74794bfb6795",
+                "severity": "info",
+                "facility": "local7",
+                "appname": "liblogging-stdlog",
+                "origin": {
+                    "software": "rsyslogd",
+                    "swVersion": "8.24.0",
+                    "x-pid": "9043",
+                    "x-info": "http://www.rsyslog.com",
+                }
+            }));
 
             log.insert(log_schema().timestamp_key(), Utc.from_utc_datetime(&dt));
             log.insert(log_schema().message_key(), msg);

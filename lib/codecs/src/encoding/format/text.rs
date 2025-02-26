@@ -44,7 +44,8 @@ impl Encoder<Event> for TextSerializer {
 
 #[cfg(test)]
 mod tests {
-    use event::{Metric, fields, tags};
+    use event::{Metric, tags};
+    use value::value;
 
     use super::*;
 
@@ -53,10 +54,10 @@ mod tests {
         let tests = [
             (
                 "log",
-                Event::from(fields!(
-                    "foo" => "bar",
-                    log_schema().message_key().path.to_string() => "msg"
-                )),
+                Event::from(value!({
+                    "foo": "bar",
+                    "message": "msg"
+                })),
                 "msg",
             ),
             (
