@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740573789908,
+  "lastUpdate": 1740574868935,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e7910bfc585f66c0a38a0a3c1b6ca6646357baef",
-          "message": "chore(deps): bump inventory from 0.3.16 to 0.3.17 (#2109)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.16 to 0.3.17.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.16...0.3.17)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-08T11:53:38+08:00",
-          "tree_id": "aaa19bc4aad9e34e946f3ed1b1532374df096e3e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e7910bfc585f66c0a38a0a3c1b6ca6646357baef"
-        },
-        "date": 1736308538514,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 530290,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 516590,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ad29fbded12afd21296a4c38f726bafd34c738f8",
+          "message": "fix integration tests (#2229)",
+          "timestamp": "2025-02-26T20:58:52+08:00",
+          "tree_id": "05a65031f62c551897c113f33b9318e50b80c29f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ad29fbded12afd21296a4c38f726bafd34c738f8"
+        },
+        "date": 1740574850227,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 518650,
             "unit": "ns/op"
           }
         ]
