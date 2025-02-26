@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740577032378,
+  "lastUpdate": 1740577050850,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "956b9f8a9d2594ed1a7d309ddbb65bc18f6f1176",
-          "message": "chore(deps): bump tokio from 1.42.0 to 1.43.0 (#2112)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.42.0 to 1.43.0.\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.42.0...tokio-1.43.0)\n\n---\nupdated-dependencies:\n- dependency-name: tokio\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-09T12:03:48+08:00",
-          "tree_id": "779fa033a8dba46df8800ebece3af159b2831c97",
-          "url": "https://github.com/f1shl3gs/vertex/commit/956b9f8a9d2594ed1a7d309ddbb65bc18f6f1176"
-        },
-        "date": 1736396028001,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27880000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 587420,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 43.532,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6841a9f9bcc3560407495c27e9a3811f74dba8e9",
           "message": "chore(deps): bump thiserror from 2.0.9 to 2.0.10 (#2113)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.9 to 2.0.10.\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.9...2.0.10)\n\n---\nupdated-dependencies:\n- dependency-name: thiserror\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <26081140+f1shl3gs@users.noreply.github.com>",
           "timestamp": "2025-01-09T13:03:10+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.827,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a68ab0bfc0b156e94430c2cba36bcd27c9ae712a",
+          "message": "chore(deps): bump uuid from 1.14.0 to 1.15.0 (#2227)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.14.0 to 1.15.0.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/v1.14.0...v1.15.0)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-26T21:26:59+08:00",
+          "tree_id": "0d4968294fe14e85f3ec843550f4b472029affe7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a68ab0bfc0b156e94430c2cba36bcd27c9ae712a"
+        },
+        "date": 1740577029372,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29214000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 737930,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 44.847,
             "unit": "ns/op"
           }
         ]
