@@ -177,10 +177,13 @@ impl TaskTransform for Throttle {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use event::{Event, fields};
-    use futures_util::{SinkExt, StreamExt};
     use std::task::Poll;
+
+    use event::Event;
+    use futures_util::{SinkExt, StreamExt};
+    use value::value;
+
+    use super::*;
 
     #[test]
     fn generate_config() {
@@ -277,8 +280,8 @@ key_field: "{{ bucket }}"
         // make sure we trip it/set the interval in the furture
         assert_eq!(Poll::Pending, futures::poll!(out_stream.next()));
 
-        let log_a = Event::from(fields!("bucket" => "a"));
-        let log_b = Event::from(fields!("bucket" => "b"));
+        let log_a = Event::from(value!({"bucket": "a"}));
+        let log_b = Event::from(value!({"bucket": "b"}));
         tx.send(log_a).await.unwrap();
         tx.send(log_b).await.unwrap();
 

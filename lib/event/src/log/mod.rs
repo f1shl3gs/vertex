@@ -298,21 +298,3 @@ pub fn fields_from_json(json_value: serde_json::Value) -> BTreeMap<String, Value
         sth => panic!("Expected a map, got {:?}", sth),
     }
 }
-
-#[macro_export]
-macro_rules! fields {
-    ( $($x:expr => $y:expr),* ) => ({
-        let mut _map: std::collections::BTreeMap<String, $crate::log::Value> = std::collections::BTreeMap::new();
-        $(
-            _map.insert($x.into(), $y.into());
-        )*
-        _map
-    });
-    // Done with trailing comma
-    ( $($x:expr => $y:expr,)* ) => (
-        fields!{$($x => $y),*}
-    );
-    () => ({
-        std::collections::BTreeMap<String, $crate::Value> = std::collections::BTreeMap::new();
-    })
-}

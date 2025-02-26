@@ -55,15 +55,15 @@ impl Encoder<Event> for JsonSerializer {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use event::fields;
     use value::value;
+
+    use super::*;
 
     #[test]
     fn serialize() {
-        let event = Event::from(fields!(
-            "foo" => "bar"
-        ));
+        let event = Event::from(value!({
+            "foo": "bar"
+        }));
         let mut serializer = JsonSerializer::new(false);
         let mut bytes = BytesMut::new();
 

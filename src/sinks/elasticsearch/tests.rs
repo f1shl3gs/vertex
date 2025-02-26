@@ -1,11 +1,10 @@
-use std::collections::BTreeMap;
-
 use chrono::{TimeZone, Utc};
 use codecs::encoding::Transformer;
+use event::LogRecord;
 use event::log::{Value, parse_value_path};
-use event::{LogRecord, fields};
 use framework::sink::util::Encoder;
 use framework::template::Template;
+use value::value;
 
 use super::BulkAction;
 use super::common::ElasticsearchCommon;
@@ -24,11 +23,12 @@ async fn sets_create_action_when_configured() {
         ..Default::default()
     };
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
-    let log = LogRecord::from(fields!(
-        "message" => "hi there",
-        "timestamp" => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
-        "action" => "crea"
-    ));
+    let timestamp = Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap();
+    let log = LogRecord::from(value!({
+        "message": "hi there",
+        "timestamp": timestamp,
+        "action": "crea"
+    }));
 
     let mut encoded = vec![];
     let encode_size = es
@@ -47,11 +47,11 @@ async fn sets_create_action_when_configured() {
     assert_eq!(encoded.len(), encode_size);
 }
 
-fn data_stream_body() -> BTreeMap<String, Value> {
-    fields!(
-        "type" => "synthetics",
-        "dataset" => "testing"
-    )
+fn data_stream_body() -> Value {
+    value!({
+        "type": "synthetics",
+        "dataset": "testing"
+    })
 }
 
 #[tokio::test]
@@ -66,12 +66,13 @@ async fn encode_datastream_mode() {
         ..Default::default()
     };
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
-
-    let log = LogRecord::from(fields!(
-        "message" => "hi there",
-        "timestamp" => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
-        "data_stream" => data_stream_body()
-    ));
+    let timestamp = Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap();
+    let data_stream = data_stream_body();
+    let log = LogRecord::from(value!({
+        "message": "hi there",
+        "timestamp": timestamp,
+        "data_stream": data_stream
+    }));
 
     let mut encoded = vec![];
     let encoded_size = es
@@ -107,11 +108,13 @@ async fn encode_datastream_mode_no_routing() {
         ..Default::default()
     };
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
-    let log = LogRecord::from(fields!(
-        "message" => "hi there",
-        "timestamp" => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
-        "data_stream" => data_stream_body()
-    ));
+    let timestamp = Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap();
+    let data_stream = data_stream_body();
+    let log = LogRecord::from(value!({
+        "message": "hi there",
+        "timestamp": timestamp,
+        "data_stream": data_stream
+    }));
 
     let mut encoded = vec![];
     let encoded_size = es
@@ -142,11 +145,11 @@ async fn decode_bulk_action_error() {
     };
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
 
-    let log = LogRecord::from(fields!(
-        "message" => "hi there",
-        "foo" => "bar",
-        "idx" => "purple",
-    ));
+    let log = LogRecord::from(value!({
+        "message": "hi there",
+        "foo": "bar",
+        "idx": "purple",
+    }));
     let action = es.mode.bulk_action(&log);
     assert!(action.is_none());
 }
@@ -162,9 +165,9 @@ async fn decode_bulk_action() {
         ..Default::default()
     };
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
-    let log = LogRecord::from(fields!(
-        "message" => "hi there",
-    ));
+    let log = LogRecord::from(value!({
+        "message": "hi there",
+    }));
     let action = es.mode.bulk_action(&log).unwrap();
     assert!(matches!(action, BulkAction::Create))
 }
@@ -187,11 +190,13 @@ async fn encode_datastream_mode_no_sync() {
     };
 
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
-    let log = LogRecord::from(fields!(
-        "message" => "hi there",
-        "timestamp" => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
-        "data_stream" => data_stream_body(),
-    ));
+    let timestamp = Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap();
+    let data_stream = data_stream_body();
+    let log = LogRecord::from(value!({
+        "message": "hi there",
+        "timestamp": timestamp,
+        "data_stream": data_stream,
+    }));
 
     let mut encoded = vec![];
     let encoded_size = es
@@ -230,11 +235,11 @@ async fn allow_using_excepted_fields() {
         ..Default::default()
     };
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
-    let log = LogRecord::from(fields!(
-        "message" => "hi there",
-        "foo" => "bar",
-        "idx" => "purple"
-    ));
+    let log = LogRecord::from(value!({
+        "message": "hi there",
+        "foo": "bar",
+        "idx": "purple"
+    }));
 
     let mut encoded = vec![];
     let encoded_size = es

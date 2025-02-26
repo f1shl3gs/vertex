@@ -26,15 +26,15 @@ impl Encoder<Event> for NativeJsonSerializer {
 
 #[cfg(test)]
 mod tests {
-    use event::fields;
+    use value::value;
 
     use super::*;
 
     #[test]
     fn serialize() {
-        let event = Event::from(fields!(
-            "foo" => "bar"
-        ));
+        let event = Event::from(value!({
+            "foo": "bar"
+        }));
 
         let mut serializer = NativeJsonSerializer::new();
         let mut buf = BytesMut::new();

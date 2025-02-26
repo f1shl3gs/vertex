@@ -1,9 +1,9 @@
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use async_trait::async_trait;
 use chrono::Utc;
 use configurable::configurable_component;
-use event::{LogRecord, fields};
+use event::LogRecord;
 use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext};
 use futures::StreamExt;
@@ -62,7 +62,6 @@ impl SourceConfig for Config {
             while let Some(evs) = combined.next().await {
                 let message_key = log_schema().message_key();
                 let timestamp_key = log_schema().timestamp_key();
-                let source_type_key = log_schema().source_type_key();
 
                 let records = evs
                     .into_iter()
@@ -86,23 +85,35 @@ impl SourceConfig for Config {
                         Some(ev)
                     })
                     .map(|ev| {
+                        let mut map = BTreeMap::new();
+
                         let timestamp = match ev.event_time {
                             Some(ts) => ts.0,
                             None => Utc::now(),
                         };
+                        map.insert(timestamp_key.to_string(), timestamp.into());
 
-                        LogRecord::from(fields!(
-                            "reason" => ev.reason.unwrap_or_default(),
-                            "action" => ev.action.unwrap_or_default(),
-                            "type" => ev.type_.unwrap_or_default(),
-                            "name" => ev.metadata.name.unwrap_or_default(),
-                            "namespace" => ev.metadata.namespace.unwrap_or_default(),
-                            "uid" => ev.metadata.uid.unwrap_or_default(),
-                            source_type_key.to_string() => "kubernetes_events",
+                        map.insert(
+                            message_key.to_string(),
+                            ev.message.unwrap_or_default().into(),
+                        );
+                        map.insert("reason".to_string(), ev.reason.unwrap_or_default().into());
+                        map.insert("action".to_string(), ev.action.unwrap_or_default().into());
+                        map.insert("type".to_string(), ev.type_.unwrap_or_default().into());
+                        map.insert(
+                            "name".to_string(),
+                            ev.metadata.name.unwrap_or_default().into(),
+                        );
+                        map.insert(
+                            "namespace".to_string(),
+                            ev.metadata.namespace.unwrap_or_default().into(),
+                        );
+                        map.insert(
+                            "uid".to_string(),
+                            ev.metadata.uid.unwrap_or_default().into(),
+                        );
 
-                            message_key.to_string() => ev.message.unwrap_or_default(),
-                            timestamp_key.to_string() => timestamp,
-                        ))
+                        LogRecord::from(map)
                     });
 
                 if let Err(err) = output.send_batch(records).await {

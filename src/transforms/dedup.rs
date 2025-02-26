@@ -197,7 +197,8 @@ impl FunctionTransform for Dedup {
 
 #[cfg(test)]
 mod tests {
-    use event::{Event, fields};
+    use event::Event;
+    use value::value;
 
     use super::*;
     use crate::transforms::transform_one;
@@ -225,25 +226,25 @@ mod tests {
     }
 
     fn basic(mut transform: Dedup) {
-        let event1 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => "some value",
-            "unmatched" => "another value",
-        ));
+        let event1 = Event::from(value!({
+            "message": "message",
+            "matched": "some value",
+            "unmatched": "another value",
+        }));
 
         // Test that unmatched field isn't considered
-        let event2 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => "some value2",
-            "unmatched" => "another value",
-        ));
+        let event2 = Event::from(value!({
+            "message": "message",
+            "matched": "some value2",
+            "unmatched": "another value",
+        }));
 
         // Test that matched field is considered
-        let event3 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => "some value",
-            "unmatched" => "another value2",
-        ));
+        let event3 = Event::from(value!({
+            "message": "message",
+            "matched": "some value",
+            "unmatched": "another value2",
+        }));
 
         // First event should always be passed through as-is.
         let new_event = transform_one(&mut transform, event1.clone()).unwrap();
@@ -284,14 +285,14 @@ mod tests {
     }
 
     fn field_name_matters(mut transform: Dedup) {
-        let event1 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched1" => "some value"
-        ));
-        let event2 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched2" => "some value",
-        ));
+        let event1 = Event::from(value!({
+            "message": "message",
+            "matched1": "some value"
+        }));
+        let event2 = Event::from(value!({
+            "message": "message",
+            "matched2": "some value",
+        }));
 
         // First event should always be passed through as-is.
         let got = transform_one(&mut transform, event1.clone()).unwrap();
@@ -313,18 +314,18 @@ mod tests {
     /// way, even if the order of the matched fields is different between the
     /// two.
     fn field_order_irrelevant(mut transform: Dedup) {
-        let event1 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched1" => "value1",
-            "matched2" => "value2",
-        ));
+        let event1 = Event::from(value!({
+            "message": "message",
+            "matched1": "value1",
+            "matched2": "value2",
+        }));
 
         // Add fields in opposite order
-        let event2 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched2" => "value2",
-            "matched1" => "value1",
-        ));
+        let event2 = Event::from(value!({
+            "message": "message",
+            "matched2": "value2",
+            "matched1": "value1",
+        }));
 
         // First event should always be passed through as-is.
         let got = transform_one(&mut transform, event1.clone()).unwrap();
@@ -343,14 +344,14 @@ mod tests {
 
     // Test the eviction behavior of the underlying LruCache
     fn age_out(mut transform: Dedup) {
-        let event1 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => "some value",
-        ));
-        let event2 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => "some value2",
-        ));
+        let event1 = Event::from(value!({
+            "message": "message",
+            "matched": "some value",
+        }));
+        let event2 = Event::from(value!({
+            "message": "message",
+            "matched": "some value2",
+        }));
 
         // First event should always be passed through as-is.
         let got = transform_one(&mut transform, event1.clone()).unwrap();
@@ -377,14 +378,14 @@ mod tests {
     // Test that two events with values for the matched fields that have different types
     // but the same string representation aren't considered duplicates.
     fn type_matching(mut transform: Dedup) {
-        let event1 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => "123",
-        ));
-        let event2 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => 123
-        ));
+        let event1 = Event::from(value!({
+            "message": "message",
+            "matched": "123",
+        }));
+        let event2 = Event::from(value!({
+            "message": "message",
+            "matched": 123
+        }));
 
         // First event should always be passed through as-is.
         let got = transform_one(&mut transform, event1.clone()).unwrap();
@@ -412,18 +413,18 @@ mod tests {
     // contains values that have different types but the same string representation
     // aren't considered duplicates.
     fn type_matching_nested_objects(mut transform: Dedup) {
-        let event1 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => fields!(
-                "key" => "123"
-            )
-        ));
-        let event2 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => fields!(
-                "key" => 123
-            )
-        ));
+        let event1 = Event::from(value!({
+            "message": "message",
+            "matched": {
+                "key": "123"
+            }
+        }));
+        let event2 = Event::from(value!({
+            "message": "message",
+            "matched": {
+                "key": 123
+            }
+        }));
 
         // First event should always be passed through as-is.
         let got = transform_one(&mut transform, event1.clone()).unwrap();
@@ -448,10 +449,10 @@ mod tests {
     }
 
     fn ignore_vs_missing(mut transform: Dedup) {
-        let event1 = Event::from(fields!(
-            log_schema().message_key().to_string() => "message",
-            "matched" => Value::Null,
-        ));
+        let event1 = Event::from(value!({
+            "message": "message",
+            "matched": null,
+        }));
         let event2 = Event::from("message");
 
         // First event should always be passed through as-is.
