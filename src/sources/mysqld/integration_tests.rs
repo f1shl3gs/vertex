@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use sqlx::MySqlPool;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
+use sqlx::{Error, MySqlPool};
 use testify::container::Container;
 use testify::next_addr;
 
@@ -60,7 +60,28 @@ async fn gather() {
                 r#"INSTALL PLUGIN QUERY_RESPONSE_TIME_WRITE SONAME 'query_response_time.so'"#,
                 r#"SET GLOBAL query_response_time_stats = on"#,
             ] {
-                sqlx::query(q).execute(&pool).await.unwrap();
+                match sqlx::query(q).execute(&pool).await {
+                    Ok(_result) => {}
+                    Err(err) => match err {
+                        Error::Database(err) => {
+                            match err.code() {
+                                Some(code) => {
+                                    if code == "HY000" {
+                                        // some version of mysql is not enabled by default,
+                                        // percona does
+                                    } else {
+                                        panic!(
+                                            "Incorrect error code returned when querying: {}",
+                                            err
+                                        );
+                                    }
+                                }
+                                None => panic!("unknown database error: {:?}", err),
+                            }
+                        }
+                        err => panic!("unexpected error: {:?}", err),
+                    },
+                }
             }
             info_schema_query_response_time::gather(&pool)
                 .await
