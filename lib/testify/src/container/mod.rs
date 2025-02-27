@@ -1,6 +1,5 @@
 mod docker;
 
-use crate::wait::wait_for_tcp;
 use docker::{HostConfig, LogOutput, PortBinding};
 use futures_util::{StreamExt, TryStreamExt};
 use std::collections::HashMap;
@@ -8,6 +7,8 @@ use std::net::SocketAddr;
 use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
 use tracing::info;
+
+use super::wait::wait_for_tcp;
 
 pub struct Container {
     image: String,

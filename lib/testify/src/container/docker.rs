@@ -268,12 +268,11 @@ impl Client {
             warnings: Vec<String>,
         }
 
-        let uri = build_uri::<()>("/containers/create", None);
         let data = serde_json::to_vec(&options).unwrap();
 
         let req = hyper::Request::builder()
             .method(Method::POST)
-            .uri(uri)
+            .uri("http://localhost/containers/create")
             .header(hyper::header::CONTENT_TYPE, "application/json")
             .body(Full::from(Bytes::from(data)))?;
         let resp = self.client.request(req).await?;
@@ -413,20 +412,6 @@ impl Client {
 
         Ok(BodyStream::new(incoming))
     }
-}
-
-fn build_uri<Q: Serialize>(path: &str, query: Option<Q>) -> Uri {
-    let builder = Uri::builder().scheme("http").authority("localhost");
-
-    let builder = if let Some(query) = query {
-        let q = serde_json::to_string(&query).unwrap();
-        let query = percent_encoding::utf8_percent_encode(&q, NON_ALPHANUMERIC);
-        builder.path_and_query(format!("{}?{}", path, query))
-    } else {
-        builder.path_and_query(path)
-    };
-
-    builder.build().unwrap()
 }
 
 enum DecoderState {
