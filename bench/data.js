@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740652876968,
+  "lastUpdate": 1740652896821,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a261b63d6a8a7f26b3e527c1ac6faf2042169670",
-          "message": "chore(deps): bump rustls from 0.23.20 to 0.23.21 (#2118)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.20 to 0.23.21.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/commits)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-10T20:21:04+08:00",
-          "tree_id": "0782ee5eef99c7547f00da354ea5559e82ec2b50",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a261b63d6a8a7f26b3e527c1ac6faf2042169670"
-        },
-        "date": 1736511805001,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.622,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.92,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 188.54,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f658b4b20d67f66f2a9e727a5511542ac8356a8f",
+          "message": "chore(deps): bump uuid from 1.15.0 to 1.15.1 (#2231)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.15.0 to 1.15.1.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/v1.15.0...v1.15.1)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-27T18:39:00+08:00",
+          "tree_id": "6cca06cc594ff9dfa97214464932cc1afbef1951",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f658b4b20d67f66f2a9e727a5511542ac8356a8f"
+        },
+        "date": 1740652877063,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.532,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.519,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.9,
             "unit": "ns/op"
           }
         ]
