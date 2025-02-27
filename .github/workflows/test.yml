@@ -13,7 +13,7 @@ env:
 jobs:
   cancel-previous:
     name: Cancel redundant jobs
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     steps:
       - uses: styfle/cancel-workflow-action@0.12.1
@@ -23,7 +23,7 @@ jobs:
 
   changes:
     name: Changes
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs:
       - cancel-previous
     # Set job outputs to values from filter step
@@ -53,7 +53,7 @@ jobs:
 
   cross:
     name: Cross - ${{ matrix.target }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: changes
     if: ${{ needs.changes.outputs.source == 'true' }}
     strategy:
@@ -74,7 +74,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-24.04.sh
       - run: bash ci/prepare.sh
       - name: Building container
         run: docker build -f ci/cross/${{ matrix.target }}.dockerfile -t vertex-cross:${{ matrix.target }} ci/cross
@@ -82,7 +82,7 @@ jobs:
 
   test:
     name: Cargo test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: changes
     if: ${{ needs.changes.outputs.source == 'true' }}
     steps:
@@ -97,7 +97,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-24.04.sh
       - run: bash ci/prepare.sh
       - name: Install nextest
         uses: taiki-e/install-action@nextest
@@ -106,7 +106,7 @@ jobs:
 
   integration:
     name: Integration tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: changes
     if: ${{ needs.changes.outputs.source == 'true' }}
     steps:
@@ -121,6 +121,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-24.04.sh
       - run: bash ci/prepare.sh
       - run: make integration-tests

@@ -15,7 +15,7 @@ env:
 
 jobs:
   cancel-previous:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     steps:
       - uses: styfle/cancel-workflow-action@0.12.1
@@ -25,12 +25,12 @@ jobs:
 
   baseline:
     name: Baseline
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs:
       - cancel-previous
     steps:
       - uses: actions/checkout@v4
-      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-24.04.sh
       - run: bash ci/prepare.sh
       - run: cargo build --release 2>&1 | tee build.txt
       - run: bash ./ci/extract_baseline_metrics.sh > build.json
