@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740668303764,
+  "lastUpdate": 1740668325559,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a261b63d6a8a7f26b3e527c1ac6faf2042169670",
-          "message": "chore(deps): bump rustls from 0.23.20 to 0.23.21 (#2118)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.20 to 0.23.21.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/commits)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-10T20:21:04+08:00",
-          "tree_id": "0782ee5eef99c7547f00da354ea5559e82ec2b50",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a261b63d6a8a7f26b3e527c1ac6faf2042169670"
-        },
-        "date": 1736512303933,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27872000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 694110,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.151,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0fa5695a809e1a233ae4dd73075aee951f27aef2",
           "message": "chore(deps): bump uuid from 1.11.0 to 1.11.1 (#2117)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.11.0 to 1.11.1.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.11.0...1.11.1)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-10T20:21:35+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 45.18,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "13f7c84b132a8cdb2d6d926a95276f045464cdeb",
+          "message": "clean up (#2232)",
+          "timestamp": "2025-02-27T22:47:10+08:00",
+          "tree_id": "e316be593c59933b5b57f2c6dd928e1534a04dfb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/13f7c84b132a8cdb2d6d926a95276f045464cdeb"
+        },
+        "date": 1740668305570,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 30948000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 670880,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.949,
             "unit": "ns/op"
           }
         ]
