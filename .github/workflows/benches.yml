@@ -26,7 +26,7 @@ env:
 
 jobs:
   cancel-previous:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     steps:
       - uses: styfle/cancel-workflow-action@0.12.1
@@ -36,7 +36,7 @@ jobs:
 
   bench:
     name: Bench - ${{ matrix.target }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs:
       - cancel-previous
     strategy:
@@ -59,7 +59,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-24.04.sh
       - run: bash ci/prepare.sh
       - run: make bench-${{ matrix.target }} | tee bench.txt
       - run: bash ./ci/bench/extract_criterion_results.sh

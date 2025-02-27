@@ -25,7 +25,7 @@ env:
 
 jobs:
   cancel-previous:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     if: github.ref != 'refs/heads/master'
     steps:
@@ -36,7 +36,7 @@ jobs:
 
   style:
     name: "Style Checks"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs:
       - cancel-previous
     steps:
