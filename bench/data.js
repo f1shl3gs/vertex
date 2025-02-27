@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740668550142,
+  "lastUpdate": 1740668968778,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0fa5695a809e1a233ae4dd73075aee951f27aef2",
-          "message": "chore(deps): bump uuid from 1.11.0 to 1.11.1 (#2117)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.11.0 to 1.11.1.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.11.0...1.11.1)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-10T20:21:35+08:00",
-          "tree_id": "7d8c43f519d6bde5b63688982775bf64f55564ef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0fa5695a809e1a233ae4dd73075aee951f27aef2"
-        },
-        "date": 1736512321297,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28571000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 726720,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 46.309,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "001f202df157b3732d892c35c0010deed75841dd",
           "message": "chore(deps): bump syn from 2.0.95 to 2.0.96 (#2116)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.95 to 2.0.96.\n- [Release notes](https://github.com/dtolnay/syn/releases)\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.95...2.0.96)\n\n---\nupdated-dependencies:\n- dependency-name: syn\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-10T20:22:00+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.949,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e2d2bec4e7353dc9176ebcc7d559ad579bf6550b",
+          "message": "bump ubuntu to 24.04 (#2233)",
+          "timestamp": "2025-02-27T22:58:49+08:00",
+          "tree_id": "27edb7b651021af238e179b8b86a0eadf3117f95",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e2d2bec4e7353dc9176ebcc7d559ad579bf6550b"
+        },
+        "date": 1740668949022,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 24201000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 627260,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.691,
             "unit": "ns/op"
           }
         ]
