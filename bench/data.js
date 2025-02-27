@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740668968778,
+  "lastUpdate": 1740669021890,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fd0f50d031464100340090ba261c3bab9f6240e3",
-          "message": "add more VTL functions (#2125)",
-          "timestamp": "2025-01-13T23:08:02+08:00",
-          "tree_id": "58088b840a3bc3f658a57bea3b1627ebb05f8595",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fd0f50d031464100340090ba261c3bab9f6240e3"
-        },
-        "date": 1736781524140,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 544,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36553.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7ad02404c1a3024280e369d8858088bef8e45eeb",
           "message": "fix route.yaml example (#2126)",
           "timestamp": "2025-01-14T22:40:56+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38373.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e2d2bec4e7353dc9176ebcc7d559ad579bf6550b",
+          "message": "bump ubuntu to 24.04 (#2233)",
+          "timestamp": "2025-02-27T22:58:49+08:00",
+          "tree_id": "27edb7b651021af238e179b8b86a0eadf3117f95",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e2d2bec4e7353dc9176ebcc7d559ad579bf6550b"
+        },
+        "date": 1740669002112,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 577,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38396.8,
             "unit": "KiB"
           }
         ]
