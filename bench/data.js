@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740746836725,
+  "lastUpdate": 1740747304480,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7ad02404c1a3024280e369d8858088bef8e45eeb",
-          "message": "fix route.yaml example (#2126)",
-          "timestamp": "2025-01-14T22:40:56+08:00",
-          "tree_id": "7abc8e469d37d64fb8dbed73fc8a64b482b6a0f0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7ad02404c1a3024280e369d8858088bef8e45eeb"
-        },
-        "date": 1736866286741,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 534,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36517.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 577,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38396.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bbea72c72c39aaf20caafa48808682f61162a2b7",
+          "message": "chore(deps): bump typetag from 0.2.19 to 0.2.20 (#2234)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.19 to 0.2.20.\n- [Release notes](https://github.com/dtolnay/typetag/releases)\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.19...0.2.20)\n\n---\nupdated-dependencies:\n- dependency-name: typetag\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-02-28T20:43:43+08:00",
+          "tree_id": "4de521651e1f5587d1f9ca97e8b2bbb5328eadae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bbea72c72c39aaf20caafa48808682f61162a2b7"
+        },
+        "date": 1740747285389,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 582,
             "unit": "s"
           },
           {
