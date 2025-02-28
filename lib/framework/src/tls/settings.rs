@@ -3,11 +3,11 @@ use std::sync::Arc;
 use std::{fs, io};
 
 use configurable::Configurable;
-use hyper_rustls::ConfigBuilderExt;
-use rustls::client::danger::{HandshakeSignatureValid, ServerCertVerified, ServerCertVerifier};
+use rustls::client::WebPkiServerVerifier;
+use rustls::client::danger::{HandshakeSignatureValid, ServerCertVerified};
 use rustls::pki_types::{CertificateDer, PrivateKeyDer, ServerName, UnixTime};
 use rustls::server::WebPkiClientVerifier;
-use rustls::{ClientConfig, DigitallySignedStruct, Error, SignatureScheme};
+use rustls::{CertificateError, ClientConfig, DigitallySignedStruct, Error, SignatureScheme};
 use rustls::{RootCertStore, ServerConfig};
 use serde::{Deserialize, Serialize};
 
@@ -93,20 +93,32 @@ impl TlsConfig {
     }
 
     pub fn client_config(&self) -> Result<ClientConfig, TlsError> {
-        let builder = if let Some(ca_file) = &self.ca {
-            let mut root_store = RootCertStore::empty();
-            let certs = load_certs(ca_file)?;
-            for cert in certs {
-                root_store.add(cert).map_err(TlsError::AddCertToStore)?;
+        let certs = if let Some(ca_file) = &self.ca {
+            load_certs(ca_file)?
+        } else {
+            let result = rustls_native_certs::load_native_certs();
+            if !result.errors.is_empty() {
+                warn!(
+                    message = "native root CA certificate loading errors",
+                    errs = ?result.errors
+                );
+
+                return Err(TlsError::NativeCerts(io::Error::new(
+                    io::ErrorKind::Other,
+                    "native root CA certificate loading errors",
+                )));
             }
 
-            ClientConfig::builder().with_root_certificates(root_store)
-        } else {
-            ClientConfig::builder()
-                .with_native_roots()
-                .map_err(TlsError::NativeCerts)?
+            result.certs
         };
 
+        let mut root_store = RootCertStore::empty();
+        for cert in certs {
+            root_store.add(cert).map_err(TlsError::AddCertToStore)?;
+        }
+
+        let root_store = Arc::new(root_store);
+        let builder = ClientConfig::builder().with_root_certificates(Arc::clone(&root_store));
         let mut config = match (&self.cert, &self.key) {
             (Some(cert_file), Some(key_file)) => {
                 let certs = load_certs(cert_file)?;
@@ -121,11 +133,15 @@ impl TlsConfig {
             (None, None) => builder.with_no_client_auth(),
         };
 
-        if !self.verify_certificate {
-            config
-                .dangerous()
-                .set_certificate_verifier(Arc::new(NoServerCertVerifier))
-        }
+        config
+            .dangerous()
+            .set_certificate_verifier(Arc::new(ServerCertVerifier {
+                inner: WebPkiServerVerifier::builder(root_store)
+                    .build()
+                    .map_err(TlsError::VerifierBuild)?,
+                verify_certificate: self.verify_certificate,
+                verify_hostname: self.verify_hostname,
+            }));
 
         Ok(config)
     }
@@ -165,36 +181,69 @@ impl TlsConfig {
 }
 
 #[derive(Debug)]
-struct NoServerCertVerifier;
+struct ServerCertVerifier {
+    inner: Arc<WebPkiServerVerifier>,
 
-impl ServerCertVerifier for NoServerCertVerifier {
+    verify_certificate: bool,
+    verify_hostname: bool,
+}
+
+impl rustls::client::danger::ServerCertVerifier for ServerCertVerifier {
     fn verify_server_cert(
         &self,
-        _end_entity: &CertificateDer<'_>,
-        _intermediates: &[CertificateDer<'_>],
-        _server_name: &ServerName<'_>,
-        _ocsp_response: &[u8],
-        _now: UnixTime,
+        end_entity: &CertificateDer<'_>,
+        intermediates: &[CertificateDer<'_>],
+        server_name: &ServerName<'_>,
+        ocsp_response: &[u8],
+        now: UnixTime,
     ) -> Result<ServerCertVerified, Error> {
-        Ok(ServerCertVerified::assertion())
+        if !self.verify_certificate {
+            return Ok(ServerCertVerified::assertion());
+        }
+
+        match self.inner.verify_server_cert(
+            end_entity,
+            intermediates,
+            server_name,
+            ocsp_response,
+            now,
+        ) {
+            Ok(verified) => Ok(verified),
+            err @ Err(Error::InvalidCertificate(CertificateError::NotValidForName)) => {
+                if self.verify_hostname {
+                    err
+                } else {
+                    Ok(ServerCertVerified::assertion())
+                }
+            }
+            Err(err) => Err(err),
+        }
     }
 
     fn verify_tls12_signature(
         &self,
-        _message: &[u8],
-        _cert: &CertificateDer<'_>,
-        _dss: &DigitallySignedStruct,
+        message: &[u8],
+        cert: &CertificateDer<'_>,
+        dss: &DigitallySignedStruct,
     ) -> Result<HandshakeSignatureValid, Error> {
-        Ok(HandshakeSignatureValid::assertion())
+        if self.verify_certificate {
+            self.inner.verify_tls12_signature(message, cert, dss)
+        } else {
+            Ok(HandshakeSignatureValid::assertion())
+        }
     }
 
     fn verify_tls13_signature(
         &self,
-        _message: &[u8],
-        _cert: &CertificateDer<'_>,
-        _dss: &DigitallySignedStruct,
+        message: &[u8],
+        cert: &CertificateDer<'_>,
+        dss: &DigitallySignedStruct,
     ) -> Result<HandshakeSignatureValid, Error> {
-        Ok(HandshakeSignatureValid::assertion())
+        if self.verify_certificate {
+            self.inner.verify_tls13_signature(message, cert, dss)
+        } else {
+            Ok(HandshakeSignatureValid::assertion())
+        }
     }
 
     fn supported_verify_schemes(&self) -> Vec<SignatureScheme> {

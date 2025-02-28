@@ -1144,6 +1144,7 @@ dependencies = [
  "rand_distr",
  "regex",
  "rustls",
+ "rustls-native-certs 0.8.1",
  "serde",
  "serde_json",
  "serde_yaml",
