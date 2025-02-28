@@ -65,6 +65,7 @@ pin-project-lite = { version = "0.2.16", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 regex = { version = "1.11.1", default-features = false }
 rustls = { version = "0.23.23", default-features = false, features = ["ring"] }
+rustls-native-certs = { version = "0.8.1", default-features = false }
 serde = { version = "1.0.218", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.139", default-features = false }
 serde_yaml = { version = "0.9.34", default-features = false }
