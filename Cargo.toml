@@ -455,6 +455,6 @@ sqlx = { version = "0.8.3", default-features = false, optional = true, features 
 thiserror = { version = "2.0.11", default-features = false }
 tonic = { version = "0.12.3", default-features = false, optional = true, features = ["prost"] }
 tonic-health = { version = "0.12.3", default-features = false, optional = true }
-typetag = { version = "0.2.19" }
+typetag = { version = "0.2.20" }
 url = { version = "2.5.4", features = ["serde"] }
 uuid = { version = "1.15.1", default-features = false, features = ["v4"], optional = true }
