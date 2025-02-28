@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740750337656,
+  "lastUpdate": 1740750356017,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "728b2ed45e06bce0db67f4a389f5ebb08b6c429f",
-          "message": "chore(deps): bump uuid from 1.11.1 to 1.12.0 (#2127)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.11.1 to 1.12.0.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.11.1...1.12.0)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-14T23:41:35+08:00",
-          "tree_id": "f229d64217a9e934c6db59dfab7d689f679b8a39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/728b2ed45e06bce0db67f4a389f5ebb08b6c429f"
-        },
-        "date": 1736869911876,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 533,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36517.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38396.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "994d1d8251373c52a1be7601752d795ab53be19f",
+          "message": "lib/framework: support verify_hostname (#2235)",
+          "timestamp": "2025-02-28T21:34:58+08:00",
+          "tree_id": "cbc79e0764fe98ad5aac35146bcd9d7ac894a69a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/994d1d8251373c52a1be7601752d795ab53be19f"
+        },
+        "date": 1740750336983,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 557,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38406.3,
             "unit": "KiB"
           }
         ]
