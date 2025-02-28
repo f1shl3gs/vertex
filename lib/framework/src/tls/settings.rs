@@ -118,7 +118,7 @@ impl TlsConfig {
         }
 
         let root_store = Arc::new(root_store);
-        let mut builder = ClientConfig::builder().with_root_certificates(Arc::clone(&root_store));
+        let builder = ClientConfig::builder().with_root_certificates(Arc::clone(&root_store));
         let mut config = match (&self.cert, &self.key) {
             (Some(cert_file), Some(key_file)) => {
                 let certs = load_certs(cert_file)?;
