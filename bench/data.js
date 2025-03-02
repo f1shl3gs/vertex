@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740918058329,
+  "lastUpdate": 1740918068039,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d28ab25c67061ef8e518f90d6b3fd4f1473f1742",
-          "message": "chore(deps): bump proc-macro2 from 1.0.92 to 1.0.93 (#2122)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.92 to 1.0.93.\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.92...1.0.93)\n\n---\nupdated-dependencies:\n- dependency-name: proc-macro2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-11T17:18:54+08:00",
-          "tree_id": "905c0aaf1df85fe42c7b3c70f1aa005d5e872b21",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d28ab25c67061ef8e518f90d6b3fd4f1473f1742"
-        },
-        "date": 1736587291995,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.643,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 140,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 299.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 604.15,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 686.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9dc0c3d943982793ae0189087caea0693485485b",
+          "message": "chore(deps): bump tokio-rustls from 0.26.1 to 0.26.2 (#2236)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.26.1 to 0.26.2.\n- [Release notes](https://github.com/rustls/tokio-rustls/releases)\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\n\n---\nupdated-dependencies:\n- dependency-name: tokio-rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-02T20:18:21+08:00",
+          "tree_id": "6e6190b2962d9e30a3f36f59af8bd6975153a323",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9dc0c3d943982793ae0189087caea0693485485b"
+        },
+        "date": 1740918049114,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 332.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 678.33,
             "unit": "ns/op"
           }
         ]
