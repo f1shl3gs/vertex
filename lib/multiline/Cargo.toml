@@ -5,7 +5,7 @@ edition = "2024"
 publish = false
 
 [dev-dependencies]
-tokio = { version = "1.43.0", default-features = false, features = ["test-util", "macros"] }
+tokio = { version = "1.44.0", default-features = false, features = ["test-util", "macros"] }
 serde_json = { version = "1.0.139", default-features = false }
 serde_yaml = { version = "0.9.34", default-features = false }
 
