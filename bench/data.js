@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741534578229,
+  "lastUpdate": 1741534590685,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5fcbd08e99abecf515a16c88a2ed96de14ea486d",
-          "message": "style (#2129)",
-          "timestamp": "2025-01-15T14:42:20+08:00",
-          "tree_id": "8c9e1e17c4887e6d0b1fd052322e2523bb19beb1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5fcbd08e99abecf515a16c88a2ed96de14ea486d"
-        },
-        "date": 1736923509799,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.717,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 133.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 308.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 617.08,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 670.24,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "297696d02efdb428bf3905708baaee96e32a6ad4",
+          "message": "chore(deps): bump serde_path_to_error from 0.1.16 to 0.1.17 (#2240)\n\nBumps [serde_path_to_error](https://github.com/dtolnay/path-to-error) from 0.1.16 to 0.1.17.\n- [Release notes](https://github.com/dtolnay/path-to-error/releases)\n- [Commits](https://github.com/dtolnay/path-to-error/compare/0.1.16...0.1.17)\n\n---\nupdated-dependencies:\n- dependency-name: serde_path_to_error\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-09T23:33:25+08:00",
+          "tree_id": "fe7c826fce13fda8581214c3f83392415e81f6f3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/297696d02efdb428bf3905708baaee96e32a6ad4"
+        },
+        "date": 1741534571045,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.038,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.59,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 321.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 663.74,
             "unit": "ns/op"
           }
         ]
