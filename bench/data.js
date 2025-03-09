@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740918569955,
+  "lastUpdate": 1741530947972,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cf08fa764e5a37bfe005b30222c85f21efbad006",
-          "message": "add sources/redfish (#2120)",
-          "timestamp": "2025-01-11T19:45:08+08:00",
-          "tree_id": "8ed103bc2938031b0842ef7d5540289a493b60ea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf08fa764e5a37bfe005b30222c85f21efbad006"
-        },
-        "date": 1736596075775,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.481,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.23,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb7076faa8dfed06b6b14f8b640af172bef2f6c6",
+          "message": "add port_observer and source/multiplier (#2249)",
+          "timestamp": "2025-03-09T22:33:27+08:00",
+          "tree_id": "723ef3ab8a80261bc7cb99e9b6f88499be4b6d23",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb7076faa8dfed06b6b14f8b640af172bef2f6c6"
+        },
+        "date": 1741530928759,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.408,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 179.71,
             "unit": "ns/op"
           }
         ]
