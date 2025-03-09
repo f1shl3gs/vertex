@@ -360,7 +360,7 @@ framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.1", default-features = false, features = ["std"] }
 serde_path_to_error = { version = "0.1.16", default-features = false }
 testify = { path = "lib/testify" }
-tokio = { version = "1.43.0", default-features = false, features = ["test-util"] }
+tokio = { version = "1.44.0", default-features = false, features = ["test-util"] }
 tonic = { version = "0.12.3", default-features = false, features = ["server"]}
 
 [dependencies]
@@ -399,7 +399,7 @@ async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.86", default-features = false }
 futures = { version = "0.3.31", default-features = false }
 futures-util = { version = "0.3.31", default-features = false }
-tokio = { version = "1.43.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
+tokio = { version = "1.44.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-stream = { version = "0.1.17", default-features = false }
 tokio-util = { version = "0.7.13", default-features = false, features = ["codec", "time", "net"] }
 
