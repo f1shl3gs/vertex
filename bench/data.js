@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741534714794,
+  "lastUpdate": 1741534729585,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "7c2902a31ce889282ff03f1c66846269cacbc19e",
-          "message": "implement Pipeline with LimitedSender/LimitedReceiver",
-          "timestamp": "2025-01-15T16:50:54+08:00",
-          "tree_id": "cdc92019b6aed4cd997c20ddda07c9f5ed0386ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c2902a31ce889282ff03f1c66846269cacbc19e"
-        },
-        "date": 1736931227562,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.427,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 139.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.34,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 656.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 663.74,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "19be50926585f44a44613f30ec04f4b03e3611c5",
+          "message": "chore(deps): bump thiserror from 2.0.11 to 2.0.12 (#2242)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.11 to 2.0.12.\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.11...2.0.12)\n\n---\nupdated-dependencies:\n- dependency-name: thiserror\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-09T23:34:22+08:00",
+          "tree_id": "89ca030037060245995fed59dba473aabe9ba27e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/19be50926585f44a44613f30ec04f4b03e3611c5"
+        },
+        "date": 1741534710432,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 45.075,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 213.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 369.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 692.6,
             "unit": "ns/op"
           }
         ]
