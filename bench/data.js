@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741531017469,
+  "lastUpdate": 1741531438996,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d28ab25c67061ef8e518f90d6b3fd4f1473f1742",
-          "message": "chore(deps): bump proc-macro2 from 1.0.92 to 1.0.93 (#2122)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.92 to 1.0.93.\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.92...1.0.93)\n\n---\nupdated-dependencies:\n- dependency-name: proc-macro2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-11T17:18:54+08:00",
-          "tree_id": "905c0aaf1df85fe42c7b3c70f1aa005d5e872b21",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d28ab25c67061ef8e518f90d6b3fd4f1473f1742"
-        },
-        "date": 1736587770134,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28439000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 710740,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.568,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.864,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb7076faa8dfed06b6b14f8b640af172bef2f6c6",
+          "message": "add port_observer and source/multiplier (#2249)",
+          "timestamp": "2025-03-09T22:33:27+08:00",
+          "tree_id": "723ef3ab8a80261bc7cb99e9b6f88499be4b6d23",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb7076faa8dfed06b6b14f8b640af172bef2f6c6"
+        },
+        "date": 1741531419167,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22427000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 572590,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.967,
             "unit": "ns/op"
           }
         ]
