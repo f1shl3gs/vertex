@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741535206543,
+  "lastUpdate": 1741535233242,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0f2b2664ab6c46b7fd6ac6c19660b402e2635207",
-          "message": "chore(deps): bump listenfd from 1.0.1 to 1.0.2 (#2137)\n\nBumps [listenfd](https://github.com/mitsuhiko/listenfd) from 1.0.1 to 1.0.2.\n- [Changelog](https://github.com/mitsuhiko/listenfd/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/mitsuhiko/listenfd/compare/1.0.1...1.0.2)\n\n---\nupdated-dependencies:\n- dependency-name: listenfd\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-20T15:11:49+08:00",
-          "tree_id": "ff74bbe7839113f0019881f63bdec42895405cde",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0f2b2664ab6c46b7fd6ac6c19660b402e2635207"
-        },
-        "date": 1737357735593,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 535,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36756.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38846.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "19be50926585f44a44613f30ec04f4b03e3611c5",
+          "message": "chore(deps): bump thiserror from 2.0.11 to 2.0.12 (#2242)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.11 to 2.0.12.\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.11...2.0.12)\n\n---\nupdated-dependencies:\n- dependency-name: thiserror\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-09T23:34:22+08:00",
+          "tree_id": "89ca030037060245995fed59dba473aabe9ba27e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/19be50926585f44a44613f30ec04f4b03e3611c5"
+        },
+        "date": 1741535213588,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 585,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38845.4,
             "unit": "KiB"
           }
         ]
