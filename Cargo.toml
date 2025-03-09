@@ -358,7 +358,7 @@ criterion = { version = "0.5.1", default-features = false, features = ["async_to
 event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.1", default-features = false, features = ["std"] }
-serde_path_to_error = { version = "0.1.16", default-features = false }
+serde_path_to_error = { version = "0.1.17", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.44.0", default-features = false, features = ["test-util"] }
 tonic = { version = "0.12.3", default-features = false, features = ["server"]}
