@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741532931868,
+  "lastUpdate": 1741532935337,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c24e3e056dad27c4f3572bc73a2a36e0b77803cb",
-          "message": "lib/vtl: add assert, parse_regex and pascalcase (#2132)",
-          "timestamp": "2025-01-16T02:54:14+08:00",
-          "tree_id": "1cfa840c799b35d1360617de5027cf8f41152131",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c24e3e056dad27c4f3572bc73a2a36e0b77803cb"
-        },
-        "date": 1736967887527,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 543,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36622.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38846.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c7f100f5992380752c44c41cda5c6d79f5bdcff1",
+          "message": "chore(deps): bump dyn-clone from 1.0.18 to 1.0.19 (#2244)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.18 to 1.0.19.\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.18...1.0.19)\n\n---\nupdated-dependencies:\n- dependency-name: dyn-clone\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-09T22:55:13+08:00",
+          "tree_id": "2ade709e585493dc2baa485d2dc937a4fd6de26f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c7f100f5992380752c44c41cda5c6d79f5bdcff1"
+        },
+        "date": 1741532916100,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38846.5,
             "unit": "KiB"
           }
         ]
