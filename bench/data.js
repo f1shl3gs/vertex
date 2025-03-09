@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741534958056,
+  "lastUpdate": 1741535028143,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fb28fe9396c728752e4f668dfd793df06fed2689",
-          "message": "chore(deps): bump chrono-tz from 0.10.0 to 0.10.1 (#2133)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.10.0 to 0.10.1.\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\n- [Commits](https://github.com/chronotope/chrono-tz/commits)\n\n---\nupdated-dependencies:\n- dependency-name: chrono-tz\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-18T17:32:17+08:00",
-          "tree_id": "8700c3ab0bccf722acfb56ab1bf0a6f27e469048",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fb28fe9396c728752e4f668dfd793df06fed2689"
-        },
-        "date": 1737193382417,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 536,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36622.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c44c9399636dcf2985089f70d9efb7d5df6f81db",
           "message": "chore(deps): bump serde_json from 1.0.135 to 1.0.136 (#2134)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.135 to 1.0.136.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.135...v1.0.136)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-19T19:41:57+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38846.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fcbc44f015933220291a0c293f483092124117b5",
+          "message": "chore(deps): bump quote from 1.0.38 to 1.0.39 (#2241)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.38 to 1.0.39.\n- [Release notes](https://github.com/dtolnay/quote/releases)\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.38...1.0.39)\n\n---\nupdated-dependencies:\n- dependency-name: quote\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-09T23:32:48+08:00",
+          "tree_id": "321bb144944449c827de11f3c7d4189602355430",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fcbc44f015933220291a0c293f483092124117b5"
+        },
+        "date": 1741535009257,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 559,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38841.2,
             "unit": "KiB"
           }
         ]
