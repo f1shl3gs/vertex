@@ -9,6 +9,7 @@ pub mod dns;
 mod extension;
 pub mod http;
 mod metrics;
+pub mod observe;
 pub mod partition;
 pub mod pipeline;
 pub mod shutdown;

@@ -1,0 +1,22 @@
+extensions:
+  ports:
+    type: port_observer
+    interval: 3s
+
+sources:
+  http:
+    type: multiplier
+    observer: ports
+    templates:
+      - rule: details.port == 9100 # prometheus_exporter sink
+        config:
+          type: http_check
+          targets:
+          - url: http://${{ target }}
+          interval: 15s
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - http

@@ -1,6 +1,6 @@
-use value::{OwnedTargetPath, OwnedValuePath};
+use value::{OwnedTargetPath, OwnedValuePath, Value};
 
-use crate::schema::{InstanceType, Metadata, SchemaGenerator, SchemaObject};
+use crate::schema::{InstanceType, Metadata, SchemaGenerator, SchemaObject, SingleOrVec};
 use crate::{Configurable, ConfigurableString};
 
 impl Configurable for OwnedValuePath {
@@ -34,3 +34,19 @@ impl Configurable for OwnedTargetPath {
 }
 
 impl ConfigurableString for OwnedTargetPath {}
+
+impl Configurable for Value {
+    fn generate_schema(_: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
+            instance_type: Some(SingleOrVec::Vec(vec![
+                InstanceType::Array,
+                InstanceType::Boolean,
+                InstanceType::Integer,
+                InstanceType::Null,
+                InstanceType::String,
+                InstanceType::Object,
+            ])),
+            ..Default::default()
+        }
+    }
+}

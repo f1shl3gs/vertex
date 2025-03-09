@@ -54,6 +54,8 @@ mod libvirt;
 mod memcached;
 #[cfg(feature = "sources-mqtt")]
 mod mqtt;
+#[cfg(feature = "sources-multiplier")]
+mod multiplier;
 #[cfg(feature = "sources-mysqld")]
 mod mysqld;
 #[cfg(feature = "sources-netflow")]
