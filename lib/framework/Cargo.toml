@@ -27,7 +27,7 @@ async-stream = { version = "0.3.6" }
 async-trait = { version = "0.1.86", default-features = false }
 backoff = { path = "../backoff" }
 buffers = { path = "../buffers" }
-bytes = { version = "1.10.0", default-features = false }
+bytes = { version = "1.10.1", default-features = false }
 chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
 chrono-tz = { version = "0.10.1", default-features = false, features = ["serde"] }
 codecs = { path = "../codecs" }
