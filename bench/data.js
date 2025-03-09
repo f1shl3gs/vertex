@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741537381572,
+  "lastUpdate": 1741537387594,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c24e3e056dad27c4f3572bc73a2a36e0b77803cb",
-          "message": "lib/vtl: add assert, parse_regex and pascalcase (#2132)",
-          "timestamp": "2025-01-16T02:54:14+08:00",
-          "tree_id": "1cfa840c799b35d1360617de5027cf8f41152131",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c24e3e056dad27c4f3572bc73a2a36e0b77803cb"
-        },
-        "date": 1736967438031,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.582,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 137.96,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 297.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 629.79,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 668.04,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca61009bbb83f8f5b992857ccc5b5e70f37015e8",
+          "message": "chore(deps): bump async-trait from 0.1.86 to 0.1.87 (#2237)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.86 to 0.1.87.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.86...0.1.87)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-10T00:19:51+08:00",
+          "tree_id": "51624118807d0350de620de366f5470cdeff2f5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca61009bbb83f8f5b992857ccc5b5e70f37015e8"
+        },
+        "date": 1741537367327,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.754,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 178.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 353.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 691.91,
             "unit": "ns/op"
           }
         ]
