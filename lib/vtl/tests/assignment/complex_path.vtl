@@ -1,0 +1,19 @@
+obj = {
+    "key": "value",
+    "foo": "bar",
+    "array": [
+        "1",
+        2,
+        3,
+        null,
+        true,
+        {
+            "a": "b"
+        }
+    ]
+}
+
+assert_eq(obj.array[5].a, "b")
+
+obj.array[5].b = "a"
+assert_eq(obj.array[5].b, "a")

@@ -169,7 +169,7 @@ where
                 .record(roundtrip.as_secs_f64());
             })?;
 
-            debug!(
+            trace!(
                 message = "HTTP response received",
                 status = %resp.status(),
                 version = ?resp.version(),

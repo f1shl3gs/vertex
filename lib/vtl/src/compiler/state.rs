@@ -2,6 +2,7 @@ use value::{OwnedValuePath, Value};
 
 use super::Kind;
 
+#[derive(Clone)]
 pub struct Variable {
     /// The name of this variable
     pub name: String,
@@ -65,7 +66,7 @@ impl Variable {
     }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct TypeState {
     /// The key is variable name
     pub variables: Vec<Variable>,

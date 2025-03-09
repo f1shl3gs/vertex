@@ -1,7 +1,10 @@
 a = "foo"
+if_result = false
 
 if a == "foo" {
-    log("true")
+    if_result = true
 } else {
-    log("false")
+    if_result = false
 }
+
+assert_eq(if_result, true)

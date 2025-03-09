@@ -3,7 +3,7 @@ use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 
 use bytes::Bytes;
-use value::{OwnedTargetPath, PathParseError, Value, parse_target_path, parse_value_path};
+use value::{OwnedTargetPath, PathParseError, parse_target_path, parse_value_path};
 
 use super::Kind;
 use super::Program;
@@ -168,7 +168,7 @@ impl Display for SyntaxError {
             SyntaxError::FallibleArgument { .. } => f.write_str("fallible argument"),
 
             SyntaxError::InvalidPath { err, .. } => {
-                write!(f, "invalid target path {}", err)
+                write!(f, "{}", err)
             }
             SyntaxError::VariableNeverUsed { name, .. } => {
                 write!(f, "variable \"{}\" is never used", name)
@@ -381,9 +381,8 @@ pub struct Compiler<'input> {
 
 impl Compiler<'_> {
     pub fn compile(input: &'_ str) -> Result<Program, SyntaxError> {
-        let lexer = Lexer::new(input);
         let mut compiler = Compiler {
-            lexer,
+            lexer: Lexer::new(input),
             functions: builtin_functions(),
             iterating: 0,
             type_state: TypeState::default(),
@@ -391,17 +390,39 @@ impl Compiler<'_> {
         };
 
         let block = compiler.parse_block()?;
-        let type_def = block.type_def(&compiler.type_state);
 
         // todo: check variables
         //   if the variables are never changed, return error
 
         Ok(Program {
             statements: block,
-            type_def,
-            variables: std::iter::repeat(Value::Null)
-                .take(compiler.type_state.variables.len())
-                .collect(),
+            type_state: compiler.type_state,
+            target_queries: compiler.target_queries,
+        })
+    }
+
+    pub fn compile_with_predefined(
+        input: &str,
+        predefined: &[&str],
+    ) -> Result<Program, SyntaxError> {
+        let mut type_state = TypeState::default();
+        predefined.iter().for_each(|name| {
+            type_state.push(name);
+        });
+
+        let mut compiler = Compiler {
+            lexer: Lexer::new(input),
+            functions: builtin_functions(),
+            iterating: 0,
+            type_state,
+            target_queries: vec![],
+        };
+
+        let block = compiler.parse_block()?;
+
+        Ok(Program {
+            statements: block,
+            type_state: compiler.type_state,
             target_queries: compiler.target_queries,
         })
     }
@@ -518,9 +539,12 @@ impl Compiler<'_> {
                         return Ok(AssignmentTarget::External(path));
                     }
 
-                    // "foo" or "foo.bar"
-                    match path.split_once(['.', '[']) {
-                        Some((name, path)) => {
+                    // "foo", "foo.bar" or "array[2]"
+                    match path.find(['.', '[']) {
+                        Some(index) => {
+                            let (name, path) = path.split_at(index);
+                            let path = path.strip_prefix('.').unwrap_or(path);
+
                             let index = self.type_state.push(name);
                             let path = parse_value_path(path)
                                 .map_err(|err| SyntaxError::InvalidPath { err, span })?;
@@ -786,6 +810,7 @@ impl Compiler<'_> {
                         match path.find(['.', '[']) {
                             Some(index) => {
                                 let (name, path) = path.split_at(index);
+                                let path = path.strip_prefix('.').unwrap_or(path);
 
                                 // at this case, the variable must exists already
                                 let index = self.variable_exists(name, span)?;

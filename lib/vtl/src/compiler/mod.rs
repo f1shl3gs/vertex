@@ -41,10 +41,7 @@ use crate::diagnostic::{DiagnosticMessage, Label};
 pub struct Program {
     // program content
     statements: block::Block,
-    type_def: TypeDef,
-
-    // variables are used repeatedly
-    variables: Vec<Value>,
+    type_state: TypeState,
 
     /// A list of possible queries made to the
     /// external Target at runtime.
@@ -54,7 +51,7 @@ pub struct Program {
 impl Program {
     pub fn run<T: Target>(&self, target: &mut T) -> Result<Value, ExpressionError> {
         // TODO: find a better way to handle this
-        let mut variables = self.variables.clone();
+        let mut variables = vec![Value::Null; self.type_state.variables.len()];
 
         let mut cx = Context {
             target,
@@ -65,13 +62,23 @@ impl Program {
     }
 
     #[inline]
+    pub fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
+        self.statements.resolve(cx)
+    }
+
+    #[inline]
     pub fn target_queries(&self) -> &[OwnedTargetPath] {
         &self.target_queries
     }
 
     #[inline]
-    pub fn type_def(&self) -> &TypeDef {
-        &self.type_def
+    pub fn type_state(&self) -> &TypeState {
+        &self.type_state
+    }
+
+    #[inline]
+    pub fn type_def(&self) -> TypeDef {
+        self.statements.type_def(&self.type_state)
     }
 }
 
@@ -83,7 +90,7 @@ pub enum ExpressionError {
     UnexpectedType { want: Kind, got: Kind, span: Span },
     UnexpectedValue { msg: String, span: Span },
 
-    // actually, they are used to control steps, not a really error
+    // actually, they are used to control steps, not a real error
     Break,
     Continue,
     Return { value: Option<Value> },

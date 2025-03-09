@@ -369,8 +369,8 @@ pub async fn build_pieces(
 
             match result {
                 Ok(()) => {
-                    debug!(message = "Finished");
-                    Ok(TaskOutput::Source)
+                    debug!(message = "extension finished");
+                    Ok(TaskOutput::Extension)
                 }
                 Err(()) => Err(()),
             }
