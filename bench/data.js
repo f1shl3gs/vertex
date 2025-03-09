@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741535028143,
+  "lastUpdate": 1741535029318,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "728b2ed45e06bce0db67f4a389f5ebb08b6c429f",
-          "message": "chore(deps): bump uuid from 1.11.1 to 1.12.0 (#2127)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.11.1 to 1.12.0.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.11.1...1.12.0)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-14T23:41:35+08:00",
-          "tree_id": "f229d64217a9e934c6db59dfab7d689f679b8a39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/728b2ed45e06bce0db67f4a389f5ebb08b6c429f"
-        },
-        "date": 1736869976436,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28440000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 686590,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.296,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.759,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fcbc44f015933220291a0c293f483092124117b5",
+          "message": "chore(deps): bump quote from 1.0.38 to 1.0.39 (#2241)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.38 to 1.0.39.\n- [Release notes](https://github.com/dtolnay/quote/releases)\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.38...1.0.39)\n\n---\nupdated-dependencies:\n- dependency-name: quote\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-09T23:32:48+08:00",
+          "tree_id": "321bb144944449c827de11f3c7d4189602355430",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fcbc44f015933220291a0c293f483092124117b5"
+        },
+        "date": 1741535009172,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22289000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 544500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.06,
             "unit": "ns/op"
           }
         ]
