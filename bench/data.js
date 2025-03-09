@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741531438996,
+  "lastUpdate": 1741531494360,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5fcbd08e99abecf515a16c88a2ed96de14ea486d",
-          "message": "style (#2129)",
-          "timestamp": "2025-01-15T14:42:20+08:00",
-          "tree_id": "8c9e1e17c4887e6d0b1fd052322e2523bb19beb1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5fcbd08e99abecf515a16c88a2ed96de14ea486d"
-        },
-        "date": 1736923970862,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 536,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36588,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38410.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb7076faa8dfed06b6b14f8b640af172bef2f6c6",
+          "message": "add port_observer and source/multiplier (#2249)",
+          "timestamp": "2025-03-09T22:33:27+08:00",
+          "tree_id": "723ef3ab8a80261bc7cb99e9b6f88499be4b6d23",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb7076faa8dfed06b6b14f8b640af172bef2f6c6"
+        },
+        "date": 1741531475484,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 568,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38818.9,
             "unit": "KiB"
           }
         ]
