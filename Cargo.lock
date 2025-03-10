@@ -4655,6 +4655,7 @@ dependencies = [
  "hostname 0.1.0",
  "http",
  "http-body-util",
+ "httpdate",
  "humanize",
  "hyper",
  "hyper-util",

@@ -162,7 +162,7 @@ sources-fluent = ["dep:flate2"]
 sources-grpc_check = ["tonic/channel", "dep:tonic-health"]
 sources-haproxy = []
 sources-http = []
-sources-http_check = []
+sources-http_check = ["dep:httpdate"]
 sources-internal_logs = []
 sources-internal_metrics = []
 sources-internal_traces = []
@@ -410,6 +410,7 @@ tracing = { version = "0.1.41", default-features = false }
 hyper = { version = "1.6.0", default-features = false, features = ["server"] }
 hyper-util = { version = "0.1.10", default-features = false, features = ["client"] }
 http = { version = "1.2.0", default-features = false }
+httpdate = { version = "1.0.3", default-features = false, optional = true }
 http-body-util = { version = "0.1.2", default-features = false }
 
 # Tower
