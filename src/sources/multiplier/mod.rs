@@ -377,8 +377,6 @@ impl SourceTemplate {
         globals: GlobalOptions,
         proxy: ProxyConfig,
     ) -> crate::Result<TaskHandle> {
-        println!("endpoint: {:?}", endpoint);
-
         let cx = SourceContext {
             key: ComponentKey::from(key.clone()),
             output,
