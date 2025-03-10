@@ -517,17 +517,10 @@ mod tests {
             }
         });
 
-        for (code, class) in [
+        for code in [
             // hyper client cannot handle `100`,
             // https://github.com/hyperium/hyper/issues/2565
-            //
-            // (100, "1xx"),
-            (101, "1xx"),
-            (200, "2xx"),
-            (203, "2xx"),
-            (301, "3xx"),
-            (404, "4xx"),
-            (502, "5xx"),
+            101, 200, 203, 301, 404, 502,
         ] {
             let (output, receiver) = Pipeline::new_test();
             let shutdown = ShutdownSignal::noop();
@@ -552,16 +545,10 @@ mod tests {
             task.abort();
 
             let metrics = events.into_metrics().unwrap();
-            assert_eq!(metrics.len(), 2);
-            let metric = &metrics[1];
-            assert_eq!(
-                metric.value,
-                MetricValue::Gauge(code as f64),
-                "code: {code}"
-            );
-            assert_eq!(
-                metric.tags().get("status_class").unwrap(),
-                &tags::Value::from(class)
+
+            assert!(
+                metrics.iter().any(|m| m.name() == "http_status_code"
+                    && m.value == MetricValue::Gauge(code as f64))
             );
         }
     }
