@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741641799740,
+  "lastUpdate": 1741641804485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0f2b2664ab6c46b7fd6ac6c19660b402e2635207",
-          "message": "chore(deps): bump listenfd from 1.0.1 to 1.0.2 (#2137)\n\nBumps [listenfd](https://github.com/mitsuhiko/listenfd) from 1.0.1 to 1.0.2.\n- [Changelog](https://github.com/mitsuhiko/listenfd/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/mitsuhiko/listenfd/compare/1.0.1...1.0.2)\n\n---\nupdated-dependencies:\n- dependency-name: listenfd\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-20T15:11:49+08:00",
-          "tree_id": "ff74bbe7839113f0019881f63bdec42895405cde",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0f2b2664ab6c46b7fd6ac6c19660b402e2635207"
-        },
-        "date": 1737357330535,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.34,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 138.86,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 301.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 629.73,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 717.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "508b1bc803dfd51781251b77ab2fe0b2eb717972",
+          "message": "chore(deps): bump indexmap from 2.7.1 to 2.8.0 (#2253)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.7.1 to 2.8.0.\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/main/RELEASES.md)\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.7.1...2.8.0)\n\n---\nupdated-dependencies:\n- dependency-name: indexmap\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-11T05:20:27+08:00",
+          "tree_id": "c5dbed87d1bba699d5fbe1e5a5d1aa0dc59b4ab1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/508b1bc803dfd51781251b77ab2fe0b2eb717972"
+        },
+        "date": 1741641784776,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.422,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 166.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 311.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 663.02,
             "unit": "ns/op"
           }
         ]
