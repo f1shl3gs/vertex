@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741645746918,
+  "lastUpdate": 1741646140932,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0f2b2664ab6c46b7fd6ac6c19660b402e2635207",
-          "message": "chore(deps): bump listenfd from 1.0.1 to 1.0.2 (#2137)\n\nBumps [listenfd](https://github.com/mitsuhiko/listenfd) from 1.0.1 to 1.0.2.\n- [Changelog](https://github.com/mitsuhiko/listenfd/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/mitsuhiko/listenfd/compare/1.0.1...1.0.2)\n\n---\nupdated-dependencies:\n- dependency-name: listenfd\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-20T15:11:49+08:00",
-          "tree_id": "ff74bbe7839113f0019881f63bdec42895405cde",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0f2b2664ab6c46b7fd6ac6c19660b402e2635207"
-        },
-        "date": 1737357768403,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28581000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 732970,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.459,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.318,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b67a4b2262597c6ff4fadf922beedc6e239c8e24",
+          "message": "chore(deps): bump ring from 0.17.11 to 0.17.13 (#2247)\n\n* chore(deps): bump ring from 0.17.11 to 0.17.13\n\nBumps [ring](https://github.com/briansmith/ring) from 0.17.11 to 0.17.13.\n- [Changelog](https://github.com/briansmith/ring/blob/main/RELEASES.md)\n- [Commits](https://github.com/briansmith/ring/commits)\n\n---\nupdated-dependencies:\n- dependency-name: ring\n  dependency-type: indirect\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* try cross main\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2025-03-11T06:25:26+08:00",
+          "tree_id": "58a49ded4bec6b149b848b01a289a2a77a1e5470",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b67a4b2262597c6ff4fadf922beedc6e239c8e24"
+        },
+        "date": 1741646121266,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22998000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 556870,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.178,
             "unit": "ns/op"
           }
         ]
