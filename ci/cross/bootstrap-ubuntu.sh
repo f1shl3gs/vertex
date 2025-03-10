@@ -6,6 +6,9 @@ apt-get update
 apt-get install -y apt-transport-https wget unzip
 apt clean
 
+# print as verion
+as -version
+
 # Setup protoc
 #
 # prost-build need protoc to be installed
