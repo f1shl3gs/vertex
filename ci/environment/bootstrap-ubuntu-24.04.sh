@@ -29,6 +29,9 @@ apt install --yes \
 # Apt cleanup
 apt clean
 
+# Dump binutils info
+as -version
+
 # Locales
 locale-gen en_US.UTF-8
 dpkg-reconfigure locales
