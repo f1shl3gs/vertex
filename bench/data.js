@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741642218960,
+  "lastUpdate": 1741642232349,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f8074a748128b0e984af871fd87c3f7ae7869c8d",
-          "message": "sources/fluent: init (#2135)",
-          "timestamp": "2025-01-20T03:58:17+08:00",
-          "tree_id": "aae97aea272812bfca04dbfb97eec50b6cd926b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f8074a748128b0e984af871fd87c3f7ae7869c8d"
-        },
-        "date": 1737317380022,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29133000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 621910,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.31,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.816,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "508b1bc803dfd51781251b77ab2fe0b2eb717972",
+          "message": "chore(deps): bump indexmap from 2.7.1 to 2.8.0 (#2253)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.7.1 to 2.8.0.\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/main/RELEASES.md)\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.7.1...2.8.0)\n\n---\nupdated-dependencies:\n- dependency-name: indexmap\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-11T05:20:27+08:00",
+          "tree_id": "c5dbed87d1bba699d5fbe1e5a5d1aa0dc59b4ab1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/508b1bc803dfd51781251b77ab2fe0b2eb717972"
+        },
+        "date": 1741642212778,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22953000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 591970,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.318,
             "unit": "ns/op"
           }
         ]
