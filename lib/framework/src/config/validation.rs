@@ -159,7 +159,7 @@ pub fn check_resources(builder: &Builder) -> Result<(), Vec<String>> {
     let extension_resources = builder
         .extensions
         .iter()
-        .map(|(id, config)| (id, config.resources()));
+        .map(|(id, config)| (id, config.inner.resources()));
     let conflicting_components = Resource::conflicts(
         source_resources
             .chain(sink_resources)

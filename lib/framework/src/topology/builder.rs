@@ -339,10 +339,11 @@ pub async fn build_pieces(
         let cx = ExtensionContext {
             name: key.to_string(),
             global: config.global.clone(),
+            proxy: ProxyConfig::merge_with_env(&config.global.proxy, extension.proxy()),
             shutdown: shutdown_signal,
         };
 
-        let ext = match extension.build(cx).await {
+        let ext = match extension.inner.build(cx).await {
             Ok(ext) => ext,
             Err(err) => {
                 errors.push(format!("Extension {}: {}", key, err));

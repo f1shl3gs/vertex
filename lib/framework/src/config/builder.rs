@@ -4,7 +4,7 @@ use glob;
 use indexmap::{IndexMap, IndexSet};
 use serde::{Deserialize, Serialize};
 
-use super::extension::ExtensionConfig;
+use super::extension::ExtensionOuter;
 use super::global::default_data_dir;
 use super::graph::Graph;
 use super::provider::ProviderConfig;
@@ -30,7 +30,7 @@ pub struct Builder {
 
     /// All configured extensions
     #[serde(default)]
-    pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
+    pub extensions: IndexMap<ComponentKey, ExtensionOuter>,
 
     /// All configured sources.
     #[serde(default)]
@@ -170,13 +170,18 @@ impl Builder {
     }
 
     #[cfg(test)]
-    pub fn add_extension<T: ExtensionConfig + 'static, S: Into<String>>(
+    pub fn add_extension<T: super::ExtensionConfig + 'static, S: Into<String>>(
         &mut self,
         name: S,
         extension: T,
     ) {
-        self.extensions
-            .insert(ComponentKey::from(name.into()), Box::new(extension));
+        self.extensions.insert(
+            ComponentKey::from(name.into()),
+            ExtensionOuter {
+                proxy: Default::default(),
+                inner: Box::new(extension),
+            },
+        );
     }
 }
 

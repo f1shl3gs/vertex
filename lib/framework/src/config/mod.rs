@@ -6,6 +6,7 @@ mod format;
 mod global;
 mod graph;
 mod helper;
+pub mod http;
 mod id;
 mod ip;
 mod loading;
@@ -31,7 +32,7 @@ use serde::{Deserialize, Serialize};
 // IndexMap preserves insertion order, allowing us to output errors in the
 // same order they are present in the file.
 pub use diff::ConfigDiff;
-pub use extension::{ExtensionConfig, ExtensionContext};
+pub use extension::{ExtensionConfig, ExtensionContext, ExtensionOuter};
 pub use format::{Format, FormatHint};
 pub use helper::{
     default_interval, default_true, serde_http_method, serde_regex, serde_uri,
@@ -244,7 +245,7 @@ pub struct Config {
 
     pub healthcheck: HealthcheckOptions,
 
-    pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
+    pub extensions: IndexMap<ComponentKey, ExtensionOuter>,
 
     pub sources: IndexMap<ComponentKey, SourceOuter>,
 

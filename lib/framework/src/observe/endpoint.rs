@@ -1,7 +1,8 @@
+use serde::Deserialize;
 use value::{OwnedSegment, OwnedValuePath, Value};
 
 /// Endpoint is a service that can be contacted remotely
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
 pub struct Endpoint {
     /// ID uniquely identifies this endpoint
     pub id: String,

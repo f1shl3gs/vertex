@@ -8,7 +8,7 @@ use std::time::Duration;
 use configurable::configurable_component;
 use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
-use framework::observe::Endpoint;
+use framework::observe::{Endpoint, register, run};
 use value::value;
 
 const fn default_interval() -> Duration {
@@ -25,42 +25,23 @@ struct Config {
 #[typetag::serde(name = "port_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let interval = self.interval;
-        let mut shutdown = cx.shutdown;
         let name = cx.name.clone();
-        let mut observer = framework::observe::register(cx.name);
+        let observer = register(cx.name);
 
-        Ok(Box::pin(async move {
-            let root = PathBuf::from("/proc");
-            let mut ticker = tokio::time::interval(interval);
+        Ok(Box::pin(run(
+            observer,
+            self.interval,
+            cx.shutdown,
+            async move || {
+                let root = PathBuf::from("/proc");
 
-            loop {
-                tokio::select! {
-                    _ = &mut shutdown => break,
-                    _ = ticker.tick() => {}
-                }
-
-                match list_endpoints(&name, root.clone()) {
-                    Ok(endpoints) => {
-                        debug!(message = "publish endpoints", count = endpoints.len());
-
-                        if let Err(_err) = observer.publish(endpoints) {
-                            error!("publish new endpoints failed, cause there is no consumers");
-                            break;
-                        }
-                    }
-                    Err(err) => {
-                        warn!(message = "Error while listing endpoints", ?err);
-                    }
-                }
-            }
-
-            Ok(())
-        }))
+                list_endpoints(&name, root).await
+            },
+        )))
     }
 }
 
-fn list_endpoints(observer: &str, root: PathBuf) -> io::Result<Vec<Endpoint>> {
+async fn list_endpoints(observer: &str, root: PathBuf) -> crate::Result<Vec<Endpoint>> {
     let infos = netstat(root)?;
 
     let endpoints = infos
