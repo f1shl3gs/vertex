@@ -5,7 +5,7 @@ use std::net::{Ipv4Addr, SocketAddr};
 use bytes::Bytes;
 use configurable::configurable_component;
 use framework::Extension;
-use framework::config::{ExtensionConfig, ExtensionContext};
+use framework::config::{ExtensionConfig, ExtensionContext, Resource};
 use framework::tls::MaybeTlsListener;
 use http::header::CONTENT_TYPE;
 use http::{Method, Request, Response, StatusCode};
@@ -51,6 +51,10 @@ impl ExtensionConfig for Config {
                 .await
                 .map_err(|_err| ())
         }))
+    }
+
+    fn resources(&self) -> Vec<Resource> {
+        vec![Resource::tcp(self.endpoint)]
     }
 }
 

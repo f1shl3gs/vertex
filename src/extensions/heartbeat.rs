@@ -8,7 +8,7 @@ use async_trait::async_trait;
 use bytes::Bytes;
 use chrono::SecondsFormat;
 use configurable::configurable_component;
-use framework::config::{ExtensionConfig, ExtensionContext, ProxyConfig, UriSerde};
+use framework::config::{ExtensionConfig, ExtensionContext, UriSerde};
 use framework::http::HttpClient;
 use framework::tls::TlsConfig;
 use framework::{Extension, ShutdownSignal};
@@ -63,7 +63,7 @@ impl ExtensionConfig for Config {
         status.kernel = sysinfo::kernel().unwrap_or_default();
         status.tags = self.tags.clone();
 
-        let client = HttpClient::new(self.tls.as_ref(), &ProxyConfig::default())?;
+        let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
 
         Ok(Box::pin(run(
             self.endpoint.clone(),

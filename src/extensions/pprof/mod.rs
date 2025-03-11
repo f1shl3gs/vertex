@@ -9,7 +9,7 @@ use std::sync::LazyLock;
 use bytes::Bytes;
 use configurable::configurable_component;
 use framework::Extension;
-use framework::config::{ExtensionConfig, ExtensionContext};
+use framework::config::{ExtensionConfig, ExtensionContext, Resource};
 use framework::shutdown::ShutdownSignal;
 use http::{Method, StatusCode};
 use http_body_util::Full;
@@ -36,6 +36,10 @@ impl ExtensionConfig for Config {
         let listener = TcpListener::bind(self.listen).await?;
 
         Ok(Box::pin(run(listener, cx.shutdown)))
+    }
+
+    fn resources(&self) -> Vec<Resource> {
+        vec![Resource::tcp(self.listen)]
     }
 }
 
