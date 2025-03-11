@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741654340326,
+  "lastUpdate": 1741654748271,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c0498581f85f4d40671675933ce7e98c9a5b5fb8",
-          "message": "fix assert_eq tests (#2136)",
-          "timestamp": "2025-01-20T15:13:17+08:00",
-          "tree_id": "a397ab505ac9eeae62d5e82e6ace949fdf5df67e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c0498581f85f4d40671675933ce7e98c9a5b5fb8"
-        },
-        "date": 1737357807168,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27804000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 592630,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.058,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.178,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83dcbae7c4fe9035c2f7ef34bfed1d32788a1664",
+          "message": "Merge pull request #2254 from f1shl3gs/extensions/http_observer\n\nextensions/http_observer: init",
+          "timestamp": "2025-03-11T08:48:51+08:00",
+          "tree_id": "1a4fca73c9920aedb1ba9913ebc5bc5b57dbd4fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83dcbae7c4fe9035c2f7ef34bfed1d32788a1664"
+        },
+        "date": 1741654728755,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22469000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 638200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.656,
             "unit": "ns/op"
           }
         ]
