@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741654748271,
+  "lastUpdate": 1741654819560,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "803b82a2497be25247e1be02d3eac9479f026ce1",
-          "message": "simplify PackedForward parsing (#2148)",
-          "timestamp": "2025-01-22T02:25:34+08:00",
-          "tree_id": "e6724b546d43cbe20bea786b28b75b3994ae942d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/803b82a2497be25247e1be02d3eac9479f026ce1"
-        },
-        "date": 1737484571447,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 538,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36854.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a59776cb7497fc603e6a446d768dcacbf88d4ea6",
           "message": "lib/framework: pipeline send events only & add acknowledgement for SourceConfig (#2149)",
           "timestamp": "2025-01-22T09:30:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39007.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83dcbae7c4fe9035c2f7ef34bfed1d32788a1664",
+          "message": "Merge pull request #2254 from f1shl3gs/extensions/http_observer\n\nextensions/http_observer: init",
+          "timestamp": "2025-03-11T08:48:51+08:00",
+          "tree_id": "1a4fca73c9920aedb1ba9913ebc5bc5b57dbd4fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83dcbae7c4fe9035c2f7ef34bfed1d32788a1664"
+        },
+        "date": 1741654800440,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39000.2,
             "unit": "KiB"
           }
         ]
