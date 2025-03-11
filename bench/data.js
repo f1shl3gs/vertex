@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741646216033,
+  "lastUpdate": 1741654266495,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "965ff522922d932a6b0545feb03a4112ed5a1f02",
-          "message": "chore(deps): bump indexmap from 2.7.0 to 2.7.1 (#2141)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.7.0 to 2.7.1.\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/master/RELEASES.md)\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.7.0...2.7.1)\n\n---\nupdated-dependencies:\n- dependency-name: indexmap\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-20T15:25:32+08:00",
-          "tree_id": "60d030a5c4b66922b80de15324a7df81553f149c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/965ff522922d932a6b0545feb03a4112ed5a1f02"
-        },
-        "date": 1737358060224,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539990,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 548630,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83dcbae7c4fe9035c2f7ef34bfed1d32788a1664",
+          "message": "Merge pull request #2254 from f1shl3gs/extensions/http_observer\n\nextensions/http_observer: init",
+          "timestamp": "2025-03-11T08:48:51+08:00",
+          "tree_id": "1a4fca73c9920aedb1ba9913ebc5bc5b57dbd4fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83dcbae7c4fe9035c2f7ef34bfed1d32788a1664"
+        },
+        "date": 1741654247445,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546900,
             "unit": "ns/op"
           }
         ]
