@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741756197991,
+  "lastUpdate": 1741756635053,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d8cf2b617f313c610835aa29c9c3da0a0a27b1dd",
-          "message": "tests: simplify testing (#2142)",
-          "timestamp": "2025-01-20T19:13:02+08:00",
-          "tree_id": "6e012b845fb5b55c071177e01cd3b6a1e9787520",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d8cf2b617f313c610835aa29c9c3da0a0a27b1dd"
-        },
-        "date": 1737372295220,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28576000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 589970,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.275,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6ff6ad3de78376ba1b5e773c7a05bc957266eba3",
           "message": "implement UdpSource with events (#2143)",
           "timestamp": "2025-01-21T00:19:30+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.157,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b",
+          "message": "Merge pull request #2258 from f1shl3gs/misc/use_asyncfn\n\nmisc: use AsyncFn*",
+          "timestamp": "2025-03-12T13:06:29+08:00",
+          "tree_id": "b7b0bca8ab8179ed28c62da9887bfd413f2e3f63",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b"
+        },
+        "date": 1741756615491,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 21755000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 605370,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.814,
             "unit": "ns/op"
           }
         ]
