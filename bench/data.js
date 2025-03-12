@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741756635053,
+  "lastUpdate": 1741756667403,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "990aef28c6f794e4a2359fa3cce82eab0c9e7cb5",
-          "message": "lib/sources: add socket (#2152)",
-          "timestamp": "2025-01-25T04:04:36+08:00",
-          "tree_id": "cf7b35c170debebf071bb51752120936233074c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/990aef28c6f794e4a2359fa3cce82eab0c9e7cb5"
-        },
-        "date": 1737749726208,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 555,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36910,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "86f0938daecfcef67b40feb8b5297c30c6d1c2f6",
           "message": "sources/http: init (#2153)",
           "timestamp": "2025-01-25T15:39:54+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39004.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b",
+          "message": "Merge pull request #2258 from f1shl3gs/misc/use_asyncfn\n\nmisc: use AsyncFn*",
+          "timestamp": "2025-03-12T13:06:29+08:00",
+          "tree_id": "b7b0bca8ab8179ed28c62da9887bfd413f2e3f63",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b"
+        },
+        "date": 1741756646894,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
             "unit": "s"
           },
           {
