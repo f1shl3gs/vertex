@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741748902645,
+  "lastUpdate": 1741748920468,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d8cf2b617f313c610835aa29c9c3da0a0a27b1dd",
-          "message": "tests: simplify testing (#2142)",
-          "timestamp": "2025-01-20T19:13:02+08:00",
-          "tree_id": "6e012b845fb5b55c071177e01cd3b6a1e9787520",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d8cf2b617f313c610835aa29c9c3da0a0a27b1dd"
-        },
-        "date": 1737371742943,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.328,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 139.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 306.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 648.63,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6ff6ad3de78376ba1b5e773c7a05bc957266eba3",
           "message": "implement UdpSource with events (#2143)",
           "timestamp": "2025-01-21T00:19:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 663.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dcc48d4a6e4e7a4304f2920804dc988f7be02078",
+          "message": "Merge pull request #2255 from f1shl3gs/dependabot/cargo/http-body-util-0.1.3\n\nchore(deps): bump http-body-util from 0.1.2 to 0.1.3",
+          "timestamp": "2025-03-12T11:05:50+08:00",
+          "tree_id": "eac7c81162b3b042dc0c5580774bcf5d6dd57761",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dcc48d4a6e4e7a4304f2920804dc988f7be02078"
+        },
+        "date": 1741748901243,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.082,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 180.87,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 351.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 719.73,
             "unit": "ns/op"
           }
         ]
