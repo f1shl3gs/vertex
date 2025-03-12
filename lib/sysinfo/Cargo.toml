@@ -5,4 +5,4 @@ edition = "2024"
 publish = false
 
 [target.'cfg(unix)'.dependencies]
-libc = { version = "0.2.170", default-features = false }
+libc = { version = "0.2.171", default-features = false }
