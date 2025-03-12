@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741756132150,
+  "lastUpdate": 1741756159058,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6ff6ad3de78376ba1b5e773c7a05bc957266eba3",
-          "message": "implement UdpSource with events (#2143)",
-          "timestamp": "2025-01-21T00:19:30+08:00",
-          "tree_id": "90a25b243cef7c86780e726d03f67fb414b185af",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6ff6ad3de78376ba1b5e773c7a05bc957266eba3"
-        },
-        "date": 1737390135758,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.566,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 142.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 307.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 622.33,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d2d28366fe38c7725934332dba4e011bbb020d76",
           "message": "bump uuid to 1.12.1 (#2146)",
           "timestamp": "2025-01-22T01:51:20+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 719.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b",
+          "message": "Merge pull request #2258 from f1shl3gs/misc/use_asyncfn\n\nmisc: use AsyncFn*",
+          "timestamp": "2025-03-12T13:06:29+08:00",
+          "tree_id": "b7b0bca8ab8179ed28c62da9887bfd413f2e3f63",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b"
+        },
+        "date": 1741756139744,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 332.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 694.24,
             "unit": "ns/op"
           }
         ]
