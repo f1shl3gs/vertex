@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741748461518,
+  "lastUpdate": 1741748468849,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d8dd9cc509caf4db8c2c5cec4e312f92ff725aa0",
-          "message": "re-order framework/source/utils (#2150)",
-          "timestamp": "2025-01-22T12:01:33+08:00",
-          "tree_id": "b4e3393bc90eb42180dc56d8626f0ca282397a7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d8dd9cc509caf4db8c2c5cec4e312f92ff725aa0"
-        },
-        "date": 1737519172649,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 535,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36815.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4eac1c77f80e40b56e683c5e500ac147075e79c",
           "message": "lib/codecs: decode inputs to Events (#2151)",
           "timestamp": "2025-01-23T16:53:12+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38990.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f75445213fbcc49a2b2e80f98d0bda4fbecd2f6d",
+          "message": "Merge pull request #2256 from f1shl3gs/dependabot/cargo/http-1.3.1\n\nchore(deps): bump http from 1.2.0 to 1.3.1",
+          "timestamp": "2025-03-12T10:49:47+08:00",
+          "tree_id": "0ed0d840dd1e8e6a6a709032e11ef632ac1e7920",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f75445213fbcc49a2b2e80f98d0bda4fbecd2f6d"
+        },
+        "date": 1741748449576,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 582,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39004.6,
             "unit": "KiB"
           }
         ]
