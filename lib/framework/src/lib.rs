@@ -1,6 +1,5 @@
 #![allow(clippy::type_complexity)]
 #![allow(clippy::too_many_arguments)]
-#![allow(async_fn_in_trait)]
 
 pub mod async_read;
 pub mod batch;

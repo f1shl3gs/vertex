@@ -33,7 +33,7 @@ async fn write_and_query() {
         .run(async move {
             // wait for loki get ready
             wait_for_duration(
-                || async move {
+                async move || {
                     let url = Url::parse(&format!("http://{}", service_addr)).unwrap();
                     let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 

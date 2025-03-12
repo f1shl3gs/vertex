@@ -9,10 +9,9 @@ const WAIT_FOR_MIN_MILLIS: u64 = 5; // The minimum time to pause before retrying
 const WAIT_FOR_MAX_MILLIS: u64 = 500; // The maximum time to pause before retrying
 
 // Wait for a Future to resolve, or the duration to elapse(will panic)
-pub async fn wait_for_duration<F, Fut>(mut f: F, duration: Duration)
+pub async fn wait_for_duration<F>(mut f: F, duration: Duration)
 where
-    F: FnMut() -> Fut,
-    Fut: Future<Output = bool> + Send + 'static,
+    F: AsyncFnMut() -> bool + Send + 'static,
 {
     let started = Instant::now();
     let mut delay = WAIT_FOR_MIN_MILLIS;
@@ -30,10 +29,9 @@ where
 }
 
 // Wait for 5s
-pub async fn wait_for<F, Fut>(f: F)
+pub async fn wait_for<F>(f: F)
 where
-    F: FnMut() -> Fut,
-    Fut: Future<Output = bool> + Send + 'static,
+    F: AsyncFnMut() -> bool + Send + 'static,
 {
     wait_for_duration(f, Duration::from_secs(WAIT_FOR_SECS)).await
 }
