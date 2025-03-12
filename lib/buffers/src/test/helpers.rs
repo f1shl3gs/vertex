@@ -1,5 +1,5 @@
 use std::io::ErrorKind;
-use std::path::Path;
+use std::path::PathBuf;
 use std::str::FromStr;
 use std::sync::LazyLock;
 use std::sync::atomic::{AtomicU32, Ordering};
@@ -44,10 +44,9 @@ macro_rules! await_timeout {
 
 pub static INTERNAL_COUNTER: AtomicU32 = AtomicU32::new(0);
 
-pub async fn with_temp_dir<F, Fut, V>(f: F) -> V
+pub async fn with_temp_dir<F, V>(f: F) -> V
 where
-    F: FnOnce(&Path) -> Fut,
-    Fut: Future<Output = V>,
+    F: AsyncFnOnce(PathBuf) -> V,
 {
     let prefix = "vertex-buffers";
 
@@ -74,7 +73,7 @@ where
         }
     };
 
-    f(tmp_dir.as_path()).await
+    f(tmp_dir).await
 }
 
 pub fn install_tracing_helpers() -> AssertionRegistry {
