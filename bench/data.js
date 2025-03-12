@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741748426049,
+  "lastUpdate": 1741748461518,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a59776cb7497fc603e6a446d768dcacbf88d4ea6",
-          "message": "lib/framework: pipeline send events only & add acknowledgement for SourceConfig (#2149)",
-          "timestamp": "2025-01-22T09:30:54+08:00",
-          "tree_id": "8ec991de92e49e9347cb433b82fc7f4c7815de0b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a59776cb7497fc603e6a446d768dcacbf88d4ea6"
-        },
-        "date": 1737510104302,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 554,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 36815.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d8dd9cc509caf4db8c2c5cec4e312f92ff725aa0",
           "message": "re-order framework/source/utils (#2150)",
           "timestamp": "2025-01-22T12:01:33+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39000.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3cfe7141d83402bd4971f147bcbeba3321081806",
+          "message": "Merge pull request #2257 from f1shl3gs/dependabot/cargo/libc-0.2.171\n\nchore(deps): bump libc from 0.2.170 to 0.2.171",
+          "timestamp": "2025-03-12T10:49:35+08:00",
+          "tree_id": "12bf3967fb3c754060075716b923176f345f3235",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3cfe7141d83402bd4971f147bcbeba3321081806"
+        },
+        "date": 1741748441745,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 584,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38990.4,
             "unit": "KiB"
           }
         ]
