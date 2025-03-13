@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741837921565,
+  "lastUpdate": 1741838172014,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d2d28366fe38c7725934332dba4e011bbb020d76",
-          "message": "bump uuid to 1.12.1 (#2146)",
-          "timestamp": "2025-01-22T01:51:20+08:00",
-          "tree_id": "eab21df921b313bde06435a55e3a2f1be8713acd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d2d28366fe38c7725934332dba4e011bbb020d76"
-        },
-        "date": 1737482537124,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28736000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 726010,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.101,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6cf6391030cad75fd70848f37c2a625672feabe7",
           "message": "convert counter data to metrics (#2147)",
           "timestamp": "2025-01-22T02:15:09+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0c84d1f759dde992f6aa958ecb2ad7409950882f",
+          "message": "Merge pull request #2259 from f1shl3gs/dependabot/cargo/kube-0.99.0\n\nchore(deps): bump kube from 0.98.0 to 0.99.0",
+          "timestamp": "2025-03-13T11:45:26+08:00",
+          "tree_id": "64033b565442673c506002d23c20a75a953f8fcf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0c84d1f759dde992f6aa958ecb2ad7409950882f"
+        },
+        "date": 1741838152335,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23830000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 635160,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.061,
             "unit": "ns/op"
           }
         ]
