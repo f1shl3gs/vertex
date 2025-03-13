@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741837740853,
+  "lastUpdate": 1741837882845,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6ff6ad3de78376ba1b5e773c7a05bc957266eba3",
-          "message": "implement UdpSource with events (#2143)",
-          "timestamp": "2025-01-21T00:19:30+08:00",
-          "tree_id": "90a25b243cef7c86780e726d03f67fb414b185af",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6ff6ad3de78376ba1b5e773c7a05bc957266eba3"
-        },
-        "date": 1737390627476,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28827000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 640180,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.915,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d2d28366fe38c7725934332dba4e011bbb020d76",
           "message": "bump uuid to 1.12.1 (#2146)",
           "timestamp": "2025-01-22T01:51:20+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.814,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4f12ac8aecbd1376ea820c9b6d027355be7ff2f2",
+          "message": "Merge pull request #2260 from f1shl3gs/dependabot/cargo/quote-1.0.40\n\nchore(deps): bump quote from 1.0.39 to 1.0.40",
+          "timestamp": "2025-03-13T11:40:49+08:00",
+          "tree_id": "f839bf67ade25db357747e01a73227a6c22a1a4a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4f12ac8aecbd1376ea820c9b6d027355be7ff2f2"
+        },
+        "date": 1741837862148,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23598000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 544780,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.92,
             "unit": "ns/op"
           }
         ]
