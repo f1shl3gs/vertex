@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741930790337,
+  "lastUpdate": 1741930815866,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "98f0f73d1110b77dec7e6b2a115f3802bcab962e",
-          "message": "update regression tests",
-          "timestamp": "2025-01-28T02:50:16+08:00",
-          "tree_id": "cd54150918f67d7b02aa08a758dc1d27e46fea47",
-          "url": "https://github.com/f1shl3gs/vertex/commit/98f0f73d1110b77dec7e6b2a115f3802bcab962e"
-        },
-        "date": 1738004479151,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 558,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37343.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38986,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "245382f7d1dea5ae013ed707602ca3ef780d4fa9",
+          "message": "Merge pull request #2261 from f1shl3gs/dependabot/cargo/tokio-1.44.1\n\nchore(deps): bump tokio from 1.44.0 to 1.44.1",
+          "timestamp": "2025-03-14T13:29:25+08:00",
+          "tree_id": "61bcb87658416f85dd1018ebbe3b86cc93a47c78",
+          "url": "https://github.com/f1shl3gs/vertex/commit/245382f7d1dea5ae013ed707602ca3ef780d4fa9"
+        },
+        "date": 1741930796728,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 555,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38986.5,
             "unit": "KiB"
           }
         ]
