@@ -130,6 +130,7 @@ all-integration-tests = [
     "redfish-integration-tests",
 ]
 
+extensions-consul_observer = []
 extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "dep:parking_lot"]
 extensions-healthcheck = []
 extensions-http = []
@@ -139,6 +140,7 @@ extensions-zpages = ["dep:parking_lot"]
 
 # Extensions
 extensions = [
+    "extensions-consul_observer",
     "extensions-healthcheck",
     "extensions-heartbeat",
     "extensions-http",
@@ -349,6 +351,14 @@ name = "haproxy"
 harness = false
 path = "benches/haproxy.rs"
 required-features = ["sources-haproxy"]
+
+[[test]]
+name = "socket"
+required-features = ["sinks-socket"]
+
+[[test]]
+name = "syslog"
+required-features = ["sinks-socket"]
 
 [build-dependencies]
 prost-build = { version = "0.13.5", default-features = false }
