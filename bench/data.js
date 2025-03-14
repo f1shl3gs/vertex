@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741934051910,
+  "lastUpdate": 1741934135672,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ce522e9ee10e5281c5fa456eb28fccf67ada1eee",
-          "message": "misc/update (#2156)",
-          "timestamp": "2025-01-28T04:34:11+08:00",
-          "tree_id": "2cee5456a21d5016c66bec261999f581844be85e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ce522e9ee10e5281c5fa456eb28fccf67ada1eee"
-        },
-        "date": 1738010695641,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37343,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7d73b6b96e14c7484e49cd643583f7143eb30c6d",
           "message": "add unix support (#2159)",
           "timestamp": "2025-01-28T04:58:17+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 555,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38986.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c85199f72b80e6733c93b460b560b4db96d5826",
+          "message": "Merge pull request #2263 from f1shl3gs/dependabot/cargo/uuid-1.16.0\n\nchore(deps): bump uuid from 1.15.1 to 1.16.0",
+          "timestamp": "2025-03-14T14:24:09+08:00",
+          "tree_id": "d78d8ffe8aa9b0bd329081578dfc261035ae538b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c85199f72b80e6733c93b460b560b4db96d5826"
+        },
+        "date": 1741934116519,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 581,
             "unit": "s"
           },
           {
