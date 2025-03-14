@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741969963635,
+  "lastUpdate": 1741970418504,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c4eac1c77f80e40b56e683c5e500ac147075e79c",
-          "message": "lib/codecs: decode inputs to Events (#2151)",
-          "timestamp": "2025-01-23T16:53:12+08:00",
-          "tree_id": "31f68ccd8217b8fc05303673d4927cb99d4c52d2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c4eac1c77f80e40b56e683c5e500ac147075e79c"
-        },
-        "date": 1737623067019,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29067000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 749730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 46.531,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "990aef28c6f794e4a2359fa3cce82eab0c9e7cb5",
           "message": "lib/sources: add socket (#2152)",
           "timestamp": "2025-01-25T04:04:36+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.641,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3885b2061a4949dfdac7569bab2367a030cf0d94",
+          "message": "Merge pull request #2265 from f1shl3gs/cargo/update\n\ncargo update",
+          "timestamp": "2025-03-15T00:29:07+08:00",
+          "tree_id": "7aefb33daeff4a7b4158f798e89e133783bd4090",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3885b2061a4949dfdac7569bab2367a030cf0d94"
+        },
+        "date": 1741970398425,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 24216000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 606800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 54.723,
             "unit": "ns/op"
           }
         ]
