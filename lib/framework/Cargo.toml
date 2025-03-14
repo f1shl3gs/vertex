@@ -18,7 +18,7 @@ proptest = { version = "1.6.0", default-features = false, features = ["std"] }
 rand = { version = "0.9.0", default-features = false }
 rand_distr = { version = "0.5.1", default-features = false }
 testify = { path = "../testify" }
-tokio = { version = "1.44.0", default-features = false, features = ["test-util"] }
+tokio = { version = "1.44.1", default-features = false, features = ["test-util"] }
 tokio-test = { version = "0.4.4", default-features = false }
 tower-test = { version = "0.4.0", default-features = false }
 
@@ -72,7 +72,7 @@ serde_yaml = { version = "0.9.34", default-features = false }
 snap = { version = "1.1.1", default-features = false }
 socket2 = { version = "0.5.8", default-features = false }
 thiserror = { version = "2.0.12", default-features = false }
-tokio = { version = "1.44.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread"] }
+tokio = { version = "1.44.1", default-features = false, features = ["time", "net", "signal", "rt-multi-thread"] }
 tokio-rustls = { version = "0.26.2", default-features = false }
 tokio-stream = { version = "0.1.17", default-features = false, features = ["net", "sync"] }
 tokio-util = { version = "0.7.14", default-features = false, features = ["time"] }
