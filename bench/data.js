@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741933598970,
+  "lastUpdate": 1741933632965,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d8dd9cc509caf4db8c2c5cec4e312f92ff725aa0",
-          "message": "re-order framework/source/utils (#2150)",
-          "timestamp": "2025-01-22T12:01:33+08:00",
-          "tree_id": "b4e3393bc90eb42180dc56d8626f0ca282397a7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d8dd9cc509caf4db8c2c5cec4e312f92ff725aa0"
-        },
-        "date": 1737518650592,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 27.191,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 631.03,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4eac1c77f80e40b56e683c5e500ac147075e79c",
           "message": "lib/codecs: decode inputs to Events (#2151)",
           "timestamp": "2025-01-23T16:53:12+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 715.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c85199f72b80e6733c93b460b560b4db96d5826",
+          "message": "Merge pull request #2263 from f1shl3gs/dependabot/cargo/uuid-1.16.0\n\nchore(deps): bump uuid from 1.15.1 to 1.16.0",
+          "timestamp": "2025-03-14T14:24:09+08:00",
+          "tree_id": "d78d8ffe8aa9b0bd329081578dfc261035ae538b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c85199f72b80e6733c93b460b560b4db96d5826"
+        },
+        "date": 1741933613186,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.699,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 166.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 306,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 667.87,
             "unit": "ns/op"
           }
         ]
