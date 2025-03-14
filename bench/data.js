@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1741930294846,
+  "lastUpdate": 1741930305335,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a59776cb7497fc603e6a446d768dcacbf88d4ea6",
-          "message": "lib/framework: pipeline send events only & add acknowledgement for SourceConfig (#2149)",
-          "timestamp": "2025-01-22T09:30:54+08:00",
-          "tree_id": "8ec991de92e49e9347cb433b82fc7f4c7815de0b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a59776cb7497fc603e6a446d768dcacbf88d4ea6"
-        },
-        "date": 1737509591140,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.336,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.028,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.42,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "245382f7d1dea5ae013ed707602ca3ef780d4fa9",
+          "message": "Merge pull request #2261 from f1shl3gs/dependabot/cargo/tokio-1.44.1\n\nchore(deps): bump tokio from 1.44.0 to 1.44.1",
+          "timestamp": "2025-03-14T13:29:25+08:00",
+          "tree_id": "61bcb87658416f85dd1018ebbe3b86cc93a47c78",
+          "url": "https://github.com/f1shl3gs/vertex/commit/245382f7d1dea5ae013ed707602ca3ef780d4fa9"
+        },
+        "date": 1741930286256,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.303,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 106.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 205.51,
             "unit": "ns/op"
           }
         ]
