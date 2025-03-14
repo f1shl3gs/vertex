@@ -239,7 +239,7 @@ async fn run(
 
                         if let Err(err) = template
                             .start(
-                                endpoint.clone(),
+                                &endpoint,
                                 key,
                                 shutdown,
                                 force_shutdown_tripwire,
@@ -293,7 +293,7 @@ async fn run(
                             shutdown_coordinator.register(key.clone());
                         if let Err(err) = template
                             .start(
-                                endpoint.clone(),
+                                &endpoint,
                                 key,
                                 shutdown,
                                 force_shutdown_tripwire,
@@ -369,7 +369,7 @@ impl SourceTemplate {
 
     async fn start(
         &self,
-        endpoint: Endpoint,
+        endpoint: &Endpoint,
         key: String,
         shutdown: ShutdownSignal,
         force_shutdown_tripwire: Tripwire,
@@ -386,7 +386,7 @@ impl SourceTemplate {
             acknowledgements: false,
         };
 
-        let source = interpolate::build_source(&self.config, &endpoint)?
+        let source = interpolate::build_source(&self.config, endpoint)?
             .build(cx)
             .await?;
 

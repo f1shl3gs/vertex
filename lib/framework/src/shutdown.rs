@@ -217,7 +217,7 @@ impl ShutdownCoordinator {
             } else {
                 error!(
                     message = "Failed to shutdown before deadline, forcing shutdown",
-                    ?source
+                    %source
                 );
 
                 force_trigger.cancel();
