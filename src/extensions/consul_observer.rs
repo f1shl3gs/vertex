@@ -42,7 +42,6 @@ const fn default_allow_stale() -> bool {
 ///     tags:
 ///     - foo
 ///     - bar
-///
 /// ```
 #[configurable_component(extension, name = "consul_observer")]
 struct Config {
@@ -105,18 +104,19 @@ impl ExtensionConfig for Config {
         let client = Client {
             http_client,
             endpoint,
-            filter: self.filter.clone(),
             auth,
+            filter: self.filter.clone(),
             datacenter: self.datacenter.clone(),
             namespace: self.namespace.clone(),
             partition: self.partition.clone(),
-            allow_stale: false,
+            allow_stale: self.allow_stale,
             last_index: Arc::new(Default::default()),
         };
 
         Ok(Box::pin(watch(
             client,
             self.refresh_interval,
+            self.services.clone(),
             observer,
             cx.shutdown,
         )))
@@ -126,6 +126,7 @@ impl ExtensionConfig for Config {
 async fn watch(
     client: Client,
     interval: Duration,
+    services: Vec<String>,
     mut observer: Observer,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
@@ -133,6 +134,7 @@ async fn watch(
     let mut initial_delay = Some(Duration::from_secs(5));
     let mut existing = BTreeMap::new();
     let grouped_endpoints = Arc::new(Mutex::new(BTreeMap::<String, Vec<Endpoint>>::new()));
+    let start_watch = std::sync::Once::new();
 
     loop {
         tokio::select! {
@@ -140,39 +142,56 @@ async fn watch(
             _ = &mut shutdown => break,
         }
 
-        match client.services().await {
-            Ok(services) => {
-                for service in services.iter() {
-                    if existing.contains_key(service) {
-                        // already running
-                        continue;
+        if services.is_empty() {
+            match client.services().await {
+                Ok(services) => {
+                    for service in &services {
+                        if existing.contains_key(service) {
+                            // already running
+                            continue;
+                        }
+
+                        let (trigger, tripwire) = Tripwire::new();
+                        existing.insert(service.clone(), trigger);
+
+                        tokio::spawn(watch_service(
+                            client.clone(),
+                            service.clone(),
+                            interval,
+                            tripwire,
+                            Arc::clone(&grouped_endpoints),
+                        ));
                     }
 
+                    // remove services, which is not exists anymore
+                    existing.retain(|name, _trigger| {
+                        // NOTE: we don't need to call trigger.cancel, cause it will
+                        // be dropped after this closure.
+                        debug!(message = "stop service watching", service = name);
+                        services.contains(name)
+                    });
+                }
+                Err(err) => {
+                    warn!(message = "list services failed", ?err);
+                    continue;
+                }
+            };
+        } else {
+            start_watch.call_once(|| {
+                for service in &services {
                     let (trigger, tripwire) = Tripwire::new();
                     existing.insert(service.to_string(), trigger);
 
-                    let wc = client.clone();
-                    let svc = service.to_string();
-                    let grouped = Arc::clone(&grouped_endpoints);
-                    tokio::spawn(async move {
-                        debug!(message = "start watching service", service = svc);
-
-                        watch_service(wc, svc, interval, tripwire, grouped).await
-                    });
+                    tokio::spawn(watch_service(
+                        client.clone(),
+                        service.clone(),
+                        interval,
+                        tripwire,
+                        Arc::clone(&grouped_endpoints),
+                    ));
                 }
-
-                // remove services, which is not exists anymore
-                existing.retain(|name, _trigger| {
-                    debug!(message = "stop service watching", service = name);
-                    services.contains(name)
-                });
-            }
-            Err(err) => {
-                warn!(message = "list services failed", ?err);
-
-                continue;
-            }
-        };
+            });
+        }
 
         if let Some(delay) = initial_delay.take() {
             tokio::select! {
@@ -193,8 +212,8 @@ async fn watch(
         }
     }
 
-    for (name, trigger) in existing {
-        info!(message = "shutting down service watcher", service = name);
+    for (service, trigger) in existing {
+        info!(message = "shutting down service watcher", service);
         trigger.cancel();
     }
 
@@ -206,8 +225,10 @@ async fn watch_service(
     service: String,
     interval: Duration,
     mut tripwire: Tripwire,
-    task: Arc<Mutex<BTreeMap<String, Vec<Endpoint>>>>,
+    cache: Arc<Mutex<BTreeMap<String, Vec<Endpoint>>>>,
 ) -> Result<(), ()> {
+    debug!(message = "start watching service", service);
+
     let mut ticker = tokio::time::interval(interval);
 
     loop {
@@ -216,15 +237,20 @@ async fn watch_service(
             _ = &mut tripwire => break
         }
 
-        match client.service_entries(service.clone()).await {
-            Ok(entries) => {
-                let endpoints = entries.into_iter().map(build_endpoint).collect::<Vec<_>>();
-                task.lock().unwrap().insert(service.clone(), endpoints);
-            }
-            Err(err) => {
-                warn!(message = "list service entries failed", ?err, service);
+        tokio::select! {
+            _ = &mut tripwire => break,
+            result = client.service_entries(&service) => match result {
+                Ok(entries) => {
+                    let endpoints = entries.into_iter().map(build_endpoint).collect::<Vec<_>>();
 
-                continue;
+                    if let Some(dst) = cache.lock().unwrap().get_mut(&service) {
+                        *dst = endpoints;
+                    }
+                },
+                Err(err) => {
+                    warn!(message = "list service entries failed", ?err, service);
+                    continue;
+                }
             }
         }
     }
@@ -260,7 +286,6 @@ struct Node {
 struct AgentService {
     #[serde(rename = "ID")]
     id: String,
-    // service: String,
     tags: Vec<String>,
     port: u16,
     address: String,
@@ -336,8 +361,8 @@ struct Client {
     http_client: HttpClient,
 
     endpoint: String,
-    filter: Option<String>,
     auth: Option<Auth>,
+    filter: Option<String>,
     datacenter: Option<String>,
     namespace: Option<String>,
     partition: Option<String>,
@@ -347,38 +372,13 @@ struct Client {
 
 impl Client {
     async fn services(&self) -> Result<Vec<String>, Error> {
-        let query = {
-            let mut builder = url::form_urlencoded::Serializer::new(String::new());
-
-            if let Some(dc) = self.datacenter.as_ref() {
-                builder.append_pair("dc", dc.as_str());
-            }
-            if let Some(ns) = self.namespace.as_ref() {
-                builder.append_pair("ns", ns);
-            }
-            if let Some(p) = self.partition.as_ref() {
-                builder.append_pair("partition", p);
-            }
-            if let Some(filter) = self.filter.as_ref() {
-                builder.append_pair("filter", filter);
-            }
-
-            let last_index = self.last_index.load(Ordering::Relaxed);
-            if last_index != 0 {
-                builder.append_pair("index", last_index.to_string().as_ref());
-            }
-            if self.allow_stale {
-                builder.append_pair("stale", "");
-            }
-
-            builder.append_pair("wait", format!("{}ms", WAIT_TIMEOUT.as_millis()).as_str());
-
-            builder.finish()
-        };
-
         let mut req = Request::builder()
             .method(Method::GET)
-            .uri(format!("{}/v1/catalog/services?{}", self.endpoint, query))
+            .uri(format!(
+                "{}/v1/catalog/services?{}",
+                self.endpoint,
+                self.build_query()
+            ))
             .body(Full::default())
             .unwrap();
 
@@ -405,44 +405,14 @@ impl Client {
         Ok(services.keys().cloned().collect())
     }
 
-    async fn service_entries(&self, name: String) -> Result<Vec<ServiceEntry>, Error> {
-        // NOTE: this scope looks useless, but it is necessary indeed.
-        // Without this block, this function will break completion with error.
-        // `url::form_urlencoded::Serializer` which is not send
-        let query = {
-            let mut builder = url::form_urlencoded::Serializer::new(String::new());
-
-            if let Some(dc) = self.datacenter.as_ref() {
-                builder.append_pair("dc", dc.as_str());
-            }
-            if let Some(ns) = self.namespace.as_ref() {
-                builder.append_pair("ns", ns);
-            }
-            if let Some(partition) = self.partition.as_ref() {
-                builder.append_pair("partition", partition);
-            }
-            if let Some(filter) = self.filter.as_ref() {
-                builder.append_pair("filter", filter);
-            }
-
-            let last_index = self.last_index.load(Ordering::Relaxed);
-            if last_index != 0 {
-                builder.append_pair("index", last_index.to_string().as_ref());
-            }
-            if self.allow_stale {
-                builder.append_pair("stale", "");
-            }
-
-            builder.append_pair("wait", format!("{}ms", WAIT_TIMEOUT.as_millis()).as_str());
-
-            builder.finish()
-        };
-
+    async fn service_entries(&self, name: &str) -> Result<Vec<ServiceEntry>, Error> {
         let mut req = Request::builder()
             .method(Method::GET)
             .uri(format!(
                 "{}/v1/health/service/{}?{}",
-                self.endpoint, name, query
+                self.endpoint,
+                name,
+                self.build_query()
             ))
             .body(Full::default())
             .unwrap();
@@ -481,6 +451,35 @@ impl Client {
                 }
             }
         }
+    }
+
+    fn build_query(&self) -> String {
+        let mut builder = url::form_urlencoded::Serializer::new(String::new());
+
+        if let Some(datacenter) = self.datacenter.as_ref() {
+            builder.append_pair("dc", datacenter.as_str());
+        }
+        if let Some(namespace) = self.namespace.as_ref() {
+            builder.append_pair("ns", namespace);
+        }
+        if let Some(partition) = self.partition.as_ref() {
+            builder.append_pair("partition", partition);
+        }
+        if let Some(filter) = self.filter.as_ref() {
+            builder.append_pair("filter", filter);
+        }
+
+        let last_index = self.last_index.load(Ordering::Relaxed);
+        if last_index != 0 {
+            builder.append_pair("index", last_index.to_string().as_ref());
+        }
+        if self.allow_stale {
+            builder.append_pair("stale", "");
+        }
+
+        builder.append_pair("wait", format!("{}ms", WAIT_TIMEOUT.as_millis()).as_str());
+
+        builder.finish()
     }
 }
 
