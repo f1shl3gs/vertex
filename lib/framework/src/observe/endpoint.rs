@@ -6,6 +6,8 @@ use value::{OwnedSegment, OwnedValuePath, Value};
 pub struct Endpoint {
     /// ID uniquely identifies this endpoint
     pub id: String,
+    /// Type of the Endpoint, e.g. service, pod, container, etc
+    pub typ: String,
     /// Target is an IP address or hostname of the endpoint.
     /// It can also be a hostname/ip:port pair.
     pub target: String,
@@ -27,12 +29,17 @@ impl Endpoint {
                     return Some(Value::Bytes(self.id.clone().into()));
                 }
             }
+            "type" => {
+                if segments.is_empty() {
+                    return Some(Value::Bytes(self.typ.clone().into()));
+                }
+            }
             "target" => {
                 if segments.is_empty() {
                     return Some(Value::Bytes(self.target.clone().into()));
                 }
             }
-            "env" => {}
+            "details" => {}
             _ => return None,
         }
 
@@ -50,6 +57,7 @@ mod tests {
     fn get() {
         let endpoint = Endpoint {
             id: "1234".to_string(),
+            typ: "test".to_string(),
             target: "127.0.0.1".to_string(),
             details: value!({
                 "foo": "bar",
@@ -63,7 +71,7 @@ mod tests {
         let path = parse_value_path("target").unwrap();
         assert_eq!(endpoint.get(&path), Some(Value::Bytes("127.0.0.1".into())));
 
-        let path = parse_value_path("env.foo").unwrap();
+        let path = parse_value_path("details.foo").unwrap();
         assert_eq!(endpoint.get(&path), Some(Value::Bytes("bar".into())));
     }
 }

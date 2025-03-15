@@ -70,6 +70,7 @@ async fn list_endpoints(observer: &str, root: PathBuf) -> crate::Result<Vec<Endp
                     addr.port(),
                     pid
                 ),
+                typ: "port".to_string(),
                 target: info.addr.to_string(),
                 details: value!({
                     "name": name,

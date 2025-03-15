@@ -521,6 +521,7 @@ fn build_endpoint(entry: ServiceEntry) -> Endpoint {
 
     Endpoint {
         id,
+        typ: "node".to_string(),
         target,
         details: value!({
             "node": node,

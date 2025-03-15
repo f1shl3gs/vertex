@@ -140,6 +140,7 @@ mod tests {
     fn mock_endpoint() -> Endpoint {
         Endpoint {
             id: "1234".to_string(),
+            typ: "mock".to_string(),
             target: "127.0.0.1".to_string(),
             details: value!({
                 "foo": "bar",
@@ -160,7 +161,7 @@ mod tests {
         let input = value!({
             "id": "${{ id }}",
             "target": "${{ target }}",
-            "env": "${{ env }}",
+            "details": "${{ details }}",
         });
         let output = interpolate(&input, &mock_endpoint()).unwrap();
         assert_eq!(
@@ -168,7 +169,7 @@ mod tests {
             json!({
                 "id": "1234",
                 "target": "127.0.0.1",
-                "env": {
+                "details": {
                     "foo": "bar",
                     "int": 1,
                     "f64": 2.2,
@@ -191,6 +192,7 @@ mod tests {
 
         let endpoint = Endpoint {
             id: "".to_string(),
+            typ: "mock".to_string(),
             target: "127.0.0.1:33331".to_string(),
             details: Value::Null,
         };
