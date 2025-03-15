@@ -6,6 +6,7 @@ use bytes::Bytes;
 use configurable::configurable_component;
 use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext, Resource};
+use framework::observe::current_endpoints;
 use framework::tls::MaybeTlsListener;
 use http::header::CONTENT_TYPE;
 use http::{Method, Request, Response, StatusCode};
@@ -85,6 +86,16 @@ async fn http_handle(req: Request<Incoming>) -> framework::Result<Response<Full<
                 .header(CONTENT_TYPE, "text/yaml")
                 .status(StatusCode::OK)
                 .body(Full::new(text.into()))?
+        }
+        "/observe" => {
+            let endpoints = current_endpoints();
+
+            let body = serde_json::to_vec(&endpoints)?;
+
+            Response::builder()
+                .header(CONTENT_TYPE, "application/json")
+                .status(StatusCode::OK)
+                .body(Full::new(body))?
         }
         "/" => {
             let text = r##"<!DOCTYPE html>
