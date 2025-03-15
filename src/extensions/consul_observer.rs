@@ -167,7 +167,6 @@ async fn watch(
                     existing.retain(|name, _trigger| {
                         // NOTE: we don't need to call trigger.cancel, cause it will
                         // be dropped after this closure.
-                        debug!(message = "stop service watching", service = name);
                         services.contains(name)
                     });
                 }
@@ -212,8 +211,7 @@ async fn watch(
         }
     }
 
-    for (service, trigger) in existing {
-        info!(message = "shutting down service watcher", service);
+    for (_service, trigger) in existing {
         trigger.cancel();
     }
 
@@ -230,6 +228,10 @@ async fn watch_service(
     debug!(message = "start watching service", service);
 
     let mut ticker = tokio::time::interval(interval);
+
+    // prepare the service entry, so later insert will not need to clone
+    // the service key.
+    cache.lock().unwrap().insert(service.clone(), Vec::new());
 
     loop {
         tokio::select! {
@@ -392,8 +394,6 @@ impl Client {
             return Err(Error::UnexpectedStatus(parts.status));
         }
 
-        self.set_last_index(parts);
-
         let body = incoming
             .collect()
             .await
@@ -484,7 +484,12 @@ impl Client {
 }
 
 fn build_endpoint(entry: ServiceEntry) -> Endpoint {
-    let id = entry.node.id;
+    // node id might be empty
+    let id = if entry.node.id.is_empty() {
+        format!("{}_{}", entry.node.node, entry.node.address)
+    } else {
+        entry.node.id
+    };
 
     // if the service address is not empty it should be used instead of the node
     // address since the service may be registered remotely through a different node.

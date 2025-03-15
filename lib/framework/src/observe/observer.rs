@@ -16,19 +16,8 @@ pub enum Error {
     NotFound,
 }
 
-static OBSERVERS: LazyLock<Mutex<BTreeMap<String, Sender<Vec<Endpoint>>>>> =
+static OBSERVERS: LazyLock<Mutex<BTreeMap<String, (Vec<Endpoint>, Sender<Vec<Change>>)>>> =
     LazyLock::new(|| Mutex::new(BTreeMap::new()));
-
-// implement `Drop` for the Observer seems to be a good idea,
-// but observable extension might be respawned when config changed, at that time,
-// notifier stream will stop and terminate
-/*
-impl Drop for Observer {
-    fn drop(&mut self) {
-        OBSERVERS.lock().unwrap().remove(self.name());
-    }
-}
-*/
 
 /// register must be call when build extension, so that sources can subscribe it
 /// when build Source.
@@ -36,7 +25,7 @@ pub fn register(name: String) -> Observer {
     OBSERVERS
         .lock()
         .unwrap()
-        .insert(name.clone(), Sender::new(16));
+        .insert(name.clone(), (Vec::new(), Sender::new(16)));
 
     Observer { name }
 }
@@ -45,11 +34,16 @@ pub fn register(name: String) -> Observer {
 /// config.
 pub fn subscribe(name: &str) -> Option<Notifier> {
     let observers = OBSERVERS.lock().unwrap();
-    let receiver = observers.get(name)?.subscribe();
+    let (current, sender) = observers.get(name)?;
+    let mut pending = VecDeque::new();
+    if !current.is_empty() {
+        pending.push_back(Change::Add(current.clone()));
+    }
+
+    let receiver = sender.subscribe();
 
     Some(Notifier {
-        endpoints: vec![],
-        pendings: VecDeque::with_capacity(32),
+        pending,
         receiver: ReusableBoxFuture::new(make_future(receiver)),
     })
 }
@@ -57,6 +51,18 @@ pub fn subscribe(name: &str) -> Option<Notifier> {
 #[inline]
 pub fn available_observers() -> Vec<String> {
     OBSERVERS.lock().unwrap().keys().cloned().collect()
+}
+
+// return all observer's current endpoints
+pub fn current_endpoints() -> BTreeMap<String, Vec<Endpoint>> {
+    let observers = OBSERVERS.lock().unwrap();
+    let mut endpoints = BTreeMap::new();
+
+    for (name, (current, _sender)) in observers.iter() {
+        endpoints.insert(name.clone(), current.clone());
+    }
+
+    endpoints
 }
 
 pub struct Observer {
@@ -74,8 +80,16 @@ impl Observer {
         let mut observers = OBSERVERS.lock().unwrap();
 
         match observers.get_mut(self.name()) {
-            Some(sender) => {
-                sender.send(endpoints).map_err(|_| Error::Closed)?;
+            Some((current, sender)) => {
+                let changes = build_changes(current, &endpoints);
+                if changes.is_empty() {
+                    return Ok(());
+                }
+
+                // update cached endpoints for later subscribe
+                *current = endpoints;
+
+                sender.send(changes).map_err(|_| Error::Closed)?;
                 Ok(())
             }
             None => Err(Error::NotFound),
@@ -91,20 +105,16 @@ pub enum Change {
 }
 
 pub struct Notifier {
-    // endpoints looks like not necessary but we need it,
-    // if new subscriber create when vertex reload
-    endpoints: Vec<Endpoint>,
-    pendings: VecDeque<Change>,
+    pending: VecDeque<Change>,
 
-    receiver:
-        ReusableBoxFuture<'static, (Result<Vec<Endpoint>, RecvError>, Receiver<Vec<Endpoint>>)>,
+    receiver: ReusableBoxFuture<'static, (Result<Vec<Change>, RecvError>, Receiver<Vec<Change>>)>,
 }
 
 impl Stream for Notifier {
     type Item = Change;
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        if let Some(change) = self.pendings.pop_front() {
+        if let Some(change) = self.pending.pop_front() {
             return Poll::Ready(Some(change));
         }
 
@@ -119,16 +129,9 @@ impl Stream for Notifier {
         };
 
         match result {
-            Ok(endpoints) => {
-                let changes = changes(&self.endpoints, &endpoints);
-                if changes.is_empty() {
-                    return Poll::Pending;
-                }
-
-                self.pendings.extend(changes);
-                self.endpoints = endpoints;
-
-                Poll::Ready(self.pendings.pop_front())
+            Ok(changes) => {
+                self.pending.extend(changes);
+                Poll::Ready(self.pending.pop_front())
             }
             Err(err) => match err {
                 RecvError::Closed => {
@@ -142,13 +145,13 @@ impl Stream for Notifier {
 }
 
 async fn make_future(
-    mut receiver: Receiver<Vec<Endpoint>>,
-) -> (Result<Vec<Endpoint>, RecvError>, Receiver<Vec<Endpoint>>) {
+    mut receiver: Receiver<Vec<Change>>,
+) -> (Result<Vec<Change>, RecvError>, Receiver<Vec<Change>>) {
     let result = receiver.recv().await;
     (result, receiver)
 }
 
-fn changes(existing: &[Endpoint], new_endpoints: &[Endpoint]) -> Vec<Change> {
+fn build_changes(existing: &[Endpoint], new_endpoints: &[Endpoint]) -> Vec<Change> {
     let mut to_add = Vec::new();
     let mut to_remove = Vec::new();
     let mut to_update = Vec::new();
@@ -195,19 +198,51 @@ mod tests {
 
     use value::Value;
 
+    fn mock_endpoint(id: i32, target: i32) -> Endpoint {
+        Endpoint {
+            id: id.to_string(),
+            target: target.to_string(),
+            details: Value::Null,
+        }
+    }
+
+    #[tokio::test]
+    async fn subscribe_in_the_middle() {
+        let name = "foo";
+        let mut observer = register(name.to_string());
+        let mut notifier = subscribe(name).unwrap();
+
+        // first state empty
+        let changes = collect_ready(&mut notifier);
+        assert!(changes.is_empty());
+
+        // pub empty, so it is empty too
+        observer.publish(vec![]).unwrap();
+        let changes = collect_ready(&mut notifier);
+        assert!(changes.is_empty());
+
+        observer.publish(vec![mock_endpoint(1, 2)]).unwrap();
+        let changes = collect_ready(&mut notifier);
+        assert_eq!(changes, vec![Change::Add(vec![mock_endpoint(1, 2)])]);
+
+        let mut notifier2 = subscribe(name).unwrap();
+        let changes = collect_ready(&mut notifier2);
+        assert_eq!(changes, vec![Change::Add(vec![mock_endpoint(1, 2)])]);
+
+        observer
+            .publish(vec![mock_endpoint(1, 2), mock_endpoint(2, 3)])
+            .unwrap();
+        let changes1 = collect_ready(&mut notifier);
+        let changes2 = collect_ready(&mut notifier2);
+        assert_eq!(changes1, vec![Change::Add(vec![mock_endpoint(2, 3)])]);
+        assert_eq!(changes1, changes2);
+    }
+
     #[tokio::test]
     async fn pubsub() {
         let name = "pubsub";
         let mut observer = register(name.to_string());
         let mut notifier = subscribe(name).unwrap();
-
-        fn mock_endpoint(id: i32, target: i32) -> Endpoint {
-            Endpoint {
-                id: id.to_string(),
-                target: target.to_string(),
-                details: Value::Null,
-            }
-        }
 
         for (input, changes) in [
             (vec![], vec![]),

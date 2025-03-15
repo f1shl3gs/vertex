@@ -2,7 +2,9 @@ mod endpoint;
 mod observer;
 
 pub use endpoint::Endpoint;
-pub use observer::{Change, Notifier, Observer, available_observers, register, subscribe};
+pub use observer::{
+    Change, Notifier, Observer, available_observers, current_endpoints, register, subscribe,
+};
 
 /// `run` is a simple helper for period service discovery, others with WATCH mechanism is
 /// not suitable for this function.
