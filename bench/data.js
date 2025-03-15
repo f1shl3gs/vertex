@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742062630210,
+  "lastUpdate": 1742062989084,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ce522e9ee10e5281c5fa456eb28fccf67ada1eee",
-          "message": "misc/update (#2156)",
-          "timestamp": "2025-01-28T04:34:11+08:00",
-          "tree_id": "2cee5456a21d5016c66bec261999f581844be85e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ce522e9ee10e5281c5fa456eb28fccf67ada1eee"
-        },
-        "date": 1738010708740,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28517000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 714030,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.798,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7d73b6b96e14c7484e49cd643583f7143eb30c6d",
           "message": "add unix support (#2159)",
           "timestamp": "2025-01-28T04:58:17+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.581,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "237dd4975ea0aef284c20e3a73796af1f1603a3b",
+          "message": "Merge pull request #2270 from f1shl3gs/extensions/dns_observer\n\nextensions/dns_observer: init",
+          "timestamp": "2025-03-16T02:12:55+08:00",
+          "tree_id": "ae289c6af7288388cb7ad13e7fce382b5004854d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/237dd4975ea0aef284c20e3a73796af1f1603a3b"
+        },
+        "date": 1742062968486,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22711000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 584070,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 50.997,
             "unit": "ns/op"
           }
         ]
