@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742038896197,
+  "lastUpdate": 1742038967213,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9",
-          "message": "chore(deps): bump serde_json from 1.0.137 to 1.0.138 (#2161)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.137 to 1.0.138.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.137...v1.0.138)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-29T10:52:52+08:00",
-          "tree_id": "bf7b717630c94fc8ab03d1139313e0c9c1ebe702",
-          "url": "https://github.com/f1shl3gs/vertex/commit/64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9"
-        },
-        "date": 1738119814866,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 543,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37433.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99591b51fb06807d77228f56a4f75bb492ad5753",
           "message": "chore(deps): bump inventory from 0.3.17 to 0.3.18 (#2164)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.17 to 0.3.18.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.17...0.3.18)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-31T18:27:04+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39142.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9f1bf3a9cd79bfc950cd186506ff6b0698ab0a68",
+          "message": "Merge pull request #2268 from f1shl3gs/misc/fix_consul_observe\n\nfix extensions/consul_observer",
+          "timestamp": "2025-03-15T19:31:37+08:00",
+          "tree_id": "664fd3daa34c8958a98ca311c767ec2536c28af3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9f1bf3a9cd79bfc950cd186506ff6b0698ab0a68"
+        },
+        "date": 1742038947822,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 572,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39168.9,
             "unit": "KiB"
           }
         ]
