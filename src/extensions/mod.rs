@@ -1,5 +1,7 @@
 #[cfg(feature = "extensions-consul_observer")]
 mod consul_observer;
+#[cfg(feature = "extensions-dns_observer")]
+mod dns_observer;
 #[cfg(feature = "extensions-healthcheck")]
 pub mod healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
