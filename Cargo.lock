@@ -4627,6 +4627,7 @@ dependencies = [
  "futures-util",
  "gcra",
  "glob",
+ "hickory-resolver",
  "hostname 0.1.0",
  "http",
  "http-body-util",
