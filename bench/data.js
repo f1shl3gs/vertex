@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742050899423,
+  "lastUpdate": 1742051305174,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dba54f988bb10408b05de8a1e6d17c798ce0aaec",
-          "message": "expose config (#2155)",
-          "timestamp": "2025-01-27T22:39:39+08:00",
-          "tree_id": "ff17546713528b99a578f649b7e8bc84e2bcbe08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dba54f988bb10408b05de8a1e6d17c798ce0aaec"
-        },
-        "date": 1737989402715,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29163000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 683730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 46.051,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ce522e9ee10e5281c5fa456eb28fccf67ada1eee",
           "message": "misc/update (#2156)",
           "timestamp": "2025-01-28T04:34:11+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 50.771,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e210e63e2380a4f2b3d1fc5276a52b60095c0ad4",
+          "message": "Merge pull request #2269 from f1shl3gs/observe/add_type_to_endpoint\n\nlib/framework: add type to observer's Endpoint",
+          "timestamp": "2025-03-15T22:58:05+08:00",
+          "tree_id": "bd066b3432ed0c4ffbe622f40efda7f09bec3c8d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e210e63e2380a4f2b3d1fc5276a52b60095c0ad4"
+        },
+        "date": 1742051285041,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22260000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 553210,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.581,
             "unit": "ns/op"
           }
         ]
