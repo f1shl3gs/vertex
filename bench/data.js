@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742051305174,
+  "lastUpdate": 1742051343200,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "99591b51fb06807d77228f56a4f75bb492ad5753",
-          "message": "chore(deps): bump inventory from 0.3.17 to 0.3.18 (#2164)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.17 to 0.3.18.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.17...0.3.18)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-31T18:27:04+08:00",
-          "tree_id": "48250cd0c00a52e15d54064aa1138f45f5ce97d7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/99591b51fb06807d77228f56a4f75bb492ad5753"
-        },
-        "date": 1738319871035,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37433.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e0c21ecb6d77161411175a15dca4665d145e75fa",
           "message": "chore(deps): bump rustls from 0.23.21 to 0.23.22 (#2163)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.21 to 0.23.22.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.21...v/0.23.22)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-31T18:27:28+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39168.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e210e63e2380a4f2b3d1fc5276a52b60095c0ad4",
+          "message": "Merge pull request #2269 from f1shl3gs/observe/add_type_to_endpoint\n\nlib/framework: add type to observer's Endpoint",
+          "timestamp": "2025-03-15T22:58:05+08:00",
+          "tree_id": "bd066b3432ed0c4ffbe622f40efda7f09bec3c8d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e210e63e2380a4f2b3d1fc5276a52b60095c0ad4"
+        },
+        "date": 1742051323853,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 559,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39169.7,
             "unit": "KiB"
           }
         ]
