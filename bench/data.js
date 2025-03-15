@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742029193281,
+  "lastUpdate": 1742029587797,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "86f0938daecfcef67b40feb8b5297c30c6d1c2f6",
-          "message": "sources/http: init (#2153)",
-          "timestamp": "2025-01-25T15:39:54+08:00",
-          "tree_id": "fd57ace5ade7f945853699392b1d6cb3fa1558a5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/86f0938daecfcef67b40feb8b5297c30c6d1c2f6"
-        },
-        "date": 1737791446467,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28181000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 661480,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.403,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "da71a4340e93496334655a0c27d4bccff0d1f079",
           "message": "sources/tail: config scan minimum cooldown (#2154)",
           "timestamp": "2025-01-27T15:50:04+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.167,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "20c79cd7ca9e4b4c7043a937e9ed1f7f891cfefb",
+          "message": "Merge pull request #2267 from f1shl3gs/dependabot/cargo/async-trait-0.1.88\n\nchore(deps): bump async-trait from 0.1.87 to 0.1.88",
+          "timestamp": "2025-03-15T16:56:18+08:00",
+          "tree_id": "b6fe952cde8c247be9ab0d4339aa5005a7a8938d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/20c79cd7ca9e4b4c7043a937e9ed1f7f891cfefb"
+        },
+        "date": 1742029567793,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23481000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 560020,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.021,
             "unit": "ns/op"
           }
         ]
