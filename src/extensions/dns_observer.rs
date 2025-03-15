@@ -32,7 +32,7 @@ struct Config {
     names: Vec<String>,
 
     /// The type of DNS query to perform.
-    r#type: QueryType,
+    query_type: QueryType,
 
     /// The port number used if the query type is not SRV
     port: u16,
@@ -53,7 +53,7 @@ impl ExtensionConfig for Config {
 
         let observer = register(cx.name);
         let port = self.port;
-        let query_type = self.r#type;
+        let query_type = self.query_type;
         let names = self.names.clone();
 
         Ok(Box::pin(run(
