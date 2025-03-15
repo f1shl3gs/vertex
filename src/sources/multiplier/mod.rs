@@ -59,8 +59,8 @@ impl SourceConfig for Config {
 
             let program = match &template.rule {
                 Some(rule) => {
-                    let program =
-                        vtl::compile_with(rule, &["id", "target", "details"]).map_err(|err| {
+                    let program = vtl::compile_with(rule, &["id", "type", "target", "details"])
+                        .map_err(|err| {
                             let diagnostic = Diagnostic::new(rule.clone());
 
                             diagnostic.snippets(err)
@@ -335,8 +335,9 @@ impl SourceTemplate {
 
         let mut variables = vec![Value::Null; program.type_state().variables.len()];
         variables[0] = Value::Bytes(Bytes::from(endpoint.id.clone()));
-        variables[1] = Value::Bytes(Bytes::from(endpoint.target.clone()));
-        variables[2] = endpoint.details.clone();
+        variables[1] = Value::Bytes(Bytes::from(endpoint.typ.clone()));
+        variables[2] = Value::Bytes(Bytes::from(endpoint.target.clone()));
+        variables[3] = endpoint.details.clone();
 
         let mut cx = vtl::Context {
             target: &mut TargetValue {
