@@ -95,7 +95,7 @@ async fn http_handle(req: Request<Incoming>) -> framework::Result<Response<Full<
             Response::builder()
                 .header(CONTENT_TYPE, "application/json")
                 .status(StatusCode::OK)
-                .body(Full::new(body))?
+                .body(Full::new(body.into()))?
         }
         "/" => {
             let text = r##"<!DOCTYPE html>
