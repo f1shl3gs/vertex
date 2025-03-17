@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742208297460,
+  "lastUpdate": 1742208739603,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7d73b6b96e14c7484e49cd643583f7143eb30c6d",
-          "message": "add unix support (#2159)",
-          "timestamp": "2025-01-28T04:58:17+08:00",
-          "tree_id": "813e6689447ea584e09a80d9892e635a9ceb0ea8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7d73b6b96e14c7484e49cd643583f7143eb30c6d"
-        },
-        "date": 1738012129387,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28366000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 587760,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.764,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 50.997,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "79614ef34bae402fae5d4917a71b70faf4c69faf",
+          "message": "Merge pull request #2271 from f1shl3gs/dependabot/cargo/rustls-0.23.24\n\nchore(deps): bump rustls from 0.23.23 to 0.23.24",
+          "timestamp": "2025-03-17T18:41:19+08:00",
+          "tree_id": "c8f8d972a43d1ffc6effea6be2a85f53e21871cb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/79614ef34bae402fae5d4917a71b70faf4c69faf"
+        },
+        "date": 1742208718593,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23518000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 650180,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.991,
             "unit": "ns/op"
           }
         ]
