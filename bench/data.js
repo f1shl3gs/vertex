@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742256513516,
+  "lastUpdate": 1742256583893,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4a37b3f88b14d0755989022582374c762c34320a",
-          "message": "bump toolchain to 1.84.1 (#2166)",
-          "timestamp": "2025-01-31T23:50:08+08:00",
-          "tree_id": "c7302d31b6ec6532c1c3a0f0011d6f2c3f5171a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a37b3f88b14d0755989022582374c762c34320a"
-        },
-        "date": 1738339252635,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 554,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37433.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "086f14fa6ddf0a36a270bd03d7f332c576bd4838",
           "message": "simplify HttpSource (#2167)",
           "timestamp": "2025-02-01T02:15:11+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39395.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e5d38b49dfa24395d1867468702bb13f0db250c",
+          "message": "Merge pull request #2273 from f1shl3gs/lib/kubernetes\n\nlib/kubernetes: init",
+          "timestamp": "2025-03-18T07:58:12+08:00",
+          "tree_id": "61ef7184eb223ec073d65869a085dae5353aca9f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e5d38b49dfa24395d1867468702bb13f0db250c"
+        },
+        "date": 1742256564715,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39401.2,
             "unit": "KiB"
           }
         ]
