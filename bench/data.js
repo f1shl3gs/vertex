@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742256107285,
+  "lastUpdate": 1742256513516,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "be05406d9deb2ab408a19155080d32a7ee0960ac",
-          "message": "chore(deps): bump rand from 0.8.5 to 0.9.0 (#2158)\n\n* chore(deps): bump rand from 0.8.5 to 0.9.0\n\nBumps [rand](https://github.com/rust-random/rand) from 0.8.5 to 0.9.0.\n- [Release notes](https://github.com/rust-random/rand/releases)\n- [Changelog](https://github.com/rust-random/rand/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/rust-random/rand/compare/0.8.5...0.9.0)\n\n---\nupdated-dependencies:\n- dependency-name: rand\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* fix compatible errors\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2025-01-28T05:08:17+08:00",
-          "tree_id": "4a22c0798cdd95a936ba63d6a887f727e9e698f8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/be05406d9deb2ab408a19155080d32a7ee0960ac"
-        },
-        "date": 1738012746148,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29029000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 729610,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.407,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6bfda0394a96549316ff943546b523980f80d7ca",
           "message": "chore(deps): bump hyper from 1.5.2 to 1.6.0 (#2160)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.2 to 1.6.0.\n- [Release notes](https://github.com/hyperium/hyper/releases)\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.2...v1.6.0)\n\n---\nupdated-dependencies:\n- dependency-name: hyper\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-29T10:51:53+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.991,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e5d38b49dfa24395d1867468702bb13f0db250c",
+          "message": "Merge pull request #2273 from f1shl3gs/lib/kubernetes\n\nlib/kubernetes: init",
+          "timestamp": "2025-03-18T07:58:12+08:00",
+          "tree_id": "61ef7184eb223ec073d65869a085dae5353aca9f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e5d38b49dfa24395d1867468702bb13f0db250c"
+        },
+        "date": 1742256493798,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22027000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 591990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.99,
             "unit": "ns/op"
           }
         ]
