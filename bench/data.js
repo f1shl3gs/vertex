@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742256054077,
+  "lastUpdate": 1742256107285,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6bfda0394a96549316ff943546b523980f80d7ca",
-          "message": "chore(deps): bump hyper from 1.5.2 to 1.6.0 (#2160)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 1.5.2 to 1.6.0.\n- [Release notes](https://github.com/hyperium/hyper/releases)\n- [Changelog](https://github.com/hyperium/hyper/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/hyperium/hyper/compare/v1.5.2...v1.6.0)\n\n---\nupdated-dependencies:\n- dependency-name: hyper\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-29T10:51:53+08:00",
-          "tree_id": "841fb744cfce9c56d2b3e9587d206f6456af3a4f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6bfda0394a96549316ff943546b523980f80d7ca"
-        },
-        "date": 1738119307559,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 200.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 20496,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 99715,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 200540,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 128.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 12778,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 64509,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 125770,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3b72c4f72fc744d9e2dc358750a07b43a6f8ca8e",
           "message": "chore(deps): bump lru from 0.12.5 to 0.13.0 (#2162)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.5 to 0.13.0.\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.5...0.13.0)\n\n---\nupdated-dependencies:\n- dependency-name: lru\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-29T10:52:18+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 127210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e5d38b49dfa24395d1867468702bb13f0db250c",
+          "message": "Merge pull request #2273 from f1shl3gs/lib/kubernetes\n\nlib/kubernetes: init",
+          "timestamp": "2025-03-18T07:58:12+08:00",
+          "tree_id": "61ef7184eb223ec073d65869a085dae5353aca9f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e5d38b49dfa24395d1867468702bb13f0db250c"
+        },
+        "date": 1742256087595,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 195.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 20264,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 100310,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 197170,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 126.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12733,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 63569,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 127220,
             "unit": "ns/op"
           }
         ]
