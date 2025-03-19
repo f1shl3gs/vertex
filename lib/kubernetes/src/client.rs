@@ -144,6 +144,7 @@ pub enum WatchEvent<K> {
     Error(ErrorResponse),
 }
 
+#[derive(Clone)]
 pub struct Client {
     http_client: HttpClient<HttpsConnector<HttpConnector>, Full<Bytes>>,
     endpoint: String,
@@ -179,6 +180,10 @@ impl Client {
         }
     }
 
+    pub fn set_namespace(&mut self, namespace: Option<String>) {
+        self.namespace = namespace;
+    }
+
     /// Retrieve version info of the API server, so we can check the compatibility
     pub async fn version(&self) -> Result<Version, Error> {
         let mut req = Request::builder()
@@ -205,7 +210,7 @@ impl Client {
     /// function again to get notified again.
     pub async fn watch<R: Resource>(
         &self,
-        params: WatchParams,
+        params: &WatchParams,
         version: String,
     ) -> Result<impl Stream<Item = Result<WatchEvent<R>, Error>>, Error> {
         // validate
@@ -226,11 +231,11 @@ impl Client {
                 params.timeout.unwrap_or(290).to_string().as_str(),
             );
 
-            if let Some(label_selector) = params.label_selector {
-                builder.append_pair("labelSelector", &label_selector);
+            if let Some(label_selector) = params.label_selector.as_ref() {
+                builder.append_pair("labelSelector", label_selector);
             }
-            if let Some(field_selector) = params.field_selector {
-                builder.append_pair("fieldSelector", &field_selector);
+            if let Some(field_selector) = params.field_selector.as_ref() {
+                builder.append_pair("fieldSelector", field_selector);
             }
 
             if params.bookmarks {

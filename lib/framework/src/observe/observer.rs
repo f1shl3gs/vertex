@@ -76,7 +76,7 @@ impl Observer {
     }
 
     #[inline]
-    pub fn publish(&mut self, endpoints: Vec<Endpoint>) -> Result<(), Error> {
+    pub fn publish(&self, endpoints: Vec<Endpoint>) -> Result<(), Error> {
         let mut observers = OBSERVERS.lock().unwrap();
 
         match observers.get_mut(self.name()) {
@@ -210,7 +210,7 @@ mod tests {
     #[tokio::test]
     async fn subscribe_in_the_middle() {
         let name = "foo";
-        let mut observer = register(name.to_string());
+        let observer = register(name.to_string());
         let mut notifier = subscribe(name).unwrap();
 
         // first state empty
@@ -242,7 +242,7 @@ mod tests {
     #[tokio::test]
     async fn pubsub() {
         let name = "pubsub";
-        let mut observer = register(name.to_string());
+        let observer = register(name.to_string());
         let mut notifier = subscribe(name).unwrap();
 
         for (input, changes) in [

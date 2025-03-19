@@ -1,6 +1,10 @@
+use framework::observe::Endpoint;
+use kubernetes::{ObjectMeta, Resource};
 use serde::Deserialize;
+use std::collections::BTreeMap;
+use value::value;
 
-use super::{ObjectMeta, Resource};
+use super::Keyed;
 
 fn default_protocol() -> String {
     String::from("TCP")
@@ -78,8 +82,8 @@ pub struct PodSpec {
     /// cannot currently be added or removed. Cannot be updated.
     ///
     /// More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-    #[serde(rename = "initContainers")]
-    pub init_containers: Option<Vec<Container>>,
+    #[serde(default, rename = "initContainers")]
+    pub init_containers: Vec<Container>,
 }
 
 /// PodCondition contains details for the current condition of this pod.
@@ -168,6 +172,7 @@ pub struct PodStatus {
     /// Current service state of pod.
     ///
     /// More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-conditions
+    #[serde(default)]
     pub conditions: Vec<PodCondition>,
 
     /// The list has one entry per container in the manifest.
@@ -209,13 +214,139 @@ pub struct Pod {
 impl Resource for Pod {
     const GROUP: &'static str = "";
     const VERSION: &'static str = "v1";
+    const KIND: &'static str = "Pod";
     const PLURAL: &'static str = "pods";
+}
+
+impl Keyed for Pod {
+    fn key(&self) -> &str {
+        self.metadata.uid.as_ref()
+    }
+}
+
+impl From<Pod> for Vec<Endpoint> {
+    fn from(pod: Pod) -> Self {
+        let Some(pod_ip) = pod.status.pod_ip else {
+            return vec![];
+        };
+
+        let mut labels = BTreeMap::new();
+        for (k, v) in pod.metadata.labels {
+            labels.insert(k, v.into());
+        }
+
+        let mut annotations = BTreeMap::new();
+        for (k, v) in pod.metadata.annotations {
+            annotations.insert(k, v.into());
+        }
+
+        let pod_info = {
+            let phase = pod.status.phase;
+            let node_name = pod.spec.node_name;
+            let host_ip = pod.status.host_ip.unwrap_or_default();
+            let ready = if pod
+                .status
+                .conditions
+                .iter()
+                .any(|condition| condition.typ == "Ready")
+            {
+                "ready"
+            } else {
+                "unknown"
+            };
+
+            value!({
+                "name": pod.metadata.name.clone(),
+                "namespace": pod.metadata.namespace.clone(),
+                "ip": pod_ip.clone(),
+                "ready": ready,
+                "phase": phase,
+                "node_name": node_name,
+                "host_ip": host_ip,
+                "uid": pod.metadata.uid,
+            })
+        };
+
+        let mut endpoints =
+            Vec::with_capacity(pod.spec.containers.len() + pod.spec.init_containers.len());
+
+        pod.spec
+            .containers
+            .iter()
+            .chain(pod.spec.init_containers.iter())
+            .enumerate()
+            // skip the terminated container
+            .filter(|(_index, container)| {
+                pod.status.container_statuses.iter().any(|status| {
+                    status.name == container.name && status.state.terminated.is_none()
+                })
+            })
+            .for_each(|(index, container)| {
+                let init_container = index < pod.spec.containers.len() - 1;
+                let image = container.image.clone();
+                let name = container.name.clone();
+
+                if container.ports.is_empty() {
+                    let id = format!(
+                        "{}/{}/containers/{}",
+                        pod.metadata.namespace, pod.metadata.name, container.name
+                    );
+
+                    endpoints.push(Endpoint {
+                        id,
+                        typ: "pod".to_string(),
+                        target: pod_ip.clone(),
+                        details: value!({
+                            "name": name,
+                            "namespace": pod.metadata.namespace.clone(),
+                            "labels": labels.clone(),
+                            "annotations": annotations.clone(),
+
+                            "image": image,
+                            "init_container": init_container,
+                            "pod": pod_info.clone(),
+                        }),
+                    });
+
+                    return;
+                }
+
+                for port in &container.ports {
+                    let id = format!(
+                        "{}/{}/containers/{}/{}:{}",
+                        pod.metadata.namespace,
+                        pod.metadata.name,
+                        container.name,
+                        port.protocol,
+                        port.container_port
+                    );
+
+                    endpoints.push(Endpoint {
+                        id,
+                        target: format!("{}:{}", pod_ip, port.container_port),
+                        typ: "pod".to_string(),
+                        details: value!({
+                            "name": name.clone(),
+                            "namespace": pod.metadata.namespace.clone(),
+                            "labels": labels.clone(),
+                            "annotations": annotations.clone(),
+
+                            "image": image.clone(),
+                            "init_container": init_container,
+                            "pod": pod_info.clone(),
+                        }),
+                    })
+                }
+            });
+
+        endpoints
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::resource::ObjectList;
+    use kubernetes::ObjectList;
 
     #[test]
     fn deserialize() {
@@ -451,7 +582,7 @@ mod tests {
 
         assert_eq!(pod.metadata.namespace, "kube-system");
         assert_eq!(pod.spec.node_name, "test-node");
-        assert_eq!(pod.metadata.name, Some("etcd-m01".into()));
+        assert_eq!(pod.metadata.name, "etcd-m01");
         assert_eq!(pod.spec.containers[1].image, "k8s.gcr.io/etcd:3.4.3-0");
         assert_eq!(pod.spec.containers[1].name, "etcd");
         assert_eq!(pod.spec.containers[1].ports[0].name, Some("foobar".into()));

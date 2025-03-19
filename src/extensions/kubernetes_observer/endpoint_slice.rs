@@ -1,10 +1,7 @@
+use kubernetes::{ObjectMeta, Resource};
 use serde::Deserialize;
 
-use super::{ObjectMeta, Resource};
-
-fn default_protocol() -> String {
-    String::from("TCP")
-}
+use super::{Keyed, default_protocol};
 
 /// EndpointConditions implements kubernetes endpoint condition.
 ///
@@ -112,13 +109,27 @@ pub struct EndpointSlice {
 impl Resource for EndpointSlice {
     const GROUP: &'static str = "discovery.k8s.io";
     const VERSION: &'static str = "v1";
+    const KIND: &'static str = "EndpointSlice";
     const PLURAL: &'static str = "endpointslices";
+}
+
+impl Keyed for EndpointSlice {
+    fn key(&self) -> &str {
+        self.metadata.uid.as_ref()
+    }
+}
+
+impl From<EndpointSlice> for Vec<framework::observe::Endpoint> {
+    fn from(_slice: EndpointSlice) -> Self {
+        todo!()
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::resource::ObjectList;
+
+    use kubernetes::ObjectList;
 
     #[test]
     fn deserialize() {

@@ -8,6 +8,8 @@ pub mod healthcheck;
 pub mod heartbeat;
 #[cfg(feature = "extensions-http")]
 mod http_observer;
+#[cfg(feature = "extensions-kubernetes_observer")]
+mod kubernetes_observer;
 #[cfg(feature = "extensions-port_observer")]
 mod port_observer;
 #[cfg(feature = "extensions-pprof")]

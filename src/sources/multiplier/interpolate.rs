@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 use std::sync::LazyLock;
 
-use framework::config::SourceConfig;
 use framework::observe::Endpoint;
 use regex::Regex;
 use serde_json::{Number, Value as JsonValue};
@@ -15,8 +14,8 @@ pub enum Error {
     InvalidPath(String),
     #[error("value not found {0}")]
     ValueNotFound(String),
-    #[error(transparent)]
-    Deserialize(serde_json::error::Error),
+    #[error("deserialize config failed, config: {0}, err: {1}")]
+    Deserialize(serde_json::Value, serde_json::error::Error),
 }
 
 /// build source interpolate the template value, and build the source
@@ -26,12 +25,7 @@ pub enum Error {
 /// env:
 ///   {{ $env.foo }}: {{ $env.bar }}
 /// ```
-pub fn build_source(input: &Value, endpoint: &Endpoint) -> Result<Box<dyn SourceConfig>, Error> {
-    let output = interpolate(input, endpoint)?;
-    serde_json::from_value::<Box<dyn SourceConfig>>(output).map_err(Error::Deserialize)
-}
-
-fn interpolate(input: &Value, endpoint: &Endpoint) -> Result<JsonValue, Error> {
+pub fn interpolate(input: &Value, endpoint: &Endpoint) -> Result<JsonValue, Error> {
     match input {
         Value::Object(map) => interpolate_map(map, endpoint),
         Value::Array(array) => array

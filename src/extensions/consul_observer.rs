@@ -127,7 +127,7 @@ async fn watch(
     client: Client,
     interval: Duration,
     services: Vec<String>,
-    mut observer: Observer,
+    observer: Observer,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     let mut ticker = tokio::time::interval(interval);

@@ -9,7 +9,7 @@ pub use observer::{
 /// `run` is a simple helper for period service discovery, others with WATCH mechanism is
 /// not suitable for this function.
 pub async fn run<L>(
-    mut observer: Observer,
+    observer: Observer,
     interval: std::time::Duration,
     mut shutdown: crate::ShutdownSignal,
     mut list_endpoints: L,

@@ -87,7 +87,7 @@ async fn http_handle(req: Request<Incoming>) -> framework::Result<Response<Full<
                 .status(StatusCode::OK)
                 .body(Full::new(text.into()))?
         }
-        "/observe" => {
+        "/observers" => {
             let endpoints = current_endpoints();
 
             let body = serde_json::to_vec(&endpoints)?;
@@ -107,6 +107,7 @@ async fn http_handle(req: Request<Incoming>) -> framework::Result<Response<Full<
 <body>
 <p><a href="/config">config</a></p>
 <p><a href="/statsz">statsz</a></p>
+<p><a href="/observers">observers</a></p>
 </body>
 </html>
 "##;
