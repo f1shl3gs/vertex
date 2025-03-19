@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742256583893,
+  "lastUpdate": 1742388291425,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3b72c4f72fc744d9e2dc358750a07b43a6f8ca8e",
-          "message": "chore(deps): bump lru from 0.12.5 to 0.13.0 (#2162)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.5 to 0.13.0.\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.5...0.13.0)\n\n---\nupdated-dependencies:\n- dependency-name: lru\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-29T10:52:18+08:00",
-          "tree_id": "48b2b85f920ec3c95eacd182e2d96d0c192e831d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3b72c4f72fc744d9e2dc358750a07b43a6f8ca8e"
-        },
-        "date": 1738119260958,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539670,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546950,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "98577473566baa65bb0fe1ee1d4ae1fe4445620f",
+          "message": "Merge pull request #2274 from f1shl3gs/dependabot/cargo/mimalloc-0.1.44\n\nchore(deps): bump mimalloc from 0.1.43 to 0.1.44",
+          "timestamp": "2025-03-19T20:42:25+08:00",
+          "tree_id": "1e7e42ea3907d8aaa43a70d25a40c015efcca772",
+          "url": "https://github.com/f1shl3gs/vertex/commit/98577473566baa65bb0fe1ee1d4ae1fe4445620f"
+        },
+        "date": 1742388272136,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 556350,
             "unit": "ns/op"
           }
         ]
