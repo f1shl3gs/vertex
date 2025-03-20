@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742464765407,
+  "lastUpdate": 1742464866292,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db",
-          "message": "chore(deps): bump async-trait from 0.1.85 to 0.1.86 (#2170)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.85 to 0.1.86.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.85...0.1.86)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-01T12:48:00+08:00",
-          "tree_id": "0f0bf8e8be0084980399afea4cf537f01888c3b9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db"
-        },
-        "date": 1738385913645,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 539,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37403.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1576b7733fddca333c5a9841ecfaa4cce7f7c1e8",
           "message": "chore(deps): bump dyn-clone from 1.0.17 to 1.0.18 (#2169)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.17 to 1.0.18.\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.17...1.0.18)\n\n---\nupdated-dependencies:\n- dependency-name: dyn-clone\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-02-01T12:48:12+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39378.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d6ea9c2abd2394e20c87c8ed0135eecc4f89e794",
+          "message": "Merge pull request #2276 from f1shl3gs/extensions/kubernetes_observer\n\nadd extensions/kubernetes_observer",
+          "timestamp": "2025-03-20T17:48:21+08:00",
+          "tree_id": "46e9f22bdfc9a5e5d417086dd59ab8f6790bb13e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d6ea9c2abd2394e20c87c8ed0135eecc4f89e794"
+        },
+        "date": 1742464846639,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 650,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40392.9,
             "unit": "KiB"
           }
         ]
