@@ -3,16 +3,6 @@ use serde::Deserialize;
 
 use kubernetes::{ObjectMeta, Resource};
 
-/// EventSource contains information for an event.
-#[derive(Deserialize)]
-pub struct EventSource {
-    /// Component from which the event is generated.
-    pub component: Option<String>,
-
-    /// Node name on which the event is generated.
-    pub host: Option<String>,
-}
-
 /// Event is a report of an event somewhere in the cluster. Events have a limited retention
 /// time and triggers and messages may evolve with time. Event consumers should not rely on
 /// the timing of an event with a given Reason reflecting reflecting a consistent underlying
