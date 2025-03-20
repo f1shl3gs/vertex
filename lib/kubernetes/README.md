@@ -7,6 +7,12 @@ needed by us.
 - Ultra lightweight
 - Resources agnostic
 
+## StreamingList
+StreamingList is added in 1.27, but it is not enabled by default.
+Then, it is enabled by default in 1.32.x
+
+https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/
+
 ## Resource or CRD
 This Library does not provide any Resources or CRD.
 

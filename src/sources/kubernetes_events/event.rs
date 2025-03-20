@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-use super::{ObjectMeta, Resource};
+use kubernetes::{ObjectMeta, Resource};
 
 /// EventSource contains information for an event.
 #[derive(Deserialize)]
@@ -62,6 +62,8 @@ pub struct Event {
 impl Resource for Event {
     const GROUP: &'static str = "events.k8s.io";
     const VERSION: &'static str = "v1";
+    const KIND: &'static str = "Event";
+
     const PLURAL: &'static str = "events";
 }
 

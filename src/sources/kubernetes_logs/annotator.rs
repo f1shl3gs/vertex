@@ -1,13 +1,11 @@
 use configurable::Configurable;
 use event::LogRecord;
 use event::log::{OwnedValuePath, owned_value_path, path};
-use k8s_openapi::{
-    api::core::v1::{Container, ContainerStatus, Pod, PodSpec, PodStatus},
-    apimachinery::pkg::apis::meta::v1::ObjectMeta,
-};
+use kubernetes::ObjectMeta;
 use serde::{Deserialize, Serialize};
 
-use super::reflector::Store;
+use super::pod::{Container, ContainerStatus, PodSpec, PodStatus};
+use super::store::Store;
 
 /// The delimiter used in the log path.
 const LOG_PATH_DELIMITER: &str = "_";
@@ -96,12 +94,12 @@ pub(super) fn parse_log_file_path(path: &str) -> Option<LogFileInfo<'_>> {
 }
 
 pub struct PodMetadataAnnotator {
-    store: Store<Pod>,
+    store: Store,
     fields_spec: FieldsSpec,
 }
 
 impl PodMetadataAnnotator {
-    pub const fn new(store: Store<Pod>, fields_spec: FieldsSpec) -> Self {
+    pub const fn new(store: Store, fields_spec: FieldsSpec) -> Self {
         Self { store, fields_spec }
     }
 
@@ -115,30 +113,25 @@ impl PodMetadataAnnotator {
 
         annotate_from_file_info(log, fields_spec, &file_info);
         annotate_from_metadata(log, fields_spec, &pod.metadata);
+        annotate_from_pod_spec(log, fields_spec, &pod.spec);
 
-        let container;
-        if let Some(ref pod_spec) = pod.spec {
-            annotate_from_pod_spec(log, fields_spec, pod_spec);
-
-            container = pod_spec
-                .containers
-                .iter()
-                .find(|c| c.name == file_info.container_name);
-            if let Some(container) = container {
-                annotate_from_container(log, fields_spec, container);
-            }
+        let container = pod
+            .spec
+            .containers
+            .iter()
+            .find(|c| c.name == file_info.container_name);
+        if let Some(container) = container {
+            annotate_from_container(log, fields_spec, container);
         }
 
-        if let Some(ref pod_status) = pod.status {
-            annotate_from_pod_status(log, fields_spec, pod_status);
-            if let Some(ref container_statuses) = pod_status.container_statuses {
-                let container_status = container_statuses
-                    .iter()
-                    .find(|c| c.name == file_info.container_name);
-                if let Some(container_status) = container_status {
-                    annotate_from_container_status(log, fields_spec, container_status);
-                }
-            }
+        annotate_from_pod_status(log, fields_spec, &pod.status);
+        let container_status = pod
+            .status
+            .container_statuses
+            .iter()
+            .find(|c| c.name == file_info.container_name);
+        if let Some(container_status) = container_status {
+            annotate_from_container_status(log, fields_spec, container_status);
         }
 
         Some(file_info)
@@ -154,16 +147,15 @@ fn annotate_from_file_info(
 }
 
 fn annotate_from_metadata(log: &mut LogRecord, fields_spec: &FieldsSpec, metadata: &ObjectMeta) {
-    if let Some(name) = &metadata.name {
-        log.insert_metadata(&fields_spec.pod_name, name.to_owned());
-    }
+    log.insert_metadata(&fields_spec.pod_name, metadata.name.to_owned());
+    log.insert_metadata(&fields_spec.pod_namespace, metadata.namespace.to_owned());
+    log.insert_metadata(&fields_spec.pod_uid, metadata.uid.to_owned());
 
-    if let Some(namespace) = &metadata.namespace {
-        log.insert_metadata(&fields_spec.pod_namespace, namespace.to_owned());
+    for (key, value) in &metadata.labels {
+        log.insert_metadata(path!("pod_labels", key), value.to_owned());
     }
-
-    if let Some(uid) = &metadata.uid {
-        log.insert_metadata(&fields_spec.pod_uid, uid.to_owned());
+    for (key, value) in &metadata.annotations {
+        log.insert_metadata(path!("pod_annotations", key), value.to_owned());
     }
 
     if let Some(owner_references) = &metadata.owner_references {
@@ -172,30 +164,16 @@ fn annotate_from_metadata(log: &mut LogRecord, fields_spec: &FieldsSpec, metadat
             format!("{}/{}", owner_references[0].kind, owner_references[0].name),
         );
     }
-
-    if let Some(labels) = &metadata.labels {
-        for (key, value) in labels {
-            log.insert_metadata(path!("pod_labels", key), value.to_owned());
-        }
-    }
-
-    if let Some(annotations) = &metadata.annotations {
-        for (key, value) in annotations {
-            log.insert_metadata(path!("pod_annotations", key), value.to_owned());
-        }
-    }
 }
 
+#[inline]
 fn annotate_from_pod_spec(log: &mut LogRecord, fields_spec: &FieldsSpec, pod_spec: &PodSpec) {
-    if let Some(node_name) = &pod_spec.node_name {
-        log.insert_metadata(&fields_spec.pod_node_name, node_name.to_owned());
-    }
+    log.insert_metadata(&fields_spec.pod_node_name, pod_spec.node_name.to_owned());
 }
 
+#[inline]
 fn annotate_from_container(log: &mut LogRecord, fields_spec: &FieldsSpec, container: &Container) {
-    if let Some(image) = &container.image {
-        log.insert_metadata(&fields_spec.container_image, image.to_owned());
-    }
+    log.insert_metadata(&fields_spec.container_image, container.image.to_owned());
 }
 
 fn annotate_from_pod_status(log: &mut LogRecord, fields_spec: &FieldsSpec, pod_status: &PodStatus) {
@@ -203,11 +181,13 @@ fn annotate_from_pod_status(log: &mut LogRecord, fields_spec: &FieldsSpec, pod_s
         log.insert_metadata(&fields_spec.pod_ip, pod_id.to_owned());
     }
 
-    if let Some(pod_ips) = &pod_status.pod_ips {
-        let value: Vec<String> = pod_ips.iter().map(|v| v.ip.clone()).collect();
+    let pod_ips = pod_status
+        .pod_ips
+        .iter()
+        .map(|ip| ip.ip.clone())
+        .collect::<Vec<_>>();
 
-        log.insert_metadata(&fields_spec.pod_ips, value);
-    }
+    log.insert_metadata(&fields_spec.pod_ips, pod_ips);
 }
 
 fn annotate_from_container_status(
@@ -222,10 +202,10 @@ fn annotate_from_container_status(
 
 #[cfg(test)]
 mod tests {
-    use k8s_openapi::api::core::v1::PodIP;
-    use testify::assert_event_data_eq;
-
     use super::*;
+    use crate::sources::kubernetes_logs::pod::{PodIP, PodSpec};
+
+    use testify::assert_event_data_eq;
 
     #[test]
     fn test_annotate_from_file_info() {
@@ -275,7 +255,7 @@ mod tests {
             (
                 FieldsSpec::default(),
                 PodSpec {
-                    node_name: Some("sandbox0-node-name".to_owned()),
+                    node_name: "sandbox0-node-name".to_owned(),
                     ..Default::default()
                 },
                 {
@@ -290,7 +270,7 @@ mod tests {
                     ..Default::default()
                 },
                 PodSpec {
-                    node_name: Some("sandbox0-node-name".to_owned()),
+                    node_name: "sandbox0-node-name".to_owned(),
                     ..Default::default()
                 },
                 {
@@ -343,7 +323,7 @@ mod tests {
             (
                 FieldsSpec::default(),
                 Container {
-                    image: Some("sandbox0-container-image".to_owned()),
+                    image: "sandbox0-container-image".to_owned(),
                     ..Default::default()
                 },
                 {
@@ -361,7 +341,7 @@ mod tests {
                     ..Default::default()
                 },
                 Container {
-                    image: Some("sandbox0-container-image".to_owned()),
+                    image: "sandbox0-container-image".to_owned(),
                     ..Default::default()
                 },
                 {
@@ -432,9 +412,9 @@ mod tests {
             (
                 FieldsSpec::default(),
                 PodStatus {
-                    pod_ips: Some(vec![PodIP {
+                    pod_ips: vec![PodIP {
                         ip: "192.168.1.2".to_owned(),
-                    }]),
+                    }],
                     ..Default::default()
                 },
                 {
@@ -452,14 +432,14 @@ mod tests {
                 },
                 PodStatus {
                     pod_ip: Some("192.168.1.2".to_owned()),
-                    pod_ips: Some(vec![
+                    pod_ips: vec![
                         PodIP {
                             ip: "192.168.1.2".to_owned(),
                         },
                         PodIP {
                             ip: "192.168.1.3".to_owned(),
                         },
-                    ]),
+                    ],
                     ..Default::default()
                 },
                 {
@@ -477,14 +457,14 @@ mod tests {
                 },
                 PodStatus {
                     pod_ip: Some("192.168.1.2".to_owned()),
-                    pod_ips: Some(vec![
+                    pod_ips: vec![
                         PodIP {
                             ip: "192.168.1.2".to_owned(),
                         },
                         PodIP {
                             ip: "192.168.1.3".to_owned(),
                         },
-                    ]),
+                    ],
                     ..Default::default()
                 },
                 {
