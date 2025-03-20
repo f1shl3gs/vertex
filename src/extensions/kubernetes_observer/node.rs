@@ -1,6 +1,10 @@
+#![allow(dead_code)]
+
+use framework::observe::Endpoint;
+use kubernetes::{ObjectMeta, Resource};
 use serde::Deserialize;
 
-use super::{ObjectMeta, Resource};
+use super::Keyed;
 
 /// NodeSpec represents NodeSpec from k8s API.
 ///
@@ -87,6 +91,7 @@ pub struct Node {
 impl Resource for Node {
     const GROUP: &'static str = "";
     const VERSION: &'static str = "v1";
+    const KIND: &'static str = "Node";
     const PLURAL: &'static str = "nodes";
 
     fn url_path(_namespace: Option<&str>) -> String {
@@ -94,10 +99,22 @@ impl Resource for Node {
     }
 }
 
+impl Keyed for Node {
+    fn key(&self) -> &str {
+        self.metadata.uid.as_ref()
+    }
+}
+
+impl From<Node> for Vec<Endpoint> {
+    fn from(_node: Node) -> Self {
+        todo!()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::resource::ObjectList;
+    use kubernetes::ObjectList;
 
     #[test]
     fn deserialize() {

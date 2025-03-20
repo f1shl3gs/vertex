@@ -41,6 +41,7 @@ struct Inner {
     expire_at: Instant,
 }
 
+#[derive(Clone)]
 pub struct RefreshableToken {
     path: PathBuf,
     inner: Arc<Mutex<Inner>>,
@@ -84,7 +85,7 @@ impl RefreshableToken {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Auth {
     None,
     Basic { username: String, password: String },

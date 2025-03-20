@@ -1,6 +1,12 @@
-use serde::Deserialize;
+use std::collections::BTreeMap;
 
-use super::{ObjectMeta, Resource};
+use bytes::Bytes;
+use framework::observe::Endpoint;
+use kubernetes::{ObjectMeta, Resource};
+use serde::Deserialize;
+use value::{Value, value};
+
+use super::{Keyed, default_protocol};
 
 /// ServicePort is k8s service port.
 ///
@@ -14,6 +20,7 @@ pub struct ServicePort {
     pub name: String,
 
     /// The IP protocol for this port. Supports "TCP", "UDP", and "SCTP". Default is TCP.
+    #[serde(default = "default_protocol")]
     pub protocol: String,
 
     /// The port that will be exposed by this service.
@@ -82,13 +89,76 @@ pub struct Service {
 impl Resource for Service {
     const GROUP: &'static str = "";
     const VERSION: &'static str = "v1";
+    const KIND: &'static str = "Service";
     const PLURAL: &'static str = "services";
+}
+
+impl Keyed for Service {
+    fn key(&self) -> &str {
+        self.metadata.uid.as_ref()
+    }
+}
+
+impl From<Service> for Vec<Endpoint> {
+    fn from(service: Service) -> Self {
+        let mut labels = BTreeMap::new();
+        for (key, value) in service.metadata.labels {
+            labels.insert(key, Value::Bytes(Bytes::from(value)));
+        }
+
+        let mut annotations = BTreeMap::new();
+        for (key, value) in service.metadata.annotations {
+            annotations.insert(key, Value::Bytes(Bytes::from(value)));
+        }
+
+        let service_info = value!({
+            "namespace": service.metadata.namespace.clone(),
+            "name": service.metadata.name.clone(),
+            "labels": labels,
+            "annotations": annotations,
+        });
+
+        let mut endpoints = Vec::with_capacity(service.spec.ports.len());
+        for port in service.spec.ports {
+            let id = format!(
+                "{}/{}/{}:{}",
+                service.metadata.namespace, service.metadata.name, port.protocol, port.port
+            );
+            let target = format!(
+                "{}.{}.svc:{}",
+                service.metadata.name, service.metadata.namespace, port.port
+            );
+            let mut details = value!({
+                "service": service_info.clone(),
+                "name": port.name,
+                "port": port.port,
+                "protocol": port.protocol,
+            });
+
+            if service.spec.typ == "ExternalName" {
+                if let Some(external_name) = service.spec.external_name.as_ref() {
+                    details.insert("external_name", external_name.clone());
+                }
+            } else {
+                details.insert("cluster_ip", service.spec.cluster_ip.clone());
+            }
+
+            endpoints.push(Endpoint {
+                id,
+                target,
+                typ: "service".to_string(),
+                details,
+            });
+        }
+
+        endpoints
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::resource::ObjectList;
+    use kubernetes::ObjectList;
 
     #[test]
     fn deserialize() {

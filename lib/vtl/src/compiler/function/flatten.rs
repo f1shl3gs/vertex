@@ -295,7 +295,9 @@ mod tests {
             ],
             Flatten,
             TypeDef::object(),
-            Ok(value!({ parent: "child" })),
+            Ok(value!({
+                parent: "child"
+            })),
         )
     }
 

@@ -8,7 +8,7 @@ needed by us.
 - Resources agnostic
 
 ## Resource or CRD
-This Library does not provide any CRD, only a few resources `Vertex` will use(which even not have all fields as it should be).
+This Library does not provide any Resources or CRD.
 
 If you want to add something you need, just implement
 `Resource`

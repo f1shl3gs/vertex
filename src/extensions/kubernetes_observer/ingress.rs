@@ -1,6 +1,11 @@
-use serde::Deserialize;
+use std::collections::BTreeMap;
 
-use super::{ObjectMeta, Resource};
+use framework::observe::Endpoint;
+use kubernetes::{ObjectMeta, Resource};
+use serde::Deserialize;
+use value::value;
+
+use super::Keyed;
 
 /// IngressTLS represents ingress TLS spec in k8s.
 ///
@@ -63,13 +68,87 @@ pub struct Ingress {
 impl Resource for Ingress {
     const GROUP: &'static str = "networking.k8s.io";
     const VERSION: &'static str = "v1";
+    const KIND: &'static str = "Ingress";
+
     const PLURAL: &'static str = "ingresses";
+}
+
+impl Keyed for Ingress {
+    fn key(&self) -> &str {
+        self.metadata.uid.as_ref()
+    }
+}
+
+impl From<Ingress> for Vec<Endpoint> {
+    fn from(ingress: Ingress) -> Self {
+        let name = ingress.metadata.name;
+        let namespace = ingress.metadata.namespace;
+
+        let mut labels = BTreeMap::new();
+        for (k, v) in ingress.metadata.labels {
+            labels.insert(k, v.into());
+        }
+
+        let mut annotations = BTreeMap::new();
+        for (k, v) in ingress.metadata.annotations {
+            annotations.insert(k, v.into());
+        }
+
+        let mut endpoints = Vec::new();
+        for rule in ingress.spec.rules {
+            let Some(HttpIngressRuleValue { paths }) = rule.http else {
+                continue;
+            };
+
+            if paths.is_empty() {
+                continue;
+            }
+
+            let scheme = if ingress
+                .spec
+                .tls
+                .iter()
+                .any(|tls| tls.hosts.contains(&rule.host))
+            {
+                "https"
+            } else {
+                "http"
+            };
+
+            for path in paths {
+                let id = format!(
+                    "{}/{}/{}://{}/{}",
+                    namespace, name, scheme, rule.host, path.path
+                );
+                let target = format!("{}://{}/{}", scheme, rule.host, path.path);
+
+                endpoints.push(Endpoint {
+                    id,
+                    typ: "ingress".to_string(),
+                    target,
+                    details: value!({
+                        "ingress": name.clone(),
+                        "namespace": namespace.clone(),
+                        "address": rule.host.clone(),
+                        "scheme": scheme,
+                        "host": rule.host.clone(),
+                        "path": path.path,
+                        "labels": labels.clone(),
+                        "annotations": annotations.clone(),
+                        "ingress_class_name": ingress.spec.ingress_class_name.clone(),
+                    }),
+                });
+            }
+        }
+
+        endpoints
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::resource::ObjectList;
+    use kubernetes::ObjectList;
 
     #[test]
     fn deserialize() {

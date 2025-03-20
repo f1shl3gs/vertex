@@ -1,6 +1,67 @@
+#![allow(dead_code)]
+
 use std::collections::BTreeMap;
 
 use serde::Deserialize;
+use serde::de::DeserializeOwned;
+
+/// An accessor trait for a kubernetes Resource.
+pub trait Resource: DeserializeOwned {
+    /// The group of the resource, or the empty string if the resource doesn't have a
+    /// group.
+    const GROUP: &'static str;
+
+    /// The version of the resource.
+    const VERSION: &'static str;
+
+    /// The kind of the resource.
+    ///
+    /// This is the string used in the `kind` field of the resource's serialized form.
+    const KIND: &'static str;
+
+    /// The plural of this resource, which is used to construct URLS
+    const PLURAL: &'static str;
+
+    /// Creates a url path for http requests for this resource
+    fn url_path(namespace: Option<&str>) -> String {
+        let group = if Self::GROUP.is_empty() {
+            "api"
+        } else {
+            "apis"
+        };
+        let api_version = if Self::GROUP.is_empty() {
+            Self::VERSION.to_string()
+        } else {
+            format!("{}/{}", Self::GROUP, Self::VERSION)
+        };
+        let namespace = match namespace {
+            Some(namespace) => format!("namespaces/{}/", namespace),
+            None => String::new(),
+        };
+        let plural = Self::PLURAL;
+
+        format!("/{group}/{api_version}/{namespace}{plural}")
+    }
+}
+
+/// A generic Kubernetes object list
+///
+/// This is used instead of a full struct for `DeploymentList`, `PodList`, etc.
+/// Kubernetes' API [always seem to expose list structs in this manner](https://docs.rs/k8s-openapi/0.10.0/k8s_openapi/apimachinery/pkg/apis/meta/v1/struct.ObjectMeta.html?search=List).
+///
+/// Note that this is only used internally within reflectors and informers.
+/// and is generally produced from list/watch/delete collection queries on
+/// an [`Resource`].
+///
+/// This is almost equivalent to [`k8s_openapi::List<T>`](k8s_openapi::List), but iterable.
+#[derive(Deserialize)]
+pub struct ObjectList<T> {
+    /// ListMeta - only really used for its `resourceVersion`
+    pub metadata: ListMeta,
+
+    /// These items we are actually interested in.
+    pub items: Vec<T>,
+}
 
 fn default_namespace() -> String {
     String::from("default")
@@ -36,7 +97,8 @@ pub struct ObjectMeta {
     /// definition. Cannot be updated.
     ///
     /// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names
-    pub name: Option<String>,
+    #[serde(default)]
+    pub name: String,
 
     /// Namespace defines the space within which each name must be unique.
     /// An empty namespace is equivalent to the "default" namespace, but
@@ -59,14 +121,16 @@ pub struct ObjectMeta {
     /// and services.
     ///
     /// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
-    pub labels: Option<BTreeMap<String, String>>,
+    #[serde(default)]
+    pub labels: BTreeMap<String, String>,
 
     /// Annotations is an unstructured key value map stored with a resource that
     /// may be set by external tools to store and retrieve arbitrary metadata.
     /// They are not queryable and should be preserved when modifying objects.
     ///
     /// More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations
-    pub annotations: Option<BTreeMap<String, String>>,
+    #[serde(default)]
+    pub annotations: BTreeMap<String, String>,
 
     /// List of objects depended on this object. If ALL objects in the list have been
     /// deleted, this object will be garbage collected. If this object is managed by
@@ -177,7 +241,7 @@ mod tests {
         assert_eq!(dummy1.spec.name, "dummy1");
         assert_eq!(
             dummy1.metadata.name,
-            Some("customer-8cdd87b54-9gf59.17e4340c67a08418".into())
+            "customer-8cdd87b54-9gf59.17e4340c67a08418"
         );
         assert_eq!(dummy1.metadata.namespace, "default");
         assert_eq!(dummy1.metadata.resource_version, Some("707".into()));
@@ -187,7 +251,7 @@ mod tests {
         assert_eq!(dummy2.spec.name, "dummy2");
         assert_eq!(
             dummy2.metadata.name,
-            Some("customer-8cdd87b54-9gf59.17e4340c7a09e487".into())
+            "customer-8cdd87b54-9gf59.17e4340c7a09e487"
         );
         assert_eq!(dummy2.metadata.namespace, "default");
         assert_eq!(dummy2.metadata.resource_version, Some("5886".into()));

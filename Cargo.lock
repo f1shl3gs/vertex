@@ -2157,6 +2157,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "kubernetes"
+version = "0.1.0"
+dependencies = [
+ "base64 0.22.1",
+ "bytes",
+ "form_urlencoded",
+ "futures",
+ "headers",
+ "http",
+ "http-body-util",
+ "hyper",
+ "hyper-rustls",
+ "hyper-util",
+ "pem",
+ "rustls",
+ "rustls-native-certs 0.8.1",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "thiserror 2.0.12",
+ "tokio",
+ "tokio-util",
+ "tracing",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4640,6 +4666,7 @@ dependencies = [
  "jaeger",
  "k8s-openapi",
  "kube",
+ "kubernetes",
  "libc",
  "log_schema",
  "lru",
