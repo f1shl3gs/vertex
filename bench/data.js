@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742388841078,
+  "lastUpdate": 1742464248960,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9",
-          "message": "chore(deps): bump serde_json from 1.0.137 to 1.0.138 (#2161)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.137 to 1.0.138.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.137...v1.0.138)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-29T10:52:52+08:00",
-          "tree_id": "bf7b717630c94fc8ab03d1139313e0c9c1ebe702",
-          "url": "https://github.com/f1shl3gs/vertex/commit/64a3fe7ce7d37bd1c0cf4f301cf435bdba41e3d9"
-        },
-        "date": 1738119300532,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.328,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.807,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.74,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.36,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d6ea9c2abd2394e20c87c8ed0135eecc4f89e794",
+          "message": "Merge pull request #2276 from f1shl3gs/extensions/kubernetes_observer\n\nadd extensions/kubernetes_observer",
+          "timestamp": "2025-03-20T17:48:21+08:00",
+          "tree_id": "46e9f22bdfc9a5e5d417086dd59ab8f6790bb13e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d6ea9c2abd2394e20c87c8ed0135eecc4f89e794"
+        },
+        "date": 1742464230577,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.815,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.892,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.51,
             "unit": "ns/op"
           }
         ]
