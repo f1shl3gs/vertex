@@ -1,12 +1,12 @@
 mod annotator;
+mod pod;
 mod provider;
-mod reflector;
+mod store;
 
 use std::path::PathBuf;
 use std::time::Duration;
 
 use annotator::FieldsSpec;
-use async_trait::async_trait;
 use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use chrono::Utc;
@@ -16,10 +16,8 @@ use event::log::{OwnedTargetPath, TargetPath, Value, path};
 use framework::config::{Output, SourceConfig, SourceContext, default_true};
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::{StreamExt, TryFutureExt, TryStreamExt};
-use k8s_openapi::api::core::v1::Pod;
-use kube::runtime::watcher;
-use kube::{Api, Client};
+use futures_util::{StreamExt, TryFutureExt};
+use kubernetes::{Client, WatchEvent, WatchParams};
 use log_schema::log_schema;
 use provider::KubernetesPathsProvider;
 use tail::{Checkpointer, Line};
@@ -127,10 +125,11 @@ impl Config {
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "kubernetes_logs")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
+        let client = Client::new(None)?;
         let data_dir = cx.globals.make_subdir(cx.key.id())?;
         let field_selector = self.prepare_field_selector()?;
         let label_selector = self.prepare_label_selector();
@@ -146,9 +145,11 @@ impl SourceConfig for Config {
             label_selector,
         };
 
-        Ok(Box::pin(log_source.run(cx.output, cx.shutdown).map_err(
-            |err| error!(message = "Kubernetes log source failed", %err),
-        )))
+        Ok(Box::pin(
+            log_source
+                .run(client, cx.output, cx.shutdown)
+                .map_err(|err| error!(message = "Kubernetes log source failed", %err)),
+        ))
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -173,7 +174,12 @@ struct LogSource {
 }
 
 impl LogSource {
-    async fn run(self, mut output: Pipeline, shutdown: ShutdownSignal) -> crate::Result<()> {
+    async fn run(
+        self,
+        client: Client,
+        mut output: Pipeline,
+        shutdown: ShutdownSignal,
+    ) -> crate::Result<()> {
         let LogSource {
             field_selector,
             label_selector,
@@ -187,37 +193,16 @@ impl LogSource {
         } = self;
 
         // Build kubernetes pod store, indexed by uuid
-        let client = Client::try_default().await?;
-        let api: Api<Pod> = Api::all(client);
-        let store = reflector::Store::new();
+        let store = store::Store::new();
+        tokio::spawn(watch(
+            client,
+            store.clone(),
+            label_selector,
+            field_selector,
+            shutdown.clone(),
+        ));
 
-        // shutdown background task when this source shutdown
-        let rfl_shutdown = shutdown.clone();
-        let rfl_store = store.clone();
-        tokio::spawn(async move {
-            info!(
-                message = "Obtained Kubernetes Node name to collect logs for (self)",
-                label_selector, field_selector,
-            );
-
-            let watch_config = watcher::Config {
-                field_selector,
-                label_selector,
-                ..Default::default()
-            };
-
-            let mut rfl = reflector::reflector(rfl_store, watcher(api, watch_config))
-                .take_until(rfl_shutdown)
-                .boxed();
-
-            while let Some(_event) = rfl.try_next().await? {
-                // TODO: metric
-            }
-
-            Ok::<(), watcher::Error>(())
-        });
-
-        let provider = KubernetesPathsProvider::new(store.clone(), exclude_pattern).await?;
+        let provider = KubernetesPathsProvider::new(store.clone(), exclude_pattern);
         let pod_annotator = annotator::PodMetadataAnnotator::new(store, fields_spec);
         let checkpointer = Checkpointer::new(&data_dir);
         let harvester = tail::Harvester {
@@ -286,9 +271,9 @@ impl LogSource {
         // `spawn_blocking` will run this closure in another thread, so our tokio
         // workers wouldn't be blocked.
         tokio::task::spawn_blocking(move || {
-            let result = harvester.run(tx, shutdown.clone(), shutdown.clone(), checkpointer);
-
-            result.unwrap();
+            harvester
+                .run(tx, shutdown.clone(), shutdown.clone(), checkpointer)
+                .unwrap()
         })
         .await?;
 
@@ -335,6 +320,73 @@ fn create_log(
     log.try_insert(log_schema().timestamp_key(), now);
 
     log
+}
+
+async fn watch(
+    client: Client,
+    store: store::Store,
+    label_selector: Option<String>,
+    field_selector: Option<String>,
+    mut shutdown: ShutdownSignal,
+) {
+    let mut resource_version = "0".to_string();
+    let params = WatchParams {
+        label_selector,
+        field_selector,
+        timeout: None,
+        bookmarks: true,
+        send_initial_events: false,
+    };
+
+    loop {
+        let stream = client
+            .watch::<pod::Pod>(&params, resource_version.clone())
+            .await
+            .unwrap();
+
+        tokio::pin!(stream);
+
+        loop {
+            let watch_event = tokio::select! {
+                _ = &mut shutdown => return,
+                result = stream.next() => match result {
+                    Some(Ok(event)) => event,
+                    Some(Err(err)) => {
+                        warn!(
+                            message = "watch pod failed",
+                            ?err
+                        );
+
+                        // backoff
+                        tokio::time::sleep(Duration::from_secs(5)).await;
+
+                        break;
+                    }
+                    None => break, // timeout
+                }
+            };
+
+            match watch_event {
+                WatchEvent::Added(pod) | WatchEvent::Modified(pod) => {
+                    store.apply(pod);
+                }
+                WatchEvent::Deleted(pod) => {
+                    store.delete(&pod.metadata.uid);
+                }
+                WatchEvent::Bookmark(bookmark) => {
+                    resource_version = bookmark.metadata.resource_version;
+                }
+                WatchEvent::Error(err) => {
+                    warn!(message = "watch pod failed", ?err);
+
+                    // backoff
+                    tokio::time::sleep(Duration::from_secs(5)).await;
+
+                    break;
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]

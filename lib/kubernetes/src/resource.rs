@@ -88,7 +88,7 @@ pub struct OwnerReference {
 
 /// ObjectMeta is metadata that all persisted resources must have,
 /// which includes all objects users must create.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 pub struct ObjectMeta {
     /// Name must be unique within a namespace. Is required when creating
     /// resources, although some resource may allow a client to request

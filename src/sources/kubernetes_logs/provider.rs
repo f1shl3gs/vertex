@@ -1,10 +1,10 @@
 use std::path::PathBuf;
 
-use k8s_openapi::api::core::v1::Pod;
-use k8s_openapi::apimachinery::pkg::apis::meta::v1::ObjectMeta;
+use kubernetes::ObjectMeta;
 use tail::provider::Provider;
 
-use super::reflector::Store;
+use super::pod::Pod;
+use super::store::Store;
 
 /// The root directory for pod logs.
 const K8S_LOGS_DIR: &str = "/var/log/pods";
@@ -15,25 +15,27 @@ const LOG_PATH_DELIMITER: &str = "_";
 /// k8s API.
 pub struct KubernetesPathsProvider {
     exclude_paths: Vec<glob::Pattern>,
-    store: Store<Pod>,
+    store: Store,
 }
 
 impl KubernetesPathsProvider {
     /// Create a new KubernetesPathsProvider
-    pub async fn new(store: Store<Pod>, exclude_paths: Vec<glob::Pattern>) -> crate::Result<Self> {
-        Ok(Self {
+    pub fn new(store: Store, exclude_paths: Vec<glob::Pattern>) -> Self {
+        Self {
             exclude_paths,
             store,
-        })
+        }
     }
 }
 
 impl Provider for KubernetesPathsProvider {
     fn scan(&self) -> Vec<PathBuf> {
         self.store
-            .state()
+            .inner()
             .iter()
-            .flat_map(|pod| {
+            .flat_map(|entry| {
+                let pod = entry.value();
+
                 let pod_paths = list_pod_log_paths(pod, |pattern| {
                     glob::glob_with(
                         pattern,
@@ -46,7 +48,7 @@ impl Provider for KubernetesPathsProvider {
                     .flat_map(|paths| paths.into_iter())
                 });
 
-                exclude_paths(pod_paths, &self.exclude_paths)
+                exclude_paths(pod_paths, &self.exclude_paths).collect::<Vec<_>>()
             })
             .collect::<Vec<_>>()
     }
@@ -123,8 +125,11 @@ fn exclude_paths<'a>(
 ///
 /// See: <https://github.com/kubernetes/kubernetes/blob/cea1d4e20b4a7886d8ff65f34c6d4f95efcb4742/pkg/kubelet/pod/mirror_client.go#L80-L81>
 pub fn extract_static_pod_config_hashsum(meta: &ObjectMeta) -> Option<&str> {
-    let annotations = meta.annotations.as_ref()?;
-    annotations
+    if meta.annotations.is_empty() {
+        return None;
+    }
+
+    meta.annotations
         .get("kubernetes.io/config.mirror")
         .map(String::as_str)
 }
@@ -149,15 +154,15 @@ pub fn extract_static_pod_config_hashsum(meta: &ObjectMeta) -> Option<&str> {
 /// See https://github.com/kubernetes/kubernetes/blob/cea1d4e20b4a7886d8ff65f34c6d4f95efcb4742/pkg/kubelet/pod/mirror_client.go#L80-L81
 fn extract_pod_logs_directory(pod: &Pod) -> Option<PathBuf> {
     let metadata = &pod.metadata;
-    let name = metadata.name.as_ref()?;
-    let namespace = metadata.namespace.as_ref()?;
+    let name = metadata.name.as_ref();
+    let namespace = metadata.namespace.as_ref();
 
     let uid = if let Some(static_pod_config_hashsum) = extract_static_pod_config_hashsum(metadata) {
         // If there's a static pod config hashsum - use it instead of uid
         static_pod_config_hashsum
     } else {
         // In the common case - just fallback to the real pod uid
-        metadata.uid.as_ref()?
+        metadata.uid.as_ref()
     };
 
     Some(build_pod_logs_directory(namespace, name, uid))
@@ -180,25 +185,28 @@ const CONTAINER_EXCLUSION_ANNOTATION_KEY: &str = "vertex.io/exclude-containers";
 fn extract_excluded_containers_for_pod(pod: &Pod) -> impl Iterator<Item = &str> {
     let meta = &pod.metadata;
 
-    meta.annotations.iter().flat_map(|annotations| {
-        annotations
-            .iter()
-            .flat_map(|(key, value)| {
-                if key != CONTAINER_EXCLUSION_ANNOTATION_KEY {
-                    return None;
-                }
+    let mut containers = vec![];
+    for key in meta.annotations.keys() {
+        if key == CONTAINER_EXCLUSION_ANNOTATION_KEY {
+            continue;
+        }
 
-                Some(value)
-            })
-            .flat_map(|containers| containers.split(','))
-            .map(|container| container.trim())
-    })
+        containers.extend(
+            pod.spec
+                .containers
+                .iter()
+                .map(|container| container.name.as_str()),
+        );
+    }
+
+    containers.into_iter()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use k8s_openapi::apimachinery::pkg::apis::meta::v1::ObjectMeta;
+    use crate::sources::kubernetes_logs::pod::{Pod, PodSpec, PodStatus};
+    use kubernetes::ObjectMeta;
 
     #[test]
     fn test_extract_pod_logs_directory() {
@@ -209,12 +217,13 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        namespace: Some("test-ns".to_owned()),
-                        name: Some("test-name".to_owned()),
-                        uid: Some("test-uid".to_owned()),
-                        ..ObjectMeta::default()
+                        namespace: "test-ns".to_owned(),
+                        name: "test-name".to_owned(),
+                        uid: "test-uid".to_owned(),
+                        ..Default::default()
                     },
-                    ..Pod::default()
+                    spec: PodSpec::default(),
+                    status: PodStatus::default(),
                 },
                 Some("/var/log/pods/test-ns_test-name_test-uid"),
             ),
@@ -222,11 +231,12 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        namespace: Some("ns".to_owned()),
-                        name: Some("name".to_owned()),
-                        ..ObjectMeta::default()
+                        name: "name".to_owned(),
+                        namespace: "ns".to_owned(),
+                        ..Default::default()
                     },
-                    ..Pod::default()
+                    spec: PodSpec::default(),
+                    status: PodStatus::default(),
                 },
                 None,
             ),
@@ -234,9 +244,9 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        namespace: Some("ns".to_owned()),
-                        uid: Some("uid".to_owned()),
-                        ..ObjectMeta::default()
+                        namespace: "ns".to_owned(),
+                        uid: "uid".to_owned(),
+                        ..Default::default()
                     },
                     ..Pod::default()
                 },
@@ -246,8 +256,8 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        name: Some("name".to_owned()),
-                        uid: Some("uid".to_owned()),
+                        name: "name".to_owned(),
+                        uid: "uid".to_owned(),
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()
@@ -258,17 +268,15 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        namespace: Some("ns".to_owned()),
-                        name: Some("name".to_owned()),
-                        uid: Some("uid".to_owned()),
-                        annotations: Some(
-                            vec![(
-                                "kubernetes.io/config.mirror".to_owned(),
-                                "config-hashsum".to_owned(),
-                            )]
-                            .into_iter()
-                            .collect(),
-                        ),
+                        namespace: "ns".to_owned(),
+                        name: "name".to_owned(),
+                        uid: "uid".to_owned(),
+                        annotations: vec![(
+                            "kubernetes.io/config.mirror".to_owned(),
+                            "config-hashsum".to_owned(),
+                        )]
+                        .into_iter()
+                        .collect(),
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()
@@ -291,7 +299,7 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        annotations: Some(vec![].into_iter().collect()),
+                        annotations: vec![].into_iter().collect(),
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()
@@ -302,11 +310,10 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        annotations: Some(
-                            vec![("some-other".to_owned(), "some_value".to_owned())]
-                                .into_iter()
-                                .collect(),
-                        ),
+                        annotations: vec![("some-other".to_owned(), "some_value".to_owned())]
+                            .into_iter()
+                            .collect(),
+
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()
@@ -317,14 +324,13 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        annotations: Some(
-                            vec![(
-                                CONTAINER_EXCLUSION_ANNOTATION_KEY.to_owned(),
-                                "container1,container4".to_owned(),
-                            )]
-                            .into_iter()
-                            .collect(),
-                        ),
+                        annotations: vec![(
+                            CONTAINER_EXCLUSION_ANNOTATION_KEY.to_owned(),
+                            "container1,container4".to_owned(),
+                        )]
+                        .into_iter()
+                        .collect(),
+
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()
@@ -335,14 +341,13 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        annotations: Some(
-                            vec![(
-                                CONTAINER_EXCLUSION_ANNOTATION_KEY.to_owned(),
-                                " container1, container4 ".to_owned(),
-                            )]
-                            .into_iter()
-                            .collect(),
-                        ),
+                        annotations: vec![(
+                            CONTAINER_EXCLUSION_ANNOTATION_KEY.to_owned(),
+                            " container1, container4 ".to_owned(),
+                        )]
+                        .into_iter()
+                        .collect(),
+
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()
@@ -367,17 +372,15 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        namespace: Some("ns".to_owned()),
-                        name: Some("name".to_owned()),
-                        uid: Some("uid".to_owned()),
-                        annotations: Some(
-                            vec![(
-                                CONTAINER_EXCLUSION_ANNOTATION_KEY.to_owned(),
-                                "excluded1,excluded2".to_owned(),
-                            )]
-                            .into_iter()
-                            .collect(),
-                        ),
+                        namespace: "ns".to_owned(),
+                        name: "name".to_owned(),
+                        uid: "uid".to_owned(),
+                        annotations: vec![(
+                            CONTAINER_EXCLUSION_ANNOTATION_KEY.to_owned(),
+                            "excluded1,excluded2".to_owned(),
+                        )]
+                        .into_iter()
+                        .collect(),
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()
@@ -406,9 +409,9 @@ mod tests {
             (
                 Pod {
                     metadata: ObjectMeta {
-                        namespace: Some("ns".to_owned()),
-                        name: Some("name".to_owned()),
-                        uid: Some("uid".to_owned()),
+                        namespace: "ns".to_owned(),
+                        name: "name".to_owned(),
+                        uid: "uid".to_owned(),
                         ..ObjectMeta::default()
                     },
                     ..Pod::default()

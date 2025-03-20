@@ -15,7 +15,7 @@ use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::observe::{Endpoint, Observer, register};
 use framework::{Extension, ShutdownSignal};
 use futures::StreamExt;
-use kubernetes::{Client, Config as KubeConfig, Resource, WatchEvent, WatchParams};
+use kubernetes::{Client, Resource, WatchEvent, WatchParams};
 use serde::{Deserialize, Serialize};
 use tokio::task::JoinSet;
 
@@ -61,9 +61,9 @@ struct Config {
 #[typetag::serde(name = "kubernetes_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let config = KubeConfig::load()?;
+        let client = Client::new(None)?;
+
         let observer = register(cx.name);
-        let client = Client::new(config, None);
         let namespaces = self.namespaces.clone();
         let label_selector = self.label_selector.clone();
         let field_selector = self.field_selector.clone();
@@ -174,7 +174,7 @@ where
         }
     }
 
-    while tasks.join_next().await.is_none() {}
+    while tasks.join_next().await.is_some() {}
 
     Ok(())
 }

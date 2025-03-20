@@ -1,17 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-use super::{ObjectMeta, Resource};
-
-/// EventSource contains information for an event.
-#[derive(Deserialize)]
-pub struct EventSource {
-    /// Component from which the event is generated.
-    pub component: Option<String>,
-
-    /// Node name on which the event is generated.
-    pub host: Option<String>,
-}
+use kubernetes::{ObjectMeta, Resource};
 
 /// Event is a report of an event somewhere in the cluster. Events have a limited retention
 /// time and triggers and messages may evolve with time. Event consumers should not rely on
@@ -62,6 +52,8 @@ pub struct Event {
 impl Resource for Event {
     const GROUP: &'static str = "events.k8s.io";
     const VERSION: &'static str = "v1";
+    const KIND: &'static str = "Event";
+
     const PLURAL: &'static str = "events";
 }
 
