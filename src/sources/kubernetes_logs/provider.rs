@@ -154,15 +154,23 @@ pub fn extract_static_pod_config_hashsum(meta: &ObjectMeta) -> Option<&str> {
 /// See https://github.com/kubernetes/kubernetes/blob/cea1d4e20b4a7886d8ff65f34c6d4f95efcb4742/pkg/kubelet/pod/mirror_client.go#L80-L81
 fn extract_pod_logs_directory(pod: &Pod) -> Option<PathBuf> {
     let metadata = &pod.metadata;
-    let name = metadata.name.as_ref();
-    let namespace = metadata.namespace.as_ref();
+    let name = metadata.name.as_str();
+    let namespace = metadata.namespace.as_str();
+
+    if name.is_empty() || namespace.is_empty() {
+        return None;
+    }
 
     let uid = if let Some(static_pod_config_hashsum) = extract_static_pod_config_hashsum(metadata) {
         // If there's a static pod config hashsum - use it instead of uid
         static_pod_config_hashsum
     } else {
         // In the common case - just fallback to the real pod uid
-        metadata.uid.as_ref()
+        if metadata.uid.is_empty() {
+            return None;
+        }
+
+        metadata.uid.as_str()
     };
 
     Some(build_pod_logs_directory(namespace, name, uid))
@@ -186,17 +194,12 @@ fn extract_excluded_containers_for_pod(pod: &Pod) -> impl Iterator<Item = &str> 
     let meta = &pod.metadata;
 
     let mut containers = vec![];
-    for key in meta.annotations.keys() {
-        if key == CONTAINER_EXCLUSION_ANNOTATION_KEY {
+    for (key, value) in &meta.annotations {
+        if key != CONTAINER_EXCLUSION_ANNOTATION_KEY {
             continue;
         }
 
-        containers.extend(
-            pod.spec
-                .containers
-                .iter()
-                .map(|container| container.name.as_str()),
-        );
+        containers.extend(value.split(',').map(|container| container.trim()));
     }
 
     containers.into_iter()
@@ -204,8 +207,9 @@ fn extract_excluded_containers_for_pod(pod: &Pod) -> impl Iterator<Item = &str> 
 
 #[cfg(test)]
 mod tests {
+    use super::super::pod::{PodSpec, PodStatus};
     use super::*;
-    use crate::sources::kubernetes_logs::pod::{Pod, PodSpec, PodStatus};
+
     use kubernetes::ObjectMeta;
 
     #[test]
@@ -286,7 +290,12 @@ mod tests {
         ];
 
         for (input, want) in cases {
-            assert_eq!(extract_pod_logs_directory(&input), want.map(PathBuf::from))
+            assert_eq!(
+                extract_pod_logs_directory(&input),
+                want.map(PathBuf::from),
+                "{:#?}",
+                input
+            );
         }
     }
 
