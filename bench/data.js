@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742765454909,
+  "lastUpdate": 1742765861947,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3b72c4f72fc744d9e2dc358750a07b43a6f8ca8e",
-          "message": "chore(deps): bump lru from 0.12.5 to 0.13.0 (#2162)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.12.5 to 0.13.0.\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.12.5...0.13.0)\n\n---\nupdated-dependencies:\n- dependency-name: lru\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-29T10:52:18+08:00",
-          "tree_id": "48b2b85f920ec3c95eacd182e2d96d0c192e831d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3b72c4f72fc744d9e2dc358750a07b43a6f8ca8e"
-        },
-        "date": 1738119820492,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29168000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 721130,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.932,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99591b51fb06807d77228f56a4f75bb492ad5753",
           "message": "chore(deps): bump inventory from 0.3.17 to 0.3.18 (#2164)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.17 to 0.3.18.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.17...0.3.18)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-31T18:27:04+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2f9a26705cc2aa6c7a2ae44f921c36471ca5d815",
+          "message": "Merge pull request #2277 from f1shl3gs/deps/remove_kube_rs\n\ndeps: remove kube-rs & k8s-openapi",
+          "timestamp": "2025-03-24T05:27:09+08:00",
+          "tree_id": "70c045579bcbe41cb28aab49eecfc1789163fa4a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2f9a26705cc2aa6c7a2ae44f921c36471ca5d815"
+        },
+        "date": 1742765841452,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22378000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 550190,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.116,
             "unit": "ns/op"
           }
         ]
