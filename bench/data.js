@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742852707498,
+  "lastUpdate": 1742853141293,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "99591b51fb06807d77228f56a4f75bb492ad5753",
-          "message": "chore(deps): bump inventory from 0.3.17 to 0.3.18 (#2164)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.17 to 0.3.18.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.17...0.3.18)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-01-31T18:27:04+08:00",
-          "tree_id": "48250cd0c00a52e15d54064aa1138f45f5ce97d7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/99591b51fb06807d77228f56a4f75bb492ad5753"
-        },
-        "date": 1738319879967,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28059000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 587780,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.288,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e0c21ecb6d77161411175a15dca4665d145e75fa",
           "message": "chore(deps): bump rustls from 0.23.21 to 0.23.22 (#2163)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.21 to 0.23.22.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.21...v/0.23.22)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-01-31T18:27:28+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.116,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e455a105cfc1cb5d0e6658736416a83c5c44429",
+          "message": "Merge pull request #2278 from f1shl3gs/lib/kubernetes/add_watch\n\nlib/kubernetes: add watcher",
+          "timestamp": "2025-03-25T05:41:23+08:00",
+          "tree_id": "9988e6a509c681ce48ed4e40d8509fb537ef7935",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e455a105cfc1cb5d0e6658736416a83c5c44429"
+        },
+        "date": 1742853120915,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22695000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 621330,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.714,
             "unit": "ns/op"
           }
         ]
