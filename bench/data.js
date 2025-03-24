@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742853785955,
+  "lastUpdate": 1742853823001,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3670e5be2debbe6c0a796774d39537c66bb09990",
-          "message": "lib/buffers: fix some tests (#2165)",
-          "timestamp": "2025-01-31T23:49:10+08:00",
-          "tree_id": "d7bcf7edf2316afb3a3a7a2e5ac8c8abc6920202",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3670e5be2debbe6c0a796774d39537c66bb09990"
-        },
-        "date": 1738338709394,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.682,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 135.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 286.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 600.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "086f14fa6ddf0a36a270bd03d7f332c576bd4838",
           "message": "simplify HttpSource (#2167)",
           "timestamp": "2025-02-01T02:15:11+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 676.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "14d63a2a9d47c656b5b73940ac42de84b3a0aed0",
+          "message": "Merge pull request #2279 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.3\n\nchore(deps): bump chrono-tz from 0.10.1 to 0.10.3",
+          "timestamp": "2025-03-25T06:00:41+08:00",
+          "tree_id": "b38a8f6f236f31d0daff311404b47d32ca42dad7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/14d63a2a9d47c656b5b73940ac42de84b3a0aed0"
+        },
+        "date": 1742853803018,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.78,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 348.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 714,
             "unit": "ns/op"
           }
         ]
