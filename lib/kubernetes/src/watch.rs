@@ -72,6 +72,50 @@ enum State<R: Resource> {
     },
 }
 
+impl<R: Resource> std::fmt::Debug for State<R> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            State::Start {
+                initial_list_strategy,
+                resource_version,
+            } => f
+                .debug_struct("State::Start")
+                .field("initial_list_strategy", initial_list_strategy)
+                .field("resource_version", resource_version)
+                .finish(),
+            State::Listing {
+                continue_token,
+                objects,
+                last_bookmark,
+            } => f
+                .debug_struct("State::Listing")
+                .field("continue_token", continue_token)
+                .field("objects", &objects.len())
+                .field("last_bookmark", last_bookmark)
+                .finish(),
+            State::InitialWatch {
+                params,
+                resource_version,
+                initial_list_done,
+            } => f
+                .debug_struct("State::InitialWatch")
+                .field("params", params)
+                .field("resource_version", resource_version)
+                .field("initial_list_done", initial_list_done)
+                .finish(),
+            State::Watching {
+                resource_version,
+                initial_list_done,
+                ..
+            } => f
+                .debug_struct("State::Watching")
+                .field("resource_version", resource_version)
+                .field("initial_list_done", initial_list_done)
+                .finish(),
+        }
+    }
+}
+
 impl<R: Resource> Default for State<R> {
     fn default() -> Self {
         State::Start {
@@ -149,6 +193,8 @@ async fn step<R: Resource + 'static>(
     config: &Config,
     state: State<R>,
 ) -> (Option<Result<Event<R>, Error>>, State<R>) {
+    // debug!(message = "stepping", ?state);
+
     match state {
         State::Start {
             initial_list_strategy,
@@ -279,20 +325,33 @@ async fn step<R: Resource + 'static>(
                                     }
                                 }
                                 WatchEvent::Deleted(obj) => {
-                                    // Kubernetes claims these events are impossible
-                                    // https://kubernetes.io/docs/reference/using-api/api-concepts/#streaming-lists
-                                    error!("got deleted event during initial watch. this is a bug");
+                                    if !initial_list_done {
+                                        // Kubernetes claims these events are impossible
+                                        // https://kubernetes.io/docs/reference/using-api/api-concepts/#streaming-lists
+                                        error!(
+                                            message = "got deleted event during initial watch. this is a bug"
+                                        );
+
+                                        return (
+                                            None,
+                                            State::Watching {
+                                                resource_version,
+                                                stream,
+                                                initial_list_done,
+                                            },
+                                        );
+                                    }
 
                                     Ok(Event::Deleted(obj))
                                 }
                                 WatchEvent::Bookmark(bookmark) => {
                                     // Added in 1.27, enabled in 1.32
-                                    let initial_list_done = bookmark
+                                    let list_done = bookmark
                                         .metadata
                                         .annotations
                                         .contains_key("k8s.io/initial-events-end");
 
-                                    let event = if initial_list_done {
+                                    let event = if list_done && !initial_list_done {
                                         debug!(message = "initial list done");
                                         Some(Ok(Event::InitDone))
                                     } else {
@@ -304,7 +363,7 @@ async fn step<R: Resource + 'static>(
                                         State::Watching {
                                             resource_version: bookmark.metadata.resource_version,
                                             stream,
-                                            initial_list_done,
+                                            initial_list_done: initial_list_done || list_done,
                                         },
                                     );
                                 }
@@ -346,7 +405,7 @@ async fn step<R: Resource + 'static>(
                     }
                 }
                 None => {
-                    debug!(message = "watch stream timeout", timeout = config.timeout);
+                    debug!(message = "watch stream timeout");
 
                     let mut params = config.watch_params();
                     params.send_initial_events = false;
