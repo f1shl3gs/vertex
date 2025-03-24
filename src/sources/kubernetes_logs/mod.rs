@@ -1,12 +1,13 @@
 mod annotator;
 mod pod;
 mod provider;
-mod store;
 
+use std::collections::BTreeMap;
 use std::path::PathBuf;
+use std::sync::{Arc, RwLock};
 use std::time::Duration;
 
-use annotator::FieldsSpec;
+use annotator::{FieldsSpec, PodMetadataAnnotator};
 use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use chrono::Utc;
@@ -17,10 +18,13 @@ use framework::config::{Output, SourceConfig, SourceContext, default_true};
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::{StreamExt, TryFutureExt};
-use kubernetes::{Client, WatchEvent, WatchParams};
+use kubernetes::{Client, Event, WatchConfig, watcher};
 use log_schema::log_schema;
+use pod::Pod;
 use provider::KubernetesPathsProvider;
 use tail::{Checkpointer, Line};
+
+pub type Store = Arc<RwLock<BTreeMap<String, Pod>>>;
 
 const fn default_max_read_bytes() -> usize {
     2 * 1024
@@ -193,17 +197,17 @@ impl LogSource {
         } = self;
 
         // Build kubernetes pod store, indexed by uuid
-        let store = store::Store::new();
+        let store = Arc::new(RwLock::new(BTreeMap::new()));
         tokio::spawn(watch(
             client,
-            store.clone(),
+            Arc::clone(&store),
             label_selector,
             field_selector,
             shutdown.clone(),
         ));
 
-        let provider = KubernetesPathsProvider::new(store.clone(), exclude_pattern);
-        let pod_annotator = annotator::PodMetadataAnnotator::new(store, fields_spec);
+        let provider = KubernetesPathsProvider::new(Arc::clone(&store), exclude_pattern);
+        let pod_annotator = PodMetadataAnnotator::new(store, fields_spec);
         let checkpointer = Checkpointer::new(&data_dir);
         let harvester = tail::Harvester {
             provider,
@@ -324,65 +328,53 @@ fn create_log(
 
 async fn watch(
     client: Client,
-    store: store::Store,
+    store: Store,
     label_selector: Option<String>,
     field_selector: Option<String>,
     mut shutdown: ShutdownSignal,
 ) {
-    let mut resource_version = "0".to_string();
-    let params = WatchParams {
+    let config = WatchConfig {
         label_selector,
         field_selector,
-        timeout: None,
-        bookmarks: true,
-        send_initial_events: false,
+        bookmark: true,
+        ..Default::default()
     };
 
+    let stream = watcher::<Pod>(client, config);
+    tokio::pin!(stream);
+
+    let mut new_store = None;
     loop {
-        let stream = client
-            .watch::<pod::Pod>(&params, resource_version.clone())
-            .await
-            .unwrap();
+        let event = tokio::select! {
+            _ = &mut shutdown => break,
+            result = stream.next() => match result {
+                Some(Ok(event)) => event,
+                Some(Err(err)) => {
+                    warn!(message = "wait next event failed", ?err);
+                    return;
+                },
+                None => break,
+            }
+        };
 
-        tokio::pin!(stream);
-
-        loop {
-            let watch_event = tokio::select! {
-                _ = &mut shutdown => return,
-                result = stream.next() => match result {
-                    Some(Ok(event)) => event,
-                    Some(Err(err)) => {
-                        warn!(
-                            message = "watch pod failed",
-                            ?err
-                        );
-
-                        // backoff
-                        tokio::time::sleep(Duration::from_secs(5)).await;
-
-                        break;
-                    }
-                    None => break, // timeout
+        match event {
+            Event::Apply(pod) => {
+                store.write().unwrap().insert(pod.metadata.uid.clone(), pod);
+            }
+            Event::Deleted(pod) => {
+                store.write().unwrap().remove(&pod.metadata.uid);
+            }
+            Event::Init => {
+                new_store = Some(BTreeMap::new());
+            }
+            Event::InitApply(pod) => {
+                if let Some(store) = &mut new_store {
+                    store.insert(pod.metadata.uid.clone(), pod);
                 }
-            };
-
-            match watch_event {
-                WatchEvent::Added(pod) | WatchEvent::Modified(pod) => {
-                    store.apply(pod);
-                }
-                WatchEvent::Deleted(pod) => {
-                    store.delete(&pod.metadata.uid);
-                }
-                WatchEvent::Bookmark(bookmark) => {
-                    resource_version = bookmark.metadata.resource_version;
-                }
-                WatchEvent::Error(err) => {
-                    warn!(message = "watch pod failed", ?err);
-
-                    // backoff
-                    tokio::time::sleep(Duration::from_secs(5)).await;
-
-                    break;
+            }
+            Event::InitDone => {
+                if let Some(new) = new_store.take() {
+                    *store.write().unwrap() = new;
                 }
             }
         }

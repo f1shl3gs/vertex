@@ -3,8 +3,7 @@ use std::path::PathBuf;
 use kubernetes::ObjectMeta;
 use tail::provider::Provider;
 
-use super::pod::Pod;
-use super::store::Store;
+use super::{Pod, Store};
 
 /// The root directory for pod logs.
 const K8S_LOGS_DIR: &str = "/var/log/pods";
@@ -31,11 +30,10 @@ impl KubernetesPathsProvider {
 impl Provider for KubernetesPathsProvider {
     fn scan(&self) -> Vec<PathBuf> {
         self.store
-            .inner()
+            .read()
+            .unwrap()
             .iter()
-            .flat_map(|entry| {
-                let pod = entry.value();
-
+            .flat_map(|(_uid, pod)| {
                 let pod_paths = list_pod_log_paths(pod, |pattern| {
                     glob::glob_with(
                         pattern,
