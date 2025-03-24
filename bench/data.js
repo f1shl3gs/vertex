@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742853861220,
+  "lastUpdate": 1742854282984,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d1a9ce7a8ec27fabbcbfd07c3f50e85992543eec",
-          "message": "fix metrics extend, to reduce clones (#2173)",
-          "timestamp": "2025-02-01T21:02:51+08:00",
-          "tree_id": "a4008613c6bba984593aaf946d9fc80455298c67",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d1a9ce7a8ec27fabbcbfd07c3f50e85992543eec"
-        },
-        "date": 1738415630560,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37393.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "524a161b8db432515c3fd0d7ec30125706a0cd8b",
           "message": "Fix regression tests (#2174)",
           "timestamp": "2025-02-01T23:37:02+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37977.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "14d63a2a9d47c656b5b73940ac42de84b3a0aed0",
+          "message": "Merge pull request #2279 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.3\n\nchore(deps): bump chrono-tz from 0.10.1 to 0.10.3",
+          "timestamp": "2025-03-25T06:00:41+08:00",
+          "tree_id": "b38a8f6f236f31d0daff311404b47d32ca42dad7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/14d63a2a9d47c656b5b73940ac42de84b3a0aed0"
+        },
+        "date": 1742854263832,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37977.3,
             "unit": "KiB"
           }
         ]
