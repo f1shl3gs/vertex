@@ -15,7 +15,7 @@ use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::observe::{Endpoint, Observer, register};
 use framework::{Extension, ShutdownSignal};
 use futures::StreamExt;
-use kubernetes::{Client, Resource, WatchEvent, WatchParams};
+use kubernetes::{Client, Event, Resource, WatchConfig, watcher};
 use serde::{Deserialize, Serialize};
 use tokio::task::JoinSet;
 
@@ -69,7 +69,7 @@ impl ExtensionConfig for Config {
         let field_selector = self.field_selector.clone();
 
         match self.resource {
-            ResourceType::Node => Ok(Box::pin(watch::<node::Node>(
+            ResourceType::Node => Ok(Box::pin(watch_all::<node::Node>(
                 client,
                 namespaces,
                 label_selector,
@@ -77,7 +77,7 @@ impl ExtensionConfig for Config {
                 observer,
                 cx.shutdown,
             ))),
-            ResourceType::Service => Ok(Box::pin(watch::<service::Service>(
+            ResourceType::Service => Ok(Box::pin(watch_all::<service::Service>(
                 client,
                 namespaces,
                 label_selector,
@@ -85,7 +85,7 @@ impl ExtensionConfig for Config {
                 observer,
                 cx.shutdown,
             ))),
-            ResourceType::Pod => Ok(Box::pin(watch::<pod::Pod>(
+            ResourceType::Pod => Ok(Box::pin(watch_all::<pod::Pod>(
                 client,
                 namespaces,
                 label_selector,
@@ -109,7 +109,7 @@ impl ExtensionConfig for Config {
             //     observer,
             //     cx.shutdown,
             // ))),
-            ResourceType::Ingress => Ok(Box::pin(watch::<ingress::Ingress>(
+            ResourceType::Ingress => Ok(Box::pin(watch_all::<ingress::Ingress>(
                 client,
                 namespaces,
                 label_selector,
@@ -121,7 +121,7 @@ impl ExtensionConfig for Config {
     }
 }
 
-async fn watch<R>(
+async fn watch_all<R>(
     client: Client,
     namespaces: Vec<String>,
     label_selector: Option<String>,
@@ -130,13 +130,13 @@ async fn watch<R>(
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()>
 where
-    R: Keyed + Resource + Into<Vec<Endpoint>> + 'static,
+    R: Keyed + Resource + Send + Into<Vec<Endpoint>> + 'static,
 {
     let cache = Arc::new(Cache::default());
     let mut tasks = JoinSet::new();
 
     if namespaces.is_empty() {
-        tasks.spawn(stream_watch::<R>(
+        tasks.spawn(watch::<R>(
             client,
             label_selector,
             field_selector,
@@ -148,7 +148,7 @@ where
             let mut client = client.clone();
             client.set_namespace(Some(namespace));
 
-            tasks.spawn(stream_watch::<R>(
+            tasks.spawn(watch::<R>(
                 client,
                 label_selector.clone(),
                 field_selector.clone(),
@@ -179,78 +179,57 @@ where
     Ok(())
 }
 
-async fn stream_watch<R>(
+async fn watch<R>(
     client: Client,
     label_selector: Option<String>,
     field_selector: Option<String>,
     cache: Arc<Cache>,
     mut shutdown: ShutdownSignal,
 ) where
-    R: Keyed + Resource + Into<Vec<Endpoint>>,
+    R: Keyed + Resource + Into<Vec<Endpoint>> + 'static,
 {
     debug!(message = "start watch kubernetes resources", kind = R::KIND);
 
-    let params = WatchParams {
+    let config = WatchConfig {
         label_selector,
         field_selector,
-        timeout: None,
-        bookmarks: true,
-        send_initial_events: false,
+        bookmark: true,
+        ..Default::default()
     };
-    let mut version = "0".to_string();
+
+    let stream = watcher::<R>(client, config);
+    tokio::pin!(stream);
+
+    let mut new_cache = None;
     loop {
-        let stream = match client.watch::<R>(&params, version.clone()).await {
-            Ok(stream) => stream.ready_chunks(32),
-            Err(err) => {
-                warn!(
-                    message = "Unable to watch kubernetes version.",
-                    ?err,
-                    version
-                );
-                continue;
+        let event = tokio::select! {
+            _ = &mut shutdown => break,
+            result = stream.next() => match result {
+                Some(Ok(event)) => event,
+                Some(Err(err)) => {
+                    warn!(message = "watch event failed", ?err, resource = format!("{}.{}.{}", R::GROUP, R::VERSION, R::KIND));
+                    break;
+                },
+                None => break,
             }
         };
 
-        tokio::pin!(stream);
-        loop {
-            let events = tokio::select! {
-                _ = &mut shutdown => return,
-                result = stream.next() => match result {
-                    Some(next) => {
-                        match next.into_iter()
-                            .collect::<Result<Vec<_>, _>>() {
-                            Ok(events) => events,
-                            Err(err) => {
-                                warn!(
-                                    message = "watch kubernetes resource failed",
-                                    kind = R::KIND,
-                                    ?err,
-                                );
-
-                                break
-                            }
-                        }
-                    }
-                    None => {break}
+        match event {
+            Event::Apply(obj) => {
+                cache.insert(obj);
+            }
+            Event::Deleted(obj) => cache.remove(obj.key()),
+            Event::Init => {
+                new_cache = Some(BTreeMap::new());
+            }
+            Event::InitApply(obj) => {
+                if let Some(new_cache) = new_cache.as_mut() {
+                    new_cache.insert(obj.key().to_string(), obj.into());
                 }
-            };
-
-            for event in events {
-                match event {
-                    WatchEvent::Bookmark(bookmark) => {
-                        version = bookmark.metadata.resource_version;
-                    }
-                    WatchEvent::Error(err) => {
-                        warn!(
-                            message = "Watch resource failed",
-                            status = err.status,
-                            resp = err.message,
-                            reason = err.reason,
-                        );
-
-                        break;
-                    }
-                    event => cache.apply(event),
+            }
+            Event::InitDone => {
+                if let Some(new) = new_cache.take() {
+                    cache.replace(new)
                 }
             }
         }
@@ -265,24 +244,27 @@ struct Cache {
 }
 
 impl Cache {
-    fn apply<R: Keyed + Resource + Into<Vec<Endpoint>>>(&self, event: WatchEvent<R>) {
-        match event {
-            WatchEvent::Added(obj) | WatchEvent::Modified(obj) => {
-                let key = obj.key().to_owned();
-                let endpoints = obj.into();
+    fn insert<R: Keyed + Resource + Into<Vec<Endpoint>>>(&self, obj: R) {
+        let key = obj.key().to_owned();
+        let endpoints = obj.into();
 
-                self.endpoints.lock().unwrap().insert(key, endpoints);
+        self.endpoints
+            .lock()
+            .unwrap()
+            .insert(key, endpoints.clone());
 
-                self.should_update.store(true, Ordering::Relaxed);
-            }
-            WatchEvent::Deleted(obj) => {
-                let key = obj.key();
+        self.should_update.store(true, Ordering::Relaxed);
+    }
 
-                self.endpoints.lock().unwrap().remove(key);
-                self.should_update.store(true, Ordering::Relaxed);
-            }
-            _ => unreachable!(),
-        }
+    fn remove(&self, key: &str) {
+        self.endpoints.lock().unwrap().remove(key);
+
+        self.should_update.store(true, Ordering::Relaxed);
+    }
+
+    fn replace(&self, endpoints: BTreeMap<String, Vec<Endpoint>>) {
+        *self.endpoints.lock().unwrap() = endpoints;
+        self.should_update.store(true, Ordering::Relaxed);
     }
 
     fn endpoints(&self) -> Vec<Endpoint> {

@@ -1,5 +1,5 @@
 use bytes::Bytes;
-use futures::Stream;
+use futures::stream::BoxStream;
 use futures::{StreamExt, TryStreamExt};
 use http::{Method, Request};
 use http_body_util::{BodyExt, Full};
@@ -242,8 +242,8 @@ pub enum WatchEvent<K> {
 #[derive(Clone)]
 pub struct Client {
     http_client: HttpClient<HttpsConnector<HttpConnector>, Full<Bytes>>,
-    endpoint: String,
     auth: Auth,
+    endpoint: String,
     namespace: Option<String>,
 }
 
@@ -380,8 +380,8 @@ impl Client {
     pub async fn watch<R: Resource>(
         &self,
         params: &WatchParams,
-        version: String,
-    ) -> Result<impl Stream<Item = Result<WatchEvent<R>, Error>>, Error> {
+        version: &str,
+    ) -> Result<BoxStream<'static, Result<WatchEvent<R>, Error>>, Error> {
         // validate
         if let Some(timeout) = params.timeout {
             if timeout >= 295 {
@@ -392,7 +392,7 @@ impl Client {
         let query = {
             let mut builder = form_urlencoded::Serializer::new(String::new());
 
-            builder.append_pair("resourceVersion", &version);
+            builder.append_pair("resourceVersion", version);
             builder.append_pair("watch", "true");
             // https://github.com/kubernetes/kubernetes/issues/6513
             builder.append_pair(
@@ -439,7 +439,7 @@ impl Client {
     async fn request_events<R: Resource>(
         &self,
         req: Request<Full<Bytes>>,
-    ) -> Result<impl Stream<Item = Result<WatchEvent<R>, Error>>, Error> {
+    ) -> Result<BoxStream<'static, Result<WatchEvent<R>, Error>>, Error> {
         let resp = self.http_client.request(req).await.map_err(Error::Http)?;
 
         let frames = FramedRead::new(
@@ -455,7 +455,7 @@ impl Client {
             LinesCodec::new(),
         );
 
-        Ok(frames.filter_map(|result| async {
+        Ok(Box::pin(frames.filter_map(|result| async {
             match result {
                 Ok(line) => {
                     match serde_json::from_str::<WatchEvent<R>>(&line) {
@@ -496,6 +496,6 @@ impl Client {
                     Some(Err(Error::LinesCodecMaxLineLengthExceeded))
                 }
             }
-        }))
+        })))
     }
 }

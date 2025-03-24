@@ -4,8 +4,8 @@ use event::log::{OwnedValuePath, owned_value_path, path};
 use kubernetes::ObjectMeta;
 use serde::{Deserialize, Serialize};
 
+use super::Store;
 use super::pod::{Container, ContainerStatus, PodSpec, PodStatus};
-use super::store::Store;
 
 /// The delimiter used in the log path.
 const LOG_PATH_DELIMITER: &str = "_";
@@ -108,9 +108,10 @@ impl PodMetadataAnnotator {
     /// `FILE_KEY` field set with a file that the line came from.
     pub fn annotate<'a>(&self, log: &mut LogRecord, path: &'a str) -> Option<LogFileInfo<'a>> {
         let file_info = parse_log_file_path(path)?;
-        let pod = self.store.get(file_info.pod_uid)?;
-        let fields_spec = &self.fields_spec;
+        let store = self.store.read().unwrap();
+        let pod = store.get(file_info.pod_uid)?;
 
+        let fields_spec = &self.fields_spec;
         annotate_from_file_info(log, fields_spec, &file_info);
         annotate_from_metadata(log, fields_spec, &pod.metadata);
         annotate_from_pod_spec(log, fields_spec, &pod.spec);
