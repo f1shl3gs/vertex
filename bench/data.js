@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742989130206,
+  "lastUpdate": 1742989174831,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db",
-          "message": "chore(deps): bump async-trait from 0.1.85 to 0.1.86 (#2170)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.85 to 0.1.86.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.85...0.1.86)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-01T12:48:00+08:00",
-          "tree_id": "0f0bf8e8be0084980399afea4cf537f01888c3b9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3413e7e9ac56b5f3e833f7fb5b9ae085dc2091db"
-        },
-        "date": 1738385481159,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 210.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 20980,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 106420,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 209160,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 126.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 12448,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 62328,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 125770,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1576b7733fddca333c5a9841ecfaa4cce7f7c1e8",
           "message": "chore(deps): bump dyn-clone from 1.0.17 to 1.0.18 (#2169)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.17 to 1.0.18.\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.17...1.0.18)\n\n---\nupdated-dependencies:\n- dependency-name: dyn-clone\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-02-01T12:48:12+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 125770,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "88e57803b34ff1a40643eb0a6443929de1c3efa3",
+          "message": "Merge pull request #2282 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
+          "timestamp": "2025-03-26T19:35:52+08:00",
+          "tree_id": "c89f6f067d071b1cd4738e0a9144924c7d8a405e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/88e57803b34ff1a40643eb0a6443929de1c3efa3"
+        },
+        "date": 1742989155451,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 202.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 20430,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 99451,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 199720,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 126.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12607,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 63080,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 126010,
             "unit": "ns/op"
           }
         ]
