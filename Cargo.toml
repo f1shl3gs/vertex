@@ -133,6 +133,7 @@ all-integration-tests = [
 
 extensions-consul_observer = []
 extensions-dns_observer = ["dep:hickory-resolver"]
+extensions-exec_observer = []
 extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "dep:parking_lot"]
 extensions-healthcheck = []
 extensions-http = []
@@ -145,6 +146,7 @@ extensions-zpages = ["dep:parking_lot"]
 extensions = [
     "extensions-consul_observer",
     "extensions-dns_observer",
+    "extensions-exec_observer",
     "extensions-healthcheck",
     "extensions-heartbeat",
     "extensions-http",

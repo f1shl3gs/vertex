@@ -1,0 +1,25 @@
+extensions:
+  exec:
+    type: exec_observer
+    path: ${PWD}/dummy.sh
+
+  zpages:
+    type: zpages
+
+sources:
+  logs:
+    type: demo_logs
+    decoding:
+      codec: json
+    format:
+      type: json
+
+sinks:
+  console:
+    inputs:
+      - logs
+    type: console
+    stream: stdout
+    encoding:
+      codec: json
+      pretty: true
