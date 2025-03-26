@@ -3,7 +3,7 @@ use std::net::SocketAddr;
 use std::time::Duration;
 
 use configurable::configurable_component;
-use event::{INSTANCE_KEY, Metric, tags};
+use event::{Metric, tags};
 use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -69,7 +69,7 @@ async fn run(
                         "",
                         1,
                         tags!(
-                            INSTANCE_KEY => target.to_string(),
+                            "instance" => target.to_string(),
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -78,7 +78,7 @@ async fn run(
                         1,
                         tags!(
                             "version" => version,
-                            INSTANCE_KEY => target.to_string()
+                            "instance" => target.to_string()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -87,7 +87,7 @@ async fn run(
                         1,
                         tags!(
                             "state" => state,
-                            INSTANCE_KEY => target.to_string()
+                            "instance" => target.to_string()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -96,7 +96,7 @@ async fn run(
                         1,
                         tags!(
                             "state" => peer_state,
-                            INSTANCE_KEY => target.to_string(),
+                            "instance" => target.to_string(),
                         ),
                     ),
                 ]);
@@ -107,7 +107,7 @@ async fn run(
                         format!("{} value of mntr", key),
                         value,
                         tags!(
-                            INSTANCE_KEY => target.to_string()
+                            "instance" => target.to_string()
                         ),
                     ));
                 }
@@ -125,7 +125,7 @@ async fn run(
                     "",
                     0,
                     tags!(
-                        INSTANCE_KEY => target.to_string()
+                        "instance" => target.to_string()
                     ),
                 )]
             }

@@ -10,7 +10,7 @@ mod slave_status;
 use std::time::{Duration, Instant};
 
 use configurable::{Configurable, configurable_component};
-use event::{INSTANCE_KEY, Metric};
+use event::Metric;
 use framework::config::{Output, SourceConfig, SourceContext, default_interval, default_true};
 use framework::{Source, tls::TlsConfig};
 use serde::{Deserialize, Serialize};
@@ -184,7 +184,7 @@ impl SourceConfig for Config {
                 let now = chrono::Utc::now();
                 metrics.iter_mut().for_each(|m| {
                     m.timestamp = Some(now);
-                    m.insert_tag(INSTANCE_KEY, instance.clone());
+                    m.insert_tag("instance", instance.clone());
                 });
 
                 if let Err(err) = output.send(metrics).await {

@@ -18,27 +18,19 @@ pub trait ByteSizeOf {
 }
 
 macro_rules! impl_byte_size_of_for_num {
-    ($typ:ident) => {
-        impl ByteSizeOf for $typ {
-            fn allocated_bytes(&self) -> usize {
-                0
+    ($($typ:ty),+) => {
+        $(
+            impl ByteSizeOf for $typ {
+                #[inline]
+                fn allocated_bytes(&self) -> usize {
+                    0
+                }
             }
-        }
+        )*
     };
 }
 
-impl_byte_size_of_for_num!(u8);
-impl_byte_size_of_for_num!(u16);
-impl_byte_size_of_for_num!(u32);
-impl_byte_size_of_for_num!(u64);
-impl_byte_size_of_for_num!(u128);
-impl_byte_size_of_for_num!(i8);
-impl_byte_size_of_for_num!(i16);
-impl_byte_size_of_for_num!(i32);
-impl_byte_size_of_for_num!(i64);
-impl_byte_size_of_for_num!(i128);
-impl_byte_size_of_for_num!(f32);
-impl_byte_size_of_for_num!(f64);
+impl_byte_size_of_for_num!(u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64);
 
 impl ByteSizeOf for String {
     fn allocated_bytes(&self) -> usize {

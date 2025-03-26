@@ -3,17 +3,17 @@ use std::{iter, slice, vec};
 use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
 
-use crate::{Event, EventMetadata, EventRef, LogRecord, Logs, Metric, Metrics, Trace, Traces};
+use crate::{Event, EventMetadata, EventRef, LogRecord, Metric, Trace};
 
 /// An array of one of the `Event` variants exclusively
 #[derive(Clone, Debug, PartialEq)]
 pub enum Events {
     /// An array of type `LogRecord`
-    Logs(Logs),
+    Logs(Vec<LogRecord>),
     /// An array of type `Metric`
-    Metrics(Metrics),
+    Metrics(Vec<Metric>),
     /// An array of type `Trace`
-    Traces(Traces),
+    Traces(Vec<Trace>),
 }
 
 impl From<Event> for Events {

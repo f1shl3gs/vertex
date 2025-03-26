@@ -23,9 +23,6 @@ use crate::{
     BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, MaybeAsLogMut,
 };
 
-/// The type alias for an array of `LogRecord` elements
-pub type Logs = Vec<LogRecord>;
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct LogRecord {
     metadata: EventMetadata,
