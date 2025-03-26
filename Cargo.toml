@@ -175,7 +175,7 @@ sources-http_check = ["dep:httpdate"]
 sources-internal_logs = []
 sources-internal_metrics = []
 sources-internal_traces = []
-sources-jaeger = ["dep:jaeger", "tonic/server"]
+sources-jaeger = ["dep:jaeger", "tonic/server", "tonic/router"]
 sources-journald = []
 sources-kafka = ["dep:rskafka", "dep:async-stream"]
 sources-kafka_metrics = ["dep:rskafka"]
@@ -374,7 +374,7 @@ pretty_assertions = { version = "1.4.1", default-features = false, features = ["
 serde_path_to_error = { version = "0.1.17", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.44.1", default-features = false, features = ["test-util"] }
-tonic = { version = "0.13.0", default-features = false, features = ["server"]}
+tonic = { version = "0.13.0", default-features = false, features = ["server", "router"]}
 
 [dependencies]
 # Workspaces
