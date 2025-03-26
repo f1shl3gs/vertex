@@ -8,10 +8,10 @@ mod proto_event {
     include!(concat!(env!("OUT_DIR"), "/event.rs"));
 }
 
+use crate::LogRecord;
+use crate::proto::event_wrapper::Event;
 use chrono::TimeZone;
 pub use proto_event::*;
-
-use crate::proto::event_wrapper::Event;
 
 impl From<Log> for Event {
     fn from(log: Log) -> Self {
@@ -43,12 +43,12 @@ impl From<EventWrapper> for crate::Event {
 }
 
 impl events::Events {
-    fn from_logs(logs: crate::Logs) -> Self {
+    fn from_logs(logs: Vec<LogRecord>) -> Self {
         let logs = logs.into_iter().map(Into::into).collect();
         Self::Logs(events::Logs { logs })
     }
 
-    fn from_metrics(metrics: crate::Metrics) -> Self {
+    fn from_metrics(metrics: Vec<crate::Metric>) -> Self {
         let metrics = metrics.into_iter().map(Into::into).collect();
         Self::Metrics(events::Metrics { metrics })
     }

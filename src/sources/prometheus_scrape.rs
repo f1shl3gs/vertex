@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 
 use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{Bucket, EXPORTED_INSTANCE_KEY, INSTANCE_KEY, Metric, Quantile};
+use event::{Bucket, Metric, Quantile};
 use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient, HttpError};
@@ -134,13 +134,15 @@ impl SourceConfig for Config {
                         // need to set it here
                         metrics.iter_mut().for_each(|metric| {
                             // Handle "instance" overwrite
-                            if let Some(value) = metric.remote_tag(&INSTANCE_KEY) {
+                            let tags = metric.tags_mut();
+
+                            if let Some(value) = tags.remove("instance") {
                                 if honor_labels {
-                                    metric.insert_tag(EXPORTED_INSTANCE_KEY, value);
+                                    tags.insert("instance", value)
                                 }
                             }
 
-                            metric.insert_tag(INSTANCE_KEY, instance.clone());
+                            metric.insert_tag("instance", instance.clone());
                         });
 
                         if let Err(err) = output.send_batch(metrics).await {

@@ -26,15 +26,14 @@ pub use finalize::{
 };
 pub use log::{LogRecord, event_path};
 pub use metadata::EventMetadata;
-pub use metric::*;
-pub use trace::{Trace, Traces};
+pub use metric::{Bucket, Kind, Metric, MetricSeries, MetricValue, Quantile};
+pub use trace::Trace;
 
 use std::collections::BTreeMap;
 
 use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use chrono::Utc;
-use log::Logs;
 use log_schema::log_schema;
 use serde::Serialize;
 

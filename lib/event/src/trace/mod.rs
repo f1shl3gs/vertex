@@ -525,8 +525,6 @@ pub struct Trace {
     metadata: EventMetadata,
 }
 
-pub type Traces = Vec<Trace>;
-
 impl ByteSizeOf for Trace {
     fn allocated_bytes(&self) -> usize {
         self.tags.allocated_bytes() + self.spans.allocated_bytes()

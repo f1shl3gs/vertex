@@ -8,9 +8,6 @@ use super::metadata::EventMetadata;
 use super::tags::{Key, Tags, Value};
 use super::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
-pub const INSTANCE_KEY: Key = Key::from_static("instance");
-pub const EXPORTED_INSTANCE_KEY: Key = Key::from_static("exported_instance");
-
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
     Gauge,
@@ -104,9 +101,6 @@ impl MetricValue {
         MetricValue::Gauge(v.into())
     }
 }
-
-/// The type alias for an array of `Metric` elements
-pub type Metrics = Vec<Metric>;
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct Metric {
