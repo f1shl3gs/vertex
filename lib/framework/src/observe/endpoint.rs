@@ -7,6 +7,7 @@ pub struct Endpoint {
     /// ID uniquely identifies this endpoint
     pub id: String,
     /// Type of the Endpoint, e.g. service, pod, container, etc
+    #[serde(rename = "type")]
     pub typ: String,
     /// Target is an IP address or hostname of the endpoint.
     /// It can also be a hostname/ip:port pair.
