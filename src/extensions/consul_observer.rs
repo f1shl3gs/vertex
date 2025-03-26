@@ -6,7 +6,7 @@ use std::time::Duration;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::http::{Auth, HttpClient, HttpError};
-use framework::observe::{Endpoint, Observer, register};
+use framework::observe::{Endpoint, Observer};
 use framework::tls::TlsConfig;
 use framework::{Extension, ShutdownSignal};
 use http::response::Parts;
@@ -91,7 +91,7 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let http_client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
-        let observer = register(cx.name);
+        let observer = Observer::register(cx.name);
         let auth = self.auth.clone();
         let endpoint = match (self.endpoint.scheme(), self.endpoint.authority()) {
             (Some(scheme), Some(authority)) => {

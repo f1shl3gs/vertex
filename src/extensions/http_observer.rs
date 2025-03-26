@@ -7,7 +7,7 @@ use framework::Extension;
 use framework::config::default_interval;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::http::{Auth, HttpClient};
-use framework::observe::{register, run};
+use framework::observe::{Observer, run};
 use framework::tls::TlsConfig;
 use http::{Method, Request, Uri};
 use http_body_util::{BodyExt, Full};
@@ -45,7 +45,7 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
-        let observer = register(cx.name);
+        let observer = Observer::register(cx.name);
         let endpoint = self.endpoint.clone();
         let auth = self.auth.clone();
         let headers = self.headers.clone();

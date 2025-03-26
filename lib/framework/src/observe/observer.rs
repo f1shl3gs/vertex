@@ -19,17 +19,6 @@ pub enum Error {
 static OBSERVERS: LazyLock<Mutex<BTreeMap<String, (Vec<Endpoint>, Sender<Vec<Change>>)>>> =
     LazyLock::new(|| Mutex::new(BTreeMap::new()));
 
-/// register must be call when build extension, so that sources can subscribe it
-/// when build Source.
-pub fn register(name: String) -> Observer {
-    OBSERVERS
-        .lock()
-        .unwrap()
-        .insert(name.clone(), (Vec::new(), Sender::new(16)));
-
-    Observer { name }
-}
-
 /// `subscribe` must be called when build source, cause the topology can valid the
 /// config.
 pub fn subscribe(name: &str) -> Option<Notifier> {
@@ -65,21 +54,34 @@ pub fn current_endpoints() -> BTreeMap<String, Vec<Endpoint>> {
     endpoints
 }
 
+/// Return the receiver count of the sender
+pub fn receiver_count(name: &str) -> Option<usize> {
+    let observers = OBSERVERS.lock().unwrap();
+    let (_, sender) = observers.get(name)?;
+    Some(sender.len())
+}
+
 pub struct Observer {
     name: String,
 }
 
 impl Observer {
-    #[inline]
-    pub fn name(&self) -> &str {
-        &self.name
+    /// register must be call when build extension, so that sources can subscribe it
+    /// when build Source.
+    pub fn register(name: String) -> Observer {
+        OBSERVERS
+            .lock()
+            .unwrap()
+            .insert(name.clone(), (Vec::new(), Sender::new(16)));
+
+        Observer { name }
     }
 
     #[inline]
     pub fn publish(&self, endpoints: Vec<Endpoint>) -> Result<(), Error> {
         let mut observers = OBSERVERS.lock().unwrap();
 
-        match observers.get_mut(self.name()) {
+        match observers.get_mut(&self.name) {
             Some((current, sender)) => {
                 let changes = build_changes(current, &endpoints);
                 if changes.is_empty() {
@@ -210,7 +212,7 @@ mod tests {
     #[tokio::test]
     async fn subscribe_in_the_middle() {
         let name = "foo";
-        let observer = register(name.to_string());
+        let observer = Observer::register(name.to_string());
         let mut notifier = subscribe(name).unwrap();
 
         // first state empty
@@ -242,7 +244,7 @@ mod tests {
     #[tokio::test]
     async fn pubsub() {
         let name = "pubsub";
-        let observer = register(name.to_string());
+        let observer = Observer::register(name.to_string());
         let mut notifier = subscribe(name).unwrap();
 
         for (input, changes) in [

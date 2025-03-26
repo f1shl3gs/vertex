@@ -28,6 +28,7 @@ use crate::metrics::MetricStreamExt;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownCoordinator;
 use crate::{SyncTransform, TaskTransform, Transform, TransformOutputs, TransformOutputsBuf};
+use crate::observe::{available_observers, receiver_count};
 
 pub(crate) const CHUNK_SIZE: usize = 1024;
 pub(crate) const TOPOLOGY_BUFFER_SIZE: NonZeroUsize = unsafe { NonZeroUsize::new_unchecked(128) };
@@ -672,6 +673,20 @@ pub async fn build_pieces(
         health_checks.insert(name.clone(), healthcheck_task);
         tasks.insert(name.clone(), task);
         detach_triggers.insert(name.clone(), trigger);
+    }
+
+    // check observers
+    for name in available_observers() {
+        match receiver_count(&name) {
+            Some(count) => {
+                if count == 0 {
+                    errors.push(format!("observer {:?} has no receiver", name));
+                }
+            },
+            None => {
+                errors.push(format!("observer {:?} is not available", name));
+            }
+        }
     }
 
     let mut finalized_outputs = HashMap::new();
