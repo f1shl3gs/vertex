@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1742968514548,
+  "lastUpdate": 1742968562279,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "524a161b8db432515c3fd0d7ec30125706a0cd8b",
-          "message": "Fix regression tests (#2174)",
-          "timestamp": "2025-02-01T23:37:02+08:00",
-          "tree_id": "a1691d7f8acd28979f3b1f7276e4dc0d470678de",
-          "url": "https://github.com/f1shl3gs/vertex/commit/524a161b8db432515c3fd0d7ec30125706a0cd8b"
-        },
-        "date": 1738424849437,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 537,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37393.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99a0b60c73818bb075a11bb8feb0007441439846",
           "message": "remove unnecessary pub (#2175)",
           "timestamp": "2025-02-02T12:52:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37977.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "84f3a5e4a7857be96b9695ac2c55d934bb570aa7",
+          "message": "Merge pull request #2281 from f1shl3gs/dependabot/cargo/quick-xml-0.37.3\n\nchore(deps): bump quick-xml from 0.37.2 to 0.37.3",
+          "timestamp": "2025-03-26T13:44:52+08:00",
+          "tree_id": "8fdad048d09c44660486b5c9f4e990d7fd15e639",
+          "url": "https://github.com/f1shl3gs/vertex/commit/84f3a5e4a7857be96b9695ac2c55d934bb570aa7"
+        },
+        "date": 1742968541301,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37982.3,
             "unit": "KiB"
           }
         ]
