@@ -184,7 +184,7 @@ mod tests {
             use std::task::{Context, Poll};
 
             use http::Request;
-            use tonic::body::BoxBody;
+            use tonic::body::Body;
             use tonic::codegen::BoxFuture;
             use tonic::server::NamedService;
             use tower::Service;
@@ -196,8 +196,8 @@ mod tests {
                 const NAME: &'static str = "dummy";
             }
 
-            impl Service<Request<BoxBody>> for DummyService {
-                type Response = http::Response<BoxBody>;
+            impl Service<Request<Body>> for DummyService {
+                type Response = http::Response<Body>;
                 type Error = std::convert::Infallible;
                 type Future = BoxFuture<Self::Response, Self::Error>;
 
@@ -205,7 +205,7 @@ mod tests {
                     Poll::Ready(Ok(()))
                 }
 
-                fn call(&mut self, _req: Request<BoxBody>) -> Self::Future {
+                fn call(&mut self, _req: Request<Body>) -> Self::Future {
                     todo!()
                 }
             }
@@ -214,7 +214,7 @@ mod tests {
         use mock::DummyService;
         use tonic::server::NamedService;
 
-        let (mut health_reporter, health_service) = tonic_health::server::health_reporter();
+        let (health_reporter, health_service) = tonic_health::server::health_reporter();
         let addr = testify::next_addr();
         let dummy_service = DummyService {};
         let endpoint = format!("http://{}", addr);
