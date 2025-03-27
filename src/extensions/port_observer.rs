@@ -8,7 +8,7 @@ use std::time::Duration;
 use configurable::configurable_component;
 use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
-use framework::observe::{Endpoint, register, run};
+use framework::observe::{Endpoint, Observer, run};
 use value::value;
 
 const fn default_interval() -> Duration {
@@ -26,7 +26,7 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let name = cx.name.clone();
-        let observer = register(cx.name);
+        let observer = Observer::register(cx.name);
 
         Ok(Box::pin(run(
             observer,

@@ -4,7 +4,7 @@ use std::time::Duration;
 use configurable::{Configurable, configurable_component};
 use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
-use framework::observe::{Endpoint, register, run};
+use framework::observe::{Endpoint, Observer, run};
 use hickory_resolver::TokioAsyncResolver;
 use serde::{Deserialize, Serialize};
 use tokio::task::JoinSet;
@@ -51,7 +51,7 @@ impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let resolver = Arc::new(TokioAsyncResolver::tokio_from_system_conf()?);
 
-        let observer = register(cx.name);
+        let observer = Observer::register(cx.name);
         let port = self.port;
         let query_type = self.query_type;
         let names = self.names.clone();

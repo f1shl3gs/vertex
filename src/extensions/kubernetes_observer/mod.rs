@@ -12,7 +12,7 @@ use std::time::Duration;
 
 use configurable::{Configurable, configurable_component};
 use framework::config::{ExtensionConfig, ExtensionContext};
-use framework::observe::{Endpoint, Observer, register};
+use framework::observe::{Endpoint, Observer};
 use framework::{Extension, ShutdownSignal};
 use futures::StreamExt;
 use kubernetes::{Client, Event, Resource, WatchConfig, watcher};
@@ -63,7 +63,7 @@ impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let client = Client::new(None)?;
 
-        let observer = register(cx.name);
+        let observer = Observer::register(cx.name);
         let namespaces = self.namespaces.clone();
         let label_selector = self.label_selector.clone();
         let field_selector = self.field_selector.clone();

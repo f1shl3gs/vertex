@@ -5,7 +5,7 @@ use std::time::Duration;
 use configurable::configurable_component;
 use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
-use framework::observe::{Endpoint, register, run};
+use framework::observe::{Endpoint, Observer, run};
 
 const fn default_interval() -> Duration {
     Duration::from_secs(10)
@@ -35,7 +35,7 @@ struct Config {
 #[typetag::serde(name = "exec_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let observer = register(cx.name);
+        let observer = Observer::register(cx.name);
         let program = self.path.clone();
         let args = self.args.clone();
         let working_dir = self.work_dir.clone();
