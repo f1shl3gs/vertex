@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743085061772,
+  "lastUpdate": 1743085105894,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b19b09498e93f0eec89b66a3d40fbf1e0f33f569",
-          "message": "lib/value: remove coalesce (#2180)",
-          "timestamp": "2025-02-03T01:33:20+08:00",
-          "tree_id": "baa5c6fe73d1329963c2f51f34e59213a440ff08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b19b09498e93f0eec89b66a3d40fbf1e0f33f569"
-        },
-        "date": 1738518231257,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37330.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2e1281e2cbb88ce5fe3f6c50306686088930799e",
           "message": "simplify generated code (#2181)",
           "timestamp": "2025-02-03T18:50:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38063.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e88e27d5226c1b5645a1291d16adf631fa1003eb",
+          "message": "Merge pull request #2284 from f1shl3gs/observer/simplify_observer_register\n\nlib/framework: simplify observer register & warning if the observer have no receivers",
+          "timestamp": "2025-03-27T22:07:32+08:00",
+          "tree_id": "81b5bc08cde5330b03333ca479bc29a66adf27ff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e88e27d5226c1b5645a1291d16adf631fa1003eb"
+        },
+        "date": 1743085084381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 546,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38068,
             "unit": "KiB"
           }
         ]
