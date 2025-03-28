@@ -113,7 +113,7 @@ fn open_config(path: &Path) -> Option<File> {
 fn load_from_inputs(
     inputs: impl IntoIterator<Item = (impl std::io::Read, FormatHint)>,
 ) -> Result<(Builder, Vec<String>), Vec<String>> {
-    let mut builder = Builder::new();
+    let mut builder = Builder::default();
     let mut errors = Vec::new();
     let mut warnings = Vec::new();
 

@@ -1,4 +1,3 @@
-mod file;
 mod http;
 
 use std::fmt::Debug;
