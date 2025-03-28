@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743187566949,
+  "lastUpdate": 1743187612970,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d1a9ce7a8ec27fabbcbfd07c3f50e85992543eec",
-          "message": "fix metrics extend, to reduce clones (#2173)",
-          "timestamp": "2025-02-01T21:02:51+08:00",
-          "tree_id": "a4008613c6bba984593aaf946d9fc80455298c67",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d1a9ce7a8ec27fabbcbfd07c3f50e85992543eec"
-        },
-        "date": 1738415130282,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.467,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 142.23,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 309.28,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 636.8,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "524a161b8db432515c3fd0d7ec30125706a0cd8b",
           "message": "Fix regression tests (#2174)",
           "timestamp": "2025-02-01T23:37:02+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 717.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e5ffda71092d371d72e88ea2075e28ffff4be69a",
+          "message": "Merge pull request #2285 from f1shl3gs/misc/remove_unused\n\nmisc: remove unused",
+          "timestamp": "2025-03-29T02:43:31+08:00",
+          "tree_id": "349fb58a47d4f46a0b23be22e571ac53cf769a2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e5ffda71092d371d72e88ea2075e28ffff4be69a"
+        },
+        "date": 1743187592751,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.645,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 157.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 318.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 669.07,
             "unit": "ns/op"
           }
         ]
