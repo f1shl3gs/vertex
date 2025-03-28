@@ -46,10 +46,6 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn new() -> Self {
-        Default::default()
-    }
-
     pub fn build(self) -> Result<Config, Vec<String>> {
         let (config, warnings) = self.build_with_warnings()?;
 
