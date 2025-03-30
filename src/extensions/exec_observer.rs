@@ -6,6 +6,7 @@ use configurable::configurable_component;
 use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::observe::{Endpoint, Observer, run};
+use tokio::process::Command;
 
 const fn default_interval() -> Duration {
     Duration::from_secs(10)
@@ -19,13 +20,13 @@ const fn default_interval() -> Duration {
 /// user to debug
 #[configurable_component(extension, name = "exec_observer")]
 struct Config {
-    path: PathBuf,
+    command: PathBuf,
 
     #[serde(default)]
     args: Vec<String>,
 
     #[serde(default)]
-    work_dir: Option<PathBuf>,
+    working_directory: Option<PathBuf>,
 
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
@@ -36,9 +37,9 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let observer = Observer::register(cx.name);
-        let program = self.path.clone();
+        let program = self.command.clone();
         let args = self.args.clone();
-        let working_dir = self.work_dir.clone();
+        let working_dir = self.working_directory.clone();
 
         Ok(Box::pin(run(
             observer,
@@ -50,11 +51,11 @@ impl ExtensionConfig for Config {
 }
 
 async fn list_endpoints(
-    program: &PathBuf,
+    command: &PathBuf,
     args: &[String],
     working_dir: Option<&PathBuf>,
 ) -> crate::Result<Vec<Endpoint>> {
-    let mut cmd = tokio::process::Command::new(program);
+    let mut cmd = Command::new(command);
     if !args.is_empty() {
         cmd.args(args);
     }
@@ -71,8 +72,8 @@ async fn list_endpoints(
         let stderr = String::from_utf8_lossy(&output.stderr);
 
         warn!(
-            message = "program exited with non-zero exit code",
-            ?program,
+            message = "command exited with non-zero exit code",
+            ?command,
             ?args,
             ?working_dir,
             status = ?output.status,

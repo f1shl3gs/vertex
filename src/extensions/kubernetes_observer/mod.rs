@@ -19,10 +19,6 @@ use kubernetes::{Client, Event, Resource, WatchConfig, watcher};
 use serde::{Deserialize, Serialize};
 use tokio::task::JoinSet;
 
-fn default_protocol() -> String {
-    String::from("TCP")
-}
-
 pub trait Keyed {
     fn key(&self) -> &str;
 }
