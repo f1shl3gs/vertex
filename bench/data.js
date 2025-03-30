@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743361086591,
+  "lastUpdate": 1743361491239,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d1a9ce7a8ec27fabbcbfd07c3f50e85992543eec",
-          "message": "fix metrics extend, to reduce clones (#2173)",
-          "timestamp": "2025-02-01T21:02:51+08:00",
-          "tree_id": "a4008613c6bba984593aaf946d9fc80455298c67",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d1a9ce7a8ec27fabbcbfd07c3f50e85992543eec"
-        },
-        "date": 1738415614404,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28299000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 712590,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.858,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "524a161b8db432515c3fd0d7ec30125706a0cd8b",
           "message": "Fix regression tests (#2174)",
           "timestamp": "2025-02-01T23:37:02+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.072,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1cd5d7533872859ae43f78e524e7fd8f30415d33",
+          "message": "Merge pull request #2286 from f1shl3gs/dependabot/cargo/socket2-0.5.9\n\nchore(deps): bump socket2 from 0.5.8 to 0.5.9",
+          "timestamp": "2025-03-31T02:54:28+08:00",
+          "tree_id": "76fb7135aa99040e81db354a0697208366d6ac79",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1cd5d7533872859ae43f78e524e7fd8f30415d33"
+        },
+        "date": 1743361469394,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 21488000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 543270,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.348,
             "unit": "ns/op"
           }
         ]
