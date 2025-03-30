@@ -25,8 +25,7 @@ struct Config {
 #[typetag::serde(name = "port_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let name = cx.name.clone();
-        let observer = Observer::register(cx.name);
+        let observer = Observer::register(cx.key);
 
         Ok(Box::pin(run(
             observer,
@@ -35,13 +34,13 @@ impl ExtensionConfig for Config {
             async move || {
                 let root = PathBuf::from("/proc");
 
-                list_endpoints(&name, root).await
+                list_endpoints(root).await
             },
         )))
     }
 }
 
-async fn list_endpoints(observer: &str, root: PathBuf) -> crate::Result<Vec<Endpoint>> {
+async fn list_endpoints(root: PathBuf) -> crate::Result<Vec<Endpoint>> {
     let infos = netstat(root)?;
 
     let endpoints = infos
@@ -62,14 +61,7 @@ async fn list_endpoints(observer: &str, root: PathBuf) -> crate::Result<Vec<Endp
             };
 
             Endpoint {
-                id: format!(
-                    "{}-{}:{}:{}@{}",
-                    observer,
-                    protocol,
-                    addr.ip(),
-                    addr.port(),
-                    pid
-                ),
+                id: format!("{}:{}:{}@{}", protocol, addr.ip(), addr.port(), pid),
                 typ: "port".to_string(),
                 target: info.addr.to_string(),
                 details: value!({

@@ -35,7 +35,7 @@ struct Config {
 #[typetag::serde(name = "exec_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let observer = Observer::register(cx.name);
+        let observer = Observer::register(cx.key);
         let program = self.path.clone();
         let args = self.args.clone();
         let working_dir = self.work_dir.clone();

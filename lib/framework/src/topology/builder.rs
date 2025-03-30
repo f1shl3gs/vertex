@@ -338,7 +338,7 @@ pub async fn build_pieces(
         let (shutdown_signal, force_shutdown_tripwire) =
             shutdown_coordinator.register_extension(key);
         let cx = ExtensionContext {
-            name: key.to_string(),
+            key: key.clone(),
             global: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, extension.proxy()),
             shutdown: shutdown_signal,

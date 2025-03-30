@@ -45,7 +45,7 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
-        let observer = Observer::register(cx.name);
+        let observer = Observer::register(cx.key);
         let endpoint = self.endpoint.clone();
         let auth = self.auth.clone();
         let headers = self.headers.clone();

@@ -51,7 +51,7 @@ impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let resolver = Arc::new(TokioAsyncResolver::tokio_from_system_conf()?);
 
-        let observer = Observer::register(cx.name);
+        let observer = Observer::register(cx.key);
         let port = self.port;
         let query_type = self.query_type;
         let names = self.names.clone();
