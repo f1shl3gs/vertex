@@ -64,8 +64,8 @@ async fn handle(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, hyper::
     }
 
     let (status, body) = match req.uri().path() {
-        "/-/healthy" => (StatusCode::OK, "Vertex is Healthy.\n"),
-        "/-/ready" => {
+        "/healthy" => (StatusCode::OK, "Vertex is Healthy.\n"),
+        "/ready" => {
             if READINESS.load(Ordering::Relaxed) {
                 (StatusCode::OK, "Vertex is Ready.\n")
             } else {
