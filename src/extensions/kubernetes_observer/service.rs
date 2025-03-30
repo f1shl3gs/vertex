@@ -6,7 +6,11 @@ use kubernetes::{ObjectMeta, Resource};
 use serde::Deserialize;
 use value::{Value, value};
 
-use super::{Keyed, default_protocol};
+use super::Keyed;
+
+fn default_protocol() -> String {
+    String::from("TCP")
+}
 
 /// ServicePort is k8s service port.
 ///

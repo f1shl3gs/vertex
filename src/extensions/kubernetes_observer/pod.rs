@@ -1,7 +1,8 @@
+use std::collections::BTreeMap;
+
 use framework::observe::Endpoint;
 use kubernetes::{ObjectMeta, Resource};
 use serde::Deserialize;
-use std::collections::BTreeMap;
 use value::value;
 
 use super::Keyed;
