@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743363744561,
+  "lastUpdate": 1743364128421,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "524a161b8db432515c3fd0d7ec30125706a0cd8b",
-          "message": "Fix regression tests (#2174)",
-          "timestamp": "2025-02-01T23:37:02+08:00",
-          "tree_id": "a1691d7f8acd28979f3b1f7276e4dc0d470678de",
-          "url": "https://github.com/f1shl3gs/vertex/commit/524a161b8db432515c3fd0d7ec30125706a0cd8b"
-        },
-        "date": 1738424885797,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28609000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 613240,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.434,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99a0b60c73818bb075a11bb8feb0007441439846",
           "message": "remove unnecessary pub (#2175)",
           "timestamp": "2025-02-02T12:52:51+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.348,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e48bece723949477dd15ec8a90254d2ef6166ead",
+          "message": "Merge pull request #2287 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
+          "timestamp": "2025-03-31T03:38:39+08:00",
+          "tree_id": "d0f2e3333df725fe3d77a6d9c5a028820ed4618d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e48bece723949477dd15ec8a90254d2ef6166ead"
+        },
+        "date": 1743364107086,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22861000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 640380,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.507,
             "unit": "ns/op"
           }
         ]
