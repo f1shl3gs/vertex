@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743361491239,
+  "lastUpdate": 1743361515114,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8d2901d6ecc5d11152af0c14b63f6d345c11462f",
-          "message": "chore(deps): bump bytes from 1.9.0 to 1.10.0 (#2182)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.9.0 to 1.10.0.\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.9.0...v1.10.0)\n\n---\nupdated-dependencies:\n- dependency-name: bytes\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-04T06:24:50+08:00",
-          "tree_id": "1e560fd254710c9ba15aca8445d317ace8bcfc1f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8d2901d6ecc5d11152af0c14b63f6d345c11462f"
-        },
-        "date": 1738622117403,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 535,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37327,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38044.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1cd5d7533872859ae43f78e524e7fd8f30415d33",
+          "message": "Merge pull request #2286 from f1shl3gs/dependabot/cargo/socket2-0.5.9\n\nchore(deps): bump socket2 from 0.5.8 to 0.5.9",
+          "timestamp": "2025-03-31T02:54:28+08:00",
+          "tree_id": "76fb7135aa99040e81db354a0697208366d6ac79",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1cd5d7533872859ae43f78e524e7fd8f30415d33"
+        },
+        "date": 1743361494776,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 531,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38043.9,
             "unit": "KiB"
           }
         ]
