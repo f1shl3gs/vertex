@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743399346437,
+  "lastUpdate": 1743399762069,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "08a320e83baf016bb240f036b494dafd1a503c0b",
-          "message": "remove lib/xdr (#2184)",
-          "timestamp": "2025-02-04T07:20:39+08:00",
-          "tree_id": "4944f0ba599f9516d1beb4f191e6bca8847fc461",
-          "url": "https://github.com/f1shl3gs/vertex/commit/08a320e83baf016bb240f036b494dafd1a503c0b"
-        },
-        "date": 1738625491596,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 562,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37474.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bd287bc72f85da88802b90fe60899b5661824fa9",
           "message": "Revert \"remove lib/xdr (#2184)\" (#2185)\n\nThis reverts commit 08a320e83baf016bb240f036b494dafd1a503c0b.",
           "timestamp": "2025-02-04T19:00:14+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38044.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e52155f22c52af0b38feadb40e06a75ecaf59e62",
+          "message": "Merge pull request #2288 from f1shl3gs/misc/simplify\n\nmisc: simplify",
+          "timestamp": "2025-03-31T13:32:13+08:00",
+          "tree_id": "d34e7caea401dc9cfefbbd6455cfe829bc44d152",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e52155f22c52af0b38feadb40e06a75ecaf59e62"
+        },
+        "date": 1743399741093,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 529,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38040.2,
             "unit": "KiB"
           }
         ]
