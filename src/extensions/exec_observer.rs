@@ -36,16 +36,16 @@ struct Config {
 #[typetag::serde(name = "exec_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let observer = Observer::register(cx.name);
+        let observer = Observer::register(cx.key);
         let program = self.command.clone();
         let args = self.args.clone();
-        let working_dir = self.working_directory.clone();
+        let working_directory = self.working_directory.clone();
 
         Ok(Box::pin(run(
             observer,
             self.interval,
             cx.shutdown,
-            async move || list_endpoints(&program, &args, working_dir.as_ref()).await,
+            async move || list_endpoints(&program, &args, working_directory.as_ref()).await,
         )))
     }
 }

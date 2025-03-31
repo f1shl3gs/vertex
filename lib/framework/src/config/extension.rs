@@ -4,12 +4,12 @@ use async_trait::async_trait;
 use configurable::NamedComponent;
 use serde::{Deserialize, Serialize};
 
-use super::{GlobalOptions, ProxyConfig, Resource, skip_serializing_if_default};
+use super::{ComponentKey, GlobalOptions, ProxyConfig, Resource, skip_serializing_if_default};
 use crate::{Extension, ShutdownSignal};
 
 #[derive(Clone)]
 pub struct ExtensionContext {
-    pub name: String,
+    pub key: ComponentKey,
     pub global: GlobalOptions,
     pub proxy: ProxyConfig,
     pub shutdown: ShutdownSignal,

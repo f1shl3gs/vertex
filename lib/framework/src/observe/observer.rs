@@ -68,7 +68,9 @@ pub struct Observer {
 impl Observer {
     /// register must be call when build extension, so that sources can subscribe it
     /// when build Source.
-    pub fn register(name: String) -> Observer {
+    pub fn register(name: impl Into<String>) -> Observer {
+        let name = name.into();
+
         OBSERVERS
             .lock()
             .unwrap()

@@ -59,7 +59,7 @@ impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let client = Client::new(None)?;
 
-        let observer = Observer::register(cx.name);
+        let observer = Observer::register(cx.key);
         let namespaces = self.namespaces.clone();
         let label_selector = self.label_selector.clone();
         let field_selector = self.field_selector.clone();

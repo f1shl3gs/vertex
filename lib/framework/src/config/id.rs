@@ -84,6 +84,12 @@ impl From<String> for ComponentKey {
     }
 }
 
+impl From<ComponentKey> for String {
+    fn from(key: ComponentKey) -> Self {
+        key.id
+    }
+}
+
 impl From<&str> for ComponentKey {
     fn from(value: &str) -> Self {
         Self::from(value.to_owned())
