@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743475190397,
+  "lastUpdate": 1743475218237,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1289129367a116040dbf44a65f1c6eac2cdd98b0",
-          "message": "remove unused dependencies (#2178)",
-          "timestamp": "2025-02-02T20:29:49+08:00",
-          "tree_id": "f60a12c24afbea66d76ae93b56ddcb6af62f38ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1289129367a116040dbf44a65f1c6eac2cdd98b0"
-        },
-        "date": 1738499555341,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.582,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 147.04,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 303.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 653.76,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b19b09498e93f0eec89b66a3d40fbf1e0f33f569",
           "message": "lib/value: remove coalesce (#2180)",
           "timestamp": "2025-02-03T01:33:20+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 679.95,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c3b03ac2f6099e266780e62eda1e9d9c967773a8",
+          "message": "Merge pull request #2289 from f1shl3gs/dependabot/cargo/hyper-util-0.1.11\n\nchore(deps): bump hyper-util from 0.1.10 to 0.1.11",
+          "timestamp": "2025-04-01T10:37:21+08:00",
+          "tree_id": "28516f139378ee213a1468efee9645ed8d413223",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c3b03ac2f6099e266780e62eda1e9d9c967773a8"
+        },
+        "date": 1743475198901,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.752,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 316.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 644.51,
             "unit": "ns/op"
           }
         ]
