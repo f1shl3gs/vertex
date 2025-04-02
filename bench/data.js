@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743591178898,
+  "lastUpdate": 1743591186315,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2e1281e2cbb88ce5fe3f6c50306686088930799e",
-          "message": "simplify generated code (#2181)",
-          "timestamp": "2025-02-03T18:50:06+08:00",
-          "tree_id": "e442fc46cabedba1645ad328aded14c8027d34ea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2e1281e2cbb88ce5fe3f6c50306686088930799e"
-        },
-        "date": 1738579944581,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.58,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.09,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d88e44bf795ae3c959cf59b8e0f782cd45bc5c5",
+          "message": "Merge pull request #2291 from f1shl3gs/dependabot/cargo/flate2-1.1.1\n\nchore(deps): bump flate2 from 1.1.0 to 1.1.1",
+          "timestamp": "2025-04-02T18:50:38+08:00",
+          "tree_id": "c7ab6e50362ad56f762462df86d66ab75982a092",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5d88e44bf795ae3c959cf59b8e0f782cd45bc5c5"
+        },
+        "date": 1743591164833,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.381,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 102.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.22,
             "unit": "ns/op"
           }
         ]
