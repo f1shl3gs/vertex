@@ -455,7 +455,7 @@ chrono = { version = "0.4.40", default-features = false }
 dashmap = { version = "6.1.0", default-features = false, optional = true }
 encoding_rs = { version = "0.8.35", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
-flate2 = { version = "1.1.0", optional = true }
+flate2 = { version = "1.1.1", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
 glob = { version = "0.3.2", default-features = false }
 hickory-resolver = { version = "0.24.4", default-features = false, optional = true, features = ["system-config", "tokio-runtime"] }
