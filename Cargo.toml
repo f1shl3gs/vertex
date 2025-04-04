@@ -295,7 +295,7 @@ sinks-http = []
 sinks-influxdb = []
 sinks-jaeger = ["dep:jaeger"]
 sinks-kafka = ["dep:rskafka"]
-sinks-loki = ["dep:snap", "dep:buffers"]
+sinks-loki = ["dep:snap"]
 sinks-prometheus_exporter = ["dep:flate2", "dep:parking_lot"]
 sinks-prometheus_remote_write = ["dep:snap"]
 sinks-skywalking = ["tonic/gzip", "tonic/zstd", "tonic/transport", "tonic/codegen"]
@@ -369,6 +369,7 @@ tonic-build = { version = "0.13.0", default-features = false, features = ["prost
 
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
+buffers = { path = "lib/buffers" }
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
 event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
@@ -380,7 +381,6 @@ tonic = { version = "0.13.0", default-features = false, features = ["server", "r
 
 [dependencies]
 # Workspaces
-buffers = { path = "lib/buffers", optional = true }
 codecs = { path = "lib/codecs" }
 configurable = { path = "lib/configurable" }
 event = { path = "lib/event" }
