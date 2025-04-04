@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743770057285,
+  "lastUpdate": 1743770071964,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b3cdf89c0df4b58276d50513e1fe083ad516df91",
-          "message": "add sources/ping (#2183)",
-          "timestamp": "2025-02-04T06:40:50+08:00",
-          "tree_id": "4efdc46b6bc3b17e7fba3c2ed83fac5567dddea4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b3cdf89c0df4b58276d50513e1fe083ad516df91"
-        },
-        "date": 1738622611729,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.322,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 139.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 299.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 631.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "08a320e83baf016bb240f036b494dafd1a503c0b",
           "message": "remove lib/xdr (#2184)",
           "timestamp": "2025-02-04T07:20:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 706.13,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ea671a4efad8ae6158b184d39c53b6f9a0df46e6",
+          "message": "Merge pull request #2294 from f1shl3gs/misc/move_buffers_to_right_place\n\nmisc: move `buffers` to right place",
+          "timestamp": "2025-04-04T20:31:17+08:00",
+          "tree_id": "4df7f0b669199edee64a608537c38653bc45187e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ea671a4efad8ae6158b184d39c53b6f9a0df46e6"
+        },
+        "date": 1743770050788,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 350.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 706.26,
             "unit": "ns/op"
           }
         ]
