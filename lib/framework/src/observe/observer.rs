@@ -58,7 +58,7 @@ pub fn current_endpoints() -> BTreeMap<String, Vec<Endpoint>> {
 pub fn receiver_count(name: &str) -> Option<usize> {
     let observers = OBSERVERS.lock().unwrap();
     let (_, sender) = observers.get(name)?;
-    Some(sender.len())
+    Some(sender.receiver_count())
 }
 
 pub struct Observer {
