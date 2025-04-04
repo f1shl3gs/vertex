@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743767169616,
+  "lastUpdate": 1743767183305,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8d2901d6ecc5d11152af0c14b63f6d345c11462f",
-          "message": "chore(deps): bump bytes from 1.9.0 to 1.10.0 (#2182)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.9.0 to 1.10.0.\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.9.0...v1.10.0)\n\n---\nupdated-dependencies:\n- dependency-name: bytes\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-04T06:24:50+08:00",
-          "tree_id": "1e560fd254710c9ba15aca8445d317ace8bcfc1f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8d2901d6ecc5d11152af0c14b63f6d345c11462f"
-        },
-        "date": 1738621624674,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.323,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.57,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.22,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f2be2f3d515df1fd5c5780b45e5ca54f62554926",
+          "message": "Merge pull request #2293 from f1shl3gs/toolchain/1.86.0\n\ntoolchain: 1.86.0",
+          "timestamp": "2025-04-04T19:43:44+08:00",
+          "tree_id": "a42b0632fe2b9591bdd10310e206a809bde28f51",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f2be2f3d515df1fd5c5780b45e5ca54f62554926"
+        },
+        "date": 1743767162066,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.502,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.29,
             "unit": "ns/op"
           }
         ]
