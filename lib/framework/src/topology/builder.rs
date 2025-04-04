@@ -31,7 +31,7 @@ use crate::shutdown::ShutdownCoordinator;
 use crate::{SyncTransform, TaskTransform, Transform, TransformOutputs, TransformOutputsBuf};
 
 pub(crate) const CHUNK_SIZE: usize = 1024;
-pub(crate) const TOPOLOGY_BUFFER_SIZE: NonZeroUsize = unsafe { NonZeroUsize::new_unchecked(128) };
+pub(crate) const TOPOLOGY_BUFFER_SIZE: NonZeroUsize = NonZeroUsize::new(128).unwrap();
 
 pub struct Pieces {
     pub inputs: HashMap<ComponentKey, (BufferSender<Events>, Vec<OutputId>)>,

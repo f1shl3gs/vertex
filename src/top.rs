@@ -81,10 +81,7 @@ impl Top {
             loop {
                 ticker.tick().await;
 
-                let stats = match fetch(&table.uri).await {
-                    Ok(stats) => Some(stats),
-                    Err(_err) => None,
-                };
+                let stats = fetch(&table.uri).await.ok();
 
                 table.render(stats);
             }

@@ -24,7 +24,7 @@ pub struct Variable {
     /// e.g.
     ///   - Value::Integer(Kind::Numeric)
     ///   - Value::Object({
-    ///         "foo": Value::Integer(Kind::Integer)
+    ///     "foo": Value::Integer(Kind::Integer)
     ///     })
     value: Value,
 }

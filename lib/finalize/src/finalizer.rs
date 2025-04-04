@@ -4,6 +4,7 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
+use futures::future::OptionFuture;
 use futures::stream::{BoxStream, FuturesOrdered, FuturesUnordered};
 use futures::{FutureExt, Stream, StreamExt};
 use pin_project_lite::pin_project;
@@ -48,7 +49,7 @@ where
     /// Produce a finalizer set along with the output stream of
     /// received acknowledged batch identifiers.
     #[must_use]
-    pub fn new<SS>(shutdown: SS) -> (Self, BoxStream<'static, (BatchStatus, T)>)
+    pub fn new<SS>(shutdown: Option<SS>) -> (Self, BoxStream<'static, (BatchStatus, T)>)
     where
         SS: Future + Send + Unpin + 'static,
         <SS as Future>::Output: Send,
@@ -73,7 +74,7 @@ where
     #[must_use]
     pub fn maybe_new<SS>(
         maybe: bool,
-        shutdown: SS,
+        shutdown: Option<SS>,
     ) -> (Option<Self>, BoxStream<'static, (BatchStatus, T)>)
     where
         SS: Future + Send + Unpin + 'static,
@@ -101,7 +102,7 @@ where
 }
 
 fn finalizer_stream<SS, T, S>(
-    mut shutdown: SS,
+    shutdown: Option<SS>,
     mut new_entries: UnboundedReceiver<(BatchStatusReceiver, T)>,
     mut status_receivers: S,
     flush: Arc<Notify>,
@@ -110,11 +111,14 @@ where
     S: Default + FuturesSet<FinalizerFuture<T>> + Unpin,
     SS: Future + Send + Unpin + 'static,
 {
+    let handle_shutdown = shutdown.is_some();
+    let mut shutdown = OptionFuture::from(shutdown);
+
     async_stream::stream! {
         loop {
             tokio::select! {
                 biased;
-                _ = &mut shutdown => break,
+                _ = &mut shutdown, if handle_shutdown => break,
                 _ = flush.notified() => {
                     // Drop all the existing status receivers and start over.
                     status_receivers = S::default();
