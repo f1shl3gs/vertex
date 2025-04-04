@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743770117225,
+  "lastUpdate": 1743770516442,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8d2901d6ecc5d11152af0c14b63f6d345c11462f",
-          "message": "chore(deps): bump bytes from 1.9.0 to 1.10.0 (#2182)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.9.0 to 1.10.0.\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.9.0...v1.10.0)\n\n---\nupdated-dependencies:\n- dependency-name: bytes\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-04T06:24:50+08:00",
-          "tree_id": "1e560fd254710c9ba15aca8445d317ace8bcfc1f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8d2901d6ecc5d11152af0c14b63f6d345c11462f"
-        },
-        "date": 1738622182220,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29721000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 594490,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.537,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.032,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ea671a4efad8ae6158b184d39c53b6f9a0df46e6",
+          "message": "Merge pull request #2294 from f1shl3gs/misc/move_buffers_to_right_place\n\nmisc: move `buffers` to right place",
+          "timestamp": "2025-04-04T20:31:17+08:00",
+          "tree_id": "4df7f0b669199edee64a608537c38653bc45187e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ea671a4efad8ae6158b184d39c53b6f9a0df46e6"
+        },
+        "date": 1743770494028,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22792000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 645890,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.977,
             "unit": "ns/op"
           }
         ]
