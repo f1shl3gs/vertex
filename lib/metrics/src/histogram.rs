@@ -1,5 +1,4 @@
-use std::iter;
-use std::iter::once;
+use std::iter::{once, repeat_n};
 use std::sync::Arc;
 
 use parking_lot::Mutex;
@@ -79,15 +78,13 @@ impl MakeMetricObserver for Histogram {
 }
 
 pub fn exponential_buckets(start: f64, factor: f64, length: u64) -> impl Iterator<Item = f64> {
-    iter::repeat(())
-        .take(length as usize)
+    repeat_n((), length as usize)
         .enumerate()
         .map(move |(i, _)| start * factor.powf(i as f64))
 }
 
 pub fn linear_buckets(start: f64, width: f64, length: u64) -> impl Iterator<Item = f64> {
-    iter::repeat(())
-        .take(length as usize)
+    repeat_n((), length as usize)
         .enumerate()
         .map(move |(i, _)| start + (width * (i as f64)))
 }

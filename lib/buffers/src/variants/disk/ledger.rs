@@ -1,13 +1,13 @@
+use crossbeam_utils::atomic::AtomicCell;
+use finalize::OrderedFinalizer;
+use fslock::LockFile;
+use futures::StreamExt;
+use std::future::Pending;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering};
 use std::time::Instant;
 use std::{fmt, io, mem};
-
-use crossbeam_utils::atomic::AtomicCell;
-use finalize::OrderedFinalizer;
-use fslock::LockFile;
-use futures::StreamExt;
 use thiserror::Error;
 use tokio::{fs, io::AsyncWriteExt, sync::Notify};
 
@@ -688,7 +688,7 @@ where
     }
 
     pub(super) fn spawn_finalizer(self: Arc<Self>) -> OrderedFinalizer<u64> {
-        let (finalizer, mut stream) = OrderedFinalizer::new(futures::future::pending::<()>());
+        let (finalizer, mut stream) = OrderedFinalizer::new::<Pending<()>>(None);
         tokio::spawn(async move {
             while let Some((_status, amount)) = stream.next().await {
                 self.increment_pending_acks(amount);

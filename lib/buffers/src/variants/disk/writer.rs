@@ -1089,12 +1089,7 @@ where
     /// If an error occurred while writing the record, an error variant will be returned describing
     /// the error.
     pub async fn try_write_record(&mut self, record: T) -> Result<Option<T>, WriterError<T>> {
-        self.try_write_record_inner(record)
-            .await
-            .map(|result| match result {
-                Ok(_) => None,
-                Err(record) => Some(record),
-            })
+        self.try_write_record_inner(record).await.map(Result::err)
     }
 
     #[instrument(skip_all, level = "debug")]

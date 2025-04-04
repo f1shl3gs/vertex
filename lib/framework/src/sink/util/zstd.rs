@@ -67,6 +67,6 @@ impl<W: Debug + Write> Debug for ZstdEncoder<W> {
 
 /// Safety:
 /// 1. There is no sharing references to zstd encoder. `Write` requires
-///     unique reference, and `finish` moves the instance itself.
+///    unique reference, and `finish` moves the instance itself.
 /// 2. Sharing only internal writer, which implements `Sync`
 unsafe impl<W: Write + Sync> Sync for ZstdEncoder<W> {}
