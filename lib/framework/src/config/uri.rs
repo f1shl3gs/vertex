@@ -165,7 +165,7 @@ fn get_basic_auth(authority: &Authority) -> (Authority, Option<Auth>) {
         // http://example.com:123/path
         None => (authority.clone(), None),
         Some((s, _)) => {
-            match s.find(':') {
+            match s.split_once(':') {
                 // http://username@example.com:123/path
                 None => {
                     let authority = Authority::from_str(authority.host()).unwrap();
@@ -179,10 +179,9 @@ fn get_basic_auth(authority: &Authority) -> (Authority, Option<Auth>) {
                     )
                 }
                 // http://username:password@example.com:123/path
-                Some(index) => {
+                Some((username, password)) => {
                     let authority = Authority::from_str(authority.host()).unwrap();
 
-                    let (username, password) = s.split_at(index);
                     let password = percent_decode_str(password)
                         .decode_utf8_lossy()
                         .to_string()
@@ -238,7 +237,8 @@ mod tests {
                         user: user.to_owned(),
                         password: password.to_owned().into(),
                     }
-                })
+                }),
+                "input: {input}"
             );
         }
     }
