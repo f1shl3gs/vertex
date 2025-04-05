@@ -11,7 +11,7 @@ use configurable::{Configurable, configurable_component};
 use futures::{Stream, StreamExt};
 use futures_util::TryStreamExt;
 use http::header::{ACCEPT, TRANSFER_ENCODING};
-use http::{Request, Response};
+use http::{Request, Response, Uri};
 use http_body_util::{BodyExt, BodyStream, Empty};
 use hyper::body::Incoming;
 use indexmap::IndexMap;
@@ -19,7 +19,6 @@ use serde::{Deserialize, Serialize};
 use tokio::time::timeout;
 use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
-use url::Url;
 
 use crate::SignalHandler;
 use crate::config::{Builder, ProxyConfig, provider::ProviderConfig};
@@ -43,7 +42,8 @@ pub struct RequestConfig {
 struct Config {
     /// The URL to download config
     #[configurable(required, format = "uri", example = "https://exampel.com/config")]
-    url: Url,
+    #[serde(with = "crate::config::serde_uri")]
+    uri: Uri,
 
     /// The interval between fetch config.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -65,13 +65,12 @@ struct Config {
 #[typetag::serde(name = "http")]
 impl ProviderConfig for Config {
     async fn build(&mut self, signal_handler: &mut SignalHandler) -> Result<Builder, Vec<String>> {
-        let url = self.url.clone();
         let tls_config = self.tls.take();
         let proxy = ProxyConfig::from_env().merge(&self.proxy);
 
         let mut cfs = Box::pin(poll_http(
             self.interval,
-            url,
+            self.uri.clone(),
             self.headers.clone(),
             tls_config,
             proxy,
@@ -92,13 +91,13 @@ impl ProviderConfig for Config {
 
 /// Makes an HTTP request to the provided endpoint, returning the Body.
 async fn http_request(
-    url: &Url,
+    uri: &Uri,
     headers: &IndexMap<String, String>,
     tls_config: Option<&TlsConfig>,
     proxy: &ProxyConfig,
 ) -> Result<Response<Incoming>, crate::Error> {
     let client = HttpClient::new(tls_config, proxy)?;
-    let mut builder = Request::get(url.as_str()).header(ACCEPT, "application/yaml");
+    let mut builder = Request::get(uri).header(ACCEPT, "application/yaml");
     for (key, value) in headers {
         builder = builder.header(key, value);
     }
@@ -132,7 +131,7 @@ fn config_hash(data: &Bytes) -> u64 {
 /// Polls the HTTP endpoint after/every `interval`, returning a stream of `ConfigBuilder`.
 fn poll_http(
     interval: Duration,
-    url: Url,
+    uri: Uri,
     headers: IndexMap<String, String>,
     tls_config: Option<TlsConfig>,
     proxy: ProxyConfig,
@@ -144,7 +143,7 @@ fn poll_http(
             // Retry loop to fetch config
             let mut backoff = ExponentialBackoff::from_secs(10).max_delay(5 * interval);
             let (parts, incoming) = loop {
-                let resp = match http_request(&url, &headers, tls_config.as_ref(), &proxy).await {
+                let resp = match http_request(&uri, &headers, tls_config.as_ref(), &proxy).await {
                     Ok(resp) => resp,
                     Err(err) => {
                         warn!(
@@ -160,7 +159,7 @@ fn poll_http(
                 if resp.status() != 200 {
                     warn!(
                         message = "fetch config failed, unexpected status code",
-                        ?url,
+                        ?uri,
                         code = ?resp.status(),
                     );
 
@@ -216,7 +215,7 @@ fn poll_http(
                         warn!(
                             message = "load config failed",
                             %err,
-                            %url,
+                            %uri,
                         );
 
                         backoff.wait().await;

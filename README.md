@@ -107,7 +107,7 @@ An extension is
 Note: Only x86_64-unknown-linux-gnu(or musl) is supported.
 
 ### Install additional dependencies
-- Rust (a recent stable version, 1.60 or higher). To install Rust, we recommend using rustup.
+- Rust, to install Rust, we recommend using rustup.
 - make
 - protobuf
 - docker
@@ -263,7 +263,7 @@ and use this data to inform optimizations such as inlining, machine-code layout,
 - Install [cargo-pgo](https://github.com/Kobzol/cargo-pgo)
 - Build Vertex with `cargo pgo build`
 - Run `cargo pgo run -- -- -c config.yaml` and wait for some time to collect enough information from your workload. Usually, waiting several minutes should be enough(your case can be different).
-- Stop Vertex.
+- Stop Vertex `kill -s SIGTERM [pid]`.
 - Run `cargo pgo optimize` to build Vertex with PGO optimization.
 
 A more detailed guide on how to apply PGO is in the Rust [documentation](https://doc.rust-lang.org/rustc/profile-guided-optimization.html).
