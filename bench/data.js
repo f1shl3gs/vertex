@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743823264935,
+  "lastUpdate": 1743823274793,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "af33504770246eb8f48589fda2f31168528ce009",
-          "message": "misc (#2192)",
-          "timestamp": "2025-02-07T05:03:19+08:00",
-          "tree_id": "85a23e518e5e818b447c7e99b8cba7ef5579d7d7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/af33504770246eb8f48589fda2f31168528ce009"
-        },
-        "date": 1738876436377,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 543,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37830.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc",
           "message": "lib/codecs: add metadata support for VTL deserializer (#2193)",
           "timestamp": "2025-02-07T05:49:48+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38102.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "89ae05b201b96224873f73c22ebc8078891dc924",
+          "message": "Merge pull request #2295 from f1shl3gs/dependabot/cargo/indexmap-2.9.0\n\nchore(deps): bump indexmap from 2.8.0 to 2.9.0",
+          "timestamp": "2025-04-05T11:10:12+08:00",
+          "tree_id": "0097d845a86317fb5932dab148fcc870b9204468",
+          "url": "https://github.com/f1shl3gs/vertex/commit/89ae05b201b96224873f73c22ebc8078891dc924"
+        },
+        "date": 1743823252975,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 547,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38102.6,
             "unit": "KiB"
           }
         ]
