@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743822774122,
+  "lastUpdate": 1743822792227,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "08a320e83baf016bb240f036b494dafd1a503c0b",
-          "message": "remove lib/xdr (#2184)",
-          "timestamp": "2025-02-04T07:20:39+08:00",
-          "tree_id": "4944f0ba599f9516d1beb4f191e6bca8847fc461",
-          "url": "https://github.com/f1shl3gs/vertex/commit/08a320e83baf016bb240f036b494dafd1a503c0b"
-        },
-        "date": 1738625002606,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 137.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 300.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 629.46,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bd287bc72f85da88802b90fe60899b5661824fa9",
           "message": "Revert \"remove lib/xdr (#2184)\" (#2185)\n\nThis reverts commit 08a320e83baf016bb240f036b494dafd1a503c0b.",
           "timestamp": "2025-02-04T19:00:14+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 706.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "89ae05b201b96224873f73c22ebc8078891dc924",
+          "message": "Merge pull request #2295 from f1shl3gs/dependabot/cargo/indexmap-2.9.0\n\nchore(deps): bump indexmap from 2.8.0 to 2.9.0",
+          "timestamp": "2025-04-05T11:10:12+08:00",
+          "tree_id": "0097d845a86317fb5932dab148fcc870b9204468",
+          "url": "https://github.com/f1shl3gs/vertex/commit/89ae05b201b96224873f73c22ebc8078891dc924"
+        },
+        "date": 1743822772741,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.59,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 327.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 705.69,
             "unit": "ns/op"
           }
         ]
