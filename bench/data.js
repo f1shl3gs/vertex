@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743822848143,
+  "lastUpdate": 1743823264935,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b3cdf89c0df4b58276d50513e1fe083ad516df91",
-          "message": "add sources/ping (#2183)",
-          "timestamp": "2025-02-04T06:40:50+08:00",
-          "tree_id": "4efdc46b6bc3b17e7fba3c2ed83fac5567dddea4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b3cdf89c0df4b58276d50513e1fe083ad516df91"
-        },
-        "date": 1738623085287,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28627000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 699730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.921,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "08a320e83baf016bb240f036b494dafd1a503c0b",
           "message": "remove lib/xdr (#2184)",
           "timestamp": "2025-02-04T07:20:39+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.977,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "89ae05b201b96224873f73c22ebc8078891dc924",
+          "message": "Merge pull request #2295 from f1shl3gs/dependabot/cargo/indexmap-2.9.0\n\nchore(deps): bump indexmap from 2.8.0 to 2.9.0",
+          "timestamp": "2025-04-05T11:10:12+08:00",
+          "tree_id": "0097d845a86317fb5932dab148fcc870b9204468",
+          "url": "https://github.com/f1shl3gs/vertex/commit/89ae05b201b96224873f73c22ebc8078891dc924"
+        },
+        "date": 1743823244938,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22173000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 568640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.272,
             "unit": "ns/op"
           }
         ]
