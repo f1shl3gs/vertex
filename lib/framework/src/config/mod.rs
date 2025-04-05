@@ -27,18 +27,18 @@ use std::ops::BitOr;
 use std::path::PathBuf;
 
 pub use builder::Builder;
-pub use global::GlobalOptions;
-use serde::{Deserialize, Serialize};
-// IndexMap preserves insertion order, allowing us to output errors in the
-// same order they are present in the file.
 pub use diff::ConfigDiff;
 pub use extension::{ExtensionConfig, ExtensionContext, ExtensionOuter};
 pub use format::{Format, FormatHint};
+pub use global::GlobalOptions;
 pub use helper::{
     default_interval, default_true, serde_http_method, serde_regex, serde_uri,
     skip_serializing_if_default,
 };
 pub use id::{ComponentKey, OutputId};
+use serde::{Deserialize, Serialize};
+// IndexMap preserves insertion order, allowing us to output errors in the
+// same order they are present in the file.
 use indexmap::IndexMap;
 pub use ip::IpAccessConfig;
 pub use loading::load_from_paths_with_provider;

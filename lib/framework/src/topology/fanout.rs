@@ -6,7 +6,7 @@ use buffers::channel::BufferSender;
 use event::Events;
 use futures::{Stream, StreamExt};
 use futures_util::{pending, poll};
-use indexmap::IndexMap;
+use indexmap::map::{Entry, IndexMap};
 use tokio::sync::mpsc;
 use tokio_util::sync::ReusableBoxFuture;
 
@@ -256,13 +256,13 @@ impl<'a> SendGroup<'a> {
         // to send but also takes ownership of the sender itself, which we give back when the
         // sender completes.
         let mut sends = HashMap::new();
-        for (i, (key, sender)) in senders.iter_mut().enumerate() {
+        for (index, (key, sender)) in senders.iter_mut().enumerate() {
             let mut sender = sender
                 .take()
                 .expect("sender must be present to initialize SendGroup");
 
             // First, arm each sender with the item to actually send.
-            if i == last_sender_idx {
+            if index == last_sender_idx {
                 sender.input = events.take();
             } else {
                 sender.input.clone_from(&events);
@@ -282,9 +282,7 @@ impl<'a> SendGroup<'a> {
 
     fn try_detach_send(&mut self, id: &ComponentKey) {
         if let Some(send) = self.sends.remove(id) {
-            tokio::spawn(async move {
-                send.await;
-            });
+            tokio::spawn(send);
         }
     }
 
@@ -293,12 +291,14 @@ impl<'a> SendGroup<'a> {
         // When we're in the middle of a send, we can only keep track of the new
         // sink, but can't actually send to it, as we don't have item to send...
         // so only add it to `senders`.
-        assert!(
-            self.senders
-                .insert(id.clone(), Some(Sender::new(sink)))
-                .is_none(),
-            "Adding duplicate output id to fanout: {id}"
-        );
+        match self.senders.entry(id) {
+            Entry::Vacant(v) => {
+                v.insert(Some(Sender::new(sink)));
+            }
+            Entry::Occupied(o) => {
+                panic!("Adding duplicate output id to fanout: {}", o.key());
+            }
+        }
     }
 
     fn remove(&mut self, id: &ComponentKey) {

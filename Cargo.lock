@@ -1138,7 +1138,6 @@ dependencies = [
  "tripwire",
  "twox-hash",
  "typetag",
- "url",
  "value",
  "zstd",
 ]
