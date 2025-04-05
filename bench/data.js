@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1743849610723,
+  "lastUpdate": 1743849625963,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bd287bc72f85da88802b90fe60899b5661824fa9",
-          "message": "Revert \"remove lib/xdr (#2184)\" (#2185)\n\nThis reverts commit 08a320e83baf016bb240f036b494dafd1a503c0b.",
-          "timestamp": "2025-02-04T19:00:14+08:00",
-          "tree_id": "4efdc46b6bc3b17e7fba3c2ed83fac5567dddea4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bd287bc72f85da88802b90fe60899b5661824fa9"
-        },
-        "date": 1738666946461,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.304,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.61,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.86,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.25,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "020f92bfbca12dc3f5f7682c553770e0f8de0924",
+          "message": "Merge pull request #2296 from f1shl3gs/misc/some_small_optimizes\n\nmisc: some small optimizes",
+          "timestamp": "2025-04-05T18:37:49+08:00",
+          "tree_id": "a0686144391523cb712c7d0c0f533296d02d4de3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/020f92bfbca12dc3f5f7682c553770e0f8de0924"
+        },
+        "date": 1743849605009,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.486,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.69,
             "unit": "ns/op"
           }
         ]
