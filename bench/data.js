@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744108933433,
+  "lastUpdate": 1744108945142,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "260c9e7965197b0bc0f102a1b192e69a7b374cdd",
-          "message": "misc: fix something (#2187)",
-          "timestamp": "2025-02-05T18:28:11+08:00",
-          "tree_id": "44d70a8c37f0015f26af8c53fb04a28c980a3860",
-          "url": "https://github.com/f1shl3gs/vertex/commit/260c9e7965197b0bc0f102a1b192e69a7b374cdd"
-        },
-        "date": 1738751452864,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.535,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 141.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 316.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 634.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 683.08,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0b8688b6935b2c18647b89f910cea2d8ba916310",
+          "message": "Merge pull request #2298 from f1shl3gs/dependabot/cargo/mimalloc-0.1.46\n\nchore(deps): bump mimalloc from 0.1.44 to 0.1.46",
+          "timestamp": "2025-04-08T18:39:44+08:00",
+          "tree_id": "fc64ee6c4e118ad2f65d903b8bcf4153aa219427",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0b8688b6935b2c18647b89f910cea2d8ba916310"
+        },
+        "date": 1744108923970,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.335,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 182.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 361,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 745.99,
             "unit": "ns/op"
           }
         ]
