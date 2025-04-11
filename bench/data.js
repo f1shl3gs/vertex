@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744374815308,
+  "lastUpdate": 1744374844081,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7fbe024ef178833f0bb12ff297992de2dbd022d0",
-          "message": "chore(deps): bump hickory-proto from 0.24.2 to 0.24.3 (#2196)\n\nBumps [hickory-proto](https://github.com/hickory-dns/hickory-dns) from 0.24.2 to 0.24.3.\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/v0.24.3/CHANGELOG.md)\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.2...v0.24.3)\n\n---\nupdated-dependencies:\n- dependency-name: hickory-proto\n  dependency-type: indirect\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-11T17:33:49+08:00",
-          "tree_id": "9ca30cc73efba96577fa5879cb873ea88ff341b0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7fbe024ef178833f0bb12ff297992de2dbd022d0"
-        },
-        "date": 1739267083905,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 556,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37575.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 537,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38117.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "09301090290c06c81dc165f3d2a996176fb13eb5",
+          "message": "Merge pull request #2299 from f1shl3gs/dependabot/cargo/crossbeam-channel-0.5.15\n\nchore(deps): bump crossbeam-channel from 0.5.14 to 0.5.15",
+          "timestamp": "2025-04-11T20:22:27+08:00",
+          "tree_id": "2d98671cfd7a3cb571778e785161eb35ebe095ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/09301090290c06c81dc165f3d2a996176fb13eb5"
+        },
+        "date": 1744374822312,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
             "unit": "s"
           },
           {
