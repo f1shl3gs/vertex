@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744374306611,
+  "lastUpdate": 1744374309428,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ba6a3324af589982a745edebed6c789a882265c8",
-          "message": "chore(deps): bump uuid from 1.12.1 to 1.13.1 (#2189)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.12.1 to 1.13.1.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.12.1...1.13.1)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-05T19:13:36+08:00",
-          "tree_id": "fed474bfbc35690096f7de75d0bfccf2d33c00ad",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ba6a3324af589982a745edebed6c789a882265c8"
-        },
-        "date": 1738754141964,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.383,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.13,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 175.76,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "09301090290c06c81dc165f3d2a996176fb13eb5",
+          "message": "Merge pull request #2299 from f1shl3gs/dependabot/cargo/crossbeam-channel-0.5.15\n\nchore(deps): bump crossbeam-channel from 0.5.14 to 0.5.15",
+          "timestamp": "2025-04-11T20:22:27+08:00",
+          "tree_id": "2d98671cfd7a3cb571778e785161eb35ebe095ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/09301090290c06c81dc165f3d2a996176fb13eb5"
+        },
+        "date": 1744374287281,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 177.97,
             "unit": "ns/op"
           }
         ]
