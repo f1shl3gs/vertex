@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744636290262,
+  "lastUpdate": 1744636317986,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "af33504770246eb8f48589fda2f31168528ce009",
-          "message": "misc (#2192)",
-          "timestamp": "2025-02-07T05:03:19+08:00",
-          "tree_id": "85a23e518e5e818b447c7e99b8cba7ef5579d7d7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/af33504770246eb8f48589fda2f31168528ce009"
-        },
-        "date": 1738875975113,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.544,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 139.91,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 298.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 634.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "81c04fe450057e8afddec5ef63e8bbc4ddbc0bdc",
           "message": "lib/codecs: add metadata support for VTL deserializer (#2193)",
           "timestamp": "2025-02-07T05:49:48+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 701.49,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3973b2c9b52f45d5a6de7952ed492e9fab88d8b6",
+          "message": "Merge pull request #2303 from f1shl3gs/dependabot/cargo/sqlx-0.8.4\n\nchore(deps): bump sqlx from 0.8.3 to 0.8.4",
+          "timestamp": "2025-04-14T21:08:50+08:00",
+          "tree_id": "d9225258ba67a3f5e8226454553ce859dfd3f4e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3973b2c9b52f45d5a6de7952ed492e9fab88d8b6"
+        },
+        "date": 1744636296902,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.706,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 314.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.19,
             "unit": "ns/op"
           }
         ]
