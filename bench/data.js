@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744636410615,
+  "lastUpdate": 1744636456697,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "af33504770246eb8f48589fda2f31168528ce009",
-          "message": "misc (#2192)",
-          "timestamp": "2025-02-07T05:03:19+08:00",
-          "tree_id": "85a23e518e5e818b447c7e99b8cba7ef5579d7d7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/af33504770246eb8f48589fda2f31168528ce009"
-        },
-        "date": 1738875929550,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.266,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.6,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.36,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 177.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3973b2c9b52f45d5a6de7952ed492e9fab88d8b6",
+          "message": "Merge pull request #2303 from f1shl3gs/dependabot/cargo/sqlx-0.8.4\n\nchore(deps): bump sqlx from 0.8.3 to 0.8.4",
+          "timestamp": "2025-04-14T21:08:50+08:00",
+          "tree_id": "d9225258ba67a3f5e8226454553ce859dfd3f4e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3973b2c9b52f45d5a6de7952ed492e9fab88d8b6"
+        },
+        "date": 1744636435107,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.454,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 177.65,
             "unit": "ns/op"
           }
         ]
