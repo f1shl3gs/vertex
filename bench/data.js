@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744637535022,
+  "lastUpdate": 1744637573518,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6a9ad1b0ac958f94b4f4b7ac1238532c813d8c4f",
-          "message": "chore(deps): bump rustls from 0.23.22 to 0.23.23 (#2199)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.23.22 to 0.23.23.\n- [Release notes](https://github.com/rustls/rustls/releases)\n- [Changelog](https://github.com/rustls/rustls/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rustls/rustls/compare/v/0.23.22...v/0.23.23)\n\n---\nupdated-dependencies:\n- dependency-name: rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-12T04:05:16+08:00",
-          "tree_id": "6922d496cad40dbf89fab7120475043ab7b3b7fb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6a9ad1b0ac958f94b4f4b7ac1238532c813d8c4f"
-        },
-        "date": 1739305011583,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 556,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37782.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 550,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38113.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "24fe151777669df4a12aaf72704b90bb0dd1d09e",
+          "message": "Merge pull request #2302 from f1shl3gs/dependabot/cargo/lru-0.14.0\n\nchore(deps): bump lru from 0.13.0 to 0.14.0",
+          "timestamp": "2025-04-14T21:21:14+08:00",
+          "tree_id": "1c5ceb255a0196032abf60dfbf89dbf936cffd61",
+          "url": "https://github.com/f1shl3gs/vertex/commit/24fe151777669df4a12aaf72704b90bb0dd1d09e"
+        },
+        "date": 1744637552476,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 542,
             "unit": "s"
           },
           {
