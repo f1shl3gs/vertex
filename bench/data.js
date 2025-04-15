@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744728508572,
+  "lastUpdate": 1744728527605,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dd9d551398630df009bced7180b9e8053551616a",
-          "message": "remove lib/xdr (#2194)",
-          "timestamp": "2025-02-07T07:40:43+08:00",
-          "tree_id": "ab702fd07f4654621bb847ebb5e9f7f0f6499ba6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dd9d551398630df009bced7180b9e8053551616a"
-        },
-        "date": 1738885385268,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.202,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 187.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 175.43,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9c8dfa2387db3d19515cca2e0ad17812cf130ea0",
+          "message": "Merge pull request #2304 from f1shl3gs/dependabot/cargo/libc-0.2.172\n\nchore(deps): bump libc from 0.2.171 to 0.2.172",
+          "timestamp": "2025-04-15T22:45:56+08:00",
+          "tree_id": "ebc9081e3031ae9b627e6183ba4cc40a6bd6d456",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9c8dfa2387db3d19515cca2e0ad17812cf130ea0"
+        },
+        "date": 1744728505734,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.524,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.91,
             "unit": "ns/op"
           }
         ]
