@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744728593422,
+  "lastUpdate": 1744729017586,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6308c531f64ac61a7f30e93d5ff2f355b0bad5af",
-          "message": "add dpdk_memzone_info (#2200)",
-          "timestamp": "2025-02-12T18:40:05+08:00",
-          "tree_id": "c4c64747eddb317e1f03c9a758c31a4e7d42cdb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6308c531f64ac61a7f30e93d5ff2f355b0bad5af"
-        },
-        "date": 1739357497853,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 597,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37778.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38113.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9c8dfa2387db3d19515cca2e0ad17812cf130ea0",
+          "message": "Merge pull request #2304 from f1shl3gs/dependabot/cargo/libc-0.2.172\n\nchore(deps): bump libc from 0.2.171 to 0.2.172",
+          "timestamp": "2025-04-15T22:45:56+08:00",
+          "tree_id": "ebc9081e3031ae9b627e6183ba4cc40a6bd6d456",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9c8dfa2387db3d19515cca2e0ad17812cf130ea0"
+        },
+        "date": 1744728995877,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 541,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38119.9,
             "unit": "KiB"
           }
         ]
