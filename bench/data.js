@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744729017586,
+  "lastUpdate": 1744729054155,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dd9d551398630df009bced7180b9e8053551616a",
-          "message": "remove lib/xdr (#2194)",
-          "timestamp": "2025-02-07T07:40:43+08:00",
-          "tree_id": "ab702fd07f4654621bb847ebb5e9f7f0f6499ba6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dd9d551398630df009bced7180b9e8053551616a"
-        },
-        "date": 1738885905616,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29655000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 591980,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 46.324,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "54103e7c53bf7a3c509dfb6412ea2083958f8c24",
           "message": "source/fluent: implement with TcpSource (#2195)",
           "timestamp": "2025-02-10T22:13:38+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.195,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9c8dfa2387db3d19515cca2e0ad17812cf130ea0",
+          "message": "Merge pull request #2304 from f1shl3gs/dependabot/cargo/libc-0.2.172\n\nchore(deps): bump libc from 0.2.171 to 0.2.172",
+          "timestamp": "2025-04-15T22:45:56+08:00",
+          "tree_id": "ebc9081e3031ae9b627e6183ba4cc40a6bd6d456",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9c8dfa2387db3d19515cca2e0ad17812cf130ea0"
+        },
+        "date": 1744729031724,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22975000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 571870,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.131,
             "unit": "ns/op"
           }
         ]
