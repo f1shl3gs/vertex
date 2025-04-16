@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744783706170,
+  "lastUpdate": 1744783714174,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f8a8fc803bcd09401fd812dc3c0b1648222809b8",
-          "message": "chore(deps): bump hickory-resolver from 0.24.2 to 0.24.3 (#2197)\n\nBumps [hickory-resolver](https://github.com/hickory-dns/hickory-dns) from 0.24.2 to 0.24.3.\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/v0.24.3/CHANGELOG.md)\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.2...v0.24.3)\n\n---\nupdated-dependencies:\n- dependency-name: hickory-resolver\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-11T17:25:08+08:00",
-          "tree_id": "b7c43e98636f6c996fc4044aee2318083dc339e6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f8a8fc803bcd09401fd812dc3c0b1648222809b8"
-        },
-        "date": 1739266042719,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.303,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.27,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 187.79,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.27,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c780214dcabf07d01f1748e3ddd66591b081eed0",
+          "message": "Merge pull request #2306 from f1shl3gs/dependabot/cargo/sqlx-0.8.5\n\nchore(deps): bump sqlx from 0.8.4 to 0.8.5",
+          "timestamp": "2025-04-16T14:05:57+08:00",
+          "tree_id": "e68dc4694626d84eeb9883687c5141b9fc18a5d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c780214dcabf07d01f1748e3ddd66591b081eed0"
+        },
+        "date": 1744783692843,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.404,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.62,
             "unit": "ns/op"
           }
         ]
