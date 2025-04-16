@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744783783092,
+  "lastUpdate": 1744784183397,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f3d4c3079defd78bdeb9f79d160d722816a58257",
-          "message": "chore(deps): bump the prost group with 3 updates (#2201)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\n\n\nUpdates `prost` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-types` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-build` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\n---\nupdated-dependencies:\n- dependency-name: prost\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-types\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-build\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-12T18:52:58+08:00",
-          "tree_id": "a34cdc6d9a946a1903774bdabb814dbafdfb77b5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f3d4c3079defd78bdeb9f79d160d722816a58257"
-        },
-        "date": 1739358237001,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37778.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38119.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "80cbc09646647baa81dd1d2021afec8e34e9c067",
+          "message": "Merge pull request #2305 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.95\n\nchore(deps): bump proc-macro2 from 1.0.94 to 1.0.95",
+          "timestamp": "2025-04-16T14:05:47+08:00",
+          "tree_id": "82f9e1270115342b14b61f7f1889d9706fdcd781",
+          "url": "https://github.com/f1shl3gs/vertex/commit/80cbc09646647baa81dd1d2021afec8e34e9c067"
+        },
+        "date": 1744784161216,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 531,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38117.9,
             "unit": "KiB"
           }
         ]
