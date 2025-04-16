@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744784183397,
+  "lastUpdate": 1744784186688,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "54103e7c53bf7a3c509dfb6412ea2083958f8c24",
-          "message": "source/fluent: implement with TcpSource (#2195)",
-          "timestamp": "2025-02-10T22:13:38+08:00",
-          "tree_id": "96225dd628bdb53be6d28b3f9cebafa49ff4d51e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/54103e7c53bf7a3c509dfb6412ea2083958f8c24"
-        },
-        "date": 1739197524516,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29378000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 719630,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.538,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.131,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "80cbc09646647baa81dd1d2021afec8e34e9c067",
+          "message": "Merge pull request #2305 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.95\n\nchore(deps): bump proc-macro2 from 1.0.94 to 1.0.95",
+          "timestamp": "2025-04-16T14:05:47+08:00",
+          "tree_id": "82f9e1270115342b14b61f7f1889d9706fdcd781",
+          "url": "https://github.com/f1shl3gs/vertex/commit/80cbc09646647baa81dd1d2021afec8e34e9c067"
+        },
+        "date": 1744784165174,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23035000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 632550,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.021,
             "unit": "ns/op"
           }
         ]
