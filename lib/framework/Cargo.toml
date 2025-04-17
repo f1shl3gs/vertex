@@ -15,7 +15,7 @@ tokio-console = ["console-subscriber", "tokio/tracing"]
 [dev-dependencies]
 event = { path = "../event", features = ["test"] }
 proptest = { version = "1.6.0", default-features = false, features = ["std"] }
-rand = { version = "0.9.0", default-features = false }
+rand = { version = "0.9.1", default-features = false }
 rand_distr = { version = "0.5.1", default-features = false }
 testify = { path = "../testify" }
 tokio = { version = "1.44.2", default-features = false, features = ["test-util"] }
