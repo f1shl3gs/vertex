@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744956541509,
+  "lastUpdate": 1744956567732,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "77782da5b705613a202a0e3083b6d3ceb9e36502",
-          "message": "Sources/dnstap: init (#2204)",
-          "timestamp": "2025-02-16T06:44:41+08:00",
-          "tree_id": "9d1142695190f49ac69fe6d80d59c77485f25f6b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/77782da5b705613a202a0e3083b6d3ceb9e36502"
-        },
-        "date": 1739660127596,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 559,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37953.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5cf8bd712ff743e150ea9b1a896a477b9ff7dbed",
           "message": "fix fd leak (#2205)",
           "timestamp": "2025-02-16T07:07:38+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38117.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c17e1d2f11be7d003762210d08d7cb16df5a9aa1",
+          "message": "Merge pull request #2307 from f1shl3gs/dependabot/cargo/rand-0.9.1\n\nchore(deps): bump rand from 0.9.0 to 0.9.1",
+          "timestamp": "2025-04-18T13:58:36+08:00",
+          "tree_id": "58b18c512ec5d5992915a848c1a01a6badf8381c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c17e1d2f11be7d003762210d08d7cb16df5a9aa1"
+        },
+        "date": 1744956546497,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 538,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38124.4,
             "unit": "KiB"
           }
         ]
