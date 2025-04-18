@@ -20,6 +20,7 @@ has already been ported.
 
 | Name                    | Description                                                       | Metric  |   Log   |  Trace  |
 |-------------------------|-------------------------------------------------------------------|:-------:|:-------:|:-------:|
+| audit                   | Receive logs from Linux Audit framework, works like auditbeat     | &cross; | &check; | &cross; |
 | bind                    | Scrapes metrics from Bind server's HTTP API                       | &check; | &cross; | &cross; |
 | chrony                  | Collect ntp metrics from chronyd                                  | &check; | &cross; | &cross; |
 | clickhouse_metrics      | Scrapes ClickHouse metrics periodically                           | &check; | &cross; | &cross; |
