@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744996590616,
+  "lastUpdate": 1744996619406,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5cf8bd712ff743e150ea9b1a896a477b9ff7dbed",
-          "message": "fix fd leak (#2205)",
-          "timestamp": "2025-02-16T07:07:38+08:00",
-          "tree_id": "436abe5c1c80cd86a2a28feaa4d916519265de53",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5cf8bd712ff743e150ea9b1a896a477b9ff7dbed"
-        },
-        "date": 1739661511267,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37953.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4159a256e484d1ba7dddd8252d13bb9f3b7dbc41",
           "message": "generate cpu metrics when `record-core-cycles` enabled (#2206)",
           "timestamp": "2025-02-16T07:36:12+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38124.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eb5d4b999302ffa924eb08f1a60c26fa3b6c659b",
+          "message": "Merge pull request #2308 from f1shl3gs/sources/audit/init\n\nsources/audit: init",
+          "timestamp": "2025-04-19T01:05:30+08:00",
+          "tree_id": "848bdc841a43b9a2042d47b43ed72ec9007a593b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eb5d4b999302ffa924eb08f1a60c26fa3b6c659b"
+        },
+        "date": 1744996596714,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38220,
             "unit": "KiB"
           }
         ]
