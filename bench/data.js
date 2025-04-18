@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1744996652663,
+  "lastUpdate": 1744997008532,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "38c773b3e6f18d31a6f5ce3583206f213b1399da",
-          "message": "sources/dpdk: init (#2198)",
-          "timestamp": "2025-02-12T04:04:51+08:00",
-          "tree_id": "9fadfb367bd77789b174874732a36bf2e66a24ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/38c773b3e6f18d31a6f5ce3583206f213b1399da"
-        },
-        "date": 1739304964329,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29000000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 623350,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 44.948,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6308c531f64ac61a7f30e93d5ff2f355b0bad5af",
           "message": "add dpdk_memzone_info (#2200)",
           "timestamp": "2025-02-12T18:40:05+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.413,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0800e8d7f85c9b1b377c7e8051bbeda5c544fd08",
+          "message": "Merge pull request #2309 from f1shl3gs/lib/vt/fix_type_def_of_to_integer\n\nlib/vtl: fix type_def of `to_integer`",
+          "timestamp": "2025-04-19T01:12:54+08:00",
+          "tree_id": "8b8aa310602aefa6d994296f674b25094f808015",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0800e8d7f85c9b1b377c7e8051bbeda5c544fd08"
+        },
+        "date": 1744996986921,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23365000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 628680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.458,
             "unit": "ns/op"
           }
         ]
