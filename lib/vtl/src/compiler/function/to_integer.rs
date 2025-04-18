@@ -68,9 +68,15 @@ impl Expression for ToIntegerFunc {
         Ok(value.into())
     }
 
-    fn type_def(&self, _state: &TypeState) -> TypeDef {
+    fn type_def(&self, state: &TypeState) -> TypeDef {
+        let def = self.value.type_def(state);
+        let fallible = !matches!(
+            def.kind,
+            Kind::INTEGER | Kind::FLOAT | Kind::BOOLEAN | Kind::NULL
+        );
+
         TypeDef {
-            fallible: false,
+            fallible,
             kind: Kind::INTEGER,
         }
     }
@@ -129,7 +135,7 @@ mod tests {
         compile_and_run(
             vec!["1".into()],
             ToInteger,
-            TypeDef::integer(),
+            TypeDef::integer().fallible(),
             Ok(1.into()),
         )
     }
@@ -139,7 +145,9 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".timestamp").unwrap().into()],
             ToInteger,
-            TypeDef::integer(),
+            // `.timestamp` is unknown at compile time, so it is fallible when
+            // there is no such field
+            TypeDef::integer().fallible(),
             Ok(1609459200.into()),
         )
     }
