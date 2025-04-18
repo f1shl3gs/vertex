@@ -968,7 +968,7 @@ dependencies = [
  "prost 0.13.5",
  "prost-build 0.13.5",
  "prost-types 0.13.5",
- "rand 0.9.0",
+ "rand 0.9.1",
  "serde",
  "serde_json",
  "tracing",
@@ -1110,7 +1110,7 @@ dependencies = [
  "pin-project-lite",
  "pkcs8",
  "proptest",
- "rand 0.9.0",
+ "rand 0.9.1",
  "rand_distr",
  "regex",
  "rustls",
@@ -2238,7 +2238,7 @@ name = "ntp"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "rand 0.9.0",
+ "rand 0.9.1",
  "tokio",
 ]
 
@@ -2820,13 +2820,12 @@ dependencies = [
 
 [[package]]
 name = "rand"
-version = "0.9.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3779b94aeb87e8bd4e834cee3650289ee9e0d5677f976ecdb6d219e5f4f6cd94"
+checksum = "9fbfd9d094a40bf3ae768db9361049ace4c0e04a4fd6b359518bd7b73a73dd97"
 dependencies = [
  "rand_chacha 0.9.0",
  "rand_core 0.9.3",
- "zerocopy 0.8.23",
 ]
 
 [[package]]
@@ -2874,7 +2873,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a8615d50dcf34fa31f7ab52692afec947c4dd0ab803cc87cb3b0b4570ff7463"
 dependencies = [
  "num-traits",
- "rand 0.9.0",
+ "rand 0.9.1",
 ]
 
 [[package]]
@@ -3021,7 +3020,7 @@ dependencies = [
  "futures",
  "lz4",
  "parking_lot",
- "rand 0.9.0",
+ "rand 0.9.1",
  "rsasl",
  "rustls",
  "snap",
@@ -3688,7 +3687,7 @@ dependencies = [
  "hyper-util",
  "percent-encoding",
  "pin-project-lite",
- "rand 0.9.0",
+ "rand 0.9.1",
  "serde",
  "serde_json",
  "tokio",
@@ -4383,7 +4382,7 @@ dependencies = [
  "prost-build 0.13.5",
  "prost-types 0.13.5",
  "quick-xml 0.37.4",
- "rand 0.9.0",
+ "rand 0.9.1",
  "regex",
  "rskafka",
  "sbbf",
