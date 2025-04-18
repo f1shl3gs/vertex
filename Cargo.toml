@@ -157,6 +157,7 @@ extensions = [
 ]
 
 # Sources
+sources-audit = ["dep:libc"]
 sources-bind = []
 sources-chrony = []
 sources-consul = []
@@ -208,6 +209,7 @@ sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
 sources-zookeeper = []
 
 sources = [
+    "sources-audit",
     "sources-bind",
     "sources-chrony",
     "sources-consul",

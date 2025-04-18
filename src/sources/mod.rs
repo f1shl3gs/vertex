@@ -1,3 +1,5 @@
+#[cfg(feature = "sources-audit")]
+mod audit;
 #[cfg(feature = "sources-bind")]
 mod bind;
 #[cfg(feature = "sources-chrony")]
