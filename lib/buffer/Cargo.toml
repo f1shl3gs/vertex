@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dev-dependencies]
-futures = { version = "0.3.31", default-features = false, features = ["async-await", "executor", "thread-pool"] }
 rand = { version = "0.9.1", default-features = false, features = ["thread_rng"] }
 serde_yaml = { version = "0.9.34", default-features = false }
 tracing-subscriber = { version = "0.3.19", default-features = false, features = ["ansi", "fmt", "registry", "env-filter"] }
