@@ -1,4 +1,5 @@
 use std::fmt::{Debug, Formatter};
+use std::time::Duration;
 
 use async_trait::async_trait;
 use buffers::BufferType;
@@ -12,6 +13,10 @@ use super::{
     ComponentKey, DataType, GlobalOptions, ProxyConfig, Resource, skip_serializing_if_default,
 };
 
+const fn default_timeout() -> Duration {
+    Duration::from_secs(10)
+}
+
 #[derive(Clone, Debug)]
 pub struct HealthcheckConfig {
     /// Whether or not to check the health of the sink when Vertex starts up.
@@ -22,6 +27,9 @@ pub struct HealthcheckConfig {
     /// This must be a valid URI, which requires at least the scheme and host.
     /// All other components -- port, path, etc -- are allowed as well
     pub uri: Option<Uri>,
+
+    /// Timeout for healthcheck
+    pub timeout: Duration,
 }
 
 impl Default for HealthcheckConfig {
@@ -29,6 +37,7 @@ impl Default for HealthcheckConfig {
         Self {
             enabled: true,
             uri: None,
+            timeout: default_timeout(),
         }
     }
 }
@@ -44,6 +53,12 @@ impl Serialize for HealthcheckConfig {
                 let mut s = serializer.serialize_struct("HealthcheckConfig", 2)?;
                 s.serialize_field("enabled", &self.enabled)?;
                 s.serialize_field("uri", &uri.to_string())?;
+
+                // implement skip_serialize_for_default
+                if self.timeout != default_timeout() {
+                    s.serialize_field("timeout", &humanize::duration::duration(&self.timeout))?;
+                }
+
                 s.end()
             }
         }
@@ -71,6 +86,7 @@ impl<'de> Deserialize<'de> for HealthcheckConfig {
                 Ok(HealthcheckConfig {
                     enabled: v,
                     uri: None,
+                    timeout: default_timeout(),
                 })
             }
 
@@ -81,6 +97,7 @@ impl<'de> Deserialize<'de> for HealthcheckConfig {
                 // default values
                 let mut enabled = false;
                 let mut uri = None;
+                let mut timeout = default_timeout();
 
                 while let Some(key) = map.next_key::<&str>()? {
                     match key {
@@ -88,16 +105,32 @@ impl<'de> Deserialize<'de> for HealthcheckConfig {
                             enabled = map.next_value()?;
                         }
                         "uri" => {
-                            let s = map.next_value::<String>()?;
+                            let s = map.next_value::<&str>()?;
                             uri = Some(s.parse::<Uri>().map_err(|_err| {
-                                Error::invalid_value(Unexpected::Str(&s), &"valid uri")
+                                Error::invalid_value(Unexpected::Str(s), &"valid uri")
                             })?);
+                        }
+                        "timeout" => {
+                            let s = map.next_value::<&str>()?;
+                            match humanize::duration::parse_duration(s) {
+                                Ok(d) => timeout = d,
+                                Err(_err) => {
+                                    return Err(Error::invalid_value(
+                                        Unexpected::Str(s),
+                                        &"valid duration, like 10s",
+                                    ));
+                                }
+                            }
                         }
                         _ => return Err(Error::unknown_field(key, &["enabled", "uri"])),
                     }
                 }
 
-                Ok(HealthcheckConfig { enabled, uri })
+                Ok(HealthcheckConfig {
+                    enabled,
+                    uri,
+                    timeout,
+                })
             }
         }
 
@@ -233,6 +266,7 @@ mod tests {
                 HealthcheckConfig {
                     enabled: true,
                     uri: None,
+                    timeout: default_timeout(),
                 },
             ),
             (
@@ -240,6 +274,7 @@ mod tests {
                 HealthcheckConfig {
                     enabled: false,
                     uri: None,
+                    timeout: default_timeout(),
                 },
             ),
             (
@@ -247,6 +282,7 @@ mod tests {
                 HealthcheckConfig {
                     enabled: true,
                     uri: None,
+                    timeout: default_timeout(),
                 },
             ),
             (
@@ -254,6 +290,7 @@ mod tests {
                 HealthcheckConfig {
                     enabled: false,
                     uri: Some(Uri::from_str("http://abc").unwrap()),
+                    timeout: default_timeout(),
                 },
             ),
             (
@@ -261,6 +298,15 @@ mod tests {
                 HealthcheckConfig {
                     enabled: false,
                     uri: Some(Uri::from_str("http://abc").unwrap()),
+                    timeout: default_timeout(),
+                },
+            ),
+            (
+                r#"{"uri": "http://abc", "timeout": "20s"}"#,
+                HealthcheckConfig {
+                    enabled: false,
+                    uri: Some(Uri::from_str("http://abc").unwrap()),
+                    timeout: Duration::from_secs(20),
                 },
             ),
         ] {

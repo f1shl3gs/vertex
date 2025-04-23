@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::future::ready;
 use std::num::NonZeroUsize;
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use buffers::builder::TopologyBuilder;
 use buffers::channel::{BufferReceiver, BufferSender};
@@ -535,10 +535,10 @@ pub async fn build_pieces(
         .filter(|(name, _)| diff.sinks.contains_new(name))
     {
         let sink_inputs = &sink.inputs;
-        let healthcheck = sink.healthcheck();
-        let enable_healthcheck = healthcheck.enabled && config.healthcheck.enabled;
         let typetag = sink.inner.component_name();
         let input_type = sink.inner.input_type();
+        let mut healthcheck = sink.healthcheck();
+        healthcheck.enabled |= config.healthcheck.enabled;
 
         let (tx, rx) = if let Some(buffer) = buffers.remove(name) {
             buffer
@@ -574,12 +574,12 @@ pub async fn build_pieces(
         };
 
         let cx = SinkContext {
-            healthcheck,
+            healthcheck: healthcheck.clone(),
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, sink.proxy()),
         };
 
-        let (sink, healthcheck) = match sink.inner.build(cx).await {
+        let (sink, healthcheck_fut) = match sink.inner.build(cx).await {
             Ok(built) => built,
             Err(err) => {
                 errors.push(format!("Sink \"{}\": {}", name, err));
@@ -625,7 +625,7 @@ pub async fn build_pieces(
         let task = Task::new(name.clone(), typetag, sink);
         let component_key = name.clone();
         let healthcheck_task = async move {
-            if !enable_healthcheck {
+            if !healthcheck.enabled {
                 info!(
                     message = "health check disabled",
                     sink = %component_key,
@@ -634,8 +634,7 @@ pub async fn build_pieces(
                 return Ok(TaskOutput::HealthCheck);
             }
 
-            let duration = Duration::from_secs(10);
-            timeout(duration, healthcheck)
+            timeout(healthcheck.timeout, healthcheck_fut)
                 .map(|result| match result {
                     Ok(Ok(_)) => {
                         info!(
