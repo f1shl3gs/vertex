@@ -11,10 +11,10 @@
 )]
 
 pub mod array;
+mod buffer;
 pub mod log;
 mod metadata;
-mod metric;
-pub mod proto;
+pub mod metric;
 pub mod tags;
 pub mod trace;
 
