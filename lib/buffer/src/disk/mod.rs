@@ -1,4 +1,3 @@
-#[path = "acknowledgement_v2.rs"]
 mod acknowledgement;
 mod ledger;
 mod reader;

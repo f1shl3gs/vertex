@@ -45,13 +45,11 @@ pub enum WhenFull {
 pub enum BufferType {
     Memory {
         /// The maximum size of the buffer can hold. It works for Memory and Disk
-        // #[serde(with = "humanize::bytes::serde")]
         max_size: usize,
     },
 
     Disk {
         /// The maximum size of the buffer can hold. It works for Memory and Disk
-        // #[serde(with = "humanize::bytes::serde")]
         max_size: usize,
 
         /// The size limitation of each Record
@@ -66,7 +64,6 @@ pub enum BufferType {
 pub struct BufferConfig {
     pub when_full: WhenFull,
 
-    // #[serde(default, flatten)]
     pub typ: BufferType,
 }
 
@@ -87,14 +84,14 @@ mod _serde {
     const DEFAULT_MEMORY_MAX_SIZE: usize = 8 * 1024 * 1024; // 8MB
     const DEFAULT_MAX_RECORD_SIZE: usize = 8 * 1024 * 1024; // 8MB
     const DEFAULT_MAX_CHUNK_FILE_SIZE: usize = 128 * 1024 * 1024; // 128MB
-    const DEFAULT_BUFFER_SIZE: usize = 512 * DEFAULT_MAX_CHUNK_FILE_SIZE; // 64GB
+    const DEFAULT_DISK_BUFFER_SIZE: usize = 64 * 1024 * 1024 * 1024; // 64GB
 
     fn default_memory_max_size() -> usize {
         DEFAULT_MEMORY_MAX_SIZE
     }
 
     fn default_disk_max_size() -> usize {
-        DEFAULT_BUFFER_SIZE
+        DEFAULT_DISK_BUFFER_SIZE
     }
 
     fn default_max_chunk_file_size() -> usize {
@@ -289,9 +286,8 @@ impl BufferConfig {
                 max_chunk_size,
                 max_record_size,
             } => {
-                let root = root.join(id);
                 let config = crate::disk::Config {
-                    root,
+                    root: root.join(id),
                     max_record_size,
                     max_chunk_size,
                     max_buffer_size: max_size,
@@ -344,8 +340,9 @@ memory:
         "#;
         let config = serde_yaml::from_str::<BufferConfig>(custom_disk).unwrap();
         assert_eq!(config.when_full, WhenFull::default());
-        assert!(
-            matches!(config.typ, BufferType::Disk { max_chunk_size, max_size, .. } if max_chunk_size == 256 * 1024 * 1024 && max_size == 16 * 1024 * 1024 * 1024 )
-        );
+        assert!(matches!(
+            config.typ,
+            BufferType::Disk { max_chunk_size, max_size, .. } if max_chunk_size == 256 * 1024 * 1024 && max_size == 16 * 1024 * 1024 * 1024,
+        ));
     }
 }
