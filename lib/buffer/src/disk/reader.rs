@@ -232,7 +232,13 @@ impl<T: Encodable> Reader<T> {
                         ledger.increment_reader_file_id();
                         ledger.decrease_buffer_bytes(file.metadata()?.len() as usize);
                     }
-                    RecordError::Corrupted { .. } => unreachable!(),
+                    RecordError::Corrupted => {
+                        // it's fine for reader to read next record
+                        warn!(
+                            message = "corrupted write detected by reader",
+                            ?path,
+                        );
+                    },
                 },
             }
         };
