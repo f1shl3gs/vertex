@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745430610578,
+  "lastUpdate": 1745430682452,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2aa3e8db1ba72adb0d2cbc5fe5b89408537cc5f4",
-          "message": "add missing source (#2207)",
-          "timestamp": "2025-02-16T08:36:51+08:00",
-          "tree_id": "e2489821ba3d401cfb50f930f8b2ff111b0cb88f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2aa3e8db1ba72adb0d2cbc5fe5b89408537cc5f4"
-        },
-        "date": 1739666865301,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37958.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99",
           "message": "lib/testify: add async docker implement (#2208)",
           "timestamp": "2025-02-18T12:04:49+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38220.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c54bf46b8139becc88533e321c05fc1d517fcd82",
+          "message": "Merge pull request #2311 from f1shl3gs/lib/framework/add_timeout_to_healtcheck_config\n\nlib/framework: add timeout for HealthcheckConfig",
+          "timestamp": "2025-04-24T01:39:28+08:00",
+          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c54bf46b8139becc88533e321c05fc1d517fcd82"
+        },
+        "date": 1745430660663,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 545,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38224.4,
             "unit": "KiB"
           }
         ]
