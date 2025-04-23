@@ -10,7 +10,7 @@ pub trait ByteSizeOf {
     /// allocated bytes. It default implementation is `std::mem::size_of`
     /// + `ByteSizeOf::allocated_bytes`
     fn size_of(&self) -> usize {
-        std::mem::size_of_val(self) + self.allocated_bytes()
+        size_of_val(self) + self.allocated_bytes()
     }
 
     /// Returns the allocated bytes of this type
