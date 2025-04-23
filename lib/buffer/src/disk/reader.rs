@@ -234,11 +234,8 @@ impl<T: Encodable> Reader<T> {
                     }
                     RecordError::Corrupted => {
                         // it's fine for reader to read next record
-                        warn!(
-                            message = "corrupted write detected by reader",
-                            ?path,
-                        );
-                    },
+                        warn!(message = "corrupted write detected by reader", ?path,);
+                    }
                 },
             }
         };
