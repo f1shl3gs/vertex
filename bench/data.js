@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745430125567,
+  "lastUpdate": 1745430150197,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6308c531f64ac61a7f30e93d5ff2f355b0bad5af",
-          "message": "add dpdk_memzone_info (#2200)",
-          "timestamp": "2025-02-12T18:40:05+08:00",
-          "tree_id": "c4c64747eddb317e1f03c9a758c31a4e7d42cdb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6308c531f64ac61a7f30e93d5ff2f355b0bad5af"
-        },
-        "date": 1739356965588,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.429,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 138.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 294.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 618.41,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 668.28,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c54bf46b8139becc88533e321c05fc1d517fcd82",
+          "message": "Merge pull request #2311 from f1shl3gs/lib/framework/add_timeout_to_healtcheck_config\n\nlib/framework: add timeout for HealthcheckConfig",
+          "timestamp": "2025-04-24T01:39:28+08:00",
+          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c54bf46b8139becc88533e321c05fc1d517fcd82"
+        },
+        "date": 1745430128594,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.746,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 150.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 674.17,
             "unit": "ns/op"
           }
         ]
