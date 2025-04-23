@@ -417,7 +417,7 @@ futures = { version = "0.3.31", default-features = false }
 futures-util = { version = "0.3.31", default-features = false }
 tokio = { version = "1.44.2", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-stream = { version = "0.1.17", default-features = false }
-tokio-util = { version = "0.7.15", default-features = false, features = ["codec", "time", "net"] }
+tokio-util = { version = "0.7.14", default-features = false, features = ["codec", "time", "net"] }
 
 # Tracing
 tracing = { version = "0.1.41", default-features = false }
