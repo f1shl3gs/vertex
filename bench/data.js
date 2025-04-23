@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745431768121,
+  "lastUpdate": 1745431801098,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ea5eec929c4e82c85921c0b668f6f58ae487ad9d",
-          "message": "use path! for Value::insert (#2202)",
-          "timestamp": "2025-02-13T04:20:36+08:00",
-          "tree_id": "a77952429180736cd6d27ca91acf76df3189fa98",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ea5eec929c4e82c85921c0b668f6f58ae487ad9d"
-        },
-        "date": 1739391806837,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.532,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 135.61,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 305.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 638.48,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "77782da5b705613a202a0e3083b6d3ceb9e36502",
           "message": "Sources/dnstap: init (#2204)",
           "timestamp": "2025-02-16T06:44:41+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 706.39,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e7a0e30dd0ea9ede220f74ae30162243c1f28771",
+          "message": "Merge pull request #2313 from f1shl3gs/revert-2310-dependabot/cargo/tokio-util-0.7.15\n\nRevert \"chore(deps): bump tokio-util from 0.7.14 to 0.7.15\"",
+          "timestamp": "2025-04-24T02:06:58+08:00",
+          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e7a0e30dd0ea9ede220f74ae30162243c1f28771"
+        },
+        "date": 1745431779607,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.449,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 170.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 343.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 700.28,
             "unit": "ns/op"
           }
         ]
