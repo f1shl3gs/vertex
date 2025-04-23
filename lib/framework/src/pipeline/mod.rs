@@ -2,12 +2,11 @@ mod errors;
 
 use std::collections::HashMap;
 
-use buffers::channel::{self, LimitedReceiver, LimitedSender};
+use buffer::{self, LimitedReceiver, LimitedSender};
 use bytesize::ByteSizeOf;
 use errors::ClosedError;
 use event::Events;
-use futures::Stream;
-use futures_util::StreamExt;
+use futures::{Stream, StreamExt};
 use metrics::{Attributes, Counter};
 
 use crate::config::Output;
@@ -146,7 +145,7 @@ impl Pipeline {
     pub fn new_test() -> (Self, impl Stream<Item = Events> + Unpin) {
         let (pipe, recv) = Self::new_with_buffer(100);
 
-        (pipe, recv.into_stream())
+        (pipe, recv)
     }
 
     #[cfg(feature = "test-util")]
@@ -159,7 +158,7 @@ impl Pipeline {
 
         // In a source test pipeline, there is no sink to acknowledge events,
         // so we have to add a map to the receiver to handle the finalization
-        let recv = recv.into_stream().map(move |mut events| {
+        let recv = recv.map(move |mut events| {
             let mut finalizers = events.take_finalizers();
             finalizers.update_status(status);
             finalizers.update_sources();
@@ -177,7 +176,7 @@ impl Pipeline {
         name: String,
     ) -> impl Stream<Item = Events> + Unpin {
         let (inner, recv) = Inner::new_with_buffer(100, "".into(), "".into(), name.clone());
-        let recv = recv.into_stream().map(move |mut events| {
+        let recv = recv.map(move |mut events| {
             events.for_each_event(|mut event| {
                 let metadata = event.metadata_mut();
                 metadata.update_status(status);
@@ -203,12 +202,12 @@ struct Inner {
 
 impl Inner {
     fn new_with_buffer(
-        n: usize,
+        capacity: usize,
         component: String,
         component_type: String,
         output: String,
     ) -> (Self, LimitedReceiver<Events>) {
-        let (tx, rx) = channel::limited(n);
+        let (tx, rx) = buffer::limited(capacity);
 
         let attrs = Attributes::from([
             ("output", output.into()),

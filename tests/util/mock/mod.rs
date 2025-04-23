@@ -1,8 +1,5 @@
-use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::{Arc, Mutex};
-
 use async_trait::async_trait;
-use buffers::channel::LimitedReceiver;
+use buffer::LimitedReceiver;
 use configurable::configurable_component;
 use event::{Events, Finalizable, MetricValue, log::Value};
 use framework::OutputBuffer;
@@ -15,6 +12,8 @@ use framework::{FunctionTransform, Healthcheck, Sink, Source, StreamSink, Transf
 use futures::{FutureExt, StreamExt};
 use futures_util::stream::BoxStream;
 use log_schema::log_schema;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex};
 use thiserror::Error;
 use tokio::sync::oneshot;
 use tracing::{error, info};
@@ -69,7 +68,7 @@ impl MockSourceConfig {
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "mock")]
 impl SourceConfig for MockSourceConfig {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {

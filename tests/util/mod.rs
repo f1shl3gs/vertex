@@ -30,7 +30,7 @@ pub fn transform(suffix: &str, increase: f64) -> MockTransformConfig {
 pub fn sink(channel_size: usize) -> (impl Stream<Item = Events>, MockSinkConfig) {
     let (tx, rx) = Pipeline::new_with_buffer(channel_size);
     let sink = MockSinkConfig::new(tx, true);
-    (rx.into_stream(), sink)
+    (rx, sink)
 }
 
 pub fn sink_with_data(
@@ -39,7 +39,7 @@ pub fn sink_with_data(
 ) -> (impl Stream<Item = Events>, MockSinkConfig) {
     let (tx, rx) = Pipeline::new_with_buffer(channel_size);
     let sink = MockSinkConfig::new_with_data(tx, true, data);
-    (rx.into_stream(), sink)
+    (rx, sink)
 }
 
 pub fn sink_failing_healthcheck(
@@ -47,5 +47,5 @@ pub fn sink_failing_healthcheck(
 ) -> (impl Stream<Item = Events>, MockSinkConfig) {
     let (tx, rx) = Pipeline::new_with_buffer(channel_size);
     let sink = MockSinkConfig::new(tx, false);
-    (rx.into_stream(), sink)
+    (rx, sink)
 }

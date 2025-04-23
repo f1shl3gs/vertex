@@ -272,6 +272,7 @@ impl Metricalize {
             let metric = Metric::new_with_metadata(
                 series.name.clone(),
                 series.tags.clone(),
+                None,
                 entry.0.clone(),
                 Some(now),
                 metadata,

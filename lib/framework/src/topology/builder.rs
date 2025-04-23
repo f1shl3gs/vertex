@@ -1,12 +1,9 @@
 use std::collections::HashMap;
 use std::future::ready;
-use std::num::NonZeroUsize;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use buffers::builder::TopologyBuilder;
-use buffers::channel::{BufferReceiver, BufferSender};
-use buffers::{BufferType, WhenFull};
+use buffer::{BufferReceiver, BufferSender, WhenFull};
 use bytesize::ByteSizeOf;
 use event::Events;
 use futures::{FutureExt, StreamExt};
@@ -17,8 +14,7 @@ use tracing_futures::Instrument;
 use tripwire::{Trigger, Tripwire};
 
 use super::BuiltBuffer;
-use super::fanout;
-use super::fanout::Fanout;
+use super::fanout::{ControlChannel, Fanout};
 use super::task::{Task, TaskOutput};
 use crate::config::{
     ComponentKey, Config, ConfigDiff, DataType, ExtensionContext, Output, OutputId, ProxyConfig,
@@ -30,12 +26,11 @@ use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownCoordinator;
 use crate::{SyncTransform, TaskTransform, Transform, TransformOutputs, TransformOutputsBuf};
 
-pub(crate) const CHUNK_SIZE: usize = 1024;
-pub(crate) const TOPOLOGY_BUFFER_SIZE: NonZeroUsize = NonZeroUsize::new(128).unwrap();
+pub(crate) const TOPOLOGY_MAX_BUFFER_SIZE: usize = 4 * 1024 * 1024; // 4MB
 
 pub struct Pieces {
     pub inputs: HashMap<ComponentKey, (BufferSender<Events>, Vec<OutputId>)>,
-    pub outputs: HashMap<ComponentKey, HashMap<Option<String>, fanout::ControlChannel>>,
+    pub outputs: HashMap<ComponentKey, HashMap<Option<String>, ControlChannel>>,
     pub tasks: HashMap<ComponentKey, Task>,
     pub source_tasks: HashMap<ComponentKey, Task>,
     pub health_checks: HashMap<ComponentKey, Task>,
@@ -57,7 +52,7 @@ fn build_transform(
     transform: Transform,
     node: TransformNode,
     input_rx: BufferReceiver<Events>,
-) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
+) -> (Task, HashMap<OutputId, ControlChannel>) {
     match transform {
         Transform::Function(f) => build_sync_transform(Box::new(f), node, input_rx),
         Transform::Synchronous(s) => build_sync_transform(s, node, input_rx),
@@ -71,7 +66,7 @@ fn build_sync_transform(
     transform: Box<dyn SyncTransform>,
     node: TransformNode,
     input_rx: BufferReceiver<Events>,
-) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
+) -> (Task, HashMap<OutputId, ControlChannel>) {
     let (outputs, controls) = TransformOutputs::new(node.outputs);
 
     let runner = Runner::new(
@@ -106,7 +101,7 @@ fn build_task_transform(
     input_type: DataType,
     typetag: &str,
     key: &ComponentKey,
-) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
+) -> (Task, HashMap<OutputId, ControlChannel>) {
     let (mut fanout, control) = Fanout::new();
     let input_rx = crate::utilization::wrap(input_rx.into_stream());
 
@@ -395,12 +390,12 @@ pub async fn build_pieces(
 
         let span = error_span!(
             "source",
-            component_kind = "source",
-            component_id = %key.id(),
-            component_type = %source.inner.component_name(),
+            kind = "source",
+            id = %key.id(),
+            r#type = %source.inner.component_name(),
         );
 
-        let mut builder = Pipeline::builder().with_buffer(CHUNK_SIZE * crate::num_workers());
+        let mut builder = Pipeline::builder().with_buffer(TOPOLOGY_MAX_BUFFER_SIZE);
         let mut pumps = Vec::new();
         let mut controls = HashMap::new();
 
@@ -520,7 +515,7 @@ pub async fn build_pieces(
         };
 
         let (input_tx, input_rx) =
-            TopologyBuilder::standalone_memory(TOPOLOGY_BUFFER_SIZE, WhenFull::Block).await;
+            buffer::standalone_memory(TOPOLOGY_MAX_BUFFER_SIZE, WhenFull::Block);
         inputs.insert(key.clone(), (input_tx, node.inputs.clone()));
 
         let (transform_task, transform_outputs) = build_transform(transform, node, input_rx);
@@ -543,31 +538,15 @@ pub async fn build_pieces(
         let (tx, rx) = if let Some(buffer) = buffers.remove(name) {
             buffer
         } else {
-            let buffer_type = match sink.buffer.stages().first().expect("cant ever be empty") {
-                BufferType::Memory { .. } => "memory",
-                BufferType::Disk { .. } => "disk",
-            };
-
-            let buffer_span = error_span!(
-                "sink",
-                component_kind = "sink",
-                component_id = %name,
-                component_type = typetag,
-                buffer_type = buffer_type,
-            );
-            let buffer = sink
+            let result = sink
                 .buffer
-                .build(
-                    config.global.data_dir.clone(),
-                    name.to_string(),
-                    buffer_span,
-                )
+                .build(name.to_string(), config.global.data_dir.clone().unwrap())
                 .await;
 
-            match buffer {
+            match result {
                 Ok((tx, rx)) => (tx, Arc::new(Mutex::new(Some(rx.into_stream())))),
                 Err(err) => {
-                    errors.push(format!("Sink \"{}\": {:?}", name, err));
+                    errors.push(format!("Sink \"{}\": {}", name, err));
                     continue;
                 }
             }

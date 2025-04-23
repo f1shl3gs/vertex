@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::pin::pin;
 use std::{fmt, task::Poll};
 
-use buffers::channel::BufferSender;
+use buffer::BufferSender;
 use event::Events;
 use futures::{Stream, StreamExt};
 use futures_util::{pending, poll};
@@ -228,8 +228,6 @@ impl Fanout {
                     // All in-flight sends have complected, so return sinks to the base collection.
                     // We extend instead of assign here because other sinks could have been added
                     // while the send was inflight.
-                    trace!(message = "Sent item to fanout");
-
                     break;
                 }
             }
@@ -403,15 +401,8 @@ impl Sender {
 #[cfg(test)]
 mod tests {
     use std::mem;
-    use std::num::NonZeroUsize;
 
-    use buffers::{
-        WhenFull,
-        topology::{
-            builder::TopologyBuilder,
-            channel::{BufferReceiver, BufferSender},
-        },
-    };
+    use buffer::{BufferReceiver, BufferSender, WhenFull};
     use event::{Event, EventContainer, Events, LogRecord};
     use futures::poll;
     use tokio::sync::mpsc::UnboundedSender;
@@ -422,11 +413,7 @@ mod tests {
     use crate::testing::{collect_ready, collect_ready_events};
 
     async fn build_sender_pair(capacity: usize) -> (BufferSender<Events>, BufferReceiver<Events>) {
-        TopologyBuilder::standalone_memory(
-            NonZeroUsize::new(capacity).expect("capacity must be nonzero"),
-            WhenFull::Block,
-        )
-        .await
+        buffer::standalone_memory(capacity, WhenFull::Block)
     }
 
     async fn build_sender_pairs(

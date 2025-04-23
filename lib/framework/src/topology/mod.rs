@@ -11,14 +11,14 @@ pub use builder::{Pieces, build_pieces};
 pub use fanout::{ControlChannel, ControlMessage, Fanout};
 pub use running::RunningTopology;
 
-use buffers::channel::{BufferReceiverStream, BufferSender};
+use std::collections::HashMap;
+use std::panic::AssertUnwindSafe;
+use std::sync::{Arc, Mutex};
+
+use buffer::BufferSender;
 use event::Events;
 use futures::{Future, FutureExt};
-use std::panic::AssertUnwindSafe;
-use std::{
-    collections::HashMap,
-    sync::{Arc, Mutex},
-};
+use futures_util::stream::BoxStream;
 use task::{Task, TaskOutput};
 use tokio::sync::mpsc;
 
@@ -26,7 +26,7 @@ use crate::config::{ComponentKey, Config, ConfigDiff, OutputId};
 
 type BuiltBuffer = (
     BufferSender<Events>,
-    Arc<Mutex<Option<BufferReceiverStream<Events>>>>,
+    Arc<Mutex<Option<BoxStream<'static, Events>>>>,
 );
 
 type Outputs = HashMap<OutputId, ControlChannel>;

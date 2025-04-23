@@ -1,0 +1,29 @@
+[package]
+name = "buffer"
+version = "0.1.0"
+edition = "2024"
+
+[dev-dependencies]
+futures = { version = "0.3.31", default-features = false, features = ["async-await", "executor", "thread-pool"] }
+rand = { version = "0.9.1", default-features = false, features = ["thread_rng"] }
+serde_yaml = { version = "0.9.34", default-features = false }
+tracing-subscriber = { version = "0.3.19", default-features = false, features = ["ansi", "fmt", "registry", "env-filter"] }
+tokio = { version = "1.44.2", default-features = false, features = ["rt-multi-thread"] }
+tokio-test = { version = "0.4.4", default-features = false }
+tracing = { version = "0.1.41", default-features = false, features = ["attributes"] }
+
+[dependencies]
+bytes = { version = "1.10.1", default-features = false }
+crc32fast = { version = "1.4.2", default-features = false }
+finalize = { path = "../finalize" }
+# TODO: file lock will be stable in 1.87
+# See https://github.com/rust-lang/rust/issues/130994
+fslock = { version = "0.2.1", default-features = false, features = ["std"] }
+futures = { version = "0.3.31", default-features = false }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
+memmap2 = { version = "0.9.5", default-features = false }
+pin-project-lite = { version = "0.2.16", default-features = false }
+serde = { version = "1.0.219", default-features = false }
+thiserror = { version = "2.0.12", default-features = false }
+tokio = { version = "1.44.2", default-features = false, features = ["rt", "time"] }
+tracing = { version = "0.1.41", default-features = false }

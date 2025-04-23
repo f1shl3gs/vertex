@@ -90,7 +90,7 @@ fn finish_metric(
 ) -> Metric {
     let (series, (value, timestamp, metadata)) = item;
 
-    Metric::new_with_metadata(series.name, series.tags, value, timestamp, metadata)
+    Metric::new_with_metadata(series.name, series.tags, None, value, timestamp, metadata)
 }
 
 /// The metrics state trait abstracts how data point normalization is

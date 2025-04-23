@@ -1,12 +1,11 @@
 mod util;
 
 use std::collections::HashMap;
-use std::num::NonZeroU64;
 use std::sync::atomic::AtomicUsize;
 use std::sync::{Arc, atomic::Ordering};
 use std::time::Duration;
 
-use buffers::{BufferConfig, BufferType, WhenFull};
+use buffer::{BufferConfig, BufferType, WhenFull};
 use event::array::into_event_stream;
 use event::{Event, EventContainer, Events, LogRecord};
 use framework::config::{Config, SinkOuter};
@@ -706,10 +705,12 @@ async fn topology_disk_buffer_flushes_on_idle() {
         Box::new(sink1),
     );
     sink1_outer.buffer = BufferConfig {
-        stages: vec![BufferType::Disk {
-            max_size: NonZeroU64::new(268435488).unwrap(),
-            when_full: WhenFull::DropNewest,
-        }],
+        when_full: WhenFull::DropNewest,
+        typ: BufferType::Disk {
+            max_size: 268435488,
+            max_record_size: 4 * 1024 * 1024,
+            max_chunk_size: 128 * 1024 * 1024,
+        },
     };
     config.add_sink_outer("out1", sink1_outer);
 
