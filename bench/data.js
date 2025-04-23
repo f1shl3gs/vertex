@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745430123179,
+  "lastUpdate": 1745430125567,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6308c531f64ac61a7f30e93d5ff2f355b0bad5af",
-          "message": "add dpdk_memzone_info (#2200)",
-          "timestamp": "2025-02-12T18:40:05+08:00",
-          "tree_id": "c4c64747eddb317e1f03c9a758c31a4e7d42cdb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6308c531f64ac61a7f30e93d5ff2f355b0bad5af"
-        },
-        "date": 1739356966772,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.354,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 108.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 192.77,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 177.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c54bf46b8139becc88533e321c05fc1d517fcd82",
+          "message": "Merge pull request #2311 from f1shl3gs/lib/framework/add_timeout_to_healtcheck_config\n\nlib/framework: add timeout for HealthcheckConfig",
+          "timestamp": "2025-04-24T01:39:28+08:00",
+          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c54bf46b8139becc88533e321c05fc1d517fcd82"
+        },
+        "date": 1745430103555,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.395,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.12,
             "unit": "ns/op"
           }
         ]
