@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745431093378,
+  "lastUpdate": 1745431502474,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f3d4c3079defd78bdeb9f79d160d722816a58257",
-          "message": "chore(deps): bump the prost group with 3 updates (#2201)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\n\n\nUpdates `prost` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-types` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\nUpdates `prost-build` from 0.13.4 to 0.13.5\n- [Release notes](https://github.com/tokio-rs/prost/releases)\n- [Changelog](https://github.com/tokio-rs/prost/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.13.4...v0.13.5)\n\n---\nupdated-dependencies:\n- dependency-name: prost\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-types\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n- dependency-name: prost-build\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: prost\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-12T18:52:58+08:00",
-          "tree_id": "a34cdc6d9a946a1903774bdabb814dbafdfb77b5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f3d4c3079defd78bdeb9f79d160d722816a58257"
-        },
-        "date": 1739358233444,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 30328000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 716370,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.018,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.576,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f1a05cae19f42d4638996961b7becbf04cd4acd",
+          "message": "Merge pull request #2310 from f1shl3gs/dependabot/cargo/tokio-util-0.7.15\n\nchore(deps): bump tokio-util from 0.7.14 to 0.7.15",
+          "timestamp": "2025-04-24T01:54:36+08:00",
+          "tree_id": "173f4374663a752a72c4563edce667a07f6a3035",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f1a05cae19f42d4638996961b7becbf04cd4acd"
+        },
+        "date": 1745431481177,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23360000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 649600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.308,
             "unit": "ns/op"
           }
         ]
