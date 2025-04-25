@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 use std::fmt::{Debug, Formatter};
 use std::hash::{Hash, Hasher};
 use std::marker::PhantomData;
+use std::mem::ManuallyDrop;
 use std::ptr::{NonNull, drop_in_place, slice_from_raw_parts_mut};
 
 use bytesize::ByteSizeOf;
@@ -200,7 +201,7 @@ impl Iterator for TagIntoIter {
     type Item = (Key, Value);
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.pos == self.len - 1 {
+        if self.pos == self.len {
             return None;
         }
 
@@ -220,10 +221,12 @@ impl IntoIterator for Tags {
     type IntoIter = TagIntoIter;
 
     fn into_iter(self) -> Self::IntoIter {
+        let this = ManuallyDrop::new(self);
+
         TagIntoIter {
-            data: self.data,
-            len: self.len,
-            cap: self.cap,
+            data: this.data,
+            len: this.len,
+            cap: this.cap,
             pos: 0,
         }
     }
@@ -779,5 +782,28 @@ mod tests {
         );
         assert_eq!(tags.len(), 2);
         assert_eq!(tags.capacity(), 3);
+    }
+
+    #[test]
+    fn into_iter() {
+        let tags = tags!();
+        let iter = tags.into_iter();
+        assert_eq!(iter.pos, 0);
+        drop(iter);
+
+        let tags = tags!(
+            "a" => "a",
+            "b" => "b",
+        );
+        let mut iter = tags.into_iter();
+        assert_eq!(iter.pos, 0);
+        assert_eq!(iter.len, 2);
+
+        let (key, value) = iter.next().unwrap();
+        assert_eq!(iter.pos, 1);
+        assert_eq!(iter.len, 2);
+        assert_eq!(key.as_str(), "a");
+        assert_eq!(value.to_string_lossy(), "a");
+        drop(iter);
     }
 }
