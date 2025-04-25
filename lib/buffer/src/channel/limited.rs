@@ -12,6 +12,7 @@ use crate::Encodable;
 use crate::queue::Queue;
 
 /// limited returns an unbounded, bytes limited MPSC channel
+#[must_use]
 pub fn limited<T>(limited: usize) -> (LimitedSender<T>, LimitedReceiver<T>) {
     let inner = Arc::new(Inner {
         queue: Queue::default(),
@@ -34,16 +35,6 @@ pub enum Error<T> {
     Closed(T),
 
     LimitExceeded(T),
-}
-
-impl<T> Error<T> {
-    #[inline]
-    pub fn inner(self) -> T {
-        match self {
-            Error::LimitExceeded(item) => item,
-            Error::Closed(item) => item,
-        }
-    }
 }
 
 struct Inner<T> {
@@ -80,7 +71,8 @@ impl<T> Debug for LimitedSender<T> {
 impl<T> Drop for LimitedSender<T> {
     fn drop(&mut self) {
         if self.inner.senders.fetch_sub(1, Ordering::SeqCst) == 1 {
-            self.inner.semaphore.close()
+            self.inner.semaphore.close();
+            self.inner.recv.wake();
         }
     }
 }
@@ -100,6 +92,7 @@ impl<T: Encodable> LimitedSender<T> {
         }
 
         self.inner.queue.push(item);
+
         // wake receiver if possible
         self.inner.recv.wake();
 
@@ -118,9 +111,8 @@ impl<T: Encodable> LimitedSender<T> {
     pub async fn try_send(&self, item: T) -> Result<(), Error<T>> {
         let bytes = item.byte_size();
 
-        match self.inner.semaphore.try_acquire(bytes) {
-            Ok(_) => {}
-            Err(_) => return Err(Error::LimitExceeded(item)),
+        if let Err(_err) = self.inner.semaphore.try_acquire(bytes) {
+            return Err(Error::Closed(item));
         }
 
         self.inner.queue.push(item);
@@ -149,6 +141,16 @@ impl<T> Debug for LimitedReceiver<T> {
     }
 }
 
+impl<T> Drop for LimitedReceiver<T> {
+    fn drop(&mut self) {
+        self.inner.semaphore.close();
+        if let Some(waker) = self.inner.recv.take() {
+            waker.wake();
+        }
+    }
+}
+
+/*
 impl<T: Encodable> LimitedReceiver<T> {
     #[inline]
     pub fn recv(&mut self) -> RecvFuture<'_, T> {
@@ -189,6 +191,7 @@ impl<T: Encodable> Future for RecvFuture<'_, T> {
         Poll::Pending
     }
 }
+*/
 
 impl<T: Encodable> Stream for LimitedReceiver<T> {
     type Item = T;
@@ -219,11 +222,13 @@ impl<T: Encodable> Stream for LimitedReceiver<T> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::tests::Message;
+
     use futures::StreamExt;
     use tokio_test::task::spawn;
-    use tokio_test::{assert_pending, assert_ready};
+    use tokio_test::{assert_pending, assert_ready, assert_ready_err};
+
+    use super::*;
+    use crate::tests::Message;
 
     #[tokio::test]
     async fn send_and_receive() {
@@ -294,7 +299,7 @@ mod tests {
         tx3.send(3.into()).await.unwrap();
 
         for i in 1..4 {
-            let got = rx.recv().await.unwrap();
+            let got = rx.next().await.unwrap();
             assert_eq!(got, i.into());
         }
 
@@ -302,5 +307,19 @@ mod tests {
         drop(tx2);
         drop(tx3);
         assert!(rx.next().await.is_none());
+    }
+
+    #[tokio::test]
+    async fn sender_notified_when_block_on_oversize_acquire() {
+        let (tx, rx) = limited::<Message>(10);
+        assert_eq!(tx.available_bytes(), 10);
+
+        let mut wait = spawn(async move { tx.send(11.into()).await });
+        assert_eq!(rx.inner.semaphore.available_permits(), 10);
+        assert_pending!(wait.poll());
+
+        drop(rx);
+
+        assert_ready_err!(wait.poll());
     }
 }
