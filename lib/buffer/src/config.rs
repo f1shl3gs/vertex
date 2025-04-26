@@ -94,11 +94,11 @@ mod _serde {
         DEFAULT_DISK_BUFFER_SIZE
     }
 
-    fn default_chunk_size_limit() -> usize {
+    fn default_max_chunk_size() -> usize {
         DEFAULT_MAX_CHUNK_FILE_SIZE
     }
 
-    fn default_record_size_limit() -> usize {
+    fn default_max_record_size() -> usize {
         DEFAULT_MAX_RECORD_SIZE
     }
 
@@ -111,23 +111,25 @@ mod _serde {
     }
 
     #[derive(Deserialize, Serialize)]
+    #[serde(deny_unknown_fields)]
     struct Memory {
         #[serde(default = "default_memory_max_size", with = "humanize::bytes::serde")]
         max_size: usize,
     }
 
     #[derive(Deserialize, Serialize)]
+    #[serde(deny_unknown_fields)]
     struct Disk {
         #[serde(default = "default_disk_max_size", with = "humanize::bytes::serde")]
         max_size: usize,
 
         /// The max size of each chunk, events will be written into chunks until
         /// the size of chunks become this size
-        #[serde(default = "default_chunk_size_limit", with = "humanize::bytes::serde")]
-        chunk_size_limit: usize,
+        #[serde(default = "default_max_chunk_size", with = "humanize::bytes::serde")]
+        max_chunk_size: usize,
 
-        #[serde(default = "default_record_size_limit", with = "humanize::bytes::serde")]
-        record_size_limit: usize,
+        #[serde(default = "default_max_record_size", with = "humanize::bytes::serde")]
+        max_record_size: usize,
     }
 
     impl<'de> Deserialize<'de> for BufferConfig {
@@ -176,9 +178,9 @@ mod _serde {
                                     let disk = map.next_value::<Disk>()?;
 
                                     typ = Some(BufferType::Disk {
-                                        max_chunk_size: disk.chunk_size_limit,
+                                        max_chunk_size: disk.max_chunk_size,
                                         max_size: disk.max_size,
-                                        max_record_size: disk.record_size_limit,
+                                        max_record_size: disk.max_record_size,
                                     });
                                 }
                                 Some(BufferType::Memory { .. }) => {
@@ -246,8 +248,8 @@ mod _serde {
                         "disk",
                         &Disk {
                             max_size,
-                            chunk_size_limit: max_chunk_size,
-                            record_size_limit: max_record_size,
+                            max_chunk_size,
+                            max_record_size,
                         },
                     )?;
                 }
