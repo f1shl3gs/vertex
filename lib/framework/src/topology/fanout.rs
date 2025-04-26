@@ -540,11 +540,11 @@ mod tests {
     #[tokio::test]
     async fn fanout_notready() {
         let events = make_events(2);
-        let es: Events = events.get(0).unwrap().clone().into();
+        let es: Events = events.first().unwrap().clone().into();
         let item_size = es.byte_size();
 
         let (mut fanout, _, mut receivers) =
-            fanout_from_senders(&[2 * item_size, 1 * item_size, 2 * item_size]).await;
+            fanout_from_senders(&[2 * item_size, item_size, 2 * item_size]).await;
 
         // First send should immediately complete because all senders have capacity:
         let mut first_send = spawn(fanout.send(events[0].clone().into()));
@@ -647,7 +647,7 @@ mod tests {
         // This means that if we remove a sink that a current send is blocked on, we should be able
         // to immediately proceed.
         let events = make_events(2);
-        let es: Events = events.get(0).unwrap().clone().into();
+        let es: Events = events.first().unwrap().clone().into();
         let item_size = es.byte_size();
         let expected_first_event = unwrap_log_event_message(events[0].clone());
         let expected_second_event = unwrap_log_event_message(events[1].clone());
@@ -686,7 +686,7 @@ mod tests {
 
         for (sender_id, should_complete, expected_last_seen) in cases {
             let (mut fanout, control, mut receivers) =
-                fanout_from_senders(&[2 * item_size, 1 * item_size, 2 * item_size]).await;
+                fanout_from_senders(&[2 * item_size, item_size, 2 * item_size]).await;
 
             // First send should immediately complete because all senders have capacity:
             let mut first_send = spawn(fanout.send(events[0].clone().into()));
