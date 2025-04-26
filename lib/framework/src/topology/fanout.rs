@@ -404,7 +404,7 @@ impl Sender {
 mod tests {
     use std::mem;
 
-    use buffer::{BufferReceiver, BufferSender, WhenFull};
+    use buffer::{BufferReceiver, BufferSender, Encodable, WhenFull};
     use event::{Event, EventContainer, Events, LogRecord};
     use futures::poll;
     use tokio::sync::mpsc::UnboundedSender;
@@ -525,7 +525,8 @@ mod tests {
 
     #[tokio::test]
     async fn fanout_writes_to_all() {
-        let (mut fanout, _, receivers) = fanout_from_senders(&[2, 2]).await;
+        let (mut fanout, _, receivers) =
+            fanout_from_senders(&[2 * 1024 * 1024, 2 * 1024 * 1024]).await;
         let events = make_event_array(2);
 
         let clones = events.clone();
@@ -538,8 +539,12 @@ mod tests {
 
     #[tokio::test]
     async fn fanout_notready() {
-        let (mut fanout, _, mut receivers) = fanout_from_senders(&[2, 1, 2]).await;
         let events = make_events(2);
+        let es: Events = events.get(0).unwrap().clone().into();
+        let item_size = es.byte_size();
+
+        let (mut fanout, _, mut receivers) =
+            fanout_from_senders(&[2 * item_size, 1 * item_size, 2 * item_size]).await;
 
         // First send should immediately complete because all senders have capacity:
         let mut first_send = spawn(fanout.send(events[0].clone().into()));
@@ -567,7 +572,8 @@ mod tests {
 
     #[tokio::test]
     async fn fanout_grow() {
-        let (mut fanout, _, mut receivers) = fanout_from_senders(&[4, 4]).await;
+        let (mut fanout, _, mut receivers) =
+            fanout_from_senders(&[4 * 1024 * 1024, 4 * 1024 * 1024]).await;
         let events = make_events(3);
 
         // Send in the first two events to our initial two senders:
@@ -575,7 +581,7 @@ mod tests {
         fanout.send(events[1].clone().into()).await;
 
         // Now add a third sender:
-        add_sender_to_fanout(&mut fanout, &mut receivers, 2, 4).await;
+        add_sender_to_fanout(&mut fanout, &mut receivers, 2, 4 * 1024 * 1024).await;
 
         // Send in the last event which all three senders will now get:
         fanout.send(events[2].clone().into()).await;
@@ -593,7 +599,8 @@ mod tests {
 
     #[tokio::test]
     async fn fanout_shrink() {
-        let (mut fanout, control, receivers) = fanout_from_senders(&[4, 4]).await;
+        let (mut fanout, control, receivers) =
+            fanout_from_senders(&[4 * 1024 * 1024, 4 * 1024 * 1024]).await;
         let events = make_events(3);
 
         // Send in the first two events to our initial two senders:
@@ -640,6 +647,8 @@ mod tests {
         // This means that if we remove a sink that a current send is blocked on, we should be able
         // to immediately proceed.
         let events = make_events(2);
+        let es: Events = events.get(0).unwrap().clone().into();
+        let item_size = es.byte_size();
         let expected_first_event = unwrap_log_event_message(events[0].clone());
         let expected_second_event = unwrap_log_event_message(events[1].clone());
 
@@ -676,7 +685,8 @@ mod tests {
         ];
 
         for (sender_id, should_complete, expected_last_seen) in cases {
-            let (mut fanout, control, mut receivers) = fanout_from_senders(&[2, 1, 2]).await;
+            let (mut fanout, control, mut receivers) =
+                fanout_from_senders(&[2 * item_size, 1 * item_size, 2 * item_size]).await;
 
             // First send should immediately complete because all senders have capacity:
             let mut first_send = spawn(fanout.send(events[0].clone().into()));
@@ -725,7 +735,8 @@ mod tests {
 
     #[tokio::test]
     async fn fanout_replace() {
-        let (mut fanout, control, mut receivers) = fanout_from_senders(&[4, 4, 4]).await;
+        let (mut fanout, control, mut receivers) =
+            fanout_from_senders(&[4 * 1024 * 1024, 4 * 1024 * 1024, 4 * 1024 * 1024]).await;
         let events = make_events(3);
 
         // First two sends should immediately complete because all senders have capacity:
@@ -733,7 +744,8 @@ mod tests {
         fanout.send(events[1].clone().into()).await;
 
         // Replace the first sender with a brand new one before polling again:
-        let old_first_receiver = replace_sender_in_fanout(&control, &mut receivers, 0, 4).await;
+        let old_first_receiver =
+            replace_sender_in_fanout(&control, &mut receivers, 0, 4 * 1024 * 1024).await;
 
         // And do the third send which should also complete since all senders still have capacity:
         fanout.send(events[2].clone().into()).await;
@@ -757,7 +769,8 @@ mod tests {
 
     #[tokio::test]
     async fn fanout_wait() {
-        let (mut fanout, control, mut receivers) = fanout_from_senders(&[4, 4]).await;
+        let (mut fanout, control, mut receivers) =
+            fanout_from_senders(&[4 * 1024 * 1024, 4 * 1024 * 1024]).await;
         let events = make_events(3);
 
         // First two sends should immediately complete because all senders have capacity:
@@ -770,7 +783,7 @@ mod tests {
         // doesn't let any writes through until we replace it properly.  We get back the receiver
         // we've replaced, but also the sender that we want to eventually install:
         let (old_first_receiver, new_first_sender) =
-            start_sender_replace(&control, &mut receivers, 0, 4).await;
+            start_sender_replace(&control, &mut receivers, 0, 4 * 1024 * 1024).await;
 
         // Third send should return pending because now we have an in-flight replacement:
         let mut third_send = spawn(fanout.send(events[2].clone().into()));
