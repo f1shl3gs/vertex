@@ -23,7 +23,7 @@ impl<T> Node<T> {
 
 /// the queue is in an inconsistent state. Popping data should succeed, but some pushers
 /// have yet to make enough progress in order allow a pop to succeed. It is recommended
-/// that a pop() occur "in the near future" in order to see if the sender has made
+/// that a `pop()` occur "in the near future" in order to see if the sender has made
 /// progress or not
 #[derive(Debug, PartialEq)]
 pub struct InconsistentError;
@@ -33,7 +33,7 @@ pub struct InconsistentError;
 /// one popper at a time, many pushers are allowed. This queue problem is not
 /// the best implementation, but it is the simplest one.
 ///
-/// See: http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue
+/// See: <http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue>
 pub struct Queue<T> {
     head: CachePadded<AtomicPtr<Node<T>>>,
     tail: CachePadded<UnsafeCell<*mut Node<T>>>,
@@ -115,6 +115,38 @@ impl<T> Queue<T> {
         }
     }
 
+    /// Attempts to pop from the front, if the item satisfies the given predication
+    ///
+    /// Returns `None` if the queue is observed to be empty, or the head does not
+    /// satisfy the given condition
+    pub fn pop_if(&self, pred: impl Fn(&T) -> bool) -> Result<Option<T>, InconsistentError> {
+        unsafe {
+            let tail = *self.tail.get();
+            let next = (*tail).next.load(Ordering::Acquire);
+
+            if !next.is_null() {
+                let value = (*next).value.as_ref().unwrap();
+                if !pred(value) {
+                    return Ok(None);
+                }
+
+                *self.tail.get() = next;
+
+                let item = (*next).value.take().unwrap();
+                drop(Box::from_raw(tail));
+
+                return Ok(Some(item));
+            }
+
+            if self.head.load(Ordering::Acquire) == tail {
+                // empty
+                Ok(None)
+            } else {
+                Err(InconsistentError)
+            }
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.head.load(Ordering::Acquire) == unsafe { *self.tail.get() }
     }
@@ -156,6 +188,8 @@ impl<T> Queue<T> {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::print_stdout)]
+
     use std::sync::Arc;
 
     use super::*;
@@ -230,5 +264,16 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn pop_if() {
+        let queue = Queue::default();
+        assert_eq!(queue.pop_if(|_value| true).unwrap(), None);
+
+        queue.push(1);
+        assert_eq!(queue.pop_if(|value| *value == 2).unwrap(), None);
+        assert_eq!(queue.pop_if(|value| *value == 1).unwrap(), Some(1));
+        assert_eq!(queue.pop_if(|_value| true).unwrap(), None);
     }
 }

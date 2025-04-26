@@ -15,6 +15,7 @@ pub use encoding::Encodable;
 pub use receiver::BufferReceiver;
 pub use sender::BufferSender;
 
+#[must_use]
 pub fn standalone_memory<T>(
     capacity: usize,
     when_full: WhenFull,

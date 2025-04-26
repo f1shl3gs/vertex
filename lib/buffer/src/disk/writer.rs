@@ -140,7 +140,7 @@ impl<T: Encodable> Writer<T> {
             write_size,
             unflushed_bytes: 0,
             unflushed_records: 0,
-            _pd: Default::default(),
+            _pd: PhantomData,
         })
     }
 
@@ -224,7 +224,10 @@ impl<T: Encodable> Writer<T> {
         self.unflushed_records += 1;
         self.next_record_id = self.next_record_id.wrapping_add(1);
 
-        // try flush!?
+        // force flush every 8MB
+        if self.unflushed_bytes >= 8 * 1024 * 1024 {
+            self.flush()?;
+        }
 
         Ok(Ok(required))
     }
@@ -292,19 +295,19 @@ impl<T: Encodable> Writer<T> {
                                 // file, which can only mean that we're still initializing, and
                                 // so this would be the chunk file we left off writing to.
                                 break file;
-                            } else {
-                                // The file isn't empty, and we're not in initialization anymore,
-                                // which means this chunk file is one that the reader still hasn't
-                                // finished reading through yet, and so we must wait for the reader
-                                // to delete it before we can proceed
-                                debug!(
-                                    message = "target chunk file is still present and not yet processed, waiting for reader",
-                                    path = ?next_path,
-                                    size
-                                );
-
-                                self.ledger.wait_for_write().await;
                             }
+
+                            // The file isn't empty, and we're not in initialization anymore,
+                            // which means this chunk file is one that the reader still hasn't
+                            // finished reading through yet, and so we must wait for the reader
+                            // to delete it before we can proceed
+                            debug!(
+                                message = "target chunk file is still present and not yet processed, waiting for reader",
+                                path = ?next_path,
+                                size
+                            );
+
+                            self.ledger.wait_for_write().await;
                         }
                         // Legitimate I/O error with the operation, bubble this up
                         _ => return Err(err.into()),

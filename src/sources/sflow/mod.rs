@@ -1671,7 +1671,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             ]
         }
         CounterRecordData::Raw(format, ..) => {
-            warn!(message = "unknown counter record type", format,);
+            warn!(message = "unknown counter record type", format);
 
             vec![]
         }

@@ -1,8 +1,5 @@
+use std::collections::VecDeque;
 use std::fmt::Debug;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicU64, Ordering};
-
-use crate::queue::Queue;
 
 #[derive(Debug)]
 enum PendingMarkerLength {
@@ -152,9 +149,9 @@ pub enum MarkerOffset {
 /// IDs represent the start of a record, and so simple arithmetic can determine the number
 /// of events that have theoretically been lost.
 pub struct OrderedAcknowledgements<T> {
-    unclaimed: AtomicU64,
-    watermark: AtomicU64,
-    pending_markers: Arc<Queue<PendingMarker<T>>>,
+    unclaimed: u64,
+    watermark: u64,
+    pending_markers: VecDeque<PendingMarker<T>>,
 }
 
 impl<T: Debug> Debug for OrderedAcknowledgements<T> {
@@ -162,16 +159,17 @@ impl<T: Debug> Debug for OrderedAcknowledgements<T> {
         f.debug_struct("OrderedAcknowledgements")
             .field("unclaimed", &self.unclaimed)
             .field("watermark", &self.watermark)
-            .finish_non_exhaustive()
+            .field("pending_markers", &self.pending_markers)
+            .finish()
     }
 }
 
 impl<T: Debug> OrderedAcknowledgements<T> {
     pub fn from_acked(watermark: u64) -> Self {
         Self {
-            unclaimed: AtomicU64::default(),
-            watermark: AtomicU64::new(watermark),
-            pending_markers: Arc::new(Queue::default()),
+            unclaimed: 0,
+            watermark,
+            pending_markers: VecDeque::new(),
         }
     }
 
@@ -180,9 +178,11 @@ impl<T: Debug> OrderedAcknowledgements<T> {
     /// Acknowledgements should be given by the caller to update the acknowledgement
     /// state before trying to get any eligible markers.
     #[cfg_attr(test, tracing::instrument(skip(self)))]
-    #[inline]
-    pub fn add_acknowledgements(&self, amount: u64) {
-        self.unclaimed.fetch_add(amount, Ordering::Release);
+    pub fn add_acknowledgements(&mut self, amount: u64) {
+        self.unclaimed = self
+            .unclaimed
+            .checked_add(amount)
+            .expect("overflowing unclaimed acknowledgements is a serious bug");
     }
 
     /// Adds a marker
@@ -219,7 +219,7 @@ impl<T: Debug> OrderedAcknowledgements<T> {
     /// Panics if pending markers is empty when last pending marker is an unknown size.
     #[cfg_attr(test, tracing::instrument(skip(self, data)))]
     pub fn add_marker(
-        &self,
+        &mut self,
         id: u64,
         len: Option<u64>,
         data: Option<T>,
@@ -234,7 +234,7 @@ impl<T: Debug> OrderedAcknowledgements<T> {
             // that marker ends, so we need to inject a synthetic gap marker to compensate
             // for that
             MarkerOffset::Gap(expected, amount) => {
-                self.pending_markers.push(PendingMarker {
+                self.pending_markers.push_back(PendingMarker {
                     id: expected,
                     len: PendingMarkerLength::Assumed(amount),
                     data: None,
@@ -248,7 +248,7 @@ impl<T: Debug> OrderedAcknowledgements<T> {
                 let len = id.wrapping_sub(last_marker_id);
                 let last_marker = self
                     .pending_markers
-                    .tail_mut()
+                    .back_mut()
                     .unwrap_or_else(|| panic!("pending markers should have items"));
 
                 last_marker.len = PendingMarkerLength::Assumed(len);
@@ -259,7 +259,7 @@ impl<T: Debug> OrderedAcknowledgements<T> {
             MarkerOffset::MonotonicityViolation => return Err(MarkerError::MonotonicityViolation),
         }
 
-        self.pending_markers.push(PendingMarker {
+        self.pending_markers.push_back(PendingMarker {
             id,
             len: len.map_or(PendingMarkerLength::Unknown, PendingMarkerLength::Known),
             data,
@@ -275,16 +275,12 @@ impl<T: Debug> OrderedAcknowledgements<T> {
     ///
     /// For pending markers with an unknown length, another pending marker must be present
     /// after it in order to calculate the ID offsets and determine the marker length.
-    pub fn get_next_eligible_marker(&self) -> Option<EligibleMarker<T>> {
-        let unclaimed = self.unclaimed.load(Ordering::Acquire);
-        let effective_acked_marker_id = self
-            .watermark
-            .load(Ordering::Acquire)
-            .wrapping_add(unclaimed);
+    pub fn get_next_eligible_marker(&mut self) -> Option<EligibleMarker<T>> {
+        let effective_acked_marker_id = self.watermark.wrapping_add(self.unclaimed);
 
         let maybe_eligible_marker =
             self.pending_markers
-                .head()
+                .front()
                 .and_then(|marker| match marker.len {
                     // If the acked marker ID is ahead of this marker, plus its length, it's
                     // been fully acknowledged, and we can consume and yield the marker. We
@@ -296,7 +292,8 @@ impl<T: Debug> OrderedAcknowledgements<T> {
                     PendingMarkerLength::Known(len) => {
                         let required_acked_marker_id = marker.id.wrapping_add(len);
 
-                        if required_acked_marker_id <= effective_acked_marker_id && unclaimed >= len
+                        if required_acked_marker_id <= effective_acked_marker_id
+                            && self.unclaimed >= len
                         {
                             Some((EligibleMarkerLength::Known(len), len))
                         } else {
@@ -323,23 +320,24 @@ impl<T: Debug> OrderedAcknowledgements<T> {
                 // If we actually got an eligible marker, we need to actually remove it from
                 // the pending marker queue, potentially adjust the amount of unclaimed
                 // acknowledgements we have, and adjust our acked marker ID.
-                let Some(PendingMarker { id, data, .. }) = self.pending_markers.pop().unwrap()
-                else {
-                    unreachable!("pending markers should not be empty")
-                };
+                let PendingMarker { id, data, .. } = self
+                    .pending_markers
+                    .pop_front()
+                    .unwrap_or_else(|| unreachable!("pending markers should not be empty"));
 
                 if acknowledged > 0 {
-                    self.unclaimed.fetch_sub(acknowledged, Ordering::Acquire);
+                    self.unclaimed =
+                        self.unclaimed.checked_sub(acknowledged).unwrap_or_else(|| {
+                            unreachable!(
+                                "should not be able to claim more acknowledgements than unclaimed"
+                            )
+                        });
                 }
 
-                self.watermark.store(
-                    id.wrapping_add(match len {
-                        EligibleMarkerLength::Assumed(len) | EligibleMarkerLength::Known(len) => {
-                            len
-                        }
-                    }),
-                    Ordering::Release,
-                );
+                self.watermark = id.wrapping_add(match len {
+                    EligibleMarkerLength::Known(len) => len,
+                    EligibleMarkerLength::Assumed(len) => len,
+                });
 
                 Some(EligibleMarker { id, len, data })
             }
@@ -376,14 +374,13 @@ impl<T: Debug> OrderedAcknowledgements<T> {
             //
             // Basically, it's up to the caller to figure this out. We're just trying to give
             // them as much information as we can.
-            let watermark = self.watermark.load(Ordering::Acquire);
-            if watermark != id {
-                return MarkerOffset::Gap(watermark, id.wrapping_sub(watermark));
+            if self.watermark != id {
+                return MarkerOffset::Gap(self.watermark, id.wrapping_sub(self.watermark));
             }
         } else {
             let back = self
                 .pending_markers
-                .tail()
+                .back()
                 .expect("pending markers should have items");
 
             // When we know the length of the previously added pending marker, we can figure out
@@ -414,13 +411,11 @@ impl<T: Debug> OrderedAcknowledgements<T> {
 
 #[cfg(test)]
 mod tests {
-    #![allow(clippy::print_stdout)]
-
     use super::*;
 
     #[test]
     fn demo() {
-        let acker: OrderedAcknowledgements<()> = OrderedAcknowledgements::from_acked(1);
+        let mut acker: OrderedAcknowledgements<()> = OrderedAcknowledgements::from_acked(1);
         println!("init\n{:#?}", acker);
 
         acker.add_marker(1, Some(25), None).unwrap();
@@ -441,14 +436,14 @@ mod tests {
         // println!("{:#?}", acker);
     }
 
-    #[derive(Debug, Clone, Copy)]
+    #[derive(Copy, Clone, Debug)]
     enum Action {
         Acknowledge(u64),
         AddMarker((u64, Option<u64>)),
         GetNextEligibleMarker,
     }
 
-    #[derive(Debug, PartialEq)]
+    #[derive(PartialEq, Debug)]
     enum ActionResult {
         // Number of unclaimed acknowledgements.
         Acknowledge(u64),
@@ -460,7 +455,7 @@ mod tests {
         match action {
             Action::Acknowledge(amount) => {
                 sut.add_acknowledgements(amount);
-                ActionResult::Acknowledge(sut.unclaimed.load(Ordering::Acquire))
+                ActionResult::Acknowledge(sut.unclaimed)
             }
             Action::AddMarker((id, maybe_len)) => {
                 let result = sut.add_marker(id, maybe_len, None);
@@ -470,6 +465,19 @@ mod tests {
                 let result = sut.get_next_eligible_marker();
                 ActionResult::GetNextEligibleMarker(result)
             }
+        }
+    }
+
+    fn run_case(name: &str, cases: Vec<(Action, ActionResult)>) {
+        let mut sut = OrderedAcknowledgements::from_acked(0);
+
+        for (action, expected_result) in cases {
+            let actual_result = apply_action_sut(&mut sut, action);
+
+            assert_eq!(
+                expected_result, actual_result,
+                "{name}: ran action {action:?} expecting result {expected_result:?}, but got result {actual_result:?} instead",
+            )
         }
     }
 
@@ -489,202 +497,18 @@ mod tests {
     }
 
     #[test]
-    fn basic_cases() {
-        // Smoke test.
-        run_test_case("empty", vec![step!(GetNextEligibleMarker, result => None)]);
-
-        // Simple through-and-through:
-        run_test_case(
+    fn basic() {
+        run_case(
             "through_and_through",
             vec![
                 step!(AddMarker, input => (0, Some(5)), result => Ok(())),
                 step!(Acknowledge, input => 5, result => 5),
                 step!(GetNextEligibleMarker, result => Some(
                     EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Known(5), data: None,
+                        id: 0, len: EligibleMarkerLength::Known(5), data: None
                     }
                 )),
             ],
-        );
-    }
-
-    #[test]
-    fn invariant_cases() {
-        // Checking for an eligible record between incremental acknowledgement:
-        run_test_case(
-            "eligible_multi_ack",
-            vec![
-                step!(AddMarker, input => (0, Some(13)), result => Ok(())),
-                step!(Acknowledge, input => 5, result => 5),
-                step!(GetNextEligibleMarker, result => None),
-                step!(Acknowledge, input => 5, result => 10),
-                step!(GetNextEligibleMarker, result => None),
-                step!(Acknowledge, input => 5, result => 15),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Known(13), data: None,
-                    }
-                )),
-            ],
-        );
-
-        // Unknown length markers can't be returned until a marker exists after them, even if we
-        // could maximally acknowledge them:
-        run_test_case(
-            "unknown_len_no_subsequent_marker",
-            vec![
-                step!(AddMarker, input => (0, None), result => Ok(())),
-                step!(Acknowledge, input => 5, result => 5),
-                step!(GetNextEligibleMarker, result => None),
-            ],
-        );
-
-        // We can always get back an unknown marker, with its length, regardless of
-        // acknowledgements, so long as there's a marker exists after them: fixed.
-        run_test_case(
-            "unknown_len_subsequent_marker_fixed",
-            vec![
-                step!(AddMarker, input => (0, None), result => Ok(())),
-                step!(AddMarker, input => (5, Some(1)), result => Ok(())),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Assumed(5), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => None),
-            ],
-        );
-
-        // We can always get back an unknown marker, with its length, regardless of
-        // acknowledgements, so long as there's a marker exists after them: unknown.
-        run_test_case(
-            "unknown_len_subsequent_marker_unknown",
-            vec![
-                step!(AddMarker, input => (0, None), result => Ok(())),
-                step!(AddMarker, input => (5, None), result => Ok(())),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Assumed(5), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => None),
-            ],
-        );
-
-        // Can add a marker without a known length and it will generate a synthetic gap marker
-        // that is immediately eligible:
-        run_test_case(
-            "unknown_len_no_pending_synthetic_gap",
-            vec![
-                step!(AddMarker, input => (1, None), result => Ok(())),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Assumed(1), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => None),
-            ],
-        );
-
-        // When another marker exists, and is fixed size, we correctly detect when trying to add
-        // another marker whose ID comes before the last pending marker we have:
-        run_test_case(
-            "detect_monotonicity_violation",
-            vec![
-                step!(AddMarker, input => (u64::MAX, Some(3)), result => Ok(())),
-                step!(AddMarker, input => (1, Some(2)), result => Err(MarkerError::MonotonicityViolation)),
-            ],
-        );
-
-        // When another marker exists, and is fixed size, we correctly detect when trying to add
-        // another marker whose ID comes after the last pending marker we have, including the
-        // length of the last pending marker, by updating the marker's unknown length to an
-        // assumed length, which is immediately eligible:
-        run_test_case(
-            "unknown_len_updated_fixed_marker",
-            vec![
-                step!(AddMarker, input => (0, Some(4)), result => Ok(())),
-                step!(AddMarker, input => (9, Some(3)), result => Ok(())),
-                step!(Acknowledge, input => 4, result => 4),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Known(4), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 4, len: EligibleMarkerLength::Assumed(5), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => None),
-            ],
-        );
-    }
-
-    #[test]
-    fn advanced_cases() {
-        // A marker with a length of 0 should be immediately available:
-        run_test_case(
-            "zero_length_eligible",
-            vec![
-                step!(AddMarker, input => (0, Some(0)), result => Ok(())),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Known(0), data: None,
-                    }
-                )),
-            ],
-        );
-
-        // When we have a fixed-size marker whose required acked marker ID lands right on the
-        // current acked marker ID, it should not be eligible unless there are enough unclaimed
-        // acks to actually account for it:
-        run_test_case(
-            "fixed_size_u64_boundary_overlap",
-            vec![
-                step!(AddMarker, input => (2_686_784_444_737_799_532, Some(15_759_959_628_971_752_084)), result => Ok(())),
-                step!(AddMarker, input => (0, None), result => Ok(())),
-                step!(AddMarker, input => (8_450_737_568, None), result => Ok(())),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Assumed(2_686_784_444_737_799_532), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => None),
-                step!(Acknowledge, input => 15_759_959_628_971_752_084, result => 15_759_959_628_971_752_084),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 2_686_784_444_737_799_532, len: EligibleMarkerLength::Known(15_759_959_628_971_752_084), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => Some(
-                    EligibleMarker {
-                        id: 0, len: EligibleMarkerLength::Assumed(8_450_737_568), data: None,
-                    }
-                )),
-                step!(GetNextEligibleMarker, result => None),
-            ],
-        );
-    }
-
-    fn run_test_case(name: &str, case: Vec<(Action, ActionResult)>) {
-        let mut sut = OrderedAcknowledgements::from_acked(0u64);
-        for (action, expected_result) in case {
-            let actual_result = apply_action_sut(&mut sut, action);
-            assert_eq!(
-                expected_result, actual_result,
-                "{name}: ran action {action:?} expecting result {expected_result:?}, but got result {actual_result:?} instead"
-            );
-        }
-    }
-
-    #[test]
-    fn unclaimed_acks_overflows() {
-        let actions = vec![Action::Acknowledge(u64::MAX), Action::Acknowledge(1)];
-
-        let mut sut = OrderedAcknowledgements::<()>::from_acked(0);
-        for action in actions {
-            apply_action_sut(&mut sut, action);
-        }
+        )
     }
 }

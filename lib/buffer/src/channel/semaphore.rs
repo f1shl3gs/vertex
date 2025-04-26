@@ -12,14 +12,14 @@ const CLOSED: usize = 1;
 /// An asynchronous counting semaphore which permits waiting on multiple permits at once.
 pub struct Semaphore {
     permits: AtomicUsize,
-    queue: Queue<Waker>,
+    queue: Queue<(usize, Waker)>,
 }
 
 impl Debug for Semaphore {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Semaphore")
             .field("permits", &self.permits)
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 
@@ -28,8 +28,7 @@ impl Semaphore {
     pub fn new(permits: usize) -> Self {
         assert!(
             permits <= MAX_PERMITS,
-            "a semaphore may not have more than MAX_PERMITS permits ({})",
-            MAX_PERMITS
+            "a semaphore may not have more than MAX_PERMITS permits ({MAX_PERMITS})",
         );
 
         Semaphore {
@@ -71,12 +70,17 @@ impl Semaphore {
     }
 
     /// Adds `amount` new permits to the semaphore.
-    pub fn release(&self, amount: usize) {
+    pub fn release(&self, mut amount: usize) {
         self.permits
             .fetch_add(amount << PERMIT_SHIFT, Ordering::Release);
 
-        // NOTE: Starvation might happen, but we do not really care about it
-        if let Ok(Some(waker)) = self.queue.pop() {
+        // wake as many as possible
+        //
+        //
+        while let Ok(Some((acquire, waker))) =
+            self.queue.pop_if(|(acquire, _waker)| amount >= *acquire)
+        {
+            amount -= acquire;
             waker.wake();
         }
     }
@@ -86,7 +90,7 @@ impl Semaphore {
     pub fn close(&self) {
         self.permits.fetch_or(CLOSED, Ordering::Release);
 
-        while let Ok(Some(waker)) = self.queue.pop() {
+        while let Ok(Some((_permit, waker))) = self.queue.pop() {
             waker.wake();
         }
     }
@@ -125,7 +129,7 @@ impl Future for AcquireFuture<'_> {
             let next = if current >= needed {
                 current - needed
             } else {
-                self.semaphore.queue.push(cx.waker().clone());
+                self.semaphore.queue.push((self.amount, cx.waker().clone()));
                 return Poll::Pending;
             };
 
@@ -149,7 +153,7 @@ impl Future for AcquireFuture<'_> {
 #[cfg(test)]
 mod tests {
     use tokio_test::task::spawn;
-    use tokio_test::{assert_pending, assert_ready};
+    use tokio_test::{assert_pending, assert_ready, assert_ready_err};
 
     use super::*;
 
@@ -208,11 +212,11 @@ mod tests {
         semaphore.acquire(1).await.unwrap();
         assert_eq!(semaphore.available_permits(), 4);
 
-        let mut waiting = spawn(async { semaphore.acquire(5).await.unwrap() });
+        let mut waiting = spawn(async { semaphore.acquire(5).await });
         assert_pending!(waiting.poll());
 
         semaphore.close();
         assert!(semaphore.acquire(1).await.is_err());
-        assert_ready!(waiting.poll());
+        assert_ready_err!(waiting.poll());
     }
 }

@@ -10,7 +10,7 @@ use futures::{FutureExt, StreamExt};
 use futures_util::stream::FuturesOrdered;
 use metrics::{Attributes, Counter};
 use tokio::time::timeout;
-use tracing_futures::Instrument;
+use tracing::Instrument;
 use tripwire::{Trigger, Tripwire};
 
 use super::BuiltBuffer;
@@ -109,7 +109,7 @@ fn build_task_transform(
     let stream = t.transform(Box::pin(filtered));
     let transform = async move {
         fanout.send_stream(stream).await;
-        debug!(message = "Finished");
+        debug!(message = "task transform finished");
         Ok(TaskOutput::Transform)
     };
 
@@ -238,7 +238,7 @@ impl Runner {
             self.send_outputs(&mut outputs_buf).await;
         }
 
-        debug!(message = "Finished");
+        debug!(message = "inline transform finished");
 
         Ok(TaskOutput::Transform)
     }
@@ -303,7 +303,8 @@ impl Runner {
             }
         }
 
-        debug!(message = "Finished");
+        debug!(message = "function transform finished");
+
         Ok(TaskOutput::Transform)
     }
 }
@@ -339,7 +340,13 @@ pub async fn build_pieces(
             shutdown: shutdown_signal,
         };
 
-        let ext = match extension.inner.build(cx).await {
+        let span = error_span!(
+            "extension",
+            id = %key.id(),
+            r#type = typetag,
+        );
+
+        let ext = match extension.inner.build(cx).instrument(span.clone()).await {
             Ok(ext) => ext,
             Err(err) => {
                 errors.push(format!("Extension {}: {}", key, err));
@@ -367,11 +374,13 @@ pub async fn build_pieces(
             match result {
                 Ok(()) => {
                     debug!(message = "extension finished");
+
                     Ok(TaskOutput::Extension)
                 }
                 Err(()) => Err(()),
             }
-        };
+        }
+        .instrument(span);
 
         let task = Task::new(key.clone(), typetag, server);
         tasks.insert(key.clone(), task);
@@ -390,9 +399,8 @@ pub async fn build_pieces(
 
         let span = error_span!(
             "source",
-            kind = "source",
-            id = %key.id(),
-            r#type = %source.inner.component_name(),
+            key = %key.id(),
+            r#type = typetag,
         );
 
         let mut builder = Pipeline::builder().with_buffer(TOPOLOGY_MAX_BUFFER_SIZE);
@@ -404,11 +412,14 @@ pub async fn build_pieces(
                 builder.add_output(key.id(), source.inner.component_name(), output.clone());
             let (mut fanout, control) = Fanout::new();
             let pump = async move {
-                debug!(message = "Source pump starting");
+                debug!(message = "source pump starting");
+
                 while let Some(events) = rx.next().await {
                     fanout.send(events).await;
                 }
-                debug!(message = "Source pump finished");
+
+                debug!(message = "source pump finished");
+
                 Ok(TaskOutput::Source)
             };
 
@@ -473,7 +484,7 @@ pub async fn build_pieces(
 
             match result {
                 Ok(()) => {
-                    debug!(message = "Finished");
+                    debug!(message = "source finished");
                     Ok(TaskOutput::Source)
                 }
                 Err(()) => Err(()),
@@ -535,13 +546,18 @@ pub async fn build_pieces(
         let typetag = sink.inner.component_name();
         let input_type = sink.inner.input_type();
 
+        let span = error_span!(
+            "sink",
+            id = %name.id(),
+            r#type = typetag,
+        );
+
         let (tx, rx) = if let Some(buffer) = buffers.remove(name) {
             buffer
         } else {
             let result = sink
                 .buffer
-                .build(name.to_string(), config.global.data_dir.clone().unwrap())
-                .await;
+                .build(name.to_string(), config.global.data_dir.clone().unwrap());
 
             match result {
                 Ok((tx, rx)) => (tx, Arc::new(Mutex::new(Some(rx.into_stream())))),
@@ -595,11 +611,15 @@ pub async fn build_pieces(
             )
             .await
             .map(|_| {
-                debug!(message = "sink finished", sink = component);
+                debug!(message = "sink finished normally");
 
                 TaskOutput::Sink(rx)
             })
-        };
+            .map_err(|_| {
+                debug!(message = "sink finished with an error");
+            })
+        }
+        .instrument(span.clone());
 
         let task = Task::new(name.clone(), typetag, sink);
         let component_key = name.clone();
@@ -617,10 +637,7 @@ pub async fn build_pieces(
             timeout(duration, healthcheck)
                 .map(|result| match result {
                     Ok(Ok(_)) => {
-                        info!(
-                            message = "health check passed",
-                            sink = %component_key,
-                        );
+                        info!(message = "health check passed");
 
                         Ok(TaskOutput::HealthCheck)
                     }
@@ -629,7 +646,6 @@ pub async fn build_pieces(
                         error!(
                             message = "health check failed",
                             %err,
-                            sink = %component_key,
                         );
 
                         Err(())
@@ -645,7 +661,8 @@ pub async fn build_pieces(
                     }
                 })
                 .await
-        };
+        }
+        .instrument(span);
 
         let healthcheck_task = Task::new(name.clone(), typetag, healthcheck_task);
         inputs.insert(name.clone(), (tx, sink_inputs.clone()));

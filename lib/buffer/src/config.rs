@@ -41,7 +41,7 @@ pub enum WhenFull {
     // DropOldest,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum BufferType {
     Memory {
         /// The maximum size of the buffer can hold. It works for Memory and Disk
@@ -94,11 +94,11 @@ mod _serde {
         DEFAULT_DISK_BUFFER_SIZE
     }
 
-    fn default_max_chunk_file_size() -> usize {
+    fn default_chunk_size_limit() -> usize {
         DEFAULT_MAX_CHUNK_FILE_SIZE
     }
 
-    fn default_max_record_size() -> usize {
+    fn default_record_size_limit() -> usize {
         DEFAULT_MAX_RECORD_SIZE
     }
 
@@ -121,14 +121,13 @@ mod _serde {
         #[serde(default = "default_disk_max_size", with = "humanize::bytes::serde")]
         max_size: usize,
 
-        #[serde(
-            default = "default_max_chunk_file_size",
-            with = "humanize::bytes::serde"
-        )]
-        max_chunk_size: usize,
+        /// The max size of each chunk, events will be written into chunks until
+        /// the size of chunks become this size
+        #[serde(default = "default_chunk_size_limit", with = "humanize::bytes::serde")]
+        chunk_size_limit: usize,
 
-        #[serde(default = "default_max_record_size", with = "humanize::bytes::serde")]
-        max_record_size: usize,
+        #[serde(default = "default_record_size_limit", with = "humanize::bytes::serde")]
+        record_size_limit: usize,
     }
 
     impl<'de> Deserialize<'de> for BufferConfig {
@@ -177,10 +176,10 @@ mod _serde {
                                     let disk = map.next_value::<Disk>()?;
 
                                     typ = Some(BufferType::Disk {
-                                        max_chunk_size: disk.max_chunk_size,
+                                        max_chunk_size: disk.chunk_size_limit,
                                         max_size: disk.max_size,
-                                        max_record_size: disk.max_record_size,
-                                    })
+                                        max_record_size: disk.record_size_limit,
+                                    });
                                 }
                                 Some(BufferType::Memory { .. }) => {
                                     return Err(Error::custom("memory buffer is already defined"));
@@ -247,8 +246,8 @@ mod _serde {
                         "disk",
                         &Disk {
                             max_size,
-                            max_chunk_size,
-                            max_record_size,
+                            chunk_size_limit: max_chunk_size,
+                            record_size_limit: max_record_size,
                         },
                     )?;
                 }
@@ -267,7 +266,7 @@ impl BufferConfig {
     /// The `Acker` is provided to callers in order to update the buffer when popped items
     /// have been processed and can be dropped or deleted, depending on the underlying
     /// buffer implementation.
-    pub async fn build<T: Encodable + Unpin>(
+    pub fn build<T: Encodable + Unpin>(
         &self,
         id: String,
         root: PathBuf,
@@ -310,10 +309,10 @@ mod tests {
 
     #[test]
     fn deserialize() {
-        let simple = r#"
+        let simple = r"
 memory:
     max_size: 16 mi
-        "#;
+";
 
         let config = serde_yaml::from_str::<BufferConfig>(simple).unwrap();
         assert_eq!(config.when_full, WhenFull::default());
@@ -321,11 +320,11 @@ memory:
             matches!(config.typ, BufferType::Memory { max_size } if max_size == 16 * 1024 * 1024 )
         );
 
-        let simple_with_mode = r#"
+        let simple_with_mode = r"
 when_full: drop_newest
 memory:
     max_size: 16 mi
-        "#;
+        ";
 
         let config = serde_yaml::from_str::<BufferConfig>(simple_with_mode).unwrap();
         assert_eq!(config.when_full, WhenFull::DropNewest);
@@ -333,11 +332,11 @@ memory:
             matches!(config.typ, BufferType::Memory { max_size } if max_size == 16 * 1024 * 1024 )
         );
 
-        let custom_disk = r#"
+        let custom_disk = r"
         disk:
             max_size: 16 gib
             max_chunk_size: 256 mi
-        "#;
+        ";
         let config = serde_yaml::from_str::<BufferConfig>(custom_disk).unwrap();
         assert_eq!(config.when_full, WhenFull::default());
         assert!(matches!(

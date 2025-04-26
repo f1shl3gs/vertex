@@ -141,20 +141,18 @@ impl Pipeline {
         )
     }
 
-    #[cfg(any(test, feature = "test-util"))]
-    pub fn new_test() -> (Self, impl Stream<Item = Events> + Unpin) {
-        let (pipe, recv) = Self::new_with_buffer(100);
+    pub fn new_test() -> (Self, LimitedReceiver<Events>) {
+        let (pipe, recv) = Self::new_with_buffer(128 * 1024);
 
         (pipe, recv)
     }
 
-    #[cfg(feature = "test-util")]
     pub fn new_test_finalize(
         status: event::EventStatus,
     ) -> (Self, impl Stream<Item = Events> + Unpin) {
         use event::Finalizable;
 
-        let (pipe, recv) = Self::new_with_buffer(100);
+        let (pipe, recv) = Self::new_with_buffer(128 * 1024);
 
         // In a source test pipeline, there is no sink to acknowledge events,
         // so we have to add a map to the receiver to handle the finalization
@@ -175,7 +173,7 @@ impl Pipeline {
         status: event::EventStatus,
         name: String,
     ) -> impl Stream<Item = Events> + Unpin {
-        let (inner, recv) = Inner::new_with_buffer(100, "".into(), "".into(), name.clone());
+        let (inner, recv) = Inner::new_with_buffer(128 * 1024, "".into(), "".into(), name.clone());
         let recv = recv.map(move |mut events| {
             events.for_each_event(|mut event| {
                 let metadata = event.metadata_mut();

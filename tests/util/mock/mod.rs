@@ -54,17 +54,21 @@ impl MockSourceConfig {
         }
     }
 
-    pub fn new_with_event_counter(
-        receiver: LimitedReceiver<Events>,
-        event_counter: Arc<AtomicUsize>,
-    ) -> Self {
-        Self {
-            receiver: Arc::new(Mutex::new(Some(receiver))),
-            event_counter: Some(event_counter),
-            data_type: Some(DataType::All),
-            force_shutdown: false,
-            data: None,
-        }
+    pub fn new_with_event_counter(force_shutdown: bool) -> (Pipeline, Self, Arc<AtomicUsize>) {
+        let event_counter = Arc::new(AtomicUsize::new(0));
+        let (tx, rx) = Pipeline::new_test();
+
+        (
+            tx,
+            Self {
+                receiver: Arc::new(Mutex::new(Some(rx))),
+                event_counter: Some(Arc::clone(&event_counter)),
+                data_type: Some(DataType::All),
+                force_shutdown,
+                data: None,
+            },
+            event_counter,
+        )
     }
 }
 
@@ -105,7 +109,8 @@ impl SourceConfig for MockSourceConfig {
                 }
             }
 
-            info!("Finished sending.");
+            info!("finished sending.");
+
             Ok(())
         }))
     }

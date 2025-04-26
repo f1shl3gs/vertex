@@ -1,9 +1,10 @@
+#[path = "acknowledgement_v1.rs"]
 mod acknowledgement;
 mod ledger;
 mod reader;
+mod record;
 mod writer;
 
-mod record;
 #[cfg(test)]
 pub mod tests;
 

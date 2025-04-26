@@ -78,14 +78,14 @@ pub struct BufferSender<T: Encodable> {
 }
 
 impl<T: Encodable> BufferSender<T> {
-    pub fn memory(tx: LimitedSender<T>, when_full: WhenFull) -> Self {
+    pub(crate) fn memory(tx: LimitedSender<T>, when_full: WhenFull) -> Self {
         Self {
             adapter: Adapter::Memory(tx),
             when_full,
         }
     }
 
-    pub fn disk(tx: Writer<T>, when_full: WhenFull) -> Self {
+    pub(crate) fn disk(tx: Writer<T>, when_full: WhenFull) -> Self {
         Self {
             adapter: Adapter::Disk(Arc::new(Mutex::new(tx))),
             when_full,
@@ -102,7 +102,7 @@ impl<T: Encodable> BufferSender<T> {
 
                 match err {
                     Error::Closed(_) | Error::LimitExceeded(_) => Err(err),
-                    err => {
+                    err @ Error::Write(_) => {
                         trace!(message = "drop newest item", ?err);
 
                         Ok(())

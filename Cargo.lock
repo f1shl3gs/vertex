@@ -364,6 +364,7 @@ dependencies = [
  "humanize",
  "memmap2",
  "pin-project-lite",
+ "pprof",
  "rand 0.9.1",
  "serde",
  "serde_yaml",

@@ -1,3 +1,5 @@
+#![allow(clippy::print_stdout)]
+
 mod acknowledgements;
 mod basic;
 mod initialization;

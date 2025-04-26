@@ -1,4 +1,5 @@
 use std::time::{Duration, Instant};
+
 use tokio::task::JoinSet;
 
 const MESSAGES: usize = 100_000_000;

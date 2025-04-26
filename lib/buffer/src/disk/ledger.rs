@@ -116,7 +116,7 @@ impl Debug for Ledger {
             .field("done", &self.write_done)
             .field("buffer_bytes", &self.buffer_bytes)
             .field("buffer_records", &self.buffer_records)
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 
@@ -180,12 +180,12 @@ impl Ledger {
         // When the reader does any necessary seeking to get to the record it left off on,
         // it will adjust the "total buffer size" downwards for each record it runs through,
         // leaving "total buffer size" at the correct value.
-        let mut total_buffer_size = 0usize;
+        let mut total_buffer_size = 0;
         for entry in std::fs::read_dir(root)?.flatten() {
             let path = entry.path();
 
             if matches!(path.extension(), Some(ext) if ext == "chunk") {
-                let size = path.metadata()?.len() as usize;
+                let size = path.metadata()?.len();
                 total_buffer_size += size;
 
                 debug!(
@@ -200,18 +200,18 @@ impl Ledger {
         Ok(Ledger {
             backing,
             lock,
-            buffer_bytes: AtomicUsize::new(total_buffer_size),
+            buffer_bytes: AtomicUsize::new(total_buffer_size as usize),
             buffer_records: AtomicUsize::new(buffered_records as usize),
-            read_notify: Default::default(),
-            write_notify: Default::default(),
-            write_done: Default::default(),
+            read_notify: Notify::default(),
+            write_notify: Notify::default(),
+            write_done: AtomicBool::default(),
         })
     }
 
     /// Notifies all tasks waiting on progress by the reader.
     #[cfg_attr(test, tracing::instrument(skip(self)))]
     pub fn notify_readers(&self) {
-        self.read_notify.notify_one()
+        self.read_notify.notify_one();
     }
 
     /// Waits for a signal from the reader that progress has been made.
@@ -227,7 +227,7 @@ impl Ledger {
     /// Notifies all tasks waiting on progress by the writer.
     #[cfg_attr(test, tracing::instrument(skip(self)))]
     pub fn notify_writers(&self) {
-        self.write_notify.notify_one()
+        self.write_notify.notify_one();
     }
 
     /// Wait for a signal from the writer that progress has been made.

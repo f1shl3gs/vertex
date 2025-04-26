@@ -20,13 +20,8 @@ fn main() {
 
             for key in &["foo", "bar"] {
                 for line_number in &[1, 2] {
-                    let span = info_span!(
-                        "sink",
-                        component_kind = "sink",
-                        component_id = &key,
-                        component_type = "fake",
-                        vrl_line_number = &line_number,
-                    );
+                    let span =
+                        info_span!("sink", key, r#type = "fake", vrl_line_number = &line_number);
                     let _enter = span.enter();
                     info!(
                         message =

@@ -575,7 +575,6 @@ impl RunningTopology {
         let task = new_pieces.tasks.remove(key).unwrap();
         let span = error_span!(
             "extension",
-            kind = "extension",
             key = %task.key(),
             r#type = %task.typetag(),
         );
@@ -594,7 +593,6 @@ impl RunningTopology {
         let task = new_pieces.tasks.remove(key).unwrap();
         let span = error_span!(
             "transform",
-            kind = "transform",
             key = %task.key(),
             r#type = %task.typetag(),
         );
@@ -609,7 +607,6 @@ impl RunningTopology {
         let task = new_pieces.tasks.remove(key).unwrap();
         let span = error_span!(
             "source",
-            kind = "source",
             key = %task.key(),
             r#type = %task.typetag(),
         );

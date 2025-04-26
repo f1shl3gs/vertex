@@ -2,8 +2,6 @@ use std::fs::OpenOptions;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::PathBuf;
 
-use crc32fast::Hasher;
-
 /// Result of checking if a buffer contained a valid record
 pub enum RecordStatus {
     /// The record was able to be read from the buffer, and the checksum is valid.
@@ -19,9 +17,9 @@ pub enum RecordStatus {
 pub fn validate_record(buf: &[u8]) -> RecordStatus {
     assert!(buf.len() > 4 + 8);
 
-    let checksum = unsafe { std::ptr::read::<u32>(buf.as_ptr() as *const _) };
+    let checksum = u32::from_ne_bytes((&buf[..4]).try_into().unwrap());
     let calculated = {
-        let mut hasher = Hasher::new();
+        let mut hasher = crc32fast::Hasher::new();
 
         hasher.update(&buf[4..]);
         hasher.finalize()
@@ -33,7 +31,7 @@ pub fn validate_record(buf: &[u8]) -> RecordStatus {
         };
     }
 
-    let id = unsafe { std::ptr::read(buf.as_ptr().add(4) as *const _) };
+    let id = u64::from_ne_bytes((&buf[4..12]).try_into().unwrap());
     RecordStatus::Valid { id }
 }
 
@@ -73,8 +71,8 @@ pub fn validate_last_write(path: &PathBuf, id: u64) -> Result<(), Error> {
     let checksum = u32::from_ne_bytes((&len_buf[4..]).try_into().unwrap());
 
     let mut consumed = 4; // the record length include crc32, so it's 4 not 0
-    let mut hasher = Hasher::new();
     let mut buf = vec![0u8; 4096];
+    let mut hasher = crc32fast::Hasher::new();
 
     while consumed < length {
         let amount = file.read(&mut buf)?;
@@ -94,7 +92,7 @@ pub fn validate_last_write(path: &PathBuf, id: u64) -> Result<(), Error> {
 }
 
 /// Seeks to where this reader previously left off, and return the remaining size,
-/// aka, file_size - position
+/// aka, `file_size` - `position`
 pub fn seek_to_next_record_id(file: &mut std::fs::File, id: u64) -> Result<u64, Error> {
     let limit = file.metadata()?.len();
     let mut position = 0;
@@ -126,7 +124,7 @@ pub fn seek_to_next_record_id(file: &mut std::fs::File, id: u64) -> Result<u64, 
         position += len + 4;
         if position > limit {
             // partial write found, and it is safe to ignore when start
-            position = limit
+            position = limit;
         }
 
         // seek overflow won't cause a error

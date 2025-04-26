@@ -197,10 +197,12 @@ impl Fanout {
                 biased;
 
                 maybe_msg = self.control_channel.recv(), if control_channel_open => {
-                    trace!(
-                        message = "Processing control message inside of send",
-                        ?maybe_msg,
-                    );
+                    if maybe_msg.is_some() {
+                        trace!(
+                            message = "Processing control message inside of send",
+                            ?maybe_msg,
+                        );
+                    }
 
                     // During a send operation, control messages must be applied via
                     // the `SendGroup`, since it has exclusive access to the senders.

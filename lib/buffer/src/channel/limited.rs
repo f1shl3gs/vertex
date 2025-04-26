@@ -150,7 +150,6 @@ impl<T> Drop for LimitedReceiver<T> {
     }
 }
 
-/*
 impl<T: Encodable> LimitedReceiver<T> {
     #[inline]
     pub fn recv(&mut self) -> RecvFuture<'_, T> {
@@ -191,7 +190,6 @@ impl<T: Encodable> Future for RecvFuture<'_, T> {
         Poll::Pending
     }
 }
-*/
 
 impl<T: Encodable> Stream for LimitedReceiver<T> {
     type Item = T;

@@ -5,7 +5,7 @@ use std::io::Read;
 use std::marker::PhantomData;
 use std::path::PathBuf;
 use std::pin::Pin;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 
 use finalize::{BatchNotifier, BatchStatus, OrderedFinalizer};
@@ -67,7 +67,7 @@ impl Debug for BufReader {
             .field("capacity", &self.capacity())
             .field("start", &self.start)
             .field("end", &self.end)
-            .finish()
+            .finish_non_exhaustive()
     }
 }
 
@@ -117,7 +117,7 @@ impl BufReader {
             // It's totally fine
             #[allow(clippy::uninit_vec)]
             unsafe {
-                self.buf.set_len(self.buf.len() * 2)
+                self.buf.set_len(self.buf.len() * 2);
             };
         } else if self.end == self.buf.len() {
             // there is still some room, filling existing buffer
@@ -165,14 +165,14 @@ impl BufReader {
     }
 }
 
-type Acknowledgements = Arc<OrderedAcknowledgements<(usize, Option<PathBuf>)>>;
+type Acknowledgements = Arc<Mutex<OrderedAcknowledgements<(usize, Option<PathBuf>)>>>;
 
 /// Reads records from the chunk file
 ///
 /// Reader not just provide a mechanism to read record form chunk files, it also tracks the
 /// acknowledgments of records and chunk files.
 ///
-/// - If the chunk file cannot provide any record and the writer_file_id != reader_file_id,
+/// - If the chunk file cannot provide any record and the `writer_file_id` != `reader_file_id`,
 ///   the reader will roll to next chunk file
 /// - Once the chunk file's all records are acknowledgment the chunk file would be deleted.
 ///
@@ -234,17 +234,18 @@ impl<T: Encodable> Reader<T> {
                     }
                     RecordError::Corrupted => {
                         // it's fine for reader to read next record
-                        warn!(message = "corrupted write detected by reader", ?path,);
+                        warn!(message = "corrupted write detected by reader", ?path);
                     }
                 },
             }
         };
 
-        let records_acknowledgements = Arc::new(
-            OrderedAcknowledgements::<(usize, Option<PathBuf>)>::from_acked(
-                next_expected_record_id,
-            ),
-        );
+        let records_acknowledgements = Arc::new(Mutex::new(OrderedAcknowledgements::<(
+            usize,
+            Option<PathBuf>,
+        )>::from_acked(
+            next_expected_record_id
+        )));
 
         let (finalizer, stream) = OrderedFinalizer::new::<Pending<()>>(None);
         tokio::spawn(run_finalizer(
@@ -309,7 +310,7 @@ impl<T: Encodable> Reader<T> {
                         reader_file_id, writer_file_id,
                     );
 
-                    self.roll_to_next_chunk_file().await?;
+                    self.roll_to_next_chunk_file()?;
                     maybe_chunk = Some(self.config.chunk_path(reader_file_id));
                 } else {
                     self.ledger.wait_for_read().await;
@@ -348,7 +349,7 @@ impl<T: Encodable> Reader<T> {
             RecordStatus::Valid { id } => {
                 let mut record = T::decode(&buf[4 + 8..]).map_err(Error::Decode)?;
 
-                if let Err(_err) = self.records_acknowledgements.add_marker(
+                if let Err(_err) = self.records_acknowledgements.lock().unwrap().add_marker(
                     id,
                     Some(1),
                     Some((4 + length, maybe_chunk)),
@@ -379,7 +380,7 @@ impl<T: Encodable> Reader<T> {
     }
 
     #[cfg_attr(test, tracing::instrument(skip(self)))]
-    async fn roll_to_next_chunk_file(&mut self) -> std::io::Result<()> {
+    fn roll_to_next_chunk_file(&mut self) -> std::io::Result<()> {
         // Add a marker for this chunk file so we know when it can be safely deleted. We also
         // need to track the necessary data to do our buffer accounting when it's eligible
         // for deletion.
@@ -453,27 +454,27 @@ async fn run_finalizer(
     let mut stream = ReadyFold { stream };
 
     while let Some(amount) = stream.next().await {
-        acknowledgements.add_acknowledgements(amount);
+        let mut guard = acknowledgements.lock().unwrap();
+
+        guard.add_acknowledgements(amount);
 
         let mut ack_records = 0;
         let mut ack_bytes = 0;
-        while let Some(EligibleMarker { len, data, .. }) =
-            acknowledgements.get_next_eligible_marker()
-        {
+        while let Some(EligibleMarker { len, data, .. }) = guard.get_next_eligible_marker() {
             if let Some((bytes, maybe_chunk)) = data {
                 ack_bytes += bytes;
 
                 if let Some(path) = maybe_chunk {
                     match std::fs::remove_file(&path) {
                         Ok(_) => {
-                            debug!(message = "deleting completed chunk file successful", ?path,);
+                            debug!(message = "deleting completed chunk file successful", ?path);
                         }
                         Err(err) => {
                             error!(
                                 message = "deleting completed chunk file failed",
                                 ?path,
                                 ?err
-                            )
+                            );
                         }
                     }
                 }
@@ -486,6 +487,8 @@ async fn run_finalizer(
                 EligibleMarkerLength::Assumed(_) => {}
             }
         }
+
+        drop(guard);
 
         ledger.increase_last_reader_record_id(ack_records);
         ledger.decrease_buffer_bytes(ack_bytes);
