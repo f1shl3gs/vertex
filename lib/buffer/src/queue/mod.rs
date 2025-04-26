@@ -260,7 +260,7 @@ mod tests {
                 match queue.pop() {
                     Ok(Some(_)) => break,
                     Ok(None) => panic!("pop returned None"),
-                    Err(_) => unsafe { std::arch::x86_64::_mm_pause() },
+                    Err(_) => tokio::task::yield_now().await,
                 }
             }
         }
