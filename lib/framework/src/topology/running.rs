@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
-use buffers::channel::BufferSender;
+use buffer::BufferSender;
 use event::Events;
 use futures::{Future, FutureExt, future};
 use tokio::sync::{mpsc, watch};
@@ -575,9 +575,8 @@ impl RunningTopology {
         let task = new_pieces.tasks.remove(key).unwrap();
         let span = error_span!(
             "extension",
-            component_kind = "extension",
-            component_key = %task.key(),
-            component_type = %task.typetag(),
+            key = %task.key(),
+            r#type = %task.typetag(),
         );
 
         let task = handle_errors(task, self.abort_tx.clone()).instrument(span);
@@ -594,9 +593,8 @@ impl RunningTopology {
         let task = new_pieces.tasks.remove(key).unwrap();
         let span = error_span!(
             "transform",
-            component_kind = "transform",
-            component_key = %task.key(),
-            component_type = %task.typetag(),
+            key = %task.key(),
+            r#type = %task.typetag(),
         );
         let task = handle_errors(task, self.abort_tx.clone()).instrument(span);
         let spawned = tokio::spawn(task);
@@ -609,9 +607,8 @@ impl RunningTopology {
         let task = new_pieces.tasks.remove(key).unwrap();
         let span = error_span!(
             "source",
-            component_kind = "source",
-            component_key = %task.key(),
-            component_type = %task.typetag(),
+            key = %task.key(),
+            r#type = %task.typetag(),
         );
         let task = handle_errors(task, self.abort_tx.clone()).instrument(span.clone());
         let spawned = tokio::spawn(task);

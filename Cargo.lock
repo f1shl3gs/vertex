@@ -353,36 +353,25 @@ dependencies = [
 ]
 
 [[package]]
-name = "buffers"
+name = "buffer"
 version = "0.1.0"
 dependencies = [
- "async-stream",
- "async-trait",
  "bytes",
- "bytesize",
  "crc32fast",
- "criterion",
- "crossbeam-queue",
- "crossbeam-utils",
- "event",
  "finalize",
  "fslock",
  "futures",
+ "humanize",
  "memmap2",
- "metrics",
- "num-traits",
- "parking_lot",
- "proptest",
- "prost 0.13.5",
- "quickcheck",
+ "pin-project-lite",
+ "pprof",
+ "rand 0.9.1",
  "serde",
- "testify",
+ "serde_yaml",
  "thiserror 2.0.12",
  "tokio",
  "tokio-test",
- "tokio-util",
  "tracing",
- "tracing-fluent-assertions",
  "tracing-subscriber",
 ]
 
@@ -958,6 +947,7 @@ dependencies = [
 name = "event"
 version = "0.1.0"
 dependencies = [
+ "buffer",
  "bytes",
  "bytesize",
  "chrono",
@@ -1073,7 +1063,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "backoff",
- "buffers",
+ "buffer",
  "bytes",
  "bytesize",
  "chrono",
@@ -1478,13 +1468,13 @@ dependencies = [
 
 [[package]]
 name = "hostname"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9c7c7c8ac16c798734b8a24560c1362120597c40d5e1459f09498f8f6c8f2ba"
+checksum = "a56f203cd1c76362b69e3863fd987520ac36cf70a8c92627449b2f64a8cf7d65"
 dependencies = [
  "cfg-if",
  "libc",
- "windows",
+ "windows-link",
 ]
 
 [[package]]
@@ -2944,7 +2934,7 @@ version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "48375394603e3dd4b2d64371f7148fd8c7baa2680e28741f2cb8d23b59e3d4c4"
 dependencies = [
- "hostname 0.4.0",
+ "hostname 0.4.1",
 ]
 
 [[package]]
@@ -4087,17 +4077,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracing-fluent-assertions"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12de1a8c6bcfee614305e836308b596bbac831137a04c61f7e5b0b0bf2cfeaf6"
-dependencies = [
- "tracing",
- "tracing-core",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "tracing-futures"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4335,7 +4314,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "base64 0.22.1",
- "buffers",
+ "buffer",
  "bytes",
  "bytesize",
  "chrono",
@@ -4601,16 +4580,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
-name = "windows"
-version = "0.52.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e48a53791691ab099e5e2ad123536d0fff50652600abaf43bbf952894110d0be"
-dependencies = [
- "windows-core",
- "windows-targets 0.52.6",
-]
-
-[[package]]
 name = "windows-core"
 version = "0.52.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4621,9 +4590,9 @@ dependencies = [
 
 [[package]]
 name = "windows-link"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6dccfd733ce2b1753b03b6d3c65edf020262ea35e20ccdf3e288043e6dd620e3"
+checksum = "76840935b766e1b0a05c0066835fb9ec80071d4c09a16f6bd5f7e655e3c14c38"
 
 [[package]]
 name = "windows-sys"

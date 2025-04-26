@@ -245,7 +245,7 @@ mod tests {
         };
     }
 
-    fn test_gauge(name: impl Into<String>, value: f64, tags: Tags) -> Event {
+    fn gauge(name: impl Into<String>, value: f64, tags: Tags) -> Event {
         Metric::gauge_with_tags(name, "", value, tags)
             .with_timestamp(Some(Utc::now()))
             .into()
@@ -296,7 +296,7 @@ mod tests {
     async fn sends_request() {
         let outputs = send_request(
             "",
-            vec![test_gauge(
+            vec![gauge(
                 "gauge_2",
                 32.0,
                 tags!("foo" => "bar", "bar" => "foo"),
@@ -326,7 +326,7 @@ mod tests {
 
         let outputs = send_request(
             "auth:\n  strategy: basic\n  user: user\n  password: password",
-            vec![test_gauge("gauge_2", 32.0, tags!("foo" => "bar"))],
+            vec![gauge("gauge_2", 32.0, tags!("foo" => "bar"))],
         )
         .await;
 
@@ -347,11 +347,8 @@ mod tests {
 
     #[tokio::test]
     async fn send_x_scope_orgid_header() {
-        let outputs = send_request(
-            "tenant_id: tenant",
-            vec![test_gauge("gauge_3", 12.1, tags!())],
-        )
-        .await;
+        let outputs =
+            send_request("tenant_id: tenant", vec![gauge("gauge_3", 12.1, tags!())]).await;
 
         assert_eq!(outputs.len(), 1);
         let (headers, _) = &outputs[0];
@@ -362,7 +359,7 @@ mod tests {
     async fn sends_templated_x_scope_orgid_header() {
         let outputs = send_request(
             "tenant_id: tenant_%Y",
-            vec![test_gauge("gauge_3", 12.3, tags!())],
+            vec![gauge("gauge_3", 12.3, tags!())],
         )
         .await;
 

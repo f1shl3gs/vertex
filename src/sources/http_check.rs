@@ -459,6 +459,7 @@ async fn probe(target: &Target) -> Result<(Parts, Trace), Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::Duration;
 
     use bytes::Bytes;
     use event::MetricValue;
@@ -535,12 +536,14 @@ mod tests {
 
             let task = tokio::spawn(run(
                 target,
-                default_interval(),
+                Duration::from_secs(1),
                 output,
                 shutdown,
                 ProxyConfig::default(),
             ));
-            tokio::time::sleep(Duration::from_secs(1)).await;
+
+            tokio::task::yield_now().await;
+
             let events = collect_one(receiver).await;
             task.abort();
 

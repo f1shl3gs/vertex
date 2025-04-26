@@ -125,6 +125,7 @@ impl ByteSizeOf for Metric {
             + self.unit.allocated_bytes()
             + self.description.allocated_bytes()
             + self.value.allocated_bytes()
+            + self.metadata.allocated_bytes()
     }
 }
 
@@ -307,13 +308,14 @@ impl Metric {
     pub fn new_with_metadata(
         name: String,
         tags: Tags,
+        description: Option<String>,
         value: MetricValue,
         timestamp: Option<DateTime<Utc>>,
         metadata: EventMetadata,
     ) -> Self {
         Self {
             series: MetricSeries { name, tags },
-            description: None,
+            description,
             unit: None,
             timestamp,
             value,

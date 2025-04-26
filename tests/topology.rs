@@ -1,19 +1,16 @@
 mod util;
 
 use std::collections::HashMap;
-use std::num::NonZeroU64;
-use std::sync::atomic::AtomicUsize;
-use std::sync::{Arc, atomic::Ordering};
+use std::sync::atomic::Ordering;
 use std::time::Duration;
 
-use buffers::{BufferConfig, BufferType, WhenFull};
+use buffer::{BufferConfig, BufferType, WhenFull};
 use event::array::into_event_stream;
 use event::{Event, EventContainer, Events, LogRecord};
 use framework::config::{Config, SinkOuter};
-use framework::{Pipeline, topology};
-use futures_util::{StreamExt, stream};
+use framework::topology;
+use futures::{StreamExt, stream};
 use log_schema::log_schema;
-use tokio::time::sleep;
 use util::{
     MockSourceConfig, sink, sink_failing_healthcheck, sink_with_data, source, source_with_data,
     start_topology, trace_init, transform,
@@ -35,7 +32,7 @@ fn into_message_stream(events: Events) -> impl futures::Stream<Item = String> {
 fn basic_config() -> Config {
     let mut config = Config::builder();
     config.add_source("in1", source().1);
-    config.add_sink("out1", &["in1"], sink(10).1);
+    config.add_sink("out1", &["in1"], sink().1);
     config.build().unwrap()
 }
 
@@ -47,15 +44,13 @@ fn basic_config_with_sink_failing_healthcheck() -> Config {
 }
 
 #[tokio::test]
-async fn shutdown_while_active() {
-    let source_event_counter = Arc::new(AtomicUsize::new(0));
-    let source_event_total = source_event_counter.clone();
+async fn shutdown_while_source_active() {
+    trace_init();
 
-    let (mut in1, rx) = Pipeline::new_with_buffer(10);
+    let (mut in1, source1, source_event_counter) = MockSourceConfig::new_with_event_counter(true);
 
-    let source1 = MockSourceConfig::new_with_event_counter(rx, source_event_counter);
     let transform1 = transform(" transformed", 0.0);
-    let (out1, sink1) = sink(10);
+    let (out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -68,37 +63,36 @@ async fn shutdown_while_active() {
         in1.send_stream(&mut stream).await
     });
 
+    let sink_handle = tokio::spawn(async move { out1.collect::<Vec<_>>().await });
+
     // Wait until at least 100 events have been seen by the source so we know the pump is running
     // and pushing events through the pipeline.
-    while source_event_total.load(Ordering::SeqCst) < 100 {
-        sleep(Duration::from_millis(10)).await;
+    while source_event_counter.load(Ordering::SeqCst) < 100 {
+        tokio::task::yield_now().await;
     }
 
-    // Now shut down the RunningTopology while Events are still beging processed.
-    let stop_complete = tokio::spawn(topology.stop());
+    // Now shut down the RunningTopology while Events are still being processed.
+    topology.stop().await;
 
     // Now that shutdown has begun we should be able to drain the Sink without
     // blocking forever, as the source should shut down and close its output channel.
-    let processed_events = out1.collect::<Vec<_>>().await;
+    let processed_events = sink_handle.await.unwrap();
     assert_eq!(
         processed_events
             .iter()
             .fold(0, |acc, events| { acc + events.len() }),
-        source_event_total.load(Ordering::Relaxed)
+        source_event_counter.load(Ordering::Relaxed)
     );
 
-    for event in processed_events.into_iter().flat_map(Events::into_events) {
-        assert_eq!(
-            event
-                .as_log()
+    for mut events in processed_events.into_iter() {
+        events.for_each_log(|log| {
+            let msg = log
                 .get(log_schema().message_key())
                 .unwrap()
-                .to_string_lossy(),
-            "test transformed".to_string()
-        );
+                .to_string_lossy();
+            assert_eq!(msg, "test transformed")
+        });
     }
-
-    stop_complete.await.unwrap();
 
     // We expect the pump to fail with an error since we shutdown the
     // source it was sending to while it was running.
@@ -106,9 +100,9 @@ async fn shutdown_while_active() {
 }
 
 #[tokio::test]
-async fn topology_source_and_sink() {
+async fn source_and_sink() {
     let (mut in1, source1) = source();
-    let (out1, sink1) = sink(10);
+    let (out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -127,10 +121,12 @@ async fn topology_source_and_sink() {
 }
 
 #[tokio::test]
-async fn topology_multiple_sources() {
+async fn multiple_sources() {
+    trace_init();
+
     let (mut in1, source1) = source();
     let (mut in2, source2) = source();
-    let (mut out1, sink1) = sink(10);
+    let (mut out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -157,13 +153,13 @@ async fn topology_multiple_sources() {
 }
 
 #[tokio::test]
-async fn topology_multiple_sinks() {
+async fn multiple_sinks() {
     trace_init();
 
     // Create source #1 as `in1`, sink #1, and sink #2, with both sink #1 and sink #2 attached to `in1`.
     let (mut in1, source1) = source();
-    let (out1, sink1) = sink(10);
-    let (out2, sink2) = sink(10);
+    let (out1, sink1) = sink();
+    let (out2, sink2) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -191,11 +187,13 @@ async fn topology_multiple_sinks() {
 }
 
 #[tokio::test]
-async fn topology_transform_chain() {
+async fn transform_chain() {
+    trace_init();
+
     let (mut in1, source1) = source();
     let transform1 = transform(" first", 0.0);
     let transform2 = transform(" second", 0.0);
-    let (out1, sink1) = sink(10);
+    let (out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -217,12 +215,12 @@ async fn topology_transform_chain() {
 }
 
 #[tokio::test]
-async fn topology_remove_one_source() {
+async fn remove_one_source() {
     trace_init();
 
     let (mut in1, source1) = source();
     let (mut in2, source2) = source();
-    let (_out1, sink1) = sink(10);
+    let (_out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -231,7 +229,7 @@ async fn topology_remove_one_source() {
 
     let (mut topology, _crash) = start_topology(config.build().unwrap(), false).await;
 
-    let (out1, sink1) = sink(10);
+    let (out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source().1);
@@ -263,10 +261,12 @@ async fn topology_remove_one_source() {
 }
 
 #[tokio::test]
-async fn topology_remove_one_sink() {
+async fn remove_one_sink() {
+    trace_init();
+
     let (mut in1, source1) = source();
-    let (out1, sink1) = sink(10);
-    let (out2, sink2) = sink(10);
+    let (out1, sink1) = sink();
+    let (out2, sink2) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -277,7 +277,7 @@ async fn topology_remove_one_sink() {
 
     let mut config = Config::builder();
     config.add_source("in1", source().1);
-    config.add_sink("out1", &["in1"], sink(10).1);
+    config.add_sink("out1", &["in1"], sink().1);
 
     assert!(
         topology
@@ -300,14 +300,14 @@ async fn topology_remove_one_sink() {
 }
 
 #[tokio::test]
-async fn topology_remove_one_transform() {
+async fn remove_one_transform() {
     trace_init();
 
     // Create a simple source/transform/transform/sink topology, wired up in that order:
     let (mut in1, source1) = source();
     let transform1 = transform(" transformed", 0.0);
     let transform2 = transform(" transformed", 0.0);
-    let (out1, sink1) = sink(10);
+    let (out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -320,7 +320,7 @@ async fn topology_remove_one_transform() {
     // Now create an identical topology, but remove one of the transforms:
     let (mut in2, source2) = source();
     let transform2 = transform(" transformed", 0.0);
-    let (out2, sink2) = sink(10);
+    let (out2, sink2) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source2);
@@ -357,12 +357,12 @@ async fn topology_remove_one_transform() {
 }
 
 #[tokio::test]
-async fn topology_swap_source() {
+async fn swap_source() {
     trace_init();
 
     // Add source #1 as `in1`, and sink #1 as `out1`, with sink #1 attached to `in1`:
     let (mut in1, source1) = source();
-    let (out1, sink1) = sink(10);
+    let (out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -372,7 +372,7 @@ async fn topology_swap_source() {
 
     // Now, create sink #2 and replace `out2` with it, and add source #2 as `in2`, attached to `out1`:
     let (mut in2, source2) = source();
-    let (out2, sink2) = sink(10);
+    let (out2, sink2) = sink();
 
     let mut config = Config::builder();
     config.add_source("in2", source2);
@@ -411,14 +411,14 @@ async fn topology_swap_source() {
 }
 
 #[tokio::test]
-async fn topology_swap_transform() {
+async fn swap_transform() {
     trace_init();
 
     // Add source #1 as `in1`, transform #1 as `t1`, and sink #1 as `out1`, with transform #1
     // attached to `in1` and sink #1 attached to `t1`:
     let (mut in1, source1) = source();
     let transform1 = transform(" transformed", 0.0);
-    let (out1, sink1) = sink(10);
+    let (out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -431,7 +431,7 @@ async fn topology_swap_transform() {
     // and add sink #2 as `out1`, attached to `t1`:
     let (mut in2, source2) = source();
     let transform2 = transform(" replaced", 0.0);
-    let (out2, sink2) = sink(10);
+    let (out2, sink2) = sink();
 
     let mut config = Config::builder();
     config.add_source("in1", source2);
@@ -471,12 +471,12 @@ async fn topology_swap_transform() {
 }
 
 #[tokio::test]
-async fn topology_swap_sink() {
+async fn swap_sink() {
     trace_init();
 
     // Add source #1 as `in1`, and sink #1 as `out1`, with sink #1 attached to `in1`:
     let (mut in1, source1) = source();
-    let (out1, sink1) = sink_with_data(10, "v1");
+    let (out1, sink1) = sink_with_data("v1");
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -486,7 +486,7 @@ async fn topology_swap_sink() {
 
     // Now, create an identical topology except that the sink has changed which will force it to be rebuilt:
     let (mut in2, source2) = source();
-    let (out2, sink2) = sink_with_data(10, "v2");
+    let (out2, sink2) = sink_with_data("v2");
 
     let mut config = Config::builder();
     config.add_source("in1", source2);
@@ -525,11 +525,11 @@ async fn topology_swap_sink() {
 }
 
 #[tokio::test]
-async fn topology_rebuild_connected() {
+async fn rebuild_connected() {
     trace_init();
 
     let (_in1, source1) = source_with_data("v1");
-    let (_out1, sink1) = sink_with_data(10, "v1");
+    let (_out1, sink1) = sink_with_data("v1");
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -538,7 +538,7 @@ async fn topology_rebuild_connected() {
     let (mut topology, _crash) = start_topology(config.build().unwrap(), false).await;
 
     let (mut in1, source1) = source_with_data("v2");
-    let (out1, sink1) = sink_with_data(10, "v2");
+    let (out1, sink1) = sink_with_data("v2");
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -565,13 +565,13 @@ async fn topology_rebuild_connected() {
 }
 
 #[tokio::test]
-async fn topology_rebuild_connected_transform() {
+async fn rebuild_connected_transform() {
     trace_init();
 
     let (mut in1, source1) = source_with_data("v1");
     let transform1 = transform(" transformed", 0.0);
     let transform2 = transform(" transformed", 0.0);
-    let (out1, sink1) = sink_with_data(10, "v1");
+    let (out1, sink1) = sink_with_data("v1");
 
     let mut config = Config::builder();
     config.add_source("in1", source1);
@@ -584,7 +584,7 @@ async fn topology_rebuild_connected_transform() {
     let (mut in2, source2) = source_with_data("v1"); // not changing
     let transform1 = transform("", 0.0);
     let transform2 = transform("", 0.0);
-    let (out2, sink2) = sink_with_data(10, "v2");
+    let (out2, sink2) = sink_with_data("v2");
 
     let mut config = Config::builder();
     config.add_source("in1", source2);
@@ -617,7 +617,7 @@ async fn topology_rebuild_connected_transform() {
 }
 
 #[tokio::test]
-async fn topology_required_healthcheck_fails_start() {
+async fn required_healthcheck_fails_start() {
     let mut config = basic_config_with_sink_failing_healthcheck();
     config.healthcheck.require_healthy = true;
     let diff = framework::config::ConfigDiff::initial(&config);
@@ -633,7 +633,7 @@ async fn topology_required_healthcheck_fails_start() {
 }
 
 #[tokio::test]
-async fn topology_optional_healthcheck_does_not_fail_start() {
+async fn optional_healthcheck_does_not_fail_start() {
     let config = basic_config_with_sink_failing_healthcheck();
     let diff = framework::config::ConfigDiff::initial(&config);
     let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new())
@@ -647,7 +647,7 @@ async fn topology_optional_healthcheck_does_not_fail_start() {
 }
 
 #[tokio::test]
-async fn topology_optional_healthcheck_does_not_fail_reload() {
+async fn optional_healthcheck_does_not_fail_reload() {
     let config = basic_config();
     let (mut topology, _crash) = start_topology(config, false).await;
     let config = basic_config_with_sink_failing_healthcheck();
@@ -655,7 +655,7 @@ async fn topology_optional_healthcheck_does_not_fail_reload() {
 }
 
 #[tokio::test]
-async fn topology_healthcheck_not_run_on_unchanged_reload() {
+async fn healthcheck_not_run_on_unchanged_reload() {
     let config = basic_config();
 
     let (mut topology, _crash) = start_topology(config, false).await;
@@ -665,12 +665,12 @@ async fn topology_healthcheck_not_run_on_unchanged_reload() {
 }
 
 #[tokio::test]
-async fn topology_healthcheck_run_for_changes_on_reload() {
+async fn healthcheck_run_for_changes_on_reload() {
     let mut config = Config::builder();
     // We can't just drop the sender side since that will close the source.
     let (_ch0, src) = source();
     config.add_source("in1", src);
-    config.add_sink("out1", &["in1"], sink(10).1);
+    config.add_sink("out1", &["in1"], sink().1);
 
     let (mut topology, _crash) = start_topology(config.build().unwrap(), false).await;
 
@@ -686,7 +686,7 @@ async fn topology_healthcheck_run_for_changes_on_reload() {
 }
 
 #[tokio::test]
-async fn topology_disk_buffer_flushes_on_idle() {
+async fn disk_buffer_flushes_on_idle() {
     trace_init();
 
     let tmpdir = testify::temp_dir();
@@ -694,7 +694,7 @@ async fn topology_disk_buffer_flushes_on_idle() {
 
     let (mut in1, source1) = source();
     let transform1 = transform("", 0.0);
-    let (mut out1, sink1) = sink(10);
+    let (mut out1, sink1) = sink();
 
     let mut config = Config::builder();
     config.set_data_dir(tmpdir.as_path());
@@ -706,10 +706,12 @@ async fn topology_disk_buffer_flushes_on_idle() {
         Box::new(sink1),
     );
     sink1_outer.buffer = BufferConfig {
-        stages: vec![BufferType::Disk {
-            max_size: NonZeroU64::new(268435488).unwrap(),
-            when_full: WhenFull::DropNewest,
-        }],
+        when_full: WhenFull::DropNewest,
+        typ: BufferType::Disk {
+            max_size: 268435488,
+            max_record_size: 4 * 1024 * 1024,
+            max_chunk_size: 128 * 1024 * 1024,
+        },
     };
     config.add_sink_outer("out1", sink1_outer);
 

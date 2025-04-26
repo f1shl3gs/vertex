@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 use std::fmt::{Debug, Formatter};
 use std::hash::{Hash, Hasher};
 use std::marker::PhantomData;
+use std::mem::ManuallyDrop;
 use std::ptr::{NonNull, drop_in_place, slice_from_raw_parts_mut};
 
 use bytesize::ByteSizeOf;
@@ -48,7 +49,17 @@ unsafe impl Sync for Tags {}
 
 impl ByteSizeOf for Tags {
     fn allocated_bytes(&self) -> usize {
-        self.cap * size_of::<Entry>()
+        self.iter()
+            .map(|(key, value)| {
+                let val_len = match value {
+                    Value::String(s) => s.len(),
+                    Value::Array(Array::String(ss)) => ss.iter().map(|s| s.len()).sum(),
+                    _ => 0,
+                };
+
+                key.len() + val_len
+            })
+            .sum()
     }
 }
 
@@ -84,7 +95,7 @@ impl Debug for Tags {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let mut first = true;
 
-        self.into_iter().try_for_each(|(key, value)| {
+        self.iter().try_for_each(|(key, value)| {
             if first {
                 first = false;
                 f.write_fmt(format_args!("{}={}", key, value))
@@ -160,6 +171,64 @@ impl<'a> Iterator for Iter<'a> {
         Self: Sized,
     {
         self.len
+    }
+}
+
+pub struct TagIntoIter {
+    data: NonNull<Entry>,
+    len: usize,
+    cap: usize,
+
+    pos: usize,
+}
+
+impl Drop for TagIntoIter {
+    fn drop(&mut self) {
+        unsafe {
+            if self.pos < self.len {
+                let slice =
+                    slice_from_raw_parts_mut(self.data.as_ptr().add(self.pos), self.len - self.pos);
+                drop_in_place(slice);
+            }
+
+            let layout = Layout::array::<Entry>(self.cap).expect("build layout");
+            dealloc(self.data.as_ptr().cast(), layout);
+        }
+    }
+}
+
+impl Iterator for TagIntoIter {
+    type Item = (Key, Value);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.pos == self.len {
+            return None;
+        }
+
+        let entry = unsafe {
+            let ptr = self.data.as_ptr().add(self.pos);
+            std::ptr::read(ptr)
+        };
+
+        self.pos += 1;
+
+        Some((entry.key, entry.value))
+    }
+}
+
+impl IntoIterator for Tags {
+    type Item = (Key, Value);
+    type IntoIter = TagIntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        let this = ManuallyDrop::new(self);
+
+        TagIntoIter {
+            data: this.data,
+            len: this.len,
+            cap: this.cap,
+            pos: 0,
+        }
     }
 }
 
@@ -713,5 +782,28 @@ mod tests {
         );
         assert_eq!(tags.len(), 2);
         assert_eq!(tags.capacity(), 3);
+    }
+
+    #[test]
+    fn into_iter() {
+        let tags = tags!();
+        let iter = tags.into_iter();
+        assert_eq!(iter.pos, 0);
+        drop(iter);
+
+        let tags = tags!(
+            "a" => "a",
+            "b" => "b",
+        );
+        let mut iter = tags.into_iter();
+        assert_eq!(iter.pos, 0);
+        assert_eq!(iter.len, 2);
+
+        let (key, value) = iter.next().unwrap();
+        assert_eq!(iter.pos, 1);
+        assert_eq!(iter.len, 2);
+        assert_eq!(key.as_str(), "a");
+        assert_eq!(value.to_string_lossy(), "a");
+        drop(iter);
     }
 }

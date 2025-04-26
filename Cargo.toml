@@ -27,7 +27,7 @@ debug = true
 [workspace]
 members = [
     "lib/backoff",
-    "lib/buffers",
+    "lib/buffer",
     "lib/codecs",
     "lib/configurable",
     "lib/configurable-derive",
@@ -369,7 +369,7 @@ tonic-build = { version = "0.13.0", default-features = false, features = ["prost
 
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
-buffers = { path = "lib/buffers" }
+buffer = { path = "lib/buffer" }
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
 event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }

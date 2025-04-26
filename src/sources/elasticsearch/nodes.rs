@@ -1374,7 +1374,6 @@ fn filesystem_io_metrics(mut tags: Tags, stats: FsIoStatsDevice) -> Vec<Metric> 
 #[cfg(test)]
 mod tests {
     use std::sync::Arc;
-    use std::time::Duration;
 
     use base64::{Engine, engine::general_purpose::STANDARD as BASE64_STANDARD};
     use bytes::Bytes;
@@ -1460,7 +1459,7 @@ mod tests {
         });
 
         // wait for http server start
-        tokio::time::sleep(Duration::from_secs(1)).await;
+        tokio::task::yield_now().await;
 
         let http_client = framework::http::HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let es = Elasticsearch {

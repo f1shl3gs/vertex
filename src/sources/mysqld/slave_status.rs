@@ -66,7 +66,7 @@ impl<'r> FromRow<'r, MySqlRow> for Record {
                         continue;
                     }
 
-                    debug!(message = "unknown column type from slave status", name,);
+                    debug!(message = "unknown column type from slave status", name);
                 }
             }
         }

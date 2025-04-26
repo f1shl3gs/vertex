@@ -58,7 +58,7 @@ pub async fn serve_connection(
 
     'RECV: loop {
         if let Err(err) = conn.read_buf(&mut buf).await {
-            error!(message = "read packet failed", ?err, ?peer,);
+            error!(message = "read packet failed", ?err, ?peer);
             return;
         }
 

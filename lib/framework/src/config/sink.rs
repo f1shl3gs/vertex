@@ -1,8 +1,7 @@
 use std::fmt::{Debug, Formatter};
 use std::time::Duration;
 
-use async_trait::async_trait;
-use buffers::BufferType;
+use buffer::BufferType;
 use configurable::NamedComponent;
 use http::Uri;
 use serde::de::{Error, MapAccess, Unexpected};
@@ -161,7 +160,7 @@ impl SinkContext {
 }
 
 /// Generalized interface for describing and building sink components.
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(tag = "type")]
 pub trait SinkConfig: NamedComponent + Debug + Send + Sync {
     /// Builds the sink with the given context.
@@ -196,7 +195,7 @@ pub struct SinkOuter<T> {
     pub inner: Box<dyn SinkConfig>,
 
     #[serde(default)]
-    pub buffer: buffers::BufferConfig,
+    pub buffer: buffer::BufferConfig,
 
     #[serde(default)]
     pub healthcheck: HealthcheckConfig,
@@ -224,11 +223,9 @@ impl<T> SinkOuter<T> {
     pub fn resources(&self, id: &ComponentKey) -> Vec<Resource> {
         let mut resources = self.inner.resources();
 
-        for stage in self.buffer.stages() {
-            match stage {
-                BufferType::Memory { .. } => {}
-                BufferType::Disk { .. } => resources.push(Resource::DiskBuffer(id.to_string())),
-            }
+        match self.buffer.typ {
+            BufferType::Memory { .. } => {}
+            BufferType::Disk { .. } => resources.push(Resource::DiskBuffer(id.to_string())),
         }
 
         resources

@@ -71,6 +71,19 @@ impl EventMetadata {
         }
     }
 
+    pub fn from_parts(
+        value: Value,
+        source_id: Option<Cow<'static, str>>,
+        source_type: Option<Cow<'static, str>>,
+    ) -> Self {
+        Self {
+            finalizers: Default::default(),
+            value,
+            source_id,
+            source_type,
+        }
+    }
+
     /// Returns a reference to the metadata value.
     #[inline]
     pub fn value(&self) -> &Value {

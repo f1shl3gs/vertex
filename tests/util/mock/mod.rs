@@ -1,8 +1,5 @@
-use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::{Arc, Mutex};
-
 use async_trait::async_trait;
-use buffers::channel::LimitedReceiver;
+use buffer::LimitedReceiver;
 use configurable::configurable_component;
 use event::{Events, Finalizable, MetricValue, log::Value};
 use framework::OutputBuffer;
@@ -15,6 +12,8 @@ use framework::{FunctionTransform, Healthcheck, Sink, Source, StreamSink, Transf
 use futures::{FutureExt, StreamExt};
 use futures_util::stream::BoxStream;
 use log_schema::log_schema;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex};
 use thiserror::Error;
 use tokio::sync::oneshot;
 use tracing::{error, info};
@@ -55,21 +54,25 @@ impl MockSourceConfig {
         }
     }
 
-    pub fn new_with_event_counter(
-        receiver: LimitedReceiver<Events>,
-        event_counter: Arc<AtomicUsize>,
-    ) -> Self {
-        Self {
-            receiver: Arc::new(Mutex::new(Some(receiver))),
-            event_counter: Some(event_counter),
-            data_type: Some(DataType::All),
-            force_shutdown: false,
-            data: None,
-        }
+    pub fn new_with_event_counter(force_shutdown: bool) -> (Pipeline, Self, Arc<AtomicUsize>) {
+        let event_counter = Arc::new(AtomicUsize::new(0));
+        let (tx, rx) = Pipeline::new_test();
+
+        (
+            tx,
+            Self {
+                receiver: Arc::new(Mutex::new(Some(rx))),
+                event_counter: Some(Arc::clone(&event_counter)),
+                data_type: Some(DataType::All),
+                force_shutdown,
+                data: None,
+            },
+            event_counter,
+        )
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "mock")]
 impl SourceConfig for MockSourceConfig {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -106,7 +109,8 @@ impl SourceConfig for MockSourceConfig {
                 }
             }
 
-            info!("Finished sending.");
+            info!("finished sending.");
+
             Ok(())
         }))
     }

@@ -219,7 +219,7 @@ async fn run_scheduled(
         match timeout {
             Ok(result) => {
                 if let Err(err) = result {
-                    error!(message = "Unable to exec", %err,);
+                    error!(message = "Unable to exec", %err);
                 }
             }
             Err(err) => {
