@@ -191,7 +191,7 @@ mod tests {
     #![allow(clippy::print_stdout)]
 
     use std::sync::Arc;
-
+    use tokio::task::JoinSet;
     use super::*;
 
     #[test]
@@ -243,27 +243,42 @@ mod tests {
     #[tokio::test(flavor = "multi_thread", worker_threads = 32)]
     async fn mpsc() {
         const SENDERS: usize = 32;
-        const MESSAGES: usize = SENDERS * 10000;
+        const MESSAGES: usize = SENDERS * 100000;
 
+        let mut tasks = JoinSet::new();
         let queue = Arc::new(Queue::<usize>::default());
         for _ in 0..SENDERS {
             let q = Arc::clone(&queue);
-            tokio::spawn(async move {
+            tasks.spawn(async move {
                 for i in 0..MESSAGES / SENDERS {
                     q.push(i);
                 }
             });
         }
 
+        let mut received = 0;
         for _ in 0..MESSAGES {
             loop {
                 match queue.pop() {
-                    Ok(Some(_)) => break,
-                    Ok(None) => panic!("pop returned None"),
-                    Err(_) => tokio::task::yield_now().await,
+                    Ok(Some(_)) => {
+                        received += 1;
+                        break
+                    },
+                    Ok(None) => {
+                        // threads we spawned, might be scheduled at any time, somehow
+                        // producers might stop for a while and receiver won't, so pop
+                        // return None.
+                    },
+                    Err(_) => {},
                 }
+
+                tokio::task::yield_now().await;
             }
         }
+
+        tasks.join_all().await;
+
+        assert_eq!(received, MESSAGES)
     }
 
     #[test]
