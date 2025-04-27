@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745790049833,
+  "lastUpdate": 1745790074289,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ef52655683a7e2f89a5dbf48f6e81c8624c8b683",
-          "message": "sinks/skywalking: init (#2213)",
-          "timestamp": "2025-02-20T14:54:46+08:00",
-          "tree_id": "95cba6f77d86818af6b32d240b531e9d744474c9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ef52655683a7e2f89a5dbf48f6e81c8624c8b683"
-        },
-        "date": 1740034639407,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.368,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 145.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 627.39,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 713.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a01cd3b12fa8d76049a82468affc9effeab885de",
+          "message": "Merge pull request #2319 from f1shl3gs/lib/framework/remove_duplicate_finalizer\n\nlib/framework: remove duplicate finalizer",
+          "timestamp": "2025-04-28T05:38:12+08:00",
+          "tree_id": "5eddd8ffe7d952e0b3335eb33fd50c42cd82f343",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a01cd3b12fa8d76049a82468affc9effeab885de"
+        },
+        "date": 1745790052668,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.792,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 151.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 305.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 669.24,
             "unit": "ns/op"
           }
         ]
