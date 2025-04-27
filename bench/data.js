@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745741875738,
+  "lastUpdate": 1745741924954,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ef52655683a7e2f89a5dbf48f6e81c8624c8b683",
-          "message": "sinks/skywalking: init (#2213)",
-          "timestamp": "2025-02-20T14:54:46+08:00",
-          "tree_id": "95cba6f77d86818af6b32d240b531e9d744474c9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ef52655683a7e2f89a5dbf48f6e81c8624c8b683"
-        },
-        "date": 1740035150458,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 568,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38110.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37679.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10719538d2f1072dbffc91a4a9fc301a58914d98",
+          "message": "Merge pull request #2315 from f1shl3gs/dependabot/cargo/syn-2.0.101\n\nchore(deps): bump syn from 2.0.100 to 2.0.101",
+          "timestamp": "2025-04-27T16:08:01+08:00",
+          "tree_id": "97d2ba664ac1e7a70c202d7d1f030928e60362b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10719538d2f1072dbffc91a4a9fc301a58914d98"
+        },
+        "date": 1745741903709,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 533,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37672.7,
             "unit": "KiB"
           }
         ]
