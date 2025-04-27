@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745741387986,
+  "lastUpdate": 1745741425257,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99",
-          "message": "lib/testify: add async docker implement (#2208)",
-          "timestamp": "2025-02-18T12:04:49+08:00",
-          "tree_id": "c4f47cc484385662884c40d736897f6a67d3f084",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f09a3b3d1ed6b8b5d400bfe80835bc8c2616c99"
-        },
-        "date": 1739851615283,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536420,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540610,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10719538d2f1072dbffc91a4a9fc301a58914d98",
+          "message": "Merge pull request #2315 from f1shl3gs/dependabot/cargo/syn-2.0.101\n\nchore(deps): bump syn from 2.0.100 to 2.0.101",
+          "timestamp": "2025-04-27T16:08:01+08:00",
+          "tree_id": "97d2ba664ac1e7a70c202d7d1f030928e60362b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10719538d2f1072dbffc91a4a9fc301a58914d98"
+        },
+        "date": 1745741404234,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 546180,
             "unit": "ns/op"
           }
         ]
