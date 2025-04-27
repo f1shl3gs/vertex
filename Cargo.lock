@@ -4325,6 +4325,7 @@ dependencies = [
  "encoding_rs",
  "event",
  "exitcode",
+ "finalize",
  "flate2",
  "framework",
  "futures",
