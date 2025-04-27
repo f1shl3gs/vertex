@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745741027704,
+  "lastUpdate": 1745741028714,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a202d7c636cfa8d0ad420dcd9ed5f062b625d725",
-          "message": "chore(deps): bump hickory-resolver from 0.24.3 to 0.24.4 (#2211)\n\n* chore(deps): bump hickory-resolver from 0.24.3 to 0.24.4\n\nBumps [hickory-resolver](https://github.com/hickory-dns/hickory-dns) from 0.24.3 to 0.24.4.\n- [Release notes](https://github.com/hickory-dns/hickory-dns/releases)\n- [Changelog](https://github.com/hickory-dns/hickory-dns/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/hickory-dns/hickory-dns/compare/v0.24.3...v0.24.4)\n\n---\nupdated-dependencies:\n- dependency-name: hickory-resolver\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* add necessary features\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2025-02-20T12:11:59+08:00",
-          "tree_id": "de4d461737aa564d3417463bf92955093e038d20",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a202d7c636cfa8d0ad420dcd9ed5f062b625d725"
-        },
-        "date": 1740025384146,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37962.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f39f07f5c9a82fb7ee063590d80ffa509039d0cf",
           "message": "chore(deps): bump serde_json from 1.0.138 to 1.0.139 (#2212)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.138 to 1.0.139.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.138...v1.0.139)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-02-20T12:27:23+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37683.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "822333b5d5858b9e5ffe0d78c08d404d21707209",
+          "message": "Merge pull request #2314 from f1shl3gs/dependabot/cargo/tokio-util-0.7.15\n\nchore(deps): bump tokio-util from 0.7.14 to 0.7.15",
+          "timestamp": "2025-04-27T15:52:56+08:00",
+          "tree_id": "2be6b0e27735ff23ddaae48fba10255f3ca025ac",
+          "url": "https://github.com/f1shl3gs/vertex/commit/822333b5d5858b9e5ffe0d78c08d404d21707209"
+        },
+        "date": 1745741007223,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 529,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37679.1,
             "unit": "KiB"
           }
         ]
