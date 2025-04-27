@@ -205,7 +205,7 @@ sources-sflow = []
 sources-socket = []
 sources-static_metrics = []
 sources-syslog = ["codecs/syslog"]
-sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
+sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs", "dep:finalize"]
 sources-zookeeper = []
 
 sources = [
@@ -384,6 +384,7 @@ tonic = { version = "0.13.0", default-features = false, features = ["server", "r
 codecs = { path = "lib/codecs" }
 configurable = { path = "lib/configurable" }
 event = { path = "lib/event" }
+finalize = { path = "lib/finalize", optional = true }
 framework = { path = "lib/framework" }
 hostname = { path = "lib/hostname" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }

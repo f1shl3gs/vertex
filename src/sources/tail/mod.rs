@@ -8,8 +8,8 @@ use chrono::{TimeDelta, Utc};
 use configurable::{Configurable, configurable_component};
 use encoding_transcode::{Decoder, Encoder};
 use event::{BatchNotifier, BatchStatus, LogRecord};
+use finalize::OrderedFinalizer;
 use framework::config::{Output, SourceConfig, SourceContext};
-use framework::source::OrderedFinalizer;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::{FutureExt, Stream, StreamExt, TryFutureExt};
 use multiline::{LineAgg, Logic, MultilineConfig, Parser};
@@ -213,7 +213,8 @@ fn tail_source(
         // The shutdown sent in to the finalizer is the global
         // shutdown handle used to tell it to stop accepting new batch
         // statuses and just wait for the remaining acks to come in.
-        let (finalizer, mut ack_stream) = OrderedFinalizer::<FinalizerEntry>::new(shutdown.clone());
+        let (finalizer, mut ack_stream) =
+            OrderedFinalizer::<FinalizerEntry>::new(Some(shutdown.clone()));
 
         // We set up a separate shutdown signal to tie together the
         // finalizer and the checkpoint writer task in the harvester,
