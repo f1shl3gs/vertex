@@ -191,7 +191,9 @@ mod tests {
     #![allow(clippy::print_stdout)]
 
     use std::sync::Arc;
+
     use tokio::task::JoinSet;
+
     use super::*;
 
     #[test]
@@ -262,14 +264,14 @@ mod tests {
                 match queue.pop() {
                     Ok(Some(_)) => {
                         received += 1;
-                        break
-                    },
+                        break;
+                    }
                     Ok(None) => {
                         // threads we spawned, might be scheduled at any time, somehow
                         // producers might stop for a while and receiver won't, so pop
                         // return None.
-                    },
-                    Err(_) => {},
+                    }
+                    Err(_) => {}
                 }
 
                 tokio::task::yield_now().await;
