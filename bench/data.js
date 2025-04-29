@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745913139156,
+  "lastUpdate": 1745913166851,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a4f7c1180b310fb8c0601854d236b31ee5e52670",
-          "message": "chore(deps): bump serde from 1.0.217 to 1.0.218 (#2214)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.217 to 1.0.218.\n- [Release notes](https://github.com/serde-rs/serde/releases)\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.217...v1.0.218)\n\n---\nupdated-dependencies:\n- dependency-name: serde\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-20T20:45:01+08:00",
-          "tree_id": "64155cf30388cc4a71c60c466e053778f0414809",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a4f7c1180b310fb8c0601854d236b31ee5e52670"
-        },
-        "date": 1740055626083,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 525630,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 544640,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b4a0f0ef8fe4cd4327494b62b7b7579138a63f87",
+          "message": "Merge pull request #2320 from f1shl3gs/misc/small_tweak\n\nlib/buffer: small tweak",
+          "timestamp": "2025-04-29T15:49:22+08:00",
+          "tree_id": "77e0a948785d27ed5be9f5051f264e02497a8b33",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b4a0f0ef8fe4cd4327494b62b7b7579138a63f87"
+        },
+        "date": 1745913145055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 543640,
             "unit": "ns/op"
           }
         ]
