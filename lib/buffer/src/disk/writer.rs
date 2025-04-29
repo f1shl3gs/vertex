@@ -17,6 +17,8 @@ use crate::Encodable;
 /// will be consumed, etc
 const DEFAULT_WRITE_BUFFER_SIZE: usize = 256 * 1024; // 256KB
 
+const FORCE_FLUSH_BYTES: usize = 8 * 1024 * 1024;
+
 /// Error that occurred during calls to [`Writer`]
 #[derive(Debug, thiserror::Error)]
 pub enum Error<T: Encodable> {
@@ -224,8 +226,8 @@ impl<T: Encodable> Writer<T> {
         self.unflushed_records += 1;
         self.next_record_id = self.next_record_id.wrapping_add(1);
 
-        // force flush every 8MB
-        if self.unflushed_bytes >= 8 * 1024 * 1024 {
+        // force flush if there is too much data unflushed
+        if self.unflushed_bytes >= FORCE_FLUSH_BYTES {
             self.flush()?;
         }
 
@@ -324,10 +326,10 @@ impl<T: Encodable> Writer<T> {
         );
 
         self.flush()?;
-
-        self.ledger.increase_writer_file_id();
         self.inner = file;
         self.write_size = 0;
+
+        self.ledger.increase_writer_file_id();
         self.ledger.flush()?;
 
         Ok(())

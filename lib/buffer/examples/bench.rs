@@ -47,7 +47,7 @@ impl Encodable for Message {
     }
 }
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 4)]
+#[tokio::main]
 async fn main() {
     let max_records = 100_0000;
 
@@ -105,21 +105,29 @@ async fn bench(records: usize, record_sizes: &[usize], variant: BufferType) {
         BufferType::Disk { .. } => "Disk",
     };
 
-    println!("-------------- {variant_str} --------------");
-    println!(" RECORD_SIZE         BYTES    RECORDS_PER_SEC  BYTES_PER_SEC     TIME");
+    println!(
+        "------------------------------------ {variant_str:^6} --------------------------------------"
+    );
+    println!(" RECORD_SIZE   BYTES    RECORDS_PER_SEC  BYTES_PER_SEC     TIME  USER_CPU  SYS_CPU");
     for record_size in record_sizes {
+        let (user, system) = get_cpu_time();
         let elapsed = write_and_read(*record_size, records, variant.clone()).await;
+        let (user_end, system_end) = get_cpu_time();
+        let user_time = user_end - user;
+        let system_time = system_end - system;
 
         let rps = records as f64 / elapsed.as_secs_f64();
         let bps = (record_size * records) as f64 / 1024.0 / 1024.0 / elapsed.as_secs_f64();
 
         println!(
-            "{:12}  {:>12}{:>15.2} r/s  {:>9.2} M/s{:>8.2}s",
+            "{:12}{:>8}{:>15.2} r/s  {:>9.2} M/s{:>8.2}s {:>8.2}%{:>8.2}%",
             record_size,
             humanize::bytes::bytes(record_size * records),
             rps,
             bps,
-            elapsed.as_secs_f64()
+            elapsed.as_secs_f64(),
+            user_time / elapsed.as_secs_f64(),
+            system_time / elapsed.as_secs_f64()
         );
     }
 }
@@ -168,4 +176,14 @@ fn setup(typ: BufferType) -> (BufferSender<Message>, BufferReceiver<Message>, Pa
     .unwrap();
 
     (tx, rx, path)
+}
+
+fn get_cpu_time() -> (f64, f64) {
+    let content = std::fs::read_to_string(format!("/proc/{}/stat", std::process::id())).unwrap();
+    let parts = content.split_whitespace().collect::<Vec<_>>();
+
+    let utime = parts[13].parse::<f64>().unwrap();
+    let stime = parts[14].parse::<f64>().unwrap();
+
+    (utime, stime)
 }
