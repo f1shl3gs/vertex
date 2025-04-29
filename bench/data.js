@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745919915405,
+  "lastUpdate": 1745925496419,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5ad0a92d4f3ef6378cee81ffd27a35d256a6fcc6",
-          "message": "chore(deps): bump pem from 3.0.4 to 3.0.5 (#2219)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.4 to 3.0.5.\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.4...v3.0.5)\n\n---\nupdated-dependencies:\n- dependency-name: pem\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-22T10:25:21+08:00",
-          "tree_id": "3f6302860a916bf1e46a8c3beac441d0ab148e78",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5ad0a92d4f3ef6378cee81ffd27a35d256a6fcc6"
-        },
-        "date": 1740191791483,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38110.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 537,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37681.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9de7465a00858a5eb18e3e64ba581db59757a9ce",
+          "message": "Merge pull request #2322 from f1shl3gs/misc/small_build_steps\n\nmisc: add information about building a small binary",
+          "timestamp": "2025-04-29T19:06:58+08:00",
+          "tree_id": "acb62364789b1088c15125481af0c023758be10c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9de7465a00858a5eb18e3e64ba581db59757a9ce"
+        },
+        "date": 1745925461731,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 538,
             "unit": "s"
           },
           {
