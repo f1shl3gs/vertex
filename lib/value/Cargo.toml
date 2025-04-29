@@ -8,13 +8,13 @@ default = []
 string_path = []
 
 [dev-dependencies]
-chrono = { version = "0.4.40", default-features = false, features = ["now"] }
+chrono = { version = "0.4.41", default-features = false, features = ["now"] }
 proptest = { version = "1.6.0", default-features = false, features = ["std"] }
 proptest-derive = { version = "0.5.1", default-features = false }
 quickcheck = { version = "1.0.3", default-features = false }
 
 [dependencies]
 bytes = { version = "1.10.1", default-features = false }
-chrono = { version = "0.4.40", default-features = false, features = ["now"] }
+chrono = { version = "0.4.41", default-features = false, features = ["now"] }
 serde = { version = "1.0.219", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.140", default-features = false, features = ["std"] }
