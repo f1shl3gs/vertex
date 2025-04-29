@@ -125,6 +125,21 @@ build for x86_64-unknown-linux-musl
 make x86_64-unknown-linux-musl
 ```
 
+### Build a small binary
+- Strip your binary, of course
+```shell
+strip /path/to/your/binary
+```
+
+- Custom your Vertex is recommended, build a lite version of vertex to collect host metrics, and export them via
+  a HTTP server just like `node_exporter`.
+```shell
+cargo build --release --no-default-features --features=sources-node_metrics,sources-selfstat,sinks-prometheus_exporter
+```
+
+`NOTE`: If you build with `x86_64-unknown-linux-musl`, you should specify an allocator, cause the default one is bad
+at performance.
+
 ## Configuration
 Let's see this `node_exporter` alternative configuration
 
