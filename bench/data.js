@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745919880066,
+  "lastUpdate": 1745919915405,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b70fe409490e181c1ca5e95b141cdff980a1149a",
-          "message": "chore(deps): bump zstd from 0.13.2 to 0.13.3 (#2217)\n\nBumps [zstd](https://github.com/gyscos/zstd-rs) from 0.13.2 to 0.13.3.\n- [Release notes](https://github.com/gyscos/zstd-rs/releases)\n- [Commits](https://github.com/gyscos/zstd-rs/compare/v0.13.2...v0.13.3)\n\n---\nupdated-dependencies:\n- dependency-name: zstd\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-21T14:26:50+08:00",
-          "tree_id": "46ede5d4645dcb67d66a6d9f7f2a2a5ea1697ca1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b70fe409490e181c1ca5e95b141cdff980a1149a"
-        },
-        "date": 1740119905551,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 579,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38110.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5ad0a92d4f3ef6378cee81ffd27a35d256a6fcc6",
           "message": "chore(deps): bump pem from 3.0.4 to 3.0.5 (#2219)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.4 to 3.0.5.\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.4...v3.0.5)\n\n---\nupdated-dependencies:\n- dependency-name: pem\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-02-22T10:25:21+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37682,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36",
+          "message": "Merge pull request #2321 from f1shl3gs/dependabot/cargo/chrono-0.4.41\n\nchore(deps): bump chrono from 0.4.40 to 0.4.41",
+          "timestamp": "2025-04-29T17:34:09+08:00",
+          "tree_id": "bbcf63c5d27dd3116a2abf450e2756444003bc42",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36"
+        },
+        "date": 1745919893088,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 537,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37681.9,
             "unit": "KiB"
           }
         ]
