@@ -5,11 +5,10 @@ use std::task::Poll;
 use event::{EventStatus, Finalizable};
 use futures::future::poll_fn;
 use futures::{FutureExt, Stream, StreamExt, TryFutureExt, poll};
-use tokio::{pin, select};
 use tower::Service;
 use tracing::Instrument;
 
-use super::futures_unordered_chunked::FuturesUnorderedChunked;
+use super::futures_unordered_count::FuturesUnorderedCount;
 
 pub trait DriverResponse {
     fn event_status(&self) -> EventStatus;
@@ -65,13 +64,13 @@ where
     /// The return type is mostly to simplify caller code.
     /// An error is currently only returned if a service returns an error from `poll_ready`
     pub async fn run(self) -> Result<(), ()> {
-        let mut inflight = FuturesUnorderedChunked::new(1024);
+        let mut inflight = FuturesUnorderedCount::new();
         let mut next_batch: Option<VecDeque<I::Item>> = None;
         let mut seq_num = 0usize;
 
         let Self { input, mut service } = self;
         let batched_input = input.ready_chunks(1024);
-        pin!(batched_input);
+        tokio::pin!(batched_input);
 
         loop {
             // Core behavior of this loop
@@ -94,7 +93,7 @@ where
             // complex logic easier than if we tried to interleave it ourselves with an
             // imperative-style loop.
 
-            select! {
+            tokio::select! {
                 // Using `biased` ensures we check the branches in the order they're written, since
                 // the default behavior of the `select!` macro is to randomly order branches as a
                 // means of ensuring scheduling fairness.
@@ -149,15 +148,6 @@ where
                             .err_into()
                             .map(move |result: Result<S::Response, S::Error>| {
                                 match result {
-                                    Err(err) => {
-                                        error!(
-                                            message = "Service call failed",
-                                            ?err,
-                                            request_id,
-                                        );
-
-                                        finalizers.update_status(EventStatus::Rejected);
-                                    },
                                     Ok(resp) => {
                                         trace!(
                                             message = "Service call succeeded",
@@ -181,6 +171,15 @@ where
                                         )
                                         .recorder(&[])
                                         .inc(bytes as u64);
+                                    },
+                                    Err(err) => {
+                                        error!(
+                                            message = "Service call failed",
+                                            request_id,
+                                            ?err,
+                                        );
+
+                                        finalizers.update_status(EventStatus::Rejected);
                                     }
                                 };
 
