@@ -2,7 +2,6 @@ use event::Event;
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use framework::sink::util::testing::{build_test_server, load_sink};
-use futures_util::StreamExt;
 use http::header::AUTHORIZATION;
 use url::Url;
 use value::value;
@@ -111,7 +110,7 @@ auth:
         .parse::<Url>()
         .expect("Could not create URL");
 
-    let (rx, _trigger, server) = build_test_server(addr);
+    let (mut rx, _trigger, server) = build_test_server(addr);
     tokio::spawn(server);
 
     // make sure the server is started
@@ -125,12 +124,15 @@ auth:
         .await
         .expect("health check failed");
 
-    let output = rx.take(1).collect::<Vec<_>>().await;
+    let got = rx
+        .recv()
+        .await
+        .map(|(parts, _body)| parts.headers.get(AUTHORIZATION).unwrap().clone());
 
     assert_eq!(
-        Some(&http::header::HeaderValue::from_static(
+        Some(http::header::HeaderValue::from_static(
             "Basic dXNlcm5hbWU6c29tZV9wYXNzd29yZA=="
         )),
-        output[0].0.headers.get(AUTHORIZATION)
+        got
     )
 }

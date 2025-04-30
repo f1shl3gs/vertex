@@ -3,8 +3,7 @@ use std::pin::pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use futures::{Future, ready};
-use futures_util::future::BoxFuture;
+use futures::{Future, future::BoxFuture, ready};
 use tokio::sync::OwnedSemaphorePermit;
 use tower::Service;
 

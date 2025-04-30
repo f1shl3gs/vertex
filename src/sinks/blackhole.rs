@@ -5,9 +5,7 @@ use configurable::configurable_component;
 use event::Events;
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
-use futures::FutureExt;
-use futures::stream::BoxStream;
-use futures_util::StreamExt;
+use futures::{FutureExt, StreamExt, stream::BoxStream};
 use tokio::time::sleep_until;
 
 #[configurable_component(sink, name = "blackhole")]

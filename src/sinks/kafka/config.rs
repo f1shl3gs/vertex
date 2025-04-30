@@ -7,7 +7,7 @@ use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::template::Template;
 use framework::{Healthcheck, Sink};
-use futures_util::FutureExt;
+use futures::FutureExt;
 use rskafka::client::partition::Compression;
 
 use super::sink::{KafkaSink, health_check};

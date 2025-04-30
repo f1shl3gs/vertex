@@ -68,7 +68,7 @@ impl<S: Read + Write + Unpin> Future for Tunnel<S> {
         loop {
             if let TunnelState::Writing = &this.state {
                 let fut = this.stream.as_mut().unwrap().write_buf(&mut this.buf);
-                futures_util::pin_mut!(fut);
+                futures::pin_mut!(fut);
                 let n = match fut.poll(ctx) {
                     Poll::Ready(Ok(n)) => n,
                     Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),
@@ -86,7 +86,7 @@ impl<S: Read + Write + Unpin> Future for Tunnel<S> {
                 }
             } else {
                 let fut = this.stream.as_mut().unwrap().read_buf(&mut this.buf);
-                futures_util::pin_mut!(fut);
+                futures::pin_mut!(fut);
                 let n = match fut.poll(ctx) {
                     Poll::Ready(Ok(x)) => x,
                     Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),
@@ -129,7 +129,7 @@ mod tests {
     use std::net::TcpListener;
     use std::thread;
 
-    use futures_util::future::TryFutureExt;
+    use futures::future::TryFutureExt;
     use hyper_util::rt::TokioIo;
     use tokio::net::TcpStream;
     use tokio::runtime::Runtime;

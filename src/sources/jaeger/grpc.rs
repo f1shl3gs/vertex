@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use configurable::Configurable;
 use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
 use framework::{Pipeline, ShutdownSignal};
-use futures_util::FutureExt;
+use futures::FutureExt;
 use jaeger::proto::collector_service_server::CollectorServiceServer;
 use jaeger::proto::{CollectorService, PostSpansRequest, PostSpansResponse};
 use serde::{Deserialize, Serialize};

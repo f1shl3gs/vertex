@@ -9,7 +9,7 @@ use framework::sink::util::service::RequestConfig;
 use framework::sink::util::{Buffer, Compression};
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
-use futures_util::{FutureExt, SinkExt};
+use futures::{FutureExt, SinkExt};
 use url::Url;
 
 use super::sink::{ClickhouseRetryLogic, healthcheck};

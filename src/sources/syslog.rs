@@ -19,7 +19,7 @@ use framework::source::tcp::{SocketListenAddr, TcpNullAcker, TcpSource};
 use framework::source::unix::build_unix_stream_source;
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::TlsConfig;
-use futures_util::StreamExt;
+use futures::StreamExt;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tokio::net::UdpSocket;

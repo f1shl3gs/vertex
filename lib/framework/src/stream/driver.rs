@@ -3,8 +3,8 @@ use std::fmt;
 use std::task::Poll;
 
 use event::{EventStatus, Finalizable};
+use futures::future::poll_fn;
 use futures::{FutureExt, Stream, StreamExt, TryFutureExt, poll};
-use futures_util::future::poll_fn;
 use tokio::{pin, select};
 use tower::Service;
 use tracing::Instrument;
@@ -215,8 +215,7 @@ mod tests {
     use std::time::Duration;
 
     use event::{BatchNotifier, EventFinalizer, EventFinalizers};
-    use futures::ready;
-    use futures_util::stream;
+    use futures::{ready, stream};
     use rand::SeedableRng;
     use rand::rngs::StdRng;
     use rand_distr::Distribution;

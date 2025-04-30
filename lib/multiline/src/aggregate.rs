@@ -5,8 +5,7 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytes::{Bytes, BytesMut};
-use futures::Stream;
-use futures::StreamExt;
+use futures::{Stream, StreamExt};
 use pin_project_lite::pin_project;
 use regex::Regex;
 use serde::{Deserialize, Serialize};

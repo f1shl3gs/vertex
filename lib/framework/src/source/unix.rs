@@ -8,7 +8,7 @@ use bytes::{Bytes, BytesMut};
 use codecs::decoding::Decoder;
 use codecs::decoding::StreamDecodingError;
 use event::Events;
-use futures_util::{FutureExt, StreamExt};
+use futures::{FutureExt, StreamExt};
 use tokio::io::AsyncWriteExt;
 use tokio::net::{UnixDatagram, UnixListener, UnixStream};
 use tokio_stream::wrappers::UnixListenerStream;

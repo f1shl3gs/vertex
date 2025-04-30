@@ -8,8 +8,7 @@ use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::http::HttpRequest;
 use framework::stream::{BatcherSettings, DriverResponse};
 use framework::template::Template;
-use futures_util::StreamExt;
-use futures_util::stream::BoxStream;
+use futures::{StreamExt, stream::BoxStream};
 use tower::Service;
 
 use super::request_builder::{InfluxdbRequestBuilder, KeyPartitioner, PartitionKey};

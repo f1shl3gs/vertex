@@ -1,9 +1,10 @@
 mod docker;
 
-use docker::{HostConfig, LogOutput, PortBinding};
-use futures_util::{StreamExt, TryStreamExt};
 use std::collections::HashMap;
 use std::net::SocketAddr;
+
+use docker::{HostConfig, LogOutput, PortBinding};
+use futures::{StreamExt, TryStreamExt};
 use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
 use tracing::info;

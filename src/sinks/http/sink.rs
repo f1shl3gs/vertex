@@ -6,8 +6,7 @@ use framework::StreamSink;
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::http::HttpRequest;
 use framework::stream::{BatcherSettings, DriverResponse};
-use futures::StreamExt;
-use futures_util::stream::BoxStream;
+use futures::{StreamExt, stream::BoxStream};
 use tower::Service;
 
 use super::request_builder::HttpRequestBuilder;

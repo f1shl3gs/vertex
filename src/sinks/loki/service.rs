@@ -4,7 +4,7 @@ use bytes::Bytes;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::stream::DriverResponse;
-use futures_util::future::BoxFuture;
+use futures::future::BoxFuture;
 use http::StatusCode;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http_body_util::Full;

@@ -11,7 +11,7 @@ use configurable::{Configurable, configurable_component};
 use event::LogRecord;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::StreamExt;
+use futures::StreamExt;
 use proto::{Dnstap, Message, Policy};
 use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};

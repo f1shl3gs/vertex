@@ -2,8 +2,7 @@ use std::mem;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::stream::FuturesOrdered;
-use futures::stream::Stream;
+use futures::stream::{FuturesOrdered, Stream};
 use pin_project_lite::pin_project;
 
 pin_project! {

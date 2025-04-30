@@ -6,9 +6,7 @@ use std::pin::Pin;
 use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 
-use futures::ready;
-use futures_util::FutureExt;
-use futures_util::future::BoxFuture;
+use futures::{FutureExt, future::BoxFuture, ready};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 
 /// Wrapper for `tokio::sync::Semaphore` that allows for shrinking the semaphore safely

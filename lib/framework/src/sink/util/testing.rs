@@ -1,8 +1,6 @@
 use std::net::SocketAddr;
 
 use bytes::Bytes;
-use futures::channel::mpsc;
-use futures_util::SinkExt;
 use http::{Request, Response, StatusCode};
 use http_body_util::{BodyExt, Empty};
 use hyper::body::{Body, Incoming};
@@ -11,6 +9,7 @@ use hyper::service::service_fn;
 use hyper_util::rt::TokioIo;
 use serde::Deserialize;
 use tokio::net::TcpListener;
+use tokio::sync::mpsc;
 use tripwire::{Trigger, Tripwire};
 
 use crate::config::{SinkConfig, SinkContext};
@@ -30,7 +29,7 @@ pub fn build_test_server(
 ) -> (
     mpsc::Receiver<(http::request::Parts, Bytes)>,
     Trigger,
-    impl std::future::Future<Output = Result<(), ()>>,
+    impl Future<Output = Result<(), ()>>,
 ) {
     build_test_server_generic(addr, || Response::new(Empty::<Bytes>::new()))
 }
@@ -41,7 +40,7 @@ pub fn build_test_server_status(
 ) -> (
     mpsc::Receiver<(http::request::Parts, Bytes)>,
     Trigger,
-    impl std::future::Future<Output = Result<(), ()>>,
+    impl Future<Output = Result<(), ()>>,
 ) {
     build_test_server_generic(addr, move || {
         Response::builder()
@@ -57,7 +56,7 @@ pub fn build_test_server_generic<B>(
 ) -> (
     mpsc::Receiver<(http::request::Parts, Bytes)>,
     Trigger,
-    impl std::future::Future<Output = Result<(), ()>>,
+    impl Future<Output = Result<(), ()>>,
 )
 where
     B: Body + Send + Sync + 'static,
@@ -91,7 +90,7 @@ where
             let service = service_fn(move |req: Request<Incoming>| {
                 let (parts, incoming) = req.into_parts();
                 let resp = responder();
-                let mut tx = tx.clone();
+                let tx = tx.clone();
                 if resp.status().is_success() {
                     tokio::spawn(async move {
                         let data = incoming.collect().await.unwrap().to_bytes();

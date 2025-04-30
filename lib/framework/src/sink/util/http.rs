@@ -8,8 +8,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use event::{Event, EventFinalizers, EventStatus, Finalizable};
-use futures::ready;
-use futures_util::future::BoxFuture;
+use futures::{future::BoxFuture, ready};
 use http::{Request, Response, StatusCode};
 use http_body_util::{BodyExt, Full};
 use pin_project_lite::pin_project;
@@ -179,7 +178,7 @@ where
     }
 }
 
-impl<T, B, RL> futures_util::Sink<Event> for BatchedHttpSink<T, B, RL>
+impl<T, B, RL> futures::Sink<Event> for BatchedHttpSink<T, B, RL>
 where
     B: Batch,
     B::Output: ByteSizeOf + Clone + Send + 'static,

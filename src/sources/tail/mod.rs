@@ -11,7 +11,7 @@ use event::{BatchNotifier, BatchStatus, LogRecord};
 use finalize::OrderedFinalizer;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::{FutureExt, Stream, StreamExt, TryFutureExt};
+use futures::{FutureExt, Stream, StreamExt, TryFutureExt};
 use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};

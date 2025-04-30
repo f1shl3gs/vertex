@@ -7,9 +7,9 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use event::EventStatus;
+use futures::future::BoxFuture;
+use futures::stream::FuturesUnordered;
 use futures::{FutureExt, Sink, Stream, TryFutureExt, ready};
-use futures_util::future::BoxFuture;
-use futures_util::stream::FuturesUnordered;
 use pin_project_lite::pin_project;
 use tokio::sync::oneshot;
 use tokio::time::{Sleep, sleep};

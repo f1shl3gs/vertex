@@ -5,8 +5,7 @@ use framework::config::{ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
 use framework::sink::util::Compression;
 use framework::sink::util::service::RequestConfig;
-use futures_util::future::ready;
-use futures_util::stream;
+use futures::future::ready;
 use http::{Method, Request};
 use http_body_util::{BodyExt, Full};
 use serde::Deserialize;
@@ -157,7 +156,7 @@ async fn insert_events() {
 
     run_and_assert_sink_compliance(
         sink,
-        stream::once(ready(input_event.clone())),
+        futures::stream::once(ready(input_event.clone())),
         &HTTP_SINK_TAGS,
     )
     .await;

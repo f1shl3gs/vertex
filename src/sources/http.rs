@@ -214,8 +214,7 @@ mod tests {
     use framework::Pipeline;
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
-    use futures::Stream;
-    use futures_util::StreamExt;
+    use futures::{Stream, StreamExt};
     use http::Request;
     use http_body_util::{BodyExt, Full};
     use testify::wait::wait_for_tcp;

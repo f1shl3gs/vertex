@@ -201,12 +201,13 @@ async fn multiple_inputs_backpressure() {
 
 mod test_sink {
     use framework::config::{DataType, SinkConfig, SinkContext};
-    use crate::sinks::{Healthcheck, Sink, StreamSink};
     use async_trait::async_trait;
     use event::Event;
     use futures::stream::BoxStream;
     use futures::{FutureExt, StreamExt};
     use serde::{Deserialize, Serialize};
+
+    use crate::sinks::{Healthcheck, Sink, StreamSink};
 
     #[derive(Debug)]
     struct TestBackpressureSink {

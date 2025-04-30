@@ -180,7 +180,7 @@ mod tests {
     use std::task::Poll;
 
     use event::Event;
-    use futures_util::{SinkExt, StreamExt};
+    use futures::{SinkExt, StreamExt};
     use value::value;
 
     use super::*;

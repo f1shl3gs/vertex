@@ -2,8 +2,7 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::{Duration, Instant};
 
-use futures::{Stream, StreamExt};
-use futures_util::ready;
+use futures::{Stream, StreamExt, ready};
 use pin_project_lite::pin_project;
 use tokio::time::interval;
 

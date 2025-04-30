@@ -19,24 +19,6 @@ pub enum Error {
 static OBSERVERS: LazyLock<Mutex<BTreeMap<String, (Vec<Endpoint>, Sender<Vec<Change>>)>>> =
     LazyLock::new(|| Mutex::new(BTreeMap::new()));
 
-/// `subscribe` must be called when build source, cause the topology can valid the
-/// config.
-pub fn subscribe(name: &str) -> Option<Notifier> {
-    let observers = OBSERVERS.lock().unwrap();
-    let (current, sender) = observers.get(name)?;
-    let mut pending = VecDeque::new();
-    if !current.is_empty() {
-        pending.push_back(Change::Add(current.clone()));
-    }
-
-    let receiver = sender.subscribe();
-
-    Some(Notifier {
-        pending,
-        receiver: ReusableBoxFuture::new(make_future(receiver)),
-    })
-}
-
 #[inline]
 pub fn available_observers() -> Vec<String> {
     OBSERVERS.lock().unwrap().keys().cloned().collect()
@@ -148,6 +130,26 @@ impl Stream for Notifier {
     }
 }
 
+impl Notifier {
+    /// `subscribe` must be called when build source, cause the topology can valid the
+    /// config.
+    pub fn subscribe(name: &str) -> Option<Notifier> {
+        let observers = OBSERVERS.lock().unwrap();
+        let (current, sender) = observers.get(name)?;
+        let mut pending = VecDeque::new();
+        if !current.is_empty() {
+            pending.push_back(Change::Add(current.clone()));
+        }
+
+        let receiver = sender.subscribe();
+
+        Some(Notifier {
+            pending,
+            receiver: ReusableBoxFuture::new(make_future(receiver)),
+        })
+    }
+}
+
 async fn make_future(
     mut receiver: Receiver<Vec<Change>>,
 ) -> (Result<Vec<Change>, RecvError>, Receiver<Vec<Change>>) {
@@ -215,7 +217,7 @@ mod tests {
     async fn subscribe_in_the_middle() {
         let name = "foo";
         let observer = Observer::register(name.to_string());
-        let mut notifier = subscribe(name).unwrap();
+        let mut notifier = Notifier::subscribe(name).unwrap();
 
         // first state empty
         let changes = collect_ready(&mut notifier);
@@ -230,7 +232,7 @@ mod tests {
         let changes = collect_ready(&mut notifier);
         assert_eq!(changes, vec![Change::Add(vec![mock_endpoint(1, 2)])]);
 
-        let mut notifier2 = subscribe(name).unwrap();
+        let mut notifier2 = Notifier::subscribe(name).unwrap();
         let changes = collect_ready(&mut notifier2);
         assert_eq!(changes, vec![Change::Add(vec![mock_endpoint(1, 2)])]);
 
@@ -247,7 +249,7 @@ mod tests {
     async fn pubsub() {
         let name = "pubsub";
         let observer = Observer::register(name.to_string());
-        let mut notifier = subscribe(name).unwrap();
+        let mut notifier = Notifier::subscribe(name).unwrap();
 
         for (input, changes) in [
             (vec![], vec![]),

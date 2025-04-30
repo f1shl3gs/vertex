@@ -17,8 +17,7 @@ use std::sync::{Arc, Mutex};
 
 use buffer::BufferSender;
 use event::Events;
-use futures::{Future, FutureExt};
-use futures_util::stream::BoxStream;
+use futures::{Future, FutureExt, stream::BoxStream};
 use task::{Task, TaskOutput};
 use tokio::sync::mpsc;
 

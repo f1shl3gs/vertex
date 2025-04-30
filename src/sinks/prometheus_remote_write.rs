@@ -219,17 +219,16 @@ impl MetricNormalize for PrometheusMetricNormalize {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
-    use crate::testing::trace_init;
     use chrono::Utc;
     use event::tags::Tags;
     use event::{Metric, tags};
     use framework::sink::util::testing::build_test_server;
-    use futures_util::StreamExt;
     use http::HeaderMap;
     use prometheus::proto;
     use testify::next_addr;
+
+    use super::*;
+    use crate::testing::trace_init;
 
     #[test]
     fn generate_config() {
@@ -256,7 +255,7 @@ mod tests {
         events: Vec<Event>,
     ) -> Vec<(HeaderMap, proto::WriteRequest)> {
         let addr = next_addr();
-        let (rx, trigger, server) = build_test_server(addr);
+        let (mut rx, trigger, server) = build_test_server(addr);
         tokio::spawn(server);
 
         let config = format!("endpoint: \"http://{}/write\"\n{}", addr, config);
@@ -268,7 +267,8 @@ mod tests {
 
         drop(trigger);
 
-        rx.map(|(parts, body)| {
+        let mut requests = Vec::new();
+        while let Some((parts, body)) = rx.recv().await {
             assert_eq!(parts.method, "POST");
             assert_eq!(parts.uri.path(), "/write");
             let headers = parts.headers;
@@ -286,10 +286,10 @@ mod tests {
 
             let req = proto::WriteRequest::decode(Bytes::from(decoded)).expect("Invalid protobuf");
 
-            (headers, req)
-        })
-        .collect::<Vec<_>>()
-        .await
+            requests.push((headers, req));
+        }
+
+        requests
     }
 
     #[tokio::test]
