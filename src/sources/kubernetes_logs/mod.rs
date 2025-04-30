@@ -17,7 +17,7 @@ use event::log::{OwnedTargetPath, TargetPath, Value, path};
 use framework::config::{Output, SourceConfig, SourceContext, default_true};
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::{StreamExt, TryFutureExt};
+use futures::{StreamExt, TryFutureExt};
 use kubernetes::{Client, Event, WatchConfig, watcher};
 use log_schema::log_schema;
 use pod::Pod;

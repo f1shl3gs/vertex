@@ -9,8 +9,8 @@ use framework::config::{
 };
 use framework::pipeline::Pipeline;
 use framework::{FunctionTransform, Healthcheck, Sink, Source, StreamSink, Transform};
+use futures::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
-use futures_util::stream::BoxStream;
 use log_schema::log_schema;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};

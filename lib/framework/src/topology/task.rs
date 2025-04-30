@@ -4,7 +4,7 @@ use std::task::{Context, Poll};
 
 use event::Events;
 use futures::future::{BoxFuture, Future, FutureExt};
-use futures_util::stream::BoxStream;
+use futures::stream::BoxStream;
 use pin_project_lite::pin_project;
 
 use crate::config::ComponentKey;

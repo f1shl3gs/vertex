@@ -1,8 +1,7 @@
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::Stream;
-use futures_util::StreamExt;
+use futures::{Stream, StreamExt};
 
 const DEFAULT_CAPACITY: usize = 1024;
 
@@ -117,8 +116,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use futures::{SinkExt, channel::mpsc};
-    use futures_util::poll;
+    use futures::{SinkExt, channel::mpsc, poll};
 
     use super::*;
 

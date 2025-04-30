@@ -1,8 +1,7 @@
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
-use futures::StreamExt;
-use futures_util::SinkExt;
+use futures::{SinkExt, StreamExt};
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;
 use tokio_util::codec::{Encoder, FramedWrite, LinesCodec};

@@ -9,9 +9,9 @@ use framework::config::{
     ComponentKey, DataType, GlobalOptions, Output, ProxyConfig, Resource, SourceConfig,
     SourceContext,
 };
-use framework::observe::{Change, Endpoint, Notifier, available_observers, subscribe};
+use framework::observe::{Change, Endpoint, Notifier, available_observers};
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::StreamExt;
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tripwire::{Trigger, Tripwire};
 use value::Value;
@@ -34,7 +34,7 @@ struct Config {
 #[typetag::serde(name = "multiplier")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let Some(notifier) = subscribe(&self.observer) else {
+        let Some(notifier) = Notifier::subscribe(&self.observer) else {
             return Err(format!(
                 "observer `{}` is not configured, available: {:?}",
                 self.observer,

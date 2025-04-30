@@ -3,7 +3,7 @@ mod observer;
 
 pub use endpoint::Endpoint;
 pub(crate) use observer::receiver_count;
-pub use observer::{Change, Notifier, Observer, available_observers, current_endpoints, subscribe};
+pub use observer::{Change, Notifier, Observer, available_observers, current_endpoints};
 
 /// `run` is a simple helper for period service discovery, others with WATCH mechanism is
 /// not suitable for this function.

@@ -6,8 +6,7 @@ use std::sync::Arc;
 
 use bytesize::ByteSizeOf;
 use event::Finalizable;
-use futures::Stream;
-use futures_util::{StreamExt, stream::Map};
+use futures::{Stream, StreamExt, stream::Map};
 use tower::Service;
 
 use super::request_builder::{IncrementalRequestBuilder, RequestBuilder};

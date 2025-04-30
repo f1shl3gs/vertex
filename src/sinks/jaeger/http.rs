@@ -9,7 +9,7 @@ use framework::sink::util::service::RequestConfig;
 use framework::sink::util::{Buffer, Compression};
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
-use futures_util::{FutureExt, SinkExt};
+use futures::{FutureExt, SinkExt};
 use http::header::CONTENT_TYPE;
 use http::{Request, StatusCode};
 use http_body_util::{BodyExt, Full};

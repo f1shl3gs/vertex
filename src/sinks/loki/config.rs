@@ -11,7 +11,7 @@ use framework::sink::util::Compression;
 use framework::sink::util::service::RequestConfig;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, template::Template};
-use futures_util::FutureExt;
+use futures::FutureExt;
 use http_body_util::{BodyExt, Full};
 use serde::{Deserialize, Serialize};
 use url::Url;

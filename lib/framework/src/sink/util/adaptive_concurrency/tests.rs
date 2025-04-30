@@ -13,16 +13,12 @@ use std::time::{Duration, Instant};
 
 use configurable::{Configurable, configurable_component};
 use event::Event;
-use futures::FutureExt;
-use futures_util::future::BoxFuture;
-use futures_util::{SinkExt, stream};
+use futures::{FutureExt, SinkExt, future::BoxFuture, stream};
 use rand::Rng;
 use rand_distr::Exp1;
 use serde::{Deserialize, Serialize};
 use testify::stats::{HistogramStats, LevelTimeHistogram, TimeHistogram, WeightedSumStats};
 use tokio::sync::oneshot;
-use tokio::time;
-use tokio::time::sleep;
 use tower::Service;
 
 use crate::batch::{BatchSettings, EncodedEvent};
@@ -266,7 +262,7 @@ fn respond_after(
     control: Arc<Mutex<TestController>>,
 ) -> BoxFuture<'static, Result<Response, Error>> {
     Box::pin(async move {
-        sleep(Duration::from_secs_f64(delay)).await;
+        tokio::time::sleep(Duration::from_secs_f64(delay)).await;
 
         let mut control = control.lock().expect("Poisoned control lock");
         control.end_request(Instant::now(), matches!(resp, Ok(Response::Ok)));
@@ -469,14 +465,16 @@ async fn run_test(_params: TestParams) -> TestResults {
 }
 
 mod mock {
-    use crate::config::{Output, SourceConfig, SourceContext};
-    use crate::{Pipeline, ShutdownSignal, Source};
+    use std::task::Poll;
+    use std::time::Duration;
+
     use chrono::Utc;
     use configurable::configurable_component;
     use event::LogRecord;
     use log_schema::log_schema;
-    use std::task::Poll;
-    use std::time::Duration;
+
+    use crate::config::{Output, SourceConfig, SourceContext};
+    use crate::{Pipeline, ShutdownSignal, Source};
 
     #[configurable_component(source, name = "mock_logs")]
     pub struct MockLogsConfig {
@@ -751,13 +749,13 @@ async fn all_tests() {
 
     entries.sort_unstable_by_key(|entry| entry.0.to_string_lossy().into_owned());
 
-    time::pause();
+    tokio::time::pause();
 
     // The first delay takes just slightly longer than all the rest,
     // which causes the first test to run differently than all the
     // others. Throw in a dummy delay to take up this delay "slack"
-    sleep(Duration::from_millis(1)).await;
-    time::advance(Duration::from_millis(1)).await;
+    tokio::time::sleep(Duration::from_millis(1)).await;
+    tokio::time::advance(Duration::from_millis(1)).await;
 
     // Then run all the tests
     for (file, input) in entries {

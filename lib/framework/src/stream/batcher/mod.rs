@@ -8,9 +8,8 @@ pub use config::BatchConfig;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::ready;
 use futures::stream::{Fuse, Stream};
-use futures::{Future, StreamExt};
+use futures::{Future, StreamExt, ready};
 use pin_project_lite::pin_project;
 use tokio::time::Sleep;
 
@@ -116,12 +115,14 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::stream::BatcherSettings;
-    use futures::stream;
     use std::num::NonZeroUsize;
     use std::pin::pin;
     use std::time::Duration;
+
+    use futures::stream;
+
+    use super::*;
+    use crate::stream::BatcherSettings;
 
     #[tokio::test]
     async fn item_limit() {

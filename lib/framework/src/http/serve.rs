@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 
-use futures_util::future::BoxFuture;
+use futures::future::BoxFuture;
 use http::{Request, Response};
 use hyper::body::{Body, Incoming};
 use hyper::service::Service;

@@ -1,15 +1,13 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::pin::Pin;
-use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::future::OptionFuture;
 use futures::stream::{BoxStream, FuturesOrdered, FuturesUnordered};
 use futures::{FutureExt, Stream, StreamExt};
 use pin_project_lite::pin_project;
-use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
-use tokio::sync::{Notify, mpsc};
+use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
 use tracing::error;
 
 use crate::{BatchStatus, BatchStatusReceiver};
@@ -36,8 +34,7 @@ pub type UnorderedFinalizer<T> = FinalizerSet<T, FuturesUnordered<FinalizerFutur
 /// is the source-specific data associated with each entry.
 #[derive(Debug)]
 pub struct FinalizerSet<T, S> {
-    sender: Option<UnboundedSender<(BatchStatusReceiver, T)>>,
-    flush: Arc<Notify>,
+    sender: UnboundedSender<(BatchStatusReceiver, T)>,
     _phantom: PhantomData<S>,
 }
 
@@ -54,16 +51,14 @@ where
         SS: Future + Send + Unpin + 'static,
         <SS as Future>::Output: Send,
     {
-        let (todo_tx, todo_rx) = mpsc::unbounded_channel();
-        let flush1 = Arc::new(Notify::new());
-        let flush2 = Arc::clone(&flush1);
+        let (tx, rx) = unbounded_channel();
+
         (
             Self {
-                sender: Some(todo_tx),
-                flush: flush1,
+                sender: tx,
                 _phantom: PhantomData,
             },
-            finalizer_stream(shutdown, todo_rx, S::default(), flush2).boxed(),
+            finalizer_stream(shutdown, rx, S::default()).boxed(),
         )
     }
 
@@ -89,27 +84,20 @@ where
     }
 
     pub fn add(&self, entry: T, receiver: BatchStatusReceiver) {
-        if let Some(sender) = &self.sender {
-            if let Err(err) = sender.send((receiver, entry)) {
-                error!(message = "FinalizerSet task ended prematurely", %err);
-            }
+        if let Err(err) = self.sender.send((receiver, entry)) {
+            error!(message = "FinalizerSet task ended prematurely", %err);
         }
-    }
-
-    pub fn flush(&self) {
-        self.flush.notify_one();
     }
 }
 
-fn finalizer_stream<SS, T, S>(
-    shutdown: Option<SS>,
+fn finalizer_stream<S, T, R>(
+    shutdown: Option<S>,
     mut new_entries: UnboundedReceiver<(BatchStatusReceiver, T)>,
-    mut status_receivers: S,
-    flush: Arc<Notify>,
+    mut status_receivers: R,
 ) -> impl Stream<Item = (BatchStatus, T)>
 where
-    S: Default + FuturesSet<FinalizerFuture<T>> + Unpin,
-    SS: Future + Send + Unpin + 'static,
+    R: Default + FuturesSet<FinalizerFuture<T>> + Unpin,
+    S: Future + Send + Unpin + 'static,
 {
     let handle_shutdown = shutdown.is_some();
     let mut shutdown = OptionFuture::from(shutdown);
@@ -118,11 +106,8 @@ where
         loop {
             tokio::select! {
                 biased;
+
                 _ = &mut shutdown, if handle_shutdown => break,
-                _ = flush.notified() => {
-                    // Drop all the existing status receivers and start over.
-                    status_receivers = S::default();
-                },
                 // Only poll for new entries until shutdown is flagged.
                 new_entry = new_entries.recv() => match new_entry {
                     Some((receiver, entry)) => {
@@ -157,6 +142,7 @@ where
 
 pub trait FuturesSet<Fut: Future>: Stream<Item = Fut::Output> {
     fn is_empty(&self) -> bool;
+
     fn push(&mut self, future: Fut);
 }
 
@@ -189,6 +175,7 @@ pin_project! {
 
 impl<T> Future for FinalizerFuture<T> {
     type Output = (<BatchStatusReceiver as Future>::Output, T);
+
     fn poll(mut self: Pin<&mut Self>, ctx: &mut Context<'_>) -> Poll<Self::Output> {
         let status = std::task::ready!(self.receiver.poll_unpin(ctx));
         // The use of this above in a `Futures{Ordered|Unordered|`

@@ -16,8 +16,7 @@ use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::{Compression, EncodeResult, KeyPartitioner, RequestBuilder};
 use framework::stream::BatcherSettings;
 use framework::template::Template;
-use futures_util::StreamExt;
-use futures_util::stream::BoxStream;
+use futures::{StreamExt, stream::BoxStream};
 use thiserror::Error;
 use tokio_util::codec::Encoder as _;
 

@@ -3,8 +3,7 @@ use std::pin::Pin;
 
 use bytesize::ByteSizeOf;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
-use futures::Stream;
-use futures_util::{StreamExt, stream};
+use futures::{Stream, StreamExt, stream};
 
 use crate::config::Output;
 use crate::topology::{ControlChannel, Fanout};

@@ -1,7 +1,5 @@
-use std::{
-    net::{SocketAddr, TcpListener},
-    time::Duration,
-};
+use std::net::{SocketAddr, TcpListener};
+use std::time::Duration;
 
 use futures::StreamExt;
 use tokio::time::sleep;

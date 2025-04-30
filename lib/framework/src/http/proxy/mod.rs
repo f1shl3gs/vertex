@@ -12,7 +12,7 @@ use std::task::{Context, Poll};
 
 use configurable::Configurable;
 use configurable::schema::{SchemaGenerator, SchemaObject};
-use futures_util::TryFutureExt;
+use futures::TryFutureExt;
 use http::{HeaderMap, Uri};
 use hyper::rt::{Read, Write};
 use hyper_rustls::ConfigBuilderExt;

@@ -3,7 +3,7 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use bytes::{Buf, BufMut};
-use futures_util::ready;
+use futures::ready;
 use hyper::rt;
 use pin_project_lite::pin_project;
 

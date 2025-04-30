@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::time::Duration;
 
-use futures_util::StreamExt;
+use futures::StreamExt;
 
 use crate::Error;
 
@@ -186,12 +186,13 @@ mod inotify {
 
     #[cfg(test)]
     mod tests {
-        use super::*;
-        use futures_util::StreamExt;
         use std::fs::File;
         use std::io::Write;
 
+        use futures::StreamExt;
         use testify::temp_dir;
+
+        use super::*;
 
         #[tokio::test]
         async fn write() {

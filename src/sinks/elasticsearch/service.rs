@@ -10,7 +10,7 @@ use framework::sink::util::Compression;
 use framework::sink::util::http::HttpBatchService;
 use framework::sink::util::service::RequestConfig;
 use framework::stream::DriverResponse;
-use futures_util::future::BoxFuture;
+use futures::future::BoxFuture;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{Request, Response, Uri};
 use tower::{Service, ServiceExt};

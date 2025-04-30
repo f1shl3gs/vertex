@@ -7,7 +7,7 @@ use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use configurable::{Configurable, configurable_component};
 use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext};
-use futures_util::StreamExt;
+use futures::StreamExt;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;

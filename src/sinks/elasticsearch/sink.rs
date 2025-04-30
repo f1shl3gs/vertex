@@ -10,8 +10,7 @@ use event::{Event, EventContainer, Events, LogRecord};
 use framework::StreamSink;
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::stream::{BatcherSettings, DriverResponse};
-use futures_util::StreamExt;
-use futures_util::stream::BoxStream;
+use futures::{StreamExt, stream::BoxStream};
 use tower::Service;
 
 use super::encoder::ProcessedEvent;
@@ -69,7 +68,7 @@ where
             })
             .filter_map(|x| async move { x })
             .filter_map(move |log| {
-                futures_util::future::ready(process_log(log, &mode, id_key_field.as_ref()))
+                futures::future::ready(process_log(log, &mode, id_key_field.as_ref()))
             })
             .batched(self.batch_settings.into_byte_size_config())
             .request_builder(request_builder_concurrency_limit, self.request_builder)

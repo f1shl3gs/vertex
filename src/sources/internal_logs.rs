@@ -8,7 +8,6 @@ use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::trace::TraceSubscription;
 use futures::StreamExt;
-use futures_util::stream;
 use log_schema::log_schema;
 
 fn default_host_key() -> Option<OwnedTargetPath> {
@@ -63,7 +62,7 @@ async fn run(
     let pid = std::process::id();
 
     // chain the logs emitted before the source started first
-    let mut rx = stream::iter(subscription.buffered())
+    let mut rx = futures::stream::iter(subscription.buffered())
         .chain(subscription.into_stream())
         .ready_chunks(128)
         .take_until(shutdown);
@@ -100,8 +99,7 @@ mod tests {
 
     use event::LogRecord;
     use event::log::Value;
-    use futures::Stream;
-    use futures_util::StreamExt;
+    use futures::{Stream, StreamExt};
     use testify::collect_ready;
     use tokio::time::sleep;
 
@@ -166,6 +164,6 @@ mod tests {
         framework::trace::stop_buffering();
 
         rx.filter_map(|events| async move { events.into_logs() })
-            .flat_map(stream::iter)
+            .flat_map(futures::stream::iter)
     }
 }

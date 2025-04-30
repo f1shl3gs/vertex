@@ -6,7 +6,7 @@ use std::time::Duration;
 
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::stream::DriverResponse;
-use futures_util::future::BoxFuture;
+use futures::future::BoxFuture;
 use parking_lot::RwLock;
 use rskafka::client::Client;
 use rskafka::client::partition::{Compression, PartitionClient, UnknownTopicHandling};

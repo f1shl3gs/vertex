@@ -10,7 +10,6 @@ syslog = ["dep:syslog_loose"]
 
 [dev-dependencies]
 event = { path = "../event", features = ["test"] }
-futures-util = { version = "0.3.31", default-features = false, features = ["async-await"] }
 serde_yaml = { version = "0.9.34", default-features = false }
 tokio = { version = "1.44.2", default-features = false, features = ["test-util", "macros"] }
 value = { path = "../value" }
@@ -21,7 +20,6 @@ chrono = { version = "0.4.41", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
 futures = { version = "0.3.31", default-features = false }
-futures-util = { version = "0.3.31", default-features = false }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.7.4", default-features = false }
 serde = { version = "1.0.219", default-features = false }

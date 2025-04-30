@@ -8,7 +8,7 @@ use configurable::configurable_component;
 use event::LogRecord;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::StreamExt;
+use futures::StreamExt;
 use tokio_util::codec::LengthDelimitedCodec;
 
 #[configurable_component(source, name = "audit")]

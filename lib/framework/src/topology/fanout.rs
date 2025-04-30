@@ -4,8 +4,7 @@ use std::{fmt, task::Poll};
 
 use buffer::BufferSender;
 use event::Events;
-use futures::{Stream, StreamExt};
-use futures_util::{pending, poll};
+use futures::{Stream, StreamExt, pending, poll};
 use indexmap::map::{Entry, IndexMap};
 use tokio::sync::mpsc;
 use tokio_util::sync::ReusableBoxFuture;
