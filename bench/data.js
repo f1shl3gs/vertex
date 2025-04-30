@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745983202867,
+  "lastUpdate": 1745983312898,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0d3f39c1fda38b29a452c0b95d2af74fa8cdbdbd",
-          "message": "toolchain: 1.85.0 (#2220)",
-          "timestamp": "2025-02-22T17:43:11+08:00",
-          "tree_id": "229ee20cde59dcdcd8a897c49fb9837bdb58014c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0d3f39c1fda38b29a452c0b95d2af74fa8cdbdbd"
-        },
-        "date": 1740218033600,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 550,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37969.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37681.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aa73e324b7ca4b4ff1da39a9dc58e37737416581",
+          "message": "Merge pull request #2323 from f1shl3gs/deps/remove_futures-util\n\ndeps: remove futures-utils",
+          "timestamp": "2025-04-30T11:09:42+08:00",
+          "tree_id": "1c5061ac8f5a5b80e0eee9ec7a89f233cab85793",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aa73e324b7ca4b4ff1da39a9dc58e37737416581"
+        },
+        "date": 1745983291321,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 543,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37672.8,
             "unit": "KiB"
           }
         ]
