@@ -1588,6 +1588,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "hyper-unix"
+version = "0.1.0"
+dependencies = [
+ "hyper",
+ "hyper-util",
+ "pin-project-lite",
+ "tokio",
+ "tower 0.5.2",
+]
+
+[[package]]
 name = "hyper-util"
 version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3671,15 +3682,14 @@ dependencies = [
  "futures",
  "http-body-util",
  "hyper",
+ "hyper-unix",
  "hyper-util",
  "percent-encoding",
- "pin-project-lite",
  "rand 0.9.1",
  "serde",
  "serde_json",
  "tokio",
  "tokio-util",
- "tower 0.5.2",
  "tracing",
 ]
 
@@ -4335,6 +4345,7 @@ dependencies = [
  "httpdate",
  "humanize",
  "hyper",
+ "hyper-unix",
  "hyper-util",
  "indexmap 2.9.0",
  "inventory",

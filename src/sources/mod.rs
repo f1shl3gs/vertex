@@ -12,6 +12,8 @@ mod consul;
 mod demo_logs;
 #[cfg(feature = "sources-dnstap")]
 mod dnstap;
+#[cfg(feature = "sources-docker")]
+mod docker;
 #[cfg(feature = "sources-dpdk")]
 mod dpdk;
 #[cfg(feature = "sources-elasticsearch")]

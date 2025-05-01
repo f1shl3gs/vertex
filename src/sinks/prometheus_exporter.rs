@@ -439,19 +439,16 @@ impl StreamSink for PrometheusExporter {
                     let finalizers = metadata.take_finalizers();
                     let timestamp = timestamp.unwrap_or(now).timestamp_millis();
 
-                    state
-                        .entry(series.name)
-                        .and_modify(|sets| {
-                            sets.metrics.replace(ExpiringEntry {
-                                tags: series.tags,
-                                value,
-                                expired_at: timestamp + ttl,
-                            });
-                        })
-                        .or_insert(Sets {
-                            description: description.unwrap_or_default(),
-                            metrics: Default::default(),
-                        });
+                    let sets = state.entry(series.name).or_insert(Sets {
+                        description: description.unwrap_or_default(),
+                        metrics: Default::default(),
+                    });
+
+                    sets.metrics.replace(ExpiringEntry {
+                        tags: series.tags,
+                        value,
+                        expired_at: timestamp + ttl,
+                    });
 
                     finalizers.update_status(EventStatus::Delivered)
                 })

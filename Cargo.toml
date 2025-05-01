@@ -35,6 +35,7 @@ members = [
     "lib/finalize",
     "lib/framework",
     "lib/hostname",
+    "lib/hyper-unix",
     "lib/jaeger",
     "lib/kubernetes",
     "lib/log_schema",
@@ -163,6 +164,7 @@ sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
 sources-dnstap = []
+sources-docker = ["dep:hyper-unix"]
 sources-dpdk = []
 sources-exec = ["tokio/process"]
 sources-clickhouse_metrics = []
@@ -216,6 +218,7 @@ sources = [
     "sources-clickhouse_metrics",
     "sources-demo_logs",
     "sources-dnstap",
+    "sources-docker",
     "sources-dpdk",
     "sources-elasticsearch",
     "sources-exec",
@@ -459,6 +462,7 @@ flate2 = { version = "1.1.1", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
 glob = { version = "0.3.2", default-features = false }
 hickory-resolver = { version = "0.24.4", default-features = false, optional = true, features = ["system-config", "tokio-runtime"] }
+hyper-unix = { path = "lib/hyper-unix", optional = true }
 indexmap = { version = "2.9.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.20", default-features = false }
 libc = { version = "0.2.172", default-features = false, optional = true }
