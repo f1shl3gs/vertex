@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746109908213,
+  "lastUpdate": 1746109935904,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f301428aa2b1fc039a305d0b9e90e2c6b55f28d1",
-          "message": "cargo update (#2221)",
-          "timestamp": "2025-02-23T21:22:19+08:00",
-          "tree_id": "00ab77b5d33580beb10a4925115ecb9388586cb1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f301428aa2b1fc039a305d0b9e90e2c6b55f28d1"
-        },
-        "date": 1740317578695,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 550,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38009.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "580fa69f2565594cf447f58cdd631e9bdd8eccc3",
           "message": "bump libc to 0.2.170 (#2222)",
           "timestamp": "2025-02-24T11:56:44+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38039.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bdd6f938b9b8acedc53db664a2be10bb89851543",
+          "message": "Merge pull request #2325 from f1shl3gs/lib/multline/impl_preset\n\nlib/multiline: implement some preset",
+          "timestamp": "2025-05-01T22:21:14+08:00",
+          "tree_id": "21ac94eddecad355d5bc60eac27264e3b078a73f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bdd6f938b9b8acedc53db664a2be10bb89851543"
+        },
+        "date": 1746109913987,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 544,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38065.3,
             "unit": "KiB"
           }
         ]
