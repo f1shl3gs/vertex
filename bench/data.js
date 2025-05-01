@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746080576226,
+  "lastUpdate": 1746080621270,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "557fc0ef6aab3715aa7fc356c905e369300c2b5b",
-          "message": "chore(deps): bump uuid from 1.13.2 to 1.14.0 (#2216)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.13.2 to 1.14.0.\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\n- [Commits](https://github.com/uuid-rs/uuid/compare/v1.13.2...v1.14.0)\n\n---\nupdated-dependencies:\n- dependency-name: uuid\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-21T14:27:01+08:00",
-          "tree_id": "06e7805f0149cc53b7c3f2aa0532311e458e420e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/557fc0ef6aab3715aa7fc356c905e369300c2b5b"
-        },
-        "date": 1740119345768,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532620,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 541420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "88729370d01191cba01a0f86be90e78d801d795b",
+          "message": "Merge pull request #2324 from f1shl3gs/sources/docker/init\n\nsources/docker: init",
+          "timestamp": "2025-05-01T14:20:00+08:00",
+          "tree_id": "8730d41327a71b2e5ccf884818645e259501555c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/88729370d01191cba01a0f86be90e78d801d795b"
+        },
+        "date": 1746080599809,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 545640,
             "unit": "ns/op"
           }
         ]
