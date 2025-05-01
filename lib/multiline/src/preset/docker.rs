@@ -1,20 +1,20 @@
 use bytes::Bytes;
 
-use crate::{Mode, Rule};
+use crate::aggregate::{Mode, Rule};
 
-pub struct DockerParser;
+pub struct Docker;
 
-impl Rule for DockerParser {
-    fn is_start(&self, _line: &Bytes) -> bool {
-        todo!()
+impl Rule for Docker {
+    fn is_start(&mut self, _line: &Bytes) -> bool {
+        true
     }
 
-    fn is_condition(&self, _line: &Bytes) -> bool {
-        todo!()
+    fn is_condition(&mut self, _line: &Bytes) -> bool {
+        false
     }
 
     fn mode(&self) -> Mode {
-        todo!()
+        Mode::ContinueThrough
     }
 }
 

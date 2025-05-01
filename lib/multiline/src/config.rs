@@ -3,37 +3,37 @@ use std::time::Duration;
 
 use humanize::duration::parse_duration;
 use regex::bytes::Regex;
-use serde::{
-    Deserialize, Deserializer, Serialize, Serializer,
-    de::{Error, MapAccess, Unexpected},
-};
+use serde::de::{Error, MapAccess, Unexpected};
+use serde::ser::SerializeStruct;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use super::aggregate::Mode;
-use super::serde_regex;
 
 const CRI_PARSER: &str = "cri";
 const DOCKER_PARSER: &str = "docker";
 const GO_PARSER: &str = "go";
 const JAVA_PARSER: &str = "java";
-const NOINDENT: &str = "noindent";
+const NO_INDENT: &str = "no_indent";
 const CUSTOM_PARSER: &str = "custom";
 const DEFAULT_TIMEOUT: Duration = Duration::from_secs(5);
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Parser {
+    #[default]
+    NoIndent,
     Cri,
     Docker,
     Go,
     Java,
-    NoIndent,
 
     Custom {
-        #[serde(with = "serde_regex")]
+        #[serde(with = "crate::serde_regex")]
         condition_pattern: Regex,
 
-        #[serde(with = "serde_regex")]
+        #[serde(with = "crate::serde_regex")]
         start_pattern: Regex,
+
         mode: Mode,
     },
 }
@@ -95,20 +95,20 @@ impl PartialEq for Parser {
 /// ```yaml
 /// multiline:
 ///     type: java
-///     timeout: 10s
+///     timeout: 2s
 /// ```
 ///
 /// Custom type, except `timeout` all field is required
 /// ```yaml
 /// multiline:
-///     parser: custom
 ///     timeout: 5s
+///     parser: custom
 ///     start_pattern:  ^[^\s]
 ///     condition_pattern: ^[\s]+
 ///     mode: continue_through
 /// ```
 #[derive(Clone, Debug, PartialEq)]
-pub struct MultilineConfig {
+pub struct Config {
     /// The maximum amount of time to wait for the next additional line.
     ///
     /// Once this timeout is reached, the buffered message is guaranteed to be flushed,
@@ -118,7 +118,7 @@ pub struct MultilineConfig {
     pub parser: Parser,
 }
 
-impl<'de> Deserialize<'de> for MultilineConfig {
+impl<'de> Deserialize<'de> for Config {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -126,7 +126,7 @@ impl<'de> Deserialize<'de> for MultilineConfig {
         struct StringOrMap;
 
         impl<'de> serde::de::Visitor<'de> for StringOrMap {
-            type Value = MultilineConfig;
+            type Value = Config;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
                 formatter.write_str("string or map")
@@ -137,29 +137,29 @@ impl<'de> Deserialize<'de> for MultilineConfig {
                 E: Error,
             {
                 match v {
-                    "cri" => Ok(MultilineConfig {
+                    "cri" => Ok(Config {
                         timeout: DEFAULT_TIMEOUT,
                         parser: Parser::Cri,
                     }),
-                    "docker" => Ok(MultilineConfig {
+                    "docker" => Ok(Config {
                         timeout: DEFAULT_TIMEOUT,
                         parser: Parser::Docker,
                     }),
-                    "go" => Ok(MultilineConfig {
+                    "go" => Ok(Config {
                         timeout: DEFAULT_TIMEOUT,
                         parser: Parser::Go,
                     }),
-                    "java" => Ok(MultilineConfig {
+                    "java" => Ok(Config {
                         timeout: DEFAULT_TIMEOUT,
                         parser: Parser::Java,
                     }),
-                    "noindent" => Ok(MultilineConfig {
+                    "no_indent" => Ok(Config {
                         timeout: DEFAULT_TIMEOUT,
                         parser: Parser::NoIndent,
                     }),
                     _ => Err(Error::invalid_value(
                         Unexpected::Str(v),
-                        &r#"cri, docker, go or java"#,
+                        &r#"cri, docker, go, java, no_ident or custom"#,
                     )),
                 }
             }
@@ -232,12 +232,12 @@ impl<'de> Deserialize<'de> for MultilineConfig {
                                 DOCKER_PARSER => Some(DOCKER_PARSER),
                                 GO_PARSER => Some(GO_PARSER),
                                 JAVA_PARSER => Some(JAVA_PARSER),
-                                NOINDENT => Some(NOINDENT),
+                                NO_INDENT => Some(NO_INDENT),
                                 CUSTOM_PARSER => Some(CUSTOM_PARSER),
                                 _ => {
                                     return Err(Error::unknown_variant(
                                         "parser",
-                                        &["cri", "docker", "go", "java", "custom"],
+                                        &["cri", "docker", "go", "java", "no_indent", "custom"],
                                     ));
                                 }
                             }
@@ -300,7 +300,7 @@ impl<'de> Deserialize<'de> for MultilineConfig {
                             return Err(Error::missing_field("mode"));
                         }
 
-                        Ok(MultilineConfig {
+                        Ok(Config {
                             timeout,
                             parser: Parser::Custom {
                                 condition_pattern: condition_pattern.unwrap(),
@@ -310,27 +310,27 @@ impl<'de> Deserialize<'de> for MultilineConfig {
                         })
                     }
 
-                    Some(CRI_PARSER) => Ok(MultilineConfig {
+                    Some(CRI_PARSER) => Ok(Config {
                         timeout,
                         parser: Parser::Cri,
                     }),
 
-                    Some(DOCKER_PARSER) => Ok(MultilineConfig {
+                    Some(DOCKER_PARSER) => Ok(Config {
                         timeout,
                         parser: Parser::Docker,
                     }),
 
-                    Some(GO_PARSER) => Ok(MultilineConfig {
+                    Some(GO_PARSER) => Ok(Config {
                         timeout,
                         parser: Parser::Go,
                     }),
 
-                    Some(JAVA_PARSER) => Ok(MultilineConfig {
+                    Some(JAVA_PARSER) => Ok(Config {
                         timeout,
                         parser: Parser::Java,
                     }),
 
-                    Some(NOINDENT) => Ok(MultilineConfig {
+                    Some(NO_INDENT) => Ok(Config {
                         timeout,
                         parser: Parser::NoIndent,
                     }),
@@ -344,12 +344,45 @@ impl<'de> Deserialize<'de> for MultilineConfig {
     }
 }
 
-impl Serialize for MultilineConfig {
-    fn serialize<S>(&self, _serializer: S) -> Result<S::Ok, S::Error>
+impl Serialize for Config {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
-        unreachable!()
+        let mut serializer = serializer.serialize_struct("Config", 2)?;
+
+        if self.timeout != DEFAULT_TIMEOUT {
+            serializer.serialize_field("timeout", &humanize::duration::duration(&self.timeout))?;
+        }
+
+        match &self.parser {
+            Parser::Cri => {
+                serializer.serialize_field("parser", "cri")?;
+            }
+            Parser::Docker => {
+                serializer.serialize_field("parser", "docker")?;
+            }
+            Parser::Go => {
+                serializer.serialize_field("parser", "go")?;
+            }
+            Parser::Java => {
+                serializer.serialize_field("parser", "java")?;
+            }
+            Parser::NoIndent => {
+                serializer.serialize_field("parser", "no_indent")?;
+            }
+            Parser::Custom {
+                condition_pattern,
+                start_pattern,
+                mode,
+            } => {
+                serializer.serialize_field("start_pattern", start_pattern.as_str())?;
+                serializer.serialize_field("condition_pattern", condition_pattern.as_str())?;
+                serializer.serialize_field("mode", mode.as_str())?;
+            }
+        }
+
+        serializer.end()
     }
 }
 
@@ -362,45 +395,52 @@ mod tests {
         let tests = [
             // simple word
             (
-                r#"cri"#,
-                Ok(MultilineConfig {
+                "cri",
+                Ok(Config {
                     timeout: DEFAULT_TIMEOUT,
                     parser: Parser::Cri,
                 }),
             ),
             (
-                r#"docker"#,
-                Ok(MultilineConfig {
+                "docker",
+                Ok(Config {
                     timeout: DEFAULT_TIMEOUT,
                     parser: Parser::Docker,
                 }),
             ),
             (
-                r#"go"#,
-                Ok(MultilineConfig {
+                "go",
+                Ok(Config {
                     timeout: DEFAULT_TIMEOUT,
                     parser: Parser::Go,
                 }),
             ),
             (
-                r#"java"#,
-                Ok(MultilineConfig {
+                "java",
+                Ok(Config {
                     timeout: DEFAULT_TIMEOUT,
                     parser: Parser::Java,
+                }),
+            ),
+            (
+                "no_indent",
+                Ok(Config {
+                    timeout: DEFAULT_TIMEOUT,
+                    parser: Parser::NoIndent,
                 }),
             ),
             // parser with timeout
             (
                 "parser: cri\ntimeout: 6s",
-                Ok(MultilineConfig {
+                Ok(Config {
                     timeout: Duration::from_secs(6),
                     parser: Parser::Cri,
                 }),
             ),
             // parser without timeout
             (
-                r#"parser: cri"#,
-                Ok(MultilineConfig {
+                "parser: cri",
+                Ok(Config {
                     timeout: DEFAULT_TIMEOUT,
                     parser: Parser::Cri,
                 }),
@@ -408,7 +448,7 @@ mod tests {
             // custom parser without timeout
             (
                 "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: continue_through",
-                Ok(MultilineConfig {
+                Ok(Config {
                     timeout: DEFAULT_TIMEOUT,
                     parser: Parser::Custom {
                         condition_pattern: Regex::new(".*").unwrap(),
@@ -419,8 +459,13 @@ mod tests {
             ),
             // custom parser with timeout
             (
-                "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: continue_through\ntimeout: 6s",
-                Ok(MultilineConfig {
+                r#"
+                parser: custom
+                start_pattern: .*
+                condition_pattern: .*
+                mode: continue_through
+                timeout: 6s"#,
+                Ok(Config {
                     timeout: Duration::from_secs(6),
                     parser: Parser::Custom {
                         condition_pattern: Regex::new(".*").unwrap(),
@@ -438,41 +483,65 @@ mod tests {
             (
                 "parser: abc",
                 Err(
-                    "unknown variant `parser`, expected one of `cri`, `docker`, `go`, `java`, `custom`",
+                    "unknown variant `parser`, expected one of `cri`, `docker`, `go`, `java`, `no_indent`, `custom`",
                 ),
             ),
             // unknown mode
             (
-                "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: foo\ntimeout: 6s",
+                r#"
+                parser: custom
+                start_pattern: .*
+                condition_pattern: .*
+                mode: foo
+                timeout: 6s"#,
                 Err(
-                    "unknown variant `mode`, expected one of `continue_through`, `continue_past`, `halt_before`, `halt_with`",
+                    "unknown variant `mode`, expected one of `continue_through`, `continue_past`, `halt_before`, `halt_with` at line 2 column 17",
                 ),
             ),
             // invalid timeout
             (
-                "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: continue_through\ntimeout: 100",
-                Err("invalid value: string \"100\", expected something like 5s, 10s"),
+                r#"
+                parser: custom
+                start_pattern: .*
+                condition_pattern: .*
+                mode: continue_through
+                timeout: 100"#,
+                Err(
+                    "invalid value: string \"100\", expected something like 5s, 10s at line 2 column 17",
+                ),
             ),
             // missing start_pattern
             (
-                "parser: custom\ncondition_pattern: .*\nmode: continue_through\ntimeout: 6s",
-                Err("missing field `start_pattern`"),
+                r#"
+                parser: custom
+                condition_pattern: .*
+                mode: continue_through
+                timeout: 6s"#,
+                Err("missing field `start_pattern` at line 2 column 17"),
             ),
             // missing condition_pattern
             (
-                "parser: custom\nstart_pattern: .*\nmode: continue_through\ntimeout: 6s",
-                Err("missing field `condition_pattern`"),
+                r#"
+                parser: custom
+                start_pattern: .*
+                mode: continue_through
+                timeout: 6s"#,
+                Err("missing field `condition_pattern` at line 2 column 17"),
             ),
             // missing mode
             (
-                "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\ntimeout: 6s",
-                Err("missing field `mode`"),
+                r#"
+                parser: custom
+                start_pattern: .*
+                condition_pattern: .*
+                timeout: 6s"#,
+                Err("missing field `mode` at line 2 column 17"),
             ),
         ];
 
         for (input, want) in tests {
             let want = want.map_err(|err| err.to_string());
-            let deserialized: Result<MultilineConfig, _> =
+            let deserialized: Result<Config, _> =
                 serde_yaml::from_str(input).map_err(|err| err.to_string());
 
             assert_eq!(deserialized, want, "input: {}", input)
@@ -483,14 +552,14 @@ mod tests {
     fn json_deserialization() {
         let tests = [(
             r#" "cri" "#,
-            Ok(MultilineConfig {
+            Ok(Config {
                 timeout: DEFAULT_TIMEOUT,
                 parser: Parser::Cri,
             }),
         )];
 
         for (input, want) in tests {
-            let deserialized: Result<MultilineConfig, _> =
+            let deserialized: Result<Config, _> =
                 serde_json::from_str(input).map_err(|err| err.to_string());
 
             assert_eq!(deserialized, want, "input: {}", input)

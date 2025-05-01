@@ -2196,6 +2196,7 @@ dependencies = [
  "bytes",
  "futures",
  "humanize",
+ "memchr",
  "pin-project-lite",
  "regex",
  "serde",

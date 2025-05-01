@@ -12,7 +12,7 @@ use finalize::OrderedFinalizer;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::{FutureExt, Stream, StreamExt, TryFutureExt};
-use multiline::{LineAgg, Logic, MultilineConfig, Parser};
+use multiline::{Config as MultilineConfig, LineAgg, Logic, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 use tokio::sync::oneshot;
@@ -120,6 +120,7 @@ struct Config {
     ///
     /// If not specified, multiline aggregation is disabled.
     #[configurable(skip)]
+    #[serde(default)]
     multiline: Option<MultilineConfig>,
 }
 
@@ -281,85 +282,106 @@ fn tail_source(
                 line
             });
 
-        let messages: Box<dyn Stream<Item = Line> + Send + Unpin> =
-            if let Some(ref multiline_config) = multiline {
-                // This match looks ugly, but it does not need `dyn`
-                match &multiline_config.parser {
-                    Parser::Cri => {
-                        let logic = Logic::new(multiline::preset::Cri, multiline_config.timeout);
-                        Box::new(
-                            LineAgg::new(
-                                rx.map(|line| {
-                                    (line.filename, line.text, (line.fingerprint, line.offset))
-                                }),
-                                logic,
-                            )
-                            .map(
-                                |(filename, text, (fingerprint, offset))| Line {
-                                    text,
-                                    filename,
-                                    fingerprint,
-                                    offset,
-                                },
-                            ),
-                        )
-                    }
-                    Parser::NoIndent => {
-                        let logic =
-                            Logic::new(multiline::preset::NoIndent, multiline_config.timeout);
-                        Box::new(
-                            LineAgg::new(
-                                rx.map(|line| {
-                                    (line.filename, line.text, (line.fingerprint, line.offset))
-                                }),
-                                logic,
-                            )
-                            .map(
-                                |(filename, text, (fingerprint, offset))| Line {
-                                    text,
-                                    filename,
-                                    fingerprint,
-                                    offset,
-                                },
-                            ),
-                        )
-                    }
-                    Parser::Custom {
-                        condition_pattern,
-                        start_pattern,
-                        mode,
-                    } => {
-                        let logic = Logic::new(
-                            multiline::RegexRule {
-                                start_pattern: start_pattern.clone(),
-                                condition_pattern: condition_pattern.clone(),
-                                mode: mode.to_owned(),
-                            },
-                            multiline_config.timeout,
-                        );
+        let messages: Box<dyn Stream<Item = Line> + Send + Unpin> = if let Some(multiline_config) =
+            &multiline
+        {
+            // This match looks ugly, but it does not need `dyn`
+            match &multiline_config.parser {
+                Parser::Cri => Box::new(
+                    LineAgg::new(
+                        rx.map(|line| (line.filename, line.text, (line.fingerprint, line.offset))),
+                        Logic::new(multiline::preset::Cri, multiline_config.timeout),
+                    )
+                    .map(|(filename, text, (fingerprint, offset))| Line {
+                        text,
+                        filename,
+                        fingerprint,
+                        offset,
+                    }),
+                ),
+                Parser::Docker => Box::new(
+                    LineAgg::new(
+                        rx.map(|line| (line.filename, line.text, (line.fingerprint, line.offset))),
+                        Logic::new(multiline::preset::Docker, multiline_config.timeout),
+                    )
+                    .map(|(filename, text, (fingerprint, offset))| Line {
+                        text,
+                        filename,
+                        fingerprint,
+                        offset,
+                    }),
+                ),
+                Parser::Go => Box::new(
+                    LineAgg::new(
+                        rx.map(|line| (line.filename, line.text, (line.fingerprint, line.offset))),
+                        Logic::new(multiline::preset::Go::default(), multiline_config.timeout),
+                    )
+                    .map(|(filename, text, (fingerprint, offset))| Line {
+                        text,
+                        filename,
+                        fingerprint,
+                        offset,
+                    }),
+                ),
+                Parser::Java => Box::new(
+                    LineAgg::new(
+                        rx.map(|line| (line.filename, line.text, (line.fingerprint, line.offset))),
+                        Logic::new(multiline::preset::Java::default(), multiline_config.timeout),
+                    )
+                    .map(|(filename, text, (fingerprint, offset))| Line {
+                        text,
+                        filename,
+                        fingerprint,
+                        offset,
+                    }),
+                ),
+                Parser::NoIndent => Box::new(
+                    LineAgg::new(
+                        rx.map(|line| (line.filename, line.text, (line.fingerprint, line.offset))),
+                        Logic::new(multiline::preset::NoIndent, multiline_config.timeout),
+                    )
+                    .map(|(filename, text, (fingerprint, offset))| Line {
+                        text,
+                        filename,
+                        fingerprint,
+                        offset,
+                    }),
+                ),
+                Parser::Custom {
+                    condition_pattern,
+                    start_pattern,
+                    mode,
+                } => {
+                    let logic = Logic::new(
+                        multiline::preset::Regex::new(
+                            start_pattern.clone(),
+                            condition_pattern.clone(),
+                            *mode,
+                        ),
+                        multiline_config.timeout,
+                    );
 
-                        Box::new(
-                            LineAgg::new(
-                                rx.map(|line| {
-                                    (line.filename, line.text, (line.fingerprint, line.offset))
-                                }),
-                                logic,
-                            )
-                            .map(
-                                |(filename, text, (fingerprint, offset))| Line {
-                                    text,
-                                    filename,
-                                    fingerprint,
-                                    offset,
-                                },
-                            ),
+                    Box::new(
+                        LineAgg::new(
+                            rx.map(|line| {
+                                (line.filename, line.text, (line.fingerprint, line.offset))
+                            }),
+                            logic,
                         )
-                    }
-                    _ => unreachable!(),
+                        .map(|(filename, text, (fingerprint, offset))| {
+                            Line {
+                                text,
+                                filename,
+                                fingerprint,
+                                offset,
+                            }
+                        }),
+                    )
                 }
-            } else {
-                Box::new(rx)
-            };
+            }
+        } else {
+            Box::new(rx)
+        };
 
         // Once harvester ends this will run until it has finished processing remaining
         // logs in the queue
