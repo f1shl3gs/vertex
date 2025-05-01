@@ -7,15 +7,12 @@ use std::time::Duration;
 use bytes::{Bytes, BytesMut};
 use futures::{Stream, StreamExt};
 use pin_project_lite::pin_project;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 use tokio_util::time::DelayQueue;
 use tokio_util::time::delay_queue::Key;
 
-use super::serde_regex;
-
 /// The mode of operation of the line aggregator
-#[derive(Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Mode {
     /// All consecutive lines matching this pattern are included in the group.
@@ -24,6 +21,7 @@ pub enum Mode {
     /// This is useful in cases such as a Java stack trace, where some indicator
     /// in the line (such as leading whitespace) indicates that it is an extension of
     /// the proceeding line.
+    #[default]
     ContinueThrough,
 
     /// All consecutive lines matching this pattern, plus one additional line, are
@@ -43,18 +41,15 @@ pub enum Mode {
     HaltWith,
 }
 
-/// Configuration parameters of the line aggregator
-#[derive(Debug, Clone)]
-pub struct Config {
-    /// Start pattern to look for as a beginning of the message
-    pub start_pattern: Regex,
-    /// Condition pattern to look for. Exact behavior is configured via `mode`
-    pub condition_pattern: Regex,
-    /// Mode of operation, specifies how the condition pattern is interpreted.
-    pub mode: Mode,
-    /// The maximum time to wait for the continuation. Once this timeout is reached,
-    /// the buffered message is guaranteed to be flushed, even if incomplete
-    pub timeout: Duration,
+impl Mode {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Mode::ContinueThrough => "continue_through",
+            Mode::ContinuePast => "continue_past",
+            Mode::HaltBefore => "halt_before",
+            Mode::HaltWith => "halt_with",
+        }
+    }
 }
 
 pin_project! {
@@ -86,8 +81,17 @@ pin_project! {
 /// as we wish, the performance of regex is not good, so we can implement by something like
 /// `contains`, it should be blazing fast.
 pub trait Rule {
-    fn is_start(&self, line: &Bytes) -> bool;
-    fn is_condition(&self, line: &Bytes) -> bool;
+    /// Match the start of a new message
+    fn is_start(&mut self, line: &Bytes) -> bool;
+
+    /// Determine whether more lines should be read.
+    ///
+    /// Configured in conjunction with `mode`.
+    fn is_condition(&mut self, line: &Bytes) -> bool;
+
+    /// Aggregation mode.
+    ///
+    /// Conjunction with `condition_pattern`.
     fn mode(&self) -> Mode;
 }
 
@@ -109,7 +113,10 @@ pub struct Logic<R, K, C> {
     timeouts: DelayQueue<K>,
 }
 
-impl<R, K, C> Logic<R, K, C> {
+impl<R, K, C> Logic<R, K, C>
+where
+    R: Rule,
+{
     /// Create a new `Logic` using the specified `Config`
     pub fn new(rule: R, timeout: Duration) -> Self {
         Self {
@@ -370,109 +377,5 @@ impl<C> Aggregate<C> {
         }
 
         (bytes_mut.freeze(), self.context)
-    }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct RegexRule {
-    #[serde(with = "serde_regex")]
-    pub start_pattern: regex::bytes::Regex,
-    #[serde(with = "serde_regex")]
-    pub condition_pattern: regex::bytes::Regex,
-
-    pub mode: Mode,
-}
-
-impl Rule for RegexRule {
-    fn is_start(&self, line: &Bytes) -> bool {
-        self.start_pattern.is_match(line.as_ref())
-    }
-
-    fn is_condition(&self, line: &Bytes) -> bool {
-        self.condition_pattern.is_match(line.as_ref())
-    }
-
-    fn mode(&self) -> Mode {
-        self.mode
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use futures::StreamExt;
-
-    type Filename = String;
-
-    fn stream_from_lines<'a>(
-        lines: &'a [&'static str],
-    ) -> impl Stream<Item = (Filename, Bytes, ())> + 'a {
-        futures::stream::iter(lines.iter().map(|line| {
-            (
-                "test.log".to_owned(),
-                Bytes::from_static(line.as_bytes()),
-                (),
-            )
-        }))
-    }
-
-    fn assert_results(actual: Vec<(Filename, Bytes, ())>, expected: &[&str]) {
-        let expected_mapped: Vec<(Filename, Bytes, ())> = expected
-            .iter()
-            .map(|line| {
-                (
-                    "test.log".to_owned(),
-                    Bytes::copy_from_slice(line.as_bytes()),
-                    (),
-                )
-            })
-            .collect();
-
-        assert_eq!(
-            actual, expected_mapped,
-            "actual on the left, expected on the right"
-        )
-    }
-
-    async fn run_and_assert(lines: &[&'static str], rule: impl Rule, expected: &[&'static str]) {
-        let stream = stream_from_lines(lines);
-        let logic = Logic::new(rule, Duration::from_secs(5));
-        let aggr = LineAgg::new(stream, logic);
-        let results = aggr.collect().await;
-        assert_results(results, expected)
-    }
-
-    #[tokio::test]
-    async fn mode_continue_through_1() {
-        let lines = vec![
-            "some usual line",
-            "some other usual line",
-            "first part",
-            " second part",
-            " last part",
-            "another normal message",
-            "finishing message",
-            " last part of the incomplete finishing message",
-        ];
-
-        let rule = RegexRule {
-            start_pattern: regex::bytes::Regex::new("^[^\\s]").unwrap(),
-            condition_pattern: regex::bytes::Regex::new("^[\\s]+").unwrap(),
-            mode: Mode::ContinueThrough,
-        };
-
-        let expected = vec![
-            "some usual line",
-            "some other usual line",
-            concat!("first part\n", " second part\n", " last part"),
-            "another normal message",
-            concat!(
-                "finishing message\n",
-                " last part of the incomplete finishing message"
-            ),
-        ];
-
-        run_and_assert(&lines, rule, &expected).await;
     }
 }

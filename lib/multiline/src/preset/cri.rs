@@ -15,19 +15,46 @@ use crate::aggregate::{Mode, Rule};
 pub struct Cri;
 
 impl Rule for Cri {
-    fn is_start(&self, _line: &Bytes) -> bool {
-        todo!()
+    fn is_start(&mut self, line: &Bytes) -> bool {
+        let mut iter = memchr::memchr_iter(b' ', line);
+        if iter.next().is_none() {
+            return false;
+        }
+        let Some(index) = iter.next() else {
+            return false;
+        };
+
+        line[index + 1] == b'P'
     }
 
-    fn is_condition(&self, _line: &Bytes) -> bool {
-        todo!()
+    fn is_condition(&mut self, line: &Bytes) -> bool {
+        let mut iter = memchr::memchr_iter(b' ', line);
+        if iter.next().is_none() {
+            return false;
+        }
+        let Some(index) = iter.next() else {
+            return false;
+        };
+
+        line[index + 1] == b'P'
     }
 
     #[inline]
     fn mode(&self) -> Mode {
-        todo!()
+        Mode::ContinueThrough
     }
 }
+
+/*
+fn is_full(line: &[u8]) -> bool {
+    let mut iter = memchr::memchr_iter(b' ', line);
+    let Some(index) = iter.skip(2).next() else {
+        return true
+    };
+
+    line[index - 1] == b'F'
+}
+*/
 
 #[cfg(test)]
 mod tests {
