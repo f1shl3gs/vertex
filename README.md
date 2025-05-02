@@ -28,6 +28,7 @@ has already been ported.
 | demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
 | dnsmasq                 | Monitor number of DHCP leases and various DNS statistics          | &check; | &cross; | &cross; |
 | dnstap                  | Receive dnstap message for bind, coredns and etc                  | &cross; | &check; | &cross; |
+| docker                  | Collect metrics for each container                                | &check; | &cross; | &cross; |
 | dpdk                    | Gathering DPDK metrics from it's telemetry socket                 | &check; | &cross; | &cross; |
 | exec                    | Execute a command and capture stdout as logs                      | &cross; | &check; | &cross; |
 | filestats               | Monitor files and send metadata metrics                           | &check; | &cross; | &cross; |
