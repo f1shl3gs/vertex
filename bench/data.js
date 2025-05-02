@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746201832722,
+  "lastUpdate": 1746202735370,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8b32ea0378c46ec3ec97e5e1509005630793e354",
-          "message": "deps: bump rskafka to 0.6.0 (#2224)",
-          "timestamp": "2025-02-24T22:11:58+08:00",
-          "tree_id": "13ed6dcf0438041515f6aeea87e08decf60237ca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b32ea0378c46ec3ec97e5e1509005630793e354"
-        },
-        "date": 1740406974838,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 561,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38388.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38119.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4fd95c3132b5d49bd63b0e78976678da811d51c7",
+          "message": "Merge pull request #2329 from f1shl3gs/sources/docker/add_to_readme\n\nsources/docker: add docker to readme",
+          "timestamp": "2025-05-03T00:08:16+08:00",
+          "tree_id": "5473ce6913c22433a5659c3c06ce56bce264b209",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4fd95c3132b5d49bd63b0e78976678da811d51c7"
+        },
+        "date": 1746202714153,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 535,
             "unit": "s"
           },
           {
