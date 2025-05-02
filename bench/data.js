@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746199210107,
+  "lastUpdate": 1746199641731,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "580fa69f2565594cf447f58cdd631e9bdd8eccc3",
-          "message": "bump libc to 0.2.170 (#2222)",
-          "timestamp": "2025-02-24T11:56:44+08:00",
-          "tree_id": "c7fcf3e47964f3e5f5d176ba46fb374eb36c9dfb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/580fa69f2565594cf447f58cdd631e9bdd8eccc3"
-        },
-        "date": 1740370056955,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 551,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38009.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b101c4dc4eff15e9c7248db729407f4119e05a9f",
           "message": "remove `--nocapture` so integration tests will not compile multiple times (#2223)",
           "timestamp": "2025-02-24T12:19:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38065.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f0477cee27af8b84b643dcd41f2048a61733233",
+          "message": "Merge pull request #2326 from f1shl3gs/sources/dnsmasq\n\nsources/dnsmasq: init",
+          "timestamp": "2025-05-02T23:16:25+08:00",
+          "tree_id": "781f5f1658f7e56f4302142e26c1ce32a52db1a8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f0477cee27af8b84b643dcd41f2048a61733233"
+        },
+        "date": 1746199620407,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 545,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38126,
             "unit": "KiB"
           }
         ]
