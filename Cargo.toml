@@ -163,6 +163,7 @@ sources-bind = []
 sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
+sources-dnsmasq = []
 sources-dnstap = []
 sources-docker = ["dep:hyper-unix"]
 sources-dpdk = []
@@ -217,6 +218,7 @@ sources = [
     "sources-consul",
     "sources-clickhouse_metrics",
     "sources-demo_logs",
+    "sources-dnsmasq",
     "sources-dnstap",
     "sources-docker",
     "sources-dpdk",

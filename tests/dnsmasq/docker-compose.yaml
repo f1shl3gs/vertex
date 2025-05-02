@@ -1,0 +1,11 @@
+services:
+  dnsmasq:
+    image: dockurr/dnsmasq:2.91
+    ports:
+      - 5353:53
+    command:
+      - --port=53
+      - --no-daemon
+      - --cache-size=512
+      - --bind-interfaces
+      - --interface=lo
