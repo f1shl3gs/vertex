@@ -10,6 +10,8 @@ mod clickhouse_metrics;
 mod consul;
 #[cfg(feature = "sources-demo_logs")]
 mod demo_logs;
+#[cfg(feature = "sources-dnsmasq")]
+mod dnsmasq;
 #[cfg(feature = "sources-dnstap")]
 mod dnstap;
 #[cfg(feature = "sources-docker")]
