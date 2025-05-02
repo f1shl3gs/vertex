@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746201404421,
+  "lastUpdate": 1746201820883,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b101c4dc4eff15e9c7248db729407f4119e05a9f",
-          "message": "remove `--nocapture` so integration tests will not compile multiple times (#2223)",
-          "timestamp": "2025-02-24T12:19:54+08:00",
-          "tree_id": "0c26ee956ce4764160af8f274c999dc6484bce31",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b101c4dc4eff15e9c7248db729407f4119e05a9f"
-        },
-        "date": 1740371443710,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 555,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38009.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b32ea0378c46ec3ec97e5e1509005630793e354",
           "message": "deps: bump rskafka to 0.6.0 (#2224)",
           "timestamp": "2025-02-24T22:11:58+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38126,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fcb58099d05c053a2ccbbd1cdfc95f22506098db",
+          "message": "Merge pull request #2328 from f1shl3gs/cargo/update\n\ncargo update",
+          "timestamp": "2025-05-02T23:52:54+08:00",
+          "tree_id": "c9dd363a4f30b22617f95348bfd9cfc6b2e23c27",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fcb58099d05c053a2ccbbd1cdfc95f22506098db"
+        },
+        "date": 1746201799862,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38119.9,
             "unit": "KiB"
           }
         ]
