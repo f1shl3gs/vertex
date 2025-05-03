@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746300535400,
+  "lastUpdate": 1746300584863,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8b32ea0378c46ec3ec97e5e1509005630793e354",
-          "message": "deps: bump rskafka to 0.6.0 (#2224)",
-          "timestamp": "2025-02-24T22:11:58+08:00",
-          "tree_id": "13ed6dcf0438041515f6aeea87e08decf60237ca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b32ea0378c46ec3ec97e5e1509005630793e354"
-        },
-        "date": 1740406488312,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.715,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 147.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 314.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 661.96,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 694.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "0954cd8d5bd5116c999cbbfb53a90703a3d89e7e",
+          "message": "reduce some code generated",
+          "timestamp": "2025-05-04T03:25:05+08:00",
+          "tree_id": "abc43e3b70191dfba465efcd48f3c0b53d712ed4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0954cd8d5bd5116c999cbbfb53a90703a3d89e7e"
+        },
+        "date": 1746300563435,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.33,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 333.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 706.79,
             "unit": "ns/op"
           }
         ]
