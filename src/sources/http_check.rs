@@ -41,7 +41,7 @@ const fn default_timeout() -> Duration {
 #[configurable_component(source, name = "http_check")]
 struct Config {
     /// Targets to probe
-    #[configurable(required)]
+    #[configurable(required, format = "uri", example = "http://127.0.0.1:8080")]
     targets: Vec<Url>,
 
     /// TLS configuration

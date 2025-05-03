@@ -75,6 +75,7 @@ impl Buf {
                 // key already written
                 self.push_str("\n- ");
                 self.push_value(example);
+                self.push('\n');
 
                 return;
             }
