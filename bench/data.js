@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746293144494,
+  "lastUpdate": 1746293177984,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "580fa69f2565594cf447f58cdd631e9bdd8eccc3",
-          "message": "bump libc to 0.2.170 (#2222)",
-          "timestamp": "2025-02-24T11:56:44+08:00",
-          "tree_id": "c7fcf3e47964f3e5f5d176ba46fb374eb36c9dfb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/580fa69f2565594cf447f58cdd631e9bdd8eccc3"
-        },
-        "date": 1740369570411,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 153.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 334.25,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 652.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b32ea0378c46ec3ec97e5e1509005630793e354",
           "message": "deps: bump rskafka to 0.6.0 (#2224)",
           "timestamp": "2025-02-24T22:11:58+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 727.07,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9751b2b05dcd1611cd29756537d483c8cfc0e89e",
+          "message": "Merge pull request #2331 from f1shl3gs/sources/http_check/refine_config_and_target\n\nsources/http_check: refine config and target",
+          "timestamp": "2025-05-04T01:23:18+08:00",
+          "tree_id": "0d78521c0b8cda710321df804e25c8e3553c03e6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9751b2b05dcd1611cd29756537d483c8cfc0e89e"
+        },
+        "date": 1746293156032,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.249,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 313.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 694.97,
             "unit": "ns/op"
           }
         ]
