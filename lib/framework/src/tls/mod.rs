@@ -3,35 +3,22 @@ mod maybe_tls;
 mod outgoing;
 mod settings;
 
-use std::{fmt::Debug, io, path::PathBuf};
+use std::fmt::Debug;
+use std::path::PathBuf;
 
-#[cfg(feature = "listenfd")]
 pub use incoming::{MaybeTlsIncomingStream, MaybeTlsListener};
 pub use maybe_tls::MaybeTls;
 pub use outgoing::MaybeTlsStream;
 pub use settings::TlsConfig;
-use thiserror::Error;
 
-#[derive(Debug, Error)]
+#[derive(Debug, thiserror::Error)]
 pub enum TlsError {
-    #[error("Could not open {note} file {filename:?}: {err}")]
-    FileOpenFailed {
-        note: &'static str,
-        filename: PathBuf,
-        err: io::Error,
-    },
     #[error("Could not read {note} file {filename:?}: {err}")]
     FileReadFailed {
         note: &'static str,
         filename: PathBuf,
-        err: io::Error,
+        err: std::io::Error,
     },
-    #[error("Could not build TLS connector: {0}")]
-    BuildConnector(io::Error),
-    #[error("Could not set TCP TLS identity: {0}")]
-    Identity(io::Error),
-    #[error("Could not export identity to DER: {0}")]
-    DerExport(io::Error),
     #[error("Identity certificate is missing a key")]
     MissingKey,
     #[error("Certificate file contains no certificates")]
@@ -39,57 +26,33 @@ pub enum TlsError {
     #[error("Certificate and PrivateKey must be set")]
     MissingCertAndKey,
     #[error("Could not parse certificate in {filename:?}: {err}")]
-    CertificateParse { filename: PathBuf, err: io::Error },
-    #[error("Must specify both TLS key_file and crt_file")]
-    MissingCrtKeyFile,
-    #[error("Could not parse X509 certificate in {filename:?}: {err}")]
-    X509Parse { filename: PathBuf, err: io::Error },
+    CertificateParse {
+        filename: PathBuf,
+        err: std::io::Error,
+    },
     #[error("Could not parse private key in {filename:?}: {err}")]
-    PrivateKeyParse { filename: PathBuf, err: io::Error },
-    #[error("Could not build PKCS#12 archive for identity: {0}")]
-    BuildPkcs12(io::Error),
-    #[error("Could not parse identity in {filename:?}: {err}")]
-    IdentityParse { filename: PathBuf, err: io::Error },
-    #[error("TLS configuration requires a certificate when enabled")]
-    MissingRequiredIdentity,
+    PrivateKeyParse {
+        filename: PathBuf,
+        err: std::io::Error,
+    },
     #[error("TLS handshake failed: {0}")]
-    Handshake(io::Error),
+    Handshake(std::io::Error),
     #[error("Incoming listener failed: {0}")]
-    IncomingListener(io::Error),
+    IncomingListener(std::io::Error),
     #[error("Invalid Server Name")]
     InvalidServerName,
-    #[error("Creating the TLS acceptor failed: {0}")]
-    CreateAcceptor(io::Error),
     #[error("Error building TLS config: {0}")]
     TlsBuild(rustls::Error),
-    #[error("Error setting up the TLS certificate: {0}")]
-    SetCertificate(io::Error),
-    #[error("Error setting up the TLS private key: {0}")]
-    SetPrivateKey(io::Error),
-    #[error("Error setting up the TLS chain certificates: {0}")]
-    AddExtraChainCert(io::Error),
-    #[error("Error creating a certificate store: {0}")]
-    NewStoreBuilder(io::Error),
     #[error("Error adding a certificate to a store: {0}")]
     AddCertToStore(rustls::Error),
-    #[error("Error setting up the verification certificate: {0}")]
-    SetVerifyCert(io::Error),
     #[error("{0}")]
     VerifierBuild(rustls::client::VerifierBuilderError),
-    #[error("PKCS#12 parse failed: {0}")]
-    ParsePkcs12(io::Error),
     #[error("TCP bind failed: {0}")]
-    TcpBind(io::Error),
-    #[error("{0}")]
-    Connect(io::Error),
-    #[error("Could not get peer address: {0}")]
-    PeerAddress(io::Error),
+    TcpBind(std::io::Error),
+    #[error(transparent)]
+    Connect(std::io::Error),
     #[error("Load native certs: {0}")]
-    NativeCerts(io::Error),
-    #[error("Creating an empty CA stack failed")]
-    NewCaStack(io::Error),
-    #[error("Could not push intermediate certificate onto stack")]
-    CaStackPush(io::Error),
+    NativeCerts(std::io::Error),
 }
 
 #[cfg(test)]
