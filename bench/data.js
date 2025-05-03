@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746263116338,
+  "lastUpdate": 1746263134756,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f301428aa2b1fc039a305d0b9e90e2c6b55f28d1",
-          "message": "cargo update (#2221)",
-          "timestamp": "2025-02-23T21:22:19+08:00",
-          "tree_id": "00ab77b5d33580beb10a4925115ecb9388586cb1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f301428aa2b1fc039a305d0b9e90e2c6b55f28d1"
-        },
-        "date": 1740317097126,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.784,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 145.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 315.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 650.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "580fa69f2565594cf447f58cdd631e9bdd8eccc3",
           "message": "bump libc to 0.2.170 (#2222)",
           "timestamp": "2025-02-24T11:56:44+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 678.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3fb8f2bac1928e7b40256761635f2c54b2d6a1bd",
+          "message": "Merge pull request #2330 from f1shl3gs/misc/cleanup\n\nmisc: remove unused",
+          "timestamp": "2025-05-03T17:02:47+08:00",
+          "tree_id": "522cbba8e676168c243d94d448cd05f0547ce3c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3fb8f2bac1928e7b40256761635f2c54b2d6a1bd"
+        },
+        "date": 1746263113306,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.261,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 184.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 342.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 727.07,
             "unit": "ns/op"
           }
         ]
