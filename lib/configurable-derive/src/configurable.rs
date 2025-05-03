@@ -46,7 +46,12 @@ pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> Result<TokenS
 }
 
 fn impl_from_struct(type_attrs: &TypeAttrs, ds: &syn::DataStruct) -> Result<TokenStream> {
-    let content = generate_struct_like(type_attrs, &ds.fields, None)?;
+    let maybe_desc = match &type_attrs.description {
+        Some(desc) => quote! { Some(#desc) },
+        None => quote! { None },
+    };
+
+    let content = generate_struct_like( &ds.fields, None, maybe_desc)?;
 
     Ok(quote!(
         fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator) -> ::configurable::schema::SchemaObject {
@@ -57,9 +62,9 @@ fn impl_from_struct(type_attrs: &TypeAttrs, ds: &syn::DataStruct) -> Result<Toke
 
 // generate Struct or a Named Variant in enum
 fn generate_struct_like(
-    type_attrs: &TypeAttrs,
     fields: &Fields,
     maybe_tag: Option<(&LitStr, String)>,
+    maybe_desc: TokenStream,
 ) -> Result<TokenStream> {
     let fields = match &fields {
         Fields::Named(fields) => fields,
@@ -76,12 +81,6 @@ fn generate_struct_like(
             ));
         }
     };
-
-    let maybe_description = type_attrs
-        .description
-        .as_ref()
-        .map(|desc| quote!( Some(#desc) ))
-        .unwrap_or_else(|| quote!(None));
 
     let mut any_flatten = false;
     let mut mapped_fields = Vec::with_capacity(fields.named.len());
@@ -138,14 +137,14 @@ fn generate_struct_like(
         )
     } else {
         quote!(
-            #(#mapped_fields)*
-
             #maybe_tag_schema
+
+            #(#mapped_fields)*
 
             ::configurable::schema::generate_struct_schema(
                 properties,
                 required,
-                #maybe_description
+                #maybe_desc
             )
         )
     };
@@ -277,13 +276,14 @@ fn generate_variant_name(variant: &syn::Variant, rule: &Option<LitStr>) -> Strin
 fn generate_enum_struct_named_variant_schema(
     type_attrs: &TypeAttrs,
     variant: &syn::Variant,
+    maybe_desc: TokenStream,
 ) -> Result<TokenStream> {
     let maybe_tag = type_attrs
         .tag
         .as_ref()
         .map(|tag| (tag, generate_variant_name(variant, &type_attrs.rename_all)));
 
-    generate_struct_like(type_attrs, &variant.fields, maybe_tag)
+    generate_struct_like(&variant.fields, maybe_tag, maybe_desc)
 }
 
 fn generate_enum_variant_schema(
@@ -291,16 +291,22 @@ fn generate_enum_variant_schema(
     variant: &syn::Variant,
 ) -> Result<TokenStream> {
     let maybe_tag = &type_attrs.tag.clone();
-    //
-    //     enum Variant {
-    //         Unit,
-    //         Named{
-    //             internal: String
-    //         },
-    //         Unnamed(External),
-    //     }
-    //
+
+    let mut desc: Option<Description> = None;
+    for attr in &variant.attrs {
+        if is_doc_attr(attr) {
+            parse_attr_doc(attr, &mut desc)?;
+        }
+    }
+
+    let maybe_desc = desc
+        .map(|desc| quote!( Some( #desc ) ))
+        .unwrap_or(quote!(None));
+
     let variant_schema = match &variant.fields {
+        // enum Variants {
+        //     Unit,
+        // }
         Fields::Unit => {
             let ident = generate_variant_name(variant, &type_attrs.rename_all);
 
@@ -318,7 +324,7 @@ fn generate_enum_variant_schema(
                         ::configurable::schema::generate_struct_schema(
                             properties,
                             required,
-                            None
+                            #maybe_desc
                         )
                     }
                 }
@@ -328,17 +334,34 @@ fn generate_enum_variant_schema(
             }
         }
 
-        Fields::Named(_named) => generate_enum_struct_named_variant_schema(type_attrs, variant)?,
+        // enum Variants {
+        //     Named {
+        //         foo: String,
+        //     },
+        // }
+        Fields::Named(_named) => {
+            generate_enum_struct_named_variant_schema(type_attrs, variant, maybe_desc)?
+        }
 
-        Fields::Unnamed(_unnamed) => generate_enum_unamed_variant_schema(type_attrs, variant)?,
+        // enum Variants {
+        //     Unnamed(String),
+        // }
+        Fields::Unnamed(_unnamed) => {
+            generate_enum_unamed_variant_schema(type_attrs, variant, maybe_desc)?
+        }
     };
 
-    generate_enum_variant_subschema(variant, variant_schema)
+    Ok(quote! ({
+        let mut subschema = { #variant_schema };
+
+        subschemas.push(subschema);
+    }))
 }
 
 fn generate_enum_unamed_variant_schema(
     type_attrs: &TypeAttrs,
     variant: &syn::Variant,
+    maybe_desc: TokenStream,
 ) -> Result<TokenStream> {
     let field = variant.fields.iter().next().expect("must exist");
     let field_type = &field.ty;
@@ -412,30 +435,8 @@ fn generate_enum_unamed_variant_schema(
             );
         }
 
+        subschema.metadata().description = #maybe_desc;
+
         subschema
     })
-}
-
-fn generate_enum_variant_subschema(
-    variant: &syn::Variant,
-    variant_schema: TokenStream,
-) -> Result<TokenStream> {
-    let mut desc: Option<Description> = None;
-
-    for attr in &variant.attrs {
-        if is_doc_attr(attr) {
-            parse_attr_doc(attr, &mut desc)?;
-        }
-    }
-
-    let maybe_description =
-        desc.map(|desc| quote!( subschema.metadata().description = Some( #desc ); ));
-
-    Ok(quote! ({
-        let mut subschema = { #variant_schema };
-
-        #maybe_description
-
-        subschemas.push(subschema);
-    }))
 }

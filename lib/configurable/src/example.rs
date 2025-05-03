@@ -104,7 +104,7 @@ impl Buf {
         } else if obj.has_type(InstanceType::Number) {
             self.push_str("1.0\n");
         } else if obj.has_type(InstanceType::String) {
-            self.push_str(r#""""#)
+            self.push_str("\"\"\n")
         } else if obj.has_type(InstanceType::Integer) {
             self.push_str("1\n")
         } else {
