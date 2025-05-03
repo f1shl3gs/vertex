@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::hash::{Hash, Hasher};
 use std::ops::Sub;
 use std::pin::Pin;
 use std::str::FromStr;
@@ -9,7 +8,7 @@ use std::time::{Duration, SystemTime};
 
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
-use configurable::{Configurable, configurable_component};
+use configurable::configurable_component;
 use event::{Metric, tags};
 use framework::config::{Output, ProxyConfig, SourceConfig, SourceContext, default_interval};
 use framework::dns::{DnsError, Resolver};
@@ -19,12 +18,11 @@ use framework::{Error, Pipeline, ShutdownSignal, Source};
 use http::header::{CONTENT_LENGTH, LAST_MODIFIED};
 use http::response::Parts;
 use http::uri::Scheme;
-use http::{HeaderName, HeaderValue, Method, Request, Uri, Version};
+use http::{HeaderMap, HeaderName, HeaderValue, Method, Request, Uri, Version};
 use http_body_util::{BodyExt, Full};
 use httpdate::HttpDate;
 use hyper_util::client::legacy::Client;
 use hyper_util::rt::{TokioExecutor, TokioIo};
-use serde::{Deserialize, Serialize};
 use tokio::net::TcpStream;
 use tokio::task::JoinSet;
 use url::Url;
@@ -35,11 +33,16 @@ const fn default_timeout() -> Duration {
     Duration::from_secs(5)
 }
 
-#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
-struct Target {
-    /// The URL of the endpoint to be monitored
-    #[configurable(required, format = "uri", example = "http://localhost:8080")]
-    url: Url,
+/// The HTTP Check source can be used for synthetic checks against HTTP
+/// endpoints. This source will make a request to the specified `endpoint`
+/// using the configured `method`. This scraper generates a metric with
+/// a label for each HTTP response status class with a value of `1` if
+/// the status code matches the class.
+#[configurable_component(source, name = "http_check")]
+struct Config {
+    /// Targets to probe
+    #[configurable(required)]
+    targets: Vec<Url>,
 
     /// TLS configuration
     tls: Option<TlsConfig>,
@@ -53,24 +56,6 @@ struct Target {
     /// Timeout for HTTP request, it's value should be less than `interval`.
     #[serde(with = "humanize::duration::serde", default = "default_timeout")]
     timeout: Duration,
-}
-
-impl Hash for Target {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.url.hash(state);
-    }
-}
-
-/// The HTTP Check source can be used for synthethic checks against HTTP
-/// endpoints. This source will make a request to the specified `endpoint`
-/// using the configured `method`. This scraper generates a metric with
-/// a label for each HTTP response status class with a value of `1` if
-/// the status code matches the class.
-#[configurable_component(source, name = "http_check")]
-struct Config {
-    /// Targets to probe
-    #[configurable(required)]
-    targets: Vec<Target>,
 
     /// This sources collects metrics on an interval.
     #[serde(with = "humanize::duration::serde", default = "default_interval")]
@@ -81,8 +66,19 @@ struct Config {
 #[typetag::serde(name = "http_check")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
+        let mut headers = HeaderMap::new();
+        for (key, value) in &self.headers {
+            let key = HeaderName::from_bytes(key.as_bytes())?;
+            let value = HeaderValue::from_bytes(value.as_bytes())?;
+
+            headers.insert(key, value);
+        }
+
         let interval = self.interval;
+        let timeout = self.timeout;
         let targets = self.targets.clone();
+        let tls = self.tls.clone();
+        let auth = self.auth.clone();
 
         Ok(Box::pin(async move {
             let mut tasks = JoinSet::new();
@@ -90,10 +86,14 @@ impl SourceConfig for Config {
             for target in targets {
                 tasks.spawn(run(
                     target,
+                    tls.clone(),
+                    headers.clone(),
+                    auth.clone(),
+                    timeout,
                     interval,
+                    cx.proxy.clone(),
                     cx.output.clone(),
                     cx.shutdown.clone(),
-                    cx.proxy.clone(),
                 ));
             }
 
@@ -113,11 +113,15 @@ impl SourceConfig for Config {
 }
 
 async fn run(
-    target: Target,
+    target: Url,
+    tls: Option<TlsConfig>,
+    headers: HeaderMap,
+    auth: Option<Auth>,
+    timeout: Duration,
     interval: Duration,
+    _proxy: ProxyConfig,
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
-    _proxy: ProxyConfig,
 ) {
     let now = Utc::now()
         .timestamp_nanos_opt()
@@ -127,7 +131,7 @@ async fn run(
         interval,
     );
 
-    let instance = target.url.host_str().unwrap_or("");
+    let instance = target.host_str().unwrap_or("");
 
     loop {
         tokio::select! {
@@ -137,9 +141,9 @@ async fn run(
             }
         }
 
-        let result = probe(&target).await;
-        let mut metrics = Vec::with_capacity(10);
+        let result = probe(&target, tls.as_ref(), auth.as_ref(), &headers, timeout).await;
 
+        let mut metrics = Vec::with_capacity(10);
         match result {
             Ok((parts, trace)) => {
                 metrics.extend([
@@ -260,7 +264,7 @@ async fn run(
                 ]);
             }
             Err(err) => {
-                debug!(message = "http check failed", ?err, url = ?target.url);
+                debug!(message = "http check failed", ?target, ?err);
 
                 metrics.push(Metric::gauge_with_tags(
                     "http_up",
@@ -377,8 +381,14 @@ fn get_host_port(dst: &Uri) -> Result<(&str, u16), ConnectError> {
     Ok((host, port))
 }
 
-async fn probe(target: &Target) -> Result<(Parts, Trace), Error> {
-    let result = tokio::time::timeout(target.timeout, async move {
+async fn probe(
+    target: &Url,
+    _tls: Option<&TlsConfig>,
+    auth: Option<&Auth>,
+    headers: &HeaderMap,
+    timeout: Duration,
+) -> Result<(Parts, Trace), Error> {
+    let result = tokio::time::timeout(timeout, async move {
         let connected = Arc::new(Mutex::new(Default::default()));
         let resolved = Arc::new(Mutex::new(Default::default()));
 
@@ -391,19 +401,18 @@ async fn probe(target: &Target) -> Result<(Parts, Trace), Error> {
 
         let mut req = Request::builder()
             .method(Method::GET)
-            .uri(target.url.as_str())
+            .uri(target.as_str())
             .body(Full::<Bytes>::default())?;
 
-        if let Some(auth) = &target.auth {
+        if let Some(auth) = auth {
             auth.apply(&mut req);
         }
 
-        for (key, value) in &target.headers {
-            let key = HeaderName::from_bytes(key.as_bytes())?;
-            let value = HeaderValue::from_bytes(value.as_bytes())?;
-
-            req.headers_mut().insert(key, value);
-        }
+        req.headers_mut().extend(
+            headers
+                .iter()
+                .map(|(key, value)| (key.clone(), value.clone())),
+        );
 
         let start = Utc::now();
         let resp = client.request(req).await?;
@@ -450,15 +459,11 @@ async fn probe(target: &Target) -> Result<(Parts, Trace), Error> {
     })
     .await;
 
-    match result {
-        Ok(result) => result,
-        Err(err) => Err(err.into()),
-    }
+    result.unwrap_or_else(|err| Err(err.into()))
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::time::Duration;
 
     use bytes::Bytes;
@@ -472,6 +477,7 @@ mod tests {
     use testify::collect_one;
     use tokio::net::TcpListener;
 
+    use super::*;
     use crate::testing::trace_init;
 
     #[test]
@@ -526,20 +532,16 @@ mod tests {
             let (output, receiver) = Pipeline::new_test();
             let shutdown = ShutdownSignal::noop();
 
-            let target = Target {
-                url: Url::parse(format!("{endpoint}/{code}").as_str()).unwrap(),
-                tls: None,
-                auth: None,
-                headers: Default::default(),
-                timeout: default_timeout(),
-            };
-
             let task = tokio::spawn(run(
-                target,
+                Url::parse(format!("{endpoint}/{code}").as_str()).unwrap(),
+                None,
+                Default::default(),
+                None,
+                default_timeout(),
                 Duration::from_secs(1),
+                ProxyConfig::default(),
                 output,
                 shutdown,
-                ProxyConfig::default(),
             ));
 
             tokio::task::yield_now().await;
