@@ -8,7 +8,6 @@ mod graph;
 mod helper;
 pub mod http;
 mod id;
-mod ip;
 mod loading;
 mod provider;
 mod proxy;
@@ -40,30 +39,28 @@ use serde::{Deserialize, Serialize};
 // IndexMap preserves insertion order, allowing us to output errors in the
 // same order they are present in the file.
 use indexmap::IndexMap;
-pub use ip::IpAccessConfig;
-pub use loading::load_from_paths_with_provider;
-pub use loading::{load, load_builder_from_paths, load_from_str, merge_path_lists, process_paths};
+pub use loading::{
+    load, load_builder_from_paths, load_from_paths_with_provider, load_from_str, merge_path_lists,
+    process_paths,
+};
 pub use proxy::ProxyConfig;
 pub use resource::{Protocol, Resource};
 pub use secret::SecretString;
-pub use sink::SinkOuter;
-pub use sink::{SinkConfig, SinkContext};
-use source::SourceOuter;
-pub use source::{SourceConfig, SourceContext};
-use transform::TransformOuter;
-pub use transform::{TransformConfig, TransformContext};
+pub use sink::{SinkConfig, SinkContext, SinkOuter};
+pub use source::{SourceConfig, SourceContext, SourceOuter};
+pub use transform::{TransformConfig, TransformContext, TransformOuter};
 pub use uri::UriSerde;
 pub use validation::warnings;
 
 /// Healthcheck options
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 pub struct HealthcheckOptions {
-    /// Whether or not healthcheck are enabled for all sinks
+    /// Whether healthcheck are enabled for all sinks
     ///
-    /// Can be overriden on a per-sink basis.
+    /// Can be overridden on a per-sink basis.
     pub enabled: bool,
 
-    /// Whether or not to require a sink to report as being healthy during startup.
+    /// Whether to require a sink to report as being healthy during startup.
     ///
     /// When enabled and a sink reports not being healthy, Vertex will exit during
     /// start-up.

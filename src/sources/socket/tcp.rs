@@ -6,7 +6,7 @@ use codecs::{Decoder, DecodingConfig};
 use configurable::Configurable;
 use event::Events;
 use framework::Source;
-use framework::config::{IpAccessConfig, Resource, SourceContext};
+use framework::config::{Resource, SourceContext};
 use framework::source::tcp::{SocketListenAddr, TcpNullAcker, TcpSource};
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::TlsConfig;
@@ -45,8 +45,6 @@ pub struct Config {
     /// The value will be the peer host's port i.e. `9000`
     port_key: Option<OwnedValuePath>,
 
-    access: Option<IpAccessConfig>,
-
     tls: Option<TlsConfig>,
 
     /// The size of the receive buffer used for each connection.
@@ -71,7 +69,6 @@ impl Config {
             shutdown_timeout: Duration::from_secs(10),
             host_key: None,
             port_key: None,
-            access: None,
             tls: None,
             receive_buffer_bytes: None,
             connection_limit: None,
