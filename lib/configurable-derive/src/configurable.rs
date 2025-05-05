@@ -51,7 +51,7 @@ fn impl_from_struct(type_attrs: &TypeAttrs, ds: &syn::DataStruct) -> Result<Toke
         None => quote! { None },
     };
 
-    let content = generate_struct_like( &ds.fields, None, maybe_desc)?;
+    let content = generate_struct_like(&ds.fields, None, maybe_desc)?;
 
     Ok(quote!(
         fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator) -> ::configurable::schema::SchemaObject {
@@ -139,7 +139,7 @@ fn generate_struct_like(
         quote!(
             #maybe_tag_schema
 
-            #(#mapped_fields)*
+            #( #mapped_fields )*
 
             ::configurable::schema::generate_struct_schema(
                 properties,

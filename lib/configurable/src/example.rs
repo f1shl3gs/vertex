@@ -70,17 +70,11 @@ impl Buf {
     }
 
     fn write_array(&mut self, obj: &SchemaObject) {
-        if let Some(meta) = obj.metadata.as_ref() {
-            if let Some(example) = meta.examples.first() {
-                // key already written
-                self.push_str("\n- ");
-                self.push_value(example);
-                self.push('\n');
-
-                return;
-            }
-
-            self.push_str("[]\n");
+        if let Some(example) = obj.metadata.examples.first() {
+            // key already written
+            self.push_str("\n- ");
+            self.push_value(example);
+            self.push('\n');
 
             return;
         }
@@ -155,14 +149,12 @@ impl Examplar {
 
         let mut buf = Buf::new();
         // write comment for root
-        if let Some(metadata) = &root.metadata {
-            if let Some(desc) = &metadata.description {
-                desc.lines().for_each(|line| {
-                    buf.push('#');
-                    buf.push_str(line);
-                    buf.push('\n');
-                })
-            }
+        if let Some(desc) = &root.metadata.description {
+            desc.lines().for_each(|line| {
+                buf.push('#');
+                buf.push_str(line);
+                buf.push('\n');
+            })
         }
 
         // root must be a struct or an enum
@@ -234,24 +226,18 @@ impl Examplar {
                 _ => continue,
             };
 
-            let mut desc = if let Some(meta) = sub_obj.metadata.as_ref() {
-                if meta.deprecated {
-                    continue;
-                }
+            if sub_obj.metadata.deprecated {
+                continue;
+            }
 
-                meta.description
-            } else {
-                None
-            };
+            let mut desc = sub_obj.metadata.description;
 
             let sub_obj = match &sub_obj.reference {
                 Some(reference) => {
                     match self.get_referenced(reference) {
                         Some(Schema::Object(so)) => {
-                            if let Some(meta) = so.metadata.as_ref() {
-                                if desc.is_none() {
-                                    desc = meta.description;
-                                }
+                            if desc.is_none() {
+                                desc = so.metadata.description;
                             }
 
                             so
@@ -361,19 +347,17 @@ fn is_one_of(obj: &SchemaObject) -> Option<&Vec<Schema>> {
 }
 
 fn get_default_or_example(obj: &SchemaObject) -> Option<&Value> {
-    if let Some(meta) = obj.metadata.as_ref() {
-        if meta.deprecated {
-            return None;
-        }
+    let meta = &obj.metadata;
 
-        if meta.default.is_some() {
-            return meta.default.as_ref();
-        }
-
-        return meta.examples.first();
+    if meta.deprecated {
+        return None;
     }
 
-    None
+    if meta.default.is_some() {
+        return meta.default.as_ref();
+    }
+
+    meta.examples.first()
 }
 
 /// Generate YAML example from a JSON Schema

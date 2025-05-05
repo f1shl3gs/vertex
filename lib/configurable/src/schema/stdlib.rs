@@ -208,13 +208,10 @@ impl Configurable for Duration {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
         SchemaObject {
             instance_type: Some(InstanceType::String.into()),
-            metadata: Some(
-                Metadata {
-                    examples: vec![Value::String("1m".to_string())],
-                    ..Default::default()
-                }
-                .into(),
-            ),
+            metadata: Metadata {
+                examples: vec![Value::String("1m".to_string())],
+                ..Default::default()
+            },
             ..Default::default()
         }
     }
@@ -223,10 +220,10 @@ impl Configurable for Duration {
 impl Configurable for PathBuf {
     fn generate_schema(_: &mut SchemaGenerator) -> SchemaObject {
         SchemaObject {
-            metadata: Some(Box::new(Metadata {
+            metadata: Metadata {
                 description: Some("file path"),
                 ..Default::default()
-            })),
+            },
             instance_type: Some(InstanceType::String.into()),
             ..Default::default()
         }
@@ -237,11 +234,11 @@ impl Configurable for PathBuf {
 impl Configurable for SocketAddr {
     fn generate_schema(_: &mut SchemaGenerator) -> SchemaObject {
         SchemaObject {
-            metadata: Some(Box::new(Metadata {
+            metadata: Metadata {
                 description: Some("An internet socket address, either IPv4 or IPv6."),
                 examples: vec![Value::String("127.0.0.1:8080".to_owned())],
                 ..Default::default()
-            })),
+            },
             instance_type: Some(InstanceType::String.into()),
             ..Default::default()
         }
@@ -251,11 +248,11 @@ impl Configurable for SocketAddr {
 impl Configurable for IpAddr {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
         SchemaObject {
-            metadata: Some(Box::new(Metadata {
+            metadata: Metadata {
                 description: Some("IPv4 or IPv6 Address"),
                 examples: vec![Value::String("192.168.0.1".to_owned())],
                 ..Default::default()
-            })),
+            },
             ..Default::default()
         }
     }

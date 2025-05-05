@@ -11,7 +11,7 @@ impl Configurable for OwnedValuePath {
         };
 
         SchemaObject {
-            metadata: Some(Box::new(metadata)),
+            metadata,
             instance_type: Some(InstanceType::String.into()),
             ..Default::default()
         }
@@ -26,7 +26,7 @@ impl Configurable for OwnedTargetPath {
         };
 
         SchemaObject {
-            metadata: Some(Box::new(metadata)),
+            metadata,
             instance_type: Some(InstanceType::String.into()),
             ..Default::default()
         }
