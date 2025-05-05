@@ -40,10 +40,10 @@ pub fn generate_struct_schema(
             required,
             ..Default::default()
         })),
-        metadata: Some(Box::new(Metadata {
+        metadata: Metadata {
             description,
             ..Default::default()
-        })),
+        },
         ..Default::default()
     }
 }

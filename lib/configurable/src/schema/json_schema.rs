@@ -102,7 +102,7 @@ pub struct RootSchema {
 pub struct SchemaObject {
     /// Properties which annotate the [`SchemaObject`] which typically have no effect when an object is being validated against the schema.
     #[serde(flatten)]
-    pub metadata: Option<Box<Metadata>>,
+    pub metadata: Metadata,
 
     /// The `type` keyword.
     ///
@@ -116,12 +116,6 @@ pub struct SchemaObject {
     /// See [JSON Schema Validation 7. A Vocabulary for Semantic Content With "format"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-7).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub format: Option<&'static str>,
-
-    /// The `enum` keyword.
-    ///
-    /// See [JSON Schema Validation 6.1.2. "enum"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.1.2)
-    #[serde(rename = "enum", skip_serializing_if = "Option::is_none")]
-    pub enum_values: Option<Vec<Value>>,
 
     /// The `const` keyword.
     ///
@@ -137,10 +131,6 @@ pub struct SchemaObject {
     #[serde(flatten)]
     pub number: Option<Box<NumberValidation>>,
 
-    /// Properties of the [`SchemaObject`] which define validation assertions for strings.
-    #[serde(flatten)]
-    pub string: Option<Box<StringValidation>>,
-
     /// Properties of the [`SchemaObject`] which define validation assertions for arrays.
     #[serde(flatten)]
     pub array: Option<Box<ArrayValidation>>,
@@ -154,10 +144,6 @@ pub struct SchemaObject {
     /// See [JSON Schema 8.2.4.1. Direct References with "$ref"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-8.2.4.1).
     #[serde(rename = "$ref", skip_serializing_if = "Option::is_none")]
     pub reference: Option<String>,
-
-    /// Arbitrary extra properties which are not part of the JSON Schema specification, or which `schemars` does not support.
-    #[serde(flatten)]
-    pub extensions: Map<String, Value>,
 }
 
 macro_rules! get_or_insert_default_fn {
@@ -211,10 +197,13 @@ impl SchemaObject {
         self.instance_type.as_ref().is_none_or(|x| x.contains(&ty))
     }
 
-    get_or_insert_default_fn!(metadata, Metadata);
+    /// Returns a mutable reference to this schema's [`Metadata`](#structfield.metadata)
+    pub fn metadata(&mut self) -> &mut Metadata {
+        &mut self.metadata
+    }
+
     get_or_insert_default_fn!(subschemas, SubschemaValidation);
     get_or_insert_default_fn!(number, NumberValidation);
-    get_or_insert_default_fn!(string, StringValidation);
     get_or_insert_default_fn!(array, ArrayValidation);
     get_or_insert_default_fn!(object, ObjectValidation);
 }
@@ -258,18 +247,6 @@ pub struct Metadata {
     /// See [JSON Schema Validation 9.3. "deprecated"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-9.3).
     #[serde(skip_serializing_if = "is_false")]
     pub deprecated: bool,
-
-    /// The `readOnly` keyword.
-    ///
-    /// See [JSON Schema Validation 9.4. "readOnly" and "writeOnly"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-9.4).
-    #[serde(skip_serializing_if = "is_false")]
-    pub read_only: bool,
-
-    /// The `writeOnly` keyword.
-    ///
-    /// See [JSON Schema Validation 9.4. "readOnly" and "writeOnly"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-9.4).
-    #[serde(skip_serializing_if = "is_false")]
-    pub write_only: bool,
 
     /// The `examples` keyword.
     ///
