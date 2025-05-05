@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746450960216,
+  "lastUpdate": 1746450992565,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "06220ed65b3eac66cf501e2afd12b5f859208b31",
-          "message": "chore(deps): bump flate2 from 1.0.35 to 1.1.0 (#2225)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.35 to 1.1.0.\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\n- [Changelog](https://github.com/rust-lang/flate2-rs/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.35...1.1.0)\n\n---\nupdated-dependencies:\n- dependency-name: flate2\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-25T18:40:39+08:00",
-          "tree_id": "467d4cde531c71a0f8972f1273b71bf8d01e0699",
-          "url": "https://github.com/f1shl3gs/vertex/commit/06220ed65b3eac66cf501e2afd12b5f859208b31"
-        },
-        "date": 1740480205658,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 20.796,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 147.04,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 326.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 661.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 706.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a3dbcaea78dc76b030df5959cececae6dd339600",
+          "message": "Merge pull request #2332 from f1shl3gs/lib/configurable/simplify\n\nlib/configurable: remove unused",
+          "timestamp": "2025-05-05T21:13:35+08:00",
+          "tree_id": "5e3392e9d958cf9598a167f3568b70bb1f574312",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a3dbcaea78dc76b030df5959cececae6dd339600"
+        },
+        "date": 1746450970872,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.356,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 337.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 692.19,
             "unit": "ns/op"
           }
         ]
