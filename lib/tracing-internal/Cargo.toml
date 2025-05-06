@@ -11,4 +11,4 @@ tracing-subscriber = { version = "0.3.19", default-features = false }
 tracing-core = { version = "0.1.33", default-features = false }
 
 [dev-dependencies]
-tokio = { version = "1.44.2", default-features = false }
+tokio = { version = "1.45.0", default-features = false }

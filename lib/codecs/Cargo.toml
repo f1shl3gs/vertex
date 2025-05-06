@@ -11,7 +11,7 @@ syslog = ["dep:syslog_loose"]
 [dev-dependencies]
 event = { path = "../event", features = ["test"] }
 serde_yaml = { version = "0.9.34", default-features = false }
-tokio = { version = "1.44.2", default-features = false, features = ["test-util", "macros"] }
+tokio = { version = "1.45.0", default-features = false, features = ["test-util", "macros"] }
 value = { path = "../value" }
 
 [dependencies]
@@ -24,7 +24,7 @@ log_schema = { path = "../log_schema" }
 memchr = { version = "2.7.4", default-features = false }
 serde = { version = "1.0.219", default-features = false }
 serde_json = { version = "1.0.140", default-features = false, features = ["std"] }
-tokio = { version = "1.44.2", default-features = false }
+tokio = { version = "1.45.0", default-features = false }
 tokio-util = { version = "0.7.15", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.41", default-features = false }
 vtl = { path = "../vtl" }
