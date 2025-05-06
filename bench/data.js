@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746510507919,
+  "lastUpdate": 1746510509007,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f6461c370f4db9405d380940f81f1b1d302ba689",
-          "message": "chore(deps): bump chrono from 0.4.39 to 0.4.40 (#2228)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.39 to 0.4.40.\n- [Release notes](https://github.com/chronotope/chrono/releases)\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.39...v0.4.40)\n\n---\nupdated-dependencies:\n- dependency-name: chrono\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-26T21:26:38+08:00",
-          "tree_id": "ae591c2bca9c334efd2daddb6fbf163919c83733",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f6461c370f4db9405d380940f81f1b1d302ba689"
-        },
-        "date": 1740577082369,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 580,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38373.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37905.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9241c10284cb5dab572330b1d1a20dde888ea08f",
+          "message": "Merge pull request #2333 from f1shl3gs/dependabot/cargo/rustls-0.23.27\n\nchore(deps): bump rustls from 0.23.26 to 0.23.27",
+          "timestamp": "2025-05-06T13:37:38+08:00",
+          "tree_id": "57f5ca1db9cf42cffcd78947d37cb7d7b358589f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9241c10284cb5dab572330b1d1a20dde888ea08f"
+        },
+        "date": 1746510487160,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 538,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37936.9,
             "unit": "KiB"
           }
         ]
