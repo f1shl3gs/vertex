@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746510078990,
+  "lastUpdate": 1746510090667,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ad29fbded12afd21296a4c38f726bafd34c738f8",
-          "message": "fix integration tests (#2229)",
-          "timestamp": "2025-02-26T20:58:52+08:00",
-          "tree_id": "05a65031f62c551897c113f33b9318e50b80c29f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ad29fbded12afd21296a4c38f726bafd34c738f8"
-        },
-        "date": 1740574863450,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.21,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 183.55,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18fab6b9d1ccfaecbdb038eed4632a2646e36d56",
+          "message": "Merge pull request #2334 from f1shl3gs/dependabot/cargo/tonic-2d232a9b87\n\nchore(deps): bump the tonic group with 3 updates",
+          "timestamp": "2025-05-06T13:38:58+08:00",
+          "tree_id": "abdd1305be86bccdb16190cafd7caf7b74a0a739",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18fab6b9d1ccfaecbdb038eed4632a2646e36d56"
+        },
+        "date": 1746510069241,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.345,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 104.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.19,
             "unit": "ns/op"
           }
         ]
