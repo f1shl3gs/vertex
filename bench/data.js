@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746615048355,
+  "lastUpdate": 1746615141892,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "13f7c84b132a8cdb2d6d926a95276f045464cdeb",
-          "message": "clean up (#2232)",
-          "timestamp": "2025-02-27T22:47:10+08:00",
-          "tree_id": "e316be593c59933b5b57f2c6dd928e1534a04dfb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/13f7c84b132a8cdb2d6d926a95276f045464cdeb"
-        },
-        "date": 1740668284355,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 562,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38373.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e2d2bec4e7353dc9176ebcc7d559ad579bf6550b",
           "message": "bump ubuntu to 24.04 (#2233)",
           "timestamp": "2025-02-27T22:58:49+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37943.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "33ec1a3061053343abc02c4ad6cc0b1fc50d95e3",
+          "message": "Merge pull request #2336 from f1shl3gs/dependabot/cargo/backtrace-0.3.75\n\nchore(deps): bump backtrace from 0.3.74 to 0.3.75",
+          "timestamp": "2025-05-07T18:40:17+08:00",
+          "tree_id": "d99cb16d441c65e969af97afd0681205e5bb1821",
+          "url": "https://github.com/f1shl3gs/vertex/commit/33ec1a3061053343abc02c4ad6cc0b1fc50d95e3"
+        },
+        "date": 1746615119925,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 536,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37945.8,
             "unit": "KiB"
           }
         ]
