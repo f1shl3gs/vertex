@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-backtrace = { version = "0.3.74" }
+backtrace = { version = "0.3.75" }
