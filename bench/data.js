@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746687093739,
+  "lastUpdate": 1746687493827,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0e08331c35749647cd0ab374e8372f25b4c595ce",
-          "message": "remove fields (#2230)",
-          "timestamp": "2025-02-27T02:27:21+08:00",
-          "tree_id": "49f1808da68e8cf72528fd62b9afa3b4e2eca35c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0e08331c35749647cd0ab374e8372f25b4c595ce"
-        },
-        "date": 1740595061471,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28511000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 633080,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 45.228,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.517,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1508bfd95fd28fec7277bad7ab7eb187cb79307",
+          "message": "Merge pull request #2337 from f1shl3gs/deps/remove_ahash\n\ndeps: remove ahash",
+          "timestamp": "2025-05-08T14:48:05+08:00",
+          "tree_id": "4c9e0149ec26f3aa305896fcc4aa72c253823510",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1508bfd95fd28fec7277bad7ab7eb187cb79307"
+        },
+        "date": 1746687471768,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22479000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 648640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.87,
             "unit": "ns/op"
           }
         ]
