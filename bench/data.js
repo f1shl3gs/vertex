@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746687028548,
+  "lastUpdate": 1746687057839,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0e08331c35749647cd0ab374e8372f25b4c595ce",
-          "message": "remove fields (#2230)",
-          "timestamp": "2025-02-27T02:27:21+08:00",
-          "tree_id": "49f1808da68e8cf72528fd62b9afa3b4e2eca35c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0e08331c35749647cd0ab374e8372f25b4c595ce"
-        },
-        "date": 1740594596038,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.199,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 340.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 665.15,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 695.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1508bfd95fd28fec7277bad7ab7eb187cb79307",
+          "message": "Merge pull request #2337 from f1shl3gs/deps/remove_ahash\n\ndeps: remove ahash",
+          "timestamp": "2025-05-08T14:48:05+08:00",
+          "tree_id": "4c9e0149ec26f3aa305896fcc4aa72c253823510",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1508bfd95fd28fec7277bad7ab7eb187cb79307"
+        },
+        "date": 1746687035316,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.468,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 314,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 701.43,
             "unit": "ns/op"
           }
         ]
