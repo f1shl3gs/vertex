@@ -274,7 +274,7 @@ transforms-metricalize = ["dep:async-stream"]
 transforms-relabel = ["dep:md-5"]
 transforms-rewrite = []
 transforms-route = []
-transforms-sample = ["dep:ahash"]
+transforms-sample = []
 transforms-throttle = ["dep:gcra"]
 
 # transforms
@@ -453,7 +453,6 @@ pprof = { version = "0.14.0", default-features = false, optional = true, feature
 argh = { version = "0.1.13", default-features = false, features = ["help"] }
 
 # External libs
-ahash = { version = "0.8.11", default-features = false, optional = true }
 base64 = { version = "0.22.1", default-features = false, optional = true }
 bytes = { version = "1.10.1", default-features = false }
 chrono = { version = "0.4.41", default-features = false }
