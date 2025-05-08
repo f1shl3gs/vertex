@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746687493827,
+  "lastUpdate": 1746687576673,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e2d2bec4e7353dc9176ebcc7d559ad579bf6550b",
-          "message": "bump ubuntu to 24.04 (#2233)",
-          "timestamp": "2025-02-27T22:58:49+08:00",
-          "tree_id": "27edb7b651021af238e179b8b86a0eadf3117f95",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e2d2bec4e7353dc9176ebcc7d559ad579bf6550b"
-        },
-        "date": 1740669002112,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38396.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 536,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37945.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1508bfd95fd28fec7277bad7ab7eb187cb79307",
+          "message": "Merge pull request #2337 from f1shl3gs/deps/remove_ahash\n\ndeps: remove ahash",
+          "timestamp": "2025-05-08T14:48:05+08:00",
+          "tree_id": "4c9e0149ec26f3aa305896fcc4aa72c253823510",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1508bfd95fd28fec7277bad7ab7eb187cb79307"
+        },
+        "date": 1746687555109,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 560,
             "unit": "s"
           },
           {
