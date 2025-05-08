@@ -1,4 +1,5 @@
-use ahash::RandomState;
+use std::hash::{DefaultHasher, Hasher};
+
 use configurable::configurable_component;
 use event::log::OwnedTargetPath;
 use event::log::path::TargetPath;
@@ -53,7 +54,6 @@ struct Sample {
     rate: u64,
     count: u64,
     key_field: Option<OwnedTargetPath>,
-    state: RandomState,
 
     // metrics
     discards_events: Counter,
@@ -61,18 +61,10 @@ struct Sample {
 
 impl Sample {
     pub fn new(rate: u64, key_field: Option<OwnedTargetPath>) -> Self {
-        let state = RandomState::with_seeds(
-            0x16f11fe89b0d677c,
-            0xb480a793d8e6c86c,
-            0x6fe2e5aaf078ebc9,
-            0x14f994a4c5259381,
-        );
-
         Self {
             rate,
             count: 0,
             key_field,
-            state,
             discards_events: metrics::register_counter(
                 "events_discarded_total",
                 "The total number of events discarded by this component.",
@@ -94,7 +86,9 @@ impl FunctionTransform for Sample {
                     .map(|v| v.to_string_lossy());
 
                 let num = if let Some(value) = value {
-                    self.state.hash_one(value.as_bytes())
+                    let mut hasher = DefaultHasher::default();
+                    hasher.write(value.as_bytes());
+                    hasher.finish()
                 } else {
                     self.count
                 };
