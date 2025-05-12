@@ -21,11 +21,6 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 #[global_allocator]
 static SCUDO_ALLOCATOR: scudo::GlobalScudoAllocator = scudo::GlobalScudoAllocator;
 
-#[cfg(feature = "tracked_alloc")]
-#[global_allocator]
-static TRACKED_ALLOCATOR: tracked_alloc::TrackedAllocator<snmalloc_rs::SnMalloc> =
-    tracked_alloc::TrackedAllocator::new(snmalloc_rs::SnMalloc::new());
-
 fn main() {
     let cmd: RootCommand = argh::from_env();
 

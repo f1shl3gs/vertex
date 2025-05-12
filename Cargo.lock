@@ -4135,13 +4135,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracked_alloc"
-version = "0.1.0"
-dependencies = [
- "backtrace",
-]
-
-[[package]]
 name = "tripwire"
 version = "0.1.0"
 dependencies = [
@@ -4384,7 +4377,6 @@ dependencies = [
  "tonic-health",
  "tower 0.5.2",
  "tracing",
- "tracked_alloc",
  "tripwire",
  "typetag",
  "url",
