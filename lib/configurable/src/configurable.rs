@@ -23,11 +23,6 @@ where
         None
     }
 
-    /// Whether or not this value is required.
-    fn required() -> bool {
-        false
-    }
-
     /// Generate the schema for this value.
     ///
     /// If an error occurs while generating the schema, an error variant will

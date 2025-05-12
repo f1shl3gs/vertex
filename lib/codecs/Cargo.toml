@@ -10,6 +10,7 @@ syslog = ["dep:syslog_loose"]
 
 [dev-dependencies]
 event = { path = "../event", features = ["test"] }
+futures = { version = "0.3.31", default-features = false, features = ["async-await"]}
 serde_yaml = { version = "0.9.34", default-features = false }
 tokio = { version = "1.45.0", default-features = false, features = ["test-util", "macros"] }
 value = { path = "../value" }

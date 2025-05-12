@@ -8,11 +8,9 @@ use proc_macro::TokenStream;
 
 #[proc_macro_derive(Configurable, attributes(configurable))]
 pub fn derive_configurable(input: TokenStream) -> TokenStream {
-    match configurable::derive_configurable_impl(input) {
-        Ok(stream) => stream,
-        Err(err) => err.into_compile_error(),
-    }
-    .into()
+    configurable::derive_configurable_impl(input)
+        .unwrap_or_else(|err| err.into_compile_error())
+        .into()
 }
 
 #[proc_macro_attribute]

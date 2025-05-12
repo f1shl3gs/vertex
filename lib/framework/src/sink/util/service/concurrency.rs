@@ -1,10 +1,7 @@
 use std::fmt::Formatter;
 
 use configurable::Configurable;
-use configurable::schema::{
-    SchemaGenerator, SchemaObject, generate_const_string_schema, generate_number_schema,
-    generate_one_of_schema,
-};
+use configurable::schema::{SchemaGenerator, SchemaObject};
 use serde::de::{Error, Unexpected, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -26,11 +23,14 @@ pub enum Concurrency {
 
 impl Configurable for Concurrency {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
-        generate_one_of_schema(vec![
-            generate_const_string_schema("none".to_string()),
-            generate_const_string_schema("adaptive".to_string()),
-            generate_number_schema::<usize>(),
-        ])
+        SchemaObject::one_of(
+            vec![
+                SchemaObject::const_value("none"),
+                SchemaObject::const_value("adaptive"),
+                <usize>::generate_schema(_gen),
+            ],
+            None,
+        )
     }
 }
 

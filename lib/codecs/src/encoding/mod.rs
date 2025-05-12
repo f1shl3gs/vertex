@@ -199,8 +199,8 @@ mod tests {
     #[test]
     fn config_yaml() {
         let config = SerializerConfig::Json(JsonSerializerConfig { pretty: false });
-        let json = serde_yaml::to_string(&config).unwrap();
-        let got = serde_yaml::from_str::<SerializerConfig>(&json).unwrap();
+        let yaml = serde_yaml::to_string(&config).unwrap();
+        let got = serde_yaml::from_str::<SerializerConfig>(&yaml).unwrap();
         assert_eq!(config, got);
     }
 }

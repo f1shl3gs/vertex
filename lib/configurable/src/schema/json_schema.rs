@@ -5,72 +5,6 @@ use serde_json::Value;
 
 use super::{Map, Set};
 
-/// A JSON Schema.
-#[allow(clippy::large_enum_variant)]
-#[derive(Clone, Debug, PartialEq, Serialize)]
-#[serde(untagged)]
-pub enum Schema {
-    /// A trivial boolean JSON Schema.
-    ///
-    /// The schema `true` matches everything (always passes validation), whereas the schema `false`
-    /// matches nothing (always fails validation).
-    Bool(bool),
-
-    /// A JSON Schema object.
-    Object(SchemaObject),
-}
-
-impl Schema {
-    /// Creates a new `$ref` schema.
-    ///
-    /// The given reference string should be a URI reference. This will usually be a JSON Pointer
-    /// in [URI Fragment representation](https://tools.ietf.org/html/rfc6901#section-6).
-    pub fn new_ref(reference: String) -> Self {
-        SchemaObject::new_ref(reference).into()
-    }
-
-    /// Returns `true` if `self` is a `$ref` schema.
-    ///
-    /// If `self` is a [`SchemaObject`] with `Some`
-    /// [`reference`](struct.SchemaObject.html#structfield.reference) set, this returns `true`.
-    /// Otherwise, returns `false`.
-    pub fn is_ref(&self) -> bool {
-        match self {
-            Schema::Object(o) => o.is_ref(),
-            _ => false,
-        }
-    }
-
-    /// Converts the given schema (if it is a boolean schema) into an equivalent schema object.
-    ///
-    /// If the given schema is already a schema object, this has no effect.
-    pub fn into_object(self) -> SchemaObject {
-        match self {
-            Schema::Object(o) => o,
-            Schema::Bool(true) => SchemaObject::default(),
-            Schema::Bool(false) => SchemaObject {
-                subschemas: Some(Box::new(SubschemaValidation {
-                    not: Some(Schema::Object(Default::default()).into()),
-                    ..Default::default()
-                })),
-                ..Default::default()
-            },
-        }
-    }
-}
-
-impl From<SchemaObject> for Schema {
-    fn from(o: SchemaObject) -> Self {
-        Schema::Object(o)
-    }
-}
-
-impl From<bool> for Schema {
-    fn from(b: bool) -> Self {
-        Schema::Bool(b)
-    }
-}
-
 /// The root object of a JSON Schema document.
 #[derive(Clone, Debug, Default, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase", default)]
@@ -78,8 +12,8 @@ pub struct RootSchema {
     /// The `$schema` keyword.
     ///
     /// See [JSON Schema 8.1.1. The "$schema" Keyword](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-8.1.1).
-    #[serde(rename = "$schema", skip_serializing_if = "Option::is_none")]
-    pub meta_schema: Option<String>,
+    #[serde(rename = "$schema")]
+    pub meta_schema: &'static str,
 
     /// The root schema itself.
     #[serde(flatten)]
@@ -93,7 +27,7 @@ pub struct RootSchema {
     /// See [JSON Schema 8.2.5. Schema Re-Use With "$defs"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-8.2.5),
     /// and [JSON Schema (draft 07) 9. Schema Re-Use With "definitions"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-01#section-9).
     #[serde(alias = "$defs", skip_serializing_if = "Map::is_empty")]
-    pub definitions: Map<&'static str, Schema>,
+    pub definitions: Map<&'static str, SchemaObject>,
 }
 
 /// A JSON Schema object.
@@ -117,6 +51,12 @@ pub struct SchemaObject {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub format: Option<&'static str>,
 
+    /// The `$ref` keyword.
+    ///
+    /// See [JSON Schema 8.2.4.1. Direct References with "$ref"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-8.2.4.1).
+    #[serde(rename = "$ref", skip_serializing_if = "Option::is_none")]
+    pub reference: Option<String>,
+
     /// The `const` keyword.
     ///
     /// See [JSON Schema Validation 6.1.3. "const"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.1.3)
@@ -138,34 +78,6 @@ pub struct SchemaObject {
     /// Properties of the [`SchemaObject`] which define validation assertions for objects.
     #[serde(flatten)]
     pub object: Option<Box<ObjectValidation>>,
-
-    /// The `$ref` keyword.
-    ///
-    /// See [JSON Schema 8.2.4.1. Direct References with "$ref"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-8.2.4.1).
-    #[serde(rename = "$ref", skip_serializing_if = "Option::is_none")]
-    pub reference: Option<String>,
-}
-
-macro_rules! get_or_insert_default_fn {
-    ($name:ident, $ret:ty) => {
-        get_or_insert_default_fn!(
-            concat!(
-                "Returns a mutable reference to this schema's [`",
-                stringify!($ret),
-                "`](#structfield.",
-                stringify!($name),
-                "), creating it if it was `None`."
-            ),
-            $name,
-            $ret
-        );
-    };
-    ($doc:expr, $name:ident, $ret:ty) => {
-        #[doc = $doc]
-        pub fn $name(&mut self) -> &mut $ret {
-            self.$name.get_or_insert_with(Default::default)
-        }
-    };
 }
 
 impl SchemaObject {
@@ -180,12 +92,159 @@ impl SchemaObject {
         }
     }
 
+    pub fn new_object(description: Option<&'static str>) -> Self {
+        SchemaObject {
+            instance_type: Some(InstanceType::Object.into()),
+            object: Some(Box::new(ObjectValidation {
+                properties: Map::new(),
+                required: Set::default(),
+                ..Default::default()
+            })),
+            metadata: Metadata {
+                description,
+                ..Default::default()
+            },
+            ..Default::default()
+        }
+    }
+
+    pub fn one_of(subschemas: Vec<SchemaObject>, description: Option<&'static str>) -> Self {
+        SchemaObject {
+            metadata: Metadata {
+                description,
+                ..Default::default()
+            },
+            subschemas: Some(Box::new(SubschemaValidation {
+                one_of: Some(subschemas),
+                ..Default::default()
+            })),
+            ..Default::default()
+        }
+    }
+
+    #[inline]
+    pub fn const_value(value: &'static str) -> Self {
+        SchemaObject {
+            instance_type: Some(SingleOrVec::Single(Box::new(InstanceType::String))),
+            const_value: Some(Value::String(value.to_string())),
+            ..Default::default()
+        }
+    }
+
+    #[inline]
+    pub fn null() -> Self {
+        SchemaObject {
+            instance_type: Some(InstanceType::Null.into()),
+            ..Default::default()
+        }
+    }
+
+    pub fn insert_property(
+        &mut self,
+        key: &'static str,
+        required: bool,
+        description: Option<&'static str>,
+        mut subschema: SchemaObject,
+    ) -> &mut Self {
+        subschema.metadata.description = description;
+
+        let object = self.object();
+        object.properties.insert(key, subschema);
+        if required {
+            object.required.insert(key);
+        }
+
+        object.properties.get_mut(key).unwrap()
+    }
+
+    pub fn insert_tag(&mut self, key: &'static str, value: &'static str) {
+        self.object().required.insert(key);
+
+        self.object().properties.insert(
+            key,
+            SchemaObject {
+                instance_type: Some(SingleOrVec::Single(Box::new(InstanceType::String))),
+                const_value: Some(Value::String(value.into())),
+                ..Default::default()
+            },
+        );
+    }
+
+    pub fn insert_flatten(&mut self, mut subschema: SchemaObject) {
+        if subschema.get_one_of().is_some() {
+            if let Some(object) = &self.object {
+                let all_of = if object.properties.is_empty() {
+                    Some(vec![subschema])
+                } else {
+                    Some(vec![self.clone(), subschema])
+                };
+
+                self.subschemas = Some(Box::new(SubschemaValidation {
+                    all_of,
+                    ..Default::default()
+                }));
+            }
+
+            self.object = None;
+            self.instance_type = None;
+
+            return;
+        }
+
+        if let Some(all_of) = self.get_all_of() {
+            all_of.push(subschema);
+            return;
+        }
+
+        // merge objects
+        let to = self.object();
+        for (k, v) in &subschema.object().properties {
+            to.properties.insert(k, v.clone());
+        }
+
+        for required in &subschema.object().required {
+            to.required.insert(required);
+        }
+    }
+
+    pub fn set_default(&mut self, value: Value) {
+        self.metadata.default = Some(value);
+    }
+
+    pub fn set_format(&mut self, format: &'static str) {
+        self.format = Some(format);
+    }
+
+    pub fn add_example(&mut self, value: impl Into<Value>) {
+        self.metadata.examples.push(value.into());
+    }
+
     /// Returns `true` if `self` is a `$ref` schema.
     ///
     /// If `self` has `Some` [`reference`](struct.SchemaObject.html#structfield.reference) set, this returns `true`.
     /// Otherwise, returns `false`.
     pub fn is_ref(&self) -> bool {
         self.reference.is_some()
+    }
+
+    fn get_one_of(&mut self) -> Option<&mut Vec<SchemaObject>> {
+        if let Some(subschemas) = &mut self.subschemas {
+            if let Some(one_of) = &mut subschemas.one_of {
+                return Some(one_of);
+            }
+        }
+
+        None
+    }
+
+    fn get_all_of(&mut self) -> Option<&mut Vec<SchemaObject>> {
+        if let Some(subschemas) = &mut self.subschemas {
+            if let Some(all_of) = &mut subschemas.all_of {
+                return Some(all_of);
+            }
+        }
+
+        None
     }
 
     /// Returns `true` if `self` accepts values of the given type, according to the [`instance_type`] field.
@@ -197,20 +256,10 @@ impl SchemaObject {
         self.instance_type.as_ref().is_none_or(|x| x.contains(&ty))
     }
 
-    /// Returns a mutable reference to this schema's [`Metadata`](#structfield.metadata)
-    pub fn metadata(&mut self) -> &mut Metadata {
-        &mut self.metadata
-    }
-
-    get_or_insert_default_fn!(subschemas, SubschemaValidation);
-    get_or_insert_default_fn!(number, NumberValidation);
-    get_or_insert_default_fn!(array, ArrayValidation);
-    get_or_insert_default_fn!(object, ObjectValidation);
-}
-
-impl From<Schema> for SchemaObject {
-    fn from(schema: Schema) -> Self {
-        schema.into_object()
+    /// Returns a mutable reference to this schema\'s [`ObjectValidation`](#structfield.object),
+    /// creating it if it was `None`.
+    pub fn object(&mut self) -> &mut ObjectValidation {
+        self.object.get_or_insert_with(Default::default)
     }
 }
 
@@ -223,12 +272,6 @@ pub struct Metadata {
     /// See [JSON Schema 8.2.2. The "$id" Keyword](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-8.2.2).
     #[serde(rename = "$id", skip_serializing_if = "Option::is_none")]
     pub id: Option<String>,
-
-    /// The `title` keyword.
-    ///
-    /// See [JSON Schema Validation 9.1. "title" and "description"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-9.1).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub title: Option<&'static str>,
 
     /// The `description` keyword.
     ///
@@ -268,101 +311,42 @@ pub struct SubschemaValidation {
     ///
     /// See [JSON Schema 9.2.1.1. "allOf"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.2.1.1).
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub all_of: Option<Vec<Schema>>,
+    pub all_of: Option<Vec<SchemaObject>>,
 
     /// The `anyOf` keyword.
     ///
     /// See [JSON Schema 9.2.1.2. "anyOf"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.2.1.2).
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub any_of: Option<Vec<Schema>>,
+    pub any_of: Option<Vec<SchemaObject>>,
 
     /// The `oneOf` keyword.
     ///
     /// See [JSON Schema 9.2.1.3. "oneOf"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.2.1.3).
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub one_of: Option<Vec<Schema>>,
+    pub one_of: Option<Vec<SchemaObject>>,
 
     /// The `not` keyword.
     ///
     /// See [JSON Schema 9.2.1.4. "not"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.2.1.4).
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub not: Option<Box<Schema>>,
-
-    /// The `if` keyword.
-    ///
-    /// See [JSON Schema 9.2.2.1. "if"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.2.2.1).
-    #[serde(rename = "if", skip_serializing_if = "Option::is_none")]
-    pub if_schema: Option<Box<Schema>>,
-
-    /// The `then` keyword.
-    ///
-    /// See [JSON Schema 9.2.2.2. "then"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.2.2.2).
-    #[serde(rename = "then", skip_serializing_if = "Option::is_none")]
-    pub then_schema: Option<Box<Schema>>,
-
-    /// The `else` keyword.
-    ///
-    /// See [JSON Schema 9.2.2.3. "else"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.2.2.3).
-    #[serde(rename = "else", skip_serializing_if = "Option::is_none")]
-    pub else_schema: Option<Box<Schema>>,
+    pub not: Option<Box<SchemaObject>>,
 }
 
 /// Properties of a [`SchemaObject`] which define validation assertions for numbers.
 #[derive(Clone, Debug, Default, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct NumberValidation {
-    /// The `multipleOf` keyword.
-    ///
-    /// See [JSON Schema Validation 6.2.1. "multipleOf"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.2.1).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub multiple_of: Option<f64>,
-
     /// The `maximum` keyword.
     ///
     /// See [JSON Schema Validation 6.2.2. "maximum"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.2.2).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub maximum: Option<f64>,
 
-    /// The `exclusiveMaximum` keyword.
-    ///
-    /// See [JSON Schema Validation 6.2.3. "exclusiveMaximum"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.2.3).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub exclusive_maximum: Option<f64>,
-
     /// The `minimum` keyword.
     ///
     /// See [JSON Schema Validation 6.2.4. "minimum"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.2.4).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub minimum: Option<f64>,
-
-    /// The `exclusiveMinimum` keyword.
-    ///
-    /// See [JSON Schema Validation 6.2.5. "exclusiveMinimum"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.2.5).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub exclusive_minimum: Option<f64>,
-}
-
-/// Properties of a [`SchemaObject`] which define validation assertions for strings.
-#[derive(Clone, Debug, Default, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct StringValidation {
-    /// The `maxLength` keyword.
-    ///
-    /// See [JSON Schema Validation 6.3.1. "maxLength"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.3.1).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub max_length: Option<u32>,
-
-    /// The `minLength` keyword.
-    ///
-    /// See [JSON Schema Validation 6.3.2. "minLength"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.3.2).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub min_length: Option<u32>,
-
-    /// The `pattern` keyword.
-    ///
-    /// See [JSON Schema Validation 6.3.3. "pattern"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.3.3).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pattern: Option<String>,
 }
 
 /// Properties of a [`SchemaObject`] which define validation assertions for arrays.
@@ -373,60 +357,18 @@ pub struct ArrayValidation {
     ///
     /// See [JSON Schema 9.3.1.1. "items"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.1.1).
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub items: Option<SingleOrVec<Schema>>,
-
-    /// The `additionalItems` keyword.
-    ///
-    /// See [JSON Schema 9.3.1.2. "additionalItems"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.1.2).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_items: Option<Box<Schema>>,
-
-    /// The `unevaluatedItems` keyword.
-    ///
-    /// See [JSON Schema 9.3.1.3. "unevaluatedItems"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.1.3).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub unevaluated_items: Option<Box<Schema>>,
-
-    /// The `maxItems` keyword.
-    ///
-    /// See [JSON Schema Validation 6.4.1. "maxItems"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.4.1).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub max_items: Option<u32>,
-
-    /// The `minItems` keyword.
-    ///
-    /// See [JSON Schema Validation 6.4.2. "minItems"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.4.2).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub min_items: Option<u32>,
-
-    /// The `uniqueItems` keyword.
-    ///
-    /// See [JSON Schema Validation 6.4.3. "uniqueItems"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.4.3).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub unique_items: Option<bool>,
-
-    /// The `contains` keyword.
-    ///
-    /// See [JSON Schema 9.3.1.4. "contains"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.1.4).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub contains: Option<Box<Schema>>,
+    pub items: Option<SingleOrVec<SchemaObject>>,
 }
 
 /// Properties of a [`SchemaObject`] which define validation assertions for objects.
 #[derive(Clone, Debug, Default, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct ObjectValidation {
-    /// The `maxProperties` keyword.
+    /// The `properties` keyword.
     ///
-    /// See [JSON Schema Validation 6.5.1. "maxProperties"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.5.1).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub max_properties: Option<u32>,
-
-    /// The `minProperties` keyword.
-    ///
-    /// See [JSON Schema Validation 6.5.2. "minProperties"](https://tools.ietf.org/html/draft-handrews-json-schema-validation-02#section-6.5.2).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub min_properties: Option<u32>,
+    /// See [JSON Schema 9.3.2.1. "properties"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.2.1).
+    #[serde(skip_serializing_if = "Map::is_empty")]
+    pub properties: Map<&'static str, SchemaObject>,
 
     /// The `required` keyword.
     ///
@@ -434,35 +376,11 @@ pub struct ObjectValidation {
     #[serde(skip_serializing_if = "Set::is_empty")]
     pub required: Set<&'static str>,
 
-    /// The `properties` keyword.
-    ///
-    /// See [JSON Schema 9.3.2.1. "properties"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.2.1).
-    #[serde(skip_serializing_if = "Map::is_empty")]
-    pub properties: Map<&'static str, Schema>,
-
-    /// The `patternProperties` keyword.
-    ///
-    /// See [JSON Schema 9.3.2.2. "patternProperties"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.2.2).
-    #[serde(skip_serializing_if = "Map::is_empty")]
-    pub pattern_properties: Map<&'static str, Schema>,
-
     /// The `additionalProperties` keyword.
     ///
     /// See [JSON Schema 9.3.2.3. "additionalProperties"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.2.3).
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_properties: Option<Box<Schema>>,
-
-    /// The `unevaluatedProperties` keyword.
-    ///
-    /// See [JSON Schema 9.3.2.4. "unevaluatedProperties"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.2.4).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub unevaluated_properties: Option<Box<Schema>>,
-
-    /// The `propertyNames` keyword.
-    ///
-    /// See [JSON Schema 9.3.2.5. "propertyNames"](https://tools.ietf.org/html/draft-handrews-json-schema-02#section-9.3.2.5).
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub property_names: Option<Box<Schema>>,
+    pub additional_properties: Option<Box<SchemaObject>>,
 }
 
 /// The possible types of values in JSON Schema documents.

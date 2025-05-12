@@ -24,10 +24,9 @@ pub struct UriSerde {
 impl Configurable for UriSerde {
     fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         let mut schema = String::generate_schema(generator);
-        schema.format = Some("uri");
 
-        let metadata = schema.metadata();
-        metadata.examples = vec![serde_json::Value::String(
+        schema.format = Some("uri");
+        schema.metadata.examples = vec![serde_json::Value::String(
             "http://username:password@example.com/some/resource".to_string(),
         )];
 
