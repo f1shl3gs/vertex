@@ -8,46 +8,81 @@ use serde_json::Value;
 use crate::Configurable;
 use crate::configurable::ConfigurableString;
 use crate::schema::{
-    ArrayValidation, InstanceType, Metadata, ObjectValidation, Schema, SchemaGenerator,
+    ArrayValidation, InstanceType, Metadata, NumberValidation, ObjectValidation, SchemaGenerator,
     SchemaObject, SingleOrVec, SubschemaValidation, assert_string_schema_for_map,
-    generate_null_schema, generate_number_schema,
 };
 
-// Numbers.
-macro_rules! impl_configurable_numeric {
-	($($ty:ty),+) => {
-		$(
-			impl Configurable for $ty {
-				fn generate_schema(_: &mut SchemaGenerator) -> SchemaObject {
-					generate_number_schema::<Self>()
-				}
-			}
-		)+
-	};
+macro_rules! impl_integer {
+    ($($typ:ty),+) => {
+        $(
+            impl Configurable for $typ {
+                fn generate_schema(_generator: &mut SchemaGenerator) -> SchemaObject {
+                    SchemaObject {
+                        instance_type: Some(InstanceType::Integer.into()),
+                        number: Some(Box::new(NumberValidation {
+                            minimum: Some(<$typ>::MIN as f64),
+                            maximum: Some(<$typ>::MAX as f64),
+                        })),
+                        ..Default::default()
+                    }
+                }
+            }
+        )+
+    };
 }
 
-impl_configurable_numeric!(
-    u8,
-    u16,
-    u32,
-    u64,
-    usize,
-    i8,
-    i16,
-    i32,
-    i64,
-    isize,
-    f32,
-    f64,
-    std::num::NonZeroU8,
-    std::num::NonZeroU16,
-    std::num::NonZeroU32,
-    std::num::NonZeroU64,
-    std::num::NonZeroI8,
-    std::num::NonZeroI16,
-    std::num::NonZeroI32,
-    std::num::NonZeroI64,
-    std::num::NonZeroUsize
+impl_integer!(u8, u16, u32, u64, usize, i8, i16, i32, i64, isize);
+
+macro_rules! impl_number {
+    ($($typ:ty),+) => {
+        $(
+            impl Configurable for $typ {
+                fn generate_schema(_generator: &mut SchemaGenerator) -> SchemaObject {
+                    SchemaObject {
+                        instance_type: Some(InstanceType::Number.into()),
+                        number: Some(Box::new(NumberValidation {
+                            minimum: Some(<$typ>::MIN as f64),
+                            maximum: Some(<$typ>::MAX as f64),
+                        })),
+                        ..Default::default()
+                    }
+                }
+            }
+        )+
+    };
+}
+impl_number!(f32, f64);
+
+macro_rules! impl_nonzero {
+    ($($typ:ty => $inner:ty),+) => {
+        $(
+            impl Configurable for $typ {
+                fn generate_schema(_generator: &mut SchemaGenerator) -> SchemaObject {
+                    SchemaObject {
+                        instance_type: Some(InstanceType::Integer.into()),
+                        number: Some(Box::new(NumberValidation {
+                            minimum: Some(1.0),
+                            maximum: Some(<$inner>::MAX as f64),
+                        })),
+                        ..Default::default()
+                    }
+                }
+            }
+        )+
+    };
+}
+
+impl_nonzero!(
+    std::num::NonZeroU8 => u8,
+    std::num::NonZeroU16 => u16,
+    std::num::NonZeroU32 => u32,
+    std::num::NonZeroU64 => u64,
+    std::num::NonZeroUsize => usize,
+    std::num::NonZeroI8 => i8,
+    std::num::NonZeroI16 => i16,
+    std::num::NonZeroI32 => i32,
+    std::num::NonZeroI64 => i64,
+    std::num::NonZeroIsize => isize
 );
 
 impl<K, V> Configurable for BTreeMap<K, V>
@@ -55,12 +90,6 @@ where
     K: ConfigurableString + Ord,
     V: Configurable,
 {
-    fn required() -> bool {
-        // A map with required fields would be... an object. So if you want that,
-        // make a struct instead, not a map.
-        false
-    }
-
     fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         // Make sure our key type is _truly_ a string schema.
         assert_string_schema_for_map::<K, Self>(generator).expect("key must be string like");
@@ -68,7 +97,7 @@ where
         SchemaObject {
             instance_type: Some(InstanceType::Object.into()),
             object: Some(Box::new(ObjectValidation {
-                additional_properties: Some(Box::new(generator.subschema_for::<V>().into())),
+                additional_properties: Some(Box::new(generator.subschema_for::<V>())),
                 ..Default::default()
             })),
             ..Default::default()
@@ -81,12 +110,6 @@ where
     K: ConfigurableString + std::hash::Hash + Eq,
     V: Configurable,
 {
-    fn required() -> bool {
-        // A map with required fields would be... an object. So if you want that,
-        // make a struct instead, not a map.
-        false
-    }
-
     fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         // Make sure our key type is _truly_ a string schema.
         assert_string_schema_for_map::<K, Self>(generator).expect("key must be string like");
@@ -94,7 +117,7 @@ where
         SchemaObject {
             instance_type: Some(InstanceType::Object.into()),
             object: Some(Box::new(ObjectValidation {
-                additional_properties: Some(Box::new(generator.subschema_for::<V>().into())),
+                additional_properties: Some(Box::new(generator.subschema_for::<V>())),
                 ..Default::default()
             })),
             ..Default::default()
@@ -128,10 +151,6 @@ impl<T: Configurable> Configurable for Option<T> {
         }
     }
 
-    fn required() -> bool {
-        false
-    }
-
     fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
         let mut schema = T::generate_schema(generator);
 
@@ -140,9 +159,9 @@ impl<T: Configurable> Configurable for Option<T> {
                 None => panic!("invalid option field type"),
                 Some(subschemas) => {
                     if let Some(any_of) = subschemas.any_of.as_mut() {
-                        any_of.push(Schema::Object(generate_null_schema()));
+                        any_of.push(SchemaObject::null());
                     } else if let Some(one_of) = subschemas.one_of.as_mut() {
-                        one_of.push(Schema::Object(generate_null_schema()));
+                        one_of.push(SchemaObject::null());
                     } else if subschemas.all_of.is_some() {
                         // If we're dealing with an all-of schema, we have to build a new
                         // one-of schema where the two choices are either the `null` schema,
@@ -159,10 +178,7 @@ impl<T: Configurable> Configurable for Option<T> {
                             ..Default::default()
                         };
 
-                        subschemas.one_of = Some(vec![
-                            Schema::Object(generate_null_schema()),
-                            Schema::Object(new_all_of_schema),
-                        ]);
+                        subschemas.one_of = Some(vec![SchemaObject::null(), new_all_of_schema]);
                     } else {
                         panic!("invalid option field type")
                     }
@@ -196,8 +212,7 @@ where
         SchemaObject {
             instance_type: Some(InstanceType::Array.into()),
             array: Some(Box::new(ArrayValidation {
-                items: Some(SingleOrVec::Single(Box::new(element_schema.into()))),
-                ..Default::default()
+                items: Some(SingleOrVec::Single(Box::new(element_schema))),
             })),
             ..Default::default()
         }

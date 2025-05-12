@@ -1,3 +1,5 @@
+use crate::GenerateError;
+
 /// Well-known validator formats as described in the [JSON Schema Validation specification][jsvs].
 ///
 /// Not all defined formats are present here.
@@ -74,4 +76,25 @@ pub enum Format {
     /// [emca262]: https://www.ecma-international.org/publications-and-standards/standards/ecma-262/
     /// [jsvs]: https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-validation-02#section-7.3.8
     Regex,
+}
+
+impl TryFrom<&'static str> for Format {
+    type Error = GenerateError;
+
+    fn try_from(value: &'static str) -> Result<Self, Self::Error> {
+        let format = match value {
+            "date" => Format::Date,
+            "time" => Format::Time,
+            "date-time" => Format::DateTime,
+            "email" => Format::Email,
+            "uri" => Format::Uri,
+            "ipv4" => Format::IPv4,
+            "ipv6" => Format::IPv6,
+            "uuid" => Format::Uuid,
+            "regex" => Format::Regex,
+            _ => return Err(GenerateError::UnknownFormat(value)),
+        };
+
+        Ok(format)
+    }
 }

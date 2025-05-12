@@ -1,13 +1,9 @@
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 use event::tags::{Key, Tags, Value};
 use event::{Bucket, MetricValue, Quantile};
-use indexmap::indexmap;
 
-use crate::schema::{
-    InstanceType, SchemaGenerator, SchemaObject, generate_number_schema, generate_one_of_schema,
-    generate_struct_schema,
-};
+use crate::schema::{InstanceType, SchemaGenerator, SchemaObject};
 use crate::{Configurable, ConfigurableString};
 
 impl Configurable for Key {
@@ -43,49 +39,60 @@ impl Configurable for Tags {
 }
 
 impl Configurable for Bucket {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
-        let properties = indexmap! {
-            "upper" => generate_number_schema::<f64>(),
-            "count" => generate_number_schema::<u64>(),
-        };
-        let requirement = BTreeSet::from(["upper", "count"]);
+    fn generate_schema(g: &mut SchemaGenerator) -> SchemaObject {
+        let mut schema = SchemaObject::new_object(None);
 
-        generate_struct_schema(properties, requirement, None)
+        schema.insert_property("upper", true, None, f64::generate_schema(g));
+        schema.insert_property("count", true, None, u64::generate_schema(g));
+
+        schema
     }
 }
 
 impl Configurable for Quantile {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
-        let properties = indexmap! {
-            "quantile" => generate_number_schema::<f64>(),
-            "value" => generate_number_schema::<f64>(),
-        };
-        let requirement = BTreeSet::from(["quantile", "value"]);
+        let mut schema = SchemaObject::new_object(None);
 
-        generate_struct_schema(properties, requirement, None)
+        schema.insert_property("quantile", true, None, f64::generate_schema(_gen));
+        schema.insert_property("value", true, None, f64::generate_schema(_gen));
+
+        schema
     }
 }
 
 impl Configurable for MetricValue {
     fn generate_schema(generator: &mut SchemaGenerator) -> SchemaObject {
-        let histogram_properties = indexmap! {
-            "count" => u64::generate_schema(generator),
-            "sum" => f64::generate_schema(generator),
-            "buckets" => Vec::<Bucket>::generate_schema(generator),
-        };
-        let histogram_requirement = BTreeSet::from(["count", "sum", "buckets"]);
+        let mut subschemas = Vec::with_capacity(3);
 
-        let summary_properties = indexmap! {
-            "count" => u64::generate_schema(generator),
-            "sum" => f64::generate_schema(generator),
-            "quantiles" => Vec::<Quantile>::generate_schema(generator),
-        };
-        let summary_requirement = BTreeSet::from(["count", "sum", "quantiles"]);
+        subschemas.push(f64::generate_schema(generator));
+        subschemas.push({
+            let mut subschema = SchemaObject::new_object(None);
+            subschema.insert_property("count", true, None, u64::generate_schema(generator));
+            subschema.insert_property("sum", true, None, f64::generate_schema(generator));
+            subschema.insert_property(
+                "buckets",
+                true,
+                None,
+                Vec::<Bucket>::generate_schema(generator),
+            );
 
-        generate_one_of_schema(vec![
-            f64::generate_schema(generator),
-            generate_struct_schema(histogram_properties, histogram_requirement, None),
-            generate_struct_schema(summary_properties, summary_requirement, None),
-        ])
+            subschema
+        });
+
+        subschemas.push({
+            let mut subschema = SchemaObject::new_object(None);
+            subschema.insert_property("count", true, None, u64::generate_schema(generator));
+            subschema.insert_property("sum", true, None, f64::generate_schema(generator));
+            subschema.insert_property(
+                "quantiles",
+                true,
+                None,
+                Vec::<Quantile>::generate_schema(generator),
+            );
+
+            subschema
+        });
+
+        SchemaObject::one_of(subschemas, None)
     }
 }

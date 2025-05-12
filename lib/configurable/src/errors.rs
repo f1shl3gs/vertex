@@ -10,6 +10,8 @@ pub enum GenerateError {
     /// An example of such an implementation would be the unit type.
     InvalidType,
 
+    UnknownFormat(&'static str),
+
     /// A type that is not string-like was specified as the key type for a map.
     ///
     /// As maps resolve to the equivalent of a JSON object, which requires strings

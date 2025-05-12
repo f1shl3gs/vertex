@@ -24,8 +24,7 @@ fn generate() {
     enum Config {
         One(OneStruct),
         Two(TwoStruct),
-        Three(String), // Two(TwoStruct),
-                       // Three(Three)
+        Three(String),
     }
 
     let root_schema = generate_root_schema::<Config>();

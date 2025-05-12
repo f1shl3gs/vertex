@@ -2,7 +2,7 @@ use serde_json::Value;
 
 use crate::Configurable;
 use crate::schema::{
-    InstanceType, ObjectValidation, RootSchema, Schema, SchemaObject, generate_root_schema,
+    InstanceType, ObjectValidation, RootSchema, SchemaObject, generate_root_schema,
 };
 
 struct Buf {
@@ -83,6 +83,12 @@ impl Buf {
     }
 
     fn write_scalar(&mut self, obj: &SchemaObject) {
+        if let Some(const_value) = obj.const_value.as_ref() {
+            self.push_value(const_value);
+            self.push_str("\n");
+            return;
+        }
+
         if let Some(value) = get_default_or_example(obj) {
             self.push_value(value);
             self.push_str("\n");
@@ -110,7 +116,7 @@ impl Buf {
         if let Some(desc) = desc {
             desc.lines().for_each(|line| {
                 self.append_ident();
-                self.push_str("#");
+                self.push_str("# ");
                 self.push_str(line);
                 self.push('\n');
             });
@@ -137,43 +143,33 @@ impl Examplar {
     }
 
     fn generate(self) -> String {
-        let root = if let Some(reference) = self.root.schema.reference.as_ref() {
-            if let Some(Schema::Object(root)) = self.get_referenced(reference) {
-                root
-            } else {
-                panic!("root schema is not found")
-            }
-        } else {
-            &self.root.schema
-        };
+        let schema = &self.root.schema;
 
         let mut buf = Buf::new();
         // write comment for root
-        if let Some(desc) = &root.metadata.description {
+        if let Some(desc) = &schema.metadata.description {
             desc.lines().for_each(|line| {
-                buf.push('#');
+                buf.push_str("# ");
                 buf.push_str(line);
                 buf.push('\n');
             })
         }
 
         // root must be a struct or an enum
-        if let Some(subschemas) = &root.subschemas {
-            if let Some(oneof) = &subschemas.one_of {
-                if let Some(Schema::Object(obj)) = oneof.first() {
+        if let Some(subschemas) = &schema.subschemas {
+            if let Some(one_of) = &subschemas.one_of {
+                if let Some(obj) = one_of.first() {
                     self.visit_obj(&mut buf, obj)
                 } else {
                     panic!("one_of's first schema should be a SchemaObject")
                 }
-            } else if let Some(allof) = &subschemas.all_of {
-                for schema in allof {
-                    if let Schema::Object(obj) = schema {
-                        self.visit_obj(&mut buf, obj)
-                    }
+            } else if let Some(all_of) = &subschemas.all_of {
+                for schema in all_of {
+                    self.visit_obj(&mut buf, schema);
                 }
             }
         } else {
-            self.visit_obj(&mut buf, root)
+            self.visit_obj(&mut buf, schema)
         }
 
         buf.data
@@ -182,7 +178,7 @@ impl Examplar {
     fn visit_obj(&self, buf: &mut Buf, obj: &SchemaObject) {
         let obj = match &obj.reference {
             Some(reference) => {
-                if let Some(Schema::Object(obj)) = self.get_referenced(reference) {
+                if let Some(obj) = self.get_referenced(reference) {
                     obj
                 } else {
                     return;
@@ -193,9 +189,7 @@ impl Examplar {
 
         if let Some(all_of) = is_all_of(obj) {
             all_of.iter().for_each(|schema| {
-                if let Schema::Object(obj) = schema {
-                    self.visit_obj(buf, obj)
-                }
+                self.visit_obj(buf, schema);
             });
 
             return;
@@ -203,10 +197,8 @@ impl Examplar {
 
         if let Some(one_of) = is_one_of(obj) {
             // always choose the first one
-            if let Schema::Object(first) = one_of.first().expect("oneOf should not be empty") {
+            if let Some(first) = one_of.first() {
                 self.visit_obj(buf, first);
-            } else {
-                panic!("expect object schema")
             }
 
             return;
@@ -220,12 +212,7 @@ impl Examplar {
         }
 
         let required = &obj.required;
-        for (k, v) in &obj.properties {
-            let sub_obj = match v {
-                Schema::Object(obj) => obj,
-                _ => continue,
-            };
-
+        for (k, sub_obj) in &obj.properties {
             if sub_obj.metadata.deprecated {
                 continue;
             }
@@ -235,7 +222,7 @@ impl Examplar {
             let sub_obj = match &sub_obj.reference {
                 Some(reference) => {
                     match self.get_referenced(reference) {
-                        Some(Schema::Object(so)) => {
+                        Some(so) => {
                             if desc.is_none() {
                                 desc = so.metadata.description;
                             }
@@ -270,15 +257,13 @@ impl Examplar {
             if let Some(subschema) = &obj.subschemas {
                 if let Some(oneof) = &subschema.one_of {
                     // always pick first one
-                    if let Some(Schema::Object(first)) = oneof.first() {
+                    if let Some(first) = oneof.first() {
                         self.visit_schema_object(buf, first);
                     }
                 } else if let Some(allof) = &subschema.all_of {
                     buf.incr_ident();
                     for schema in allof {
-                        if let Schema::Object(obj) = schema {
-                            self.visit_obj(buf, obj)
-                        }
+                        self.visit_obj(buf, schema);
                     }
                     buf.decr_ident();
 
@@ -299,7 +284,7 @@ impl Examplar {
         }
     }
 
-    fn get_referenced(&self, key: &str) -> Option<&Schema> {
+    fn get_referenced(&self, key: &str) -> Option<&SchemaObject> {
         if let Some(stripped) = key.strip_prefix("#/definitions/") {
             self.root.definitions.get(stripped)
         } else {
@@ -315,7 +300,7 @@ impl Examplar {
                 if let Some(subschemas) = &obj.subschemas {
                     if let Some(oneof) = &subschemas.one_of {
                         // handle first only
-                        if let Some(Schema::Object(first)) = oneof.first() {
+                        if let Some(first) = oneof.first() {
                             return first
                                 .object
                                 .as_ref()
@@ -332,14 +317,14 @@ impl Examplar {
     }
 }
 
-fn is_all_of(obj: &SchemaObject) -> Option<&Vec<Schema>> {
+fn is_all_of(obj: &SchemaObject) -> Option<&Vec<SchemaObject>> {
     match &obj.subschemas {
         Some(sub) => sub.all_of.as_ref(),
         None => None,
     }
 }
 
-fn is_one_of(obj: &SchemaObject) -> Option<&Vec<Schema>> {
+fn is_one_of(obj: &SchemaObject) -> Option<&Vec<SchemaObject>> {
     match &obj.subschemas {
         Some(sub) => sub.one_of.as_ref(),
         None => None,

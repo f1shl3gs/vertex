@@ -26,7 +26,7 @@ impl Description {
                 if let Lit::Str(ls) = &lit.lit {
                     return Ok(Description {
                         explicit: false,
-                        content: ls.clone(),
+                        content: LitStr::new(ls.value().trim_start(), lit.span()),
                     });
                 }
 
@@ -41,8 +41,15 @@ impl Description {
         match &nv.value {
             Expr::Lit(lit) => {
                 if let Lit::Str(ls) = &lit.lit {
-                    self.content =
-                        LitStr::new(&(self.content.value() + "\n" + &*ls.value()), attr.span());
+                    self.content = LitStr::new(
+                        format!(
+                            "{}\n{}",
+                            self.content.value().trim_start(),
+                            ls.value().trim_start()
+                        )
+                        .as_str(),
+                        attr.span(),
+                    );
 
                     return Ok(());
                 }
@@ -203,23 +210,27 @@ impl FieldAttrs {
         })
     }
 
-    pub fn maybe_default(&self, field_typ: &Type) -> TokenStream {
-        let default_value = if let Some(value) = &self.default {
-            // #[configurable(default = 1111)
-            // #[configurable(default = "abcd")
-            quote!( let default_value = #value; )
-        } else if let Some(default_fn) = &self.default_fn {
+    pub fn maybe_default(&self, field_typ: &Type) -> Option<TokenStream> {
+        // #[configurable(default = 1111)
+        // #[configurable(default = "abcd")
+        if let Some(value) = &self.default {
+            return Some(quote! {
+                subschema.set_default( #value.into() );
+            });
+        }
+
+        let default_value = if let Some(default_fn) = &self.default_fn {
             if default_fn.value().is_empty() {
                 // handle something like `#[serde(default)]`
-                quote!( let default_value: #field_typ = Default::default(); )
+                quote!( let value: #field_typ = Default::default(); )
             } else {
                 let default_fn: Path = default_fn
                     .parse()
                     .expect("serde's default function cannot be transform to syn::Path");
-                quote!( let default_value = #default_fn(); )
+                quote!( let value = #default_fn(); )
             }
         } else {
-            return quote!();
+            return None;
         };
 
         let json_value = match &self.serde_with {
@@ -227,24 +238,24 @@ impl FieldAttrs {
                 let serde_with: Path = serde_with.parse().expect("valid serde with value");
 
                 quote! {
-                    let value = #serde_with::serialize(&default_value, serde_json::value::Serializer)
+                    let value = #serde_with::serialize( &value, serde_json::value::Serializer )
                         .expect("serialize default value");
                 }
             }
             None => {
                 quote! {
-                    let value = ::serde_json::to_value( & default_value )
+                    let value = ::serde_json::to_value( &value )
                         .expect("transform default value to serde_json::Value");
                 }
             }
         };
 
-        quote! {
+        Some(quote!({
             #default_value
             #json_value
 
-            subschema.metadata().default = Some(value);
-        }
+            subschema.set_default(value);
+        }))
     }
 }
 

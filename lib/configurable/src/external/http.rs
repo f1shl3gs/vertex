@@ -1,10 +1,7 @@
 use http::{Method, Uri};
 
 use crate::Configurable;
-use crate::schema::{
-    InstanceType, SchemaGenerator, SchemaObject, generate_const_string_schema,
-    generate_one_of_schema,
-};
+use crate::schema::{InstanceType, SchemaGenerator, SchemaObject};
 
 impl Configurable for Uri {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
@@ -14,8 +11,7 @@ impl Configurable for Uri {
             ..Default::default()
         };
 
-        let metadata = schema.metadata();
-        metadata.examples = vec![serde_json::Value::String(
+        schema.metadata.examples = vec![serde_json::Value::String(
             "http://example.com/some/resource".to_string(),
         )];
 
@@ -25,19 +21,22 @@ impl Configurable for Uri {
 
 impl Configurable for Method {
     fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
-        let mut schema = generate_one_of_schema(vec![
-            generate_const_string_schema("OPTIONS".to_string()),
-            generate_const_string_schema("GET".to_string()),
-            generate_const_string_schema("POST".to_string()),
-            generate_const_string_schema("PUT".to_string()),
-            generate_const_string_schema("DELETE".to_string()),
-            generate_const_string_schema("HEAD".to_string()),
-            generate_const_string_schema("TRACE".to_string()),
-            generate_const_string_schema("CONNECT".to_string()),
-            generate_const_string_schema("PATCH".to_string()),
-        ]);
-        let metadata = schema.metadata();
-        metadata.examples = vec![
+        let mut schema = SchemaObject::one_of(
+            vec![
+                SchemaObject::const_value("OPTIONS"),
+                SchemaObject::const_value("GET"),
+                SchemaObject::const_value("POST"),
+                SchemaObject::const_value("PUT"),
+                SchemaObject::const_value("DELETE"),
+                SchemaObject::const_value("HEAD"),
+                SchemaObject::const_value("TRACE"),
+                SchemaObject::const_value("CONNECT"),
+                SchemaObject::const_value("PATCH"),
+            ],
+            None,
+        );
+
+        schema.metadata.examples = vec![
             serde_json::Value::String("GET".to_string()),
             serde_json::Value::String("POST".to_string()),
         ];
