@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747030237310,
+  "lastUpdate": 1747030274577,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bbea72c72c39aaf20caafa48808682f61162a2b7",
-          "message": "chore(deps): bump typetag from 0.2.19 to 0.2.20 (#2234)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.19 to 0.2.20.\n- [Release notes](https://github.com/dtolnay/typetag/releases)\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.19...0.2.20)\n\n---\nupdated-dependencies:\n- dependency-name: typetag\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-02-28T20:43:43+08:00",
-          "tree_id": "4de521651e1f5587d1f9ca97e8b2bbb5328eadae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bbea72c72c39aaf20caafa48808682f61162a2b7"
-        },
-        "date": 1740747285389,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 582,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38396.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37945.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f",
+          "message": "Merge pull request #2338 from f1shl3gs/lib/configurable/simplify_and_reduce_codebase\n\nlib/configurable: reduce codebase and the binary size",
+          "timestamp": "2025-05-12T14:00:17+08:00",
+          "tree_id": "260c584d8c061d9bf755426787925231590baa47",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f"
+        },
+        "date": 1747030252710,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 558,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37705.2,
             "unit": "KiB"
           }
         ]
