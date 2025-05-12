@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747032508024,
+  "lastUpdate": 1747032950727,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "994d1d8251373c52a1be7601752d795ab53be19f",
-          "message": "lib/framework: support verify_hostname (#2235)",
-          "timestamp": "2025-02-28T21:34:58+08:00",
-          "tree_id": "cbc79e0764fe98ad5aac35146bcd9d7ac894a69a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/994d1d8251373c52a1be7601752d795ab53be19f"
-        },
-        "date": 1740750336983,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38406.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 558,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37705.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
+          "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
+          "timestamp": "2025-05-12T14:44:59+08:00",
+          "tree_id": "e628ab01e96ac4984882ee064f0645fa50d7f090",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f8d51363a24a984c53ab2a5ded87b9e9054a1bf"
+        },
+        "date": 1747032928825,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
             "unit": "s"
           },
           {
