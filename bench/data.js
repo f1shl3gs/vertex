@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747032440873,
+  "lastUpdate": 1747032462892,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "13f7c84b132a8cdb2d6d926a95276f045464cdeb",
-          "message": "clean up (#2232)",
-          "timestamp": "2025-02-27T22:47:10+08:00",
-          "tree_id": "e316be593c59933b5b57f2c6dd928e1534a04dfb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/13f7c84b132a8cdb2d6d926a95276f045464cdeb"
-        },
-        "date": 1740667785824,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.642,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 141.86,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 316.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 655.92,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e2d2bec4e7353dc9176ebcc7d559ad579bf6550b",
           "message": "bump ubuntu to 24.04 (#2233)",
           "timestamp": "2025-02-27T22:58:49+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 712.43,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
+          "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
+          "timestamp": "2025-05-12T14:44:59+08:00",
+          "tree_id": "e628ab01e96ac4984882ee064f0645fa50d7f090",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f8d51363a24a984c53ab2a5ded87b9e9054a1bf"
+        },
+        "date": 1747032441078,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.424,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 329.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 686.24,
             "unit": "ns/op"
           }
         ]
