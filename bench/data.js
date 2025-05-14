@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747231999648,
+  "lastUpdate": 1747232054540,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9dc0c3d943982793ae0189087caea0693485485b",
-          "message": "chore(deps): bump tokio-rustls from 0.26.1 to 0.26.2 (#2236)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.26.1 to 0.26.2.\n- [Release notes](https://github.com/rustls/tokio-rustls/releases)\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\n\n---\nupdated-dependencies:\n- dependency-name: tokio-rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-02T20:18:21+08:00",
-          "tree_id": "6e6190b2962d9e30a3f36f59af8bd6975153a323",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9dc0c3d943982793ae0189087caea0693485485b"
-        },
-        "date": 1740918550669,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 565,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38410.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37705.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6f6d998cb2f9a82d84c86cb958e6846f3331e109",
+          "message": "Merge pull request #2340 from f1shl3gs/lib/tracked_alloc/remove\n\nlib/tracked_alloc: remove",
+          "timestamp": "2025-05-14T22:03:09+08:00",
+          "tree_id": "8c683b920a6a85127a6bdb326294158ca985bf2c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6f6d998cb2f9a82d84c86cb958e6846f3331e109"
+        },
+        "date": 1747232033356,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 561,
             "unit": "s"
           },
           {
