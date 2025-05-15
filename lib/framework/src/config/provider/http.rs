@@ -238,7 +238,7 @@ fn poll_http(
                             return std::io::Error::new(std::io::ErrorKind::UnexpectedEof, err);
                         }
 
-                        std::io::Error::new(std::io::ErrorKind::Other, err)
+                        std::io::Error::other(err)
                     })
                 ),
                 ChunkedDecoder::default(),

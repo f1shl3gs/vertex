@@ -55,10 +55,7 @@ impl Decoder for ChunkedDecoder {
 
                         continue;
                     } else {
-                        return Err(std::io::Error::new(
-                            std::io::ErrorKind::Other,
-                            format!("Unexpected token {}", char),
-                        ));
+                        return Err(std::io::Error::other(format!("Unexpected token {char}")));
                     }
                 }
 
@@ -84,10 +81,7 @@ impl Decoder for ChunkedDecoder {
 
                         continue;
                     } else {
-                        return Err(std::io::Error::new(
-                            std::io::ErrorKind::Other,
-                            format!("Unexpected token {}", char),
-                        ));
+                        return Err(std::io::Error::other(format!("Unexpected token {char}")));
                     }
                 }
             }

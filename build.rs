@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use std::env;
-use std::io::{Error, ErrorKind, Result, Write};
+use std::io::{Error, Result, Write};
 use std::path::Path;
 use std::process::Command;
 
@@ -221,22 +221,16 @@ fn git_info() -> Result<(String, String)> {
                 .output()?;
 
             if !output.status.success() {
-                return Err(Error::new(
-                    ErrorKind::Other,
-                    format!(
-                        "Unexpected exit code when get branch, stdout: {}, stderr: {}",
-                        std::str::from_utf8(&output.stdout).unwrap(),
-                        std::str::from_utf8(&output.stderr).unwrap(),
-                    ),
-                ));
+                return Err(Error::other(format!(
+                    "Unexpected exit code when get branch, stdout: {}, stderr: {}",
+                    std::str::from_utf8(&output.stdout).unwrap(),
+                    std::str::from_utf8(&output.stderr).unwrap(),
+                )));
             }
 
             let text = std::str::from_utf8(&output.stdout)
                 .map_err(|err| {
-                    Error::new(
-                        ErrorKind::Other,
-                        format!("Unexpected output when get branch, err: {}", err),
-                    )
+                    Error::other(format!("Unexpected output when get branch, err: {}", err))
                 })?
                 .trim();
 
@@ -264,18 +258,12 @@ fn git_info() -> Result<(String, String)> {
                 .output()?;
 
             if !output.status.success() {
-                return Err(Error::new(
-                    ErrorKind::Other,
-                    "Unexpected exit code when get hash",
-                ));
+                return Err(Error::other("Unexpected exit code when get hash"));
             }
 
             std::str::from_utf8(&output.stdout)
                 .map_err(|err| {
-                    Error::new(
-                        ErrorKind::Other,
-                        format!("Unexpected output when get hash, err: {}", err),
-                    )
+                    Error::other(format!("Unexpected output when get hash, err: {}", err))
                 })?
                 .trim()
                 .to_string()

@@ -1,4 +1,3 @@
-use std::io::ErrorKind;
 use std::path::PathBuf;
 use std::process::ExitStatus;
 use std::time::{Duration, Instant};
@@ -256,9 +255,10 @@ async fn run_command(
 
     // Optionally include stderr
     if include_stderr {
-        let stderr = child.stderr.take().ok_or_else(|| {
-            std::io::Error::new(ErrorKind::Other, "Unable to take stderr of spawned process")
-        })?;
+        let stderr = child
+            .stderr
+            .take()
+            .ok_or_else(|| std::io::Error::other("Unable to take stderr of spawned process"))?;
 
         // Crate stderr async reader
         let stderr = stderr.allow_read_until(shutdown.clone().map(|_| ()));
@@ -267,9 +267,10 @@ async fn run_command(
         spawn_reader_thread(stderr_reader, decoder.clone(), STDERR, sender.clone());
     }
 
-    let stdout = child.stdout.take().ok_or_else(|| {
-        std::io::Error::new(ErrorKind::Other, "Unable to take stdout of spawned process")
-    })?;
+    let stdout = child
+        .stdout
+        .take()
+        .ok_or_else(|| std::io::Error::other("Unable to take stdout of spawned process"))?;
 
     // Create stdout async reader
     let stdout = stdout.allow_read_until(shutdown.clone().map(|_| ()));

@@ -1,4 +1,3 @@
-use std::io::{Error as IoError, ErrorKind};
 use std::marker::Unpin;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -17,7 +16,7 @@ use crate::batch::EncodedEvent;
 const MAX_PENDING_ITEMS: usize = 1024;
 
 pub enum ShutdownCheck {
-    Error(IoError),
+    Error(std::io::Error),
     Close(&'static str),
     Alive,
 }
@@ -149,7 +148,7 @@ where
                     return Poll::Ready(Err(err));
                 }
 
-                return Poll::Ready(Err(IoError::new(ErrorKind::Other, reason)));
+                return Poll::Ready(Err(std::io::Error::other(reason)));
             }
             ShutdownCheck::Alive => {}
         }
