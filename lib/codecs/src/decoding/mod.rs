@@ -74,6 +74,7 @@ impl tokio_util::codec::Decoder for Framer {
 
 /// Parse structured events from bytes
 #[derive(Clone, Debug)]
+#[allow(clippy::large_enum_variant)]
 pub enum Deserializer {
     /// Uses a `BytesDeserializer` for deserialization.
     Bytes(BytesDeserializer),

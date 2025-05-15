@@ -149,7 +149,7 @@ impl Container {
                                 return std::io::Error::new(std::io::ErrorKind::TimedOut, err);
                             }
 
-                            std::io::Error::new(std::io::ErrorKind::Other, err)
+                            std::io::Error::other(err)
                         }),
                     ),
                     docker::NewlineLogOutputDecoder::default(),

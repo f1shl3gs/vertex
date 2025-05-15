@@ -1,4 +1,4 @@
-use std::io::{Error, ErrorKind, Result};
+use std::io::{Error, Result};
 
 #[cfg(unix)]
 pub fn get() -> Result<String> {
@@ -17,7 +17,7 @@ pub fn get() -> Result<String> {
 
     let Ok(max_len) = usize::try_from(limit) else {
         let msg = format!("hostname max limit ({limit}) overflowed usize");
-        return Err(Error::new(ErrorKind::Other, msg));
+        return Err(Error::other(msg));
     };
 
     // max_len here includes the NUL terminator.
@@ -35,10 +35,7 @@ pub fn get() -> Result<String> {
     // write a truncate name back that is not necessarily NUL terminated.
     // So if we can't find a NUL terminator, then just give up.
     let Some(zero_pos) = buf.iter().position(|&b| b == 0) else {
-        return Err(Error::new(
-            ErrorKind::Other,
-            "could not find NUL terminator in hostname",
-        ));
+        return Err(Error::other("could not find NUL terminator in hostname"));
     };
 
     buf.truncate(zero_pos);

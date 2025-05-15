@@ -103,8 +103,7 @@ impl TlsConfig {
                     errs = ?result.errors
                 );
 
-                return Err(TlsError::NativeCerts(io::Error::new(
-                    io::ErrorKind::Other,
+                return Err(TlsError::NativeCerts(io::Error::other(
                     "native root CA certificate loading errors",
                 )));
             }

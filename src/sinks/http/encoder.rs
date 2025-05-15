@@ -31,9 +31,9 @@ impl Encoder<Vec<Event>> for HttpEncoder {
         for mut event in events {
             self.transformer.transform(&mut event);
 
-            encoder.encode(event, &mut buf).map_err(|_err| {
-                std::io::Error::new(std::io::ErrorKind::Other, "unable to encode event")
-            })?;
+            encoder
+                .encode(event, &mut buf)
+                .map_err(std::io::Error::other)?;
         }
 
         let data = buf.freeze();

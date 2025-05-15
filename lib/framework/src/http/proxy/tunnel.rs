@@ -79,8 +79,7 @@ impl<S: Read + Write + Unpin> Future for Tunnel<S> {
                     this.state = TunnelState::Reading;
                     this.buf.truncate(0);
                 } else if n == 0 {
-                    return Poll::Ready(Err(io::Error::new(
-                        io::ErrorKind::Other,
+                    return Poll::Ready(Err(io::Error::other(
                         "unexpected EOF while tunnel writing",
                     )));
                 }
@@ -94,8 +93,7 @@ impl<S: Read + Write + Unpin> Future for Tunnel<S> {
                 };
 
                 if n == 0 {
-                    return Poll::Ready(Err(io::Error::new(
-                        io::ErrorKind::Other,
+                    return Poll::Ready(Err(io::Error::other(
                         "unexpected EOF while tunnel reading",
                     )));
                 } else {
@@ -108,13 +106,10 @@ impl<S: Read + Write + Unpin> Future for Tunnel<S> {
                             // else read more
                         } else {
                             let len = read.len().min(16);
-                            return Poll::Ready(Err(io::Error::new(
-                                io::ErrorKind::Other,
-                                format!(
-                                    "unsuccessful tunnel ({})",
-                                    String::from_utf8_lossy(&read[0..len])
-                                ),
-                            )));
+                            return Poll::Ready(Err(io::Error::other(format!(
+                                "unsuccessful tunnel ({})",
+                                String::from_utf8_lossy(&read[0..len])
+                            ))));
                         }
                     }
                 }

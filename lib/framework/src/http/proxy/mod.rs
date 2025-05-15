@@ -4,7 +4,7 @@ mod tunnel;
 
 use std::env;
 use std::fmt::Formatter;
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 use std::net::IpAddr;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -203,8 +203,8 @@ impl NoProxy {
     ///   example `google.com` and `.google.com` are equivalent) and would match both that
     ///   domain and all subdomains.
     ///
-    /// For example, if `"NO_PROXY=google.com, 192.168.1.0/24"` was set, all of the
-    /// following would match (and therefore would bypass the proxy):
+    /// For example, if `"NO_PROXY=google.com, 192.168.1.0/24"` was set, all the following
+    /// would match (and therefore would bypass the proxy):
     /// * `http://google.com/`
     /// * `http://www.google.com/`
     /// * `http://192.168.1.42/`
@@ -362,7 +362,7 @@ where
     C: Service<Uri>,
     C::Response: Read + Write + Send + Unpin + 'static,
     C::Future: Send + 'static,
-    C::Error: Into<Box<dyn std::error::Error + Send + Sync>>,
+    C::Error: Into<Box<dyn std::error::Error + Send + Sync>> + 'static,
 {
     type Response = ProxyStream<C::Response>;
     type Error = Error;
@@ -371,7 +371,7 @@ where
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         match self.connector.poll_ready(cx) {
             Poll::Ready(Ok(())) => Poll::Ready(Ok(())),
-            Poll::Ready(Err(err)) => Poll::Ready(Err(Error::new(ErrorKind::Other, err))),
+            Poll::Ready(Err(err)) => Poll::Ready(Err(Error::other(err))),
             Poll::Pending => Poll::Pending,
         }
     }
@@ -404,7 +404,7 @@ where
                             Err(err) => break Err(err),
                         }
                         .await
-                        .map_err(|err| Error::new(ErrorKind::Other, err))
+                        .map_err(Error::other)
                         {
                             Ok(v) => v,
                             Err(err) => break Err(err),
@@ -413,8 +413,7 @@ where
 
                         break match tls {
                             Some(tls) => {
-                                let dns_ref = match ServerName::try_from(host)
-                                    .map_err(|err| Error::new(ErrorKind::Other, err))
+                                let dns_ref = match ServerName::try_from(host).map_err(Error::other)
                                 {
                                     Ok(v) => v,
                                     Err(err) => break Err(err),
@@ -422,7 +421,7 @@ where
                                 let secure_stream = match tls
                                     .connect(dns_ref, TokioIo::new(tunnel_stream))
                                     .await
-                                    .map_err(|err| Error::new(ErrorKind::Other, err))
+                                    .map_err(Error::other)
                                 {
                                     Ok(v) => v,
                                     Err(err) => break Err(err),
@@ -441,9 +440,9 @@ where
                         self.connector
                             .call(proxy_uri)
                             .map_ok(ProxyStream::Regular)
-                            .map_err(|err| Error::new(ErrorKind::Other, err)),
+                            .map_err(Error::other),
                     ),
-                    Err(err) => Box::pin(futures::future::err(Error::new(ErrorKind::Other, err))),
+                    Err(err) => Box::pin(futures::future::err(err)),
                 }
             }
         } else {
@@ -451,7 +450,7 @@ where
                 self.connector
                     .call(uri)
                     .map_ok(ProxyStream::NoProxy)
-                    .map_err(|err| Error::new(ErrorKind::Other, err)),
+                    .map_err(Error::other),
             )
         }
     }
@@ -459,24 +458,18 @@ where
 
 fn proxy_dst(dst: &Uri, proxy: &Uri) -> Result<Uri, Error> {
     Uri::builder()
-        .scheme(proxy.scheme_str().ok_or_else(|| {
-            Error::new(
-                ErrorKind::Other,
-                format!("proxy uri missing scheme: {}", proxy),
-            )
-        })?)
+        .scheme(
+            proxy
+                .scheme_str()
+                .ok_or_else(|| Error::other(format!("proxy uri missing scheme: {}", proxy)))?,
+        )
         .authority(
             proxy
                 .authority()
-                .ok_or_else(|| {
-                    Error::new(
-                        ErrorKind::Other,
-                        format!("proxy uri missing host: {}", proxy),
-                    )
-                })?
+                .ok_or_else(|| Error::other(format!("proxy uri missing host: {}", proxy)))?
                 .clone(),
         )
         .path_and_query(dst.path_and_query().unwrap().clone())
         .build()
-        .map_err(|err| Error::new(ErrorKind::Other, format!("other error: {}", err)))
+        .map_err(|err| Error::other(format!("other error: {}", err)))
 }
