@@ -50,7 +50,7 @@ pub enum Error {
     BuildRootCertStore(#[source] rustls::Error),
 }
 
-pub fn incluster_env() -> Result<Config, Error> {
+pub fn from_env() -> Result<Config, Error> {
     let cluster_url = try_uri()?;
     let default_namespace = load_default_namespace()?;
     let tls = load_tls()?;
