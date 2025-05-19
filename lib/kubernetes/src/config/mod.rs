@@ -149,13 +149,14 @@ pub struct Config {
 
 impl Config {
     pub fn load() -> Result<Config, Error> {
-        if let Ok(home) = std::env::var("HOME") {
-            let path = format!("{}/.kube/config", home);
+        if let Some(home) = std::env::home_dir() {
+            let path = home.join(".kube/config");
+
             if let Ok(config) = file::from_config(path) {
                 return Ok(config);
             }
         }
 
-        incluster::incluster_env().map_err(Into::into)
+        incluster::from_env().map_err(Into::into)
     }
 }
