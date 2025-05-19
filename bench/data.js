@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747619572986,
+  "lastUpdate": 1747619663083,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8a5472cf2eefd733c4596f9d3868fbb92302579b",
-          "message": "chore(deps): bump tokio from 1.43.0 to 1.44.0 (#2248)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.43.0 to 1.44.0.\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.43.0...tokio-1.44.0)\n\n---\nupdated-dependencies:\n- dependency-name: tokio\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T22:53:03+08:00",
-          "tree_id": "efe5a3ac8bbebe9e871db75302664021540222f8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a5472cf2eefd733c4596f9d3868fbb92302579b"
-        },
-        "date": 1741532655720,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 586,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38845.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5d650fec86bcee62b6ef5048d45a4fe05c43cb81",
           "message": "chore(deps): bump inventory from 0.3.19 to 0.3.20 (#2246)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.19 to 0.3.20.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.19...0.3.20)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-09T22:53:42+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38572.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "133063c56acd8eec474e10bad4881bc58ab4de6c",
+          "message": "Merge pull request #2342 from f1shl3gs/lib/kubernetes/get_home_with_home_dir_in_std\n\nlib/kubernetes: get home_dir with stable api",
+          "timestamp": "2025-05-19T09:43:00+08:00",
+          "tree_id": "a6a8cedceea41e15bb54efaded69853e49ccb74d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/133063c56acd8eec474e10bad4881bc58ab4de6c"
+        },
+        "date": 1747619641763,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 560,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38572.6,
             "unit": "KiB"
           }
         ]
