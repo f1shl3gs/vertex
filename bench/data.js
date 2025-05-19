@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747619196822,
+  "lastUpdate": 1747619572986,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "994d1d8251373c52a1be7601752d795ab53be19f",
-          "message": "lib/framework: support verify_hostname (#2235)",
-          "timestamp": "2025-02-28T21:34:58+08:00",
-          "tree_id": "cbc79e0764fe98ad5aac35146bcd9d7ac894a69a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/994d1d8251373c52a1be7601752d795ab53be19f"
-        },
-        "date": 1740750317504,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22310000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 590040,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.486,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.858,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "133063c56acd8eec474e10bad4881bc58ab4de6c",
+          "message": "Merge pull request #2342 from f1shl3gs/lib/kubernetes/get_home_with_home_dir_in_std\n\nlib/kubernetes: get home_dir with stable api",
+          "timestamp": "2025-05-19T09:43:00+08:00",
+          "tree_id": "a6a8cedceea41e15bb54efaded69853e49ccb74d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/133063c56acd8eec474e10bad4881bc58ab4de6c"
+        },
+        "date": 1747619551263,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22440000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 603380,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.715,
             "unit": "ns/op"
           }
         ]
