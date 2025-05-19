@@ -373,7 +373,7 @@ tonic-build = { version = "0.13.1", default-features = false, features = ["prost
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
 buffer = { path = "lib/buffer" }
-criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
+criterion = { version = "0.6.0", default-features = false, features = ["async_tokio"] }
 event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.1", default-features = false, features = ["std"] }
