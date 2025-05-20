@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747705103835,
+  "lastUpdate": 1747705510851,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5d650fec86bcee62b6ef5048d45a4fe05c43cb81",
-          "message": "chore(deps): bump inventory from 0.3.19 to 0.3.20 (#2246)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.19 to 0.3.20.\n- [Release notes](https://github.com/dtolnay/inventory/releases)\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.19...0.3.20)\n\n---\nupdated-dependencies:\n- dependency-name: inventory\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T22:53:42+08:00",
-          "tree_id": "2cec7b01512eae8b1d215c068894d9eb6e2be19b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5d650fec86bcee62b6ef5048d45a4fe05c43cb81"
-        },
-        "date": 1741532805295,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 562,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38845.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4aa61aa54b0b8f81aae5404b638e25e4ca71a69e",
           "message": "chore(deps): bump proc-macro2 from 1.0.93 to 1.0.94 (#2243)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.93 to 1.0.94.\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.93...1.0.94)\n\n---\nupdated-dependencies:\n- dependency-name: proc-macro2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-09T22:54:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 38572.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "68515e2eb759cb5ae7388ae54518e18aa8390590",
+          "message": "Merge pull request #2343 from f1shl3gs/dependabot/cargo/hyper-util-0.1.12\n\nchore(deps): bump hyper-util from 0.1.11 to 0.1.12",
+          "timestamp": "2025-05-20T09:34:33+08:00",
+          "tree_id": "40672483ab11b47f4a559999b14d27f006f11f03",
+          "url": "https://github.com/f1shl3gs/vertex/commit/68515e2eb759cb5ae7388ae54518e18aa8390590"
+        },
+        "date": 1747705488879,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 525,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38560.9,
             "unit": "KiB"
           }
         ]
