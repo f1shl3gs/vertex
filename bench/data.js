@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747706134599,
+  "lastUpdate": 1747706139394,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fb7076faa8dfed06b6b14f8b640af172bef2f6c6",
-          "message": "add port_observer and source/multiplier (#2249)",
-          "timestamp": "2025-03-09T22:33:27+08:00",
-          "tree_id": "723ef3ab8a80261bc7cb99e9b6f88499be4b6d23",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fb7076faa8dfed06b6b14f8b640af172bef2f6c6"
-        },
-        "date": 1741530928759,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.408,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 101.7,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.71,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 172.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd0cb9c429ca4522dd941a01893db01fb4782ca8",
+          "message": "Merge pull request #2344 from f1shl3gs/dependabot/cargo/criterion-0.6.0\n\nchore(deps): bump criterion from 0.5.1 to 0.6.0",
+          "timestamp": "2025-05-20T09:53:01+08:00",
+          "tree_id": "51b39bd25379deff5cd7344c5ec7a76b29b370a5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd0cb9c429ca4522dd941a01893db01fb4782ca8"
+        },
+        "date": 1747706118075,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.335,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 92.892,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.47,
             "unit": "ns/op"
           }
         ]
