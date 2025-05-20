@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747711516359,
+  "lastUpdate": 1747711519233,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8a5472cf2eefd733c4596f9d3868fbb92302579b",
-          "message": "chore(deps): bump tokio from 1.43.0 to 1.44.0 (#2248)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.43.0 to 1.44.0.\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.43.0...tokio-1.44.0)\n\n---\nupdated-dependencies:\n- dependency-name: tokio\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T22:53:03+08:00",
-          "tree_id": "efe5a3ac8bbebe9e871db75302664021540222f8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a5472cf2eefd733c4596f9d3868fbb92302579b"
-        },
-        "date": 1741532097049,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 530940,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 539360,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "91dec175fad00ee024638cc893cd4f1436636138",
+          "message": "Merge pull request #2345 from f1shl3gs/dependabot/cargo/sqlx-0.8.6\n\nchore(deps): bump sqlx from 0.8.5 to 0.8.6",
+          "timestamp": "2025-05-20T11:22:41+08:00",
+          "tree_id": "9aa4fcfd09eb892aeb2cab3c2904654c98ea1ad0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/91dec175fad00ee024638cc893cd4f1436636138"
+        },
+        "date": 1747711497512,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 543910,
             "unit": "ns/op"
           }
         ]
