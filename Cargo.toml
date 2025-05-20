@@ -476,7 +476,7 @@ rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "7ee5c942a83d8a39
 sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d9e6fb1fa67f362491c0bd4da63fc727ef14f8f0", optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 socket2 = { version = "0.5.9", optional = true, default-features = false}
-sqlx = { version = "0.8.5", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
+sqlx = { version = "0.8.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "2.0.12", default-features = false }
 tonic = { version = "0.13.1", default-features = false, optional = true, features = ["prost"] }
 tonic-health = { version = "0.13.1", default-features = false, optional = true }
