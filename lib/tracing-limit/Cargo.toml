@@ -10,7 +10,7 @@ tracing-core = { version = "0.1.33", default-features = false }
 dashmap = { version = "6.1.0", default-features = false }
 
 [dev-dependencies]
-criterion = { version = "0.5.1", default-features = false }
+criterion = { version = "0.6.0", default-features = false }
 tracing = { version = "0.1.41", default-features = false, features = ["std"] }
 testify = { path = "../testify" }
 tracing-subscriber = { version = "0.3.19", default-features = false, features = ["env-filter", "registry"] }

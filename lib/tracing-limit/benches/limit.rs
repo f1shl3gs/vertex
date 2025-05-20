@@ -1,7 +1,8 @@
 use std::fmt;
+use std::hint::black_box;
 use std::sync::{Mutex, MutexGuard};
 
-use criterion::{BenchmarkId, Criterion, black_box};
+use criterion::{BenchmarkId, Criterion};
 use tracing::{Event, Metadata, Subscriber, field, span, subscriber::Interest};
 use tracing_limit::RateLimitedLayer;
 use tracing_subscriber::layer::SubscriberExt;
