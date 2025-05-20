@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747706600103,
+  "lastUpdate": 1747706617601,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4aa61aa54b0b8f81aae5404b638e25e4ca71a69e",
-          "message": "chore(deps): bump proc-macro2 from 1.0.93 to 1.0.94 (#2243)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.93 to 1.0.94.\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.93...1.0.94)\n\n---\nupdated-dependencies:\n- dependency-name: proc-macro2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T22:54:06+08:00",
-          "tree_id": "94dee94a1599afb8b99f310857d88979ec3de169",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4aa61aa54b0b8f81aae5404b638e25e4ca71a69e"
-        },
-        "date": 1741532828865,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 563,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38846.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c7f100f5992380752c44c41cda5c6d79f5bdcff1",
           "message": "chore(deps): bump dyn-clone from 1.0.18 to 1.0.19 (#2244)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.18 to 1.0.19.\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.18...1.0.19)\n\n---\nupdated-dependencies:\n- dependency-name: dyn-clone\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-09T22:55:13+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 525,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 38560.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd0cb9c429ca4522dd941a01893db01fb4782ca8",
+          "message": "Merge pull request #2344 from f1shl3gs/dependabot/cargo/criterion-0.6.0\n\nchore(deps): bump criterion from 0.5.1 to 0.6.0",
+          "timestamp": "2025-05-20T09:53:01+08:00",
+          "tree_id": "51b39bd25379deff5cd7344c5ec7a76b29b370a5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd0cb9c429ca4522dd941a01893db01fb4782ca8"
+        },
+        "date": 1747706595500,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
             "unit": "s"
           },
           {
