@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747705510851,
+  "lastUpdate": 1747705524174,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9dc0c3d943982793ae0189087caea0693485485b",
-          "message": "chore(deps): bump tokio-rustls from 0.26.1 to 0.26.2 (#2236)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.26.1 to 0.26.2.\n- [Release notes](https://github.com/rustls/tokio-rustls/releases)\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\n\n---\nupdated-dependencies:\n- dependency-name: tokio-rustls\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-02T20:18:21+08:00",
-          "tree_id": "6e6190b2962d9e30a3f36f59af8bd6975153a323",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9dc0c3d943982793ae0189087caea0693485485b"
-        },
-        "date": 1740918505088,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23002000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 544040,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.864,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.715,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "68515e2eb759cb5ae7388ae54518e18aa8390590",
+          "message": "Merge pull request #2343 from f1shl3gs/dependabot/cargo/hyper-util-0.1.12\n\nchore(deps): bump hyper-util from 0.1.11 to 0.1.12",
+          "timestamp": "2025-05-20T09:34:33+08:00",
+          "tree_id": "40672483ab11b47f4a559999b14d27f006f11f03",
+          "url": "https://github.com/f1shl3gs/vertex/commit/68515e2eb759cb5ae7388ae54518e18aa8390590"
+        },
+        "date": 1747705502336,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23938000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 647900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.698,
             "unit": "ns/op"
           }
         ]
