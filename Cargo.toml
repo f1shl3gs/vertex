@@ -161,17 +161,17 @@ extensions = [
 sources-audit = ["dep:libc"]
 sources-bind = []
 sources-chrony = []
+sources-clickhouse_metrics = []
 sources-consul = []
-sources-demo_logs = []
 sources-dnsmasq = ["dep:resolver"]
 sources-dnstap = []
 sources-docker = ["dep:hyper-unix"]
 sources-dpdk = []
 sources-exec = ["tokio/process"]
-sources-clickhouse_metrics = []
 sources-elasticsearch = []
 sources-filestats = []
 sources-fluent = ["dep:flate2"]
+sources-generate = []
 sources-grpc_check = ["tonic/channel", "dep:tonic-health"]
 sources-haproxy = []
 sources-http = []
@@ -217,7 +217,7 @@ sources = [
     "sources-chrony",
     "sources-consul",
     "sources-clickhouse_metrics",
-    "sources-demo_logs",
+    "sources-generate",
     "sources-dnsmasq",
     "sources-dnstap",
     "sources-docker",

@@ -12,7 +12,7 @@ use crate::{
         console::{ConsoleSinkConfig, Encoding, Target},
         prometheus::exporter::PrometheusExporterConfig,
     },
-    sources::{demo_logs::DemoLogsConfig, splunk_hec::SplunkConfig},
+    sources::{generate::DemoLogsConfig, splunk_hec::SplunkConfig},
     test_util::{next_addr, start_topology, temp_dir, wait_for_tcp},
     transforms::log_to_metric::{GaugeConfig, LogToMetricConfig, MetricConfig},
 };

@@ -2,12 +2,12 @@
 // #[cfg(all(test, feature = "sinks-blackhole", feature = "transforms-json_parser"))]
 // mod transient_state;
 
-// #[cfg(all(test, feature = "sources-demo_logs"))]
+// #[cfg(all(test, feature = "sources-generate"))]
 // mod source_finished;
 
 // #[cfg(all(
 //    test,
-//    feature = "sources-demo_logs",
+//    feature = "sources-generate",
 //    feature = "sinks-prometheus_exporter",
 //    feature = "transforms-metricalize",
 //    feature = "sinks-socket",

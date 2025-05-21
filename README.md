@@ -25,7 +25,7 @@ has already been ported.
 | chrony                  | Collect ntp metrics from chronyd                                  | &check; | &cross; | &cross; |
 | clickhouse_metrics      | Scrapes ClickHouse metrics periodically                           | &check; | &cross; | &cross; |
 | consul                  | Scrapes metrics from consul                                       | &check; | &cross; | &cross; |
-| demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
+| generate                | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
 | dnsmasq                 | Monitor number of DHCP leases and various DNS statistics          | &check; | &cross; | &cross; |
 | dnstap                  | Receive dnstap message for bind, coredns and etc                  | &cross; | &check; | &cross; |
 | docker                  | Collect metrics for each container                                | &check; | &cross; | &cross; |
@@ -200,9 +200,9 @@ $ ./target/release/vertex sources
 bind
 chrony
 consul
-demo_logs
 elasticsearch
 exec
+generate
 grpc_check
 haproxy
 http_check

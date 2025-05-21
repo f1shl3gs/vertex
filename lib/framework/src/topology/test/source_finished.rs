@@ -6,7 +6,7 @@ use crate::{
         console::{ConsoleSinkConfig, Target},
         util::encoding::StandardEncodings,
     },
-    sources::demo_logs::DemoLogsConfig,
+    sources::generate::DemoLogsConfig,
     test_util::start_topology,
 };
 

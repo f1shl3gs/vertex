@@ -1,6 +1,6 @@
 sources:
   logs:
-    type: demo_logs
+    type: generate
     format:
       type: json
     decoding:

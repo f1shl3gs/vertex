@@ -1,6 +1,6 @@
 sources:
   logs1:
-    type: demo_logs
+    type: generate
     decoding:
       codec: json
     format:
@@ -10,7 +10,7 @@ sources:
           {"message": "info blah"}
 
   logs2:
-    type: demo_logs
+    type: generate
     decoding:
       codec: json
     format:
@@ -20,7 +20,7 @@ sources:
           {"message": "warn blah"}
 
   logs3:
-    type: demo_logs
+    type: generate
     decoding:
       codec: json
     format:
