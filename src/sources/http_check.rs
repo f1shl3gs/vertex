@@ -335,6 +335,11 @@ impl Trace {
     }
 
     #[inline]
+    fn start(&self) {
+        self.0.borrow_mut().start = Instant::now();
+    }
+
+    #[inline]
     fn resolved(&self) {
         self.0.borrow_mut().resolved = Instant::now();
     }
@@ -413,6 +418,8 @@ impl tower::Service<Uri> for TraceConnector {
         Box::pin(async move {
             let (host, port) = get_host_port(&dst)?;
             let host = host.trim_start_matches('[').trim_end_matches(']');
+
+            trace.start();
 
             let addrs = resolver
                 .lookup_ip(host)
