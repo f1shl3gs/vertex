@@ -1,21 +1,18 @@
-mod dns;
-
-use std::io::{BufRead, BufReader, Cursor};
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::io::{BufRead, BufReader};
+use std::net::SocketAddr;
 use std::path::PathBuf;
-use std::sync::atomic::AtomicU16;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
 use event::{Metric, tags};
 use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext, default_interval};
-use tokio::net::UdpSocket;
+use futures::StreamExt;
+use futures::stream::FuturesUnordered;
+use resolver::{Hosts, RecordClass, RecordData, RecordType, Resolver};
 
-use dns::Encodable;
-
-const fn default_endpoint() -> SocketAddr {
-    SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 53)
+const fn default_timeout() -> Duration {
+    Duration::from_secs(2)
 }
 
 fn default_leases_path() -> PathBuf {
@@ -23,30 +20,48 @@ fn default_leases_path() -> PathBuf {
 }
 
 #[configurable_component(source, name = "dnsmasq")]
+#[serde(deny_unknown_fields)]
 struct Config {
-    #[serde(default = "default_endpoint")]
-    endpoint: SocketAddr,
+    /// Dnsmasq host:port addresses
+    #[serde(default)]
+    name_servers: Vec<SocketAddr>,
 
+    /// Path to the dnsmasq leases file, by default it is `/var/lib/misc/dnsmasq.leases`
     #[serde(default = "default_leases_path")]
     leases_path: PathBuf,
 
+    /// Expose dnsmasq leases as metrics (high cardinality)
     #[serde(default)]
     expose_leases: bool,
 
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
+
+    /// Timeout for the TCP/UDP socket
+    #[serde(default = "default_timeout", with = "humanize::duration::serde")]
+    timeout: Duration,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "dnsmasq")]
 impl SourceConfig for Config {
-    // Good news, we have an async resolver, aka hickory-resolver
-    // Bad news, it doesn't support lookup by Query, while we need to set the class to
-    //   DNSClass::CH (Chaos)
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let mut config = resolver::Config {
+            timeout: self.timeout,
+            ..Default::default()
+        };
+        if !self.name_servers.is_empty() {
+            config.servers = self.name_servers.clone();
+        }
+
+        let resolver = Resolver::new(config, Hosts::default());
+
         let interval = self.interval;
-        let name_server = self.endpoint;
-        let leases_path = self.leases_path.clone();
+        let leases_path = if self.expose_leases {
+            Some(self.leases_path.clone())
+        } else {
+            None
+        };
         let mut shutdown = cx.shutdown;
         let mut output = cx.output;
 
@@ -59,15 +74,27 @@ impl SourceConfig for Config {
                     _ = ticker.tick() => {}
                 }
 
-                match gather(name_server, &leases_path).await {
-                    Ok(metrics) => {
-                        if let Err(_err) = output.send(metrics).await {
-                            break;
-                        }
-                    }
-                    Err(err) => {
-                        warn!(message = "fetch dnsmasq metrics failed", ?err);
-                    }
+                let start = Instant::now();
+                let result = tokio::select! {
+                    _ = &mut shutdown => break,
+                    result = gather(&resolver, leases_path.as_ref()) => result
+                };
+
+                let elapsed = start.elapsed();
+                let up = result.is_ok();
+
+                let mut metrics = result.unwrap_or_default();
+                metrics.extend([
+                    Metric::gauge("dnsmasq_up", "Whether the dnsmasq query successful", up),
+                    Metric::gauge(
+                        "dnsmasq_scrape_duration_seconds",
+                        "query dnsmasq time in seconds",
+                        elapsed,
+                    ),
+                ]);
+
+                if let Err(_err) = output.send(metrics).await {
+                    break;
                 }
             }
 
@@ -84,12 +111,6 @@ impl SourceConfig for Config {
     }
 }
 
-#[derive(Debug, thiserror::Error)]
-enum Error {
-    #[error(transparent)]
-    Io(#[from] std::io::Error),
-}
-
 const QUESTIONS: [&str; 7] = [
     "cachesize.bind.",
     "insertions.bind.",
@@ -100,73 +121,65 @@ const QUESTIONS: [&str; 7] = [
     "servers.bind.",
 ];
 
-static ID_GEN: AtomicU16 = AtomicU16::new(1);
+async fn gather(
+    resolver: &Resolver,
+    leases_path: Option<&PathBuf>,
+) -> std::io::Result<Vec<Metric>> {
+    let mut tasks = FuturesUnordered::from_iter(QUESTIONS.into_iter().map(|question| async move {
+        (
+            question,
+            resolver
+                .lookup(question, RecordType::TXT, RecordClass::CHAOS)
+                .await,
+        )
+    }));
 
-fn next_id() -> u16 {
-    ID_GEN.fetch_add(1, std::sync::atomic::Ordering::SeqCst)
-}
-
-async fn gather(name_server: SocketAddr, leases_path: &PathBuf) -> Result<Vec<Metric>, Error> {
-    let socket =
-        UdpSocket::bind(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 0)).await?;
-    socket.connect(&name_server).await?;
-
-    let mut buf = Cursor::new([0u8; 512]);
     let mut metrics = vec![];
-    for question in &QUESTIONS {
-        let msg = dns::Message {
-            header: dns::Header {
-                id: next_id(),
-                recursion_desired: true,
-                ..Default::default()
-            },
-            questions: vec![dns::Question {
-                name: question.to_string(),
-                typ: 16,  // TXT
-                class: 3, // CHAOS
-            }],
-            ..Default::default()
+    while let Some((question, result)) = tasks.next().await {
+        let msg = match result {
+            Ok(msg) => msg,
+            Err(err) => {
+                debug!(message = "lookup failed", ?err, question);
+                continue;
+            }
         };
 
-        buf.set_position(0);
-        msg.encode(&mut buf).unwrap();
-        let len = buf.position() as usize;
-        socket.send(&buf.get_mut()[..len]).await?;
-
-        buf.set_position(0);
-        socket.recv(buf.get_mut()).await?;
-        let msg = dns::Message::decode(&mut buf).unwrap();
-
-        if *question == "servers.bind." {
+        if question == "servers.bind." {
             for answer in msg.answers {
-                let str = String::from_utf8_lossy(&answer.data);
-                let arr = str.split_ascii_whitespace().collect::<Vec<_>>();
-                if arr.len() != 3 {
+                let RecordData::TXT(txt) = answer.data else {
                     continue;
+                };
+
+                for data in txt {
+                    let str = String::from_utf8_lossy(&data);
+                    let arr = str.split_ascii_whitespace().collect::<Vec<_>>();
+                    if arr.len() != 3 {
+                        continue;
+                    }
+
+                    let server = arr[0];
+                    let Ok(queries) = arr[1].parse::<f64>() else {
+                        continue;
+                    };
+                    let Ok(queries_failed) = arr[2].parse::<f64>() else {
+                        continue;
+                    };
+
+                    metrics.extend([
+                        Metric::gauge_with_tags(
+                            "dnsmasq_servers_queries",
+                            "DNS queries on upstream server",
+                            queries,
+                            tags! {"server" => server},
+                        ),
+                        Metric::gauge_with_tags(
+                            "dnsmasq_servers_queries_failed",
+                            "DNS queries failed on upstream server",
+                            queries_failed,
+                            tags! {"server" => server},
+                        ),
+                    ]);
                 }
-
-                let server = arr[0];
-                let Ok(queries) = arr[1].parse::<f64>() else {
-                    continue;
-                };
-                let Ok(queries_failed) = arr[2].parse::<f64>() else {
-                    continue;
-                };
-
-                metrics.extend([
-                    Metric::gauge_with_tags(
-                        "dnsmasq_servers_queries",
-                        "DNS queries on upstream server",
-                        queries,
-                        tags! {"server" => server},
-                    ),
-                    Metric::gauge_with_tags(
-                        "dnsmasq_servers_queries_failed",
-                        "DNS queries failed on upstream server",
-                        queries_failed,
-                        tags! {"server" => server},
-                    ),
-                ]);
             }
 
             continue;
@@ -176,12 +189,21 @@ async fn gather(name_server: SocketAddr, leases_path: &PathBuf) -> Result<Vec<Me
             continue;
         };
 
-        let value = match String::from_utf8_lossy(&answer.data[1..]).parse::<f64>() {
+        let RecordData::TXT(fields) = &answer.data else {
+            continue;
+        };
+
+        let Some(data) = fields.first() else {
+            continue;
+        };
+
+        // first byte is the length delimiter
+        let value = match String::from_utf8_lossy(data).parse::<f64>() {
             Ok(value) => value,
             Err(_) => continue,
         };
 
-        match *question {
+        match question {
             "cachesize.bind." => metrics.push(Metric::gauge(
                 "dnsmasq_cache_size",
                 "configured size of the DNS cache",
@@ -216,34 +238,36 @@ async fn gather(name_server: SocketAddr, leases_path: &PathBuf) -> Result<Vec<Me
         }
     }
 
-    match load_lease_file(leases_path) {
-        Ok(leases) => {
-            metrics.push(Metric::gauge(
-                "dnsmasq_leases",
-                "Number of DHCP leases handed out",
-                leases.len() as f64,
-            ));
+    if let Some(leases_path) = leases_path {
+        match load_lease_file(leases_path) {
+            Ok(leases) => {
+                metrics.push(Metric::gauge(
+                    "dnsmasq_leases",
+                    "Number of DHCP leases handed out",
+                    leases.len() as f64,
+                ));
 
-            for lease in leases {
-                metrics.push(Metric::gauge_with_tags(
-                    "dnsmasq_lease_expiry",
-                    "Expiry time for active DHCP leases",
-                    lease.expiry,
-                    tags!(
-                        "mac" => lease.mac,
-                        "ip" => lease.ip,
-                        "computer" => lease.computer,
-                        "client_id" => lease.client_id,
-                    ),
-                ))
+                for lease in leases {
+                    metrics.push(Metric::gauge_with_tags(
+                        "dnsmasq_lease_expiry",
+                        "Expiry time for active DHCP leases",
+                        lease.expiry,
+                        tags!(
+                            "mac" => lease.mac,
+                            "ip" => lease.ip,
+                            "computer" => lease.computer,
+                            "client_id" => lease.client_id,
+                        ),
+                    ))
+                }
             }
-        }
-        Err(err) => {
-            warn!(
-                message = "load lease file failed",
-                path = ?leases_path,
-                ?err,
-            );
+            Err(err) => {
+                warn!(
+                    message = "load lease file failed",
+                    path = ?leases_path,
+                    %err,
+                );
+            }
         }
     }
 
@@ -258,8 +282,8 @@ struct Lease {
     client_id: String,
 }
 
-fn load_lease_file(path: &PathBuf) -> Result<Vec<Lease>, Error> {
-    let file = std::fs::File::open(path).map_err(Error::Io)?;
+fn load_lease_file(path: &PathBuf) -> std::io::Result<Vec<Lease>> {
+    let file = std::fs::File::open(path)?;
     let mut lines = BufReader::new(file).lines();
 
     let mut leases = vec![];
@@ -270,7 +294,7 @@ fn load_lease_file(path: &PathBuf) -> Result<Vec<Lease>, Error> {
         }
 
         let Ok(expiry) = parts[0].parse() else {
-            warn!(message = "parse lease line failed", line,);
+            warn!(message = "parse lease line failed", line);
 
             continue;
         };

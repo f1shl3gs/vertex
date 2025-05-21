@@ -1,28 +1,30 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
-use std::ops::Sub;
 use std::pin::Pin;
 use std::str::FromStr;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::task::{Context, Poll};
-use std::time::{Duration, SystemTime};
+use std::time::{Duration, Instant, SystemTime};
 
 use bytes::Bytes;
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use configurable::configurable_component;
 use event::{Metric, tags};
 use framework::config::{Output, ProxyConfig, SourceConfig, SourceContext, default_interval};
 use framework::dns::{DnsError, Resolver};
 use framework::http::Auth;
-use framework::tls::TlsConfig;
+use framework::tls::{TlsConfig, TlsError};
 use framework::{Error, Pipeline, ShutdownSignal, Source};
-use http::header::{CONTENT_LENGTH, LAST_MODIFIED};
+use http::header::{CONTENT_LENGTH, LAST_MODIFIED, LOCATION};
 use http::response::Parts;
 use http::uri::Scheme;
 use http::{HeaderMap, HeaderName, HeaderValue, Method, Request, Uri, Version};
 use http_body_util::{BodyExt, Full};
 use httpdate::HttpDate;
+use hyper_rustls::ConfigBuilderExt;
 use hyper_util::client::legacy::Client;
 use hyper_util::rt::{TokioExecutor, TokioIo};
+use rustls::ClientConfig;
 use tokio::net::TcpStream;
 use tokio::task::JoinSet;
 use url::Url;
@@ -156,9 +158,17 @@ async fn run(
                         ),
                     ),
                     Metric::gauge_with_tags(
+                        "http_redirects",
+                        "The number of redirects",
+                        trace.redirects(),
+                        tags!(
+                            "instance" => instance,
+                        ),
+                    ),
+                    Metric::gauge_with_tags(
                         "http_duration_seconds",
                         "Duration of http request by phase",
-                        trace.resolved.sub(trace.start).to_std().unwrap(),
+                        trace.resolving(),
                         tags!(
                             "phase" => "resolve",
                             "instance" => instance,
@@ -167,7 +177,7 @@ async fn run(
                     Metric::gauge_with_tags(
                         "http_duration_seconds",
                         "Duration of http request by phase",
-                        trace.connected.sub(trace.resolved).to_std().unwrap(),
+                        trace.connecting(),
                         tags!(
                             "phase" => "connect",
                             "instance" => instance,
@@ -176,7 +186,7 @@ async fn run(
                     Metric::gauge_with_tags(
                         "http_duration_seconds",
                         "Duration of http request by phase",
-                        trace.processed.sub(trace.connected).to_std().unwrap(),
+                        trace.processing(),
                         tags!(
                             "phase" => "processing",
                             "instance" => instance,
@@ -185,7 +195,7 @@ async fn run(
                     Metric::gauge_with_tags(
                         "http_duration_seconds",
                         "Duration of http request by phase",
-                        trace.transferred.sub(trace.processed).to_std().unwrap(),
+                        trace.transferring(),
                         tags!(
                             "phase" => "transfer",
                             "instance" => instance,
@@ -284,13 +294,89 @@ async fn run(
     }
 }
 
-#[derive(Debug, Default)]
-struct Trace {
-    start: DateTime<Utc>,
-    resolved: DateTime<Utc>,
-    connected: DateTime<Utc>,
-    processed: DateTime<Utc>,
-    transferred: DateTime<Utc>,
+#[derive(Debug)]
+struct Inner {
+    start: Instant,
+    resolved: Instant,
+    connected: Instant,
+    processed: Instant,
+    transferred: Instant,
+
+    redirects: u64,
+}
+
+#[derive(Debug)]
+struct Trace(RefCell<Inner>);
+
+unsafe impl Sync for Trace {}
+
+impl Trace {
+    fn new() -> Self {
+        let now = Instant::now();
+
+        Self(RefCell::new(Inner {
+            start: now,
+            resolved: now,
+            connected: now,
+            processed: now,
+            transferred: now,
+            redirects: 0,
+        }))
+    }
+
+    #[inline]
+    fn redirected(&self) {
+        self.0.borrow_mut().redirects += 1;
+    }
+
+    #[inline]
+    fn redirects(&self) -> u64 {
+        self.0.borrow().redirects
+    }
+
+    #[inline]
+    fn resolved(&self) {
+        self.0.borrow_mut().resolved = Instant::now();
+    }
+
+    #[inline]
+    fn resolving(&self) -> Duration {
+        let inner = self.0.borrow();
+        inner.resolved - inner.start
+    }
+
+    #[inline]
+    fn connected(&self) {
+        self.0.borrow_mut().connected = Instant::now();
+    }
+
+    #[inline]
+    fn connecting(&self) -> Duration {
+        let inner = self.0.borrow();
+        inner.connected - inner.resolved
+    }
+
+    #[inline]
+    fn processed(&self) {
+        self.0.borrow_mut().processed = Instant::now();
+    }
+
+    #[inline]
+    fn processing(&self) -> Duration {
+        let inner = self.0.borrow();
+        inner.processed - inner.connected
+    }
+
+    #[inline]
+    fn transferred(&self) {
+        self.0.borrow_mut().transferred = Instant::now();
+    }
+
+    #[inline]
+    fn transferring(&self) -> Duration {
+        let inner = self.0.borrow();
+        inner.transferred - inner.processed
+    }
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -308,9 +394,7 @@ enum ConnectError {
 #[derive(Clone)]
 struct TraceConnector {
     resolver: Resolver,
-
-    resolved: Arc<Mutex<DateTime<Utc>>>,
-    connected: Arc<Mutex<DateTime<Utc>>>,
+    trace: Arc<Trace>,
 }
 
 impl tower::Service<Uri> for TraceConnector {
@@ -324,8 +408,7 @@ impl tower::Service<Uri> for TraceConnector {
 
     fn call(&mut self, dst: Uri) -> Self::Future {
         let resolver = self.resolver.clone();
-        let connected = Arc::clone(&self.connected);
-        let resolved = Arc::clone(&self.resolved);
+        let trace = Arc::clone(&self.trace);
 
         Box::pin(async move {
             let (host, port) = get_host_port(&dst)?;
@@ -336,21 +419,21 @@ impl tower::Service<Uri> for TraceConnector {
                 .await
                 .map_err(ConnectError::Resolve)?;
 
-            *resolved.lock().unwrap() = Utc::now();
+            trace.resolved();
 
             for mut addr in addrs {
                 addr.set_port(port);
 
                 match TcpStream::connect(addr).await {
                     Ok(stream) => {
-                        *connected.lock().unwrap() = Utc::now();
+                        trace.connected();
                         return Ok(TokioIo::new(stream));
                     }
                     Err(_err) => continue,
                 }
             }
 
-            *connected.lock().unwrap() = Utc::now();
+            trace.connected();
 
             Err(ConnectError::NoAvailable)
         })
@@ -383,42 +466,64 @@ fn get_host_port(dst: &Uri) -> Result<(&str, u16), ConnectError> {
 
 async fn probe(
     target: &Url,
-    _tls: Option<&TlsConfig>,
+    tls: Option<&TlsConfig>,
     auth: Option<&Auth>,
     headers: &HeaderMap,
     timeout: Duration,
-) -> Result<(Parts, Trace), Error> {
+) -> Result<(Parts, Arc<Trace>), Error> {
     let result = tokio::time::timeout(timeout, async move {
-        let connected = Arc::new(Mutex::new(Default::default()));
-        let resolved = Arc::new(Mutex::new(Default::default()));
+        let trace = Arc::new(Trace::new());
 
-        let client = Client::builder(TokioExecutor::new()).build(TraceConnector {
+        let connector = TraceConnector {
             resolver: Resolver::new(),
+            trace: Arc::clone(&trace),
+        };
 
-            connected: Arc::clone(&connected),
-            resolved: Arc::clone(&resolved),
-        });
+        let config = match tls {
+            Some(config) => config.client_config()?,
+            None => ClientConfig::builder()
+                .with_native_roots()
+                .map_err(TlsError::NativeCerts)?
+                .with_no_client_auth(),
+        };
+        let connector = hyper_rustls::HttpsConnector::from((connector, config));
 
-        let mut req = Request::builder()
-            .method(Method::GET)
-            .uri(target.as_str())
-            .body(Full::<Bytes>::default())?;
+        let client = Client::builder(TokioExecutor::new()).build(connector);
 
-        if let Some(auth) = auth {
-            auth.apply(&mut req);
-        }
+        let mut uri = target.to_string();
+        let (parts, mut incoming) = loop {
+            let mut req = Request::builder()
+                .method(Method::GET)
+                .uri(&uri)
+                .body(Full::<Bytes>::default())?;
 
-        req.headers_mut().extend(
-            headers
-                .iter()
-                .map(|(key, value)| (key.clone(), value.clone())),
-        );
+            if let Some(auth) = auth {
+                auth.apply(&mut req);
+            }
 
-        let start = Utc::now();
-        let resp = client.request(req).await?;
-        let processed = Utc::now();
+            req.headers_mut().extend(
+                headers
+                    .iter()
+                    .map(|(key, value)| (key.clone(), value.clone())),
+            );
 
-        let (parts, mut incoming) = resp.into_parts();
+            let resp = client.request(req).await?;
+            trace.processed();
+
+            let (parts, incoming) = resp.into_parts();
+            if parts.status.is_redirection() {
+                trace.redirected();
+
+                if let Some(to) = parts.headers.get(LOCATION) {
+                    uri = to.to_str()?.to_string();
+                    continue;
+                } else {
+                    break (parts, incoming);
+                }
+            } else {
+                break (parts, incoming);
+            }
+        };
 
         let mut first_bytes_arrive = None;
         loop {
@@ -444,18 +549,9 @@ async fn probe(
             }
         }
 
-        let transferred = Utc::now();
+        trace.transferred();
 
-        Ok((
-            parts,
-            Trace {
-                start,
-                resolved: *resolved.lock().unwrap(),
-                connected: *connected.lock().unwrap(),
-                processed,
-                transferred,
-            },
-        ))
+        Ok((parts, trace))
     })
     .await;
 

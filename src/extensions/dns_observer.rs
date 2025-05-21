@@ -5,7 +5,7 @@ use configurable::{Configurable, configurable_component};
 use framework::Extension;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::observe::{Endpoint, Observer, run};
-use hickory_resolver::TokioAsyncResolver;
+use resolver::{RecordClass, RecordData, RecordType, Resolver};
 use serde::{Deserialize, Serialize};
 use tokio::task::JoinSet;
 use value::{Value, value};
@@ -49,7 +49,7 @@ struct Config {
 #[typetag::serde(name = "dns_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
-        let resolver = Arc::new(TokioAsyncResolver::tokio_from_system_conf()?);
+        let resolver = Arc::new(Resolver::with_defaults()?);
 
         let observer = Observer::register(cx.key);
         let port = self.port;
@@ -83,37 +83,41 @@ impl ExtensionConfig for Config {
 }
 
 async fn query(
-    resolver: Arc<TokioAsyncResolver>,
+    resolver: Arc<Resolver>,
     name: String,
     query_type: QueryType,
     default_port: u16,
 ) -> Vec<Endpoint> {
     match query_type {
-        QueryType::SRV => match resolver.srv_lookup(&name).await {
-            Ok(iter) => iter
+        QueryType::SRV => match resolver
+            .lookup(&name, RecordType::SRV, RecordClass::INET)
+            .await
+        {
+            Ok(msg) => msg
+                .answers
                 .into_iter()
-                .map(|srv| {
-                    let priority = srv.priority();
-                    let port = srv.port();
-                    let weight = srv.weight();
-                    let target = srv.target();
+                .filter_map(|record| match record.data {
+                    RecordData::SRV(srv) => {
+                        let target = String::from_utf8_lossy(&srv.target);
 
-                    let id = format!("SRV_{}_{}:{}", name, target, port);
-                    let target = format!("{}:{}", target, port);
-                    let details_target = srv.target().to_string();
-                    let details = value!({
-                        "priority": priority,
-                        "port": port,
-                        "weight": weight,
-                        "target": details_target,
-                    });
+                        let id = format!("SRV_{}_{}:{}", name, target, srv.port);
+                        let target = format!("{}:{}", target, srv.port);
+                        let details_target = target.to_string();
+                        let details = value!({
+                            "priority": srv.priority,
+                            "port": srv.port,
+                            "weight": srv.weight,
+                            "target": details_target,
+                        });
 
-                    Endpoint {
-                        id,
-                        typ: "SRV".to_string(),
-                        target,
-                        details,
+                        Some(Endpoint {
+                            id,
+                            typ: "SRV".to_string(),
+                            target,
+                            details,
+                        })
                     }
+                    _ => None,
                 })
                 .collect::<Vec<_>>(),
             Err(err) => {
@@ -121,19 +125,26 @@ async fn query(
                 vec![]
             }
         },
-        QueryType::A => match resolver.ipv4_lookup(&name).await {
-            Ok(iter) => iter
+        QueryType::A => match resolver
+            .lookup(&name, RecordType::A, RecordClass::INET)
+            .await
+        {
+            Ok(msg) => msg
+                .answers
                 .into_iter()
-                .map(|record| {
-                    let id = format!("A_{}_{}", record.0, default_port);
-                    let target = format!("{}:{}", record.0, default_port);
+                .filter_map(|record| match record.data {
+                    RecordData::A(ip) => {
+                        let id = format!("A_{}_{}", ip, default_port);
+                        let target = format!("{}:{}", ip, default_port);
 
-                    Endpoint {
-                        id,
-                        typ: "A".to_string(),
-                        target,
-                        details: Value::Null,
+                        Some(Endpoint {
+                            id,
+                            typ: "A".to_string(),
+                            target,
+                            details: Value::Null,
+                        })
                     }
+                    _ => None,
                 })
                 .collect(),
             Err(err) => {
@@ -141,19 +152,26 @@ async fn query(
                 vec![]
             }
         },
-        QueryType::AAAA => match resolver.ipv6_lookup(&name).await {
-            Ok(iter) => iter
+        QueryType::AAAA => match resolver
+            .lookup(&name, RecordType::A, RecordClass::INET)
+            .await
+        {
+            Ok(msg) => msg
+                .answers
                 .into_iter()
-                .map(|record| {
-                    let id = format!("AAAA_{}_{}", record.0, default_port);
-                    let target = format!("{}:{}", record.0, default_port);
+                .filter_map(|record| match record.data {
+                    RecordData::AAAA(ip) => {
+                        let id = format!("AAAA_{}_{}", ip, default_port);
+                        let target = format!("{}:{}", ip, default_port);
 
-                    Endpoint {
-                        id,
-                        typ: "AAAA".to_string(),
-                        target,
-                        details: Value::Null,
+                        Some(Endpoint {
+                            id,
+                            typ: "AAAA".to_string(),
+                            target,
+                            details: Value::Null,
+                        })
                     }
+                    _ => None,
                 })
                 .collect(),
             Err(err) => {
@@ -161,24 +179,32 @@ async fn query(
                 vec![]
             }
         },
-        QueryType::MX => match resolver.mx_lookup(&name).await {
-            Ok(iter) => iter
+        QueryType::MX => match resolver
+            .lookup(&name, RecordType::MX, RecordClass::INET)
+            .await
+        {
+            Ok(msg) => msg
+                .answers
                 .into_iter()
-                .map(|mx| {
-                    let id = format!("MX_{}_{}:{}", name, mx.exchange(), default_port);
-                    let target = format!("{}:{}", mx.exchange(), default_port);
-                    let preference = mx.preference();
-                    let exchange = mx.exchange().to_string();
+                .filter_map(|record| match record.data {
+                    RecordData::MX(mx) => {
+                        let preference = mx.preference;
+                        let exchange = String::from_utf8_lossy(&mx.exchange).to_string();
 
-                    Endpoint {
-                        id,
-                        typ: "MX".to_string(),
-                        target,
-                        details: value!({
-                            "preference": preference,
-                            "exchange": exchange
-                        }),
+                        let id = format!("MX_{}_{}:{}", name, exchange, default_port);
+                        let target = format!("{}:{}", exchange, default_port);
+
+                        Some(Endpoint {
+                            id,
+                            typ: "MX".to_string(),
+                            target,
+                            details: value!({
+                                "preference": preference,
+                                "exchange": exchange
+                            }),
+                        })
                     }
+                    _ => None,
                 })
                 .collect(),
             Err(err) => {
@@ -186,22 +212,27 @@ async fn query(
                 vec![]
             }
         },
-        QueryType::NS => match resolver.ns_lookup(&name).await {
-            Ok(iter) => iter
+        QueryType::NS => match resolver
+            .lookup(&name, RecordType::NS, RecordClass::INET)
+            .await
+        {
+            Ok(msg) => msg
+                .answers
                 .into_iter()
-                .map(|ns| {
-                    let id = format!("NS_{}_{}:{}", name, ns.0, default_port);
-                    let target = format!("{}:{}", ns.0, default_port);
-                    let ns = ns.0.to_string();
+                .filter_map(|record| match record.data {
+                    RecordData::NS(ns) => {
+                        let ns = String::from_utf8_lossy(&ns).to_string();
+                        let id = format!("NS_{}_{}:{}", name, ns, default_port);
+                        let target = format!("{}:{}", ns, default_port);
 
-                    Endpoint {
-                        id,
-                        typ: "NS".to_string(),
-                        target,
-                        details: value!({
-                            "ns": ns
-                        }),
+                        Some(Endpoint {
+                            id,
+                            typ: "NS".to_string(),
+                            target,
+                            details: value!({ "ns": ns }),
+                        })
                     }
+                    _ => None,
                 })
                 .collect(),
             Err(err) => {

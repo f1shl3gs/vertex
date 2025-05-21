@@ -3,60 +3,52 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::future::BoxFuture;
-use hickory_resolver::lookup::{Lookup, LookupIntoIter};
-use hickory_resolver::proto::op::Query;
-use hickory_resolver::proto::rr::RData;
-use hickory_resolver::proto::rr::rdata::A;
-use hickory_resolver::{TokioAsyncResolver, system_conf};
 use hyper_util::client::legacy::connect::dns::Name;
+use resolver::RecordData;
 use thiserror::Error;
 use tower::Service;
 
-pub struct LookupIp(LookupIntoIter);
+pub struct LookupIp(::resolver::LookupIntoIter);
 
 impl Iterator for LookupIp {
     type Item = SocketAddr;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.0.next().map(|rdata| match rdata {
-            RData::A(a) => SocketAddr::from((a.0, 0)),
-            RData::AAAA(aaaa) => SocketAddr::from((aaaa.0, 0)),
-            _ => panic!("invalid resolve response"),
-        })
+        loop {
+            match self.0.next() {
+                Some(record) => match record.data {
+                    RecordData::A(addr) => return Some(SocketAddr::from((addr, 0))),
+                    RecordData::AAAA(addr) => return Some(SocketAddr::from((addr, 0))),
+                    _ => continue,
+                },
+                None => return None,
+            }
+        }
     }
 }
 
 #[derive(Debug, Error)]
 pub enum DnsError {
-    #[error(transparent)]
-    Resolve(hickory_resolver::error::ResolveError),
+    #[error("resolve error: {0:?}")]
+    Resolve(::resolver::Error),
 }
 
 #[derive(Clone, Debug)]
-pub struct Resolver(Arc<TokioAsyncResolver>);
+pub struct Resolver(Arc<::resolver::Resolver>);
 
 impl Resolver {
     /// Create a new Async resolver
     #[allow(clippy::new_without_default)]
     pub fn new() -> Resolver {
-        let (config, opts) =
-            system_conf::read_system_conf().expect("Read system config of DNS failed");
-        let inner = TokioAsyncResolver::tokio(config, opts);
+        let inner = ::resolver::Resolver::with_defaults().unwrap();
 
         Resolver(Arc::new(inner))
     }
 
     pub async fn lookup_ip(&self, name: &str) -> Result<LookupIp, DnsError> {
-        let lookup = if name == "localhost" {
-            // Not all operating systems support `localhost` as IPv6 `::1`, so
-            // we resolving it to it's IPv4 value.
-            Lookup::from_rdata(Query::default(), RData::A(A::new(127, 0, 0, 1)))
-        } else {
-            let inner = self.0.lookup_ip(name).await.map_err(DnsError::Resolve)?;
-            Lookup::from(inner)
-        };
+        let msg = self.0.lookup_ipv4(name).await.map_err(DnsError::Resolve)?;
 
-        Ok(LookupIp(lookup.into_iter()))
+        Ok(LookupIp(msg.into_iter()))
     }
 }
 
