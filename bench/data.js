@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747822395141,
+  "lastUpdate": 1747822433235,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8d7379ee2d41965a8ebc273abc2bdb4934058bc8",
-          "message": "chore(deps): bump bytes from 1.10.0 to 1.10.1 (#2245)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.10.0 to 1.10.1.\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.10.0...v1.10.1)\n\n---\nupdated-dependencies:\n- dependency-name: bytes\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T23:32:25+08:00",
-          "tree_id": "3cc10dd444bac6c8f501a38756cdee2ff011c003",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8d7379ee2d41965a8ebc273abc2bdb4934058bc8"
-        },
-        "date": 1741535047726,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 602,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38846.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "19be50926585f44a44613f30ec04f4b03e3611c5",
           "message": "chore(deps): bump thiserror from 2.0.11 to 2.0.12 (#2242)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 2.0.11 to 2.0.12.\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\n- [Commits](https://github.com/dtolnay/thiserror/compare/2.0.11...2.0.12)\n\n---\nupdated-dependencies:\n- dependency-name: thiserror\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-09T23:34:22+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 499,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37377.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d70238d8b5380708bb0d1e06c0e7c466fa7c00e9",
+          "message": "Merge pull request #2348 from f1shl3gs/lib/resolver/simplify_decode\n\nlib/resolver: simplify decode_message",
+          "timestamp": "2025-05-21T18:03:38+08:00",
+          "tree_id": "47e1e5a538eb1775fd712626105fc750657384b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d70238d8b5380708bb0d1e06c0e7c466fa7c00e9"
+        },
+        "date": 1747822411310,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 503,
             "unit": "s"
           },
           {
