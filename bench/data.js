@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747810920110,
+  "lastUpdate": 1747810925914,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4aa61aa54b0b8f81aae5404b638e25e4ca71a69e",
-          "message": "chore(deps): bump proc-macro2 from 1.0.93 to 1.0.94 (#2243)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.93 to 1.0.94.\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.93...1.0.94)\n\n---\nupdated-dependencies:\n- dependency-name: proc-macro2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T22:54:06+08:00",
-          "tree_id": "94dee94a1599afb8b99f310857d88979ec3de169",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4aa61aa54b0b8f81aae5404b638e25e4ca71a69e"
-        },
-        "date": 1741532315316,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.323,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 101.52,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.99,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2443a31d4f6e26532fe671af2ecd6c2dc36ed89f",
+          "message": "Merge pull request #2347 from f1shl3gs/cargo/update\n\ncargo update",
+          "timestamp": "2025-05-21T14:59:31+08:00",
+          "tree_id": "dc88619dc9994f3db2c74f4a5c58f5960eed8b82",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2443a31d4f6e26532fe671af2ecd6c2dc36ed89f"
+        },
+        "date": 1747810904275,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.416,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.402,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 169.39,
             "unit": "ns/op"
           }
         ]
