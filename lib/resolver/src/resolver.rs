@@ -14,7 +14,7 @@ const HOSTS_FILE_PATH: &str = "/etc/hosts";
 
 #[derive(Clone, Debug)]
 pub enum Error {
-    Io(String),
+    Io(std::io::ErrorKind),
 
     NoAvailable,
 
@@ -215,7 +215,7 @@ impl Resolver {
         }
 
         if let Some(err) = last_err {
-            return Err(Error::Io(err.to_string()));
+            return Err(Error::Io(err.kind()));
         }
 
         Err(Error::NoAvailable)

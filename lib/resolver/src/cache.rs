@@ -42,8 +42,10 @@ impl<T: Sized, const N: usize> Cache<T, N> {
         let hash = hash(key.as_bytes());
         let index = hash % N as u32;
 
-        let entry = self.entries[index as usize];
-        entry.assume_init_mut() = Entry { prev: 0, next: 0, key, value };
+        unsafe {
+            let mut entry = self.entries.get_unchecked(index as usize);
+            entry.write(Entry { prev: 0, next: 0, key, value });
+        };
     }
 }
 

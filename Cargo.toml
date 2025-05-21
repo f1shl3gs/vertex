@@ -6,7 +6,7 @@ edition = "2024"
 description = "A lightweight and ultra-fast tool for building observability pipelines"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
-rust-version = "1.85"
+rust-version = "1.86"
 exclude = [ "tests/node" ]
 
 # This profile optimizes for runtime performance and small binary size at the expense of longer
@@ -486,5 +486,5 @@ thiserror = { version = "2.0.12", default-features = false }
 tonic = { version = "0.13.1", default-features = false, optional = true, features = ["prost"] }
 tonic-health = { version = "0.13.1", default-features = false, optional = true }
 typetag = { version = "0.2.20" }
-url = { version = "2.5.4", features = ["serde"] }
+url = { version = "2.5.4", default-features = false, features = ["serde"] }
 uuid = { version = "1.16.0", default-features = false, features = ["v4"], optional = true }
