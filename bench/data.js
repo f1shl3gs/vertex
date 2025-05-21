@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747821962525,
+  "lastUpdate": 1747821980734,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c7f100f5992380752c44c41cda5c6d79f5bdcff1",
-          "message": "chore(deps): bump dyn-clone from 1.0.18 to 1.0.19 (#2244)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.18 to 1.0.19.\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.18...1.0.19)\n\n---\nupdated-dependencies:\n- dependency-name: dyn-clone\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T22:55:13+08:00",
-          "tree_id": "2ade709e585493dc2baa485d2dc937a4fd6de26f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c7f100f5992380752c44c41cda5c6d79f5bdcff1"
-        },
-        "date": 1741532368562,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 101.91,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.27,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 169.39,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d70238d8b5380708bb0d1e06c0e7c466fa7c00e9",
+          "message": "Merge pull request #2348 from f1shl3gs/lib/resolver/simplify_decode\n\nlib/resolver: simplify decode_message",
+          "timestamp": "2025-05-21T18:03:38+08:00",
+          "tree_id": "47e1e5a538eb1775fd712626105fc750657384b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d70238d8b5380708bb0d1e06c0e7c466fa7c00e9"
+        },
+        "date": 1747821958248,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 33.016,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 170.44,
             "unit": "ns/op"
           }
         ]
