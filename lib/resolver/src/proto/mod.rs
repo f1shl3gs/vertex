@@ -629,7 +629,7 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
                     let ns = decode_name(buf, &mut *pos)?;
                     RecordData::NS(ns)
                 }
-                _ => unreachable!(),
+                _ => panic!("unknown typ {:?}", typ),
             };
 
             *pos += rdlen;
