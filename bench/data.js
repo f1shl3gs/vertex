@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747829796555,
+  "lastUpdate": 1747829807283,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8d7379ee2d41965a8ebc273abc2bdb4934058bc8",
-          "message": "chore(deps): bump bytes from 1.10.0 to 1.10.1 (#2245)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.10.0 to 1.10.1.\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.10.0...v1.10.1)\n\n---\nupdated-dependencies:\n- dependency-name: bytes\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T23:32:25+08:00",
-          "tree_id": "3cc10dd444bac6c8f501a38756cdee2ff011c003",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8d7379ee2d41965a8ebc273abc2bdb4934058bc8"
-        },
-        "date": 1741534468997,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.784,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 102.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 181.36,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f6d46452264cef4e78ce169aeae66c668787d146",
+          "message": "Merge pull request #2349 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
+          "timestamp": "2025-05-21T20:14:08+08:00",
+          "tree_id": "8f81cd2edb91d1e66240f22241eb12a4f0650bb0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f6d46452264cef4e78ce169aeae66c668787d146"
+        },
+        "date": 1747829785055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.419,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.941,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 166.54,
             "unit": "ns/op"
           }
         ]
