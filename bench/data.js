@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747871878825,
+  "lastUpdate": 1747871935063,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8c3289a34f266ee8b327a45222215ff193a10e62",
-          "message": "chore(deps): bump serde_json from 1.0.139 to 1.0.140 (#2238)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.139 to 1.0.140.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.139...v1.0.140)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-10T00:19:22+08:00",
-          "tree_id": "0ebca59643e7d805db7ce040b1a83edd92d43c1e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c3289a34f266ee8b327a45222215ff193a10e62"
-        },
-        "date": 1741537826292,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 568,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38841,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ca61009bbb83f8f5b992857ccc5b5e70f37015e8",
           "message": "chore(deps): bump async-trait from 0.1.86 to 0.1.87 (#2237)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.86 to 0.1.87.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.86...0.1.87)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-10T00:19:51+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 505,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37278.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "79c99fa78a87608fd3ca9a3fece441546a12ac42",
+          "message": "Merge pull request #2350 from f1shl3gs/sources/http_check/fix_trace_start\n\nsources/http_check: set start before resolve",
+          "timestamp": "2025-05-22T07:48:36+08:00",
+          "tree_id": "c7ffdb94fa8365392c0cbdbf6412d40a5bc9e55f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/79c99fa78a87608fd3ca9a3fece441546a12ac42"
+        },
+        "date": 1747871913586,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 509,
             "unit": "s"
           },
           {
