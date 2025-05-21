@@ -1,0 +1,12 @@
+[package]
+name = "resolver"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dev-dependencies]
+tokio = { version = "1.45.0", default-features = false, features = ["macros", "rt-multi-thread"]}
+
+[dependencies]
+libc = { version = "0.2.172", default-features = false }
+tokio = { version = "1.45.0", default-features = false, features = ["io-util", "net", "sync", "time"] }

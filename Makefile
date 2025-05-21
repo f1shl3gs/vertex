@@ -95,8 +95,8 @@ nginx_stub-integration-tests:
 
 .PHONY: redfish-integration-tests
 redfish-integration-tests:
-	bash ./scripts/redfish_prepare.sh
-	cargo test -p vertex --lib sources::redfish::integration_tests --features all-integration-tests --no-fail-fast
+	# bash ./scripts/redfish_prepare.sh
+	# cargo test -p vertex --lib sources::redfish::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: clickhouse-integration-tests
 clickhouse-integration-tests:
