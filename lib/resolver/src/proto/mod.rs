@@ -154,6 +154,7 @@ impl RecordClass {
 }
 
 /// An RCode is a DNS response status code.
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug)]
 pub enum RCode {
     Success,
@@ -316,8 +317,11 @@ impl Header {
     }
 }
 
-/// Maximum TTL as defined in https://tools.ietf.org/html/rfc2181, 2147483647
-///   Setting this to a value of 1 day, in seconds
+/// Maximum TTL. This is set to one day (in seconds).
+///
+/// [RFC 2181, section 8](https://tools.ietf.org/html/rfc2181#section-8) says
+/// that the maximum TTL value is 2147483647, but implementations may place an
+/// upper bound on received TTLs.
 pub(crate) const MAX_TTL: u32 = 86400_u32;
 pub(crate) const HEADER_SIZE: usize = 12;
 
@@ -333,6 +337,7 @@ pub struct Question {
 }
 
 #[allow(clippy::upper_case_acronyms)]
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Clone, Debug)]
 pub enum RecordData {
     NoData,
@@ -410,6 +415,7 @@ pub enum RecordData {
     },
 }
 
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Clone, Debug)]
 pub struct Opt {
     pub code: u16,
@@ -586,9 +592,6 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
             RecordClass::from(value)
         };
         let ttl = u32::from_be_bytes(buf[*pos + 4..*pos + 8].try_into().unwrap());
-        if ttl > MAX_TTL {
-            return Err(Error::InvalidTTL(ttl));
-        }
 
         let rdlen = u16::from_be_bytes(buf[*pos + 8..*pos + 10].try_into().unwrap()) as usize;
         *pos += 10;
@@ -596,54 +599,51 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
         let data = if rdlen == 0 {
             RecordData::NoData
         } else {
-            let data = &buf[*pos..*pos + rdlen];
+            let reloc = *pos + rdlen;
 
             let data = match typ {
                 RecordType::A => {
-                    if data.len() != 4 {
-                        return Err(Error::InvalidRecordData);
-                    }
-
-                    RecordData::A(Ipv4Addr::new(data[0], data[1], data[2], data[3]))
-                }
-                RecordType::NS => {
-                    let ns = decode_name(buf, &mut *pos)?;
-                    RecordData::NS(ns)
-                }
-                RecordType::CNAME => {
-                    let mut tmp = *pos;
-                    let cname = decode_name(buf, &mut tmp)?;
-                    RecordData::CNAME(cname)
-                }
-                RecordType::SOA => {
-                    let mut tmp = 0;
-                    let ns = decode_name(data, &mut tmp)?;
-                    let mbox = decode_name(data, &mut tmp)?;
-
-                    if data.len() - tmp < 20 {
+                    if buf.len() - *pos < 4 {
                         return Err(Error::TooSmall);
                     }
 
-                    let serial = ((buf[tmp] as u32) << 24)
-                        | ((buf[tmp + 1] as u32) << 16)
-                        | ((buf[tmp + 2] as u32) << 8)
-                        | buf[tmp + 3] as u32;
-                    let refresh = ((buf[tmp + 4] as u32) << 24)
-                        | ((buf[tmp + 5] as u32) << 16)
-                        | ((buf[tmp + 6] as u32) << 8)
-                        | buf[tmp + 7] as u32;
-                    let retry = ((buf[tmp + 8] as u32) << 24)
-                        | ((buf[tmp + 9] as u32) << 16)
-                        | ((buf[tmp + 10] as u32) << 8)
-                        | buf[tmp + 11] as u32;
-                    let expire = ((buf[tmp + 12] as u32) << 24)
-                        | ((buf[tmp + 13] as u32) << 16)
-                        | ((buf[tmp + 14] as u32) << 8)
-                        | buf[tmp + 15] as u32;
-                    let min_ttl = ((buf[tmp + 16] as u32) << 24)
-                        | ((buf[tmp + 17] as u32) << 16)
-                        | ((buf[tmp + 18] as u32) << 8)
-                        | buf[tmp + 19] as u32;
+                    RecordData::A(Ipv4Addr::new(
+                        buf[*pos],
+                        buf[*pos + 1],
+                        buf[*pos + 2],
+                        buf[*pos + 3],
+                    ))
+                }
+                RecordType::NS => RecordData::NS(decode_name(buf, pos)?),
+                RecordType::CNAME => RecordData::CNAME(decode_name(buf, pos)?),
+                RecordType::SOA => {
+                    let ns = decode_name(buf, pos)?;
+                    let mbox = decode_name(buf, pos)?;
+
+                    if buf.len() - *pos < 20 {
+                        return Err(Error::TooSmall);
+                    }
+
+                    let serial = ((buf[*pos] as u32) << 24)
+                        | ((buf[*pos + 1] as u32) << 16)
+                        | ((buf[*pos + 2] as u32) << 8)
+                        | buf[*pos + 3] as u32;
+                    let refresh = ((buf[*pos + 4] as u32) << 24)
+                        | ((buf[*pos + 5] as u32) << 16)
+                        | ((buf[*pos + 6] as u32) << 8)
+                        | buf[*pos + 7] as u32;
+                    let retry = ((buf[*pos + 8] as u32) << 24)
+                        | ((buf[*pos + 9] as u32) << 16)
+                        | ((buf[*pos + 10] as u32) << 8)
+                        | buf[*pos + 11] as u32;
+                    let expire = ((buf[*pos + 12] as u32) << 24)
+                        | ((buf[*pos + 13] as u32) << 16)
+                        | ((buf[*pos + 14] as u32) << 8)
+                        | buf[*pos + 15] as u32;
+                    let min_ttl = ((buf[*pos + 16] as u32) << 24)
+                        | ((buf[*pos + 17] as u32) << 16)
+                        | ((buf[*pos + 18] as u32) << 8)
+                        | buf[*pos + 19] as u32;
 
                     RecordData::SOA {
                         ns,
@@ -655,68 +655,76 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
                         min_ttl,
                     }
                 }
-                RecordType::PTR => {
-                    let name = decode_name(data, &mut 0)?;
-                    RecordData::PTR(name)
-                }
+                RecordType::PTR => RecordData::PTR(decode_name(buf, pos)?),
                 RecordType::MX => {
-                    let preference = ((data[0] as u16) << 8) | data[1] as u16;
-                    let exchange = decode_name(buf, &mut *pos)?;
+                    let preference = ((buf[*pos] as u16) << 8) | buf[*pos + 1] as u16;
+                    *pos += 2;
 
                     RecordData::MX {
                         preference,
-                        exchange,
+                        exchange: decode_name(buf, pos)?,
                     }
                 }
                 RecordType::TXT => {
                     let mut fields = Vec::new();
-                    let mut tmp = 0;
-                    while tmp < rdlen {
-                        let len = data[tmp] as usize;
-                        tmp += 1;
+                    while *pos < reloc {
+                        let len = buf[*pos] as usize;
+                        *pos += 1;
 
-                        fields.push(data[tmp..tmp + len].to_vec());
-                        tmp += len;
+                        fields.push(buf[*pos..*pos + len].to_vec());
+                        *pos += len;
                     }
 
                     RecordData::TXT(fields)
                 }
                 RecordType::AAAA => {
-                    if data.len() != 16 {
+                    if buf.len() - *pos < 16 {
                         return Err(Error::InvalidRecordData);
                     }
 
                     RecordData::AAAA(Ipv6Addr::from([
-                        data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],
-                        data[8], data[9], data[10], data[11], data[12], data[13], data[14],
-                        data[15],
+                        buf[*pos],
+                        buf[*pos + 1],
+                        buf[*pos + 2],
+                        buf[*pos + 3],
+                        buf[*pos + 4],
+                        buf[*pos + 5],
+                        buf[*pos + 6],
+                        buf[*pos + 7],
+                        buf[*pos + 8],
+                        buf[*pos + 9],
+                        buf[*pos + 10],
+                        buf[*pos + 11],
+                        buf[*pos + 12],
+                        buf[*pos + 13],
+                        buf[*pos + 14],
+                        buf[*pos + 15],
                     ]))
                 }
                 RecordType::SRV => {
-                    let priority = ((data[0] as u16) << 8) | data[1] as u16;
-                    let weight = ((data[2] as u16) << 8) | data[3] as u16;
-                    let port = ((data[4] as u16) << 8) | data[5] as u16;
-                    // name compression is not to be used for this field.
-                    let target = decode_name(buf, &mut *pos)?;
+                    let priority = ((buf[*pos] as u16) << 8) | buf[*pos + 1] as u16;
+                    let weight = ((buf[*pos + 2] as u16) << 8) | buf[*pos + 3] as u16;
+                    let port = ((buf[*pos + 4] as u16) << 8) | buf[*pos + 5] as u16;
+                    *pos += 6;
 
                     RecordData::SRV {
                         priority,
                         weight,
                         port,
-                        target,
+                        // name compression is not to be used for this field.
+                        target: decode_name(buf, pos)?,
                     }
                 }
                 RecordType::OPT => {
                     let mut options = Vec::new();
-                    let mut pos = 0;
 
-                    while pos < rdlen {
-                        let code = ((data[0] as u16) << 8) | data[1] as u16;
-                        let len = ((data[2] as u16) << 8) | data[3] as u16;
-                        pos += 4;
+                    while *pos < reloc {
+                        let code = ((buf[*pos] as u16) << 8) | buf[*pos + 1] as u16;
+                        let len = ((buf[*pos + 2] as u16) << 8) | buf[*pos + 3] as u16;
+                        *pos += 4;
 
-                        let data = Vec::from(&data[pos..pos + len as usize]);
-                        pos += len as usize;
+                        let data = Vec::from(&buf[*pos..*pos + len as usize]);
+                        *pos += len as usize;
 
                         options.push(Opt { code, data });
                     }
@@ -725,11 +733,11 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
                 }
                 _ => RecordData::Unknown {
                     typ,
-                    data: data.to_vec(),
+                    data: buf[*pos..*pos + rdlen].to_vec(),
                 },
             };
 
-            *pos += rdlen;
+            *pos = reloc;
 
             data
         };
@@ -749,135 +757,6 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    /*
-        #[test]
-        fn srv() {
-            let record = Record {
-                name: vec![],
-                typ: RecordType::A,
-                class: RecordClass::INET,
-                ttl: 0,
-                #[rustfmt::skip]
-                data: vec![
-                    // priority
-                    0, 1,
-                    // weight
-                    0, 2,
-                    // port
-                    0, 3,
-                    // data
-                    4, 95, 100, 110, 115,
-                    4, 95, 116, 99, 112,
-                    7, 101, 120, 97, 109, 112, 108, 101,
-                    3, 99, 111, 109,
-                    0,
-                ],
-            };
-
-            let srv = record.srv();
-
-            assert_eq!(srv.priority, 1);
-            assert_eq!(srv.weight, 2);
-            assert_eq!(srv.port, 3);
-            assert_eq!(srv.target, b"_dns._tcp.example.com.");
-        }
-
-        #[test]
-        fn mx() {
-            let record = Record {
-                name: vec![],
-                typ: RecordType::A,
-                class: RecordClass::INET,
-                ttl: 0,
-                #[rustfmt::skip]
-                data: vec![
-                    // preference
-                    0, 16,
-                    // exchange
-                    4, 109, 97, 105, 108,
-                    7, 101, 120, 97, 109, 112, 108, 101,
-                    3, 99, 111, 109,
-                    0
-                ],
-            };
-
-            let mx = record.mx();
-
-            assert_eq!(mx.preference, 16);
-            assert_eq!(mx.exchange, b"mail.example.com.");
-        }
-    */
-
-    #[test]
-    fn decode() {
-        #[rustfmt::skip]
-        let input = [
-            // id
-            68, 218,
-            // flags
-            129, 128,
-            // questions
-            0, 1,
-            // answers
-            0, 3,
-            // authorities
-            0, 0,
-            // additionals
-            0, 0,
-
-            // question name
-            3, 119, 119, 119,    5, 98, 97, 105, 100, 117,    3, 99, 111, 109,   0,
-            // type
-            0, 1,
-            // class
-            0, 1,
-
-            // answers
-            // ptr and offset
-            192, 12,
-            // type
-            0, 5,   // CNAME
-            // class
-            0, 1,   // INET
-            // ttl
-            0, 0, 0, 10,
-            // record data length
-            0, 15,
-            // record data
-            3, 119, 119, 119,    1, 97,     6, 115, 104, 105, 102, 101, 110,
-            // ptr and offset
-            192, 22,
-
-            // ptr and offset
-            192, 43,
-            // type
-            0, 1,   // A
-            // class
-            0, 1,   // INET
-            // ttl
-            0, 0, 0, 10,
-            // record data length
-            0, 4,
-            // record data
-            180, 101, 49, 44,
-
-            // ptr and offset
-            192, 43,
-            // type
-            0, 1,   // A
-            // class
-            0, 1,   // INET
-            // ttl
-            0, 0, 0, 10,
-            // record data length
-            0, 4,
-            // record data
-            180, 101, 51, 73
-        ];
-
-        let _msg = decode_message(&input).unwrap();
-    }
 
     #[test]
     fn decode_resp_with_additionals() {
@@ -991,5 +870,255 @@ mod tests {
 
             assert_eq!(got, want, "label: {}", label);
         }
+    }
+
+    #[test]
+    fn large_message() {
+        let input = [
+            0, 0, 132, 0, 0, 1, 0, 9, 0, 2, 0, 3, 3, 102, 111, 111, 3, 98, 97, 114, 7, 101, 120,
+            97, 109, 112, 108, 101, 3, 99, 111, 109, 0, 0, 1, 0, 1, 192, 12, 0, 1, 0, 1, 0, 0, 0,
+            0, 0, 4, 127, 0, 0, 1, 192, 12, 0, 1, 0, 1, 0, 0, 0, 0, 0, 4, 127, 0, 0, 2, 192, 12, 0,
+            28, 0, 1, 0, 0, 0, 0, 0, 16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+            192, 12, 0, 5, 0, 1, 0, 0, 0, 0, 0, 8, 5, 97, 108, 105, 97, 115, 192, 20, 192, 12, 0,
+            6, 0, 1, 0, 0, 0, 0, 0, 31, 3, 110, 115, 49, 192, 20, 2, 109, 98, 192, 20, 0, 0, 0, 1,
+            0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 192, 12, 0, 12, 0, 1, 0, 0, 0, 0, 0, 6,
+            3, 112, 116, 114, 192, 20, 192, 12, 0, 15, 0, 1, 0, 0, 0, 0, 0, 7, 0, 7, 2, 109, 120,
+            192, 20, 192, 12, 0, 33, 0, 1, 0, 0, 0, 0, 0, 23, 0, 8, 0, 9, 0, 11, 3, 115, 114, 118,
+            7, 101, 120, 97, 109, 112, 108, 101, 3, 99, 111, 109, 0, 192, 12, 255, 82, 0, 1, 0, 0,
+            0, 0, 0, 4, 42, 0, 43, 44, 192, 12, 0, 2, 0, 1, 0, 0, 0, 0, 0, 2, 192, 129, 192, 12, 0,
+            2, 0, 1, 0, 0, 0, 0, 0, 6, 3, 110, 115, 50, 192, 20, 192, 12, 0, 16, 0, 1, 0, 0, 0, 0,
+            0, 37, 36, 83, 111, 32, 76, 111, 110, 103, 44, 32, 97, 110, 100, 32, 84, 104, 97, 110,
+            107, 115, 32, 102, 111, 114, 32, 65, 108, 108, 32, 116, 104, 101, 32, 70, 105, 115,
+            104, 192, 12, 0, 16, 0, 1, 0, 0, 0, 0, 0, 36, 35, 72, 97, 109, 115, 116, 101, 114, 32,
+            72, 117, 101, 121, 32, 97, 110, 100, 32, 116, 104, 101, 32, 71, 111, 111, 101, 121, 32,
+            75, 97, 98, 108, 111, 111, 105, 101, 0, 0, 41, 16, 0, 254, 0, 0, 0, 0, 12, 0, 10, 0, 8,
+            1, 35, 69, 103, 137, 171, 205, 239,
+        ];
+
+        let mut msg = decode_message(&input).unwrap();
+        // println!("{:#?}", msg);
+
+        let name = "foo.bar.example.com.".as_bytes().to_vec();
+
+        let header = msg.header;
+        assert_eq!(header.id, 0);
+        assert!(header.response());
+        assert_eq!(header.opcode(), 0);
+        assert!(header.authoritative());
+        assert!(!header.truncated());
+        assert!(!header.recursion_desired());
+        assert!(!header.recursion_available());
+        assert_eq!(header.response_code(), RCode::Success);
+
+        let question = msg.questions.remove(0);
+        assert_eq!(question.name, name);
+        assert_eq!(question.typ, RecordType::A);
+        assert_eq!(question.class, RecordClass::INET);
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::A);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(answer.data, RecordData::A(Ipv4Addr::new(127, 0, 0, 1)));
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::A);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(answer.data, RecordData::A(Ipv4Addr::new(127, 0, 0, 2)));
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::AAAA);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(
+            answer.data,
+            RecordData::AAAA(Ipv6Addr::from([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+            ]))
+        );
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::CNAME);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(
+            answer.data,
+            RecordData::CNAME("alias.example.com.".as_bytes().to_vec())
+        );
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::SOA);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(
+            answer.data,
+            RecordData::SOA {
+                ns: "ns1.example.com.".as_bytes().to_vec(),
+                mbox: "mb.example.com.".as_bytes().to_vec(),
+                serial: 1,
+                refresh: 2,
+                retry: 3,
+                expire: 4,
+                min_ttl: 5,
+            }
+        );
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::PTR);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(
+            answer.data,
+            RecordData::PTR("ptr.example.com.".as_bytes().to_vec())
+        );
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::MX);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(
+            answer.data,
+            RecordData::MX {
+                preference: 7,
+                exchange: "mx.example.com.".as_bytes().to_vec(),
+            }
+        );
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::SRV);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(
+            answer.data,
+            RecordData::SRV {
+                priority: 8,
+                weight: 9,
+                port: 11,
+                target: "srv.example.com.".as_bytes().to_vec(),
+            }
+        );
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::Unknown(65362));
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(
+            answer.data,
+            RecordData::Unknown {
+                typ: RecordType::Unknown(65362),
+                data: vec![42, 0, 43, 44]
+            }
+        );
+
+        let authority = msg.authorities.remove(0);
+        assert_eq!(authority.name, name);
+        assert_eq!(authority.typ, RecordType::NS);
+        assert_eq!(authority.class, RecordClass::INET);
+        assert_eq!(authority.ttl, 0);
+        assert_eq!(
+            authority.data,
+            RecordData::NS("ns1.example.com.".as_bytes().to_vec())
+        );
+
+        let authority = msg.authorities.remove(0);
+        assert_eq!(authority.name, name);
+        assert_eq!(authority.typ, RecordType::NS);
+        assert_eq!(authority.class, RecordClass::INET);
+        assert_eq!(authority.ttl, 0);
+        assert_eq!(
+            authority.data,
+            RecordData::NS("ns2.example.com.".as_bytes().to_vec())
+        );
+
+        let additional = msg.additionals.remove(0);
+        assert_eq!(additional.name, name);
+        assert_eq!(additional.typ, RecordType::TXT);
+        assert_eq!(additional.class, RecordClass::INET);
+        assert_eq!(additional.ttl, 0);
+        assert_eq!(
+            additional.data,
+            RecordData::TXT(vec![
+                "So Long\x2c and Thanks for All the Fish"
+                    .as_bytes()
+                    .to_vec()
+            ])
+        );
+
+        let additional = msg.additionals.remove(0);
+        assert_eq!(additional.name, name);
+        assert_eq!(additional.typ, RecordType::TXT);
+        assert_eq!(additional.class, RecordClass::INET);
+        assert_eq!(additional.ttl, 0);
+        assert_eq!(
+            additional.data,
+            RecordData::TXT(vec![
+                "Hamster Huey and the Gooey Kablooie".as_bytes().to_vec(),
+            ])
+        );
+
+        let additional = msg.additionals.remove(0);
+        assert_eq!(additional.name, ".".as_bytes().to_vec());
+        assert_eq!(additional.typ, RecordType::OPT);
+        assert_eq!(additional.class, RecordClass::OPT(4096));
+        assert_eq!(additional.ttl, 4261412864);
+        assert_eq!(
+            additional.data,
+            RecordData::OPT(vec![Opt {
+                code: 10,
+                data: vec![1, 35, 69, 103, 137, 171, 205, 239]
+            }])
+        );
+    }
+
+    #[test]
+    fn small_message() {
+        let input = [
+            0, 0, 132, 0, 0, 1, 0, 1, 0, 1, 0, 1, 7, 101, 120, 97, 109, 112, 108, 101, 3, 99, 111,
+            109, 0, 0, 1, 0, 1, 192, 12, 0, 1, 0, 1, 0, 0, 0, 0, 0, 4, 127, 0, 0, 1, 192, 12, 0, 1,
+            0, 1, 0, 0, 0, 0, 0, 4, 127, 0, 0, 1, 192, 12, 0, 1, 0, 1, 0, 0, 0, 0, 0, 4, 127, 0, 0,
+            1,
+        ];
+
+        let mut msg = decode_message(&input).unwrap();
+        let name = "example.com.".as_bytes().to_vec();
+
+        assert!(msg.header.response());
+        assert!(msg.header.authoritative());
+
+        let question = msg.questions.remove(0);
+        assert_eq!(question.name, name);
+        assert_eq!(question.typ, RecordType::A);
+        assert_eq!(question.class, RecordClass::INET);
+
+        let answer = msg.answers.remove(0);
+        assert_eq!(answer.name, name);
+        assert_eq!(answer.typ, RecordType::A);
+        assert_eq!(answer.class, RecordClass::INET);
+        assert_eq!(answer.ttl, 0);
+        assert_eq!(answer.data, RecordData::A(Ipv4Addr::new(127, 0, 0, 1)));
+
+        let authorities = msg.authorities.remove(0);
+        assert_eq!(authorities.name, name);
+        assert_eq!(authorities.typ, RecordType::A);
+        assert_eq!(authorities.class, RecordClass::INET);
+        assert_eq!(authorities.ttl, 0);
+        assert_eq!(authorities.data, RecordData::A(Ipv4Addr::new(127, 0, 0, 1)));
+
+        let additional = msg.additionals.remove(0);
+        assert_eq!(additional.name, name);
+        assert_eq!(additional.typ, RecordType::A);
+        assert_eq!(additional.class, RecordClass::INET);
+        assert_eq!(additional.ttl, 0);
+        assert_eq!(additional.data, RecordData::A(Ipv4Addr::new(127, 0, 0, 1)));
     }
 }
