@@ -4,7 +4,8 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use crate::config::{Config, Hosts};
 use crate::proto::{
-    Error as DecodeError, HEADER_SIZE, Message, Record, RecordClass, RecordType, decode_message,
+    Error as DecodeError, HEADER_SIZE, MAX_TTL, Message, Record, RecordClass, RecordData,
+    RecordType, decode_message,
 };
 use crate::singleflight::SingleFlight;
 
@@ -18,12 +19,6 @@ pub enum Error {
     NoAvailable,
 
     Decode(DecodeError),
-}
-
-impl From<DecodeError> for Error {
-    fn from(err: DecodeError) -> Self {
-        Error::Decode(err)
-    }
 }
 
 #[derive(Debug)]
@@ -59,6 +54,21 @@ impl Resolver {
     }
 
     pub async fn lookup_ipv4(&self, name: &str) -> Result<Lookup, Error> {
+        if let Ok(addr) = name.parse::<Ipv4Addr>() {
+            return Ok(Lookup {
+                name: Vec::from(name.as_bytes()),
+                typ: RecordType::A,
+                class: RecordClass::INET,
+                records: Arc::from([Record {
+                    name: Vec::from(name.as_bytes()),
+                    typ: RecordType::A,
+                    class: RecordClass::INET,
+                    ttl: MAX_TTL,
+                    data: RecordData::A(addr),
+                }]),
+            });
+        }
+
         if let Some(records) = self.hosts.lookup_ipv4(name) {
             return Ok(Lookup {
                 name: name.as_bytes().to_vec(),
@@ -121,6 +131,8 @@ impl Resolver {
         typ: RecordType,
         class: RecordClass,
     ) -> Result<Message, Error> {
+        // if (typ == RecordType::A || typ == RecordType::AAAA) && class == RecordClass::INET {}
+
         let mut buf = [0u8; 512];
 
         let id = random_id();
@@ -183,12 +195,13 @@ impl Resolver {
                 .await;
 
                 match result {
-                    Ok(Ok(data)) => {
+                    Ok(Ok(resp)) => {
                         let msg = if self.config.use_tcp {
-                            decode_message(&data[2..])?
+                            decode_message(&resp[2..])
                         } else {
-                            decode_message(&data)?
-                        };
+                            decode_message(&resp)
+                        }
+                        .map_err(Error::Decode)?;
 
                         return Ok(msg);
                     }
@@ -328,5 +341,21 @@ impl IntoIterator for Lookup {
             index: 0,
             records: Arc::clone(&self.records),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn lookup_localhost() {
+        let resolver = Resolver::with_defaults().unwrap();
+
+        let msg = resolver
+            .lookup("127.0.0.1", RecordType::A, RecordClass::INET)
+            .await
+            .unwrap();
+        println!("{:#?}", msg);
     }
 }
