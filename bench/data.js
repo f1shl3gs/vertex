@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747811367294,
+  "lastUpdate": 1747811382201,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "297696d02efdb428bf3905708baaee96e32a6ad4",
-          "message": "chore(deps): bump serde_path_to_error from 0.1.16 to 0.1.17 (#2240)\n\nBumps [serde_path_to_error](https://github.com/dtolnay/path-to-error) from 0.1.16 to 0.1.17.\n- [Release notes](https://github.com/dtolnay/path-to-error/releases)\n- [Commits](https://github.com/dtolnay/path-to-error/compare/0.1.16...0.1.17)\n\n---\nupdated-dependencies:\n- dependency-name: serde_path_to_error\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-09T23:33:25+08:00",
-          "tree_id": "fe7c826fce13fda8581214c3f83392415e81f6f3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/297696d02efdb428bf3905708baaee96e32a6ad4"
-        },
-        "date": 1741535044243,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 555,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38841.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8d7379ee2d41965a8ebc273abc2bdb4934058bc8",
           "message": "chore(deps): bump bytes from 1.10.0 to 1.10.1 (#2245)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.10.0 to 1.10.1.\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.10.0...v1.10.1)\n\n---\nupdated-dependencies:\n- dependency-name: bytes\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-09T23:32:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37358,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2443a31d4f6e26532fe671af2ecd6c2dc36ed89f",
+          "message": "Merge pull request #2347 from f1shl3gs/cargo/update\n\ncargo update",
+          "timestamp": "2025-05-21T14:59:31+08:00",
+          "tree_id": "dc88619dc9994f3db2c74f4a5c58f5960eed8b82",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2443a31d4f6e26532fe671af2ecd6c2dc36ed89f"
+        },
+        "date": 1747811360558,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 499,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37377.1,
             "unit": "KiB"
           }
         ]
