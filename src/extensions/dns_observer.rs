@@ -97,23 +97,26 @@ async fn query(
                 .answers
                 .into_iter()
                 .filter_map(|record| match record.data {
-                    RecordData::SRV(srv) => {
-                        let target = String::from_utf8_lossy(&srv.target);
+                    RecordData::SRV {
+                        priority,
+                        weight,
+                        port,
+                        target,
+                    } => {
+                        let target = String::from_utf8_lossy(&target);
 
-                        let id = format!("SRV_{}_{}:{}", name, target, srv.port);
-                        let target = format!("{}:{}", target, srv.port);
-                        let details_target = target.to_string();
+                        let id = format!("SRV_{}_{}:{}", name, target, port);
                         let details = value!({
-                            "priority": srv.priority,
-                            "port": srv.port,
-                            "weight": srv.weight,
-                            "target": details_target,
+                            "priority": priority,
+                            "port": port,
+                            "weight": weight,
+                            "target": target.to_string(),
                         });
 
                         Some(Endpoint {
                             id,
                             typ: "SRV".to_string(),
-                            target,
+                            target: format!("{}:{}", target, port),
                             details,
                         })
                     }
@@ -187,9 +190,11 @@ async fn query(
                 .answers
                 .into_iter()
                 .filter_map(|record| match record.data {
-                    RecordData::MX(mx) => {
-                        let preference = mx.preference;
-                        let exchange = String::from_utf8_lossy(&mx.exchange).to_string();
+                    RecordData::MX {
+                        preference,
+                        exchange,
+                    } => {
+                        let exchange = String::from_utf8_lossy(&exchange).to_string();
 
                         let id = format!("MX_{}_{}:{}", name, exchange, default_port);
                         let target = format!("{}:{}", exchange, default_port);

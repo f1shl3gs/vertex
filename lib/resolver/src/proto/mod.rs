@@ -5,7 +5,7 @@ use std::net::{Ipv4Addr, Ipv6Addr};
 /// The type of the resource record
 ///
 /// This specifies the type of data in the RData field of the Resource Record
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum RecordType {
     // ResourceHeader.Type and Question.Type
     A,
@@ -334,66 +334,86 @@ pub struct Question {
 
 #[allow(clippy::upper_case_acronyms)]
 #[derive(Clone, Debug)]
-pub struct SRV {
-    /// The priority of this target host. A client MUST attempt to contact the
-    /// target host with the lowest-numbered priority it can reach; target hosts
-    /// with the same priority SHOULD be tried in an order defined by the weight
-    /// field.
-    ///
-    /// The range is 0-65535. This is a 16-bit unsigned integer in network order.
-    pub priority: u16,
-
-    /// A server selection mechanism. The weight field specifies a relative weight
-    /// for entries with the same priority. Larger weights SHOULD be given a
-    /// proportionately higher probability of being selected.
-    ///
-    /// The range of this number if 0-65535, 16-bit unsigned integer in network order.
-    ///
-    /// Domain administrators SHOULD use Weight 0 when there isn't any server
-    /// selection to do, to make the RR easier to read for humans (less noisy).
-    pub weight: u16,
-
-    /// The port on this target host of this service.
-    ///
-    /// The range is 0-65535. This is a 16-bit unsigned integer in network order
-    /// This is often as specified in Assigned Numbers but need not be.
-    pub port: u16,
-
-    /// The domain name of the target host. There MUST be one or more address
-    /// records for this name, the name MUST NOT be an alias (in the sense of
-    /// RFC 1034 or RFC 2181). Implementors are urged, but not required, to
-    /// return the address record(s) in the Additional Data section. Unless and
-    /// until permitted by future standards action, name compression is not to
-    /// be used for this field.
-    ///
-    /// A target of "." means that the service is decidedly not available at
-    /// this domain.
-    pub target: Vec<u8>,
-}
-
-#[derive(Clone, Debug)]
-pub struct MX {
-    /// A 16-bit integer which specifies the preference given to this RR among
-    /// others at the same owner. Lower values are preferred
-    pub preference: u16,
-
-    /// A <domain-name> which specifies a host willing to act as a mail exchange
-    /// for the owner name
-    pub exchange: Vec<u8>,
-}
-
-#[allow(clippy::upper_case_acronyms)]
-#[derive(Clone, Debug)]
 pub enum RecordData {
     NoData,
 
     A(Ipv4Addr),
-    AAAA(Ipv6Addr),
-    CNAME(Vec<u8>),
-    SRV(SRV),
-    MX(MX),
     NS(Vec<u8>),
+    CNAME(Vec<u8>),
+    SOA {
+        ns: Vec<u8>,
+        mbox: Vec<u8>,
+        serial: u32,
+        refresh: u32,
+        retry: u32,
+        expire: u32,
+
+        // MinTTL is the default TTL of resources records which did not contain a
+        // TTL value and the TTL of negative responses
+        //
+        // RFC 2308 Section 4
+        min_ttl: u32,
+    },
+    PTR(Vec<u8>),
+    MX {
+        /// A 16-bit integer which specifies the preference given to this RR among
+        /// others at the same owner. Lower values are preferred
+        preference: u16,
+
+        /// A <domain-name> which specifies a host willing to act as a mail exchange
+        /// for the owner name
+        exchange: Vec<u8>,
+    },
     TXT(Vec<Vec<u8>>),
+    AAAA(Ipv6Addr),
+    SRV {
+        /// The priority of this target host. A client MUST attempt to contact the
+        /// target host with the lowest-numbered priority it can reach; target hosts
+        /// with the same priority SHOULD be tried in an order defined by the weight
+        /// field.
+        ///
+        /// The range is 0-65535. This is a 16-bit unsigned integer in network order.
+        priority: u16,
+
+        /// A server selection mechanism. The weight field specifies a relative weight
+        /// for entries with the same priority. Larger weights SHOULD be given a
+        /// proportionately higher probability of being selected.
+        ///
+        /// The range of this number if 0-65535, 16-bit unsigned integer in network order.
+        ///
+        /// Domain administrators SHOULD use Weight 0 when there isn't any server
+        /// selection to do, to make the RR easier to read for humans (less noisy).
+        weight: u16,
+
+        /// The port on this target host of this service.
+        ///
+        /// The range is 0-65535. This is a 16-bit unsigned integer in network order
+        /// This is often as specified in Assigned Numbers but need not be.
+        port: u16,
+
+        /// The domain name of the target host. There MUST be one or more address
+        /// records for this name, the name MUST NOT be an alias (in the sense of
+        /// RFC 1034 or RFC 2181). Implementors are urged, but not required, to
+        /// return the address record(s) in the Additional Data section. Unless and
+        /// until permitted by future standards action, name compression is not to
+        /// be used for this field.
+        ///
+        /// A target of "." means that the service is decidedly not available at
+        /// this domain.
+        target: Vec<u8>,
+    },
+    OPT(Vec<Opt>),
+
+    Unknown {
+        typ: RecordType,
+        data: Vec<u8>,
+    },
+}
+
+#[derive(Clone, Debug)]
+pub struct Opt {
+    pub code: u16,
+    pub data: Vec<u8>,
 }
 
 #[derive(Clone, Debug)]
@@ -586,6 +606,81 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
 
                     RecordData::A(Ipv4Addr::new(data[0], data[1], data[2], data[3]))
                 }
+                RecordType::NS => {
+                    let ns = decode_name(buf, &mut *pos)?;
+                    RecordData::NS(ns)
+                }
+                RecordType::CNAME => {
+                    let mut tmp = *pos;
+                    let cname = decode_name(buf, &mut tmp)?;
+                    RecordData::CNAME(cname)
+                }
+                RecordType::SOA => {
+                    let mut tmp = 0;
+                    let ns = decode_name(data, &mut tmp)?;
+                    let mbox = decode_name(data, &mut tmp)?;
+
+                    if data.len() - tmp < 20 {
+                        return Err(Error::TooSmall);
+                    }
+
+                    let serial = ((buf[tmp] as u32) << 24)
+                        | ((buf[tmp + 1] as u32) << 16)
+                        | ((buf[tmp + 2] as u32) << 8)
+                        | buf[tmp + 3] as u32;
+                    let refresh = ((buf[tmp + 4] as u32) << 24)
+                        | ((buf[tmp + 5] as u32) << 16)
+                        | ((buf[tmp + 6] as u32) << 8)
+                        | buf[tmp + 7] as u32;
+                    let retry = ((buf[tmp + 8] as u32) << 24)
+                        | ((buf[tmp + 9] as u32) << 16)
+                        | ((buf[tmp + 10] as u32) << 8)
+                        | buf[tmp + 11] as u32;
+                    let expire = ((buf[tmp + 12] as u32) << 24)
+                        | ((buf[tmp + 13] as u32) << 16)
+                        | ((buf[tmp + 14] as u32) << 8)
+                        | buf[tmp + 15] as u32;
+                    let min_ttl = ((buf[tmp + 16] as u32) << 24)
+                        | ((buf[tmp + 17] as u32) << 16)
+                        | ((buf[tmp + 18] as u32) << 8)
+                        | buf[tmp + 19] as u32;
+
+                    RecordData::SOA {
+                        ns,
+                        mbox,
+                        serial,
+                        refresh,
+                        retry,
+                        expire,
+                        min_ttl,
+                    }
+                }
+                RecordType::PTR => {
+                    let name = decode_name(data, &mut 0)?;
+                    RecordData::PTR(name)
+                }
+                RecordType::MX => {
+                    let preference = ((data[0] as u16) << 8) | data[1] as u16;
+                    let exchange = decode_name(buf, &mut *pos)?;
+
+                    RecordData::MX {
+                        preference,
+                        exchange,
+                    }
+                }
+                RecordType::TXT => {
+                    let mut fields = Vec::new();
+                    let mut tmp = 0;
+                    while tmp < rdlen {
+                        let len = data[tmp] as usize;
+                        tmp += 1;
+
+                        fields.push(data[tmp..tmp + len].to_vec());
+                        tmp += len;
+                    }
+
+                    RecordData::TXT(fields)
+                }
                 RecordType::AAAA => {
                     if data.len() != 16 {
                         return Err(Error::InvalidRecordData);
@@ -597,39 +692,41 @@ fn decode_records(count: u16, buf: &[u8], pos: &mut usize) -> Result<Vec<Record>
                         data[15],
                     ]))
                 }
-                RecordType::CNAME => {
-                    let mut tmp = *pos;
-                    let cname = decode_name(buf, &mut tmp)?;
-                    RecordData::CNAME(cname)
-                }
                 RecordType::SRV => {
-                    // name compression is not to be used for this field.
                     let priority = ((data[0] as u16) << 8) | data[1] as u16;
                     let weight = ((data[2] as u16) << 8) | data[3] as u16;
                     let port = ((data[4] as u16) << 8) | data[5] as u16;
+                    // name compression is not to be used for this field.
                     let target = decode_name(buf, &mut *pos)?;
 
-                    RecordData::SRV(SRV {
+                    RecordData::SRV {
                         priority,
                         weight,
                         port,
                         target,
-                    })
+                    }
                 }
-                RecordType::MX => {
-                    let preference = ((data[0] as u16) << 8) | data[1] as u16;
-                    let exchange = decode_name(buf, &mut *pos)?;
+                RecordType::OPT => {
+                    let mut options = Vec::new();
+                    let mut pos = 0;
 
-                    RecordData::MX(MX {
-                        preference,
-                        exchange,
-                    })
+                    while pos < rdlen {
+                        let code = ((data[0] as u16) << 8) | data[1] as u16;
+                        let len = ((data[2] as u16) << 8) | data[3] as u16;
+                        pos += 4;
+
+                        let data = Vec::from(&data[pos..pos + len as usize]);
+                        pos += len as usize;
+
+                        options.push(Opt { code, data });
+                    }
+
+                    RecordData::OPT(options)
                 }
-                RecordType::NS => {
-                    let ns = decode_name(buf, &mut *pos)?;
-                    RecordData::NS(ns)
-                }
-                _ => panic!("unknown typ {:?}", typ),
+                _ => RecordData::Unknown {
+                    typ,
+                    data: data.to_vec(),
+                },
             };
 
             *pos += rdlen;
