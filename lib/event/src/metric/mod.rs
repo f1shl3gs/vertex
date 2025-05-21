@@ -109,8 +109,6 @@ pub struct Metric {
 
     pub description: Option<String>,
 
-    pub unit: Option<String>,
-
     pub timestamp: Option<DateTime<Utc>>,
 
     pub value: MetricValue,
@@ -122,7 +120,6 @@ pub struct Metric {
 impl ByteSizeOf for Metric {
     fn allocated_bytes(&self) -> usize {
         self.series.allocated_bytes()
-            + self.unit.allocated_bytes()
             + self.description.allocated_bytes()
             + self.value.allocated_bytes()
             + self.metadata.allocated_bytes()
@@ -297,7 +294,6 @@ impl Metric {
                 tags,
             },
             description,
-            unit: None,
             timestamp: Some(ts),
             value,
             metadata: EventMetadata::default(),
@@ -316,7 +312,6 @@ impl Metric {
         Self {
             series: MetricSeries { name, tags },
             description,
-            unit: None,
             timestamp,
             value,
             metadata,
@@ -341,7 +336,6 @@ impl Metric {
                 tags: Tags::default(),
             },
             description: Some(desc.into()),
-            unit: None,
             timestamp: None,
             value: MetricValue::Gauge(v.into_f64()),
             metadata: EventMetadata::default(),
@@ -362,7 +356,6 @@ impl Metric {
                 tags: tags.into(),
             },
             description: Some(desc.into()),
-            unit: None,
             timestamp: None,
             value: MetricValue::Gauge(value.into_f64()),
             metadata: EventMetadata::default(),
@@ -382,7 +375,6 @@ impl Metric {
                 tags: Tags::default(),
             },
             description: Some(desc.into()),
-            unit: None,
             timestamp: None,
             value: MetricValue::Sum(v.into_f64()),
             metadata: EventMetadata::default(),
@@ -403,7 +395,6 @@ impl Metric {
                 tags: tags.into(),
             },
             description: Some(desc.into()),
-            unit: None,
             timestamp: None,
             value: MetricValue::Sum(value.into_f64()),
             metadata: EventMetadata::default(),
@@ -424,7 +415,6 @@ impl Metric {
                 tags: Tags::default(),
             },
             description: Some(desc.into()),
-            unit: None,
             timestamp: None,
             metadata: EventMetadata::default(),
             value: MetricValue::Histogram {
@@ -457,7 +447,6 @@ impl Metric {
                 tags: tags.into(),
             },
             description: Some(desc.into()),
-            unit: None,
             timestamp: None,
             metadata: EventMetadata::default(),
             value: MetricValue::Histogram {
@@ -488,7 +477,6 @@ impl Metric {
                 tags: Tags::default(),
             },
             description: Some(desc.into()),
-            unit: None,
             timestamp: None,
             metadata: EventMetadata::default(),
             value: MetricValue::Summary {

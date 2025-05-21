@@ -3983,7 +3983,6 @@ name = "tracing-internal"
 version = "0.1.0"
 dependencies = [
  "event",
- "tokio",
  "tracing",
  "tracing-core",
  "tracing-subscriber",
