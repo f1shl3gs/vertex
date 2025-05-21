@@ -596,6 +596,9 @@ mod tests {
 
     #[tokio::test]
     async fn check() {
+        let content = std::fs::read_to_string("/etc/hosts").unwrap();
+        println!("{}", content);
+
         use hyper::server::conn::http1;
 
         trace_init();
