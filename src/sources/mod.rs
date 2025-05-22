@@ -72,8 +72,8 @@ mod nginx_stub;
 pub mod node;
 #[cfg(feature = "sources-ntp")]
 mod ntp;
-#[cfg(feature = "sources-nvidia_smi")]
-mod nvidia_smi;
+#[cfg(feature = "sources-nvidia")]
+mod nvidia;
 #[cfg(feature = "sources-ping")]
 mod ping;
 #[cfg(feature = "sources-prometheus_pushgateway")]
