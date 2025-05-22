@@ -258,10 +258,12 @@ async fn scrape(path: &Path, infos: &[(String, String)]) -> Result<Vec<Metric>, 
             continue;
         }
 
-        let Some(uuid) = fields.get(uuid_index.unwrap()).map(|field| field.trim()) else {
+        let Some(uuid) = fields
+            .get(uuid_index.unwrap())
+            .map(|field| field.strip_prefix("GPU-").unwrap_or(field))
+        else {
             continue;
         };
-        let uuid = uuid.strip_prefix("GPU-").unwrap_or(uuid);
 
         {
             let mut tags = tags!(
@@ -297,30 +299,37 @@ async fn scrape(path: &Path, infos: &[(String, String)]) -> Result<Vec<Metric>, 
         }
 
         for (index, (column, field)) in columns.iter().zip(fields.iter()).enumerate() {
+            if *field == "[N/A]" {
+                continue;
+            }
+
             let mut multiplier = 1.0;
             let name = if let Some(stripped) = column.strip_suffix(" [W]") {
-                format!("{stripped}_watts")
+                format!("{}_watts", sanitize(stripped))
             } else if let Some(stripped) = column.strip_suffix(" [MHz]") {
                 multiplier = 1_000_000.0;
-                format!("{stripped}_clock_hz")
+                format!("{}_clock_hz", sanitize(stripped))
             } else if let Some(stripped) = column.strip_suffix(" [MiB]") {
                 multiplier = 1_048_576.0;
-                format!("{stripped}_bytes")
+                format!("{}_bytes", sanitize(stripped))
             } else if let Some(stripped) = column.strip_suffix(" [%]") {
                 multiplier = 0.01;
-                format!("{stripped}_ratio")
+                format!("{}_ratio", sanitize(stripped))
             } else if let Some(stripped) = column.strip_suffix(" [us]") {
                 multiplier = 0.000001;
-                format!("{stripped}_seconds")
+                format!("{}_seconds", sanitize(stripped))
             } else {
-                column.to_string()
+                sanitize(column)
             };
 
             let value = match *field {
                 "Enabled" | "Yes" | "Active" => 1.0,
                 "Disabled" | "No" | "Not Active" => 0.0,
+
+                // "compute_mode"
+                // The compute mode flag indicates whether individual or multiple compute applications may run on the GPU.
                 "Default" => 0.0,
-                "Exclusive_thread" => 1.0,
+                "Exclusive_Thread" => 1.0,
                 "Prohibited" => 2.0,
                 "Exclusive_Process" => 3.0,
 
@@ -364,7 +373,7 @@ async fn scrape(path: &Path, infos: &[(String, String)]) -> Result<Vec<Metric>, 
             };
 
             metrics.push(Metric::gauge_with_tags(
-                sanitize(&name),
+                name,
                 infos
                     .get(index)
                     .map(|info| info.1.as_str())
@@ -385,6 +394,10 @@ fn sanitize(input: &str) -> String {
     output.push_str("nvidia_");
 
     for c in input.chars() {
+        if c.is_whitespace() {
+            break;
+        }
+
         if c.is_ascii_uppercase() {
             output.push('_');
             output.push(c.to_ascii_lowercase());
