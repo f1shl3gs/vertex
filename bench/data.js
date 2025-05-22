@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747875705042,
+  "lastUpdate": 1747904639908,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8c3289a34f266ee8b327a45222215ff193a10e62",
-          "message": "chore(deps): bump serde_json from 1.0.139 to 1.0.140 (#2238)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.139 to 1.0.140.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.139...v1.0.140)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-10T00:19:22+08:00",
-          "tree_id": "0ebca59643e7d805db7ce040b1a83edd92d43c1e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c3289a34f266ee8b327a45222215ff193a10e62"
-        },
-        "date": 1741537282451,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 557470,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 541500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3924d18c3ed0a093655d32930566de0b80550e8b",
+          "message": "Merge pull request #2353 from f1shl3gs/sources/nvidia/refactor\n\nsources/nvidia: refactor and remove quick-xml",
+          "timestamp": "2025-05-22T17:01:25+08:00",
+          "tree_id": "4ced1660a9cc30417800070a455899e790b2c96e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3924d18c3ed0a093655d32930566de0b80550e8b"
+        },
+        "date": 1747904618003,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540730,
             "unit": "ns/op"
           }
         ]
