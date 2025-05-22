@@ -379,7 +379,7 @@ const fn default_count() -> usize {
     usize::MAX
 }
 
-#[configurable_component(source, name = "demo_logs")]
+#[configurable_component(source, name = "generate")]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// How many logs to produce.
@@ -402,7 +402,7 @@ struct Config {
 }
 
 #[async_trait]
-#[typetag::serde(name = "demo_logs")]
+#[typetag::serde(name = "generate")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         self.format.validate()?;

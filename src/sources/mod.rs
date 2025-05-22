@@ -8,8 +8,6 @@ mod chrony;
 mod clickhouse_metrics;
 #[cfg(feature = "sources-consul")]
 mod consul;
-#[cfg(feature = "sources-demo_logs")]
-mod demo_logs;
 #[cfg(feature = "sources-dnsmasq")]
 mod dnsmasq;
 #[cfg(feature = "sources-dnstap")]
@@ -26,6 +24,8 @@ mod exec;
 mod filestats;
 #[cfg(feature = "sources-fluent")]
 mod fluent;
+#[cfg(feature = "sources-generate")]
+mod generate;
 #[cfg(feature = "sources-grpc_check")]
 mod grpc_check;
 #[cfg(feature = "sources-haproxy")]
