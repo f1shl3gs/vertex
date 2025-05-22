@@ -159,7 +159,7 @@ extensions = [
 
 # Sources
 sources-audit = ["dep:libc"]
-sources-bind = []
+sources-bind = ["dep:quick-xml"]
 sources-chrony = []
 sources-clickhouse_metrics = []
 sources-consul = []
@@ -196,7 +196,7 @@ sources-netflow = []
 sources-nginx_stub = []
 sources-node_metrics = ["dep:libc"]
 sources-ntp = ["dep:ntp"]
-sources-nvidia_smi = ["dep:quick-xml"]
+sources-nvidia = ["tokio/process"]
 sources-ping = ["dep:socket2", "dep:parking_lot"]
 sources-prometheus_pushgateway = ["dep:base64"]
 sources-prometheus_scrape = ["dep:prometheus"]
@@ -250,7 +250,7 @@ sources = [
     "sources-nginx_stub",
     "sources-node_metrics",
     "sources-ntp",
-    "sources-nvidia_smi",
+    "sources-nvidia",
     "sources-ping",
     "sources-prometheus_pushgateway",
     "sources-prometheus_scrape",
