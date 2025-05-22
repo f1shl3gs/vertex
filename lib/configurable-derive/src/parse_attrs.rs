@@ -1,7 +1,7 @@
 use proc_macro2::{Literal, TokenStream};
 use quote::{ToTokens, TokenStreamExt, quote};
 use syn::spanned::Spanned;
-use syn::{Attribute, Expr, Lit, LitBool, LitStr, Path, Token, Type};
+use syn::{Attribute, Expr, Lit, LitBool, LitStr, Path, Token, Type, TypePath};
 
 pub const DOC: &str = "doc";
 pub const SERDE: &str = "serde";
@@ -112,6 +112,14 @@ impl FieldAttrs {
                     match name.as_str() {
                         "skip" => this.skip = true,
                         "required" => {
+                            if let Type::Path(TypePath { path, .. }) = &field.ty {
+                                if let Some(first) = path.segments.first() {
+                                    if first.ident == "Option" {
+                                        return Err(syn::Error::new(meta.path.span(), "required attribute cannot be applied to Option<T>"));
+                                    }
+                                }
+                            };
+
                             if meta.input.peek(Token![=]) {
                                 // #[configurable(require = true)] or #[configurable(require = false)]
                                 let value = meta.value()?;

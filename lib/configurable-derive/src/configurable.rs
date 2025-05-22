@@ -131,8 +131,11 @@ fn generate_named_struct_field(field: &syn::Field, field_attrs: FieldAttrs) -> T
         field.ident.clone().expect("filed has a name").to_string()
     };
 
-    let maybe_required =
-        field_attrs.required || (field_attrs.default.is_none() && field_attrs.default_fn.is_none());
+    let maybe_required = if field_attrs.default.is_some() || field_attrs.default_fn.is_some() {
+        false
+    } else {
+        field_attrs.required
+    };
 
     let maybe_description = match field_attrs.description {
         None => quote! { None },
