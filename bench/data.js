@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747904644980,
+  "lastUpdate": 1747904658293,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8c3289a34f266ee8b327a45222215ff193a10e62",
-          "message": "chore(deps): bump serde_json from 1.0.139 to 1.0.140 (#2238)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.139 to 1.0.140.\n- [Release notes](https://github.com/serde-rs/json/releases)\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.139...v1.0.140)\n\n---\nupdated-dependencies:\n- dependency-name: serde_json\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-10T00:19:22+08:00",
-          "tree_id": "0ebca59643e7d805db7ce040b1a83edd92d43c1e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c3289a34f266ee8b327a45222215ff193a10e62"
-        },
-        "date": 1741537319412,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.792,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 668.04,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ca61009bbb83f8f5b992857ccc5b5e70f37015e8",
           "message": "chore(deps): bump async-trait from 0.1.86 to 0.1.87 (#2237)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.86 to 0.1.87.\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.86...0.1.87)\n\n---\nupdated-dependencies:\n- dependency-name: async-trait\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-10T00:19:51+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 663.27,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3924d18c3ed0a093655d32930566de0b80550e8b",
+          "message": "Merge pull request #2353 from f1shl3gs/sources/nvidia/refactor\n\nsources/nvidia: refactor and remove quick-xml",
+          "timestamp": "2025-05-22T17:01:25+08:00",
+          "tree_id": "4ced1660a9cc30417800070a455899e790b2c96e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3924d18c3ed0a093655d32930566de0b80550e8b"
+        },
+        "date": 1747904636965,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.267,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 175.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 326.18,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 701.29,
             "unit": "ns/op"
           }
         ]
