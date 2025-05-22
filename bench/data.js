@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747875676215,
+  "lastUpdate": 1747875705042,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8eae9799c9a65ead68cfec1a45dc44c7421dafb8",
-          "message": "chore(deps): bump serde from 1.0.218 to 1.0.219 (#2251)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.218 to 1.0.219.\n- [Release notes](https://github.com/serde-rs/serde/releases)\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.218...v1.0.219)\n\n---\nupdated-dependencies:\n- dependency-name: serde\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-10T22:24:04+08:00",
-          "tree_id": "21d92d3ba481087149d471b6adb460922129664d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8eae9799c9a65ead68cfec1a45dc44c7421dafb8"
-        },
-        "date": 1741617328802,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38851.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "934a147b7da0e9eee0f30ccc2f41df527acc120d",
           "message": "chore(deps): bump syn from 2.0.99 to 2.0.100 (#2250)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.99 to 2.0.100.\n- [Release notes](https://github.com/dtolnay/syn/releases)\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.99...2.0.100)\n\n---\nupdated-dependencies:\n- dependency-name: syn\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2025-03-10T22:24:39+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 521,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37361.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10537cc937d8703e260bb86045d62ee38583df16",
+          "message": "Merge pull request #2352 from f1shl3gs/lib/configurable-derive/set_require_to_false_for_optional\n\nlib/configurable-derive: set required to false for Option<T>",
+          "timestamp": "2025-05-22T08:51:18+08:00",
+          "tree_id": "d16f8b9f5dca8bebe15768c26788dac1d548d393",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10537cc937d8703e260bb86045d62ee38583df16"
+        },
+        "date": 1747875683490,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 503,
             "unit": "s"
           },
           {
