@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747981119171,
+  "lastUpdate": 1747981519514,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "508b1bc803dfd51781251b77ab2fe0b2eb717972",
-          "message": "chore(deps): bump indexmap from 2.7.1 to 2.8.0 (#2253)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.7.1 to 2.8.0.\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/main/RELEASES.md)\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.7.1...2.8.0)\n\n---\nupdated-dependencies:\n- dependency-name: indexmap\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-11T05:20:27+08:00",
-          "tree_id": "c5dbed87d1bba699d5fbe1e5a5d1aa0dc59b4ab1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/508b1bc803dfd51781251b77ab2fe0b2eb717972"
-        },
-        "date": 1741642277083,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 568,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39007,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b67a4b2262597c6ff4fadf922beedc6e239c8e24",
           "message": "chore(deps): bump ring from 0.17.11 to 0.17.13 (#2247)\n\n* chore(deps): bump ring from 0.17.11 to 0.17.13\n\nBumps [ring](https://github.com/briansmith/ring) from 0.17.11 to 0.17.13.\n- [Changelog](https://github.com/briansmith/ring/blob/main/RELEASES.md)\n- [Commits](https://github.com/briansmith/ring/commits)\n\n---\nupdated-dependencies:\n- dependency-name: ring\n  dependency-type: indirect\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* try cross main\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2025-03-11T06:25:26+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37262,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7476dcff96013948fb68a7f4ed11199c21ba3d64",
+          "message": "Merge pull request #2358 from f1shl3gs/sources/dnsmasq/add_leases_count_metric\n\nsources/dnsmasq: add leases count metric",
+          "timestamp": "2025-05-23T14:14:49+08:00",
+          "tree_id": "abc4d74cdfa684073fec159a9b1c5806d709e905",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7476dcff96013948fb68a7f4ed11199c21ba3d64"
+        },
+        "date": 1747981497640,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 501,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37248.8,
             "unit": "KiB"
           }
         ]
