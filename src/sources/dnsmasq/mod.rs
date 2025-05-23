@@ -57,11 +57,8 @@ impl SourceConfig for Config {
         let resolver = Resolver::new(config, Hosts::default());
 
         let interval = self.interval;
-        let leases_path = if self.expose_leases {
-            Some(self.leases_path.clone())
-        } else {
-            None
-        };
+        let leases_path = self.leases_path.clone();
+        let expose_leases = self.expose_leases;
         let mut shutdown = cx.shutdown;
         let mut output = cx.output;
 
@@ -75,11 +72,7 @@ impl SourceConfig for Config {
                 }
 
                 let start = Instant::now();
-                let result = tokio::select! {
-                    _ = &mut shutdown => break,
-                    result = gather(&resolver, leases_path.as_ref()) => result
-                };
-
+                let result = gather(&resolver, &leases_path, expose_leases).await;
                 let elapsed = start.elapsed();
                 let up = result.is_ok();
 
@@ -123,7 +116,8 @@ const QUESTIONS: [&str; 7] = [
 
 async fn gather(
     resolver: &Resolver,
-    leases_path: Option<&PathBuf>,
+    leases_path: &PathBuf,
+    expose_leases: bool,
 ) -> std::io::Result<Vec<Metric>> {
     let mut tasks = FuturesUnordered::from_iter(QUESTIONS.into_iter().map(|question| async move {
         (
@@ -238,77 +232,57 @@ async fn gather(
         }
     }
 
-    if let Some(leases_path) = leases_path {
-        match load_lease_file(leases_path) {
-            Ok(leases) => {
-                metrics.push(Metric::gauge(
-                    "dnsmasq_leases",
-                    "Number of DHCP leases handed out",
-                    leases.len() as f64,
-                ));
-
-                for lease in leases {
-                    metrics.push(Metric::gauge_with_tags(
-                        "dnsmasq_lease_expiry",
-                        "Expiry time for active DHCP leases",
-                        lease.expiry,
-                        tags!(
-                            "mac" => lease.mac,
-                            "ip" => lease.ip,
-                            "computer" => lease.computer,
-                            "client_id" => lease.client_id,
-                        ),
-                    ))
-                }
-            }
-            Err(err) => {
-                warn!(
-                    message = "load lease file failed",
-                    path = ?leases_path,
-                    %err,
-                );
-            }
+    let mut count = 0;
+    if let Err(err) = load_leases_with(leases_path, |expire, mac, ip, computer, client_id| {
+        count += 1;
+        if !expose_leases {
+            return;
         }
+
+        let Ok(expiry) = expire.parse::<u64>() else {
+            return;
+        };
+
+        metrics.push(Metric::gauge_with_tags(
+            "dnsmasq_lease_expiry",
+            "Expiry time for active DHCP leases",
+            expiry,
+            tags!(
+                "mac" => mac,
+                "ip" => ip,
+                "computer" => computer,
+                "client_id" => client_id,
+            ),
+        ));
+    }) {
+        warn!(message = "failed to load DHCP leases", ?err, ?leases_path);
     }
+
+    metrics.push(Metric::gauge(
+        "dnsmasq_leases",
+        "Number of DHCP leases handed out",
+        count,
+    ));
 
     Ok(metrics)
 }
 
-struct Lease {
-    expiry: u64,
-    mac: String,
-    ip: String,
-    computer: String,
-    client_id: String,
-}
-
-fn load_lease_file(path: &PathBuf) -> std::io::Result<Vec<Lease>> {
+fn load_leases_with<F>(path: &PathBuf, mut f: F) -> std::io::Result<()>
+where
+    F: FnMut(&str, &str, &str, &str, &str),
+{
     let file = std::fs::File::open(path)?;
     let mut lines = BufReader::new(file).lines();
-
-    let mut leases = vec![];
     while let Some(Ok(line)) = lines.next() {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() != 5 {
             continue;
         }
 
-        let Ok(expiry) = parts[0].parse() else {
-            warn!(message = "parse lease line failed", line);
-
-            continue;
-        };
-
-        leases.push(Lease {
-            expiry,
-            mac: parts[1].to_string(),
-            ip: parts[2].to_string(),
-            computer: parts[3].to_string(),
-            client_id: parts[4].to_string(),
-        });
+        f(parts[0], parts[1], parts[2], parts[3], parts[4]);
     }
 
-    Ok(leases)
+    Ok(())
 }
 
 #[cfg(test)]
