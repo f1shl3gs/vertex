@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1747981526943,
+  "lastUpdate": 1748047697129,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "934a147b7da0e9eee0f30ccc2f41df527acc120d",
-          "message": "chore(deps): bump syn from 2.0.99 to 2.0.100 (#2250)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.99 to 2.0.100.\n- [Release notes](https://github.com/dtolnay/syn/releases)\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.99...2.0.100)\n\n---\nupdated-dependencies:\n- dependency-name: syn\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-10T22:24:39+08:00",
-          "tree_id": "1567d3e880b0c7733f242b90f41881c6fdd0ebc7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/934a147b7da0e9eee0f30ccc2f41df527acc120d"
-        },
-        "date": 1741616823871,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 550380,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 543580,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c36bda1a36393d99fadcc79c9e1b099492b1e03f",
+          "message": "Merge pull request #2359 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.6\n\nchore(deps): bump hyper-rustls from 0.27.5 to 0.27.6",
+          "timestamp": "2025-05-24T08:45:48+08:00",
+          "tree_id": "70629d8a132b629f7ced4f1f35aae12cc6ba69eb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c36bda1a36393d99fadcc79c9e1b099492b1e03f"
+        },
+        "date": 1748047675544,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537300,
             "unit": "ns/op"
           }
         ]
