@@ -7,5 +7,5 @@ edition = "2024"
 hyper = { version = "1.6.0", default-features = false, features = ["client"] }
 hyper-util = { version = "0.1.12", default-features = false, features = ["client"] }
 pin-project-lite = { version = "0.2.16", default-features = false }
-tokio = { version = "1.45.0", default-features = false }
+tokio = { version = "1.45.1", default-features = false }
 tower = { version = "0.5.2", default-features = false }
