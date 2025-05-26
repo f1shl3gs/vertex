@@ -9,16 +9,14 @@ use event::Events;
 use futures::{Stream, StreamExt};
 use metrics::{Attributes, Counter};
 
-use crate::config::Output;
-
 const CHUNK_SIZE: usize = 1024;
 pub const DEFAULT_OUTPUT: &str = "_default";
 
 #[derive(Debug)]
 pub struct Builder {
     buf_size: usize,
-    inner: Option<Inner>,
-    named_inners: HashMap<String, Inner>,
+    inner: Option<Output>,
+    named_inners: HashMap<String, Output>,
 }
 
 impl Builder {
@@ -34,11 +32,11 @@ impl Builder {
         &mut self,
         component: impl Into<String>,
         component_type: &'static str,
-        output: Output,
+        output: crate::config::Output,
     ) -> LimitedReceiver<Events> {
         match output.port {
             None => {
-                let (inner, rx) = Inner::new_with_buffer(
+                let (inner, rx) = Output::new_with_buffer(
                     self.buf_size,
                     component.into(),
                     component_type.into(),
@@ -49,7 +47,7 @@ impl Builder {
                 rx
             }
             Some(name) => {
-                let (inner, rx) = Inner::new_with_buffer(
+                let (inner, rx) = Output::new_with_buffer(
                     self.buf_size,
                     component.into(),
                     component_type.into(),
@@ -64,16 +62,16 @@ impl Builder {
 
     pub fn build(self) -> Pipeline {
         Pipeline {
-            inner: self.inner,
-            named_inners: self.named_inners,
+            default: self.inner.expect("no default output"),
+            named: self.named_inners,
         }
     }
 }
 
 #[derive(Clone, Debug)]
 pub struct Pipeline {
-    inner: Option<Inner>,
-    named_inners: HashMap<String, Inner>,
+    default: Output,
+    named: HashMap<String, Output>,
 }
 
 impl Pipeline {
@@ -86,15 +84,11 @@ impl Pipeline {
     }
 
     pub async fn send(&mut self, events: impl Into<Events>) -> Result<(), ClosedError> {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send(events.into())
-            .await
+        self.default.send(events.into()).await
     }
 
     pub async fn send_named(&mut self, name: &str, events: Events) -> Result<(), ClosedError> {
-        self.named_inners
+        self.named
             .get_mut(name)
             .expect("unknown output")
             .send(events)
@@ -106,11 +100,7 @@ impl Pipeline {
         E: Into<Events> + ByteSizeOf,
         I: IntoIterator<Item = E>,
     {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send_batch(events)
-            .await
+        self.default.send_batch(events).await
     }
 
     pub async fn send_stream<S, E>(&mut self, stream: S) -> Result<(), ClosedError>
@@ -118,11 +108,7 @@ impl Pipeline {
         S: Stream<Item = E> + Unpin,
         E: Into<Events> + ByteSizeOf,
     {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send_stream(stream)
-            .await
+        self.default.send_stream(stream).await
     }
 }
 
@@ -130,12 +116,12 @@ impl Pipeline {
 impl Pipeline {
     pub fn new_with_buffer(n: usize) -> (Self, LimitedReceiver<Events>) {
         let (inner, rx) =
-            Inner::new_with_buffer(n, "".into(), "".into(), DEFAULT_OUTPUT.to_owned());
+            Output::new_with_buffer(n, "".into(), "".into(), DEFAULT_OUTPUT.to_owned());
 
         (
             Self {
-                inner: Some(inner),
-                named_inners: Default::default(),
+                default: inner,
+                named: Default::default(),
             },
             rx,
         )
@@ -173,7 +159,7 @@ impl Pipeline {
         status: event::EventStatus,
         name: String,
     ) -> impl Stream<Item = Events> + Unpin {
-        let (inner, recv) = Inner::new_with_buffer(128 * 1024, "".into(), "".into(), name.clone());
+        let (inner, recv) = Output::new_with_buffer(128 * 1024, "".into(), "".into(), name.clone());
         let recv = recv.map(move |mut events| {
             events.for_each_event(|mut event| {
                 let metadata = event.metadata_mut();
@@ -184,13 +170,13 @@ impl Pipeline {
             events
         });
 
-        self.named_inners.insert(name, inner);
+        self.named.insert(name, inner);
         recv
     }
 }
 
 #[derive(Clone, Debug)]
-struct Inner {
+struct Output {
     inner: LimitedSender<Events>,
 
     // metrics
@@ -198,7 +184,7 @@ struct Inner {
     sent_bytes: Counter,
 }
 
-impl Inner {
+impl Output {
     fn new_with_buffer(
         capacity: usize,
         component: String,
