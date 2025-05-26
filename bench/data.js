@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748231437909,
+  "lastUpdate": 1748231449568,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "508b1bc803dfd51781251b77ab2fe0b2eb717972",
-          "message": "chore(deps): bump indexmap from 2.7.1 to 2.8.0 (#2253)\n\nBumps [indexmap](https://github.com/indexmap-rs/indexmap) from 2.7.1 to 2.8.0.\n- [Changelog](https://github.com/indexmap-rs/indexmap/blob/main/RELEASES.md)\n- [Commits](https://github.com/indexmap-rs/indexmap/compare/2.7.1...2.8.0)\n\n---\nupdated-dependencies:\n- dependency-name: indexmap\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2025-03-11T05:20:27+08:00",
-          "tree_id": "c5dbed87d1bba699d5fbe1e5a5d1aa0dc59b4ab1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/508b1bc803dfd51781251b77ab2fe0b2eb717972"
-        },
-        "date": 1741641784776,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.422,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 166.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 311.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 663.02,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b67a4b2262597c6ff4fadf922beedc6e239c8e24",
           "message": "chore(deps): bump ring from 0.17.11 to 0.17.13 (#2247)\n\n* chore(deps): bump ring from 0.17.11 to 0.17.13\n\nBumps [ring](https://github.com/briansmith/ring) from 0.17.11 to 0.17.13.\n- [Changelog](https://github.com/briansmith/ring/blob/main/RELEASES.md)\n- [Commits](https://github.com/briansmith/ring/commits)\n\n---\nupdated-dependencies:\n- dependency-name: ring\n  dependency-type: indirect\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* try cross main\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2025-03-11T06:25:26+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 676.84,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0e3fd995384f509e664ce5806efc38c927127a87",
+          "message": "Merge pull request #2361 from f1shl3gs/lib/framework/simplify_pipeline\n\nlib/framework: simplify pipeline",
+          "timestamp": "2025-05-26T11:47:58+08:00",
+          "tree_id": "07a37d4e2e8fbfefa4fff71ed2add35b9c285834",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0e3fd995384f509e664ce5806efc38c927127a87"
+        },
+        "date": 1748231428255,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.871,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 696.89,
             "unit": "ns/op"
           }
         ]
