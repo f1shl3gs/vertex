@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748311315213,
+  "lastUpdate": 1748366454601,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "83dcbae7c4fe9035c2f7ef34bfed1d32788a1664",
-          "message": "Merge pull request #2254 from f1shl3gs/extensions/http_observer\n\nextensions/http_observer: init",
-          "timestamp": "2025-03-11T08:48:51+08:00",
-          "tree_id": "1a4fca73c9920aedb1ba9913ebc5bc5b57dbd4fb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83dcbae7c4fe9035c2f7ef34bfed1d32788a1664"
-        },
-        "date": 1741654247445,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 546900,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 536970,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "185ebadfcd4e34d0a2145ec2936aeaec2fbe6e15",
+          "message": "Merge pull request #2364 from f1shl3gs/dependabot/cargo/hyper-util-0.1.13\n\nchore(deps): bump hyper-util from 0.1.12 to 0.1.13",
+          "timestamp": "2025-05-28T01:18:29+08:00",
+          "tree_id": "6fb981931baeb225da4f0b838d58d9c27618c62f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/185ebadfcd4e34d0a2145ec2936aeaec2fbe6e15"
+        },
+        "date": 1748366432956,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 541140,
             "unit": "ns/op"
           }
         ]
