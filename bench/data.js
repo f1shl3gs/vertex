@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748310845911,
+  "lastUpdate": 1748310854952,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b67a4b2262597c6ff4fadf922beedc6e239c8e24",
-          "message": "chore(deps): bump ring from 0.17.11 to 0.17.13 (#2247)\n\n* chore(deps): bump ring from 0.17.11 to 0.17.13\n\nBumps [ring](https://github.com/briansmith/ring) from 0.17.11 to 0.17.13.\n- [Changelog](https://github.com/briansmith/ring/blob/main/RELEASES.md)\n- [Commits](https://github.com/briansmith/ring/commits)\n\n---\nupdated-dependencies:\n- dependency-name: ring\n  dependency-type: indirect\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\n\n* try cross main\n\n---------\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2025-03-11T06:25:26+08:00",
-          "tree_id": "58a49ded4bec6b149b848b01a289a2a77a1e5470",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b67a4b2262597c6ff4fadf922beedc6e239c8e24"
-        },
-        "date": 1741645679742,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.813,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 166.83,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 306.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 702.93,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 696.89,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d72cae22a88c7ca8bd7006ab0d97fd504daf07f4",
+          "message": "Merge pull request #2362 from f1shl3gs/dependabot/cargo/socket2-0.5.10\n\nchore(deps): bump socket2 from 0.5.9 to 0.5.10",
+          "timestamp": "2025-05-27T09:51:19+08:00",
+          "tree_id": "66d78f423f27d70b154800a07c8703bf9ecfce55",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d72cae22a88c7ca8bd7006ab0d97fd504daf07f4"
+        },
+        "date": 1748310833479,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.423,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 166.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 323.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 674.55,
             "unit": "ns/op"
           }
         ]
