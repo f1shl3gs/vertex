@@ -140,20 +140,6 @@ mod tests {
     fn generate_config() {
         crate::testing::generate_config::<Config>()
     }
-
-    #[tokio::test]
-    async fn unit() {
-        let mut client = Client::connect().await.unwrap();
-        let include = default_include();
-        let exclude = default_exclude();
-
-        let metrics = units::collect(&mut client, &include, &exclude)
-            .await
-            .unwrap();
-        for metric in metrics {
-            println!("{}", metric);
-        }
-    }
 }
 
 /*
@@ -162,18 +148,6 @@ mod dump {
     use super::*;
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
     use tokio::net::{UnixSocket, UnixStream};
-
-    #[test]
-    fn bytes() {
-        let n = [
-            108, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 109, 0, 0, 0, 1, 1, 111, 0, 21, 0, 0, 0, 47, 111,
-            114, 103, 47, 102, 114, 101, 101, 100, 101, 115, 107, 116, 111, 112, 47, 68, 66, 117,
-            115, 0, 0, 0, 2, 1, 115, 0, 20, 0, 0, 0, 111, 114, 103, 46, 102, 114, 101, 101, 100,
-            101, 115, 107, 116, 111, 112, 46, 68, 66, 117, 115, 0, 0, 0, 0, 3, 1, 115, 0, 5, 0, 0,
-            0, 72, 101, 108, 108, 111, 0, 0, 0, 6, 1, 115, 0, 20, 0, 0, 0, 111, 114, 103, 46, 102,
-            114, 101, 101, 100, 101, 115, 107, 116, 111, 112, 46, 68, 66, 117, 115, 0, 0, 0, 0,
-        ];
-    }
 
     #[tokio::test]
     async fn unix_dump() {
