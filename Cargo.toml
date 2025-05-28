@@ -208,6 +208,7 @@ sources-sflow = []
 sources-socket = []
 sources-static_metrics = []
 sources-syslog = ["codecs/syslog"]
+sources-systemd = []
 sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs", "dep:finalize"]
 sources-zookeeper = []
 
@@ -262,6 +263,7 @@ sources = [
     "sources-socket",
     "sources-static_metrics",
     "sources-syslog",
+    "sources-systemd",
     "sources-tail",
     "sources-zookeeper",
 ]

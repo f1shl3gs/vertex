@@ -96,6 +96,8 @@ pub mod socket;
 mod static_metrics;
 #[cfg(feature = "sources-syslog")]
 pub mod syslog;
+#[cfg(feature = "sources-systemd")]
+mod systemd;
 #[cfg(feature = "sources-tail")]
 mod tail;
 #[cfg(feature = "sources-zookeeper")]
