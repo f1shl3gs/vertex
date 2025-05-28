@@ -89,7 +89,7 @@ pub async fn collect(
         .await?;
 
     for unit in units {
-        if include.is_match(unit.name.as_str()) && !exclude.is_match(unit.name.as_str()) {
+        if !include.is_match(unit.name.as_str()) || exclude.is_match(unit.name.as_str()) {
             continue;
         }
 
