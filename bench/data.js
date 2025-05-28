@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748433373778,
+  "lastUpdate": 1748433388901,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0c84d1f759dde992f6aa958ecb2ad7409950882f",
-          "message": "Merge pull request #2259 from f1shl3gs/dependabot/cargo/kube-0.99.0\n\nchore(deps): bump kube from 0.98.0 to 0.99.0",
-          "timestamp": "2025-03-13T11:45:26+08:00",
-          "tree_id": "64033b565442673c506002d23c20a75a953f8fcf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0c84d1f759dde992f6aa958ecb2ad7409950882f"
-        },
-        "date": 1741838173072,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 569,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38996.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ca43575d3953fb304c74618702ac949694bdb18a",
           "message": "Merge pull request #2262 from f1shl3gs/dependabot/cargo/tokio-util-0.7.14\n\nchore(deps): bump tokio-util from 0.7.13 to 0.7.14",
           "timestamp": "2025-03-14T12:38:26+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 512,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37434.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da062de29a5a6b3b9753bca8dd5cda4ac8c217ca",
+          "message": "Merge pull request #2367 from f1shl3gs/sources/systemd/fix_unit_filter\n\nsources/systemd: fix units filter",
+          "timestamp": "2025-05-28T19:46:02+08:00",
+          "tree_id": "5f29032ea5595e375bfa06b33d6249c50d785c5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da062de29a5a6b3b9753bca8dd5cda4ac8c217ca"
+        },
+        "date": 1748433367387,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 516,
             "unit": "s"
           },
           {
