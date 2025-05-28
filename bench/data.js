@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748366957377,
+  "lastUpdate": 1748429678840,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f75445213fbcc49a2b2e80f98d0bda4fbecd2f6d",
-          "message": "Merge pull request #2256 from f1shl3gs/dependabot/cargo/http-1.3.1\n\nchore(deps): bump http from 1.2.0 to 1.3.1",
-          "timestamp": "2025-03-12T10:49:47+08:00",
-          "tree_id": "0ed0d840dd1e8e6a6a709032e11ef632ac1e7920",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f75445213fbcc49a2b2e80f98d0bda4fbecd2f6d"
-        },
-        "date": 1741747900007,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 551180,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 539610,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9da47cf876a8f4ec6391d9d18e0bdc9798fb6489",
+          "message": "Merge pull request #2366 from f1shl3gs/sources/systemd\n\nsources/systemd: init",
+          "timestamp": "2025-05-28T18:52:10+08:00",
+          "tree_id": "af3276b46fca6aa4988eb6ea458d5c60aa0c7466",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9da47cf876a8f4ec6391d9d18e0bdc9798fb6489"
+        },
+        "date": 1748429656485,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 542150,
             "unit": "ns/op"
           }
         ]
