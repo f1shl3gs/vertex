@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748430148038,
+  "lastUpdate": 1748432916570,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dcc48d4a6e4e7a4304f2920804dc988f7be02078",
-          "message": "Merge pull request #2255 from f1shl3gs/dependabot/cargo/http-body-util-0.1.3\n\nchore(deps): bump http-body-util from 0.1.2 to 0.1.3",
-          "timestamp": "2025-03-12T11:05:50+08:00",
-          "tree_id": "eac7c81162b3b042dc0c5580774bcf5d6dd57761",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dcc48d4a6e4e7a4304f2920804dc988f7be02078"
-        },
-        "date": 1741748873157,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 547130,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 542150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da062de29a5a6b3b9753bca8dd5cda4ac8c217ca",
+          "message": "Merge pull request #2367 from f1shl3gs/sources/systemd/fix_unit_filter\n\nsources/systemd: fix units filter",
+          "timestamp": "2025-05-28T19:46:02+08:00",
+          "tree_id": "5f29032ea5595e375bfa06b33d6249c50d785c5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da062de29a5a6b3b9753bca8dd5cda4ac8c217ca"
+        },
+        "date": 1748432894967,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540550,
             "unit": "ns/op"
           }
         ]
