@@ -67,11 +67,9 @@ impl SourceConfig for Config {
                     }
                 };
 
-                let mut metrics = Vec::with_capacity(128);
+                let mut metrics = Vec::with_capacity(1024);
                 match resolved::collect(&mut client).await {
-                    Ok(partial) => {
-                        metrics.extend(partial);
-                    }
+                    Ok(partial) => metrics.extend(partial),
                     Err(err) => {
                         warn!(
                             message = "Failed to collect resolved metrics",
