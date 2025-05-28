@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748430124949,
+  "lastUpdate": 1748430148038,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4f12ac8aecbd1376ea820c9b6d027355be7ff2f2",
-          "message": "Merge pull request #2260 from f1shl3gs/dependabot/cargo/quote-1.0.40\n\nchore(deps): bump quote from 1.0.39 to 1.0.40",
-          "timestamp": "2025-03-13T11:40:49+08:00",
-          "tree_id": "f839bf67ade25db357747e01a73227a6c22a1a4a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4f12ac8aecbd1376ea820c9b6d027355be7ff2f2"
-        },
-        "date": 1741837901810,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38995.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0c84d1f759dde992f6aa958ecb2ad7409950882f",
           "message": "Merge pull request #2259 from f1shl3gs/dependabot/cargo/kube-0.99.0\n\nchore(deps): bump kube from 0.98.0 to 0.99.0",
           "timestamp": "2025-03-13T11:45:26+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37303.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9da47cf876a8f4ec6391d9d18e0bdc9798fb6489",
+          "message": "Merge pull request #2366 from f1shl3gs/sources/systemd\n\nsources/systemd: init",
+          "timestamp": "2025-05-28T18:52:10+08:00",
+          "tree_id": "af3276b46fca6aa4988eb6ea458d5c60aa0c7466",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9da47cf876a8f4ec6391d9d18e0bdc9798fb6489"
+        },
+        "date": 1748430125666,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 512,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37434.3,
             "unit": "KiB"
           }
         ]
