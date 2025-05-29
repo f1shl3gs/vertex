@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748542692187,
+  "lastUpdate": 1748542824264,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b",
-          "message": "Merge pull request #2258 from f1shl3gs/misc/use_asyncfn\n\nmisc: use AsyncFn*",
-          "timestamp": "2025-03-12T13:06:29+08:00",
-          "tree_id": "b7b0bca8ab8179ed28c62da9887bfd413f2e3f63",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee9f1301f7c1f3ca2818e9bf7503fd9d29d8bf2b"
-        },
-        "date": 1741756139744,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.52,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 332.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 694.24,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4f12ac8aecbd1376ea820c9b6d027355be7ff2f2",
           "message": "Merge pull request #2260 from f1shl3gs/dependabot/cargo/quote-1.0.40\n\nchore(deps): bump quote from 1.0.39 to 1.0.40",
           "timestamp": "2025-03-13T11:40:49+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 705.47,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "27f60f62f28e096689064c8ab88f77ef4ab7f21b",
+          "message": "Merge pull request #2368 from f1shl3gs/sources/systemd/reuse_buffers\n\nsources/systemd: always try to reuse buffers, which will reduce memory usage",
+          "timestamp": "2025-05-30T02:15:20+08:00",
+          "tree_id": "cef4343b190654de7a2c96826a7088e8f70bec0a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/27f60f62f28e096689064c8ab88f77ef4ab7f21b"
+        },
+        "date": 1748542802713,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 31.532,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 193.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 344.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 714.07,
             "unit": "ns/op"
           }
         ]
