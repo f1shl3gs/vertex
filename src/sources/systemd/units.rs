@@ -5,9 +5,23 @@ use super::dbus::{Client, Error, Variant, padding};
 
 #[derive(Debug)]
 struct Unit {
+    /// The primary unit name as string
     name: String,
+    // The human readable description string
+    // description: String,
+    // The load state (i.e. whether the unit file has been loaded successfully)
+    // load_state: string,
+    /// The active state (i.e. whether the unit is currently started or not)
     active_state: String,
+    // The sub state (a more fine-grained version of the active state that is specific to the unit type, which the active state is not)
+    // sub_state: String,
+    // A unit that is being followed in its state by this unit, if there is any, otherwise the empty string.
+    // followed: String,
+    /// The unit object path
     path: String,
+    // job_id: u32,         // If there is a job queued for the job unit the numeric job id, 0 otherwise
+    // job_type: String     // The job type as string
+    // job_path: String     // The job object path
 }
 
 impl Variant for Vec<Unit> {
@@ -38,20 +52,20 @@ impl Variant for Vec<Unit> {
 
         while pos < input.len() {
             let name = read_string(input, &mut pos);
-            // let _description = self.read_str();
+            // skip `description`
             skip_string(input, &mut pos);
             let load_state = read_string(input, &mut pos);
             let active_state = read_string(input, &mut pos);
-            // let _sub_state = self.read_str();
+            // skip sub_state
             skip_string(input, &mut pos);
-            // let _followed = self.read_str();
+            // skip followed
             skip_string(input, &mut pos);
             let path = read_string(input, &mut pos);
-            // let _job_id = self.read_u32_le();
+            // skip job_id
             pos += 4;
-            // let _job_type = self.read_str();
+            // skip `job_type`
             skip_string(input, &mut pos);
-            // let _job_path = self.read_str();
+            // skip `job_path`
             skip_string(input, &mut pos);
 
             pos += padding(pos, 8);
@@ -75,9 +89,8 @@ pub async fn collect(
     client: &mut Client,
     include: &Regex,
     exclude: &Regex,
+    version: f64,
 ) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
-
     let units = client
         .call::<Vec<Unit>>(
             "/org/freedesktop/systemd1",
@@ -88,12 +101,14 @@ pub async fn collect(
         )
         .await?;
 
+    // 20 is just a guess, and it should be fine
+    let mut metrics = Vec::with_capacity(units.len() * 20);
     for unit in units {
         if !include.is_match(unit.name.as_str()) || exclude.is_match(unit.name.as_str()) {
             continue;
         }
 
-        let partial = collect_unit(client, unit).await?;
+        let partial = collect_unit(client, unit, version).await?;
         metrics.extend(partial);
     }
 
@@ -102,7 +117,7 @@ pub async fn collect(
 
 const STATE_NAMES: [&str; 5] = ["active", "activating", "deactivating", "inactive", "failed"];
 
-async fn collect_unit(client: &mut Client, unit: Unit) -> Result<Vec<Metric>, Error> {
+async fn collect_unit(client: &mut Client, unit: Unit, version: f64) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
 
     let typ = if let Some(pos) = unit.name.rfind('.') {
@@ -202,66 +217,39 @@ async fn collect_unit(client: &mut Client, unit: Unit) -> Result<Vec<Metric>, Er
 
     match typ {
         "service" => {
-            // service info
-            let service_type = client
-                .call::<String>(
-                    unit.path.as_str(),
-                    "Get",
-                    "org.freedesktop.systemd1",
-                    "org.freedesktop.DBus.Properties",
-                    &["org.freedesktop.systemd1.Service", "Type"],
-                )
-                .await?;
-
-            metrics.push(Metric::gauge_with_tags(
-                "systemd_unit_info",
-                "Mostly-static metadata for all unit types",
-                1,
-                tags!(
-                    "name" => unit.name.as_str(),
-                    "type" => typ,
-                    "mount_type" => "",
-                    "service_type" => service_type
-                ),
-            ));
-
-            let start = if unit.active_state == "active" {
-                client
-                    .call::<u64>(
-                        unit.path.as_str(),
-                        "Get",
-                        "org.freedesktop.systemd1",
-                        "org.freedesktop.DBus.Properties",
-                        &["org.freedesktop.systemd1.Unit", "ActiveEnterTimestamp"],
-                    )
-                    .await?
-            } else {
-                0
-            };
-
-            metrics.push(Metric::gauge_with_tags(
-                "systemd_unit_start_time_seconds",
-                "Start time of the unit since unix epoch in seconds.",
-                start as f64 / 1_000_000.0,
-                tags!(
-                    "name" => unit.name.as_str(),
-                    "type" => typ,
-                ),
-            ));
-
-            match collect_service_tasks(client, &unit, typ).await {
+            match collect_service_info(client, &unit, typ).await {
                 Ok(partial) => metrics.extend(partial),
                 Err(err) => {
                     warn!(
-                        message = "Failed to collect service tasks metrics",
+                        message = "failed to collect service info",
                         %err
                     );
+                }
+            }
 
-                    return Err(err);
+            if version >= 235.0 {
+                match collect_service_restart(client, &unit).await {
+                    Ok(partial) => metrics.extend(partial),
+                    Err(err) => {
+                        warn!(
+                            message = "failed to collect service restart",
+                            %err
+                        )
+                    }
+                }
+
+                match collect_ip_accounting(client, &unit).await {
+                    Ok(partial) => metrics.extend(partial),
+                    Err(err) => {
+                        warn!(
+                            message = "failed to collect ip accounting",
+                            %err
+                        )
+                    }
                 }
             }
         }
-        "mount" => match collect_mount_info(client, &unit, typ).await {
+        "mount" => match collect_mount_info(client, &unit).await {
             Ok(partial) => metrics.extend(partial),
             Err(err) => {
                 warn!(
@@ -279,7 +267,7 @@ async fn collect_unit(client: &mut Client, unit: Unit) -> Result<Vec<Metric>, Er
                 );
             }
         },
-        "socket" => match collect_socket_conn(client, &unit).await {
+        "socket" => match collect_socket(client, &unit).await {
             Ok(partial) => metrics.extend(partial),
             Err(err) => {
                 warn!(
@@ -289,6 +277,73 @@ async fn collect_unit(client: &mut Client, unit: Unit) -> Result<Vec<Metric>, Er
             }
         },
         _ => {}
+    }
+
+    Ok(metrics)
+}
+
+async fn collect_service_info(
+    client: &mut Client,
+    unit: &Unit,
+    typ: &str,
+) -> Result<Vec<Metric>, Error> {
+    let mut metrics = Vec::new();
+
+    let service_type = client
+        .call::<String>(
+            unit.path.as_str(),
+            "Get",
+            "org.freedesktop.systemd1",
+            "org.freedesktop.DBus.Properties",
+            &["org.freedesktop.systemd1.Service", "Type"],
+        )
+        .await?;
+
+    metrics.push(Metric::gauge_with_tags(
+        "systemd_unit_info",
+        "Mostly-static metadata for all unit types",
+        1,
+        tags!(
+            "name" => unit.name.as_str(),
+            "type" => typ,
+            "service_type" => service_type
+        ),
+    ));
+
+    let start = if unit.active_state == "active" {
+        client
+            .call::<u64>(
+                unit.path.as_str(),
+                "Get",
+                "org.freedesktop.systemd1",
+                "org.freedesktop.DBus.Properties",
+                &["org.freedesktop.systemd1.Unit", "ActiveEnterTimestamp"],
+            )
+            .await?
+    } else {
+        0
+    };
+
+    metrics.push(Metric::gauge_with_tags(
+        "systemd_unit_start_time_seconds",
+        "Start time of the unit since unix epoch in seconds.",
+        start as f64 / 1_000_000.0,
+        tags!(
+            "name" => unit.name.as_str(),
+            "type" => typ,
+        ),
+    ));
+
+    match collect_service_tasks(client, unit, typ).await {
+        Ok(partial) => metrics.extend(partial),
+        Err(err) => {
+            warn!(
+                message = "Failed to collect service tasks metrics",
+                %err
+            );
+
+            return Err(err);
+        }
     }
 
     Ok(metrics)
@@ -346,11 +401,7 @@ async fn collect_service_tasks(
     Ok(metrics)
 }
 
-async fn collect_mount_info(
-    client: &mut Client,
-    unit: &Unit,
-    typ: &str,
-) -> Result<Vec<Metric>, Error> {
+async fn collect_mount_info(client: &mut Client, unit: &Unit) -> Result<Vec<Metric>, Error> {
     let value = client
         .call::<String>(
             unit.path.as_str(),
@@ -368,7 +419,6 @@ async fn collect_mount_info(
         tags!(
             "name" => unit.name.as_str(),
             "type" => value,
-            "service_type" => typ
         ),
     )])
 }
@@ -394,7 +444,7 @@ async fn collect_timer(client: &mut Client, unit: &Unit) -> Result<Vec<Metric>, 
     )])
 }
 
-async fn collect_socket_conn(client: &mut Client, unit: &Unit) -> Result<Vec<Metric>, Error> {
+async fn collect_socket(client: &mut Client, unit: &Unit) -> Result<Vec<Metric>, Error> {
     let accepted = client
         .call::<u32>(
             unit.path.as_str(),
@@ -453,83 +503,71 @@ async fn collect_socket_conn(client: &mut Client, unit: &Unit) -> Result<Vec<Met
     ])
 }
 
-/*
-#[derive(Debug)]
-struct UnitItem {
-    name: String,
-    description: String,
-    load_state: String,
-    active_state: String,
-    sub_state: String,
-    followed: String,
-    path: String,
-    job_id: u32,
-    job_type: String,
-    job_path: String,
+async fn collect_service_restart(client: &mut Client, unit: &Unit) -> Result<Vec<Metric>, Error> {
+    let restarts = client
+        .call::<u32>(
+            unit.path.as_str(),
+            "Get",
+            "org.freedesktop.systemd1",
+            "org.freedesktop.DBus.Properties",
+            &["org.freedesktop.systemd1.Service", "NRestarts"],
+        )
+        .await?;
+
+    Ok(vec![Metric::sum_with_tags(
+        "systemd_service_restart_total",
+        "Service unit count of Restart triggers",
+        restarts,
+        tags!(
+            "name" => unit.name.as_str(),
+        ),
+    )])
 }
 
-struct Units {
-    data: Vec<u8>,
-    pos: usize,
-}
+async fn collect_ip_accounting(client: &mut Client, unit: &Unit) -> Result<Vec<Metric>, Error> {
+    let mut metrics = Vec::with_capacity(4);
 
-impl Units {
-    fn new(data: Vec<u8>) -> Self {
-        Self { data, pos: 8 }
-    }
+    for (property, name, description) in [
+        (
+            "IPIngressBytes",
+            "systemd_service_ip_ingress_bytes",
+            "Service unit ingress IP accounting in bytes.",
+        ),
+        (
+            "IPEgressBytes",
+            "systemd_service_ip_egress_bytes",
+            "Service unit egress IP accounting in bytes.",
+        ),
+        (
+            "IPIngressPackets",
+            "systemd_service_ip_ingress_packets_total",
+            "Service unit ingress IP accounting in packets.",
+        ),
+        (
+            "IPEgressPackets",
+            "systemd_service_ip_egress_packets_total",
+            "Service unit egress IP accounting in packets.",
+        ),
+    ] {
+        let value = client
+            .call::<u64>(
+                unit.path.as_str(),
+                "Get",
+                "org.freedesktop.systemd1",
+                "org.freedesktop.DBus.Properties",
+                &["org.freedesktop.systemd1.Service", property],
+            )
+            .await?;
 
-    fn read_u32_le(&mut self) -> u32 {
-        let value = u32::from_le_bytes((&self.data[self.pos..self.pos + 4]).try_into().unwrap());
-
-        self.pos += 4;
-
-        value
-    }
-
-    fn read_str(&mut self) -> String {
-        let len = self.read_u32_le() as usize;
-
-        let s = String::from_utf8_lossy(&self.data[self.pos..self.pos + len]).to_string();
-
-        self.pos += len + 1 + padding(len + 1, 4);
-
-        s
-    }
-}
-
-impl Iterator for Units {
-    type Item = UnitItem;
-
-    fn next(&'_ mut self) -> Option<Self::Item> {
-        if self.pos >= self.data.len() {
-            return None;
-        }
-
-        let name = self.read_str();
-        let description = self.read_str();
-        let load_state = self.read_str();
-        let active_state = self.read_str();
-        let sub_state = self.read_str();
-        let followed = self.read_str();
-        let path = self.read_str();
-        let job_id = self.read_u32_le();
-        let job_type = self.read_str();
-        let job_path = self.read_str();
-
-        self.pos += padding(self.pos, 8);
-
-        Some(UnitItem {
+        metrics.push(Metric::sum_with_tags(
             name,
             description,
-            load_state,
-            active_state,
-            sub_state,
-            followed,
-            path,
-            job_id,
-            job_type,
-            job_path,
-        })
+            value,
+            tags!(
+                "name" => unit.name.as_str(),
+            ),
+        ))
     }
+
+    Ok(metrics)
 }
-*/
