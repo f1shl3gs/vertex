@@ -2,6 +2,7 @@ mod dbus;
 mod resolved;
 mod service;
 mod units;
+mod version;
 mod watchdog;
 
 use std::time::Duration;
@@ -67,7 +68,49 @@ impl SourceConfig for Config {
                     }
                 };
 
-                let mut metrics = Vec::with_capacity(1024);
+                // N.B.
+                // it takes around 700ms in serial mode, so we don't need to
+                // make it parallel.
+
+                let version = match version::collect(&mut client).await {
+                    Ok((version, metric)) => {
+                        if let Err(_err) = output.send(metric).await {
+                            break;
+                        }
+                        version
+                    }
+                    Err(err) => {
+                        warn!(
+                            message = "failed to get systemd version",
+                            %err
+                        );
+
+                        0.0
+                    }
+                };
+
+                let mut metrics =
+                    match units::collect(&mut client, &include, &exclude, version).await {
+                        Ok(metrics) => metrics,
+                        Err(err) => {
+                            warn!(
+                                message = "failed to collect systemd units metrics",
+                                %err
+                            );
+                            continue;
+                        }
+                    };
+
+                match service::collect(&mut client).await {
+                    Ok(partial) => metrics.extend(partial),
+                    Err(err) => {
+                        warn!(
+                            message = "failed to collect systemd metrics",
+                            %err
+                        );
+                    }
+                }
+
                 match resolved::collect(&mut client).await {
                     Ok(partial) => metrics.extend(partial),
                     Err(err) => {
@@ -83,30 +126,6 @@ impl SourceConfig for Config {
                     Err(err) => {
                         warn!(
                             message = "failed to collect watchdog metrics",
-                            %err
-                        );
-                    }
-                }
-
-                match service::collect(&mut client).await {
-                    Ok(partial) => {
-                        metrics.extend(partial);
-                    }
-                    Err(err) => {
-                        warn!(
-                            message = "failed to collect systemd metrics",
-                            %err
-                        );
-                    }
-                }
-
-                match units::collect(&mut client, &include, &exclude).await {
-                    Ok(partial) => {
-                        metrics.extend(partial);
-                    }
-                    Err(err) => {
-                        warn!(
-                            message = "failed to collect systemd units metrics",
                             %err
                         );
                     }
@@ -143,7 +162,6 @@ mod tests {
 /*
 #[cfg(test)]
 mod dump {
-    use super::*;
     use tokio::io::{AsyncReadExt, AsyncWriteExt};
     use tokio::net::{UnixSocket, UnixStream};
 
@@ -154,11 +172,11 @@ mod dump {
         sock.bind("proxy.sock").unwrap();
         let listener = sock.listen(1024).unwrap();
 
-        let mut upstream = UnixStream::connect("/var/run/dbus/system_bus_socket")
+        let upstream = UnixStream::connect("/var/run/dbus/system_bus_socket")
             .await
             .unwrap();
 
-        let (mut peer, _addr) = listener.accept().await.unwrap();
+        let (peer, _addr) = listener.accept().await.unwrap();
 
         let (mut peer_reader, mut peer_writer) = peer.into_split();
         let (mut upstream_reader, mut upstream_writer) = upstream.into_split();

@@ -1,3 +1,7 @@
+//! The D-Bus API of systemd
+//!
+//! https://www.freedesktop.org/wiki/Software/systemd/dbus/
+
 use std::sync::atomic::{AtomicU32, Ordering};
 
 use bytes::BufMut;
@@ -6,12 +10,14 @@ use tokio::net::UnixStream;
 
 const SYSTEMD_SOCKET_PATH: &str = "/var/run/dbus/system_bus_socket";
 
+static SERIAL_GENERATOR: AtomicU32 = AtomicU32::new(1);
+
 pub struct Client {
     stream: UnixStream,
 }
 
 impl Client {
-    pub async fn connect() -> std::io::Result<Self> {
+    pub async fn connect() -> Result<Self, Error> {
         let mut stream = match std::env::var("DBUS_SYSTEM_BUS_ADDRESS") {
             Ok(val) => UnixStream::connect(val).await?,
             _ => UnixStream::connect(SYSTEMD_SOCKET_PATH).await?,
@@ -22,109 +28,114 @@ impl Client {
         stream.write_all(b"\0AUTH EXTERNAL\r\n").await?;
         let size = stream.read(&mut buf).await?;
         if &buf[..size] != b"DATA\r\n" {
-            return Err(std::io::Error::other(format!(
-                "external auth failed, resp: {:?}",
-                &buf[..size]
-            )));
+            return Err(Error::Authentication);
         }
 
         stream.write_all(b"DATA\r\n").await?;
         let size = stream.read(&mut buf).await?;
         if !buf[..size].starts_with(b"OK ") {
-            return Err(std::io::Error::other(format!(
-                "DATA exchange failed, resp: {:?}",
-                &buf[..size]
-            )));
-        }
-
-        stream.write_all(b"NEGOTIATE_UNIX_FD\r\n").await?;
-        let size = stream.read(&mut buf).await?;
-        if &buf[..size] != b"AGREE_UNIX_FD\r\n" {
-            return Err(std::io::Error::other(format!(
-                "negotiate unix fd failed, resp: {:?}",
-                &buf[..size]
-            )));
+            return Err(Error::Authentication);
         }
 
         stream.write_all(b"BEGIN\r\n").await?;
 
-        let cmd = build_message(
-            "/org/freedesktop/DBus",
-            "Hello",
-            "org.freedesktop.DBus",
-            "org.freedesktop.DBus",
-            &[],
-        );
-        stream.write_all(&cmd).await?;
-        let _size = stream.read(&mut buf).await?;
+        let mut client = Client { stream };
 
-        Ok(Client { stream })
+        let _guid = client
+            .call::<Vec<u8>>(
+                "/org/freedesktop/DBus",
+                "Hello",
+                "org.freedesktop.DBus",
+                "org.freedesktop.DBus",
+                &[],
+            )
+            .await?;
+
+        Ok(client)
     }
 
     pub async fn call<T: Variant>(
         &mut self,
         path: &str,
         method: &str,
-        dest: &str,
+        destination: &str,
         interface: &str,
         body: &[&str],
     ) -> Result<T, Error> {
-        let req = build_message(path, method, dest, interface, body);
+        let mut buf = build_message(path, method, destination, interface, body);
 
-        self.stream.write_all(req.as_slice()).await?;
+        self.stream.write_all(buf.as_slice()).await?;
 
         let mut header = [0u8; 16];
-        let size = self.stream.read(&mut header).await?;
-        if size < 16 {
-            return Err(Error::ResponseTooShort);
-        }
-
-        let body_len = u32::from_le_bytes((&header[4..8]).try_into().unwrap()) as usize;
-        let header_len = u32::from_le_bytes((&header[12..16]).try_into().unwrap()) as usize;
-
-        let mut resp = vec![0u8; header_len + padding(header_len, 8) + body_len];
-        let mut size = 0;
         loop {
-            if size == resp.capacity() {
-                break;
+            self.stream.read_exact(&mut header).await?;
+
+            let body_len = u32::from_le_bytes((&header[4..8]).try_into().unwrap()) as usize;
+            let header_len = u32::from_le_bytes((&header[12..16]).try_into().unwrap()) as usize;
+            if body_len + header_len + 16 > 1 << 27 {
+                return Err(Error::MessageTooBig);
             }
 
-            let count = self.stream.read(&mut resp[size..]).await?;
-            size += count;
-        }
+            let want = header_len + padding(header_len, 8) + body_len;
+            buf.truncate(0);
+            buf.reserve(want);
 
-        T::decode(&resp[resp.len() - body_len..])
+            let mut size = 0;
+            loop {
+                let uninitialed = unsafe {
+                    std::slice::from_raw_parts_mut(buf.as_mut_ptr().add(size), want - size)
+                };
+
+                size += self.stream.read(uninitialed).await?;
+                if size == want {
+                    unsafe { buf.set_len(want) };
+                    break;
+                }
+            }
+
+            // we don't case about signals
+            if header[1] == 4 {
+                continue;
+            }
+
+            // maybe we should validate response
+
+            break T::decode(&buf[want - body_len..]);
+        }
     }
 }
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error(transparent)]
-    Io(std::io::Error),
+    Io(#[from] std::io::Error),
+
+    #[error("authentication failed")]
+    Authentication,
 
     #[error("signature not match")]
     SignatureNotMatch,
 
+    #[error("message is too large")]
+    MessageTooBig,
+
     #[error("body is too small")]
     BodyTooSmall,
-
-    #[error("response is too short")]
-    ResponseTooShort,
-}
-
-impl From<std::io::Error> for Error {
-    fn from(err: std::io::Error) -> Self {
-        Error::Io(err)
-    }
 }
 
 pub trait Variant: Sized {
     fn decode(input: &[u8]) -> Result<Self, Error>;
 }
 
-impl Variant for () {
-    fn decode(_: &[u8]) -> Result<(), Error> {
-        Ok(())
+impl Variant for Vec<u8> {
+    fn decode(input: &[u8]) -> Result<Self, Error> {
+        if input.len() < 4 {
+            return Err(Error::BodyTooSmall);
+        }
+
+        let len = u32::from_le_bytes([input[0], input[1], input[2], input[3]]) as usize;
+
+        Ok(Vec::from(&input[4..4 + len]))
     }
 }
 
@@ -197,7 +208,13 @@ impl<const N: usize> Variant for [u64; N] {
     }
 }
 
-fn build_message(path: &str, method: &str, dest: &str, interface: &str, body: &[&str]) -> Vec<u8> {
+fn build_message(
+    path: &str,
+    method: &str,
+    destination: &str,
+    interface: &str,
+    body: &[&str],
+) -> Vec<u8> {
     let mut buf = Vec::with_capacity(256);
 
     // little endian
@@ -229,15 +246,15 @@ fn build_message(path: &str, method: &str, dest: &str, interface: &str, body: &[
     buf.put_slice(path.as_bytes());
     buf.push(0);
 
-    // destination
+    // interface
     let pad = padding(buf.len(), 8);
     if pad > 0 {
         buf.put_bytes(0, pad)
     }
-    buf.push(6);
+    buf.push(2);
     buf.put_slice(&[1u8, 115, 0]);
-    buf.put_slice((dest.len() as u32).to_le_bytes().as_ref());
-    buf.put_slice(dest.as_bytes());
+    buf.put_slice((interface.len() as u32).to_le_bytes().as_ref());
+    buf.put_slice(interface.as_bytes());
     buf.push(0);
 
     // member
@@ -251,35 +268,16 @@ fn build_message(path: &str, method: &str, dest: &str, interface: &str, body: &[
     buf.put_slice(method.as_bytes());
     buf.push(0);
 
-    // interface
-    if !interface.is_empty() {
-        let pad = padding(buf.len(), 8);
-        if pad > 0 {
-            buf.put_bytes(0, pad)
-        }
-
-        buf.push(2);
-        buf.put_slice(&[1u8, 115, 0]);
-        buf.put_slice((interface.len() as u32).to_le_bytes().as_ref());
-        buf.put_slice(interface.as_bytes());
-        buf.push(0);
+    // destination
+    let pad = padding(buf.len(), 8);
+    if pad > 0 {
+        buf.put_bytes(0, pad)
     }
-
-    /*
-            // sender
-            if !self.name.is_empty() {
-                let pad = padding(buf.len(), 8);
-                if pad > 0 {
-                    buf.put_bytes(0, pad)
-                }
-
-                buf.push(7);
-                buf.put_slice(&[1u8, 115, 0]); // string signature
-                buf.put_slice((self.name.len() as u32).to_le_bytes().as_ref());
-                buf.put_slice(self.name.as_bytes());
-                buf.push(0);
-            }
-    */
+    buf.push(6);
+    buf.put_slice(&[1u8, 115, 0]);
+    buf.put_slice((destination.len() as u32).to_le_bytes().as_ref());
+    buf.put_slice(destination.as_bytes());
+    buf.push(0);
 
     // signature
     if !body.is_empty() {
@@ -307,11 +305,19 @@ fn build_message(path: &str, method: &str, dest: &str, interface: &str, body: &[
         buf.put_bytes(0, pad)
     }
     if !body.is_empty() {
-        let body = encode_strings(body);
+        let start = buf.len();
+        for arg in body {
+            let pad = padding(buf.len(), 4);
+            if pad > 0 {
+                buf.put_bytes(0, pad);
+            }
 
-        buf.put_slice(body.as_slice());
+            buf.put_slice((arg.len() as u32).to_le_bytes().as_ref());
+            buf.put_slice(arg.as_bytes());
+            buf.push(0);
+        }
 
-        let body_len = body.len() as u32;
+        let body_len = (buf.len() - start) as u32;
         buf[4..8].copy_from_slice(&body_len.to_le_bytes());
     }
 
@@ -325,24 +331,4 @@ pub fn padding(offset: usize, align: usize) -> usize {
     } else {
         0
     }
-}
-
-static SERIAL_GENERATOR: AtomicU32 = AtomicU32::new(1);
-
-#[inline]
-fn encode_strings(input: &[&str]) -> Vec<u8> {
-    let mut buf = Vec::new();
-
-    for s in input {
-        let pad = padding(buf.len(), 4);
-        if pad > 0 {
-            buf.put_bytes(0, pad);
-        }
-
-        buf.put_slice((s.len() as u32).to_le_bytes().as_ref());
-        buf.put_slice(s.as_bytes());
-        buf.push(0);
-    }
-
-    buf
 }
