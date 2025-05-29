@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748543193726,
+  "lastUpdate": 1748543279293,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca43575d3953fb304c74618702ac949694bdb18a",
-          "message": "Merge pull request #2262 from f1shl3gs/dependabot/cargo/tokio-util-0.7.14\n\nchore(deps): bump tokio-util from 0.7.13 to 0.7.14",
-          "timestamp": "2025-03-14T12:38:26+08:00",
-          "tree_id": "4a8c5c0d0f6a014c4033f4e216e692720183c640",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca43575d3953fb304c74618702ac949694bdb18a"
-        },
-        "date": 1741927754933,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 569,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38986,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "245382f7d1dea5ae013ed707602ca3ef780d4fa9",
           "message": "Merge pull request #2261 from f1shl3gs/dependabot/cargo/tokio-1.44.1\n\nchore(deps): bump tokio from 1.44.0 to 1.44.1",
           "timestamp": "2025-03-14T13:29:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37434.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "27f60f62f28e096689064c8ab88f77ef4ab7f21b",
+          "message": "Merge pull request #2368 from f1shl3gs/sources/systemd/reuse_buffers\n\nsources/systemd: always try to reuse buffers, which will reduce memory usage",
+          "timestamp": "2025-05-30T02:15:20+08:00",
+          "tree_id": "cef4343b190654de7a2c96826a7088e8f70bec0a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/27f60f62f28e096689064c8ab88f77ef4ab7f21b"
+        },
+        "date": 1748543257035,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 523,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37453.1,
             "unit": "KiB"
           }
         ]
