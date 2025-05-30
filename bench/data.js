@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748573987649,
+  "lastUpdate": 1748574061036,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "245382f7d1dea5ae013ed707602ca3ef780d4fa9",
-          "message": "Merge pull request #2261 from f1shl3gs/dependabot/cargo/tokio-1.44.1\n\nchore(deps): bump tokio from 1.44.0 to 1.44.1",
-          "timestamp": "2025-03-14T13:29:25+08:00",
-          "tree_id": "61bcb87658416f85dd1018ebbe3b86cc93a47c78",
-          "url": "https://github.com/f1shl3gs/vertex/commit/245382f7d1dea5ae013ed707602ca3ef780d4fa9"
-        },
-        "date": 1741930796728,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 555,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38986.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5c85199f72b80e6733c93b460b560b4db96d5826",
           "message": "Merge pull request #2263 from f1shl3gs/dependabot/cargo/uuid-1.16.0\n\nchore(deps): bump uuid from 1.15.1 to 1.16.0",
           "timestamp": "2025-03-14T14:24:09+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37453.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d813a2d53b049fab4c42ea633ed87c2bcf3acaf6",
+          "message": "Merge pull request #2369 from f1shl3gs/dependabot/cargo/parking_lot-0.12.4\n\nchore(deps): bump parking_lot from 0.12.3 to 0.12.4",
+          "timestamp": "2025-05-30T10:49:32+08:00",
+          "tree_id": "2d9bc9468d7c0258ffa89284c70517a1ecd21979",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d813a2d53b049fab4c42ea633ed87c2bcf3acaf6"
+        },
+        "date": 1748574039571,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 510,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37452.8,
             "unit": "KiB"
           }
         ]
