@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748573606468,
+  "lastUpdate": 1748573658221,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4f12ac8aecbd1376ea820c9b6d027355be7ff2f2",
-          "message": "Merge pull request #2260 from f1shl3gs/dependabot/cargo/quote-1.0.40\n\nchore(deps): bump quote from 1.0.39 to 1.0.40",
-          "timestamp": "2025-03-13T11:40:49+08:00",
-          "tree_id": "f839bf67ade25db357747e01a73227a6c22a1a4a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4f12ac8aecbd1376ea820c9b6d027355be7ff2f2"
-        },
-        "date": 1741837381524,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.371,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 102.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.77,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.18,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d813a2d53b049fab4c42ea633ed87c2bcf3acaf6",
+          "message": "Merge pull request #2369 from f1shl3gs/dependabot/cargo/parking_lot-0.12.4\n\nchore(deps): bump parking_lot from 0.12.3 to 0.12.4",
+          "timestamp": "2025-05-30T10:49:32+08:00",
+          "tree_id": "2d9bc9468d7c0258ffa89284c70517a1ecd21979",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d813a2d53b049fab4c42ea633ed87c2bcf3acaf6"
+        },
+        "date": 1748573636067,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.401,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.229,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.06,
             "unit": "ns/op"
           }
         ]
