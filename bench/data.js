@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748622540680,
+  "lastUpdate": 1748622557921,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0c84d1f759dde992f6aa958ecb2ad7409950882f",
-          "message": "Merge pull request #2259 from f1shl3gs/dependabot/cargo/kube-0.99.0\n\nchore(deps): bump kube from 0.98.0 to 0.99.0",
-          "timestamp": "2025-03-13T11:45:26+08:00",
-          "tree_id": "64033b565442673c506002d23c20a75a953f8fcf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0c84d1f759dde992f6aa958ecb2ad7409950882f"
-        },
-        "date": 1741837653197,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.406,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 101.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.58,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.06,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "12704f93b0860ac0c17012009011f93cf5f2356c",
+          "message": "Merge pull request #2370 from f1shl3gs/misc/add_more_detail\n\nmisc: add more detail of config",
+          "timestamp": "2025-05-31T00:26:29+08:00",
+          "tree_id": "4c661f297773d5e64f40033a27053f434fc37bf8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/12704f93b0860ac0c17012009011f93cf5f2356c"
+        },
+        "date": 1748622536151,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.394,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 105.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 189.68,
             "unit": "ns/op"
           }
         ]
