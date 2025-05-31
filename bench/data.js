@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748700597278,
+  "lastUpdate": 1748700690613,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "82d16fcf2f99df7e62032e797c4c4d343ecaf24c",
-          "message": "Merge pull request #2266 from f1shl3gs/extensions/consul_observe/support_watch_specified_services\n\nextensions/consul_observe: support watch specified services",
-          "timestamp": "2025-03-15T01:51:38+08:00",
-          "tree_id": "4e17dd8197a20b1ec51467921eac4c9cd9fa386d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/82d16fcf2f99df7e62032e797c4c4d343ecaf24c"
-        },
-        "date": 1741975376974,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 593,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39161.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "20c79cd7ca9e4b4c7043a937e9ed1f7f891cfefb",
           "message": "Merge pull request #2267 from f1shl3gs/dependabot/cargo/async-trait-0.1.88\n\nchore(deps): bump async-trait from 0.1.87 to 0.1.88",
           "timestamp": "2025-03-15T16:56:18+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37452.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ebaa782698c4a5b656e91339519f8285e653be68",
+          "message": "Merge pull request #2373 from f1shl3gs/lib/framework/tidy\n\nlib/framework: reorganize sink/utils",
+          "timestamp": "2025-05-31T21:59:50+08:00",
+          "tree_id": "16ce767677d204e2a729a57600c92c0fdd38b7fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ebaa782698c4a5b656e91339519f8285e653be68"
+        },
+        "date": 1748700668911,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 504,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37446.6,
             "unit": "KiB"
           }
         ]
