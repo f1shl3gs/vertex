@@ -10,7 +10,7 @@ use pin_project_lite::pin_project;
 use tokio::io::AsyncWrite;
 use tokio_util::codec::FramedWrite;
 
-use super::SocketMode;
+use super::util::SocketMode;
 use crate::batch::EncodedEvent;
 
 const MAX_PENDING_ITEMS: usize = 1024;

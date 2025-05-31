@@ -7,7 +7,7 @@ use async_trait::async_trait;
 use codecs::encoding::Transformer;
 use configurable::configurable_component;
 use framework::config::{DataType, SinkConfig, SinkContext};
-use framework::sink::util::udp::UdpSinkConfig;
+use framework::sink::udp::UdpSinkConfig;
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 

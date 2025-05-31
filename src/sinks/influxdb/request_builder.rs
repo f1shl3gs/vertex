@@ -1,7 +1,7 @@
 use bytes::Bytes;
 use event::{EventFinalizers, Finalizable, Metric};
 use framework::partition::Partitioner;
-use framework::sink::util::http::HttpRequest;
+use framework::sink::http::HttpRequest;
 use framework::sink::util::{Compression, EncodeResult, RequestBuilder};
 use framework::template::Template;
 

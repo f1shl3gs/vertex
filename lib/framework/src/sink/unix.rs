@@ -12,15 +12,10 @@ use thiserror::Error;
 use tokio::net::UnixStream;
 use tokio_util::codec::Encoder;
 
+use super::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::batch::EncodedEvent;
 use crate::{Healthcheck, Sink, StreamSink};
-use crate::{
-    sink::VecSinkExt,
-    sink::util::{
-        SocketMode,
-        socket_bytes_sink::{BytesSink, ShutdownCheck},
-    },
-};
+use crate::{sink::VecSinkExt, sink::util::SocketMode};
 
 #[derive(Debug, Error)]
 pub enum UnixError {

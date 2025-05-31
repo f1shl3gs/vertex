@@ -7,7 +7,7 @@ use event::{Event, Metric};
 use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext, serde_uri};
 use framework::http::{Auth, HttpClient};
-use framework::sink::util::http::HttpRetryLogic;
+use framework::sink::http::HttpRetryLogic;
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::sink::PartitionBatchSink;
 use framework::sink::util::{
