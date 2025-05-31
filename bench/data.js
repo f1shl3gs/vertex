@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748667309339,
+  "lastUpdate": 1748700156067,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "245382f7d1dea5ae013ed707602ca3ef780d4fa9",
-          "message": "Merge pull request #2261 from f1shl3gs/dependabot/cargo/tokio-1.44.1\n\nchore(deps): bump tokio from 1.44.0 to 1.44.1",
-          "timestamp": "2025-03-14T13:29:25+08:00",
-          "tree_id": "61bcb87658416f85dd1018ebbe3b86cc93a47c78",
-          "url": "https://github.com/f1shl3gs/vertex/commit/245382f7d1dea5ae013ed707602ca3ef780d4fa9"
-        },
-        "date": 1741930275650,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 552630,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540450,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ebaa782698c4a5b656e91339519f8285e653be68",
+          "message": "Merge pull request #2373 from f1shl3gs/lib/framework/tidy\n\nlib/framework: reorganize sink/utils",
+          "timestamp": "2025-05-31T21:59:50+08:00",
+          "tree_id": "16ce767677d204e2a729a57600c92c0fdd38b7fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ebaa782698c4a5b656e91339519f8285e653be68"
+        },
+        "date": 1748700134244,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 541770,
             "unit": "ns/op"
           }
         ]
