@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748664222940,
+  "lastUpdate": 1748667309339,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3885b2061a4949dfdac7569bab2367a030cf0d94",
-          "message": "Merge pull request #2265 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-03-15T00:29:07+08:00",
-          "tree_id": "7aefb33daeff4a7b4158f798e89e133783bd4090",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3885b2061a4949dfdac7569bab2367a030cf0d94"
-        },
-        "date": 1741970776665,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 905,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39169.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "82d16fcf2f99df7e62032e797c4c4d343ecaf24c",
           "message": "Merge pull request #2266 from f1shl3gs/extensions/consul_observe/support_watch_specified_services\n\nextensions/consul_observe: support watch specified services",
           "timestamp": "2025-03-15T01:51:38+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 502,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37452.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0c380197274f3fb046d457efbabe014ccc0f5b96",
+          "message": "Merge pull request #2372 from f1shl3gs/misc/readme/add_systemd\n\nmisc: add systemd to readme",
+          "timestamp": "2025-05-31T12:44:11+08:00",
+          "tree_id": "669af8dc6585a07f71fe2097d5122135a0801efb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0c380197274f3fb046d457efbabe014ccc0f5b96"
+        },
+        "date": 1748667287033,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
             "unit": "s"
           },
           {
