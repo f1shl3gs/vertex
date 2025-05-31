@@ -1,184 +1,56 @@
 #[cfg(not(target_arch = "x86_64"))]
 compile_error!("audit source is only supported on x86_64");
 
-use std::cmp::Ordering;
-use std::collections::HashMap;
-use std::sync::LazyLock;
-
-static ARCH_NAMES: LazyLock<HashMap<&'static str, &'static str>> = LazyLock::new(|| {
-    let mut map = HashMap::with_capacity(35);
-
-    map.insert("c00000b7", "aarch64");
-    map.insert("40000028", "arm");
-    map.insert("28", "armeb");
-    map.insert("4000008c", "c6x");
-    map.insert("8c", "c6xbe");
-    map.insert("4000004c", "cris");
-    map.insert("5441", "frv");
-    map.insert("2e", "h8300");
-    map.insert("40000003", "i386");
-    map.insert("c0000032", "ia64");
-    map.insert("40000102", "loongarch32");
-    map.insert("c0000102", "loongarch64");
-    map.insert("58", "m32r");
-    map.insert("4", "m68k");
-    map.insert("8", "mips");
-    map.insert("80000008", "mips64");
-    map.insert("a0000008", "mips64n32");
-    map.insert("40000008", "mipsel");
-    map.insert("c0000008", "mipsel64");
-    map.insert("e0000008", "mipsel64n32");
-    map.insert("40000071", "nios2");
-    map.insert("f", "parisc");
-    map.insert("8000000f", "parisc64");
-    map.insert("14", "ppc");
-    map.insert("80000015", "ppc64");
-    map.insert("c0000015", "ppc64le");
-    map.insert("16", "s390");
-    map.insert("80000016", "s390x");
-    map.insert("2a", "sh");
-    map.insert("8000002a", "sh64");
-    map.insert("4000002a", "shel");
-    map.insert("c000002a", "shel64");
-    map.insert("2", "sparc");
-    map.insert("8000002b", "sparc64");
-    map.insert("c000003e", "x86_64");
-
-    map
-});
+const ARCH_NAMES: [(&str, &str); 35] = [
+    ("14", "ppc"),
+    ("16", "s390"),
+    ("2", "sparc"),
+    ("28", "armeb"),
+    ("2a", "sh"),
+    ("2e", "h8300"),
+    ("4", "m68k"),
+    ("40000003", "i386"),
+    ("40000008", "mipsel"),
+    ("40000028", "arm"),
+    ("4000002a", "shel"),
+    ("4000004c", "cris"),
+    ("40000071", "nios2"),
+    ("4000008c", "c6x"),
+    ("40000102", "loongarch32"),
+    ("5441", "frv"),
+    ("58", "m32r"),
+    ("8", "mips"),
+    ("80000008", "mips64"),
+    ("8000000f", "parisc64"),
+    ("80000015", "ppc64"),
+    ("80000016", "s390x"),
+    ("8000002a", "sh64"),
+    ("8000002b", "sparc64"),
+    ("8c", "c6xbe"),
+    ("a0000008", "mips64n32"),
+    ("c0000008", "mipsel64"),
+    ("c0000015", "ppc64le"),
+    ("c000002a", "shel64"),
+    ("c0000032", "ia64"),
+    ("c000003e", "x86_64"),
+    ("c00000b7", "aarch64"),
+    ("c0000102", "loongarch64"),
+    ("e0000008", "mipsel64n32"),
+    ("f", "parisc"),
+];
 
 #[inline]
 pub fn arch_name(id: &str) -> Option<&'static str> {
-    ARCH_NAMES.get(id).copied()
+    match ARCH_NAMES.binary_search_by(|(aid, _arch)| (*aid).cmp(id)) {
+        Ok(index) => Some(ARCH_NAMES[index].1),
+        Err(_) => None,
+    }
 }
 
-pub fn syscall_name(id: &str) -> Option<&'static str> {
-    let index = SYSCALLS
-        .binary_search_by(|(sid, _name)| {
-            let lhs = sid.as_bytes();
-            let rhs = id.as_bytes();
-
-            match lhs.len().cmp(&rhs.len()) {
-                Ordering::Equal => {}
-                ordering => return ordering,
-            }
-
-            for i in 0..lhs.len() {
-                match lhs[i].cmp(&rhs[i]) {
-                    Ordering::Equal => {}
-                    ordering => return ordering,
-                }
-            }
-
-            Ordering::Equal
-        })
-        .ok()?;
-
-    Some(SYSCALLS[index].1)
-}
-
-#[cfg(target_arch = "x86_64")]
 const SYSCALLS: [(&str, &str); 378] = [
     ("0", "read"),
     ("1", "write"),
-    ("2", "open"),
-    ("3", "close"),
-    ("4", "stat"),
-    ("5", "fstat"),
-    ("6", "lstat"),
-    ("7", "poll"),
-    ("8", "lseek"),
-    ("9", "mmap"),
     ("10", "mprotect"),
-    ("11", "munmap"),
-    ("12", "brk"),
-    ("13", "rt_sigaction"),
-    ("14", "rt_sigprocmask"),
-    ("15", "rt_sigreturn"),
-    ("16", "ioctl"),
-    ("17", "pread"),
-    ("18", "pwrite"),
-    ("19", "readv"),
-    ("20", "writev"),
-    ("21", "access"),
-    ("22", "pipe"),
-    ("23", "select"),
-    ("24", "sched_yield"),
-    ("25", "mremap"),
-    ("26", "msync"),
-    ("27", "mincore"),
-    ("28", "madvise"),
-    ("29", "shmget"),
-    ("30", "shmat"),
-    ("31", "shmctl"),
-    ("32", "dup"),
-    ("33", "dup2"),
-    ("34", "pause"),
-    ("35", "nanosleep"),
-    ("36", "getitimer"),
-    ("37", "alarm"),
-    ("38", "setitimer"),
-    ("39", "getpid"),
-    ("40", "sendfile"),
-    ("41", "socket"),
-    ("42", "connect"),
-    ("43", "accept"),
-    ("44", "sendto"),
-    ("45", "recvfrom"),
-    ("46", "sendmsg"),
-    ("47", "recvmsg"),
-    ("48", "shutdown"),
-    ("49", "bind"),
-    ("50", "listen"),
-    ("51", "getsockname"),
-    ("52", "getpeername"),
-    ("53", "socketpair"),
-    ("54", "setsockopt"),
-    ("55", "getsockopt"),
-    ("56", "clone"),
-    ("57", "fork"),
-    ("58", "vfork"),
-    ("59", "execve"),
-    ("60", "exit"),
-    ("61", "wait4"),
-    ("62", "kill"),
-    ("63", "uname"),
-    ("64", "semget"),
-    ("65", "semop"),
-    ("66", "semctl"),
-    ("67", "shmdt"),
-    ("68", "msgget"),
-    ("69", "msgsnd"),
-    ("70", "msgrcv"),
-    ("71", "msgctl"),
-    ("72", "fcntl"),
-    ("73", "flock"),
-    ("74", "fsync"),
-    ("75", "fdatasync"),
-    ("76", "truncate"),
-    ("77", "ftruncate"),
-    ("78", "getdents"),
-    ("79", "getcwd"),
-    ("80", "chdir"),
-    ("81", "fchdir"),
-    ("82", "rename"),
-    ("83", "mkdir"),
-    ("84", "rmdir"),
-    ("85", "creat"),
-    ("86", "link"),
-    ("87", "unlink"),
-    ("88", "symlink"),
-    ("89", "readlink"),
-    ("90", "chmod"),
-    ("91", "fchmod"),
-    ("92", "chown"),
-    ("93", "fchown"),
-    ("94", "lchown"),
-    ("95", "umask"),
-    ("96", "gettimeofday"),
-    ("97", "getrlimit"),
-    ("98", "getrusage"),
-    ("99", "sysinfo"),
     ("100", "times"),
     ("101", "ptrace"),
     ("102", "getuid"),
@@ -189,6 +61,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("107", "geteuid"),
     ("108", "getegid"),
     ("109", "setpgid"),
+    ("11", "munmap"),
     ("110", "getppid"),
     ("111", "getpgrp"),
     ("112", "setsid"),
@@ -199,6 +72,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("117", "setresuid"),
     ("118", "getresuid"),
     ("119", "setresgid"),
+    ("12", "brk"),
     ("120", "getresgid"),
     ("121", "getpgid"),
     ("122", "setfsuid"),
@@ -209,6 +83,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("127", "rt_sigpending"),
     ("128", "rt_sigtimedwait"),
     ("129", "rt_sigqueueinfo"),
+    ("13", "rt_sigaction"),
     ("130", "rt_sigsuspend"),
     ("131", "sigaltstack"),
     ("132", "utime"),
@@ -219,6 +94,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("137", "statfs"),
     ("138", "fstatfs"),
     ("139", "sysfs"),
+    ("14", "rt_sigprocmask"),
     ("140", "getpriority"),
     ("141", "setpriority"),
     ("142", "sched_setparam"),
@@ -229,6 +105,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("147", "sched_get_priority_min"),
     ("148", "sched_rr_get_interval"),
     ("149", "mlock"),
+    ("15", "rt_sigreturn"),
     ("150", "munlock"),
     ("151", "mlockall"),
     ("152", "munlockall"),
@@ -239,6 +116,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("157", "prctl"),
     ("158", "arch_prctl"),
     ("159", "adjtimex"),
+    ("16", "ioctl"),
     ("160", "setrlimit"),
     ("161", "chroot"),
     ("162", "sync"),
@@ -249,6 +127,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("167", "swapon"),
     ("168", "swapoff"),
     ("169", "reboot"),
+    ("17", "pread"),
     ("170", "sethostname"),
     ("171", "setdomainname"),
     ("172", "iopl"),
@@ -259,6 +138,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("177", "get_kernel_syms"),
     ("178", "query_module"),
     ("179", "quotactl"),
+    ("18", "pwrite"),
     ("180", "nfsservctl"),
     ("181", "getpmsg"),
     ("182", "putpmsg"),
@@ -269,6 +149,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("187", "readahead"),
     ("188", "setxattr"),
     ("189", "lsetxattr"),
+    ("19", "readv"),
     ("190", "fsetxattr"),
     ("191", "getxattr"),
     ("192", "lgetxattr"),
@@ -279,6 +160,8 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("197", "removexattr"),
     ("198", "lremovexattr"),
     ("199", "fremovexattr"),
+    ("2", "open"),
+    ("20", "writev"),
     ("200", "tkill"),
     ("201", "time"),
     ("202", "futex"),
@@ -289,6 +172,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("207", "io_destroy"),
     ("208", "io_getevents"),
     ("209", "io_submit"),
+    ("21", "access"),
     ("210", "io_cancel"),
     ("211", "get_thread_area"),
     ("212", "lookup_dcookie"),
@@ -299,6 +183,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("217", "getdents64"),
     ("218", "set_tid_address"),
     ("219", "restart_syscall"),
+    ("22", "pipe"),
     ("220", "semtimedop"),
     ("221", "fadvise64"),
     ("222", "timer_create"),
@@ -309,6 +194,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("227", "clock_settime"),
     ("228", "clock_gettime"),
     ("229", "clock_getres"),
+    ("23", "select"),
     ("230", "clock_nanosleep"),
     ("231", "exit_group"),
     ("232", "epoll_wait"),
@@ -319,6 +205,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("237", "mbind"),
     ("238", "set_mempolicy"),
     ("239", "get_mempolicy"),
+    ("24", "sched_yield"),
     ("240", "mq_open"),
     ("241", "mq_unlink"),
     ("242", "mq_timedsend"),
@@ -329,6 +216,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("247", "waitid"),
     ("248", "add_key"),
     ("249", "request_key"),
+    ("25", "mremap"),
     ("250", "keyctl"),
     ("251", "ioprio_set"),
     ("252", "ioprio_get"),
@@ -339,6 +227,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("257", "openat"),
     ("258", "mkdirat"),
     ("259", "mknodat"),
+    ("26", "msync"),
     ("260", "fchownat"),
     ("261", "futimesat"),
     ("262", "newfstatat"),
@@ -349,6 +238,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("267", "readlinkat"),
     ("268", "fchmodat"),
     ("269", "faccessat"),
+    ("27", "mincore"),
     ("270", "pselect6"),
     ("271", "ppoll"),
     ("272", "unshare"),
@@ -359,6 +249,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("277", "sync_file_range"),
     ("278", "vmsplice"),
     ("279", "move_pages"),
+    ("28", "madvise"),
     ("280", "utimensat"),
     ("281", "epoll_pwait"),
     ("282", "signalfd"),
@@ -369,6 +260,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("287", "timerfd_gettime"),
     ("288", "accept4"),
     ("289", "signalfd4"),
+    ("29", "shmget"),
     ("290", "eventfd2"),
     ("291", "epoll_create1"),
     ("292", "dup3"),
@@ -379,6 +271,8 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("297", "rt_tgsigqueueinfo"),
     ("298", "perf_event_open"),
     ("299", "recvmmsg"),
+    ("3", "close"),
+    ("30", "shmat"),
     ("300", "fanotify_init"),
     ("301", "fanotify_mark"),
     ("302", "prlimit64"),
@@ -389,6 +283,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("307", "sendmmsg"),
     ("308", "setns"),
     ("309", "getcpu"),
+    ("31", "shmctl"),
     ("310", "process_vm_readv"),
     ("311", "process_vm_writev"),
     ("312", "kcmp"),
@@ -399,6 +294,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("317", "seccomp"),
     ("318", "getrandom"),
     ("319", "memfd_create"),
+    ("32", "dup"),
     ("320", "kexec_file_load"),
     ("321", "bpf"),
     ("322", "execveat"),
@@ -409,17 +305,29 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("327", "preadv2"),
     ("328", "pwritev2"),
     ("329", "pkey_mprotect"),
+    ("33", "dup2"),
     ("330", "pkey_alloc"),
     ("331", "pkey_free"),
     ("332", "statx"),
     ("333", "io_pgetevents"),
     ("334", "rseq"),
+    ("34", "pause"),
+    ("35", "nanosleep"),
+    ("36", "getitimer"),
+    ("37", "alarm"),
+    ("38", "setitimer"),
+    ("39", "getpid"),
+    ("4", "stat"),
+    ("40", "sendfile"),
+    ("41", "socket"),
+    ("42", "connect"),
     ("424", "pidfd_send_signal"),
     ("425", "io_uring_setup"),
     ("426", "io_uring_enter"),
     ("427", "io_uring_register"),
     ("428", "open_tree"),
     ("429", "move_mount"),
+    ("43", "accept"),
     ("430", "fsopen"),
     ("431", "fsconfig"),
     ("432", "fsmount"),
@@ -430,6 +338,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("437", "openat2"),
     ("438", "pidfd_getfd"),
     ("439", "faccessat2"),
+    ("44", "sendto"),
     ("440", "process_madvise"),
     ("441", "epoll_pwait2"),
     ("442", "mount_setattr"),
@@ -440,6 +349,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("447", "memfd_secret"),
     ("448", "process_mrelease"),
     ("449", "futex_waitv"),
+    ("45", "recvfrom"),
     ("450", "set_mempolicy_home_node"),
     ("451", "cachestat"),
     ("452", "fchmodat2"),
@@ -450,6 +360,7 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("457", "statmount"),
     ("458", "listmount"),
     ("459", "lsm_get_self_attr"),
+    ("46", "sendmsg"),
     ("460", "lsm_set_self_attr"),
     ("461", "lsm_list_modules"),
     ("462", "mseal"),
@@ -457,13 +368,87 @@ const SYSCALLS: [(&str, &str); 378] = [
     ("464", "getxattrat"),
     ("465", "listxattrat"),
     ("466", "removexattrat"),
+    ("47", "recvmsg"),
+    ("48", "shutdown"),
+    ("49", "bind"),
+    ("5", "fstat"),
+    ("50", "listen"),
+    ("51", "getsockname"),
+    ("52", "getpeername"),
+    ("53", "socketpair"),
+    ("54", "setsockopt"),
+    ("55", "getsockopt"),
+    ("56", "clone"),
+    ("57", "fork"),
+    ("58", "vfork"),
+    ("59", "execve"),
+    ("6", "lstat"),
+    ("60", "exit"),
+    ("61", "wait4"),
+    ("62", "kill"),
+    ("63", "uname"),
+    ("64", "semget"),
+    ("65", "semop"),
+    ("66", "semctl"),
+    ("67", "shmdt"),
+    ("68", "msgget"),
+    ("69", "msgsnd"),
+    ("7", "poll"),
+    ("70", "msgrcv"),
+    ("71", "msgctl"),
+    ("72", "fcntl"),
+    ("73", "flock"),
+    ("74", "fsync"),
+    ("75", "fdatasync"),
+    ("76", "truncate"),
+    ("77", "ftruncate"),
+    ("78", "getdents"),
+    ("79", "getcwd"),
+    ("8", "lseek"),
+    ("80", "chdir"),
+    ("81", "fchdir"),
+    ("82", "rename"),
+    ("83", "mkdir"),
+    ("84", "rmdir"),
+    ("85", "creat"),
+    ("86", "link"),
+    ("87", "unlink"),
+    ("88", "symlink"),
+    ("89", "readlink"),
+    ("9", "mmap"),
+    ("90", "chmod"),
+    ("91", "fchmod"),
+    ("92", "chown"),
+    ("93", "fchown"),
+    ("94", "lchown"),
+    ("95", "umask"),
+    ("96", "gettimeofday"),
+    ("97", "getrlimit"),
+    ("98", "getrusage"),
+    ("99", "sysinfo"),
 ];
+
+#[inline]
+pub fn syscall_name(id: &str) -> Option<&'static str> {
+    match SYSCALLS.binary_search_by(|(aid, _arch)| (*aid).cmp(id)) {
+        Ok(index) => Some(SYSCALLS[index].1),
+        Err(_) => None,
+    }
+}
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[cfg(target_arch = "x86_64")]
+    #[test]
+    fn arch_lookup() {
+        assert_eq!(arch_name("14"), Some("ppc"));
+        assert_eq!(arch_name("f"), Some("parisc"));
+        assert_eq!(arch_name("5441"), Some("frv"));
+
+        assert_eq!(arch_name("aaaaaa"), None);
+    }
+
     #[test]
     fn lookup() {
         assert_eq!(syscall_name("466"), Some("removexattrat"));
