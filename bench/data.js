@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748713711683,
+  "lastUpdate": 1748713723279,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "280e5a080e6b367f34c59bb92bb7c6825788f53c",
-          "message": "Merge pull request #2264 from f1shl3gs/extensions/consul_observer\n\nextensions/consul_observer: init",
-          "timestamp": "2025-03-15T00:05:40+08:00",
-          "tree_id": "4d8d1ffc4e2ebc9ad06506775225edba2c304f53",
-          "url": "https://github.com/f1shl3gs/vertex/commit/280e5a080e6b367f34c59bb92bb7c6825788f53c"
-        },
-        "date": 1741968496668,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.339,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 155.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.23,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 711.75,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3885b2061a4949dfdac7569bab2367a030cf0d94",
           "message": "Merge pull request #2265 from f1shl3gs/cargo/update\n\ncargo update",
           "timestamp": "2025-03-15T00:29:07+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 712.02,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "51f2ae163e6398034e2983593989245eb9bda01a",
+          "message": "Merge pull request #2375 from f1shl3gs/sources/sflow/small_refactor\n\nsources/sflow: reorganize data structures",
+          "timestamp": "2025-06-01T01:45:41+08:00",
+          "tree_id": "cf4de9774605d2cdabf9908c823a3f93e6736994",
+          "url": "https://github.com/f1shl3gs/vertex/commit/51f2ae163e6398034e2983593989245eb9bda01a"
+        },
+        "date": 1748713701864,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 25.832,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 695.66,
             "unit": "ns/op"
           }
         ]
