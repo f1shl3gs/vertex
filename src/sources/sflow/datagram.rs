@@ -318,227 +318,101 @@ pub struct RecordHeader {
 }
 
 #[derive(Debug)]
-pub struct FlowRecordRaw {
-    pub protocol: u32,
-    pub frame_length: u32,
-    pub stripped: u32,
-    pub original_length: u32,
-    pub header_bytes: Vec<u8>,
-}
-
-#[derive(Debug)]
-pub struct FlowRecordSampleEthernet {
-    pub length: u32,
-    pub src_mac: [u8; 6],
-    pub dst_mac: [u8; 6],
-    pub eth_type: u32,
-}
-
-#[derive(Debug)]
-pub struct SampledIpv4 {
-    pub length: u32,
-    pub protocol: u32,
-    pub src_ip: Ipv4Addr,
-    pub dst_ip: Ipv4Addr,
-    pub src_port: u32,
-    pub dst_port: u32,
-    pub tcp_flags: u32,
-
-    pub tos: u32,
-}
-
-#[derive(Debug)]
-pub struct SampledIpv6 {
-    pub length: u32,
-    pub protocol: u32,
-    pub src_ip: Ipv6Addr,
-    pub dst_ip: Ipv6Addr,
-    pub src_port: u32,
-    pub dst_port: u32,
-    pub tcp_flags: u32,
-
-    pub priority: u32,
-}
-
-#[derive(Debug)]
-pub struct ExtendedSwitch {
-    pub src_vlan: u32,
-    pub src_priority: u32,
-    pub dst_vlan: u32,
-    pub dst_priority: u32,
-}
-
-#[derive(Debug)]
-pub struct ExtendedRouter {
-    pub next_hop: IpAddr,
-    pub src_mask_len: u32,
-    pub dst_mask_len: u32,
-}
-
-#[derive(Debug)]
-pub struct ExtendedGateway {
-    pub next_hop: IpAddr,
-    pub r#as: u32,
-    pub src_as: u32,
-    pub src_peer_as: u32,
-    pub as_destinations: u32,
-    pub as_path_type: u32,
-    pub as_path_length: u32,
-    pub as_path: Vec<u32>,
-    pub communities_length: u32,
-    pub communities: Vec<u32>,
-    pub local_pref: u32,
-}
-
-#[derive(Debug)]
-pub struct EgressQueue {
-    pub queue: u32,
-}
-
-#[derive(Debug)]
-pub struct ExtendedACL {
-    pub number: u32,
-    pub name: String,
-    pub direction: u32,
-}
-
-#[derive(Debug)]
-pub struct ExtendedFunction {
-    pub symbol: String,
-}
-
-#[derive(Debug)]
-pub struct ExtendedTCPInfo {
-    pub direction: u32,  /* Sampled packet direction */
-    pub snd_mss: u32,    /* Cached effective mss, not including SACKS */
-    pub rcv_mss: u32,    /* Max. recv. segment size */
-    pub unacked: u32,    /* Packets which are "in flight" */
-    pub lost: u32,       /* Lost packets */
-    pub retrans: u32,    /* Retransmitted packets */
-    pub pmtu: u32,       /* Last pmtu seen by socket */
-    pub rtt: u32,        /* smoothed RTT (microseconds) */
-    pub rttvar: u32,     /* RTT variance (microseconds) */
-    pub snd_cwnd: u32,   /* Sending congestion window */
-    pub reordering: u32, /* Reordering */
-    pub min_rtt: u32,    /* Minimum RTT (microseconds) */
-}
-
-// Linux drop_monitor reason
-// opaque = flow_data; enterprise = 0; format = 1042
-// https://github.com/torvalds/linux/blob/master/include/net/dropreason.h
-// XDR spec:
-//  struct extended_linux_drop_reason {
-//    string reason<>; /* NET_DM_ATTR_REASON */
-//  }
-#[derive(Debug)]
-pub struct ExtendedLinuxReason {
-    pub reason: String,
-}
-
-#[derive(Debug)]
 pub enum FlowRecord {
-    Raw(FlowRecordRaw),
-    SampledEthernet(FlowRecordSampleEthernet),
-    SampledIpv4(SampledIpv4),
-    SampledIpv6(SampledIpv6),
-    ExtendedSwitch(ExtendedSwitch),
-    ExtendedRouter(ExtendedRouter),
-    ExtendedGateway(ExtendedGateway),
-    EgressQueue(EgressQueue),
-    ExtendedACL(ExtendedACL),
-    ExtendedFunction(ExtendedFunction),
-    ExtendedTCPInfo(ExtendedTCPInfo),
-    ExtendedLinuxReason(ExtendedLinuxReason),
-}
+    Raw {
+        protocol: u32,
+        frame_length: u32,
+        stripped: u32,
+        original_length: u32,
+        header_bytes: Vec<u8>,
+    },
+    SampledEthernet {
+        length: u32,
+        src_mac: [u8; 6],
+        dst_mac: [u8; 6],
+        eth_type: u32,
+    },
+    SampledIpv4 {
+        length: u32,
+        protocol: u32,
+        src_ip: Ipv4Addr,
+        dst_ip: Ipv4Addr,
+        src_port: u32,
+        dst_port: u32,
+        tcp_flags: u32,
 
-#[derive(Debug)]
-pub struct IfCounters {
-    pub index: u32,
-    pub typ: u32,
-    pub speed: u64,
-    pub direction: u32,
-    pub status: u32,
-    pub in_octets: u64,
-    pub in_ucast_pkts: u32,
-    pub in_multicast_pkts: u32,
-    pub in_broadcast_pkts: u32,
-    pub in_discards: u32,
-    pub in_errors: u32,
-    pub in_unknown_protos: u32,
-    pub out_octets: u64,
-    pub out_ucast_pkts: u32,
-    pub out_multicast_pkts: u32,
-    pub out_broadcast_pkts: u32,
-    pub out_discards: u32,
-    pub out_errors: u32,
-    pub promiscuous_mode: u32,
-}
+        tos: u32,
+    },
+    SampledIpv6 {
+        length: u32,
+        protocol: u32,
+        src_ip: Ipv6Addr,
+        dst_ip: Ipv6Addr,
+        src_port: u32,
+        dst_port: u32,
+        tcp_flags: u32,
 
-#[derive(Debug)]
-pub struct EthernetCounters {
-    pub dot3_stats_alignment_errors: u32,
-    pub dot3_stats_fcs_errors: u32,
-    pub dot3_stats_single_collision_frames: u32,
-    pub dot3_stats_multiple_collision_frames: u32,
-    pub dot3_stats_sqe_test_errors: u32,
-    pub dot3_stats_deferred_transmissions: u32,
-    pub dot3_stats_late_collisions: u32,
-    pub dot3_stats_excessive_collisions: u32,
-    pub dot3_stats_internal_mac_transmit_errors: u32,
-    pub dot3_stats_carrier_sense_errors: u32,
-    pub dot3_stats_frame_too_longs: u32,
-    pub dot3_stats_internal_mac_receive_errors: u32,
-    pub dot3_stats_symbol_errors: u32,
-}
-
-#[derive(Debug)]
-pub struct TokenRingCounters {
-    pub dot5_stats_line_errors: u32,
-    pub dot5_stats_burst_errors: u32,
-    pub dot5_stats_ac_errors: u32,
-    pub dot5_stats_abort_trans_errors: u32,
-    pub dot5_stats_internal_errors: u32,
-    pub dot5_stats_lost_frame_errors: u32,
-    pub dot5_stats_receive_congestions: u32,
-    pub dot5_stats_frame_copied_errors: u32,
-    pub dot5_stats_token_errors: u32,
-    pub dot5_stats_soft_errors: u32,
-    pub dot5_stats_hard_errors: u32,
-    pub dot5_stats_signal_loss: u32,
-    pub dot5_stats_transmit_beacons: u32,
-    pub dot5_stats_recoverys: u32,
-    pub dot5_stats_lobe_wires: u32,
-    pub dot5_stats_removes: u32,
-    pub dot5_stats_singles: u32,
-    pub dot5_stats_freq_errors: u32,
-}
-
-#[derive(Debug)]
-pub struct VgCounters {
-    pub dot12_in_high_priority_frames: u32,
-    pub dot12_in_high_priority_octets: u64,
-    pub dot12_in_norm_priority_frames: u32,
-    pub dot12_in_norm_priority_octets: u64,
-    pub dot12_in_ipm_errors: u32,
-    pub dot12_in_oversize_frame_errors: u32,
-    pub dot12_in_data_errors: u32,
-    pub dot12_in_null_addressed_frames: u32,
-    pub dot12_out_high_priority_frames: u32,
-    pub dot12_out_high_priority_octets: u64,
-    pub dot12_transition_into_trainings: u32,
-    pub dot12_hc_in_high_priority_octets: u64,
-    pub dot12_hc_in_norm_priority_octets: u64,
-    pub dot12_hc_out_high_priority_octets: u64,
-}
-
-#[derive(Debug)]
-pub struct Vlan {
-    pub vlan_id: u32,
-    pub octets: u64,
-    pub ucast_pkts: u32,
-    pub multicast_pkts: u32,
-    pub broadcast_pkts: u32,
-    pub discards: u32,
+        priority: u32,
+    },
+    ExtendedSwitch {
+        src_vlan: u32,
+        src_priority: u32,
+        dst_vlan: u32,
+        dst_priority: u32,
+    },
+    ExtendedRouter {
+        next_hop: IpAddr,
+        src_mask_len: u32,
+        dst_mask_len: u32,
+    },
+    ExtendedGateway {
+        next_hop: IpAddr,
+        r#as: u32,
+        src_as: u32,
+        src_peer_as: u32,
+        as_destinations: u32,
+        as_path_type: u32,
+        as_path_length: u32,
+        as_path: Vec<u32>,
+        communities_length: u32,
+        communities: Vec<u32>,
+        local_pref: u32,
+    },
+    EgressQueue {
+        queue: u32,
+    },
+    ExtendedACL {
+        number: u32,
+        name: String,
+        direction: u32,
+    },
+    ExtendedFunction {
+        symbol: String,
+    },
+    ExtendedTCPInfo {
+        direction: u32,  /* Sampled packet direction */
+        snd_mss: u32,    /* Cached effective mss, not including SACKS */
+        rcv_mss: u32,    /* Max. recv. segment size */
+        unacked: u32,    /* Packets which are "in flight" */
+        lost: u32,       /* Lost packets */
+        retrans: u32,    /* Retransmitted packets */
+        pmtu: u32,       /* Last pmtu seen by socket */
+        rtt: u32,        /* smoothed RTT (microseconds) */
+        rttvar: u32,     /* RTT variance (microseconds) */
+        snd_cwnd: u32,   /* Sending congestion window */
+        reordering: u32, /* Reordering */
+        min_rtt: u32,    /* Minimum RTT (microseconds) */
+    },
+    ExtendedLinuxReason {
+        // Linux drop_monitor reason
+        // opaque = flow_data; enterprise = 0; format = 1042
+        // https://github.com/torvalds/linux/blob/master/include/net/dropreason.h
+        // XDR spec:
+        //  struct extended_linux_drop_reason {
+        //    string reason<>; /* NET_DM_ATTR_REASON */
+        //  }
+        reason: String,
+    },
 }
 
 #[derive(Debug)]
@@ -556,351 +430,360 @@ pub struct Lane {
 }
 
 #[derive(Debug)]
-pub struct Sfp {
-    pub id: u32,
-    pub total_lanes: u32,    /* total lanes in module */
-    pub supply_voltage: u32, /* millivolts */
-    pub temperature: i32,    /* signed - in oC / 1000 */
-    pub lanes: Vec<Lane>,
-}
-
-#[derive(Debug)]
-pub struct Processor {
-    pub five_sec_cpu: u32, /* 5 second average CPU utilization */
-    pub one_min_cpu: u32,  /* 1 minute average CPU utilization */
-    pub five_min_cpu: u32, /* 5 minute average CPU utilization */
-    pub total_memory: u64, /* total memory (in bytes) */
-    pub free_memory: u64,  /* free memory (in bytes) */
-}
-
-#[derive(Debug)]
-pub struct PortName {
-    pub name: String,
-}
-
-#[derive(Debug)]
 pub struct HostAdapter {
     pub if_index: u32,
     pub mac_addresses: Vec<[u8; 6]>,
 }
 
-/// Phyical or virtual network adapter NIC/vNIC
-#[derive(Debug)]
-pub struct HostAdapters {
-    pub length: u32,
-    pub adapters: Vec<HostAdapter>,
-}
-
-#[derive(Debug)]
-pub struct HostParent {
-    pub container_type: u32,
-    pub container_index: u32,
-}
-
-#[derive(Debug)]
-pub struct HostDescription {
-    pub host: String,
-    pub uuid: [u8; 16],
-    pub machine_type: u32,
-    pub os_name: u32,
-    pub os_release: String,
-}
-
-#[derive(Debug)]
-pub struct HostCPU {
-    pub load_one: f32,     /* 1 minute load avg., -1.0 = unknown */
-    pub load_five: f32,    /* 5 minute load avg., -1.0 = unknown */
-    pub load_fifteen: f32, /* 15 minute load avg., -1.0 = unknown */
-
-    pub proc_run: u32,   /* total number of running processes */
-    pub proc_total: u32, /* total number of processes */
-    pub cpu_num: u32,    /* number of CPUs */
-    pub cpu_speed: u32,  /* speed in MHz of CPU */
-    pub uptime: u32,     /* seconds since last reboot */
-    pub cpu_user: u32,   /* user time (ms) */
-    pub cpu_nice: u32,   /* nice time (ms) */
-    pub cpu_system: u32, /* system time (ms) */
-    pub cpu_idle: u32,   /* idle time (ms) */
-    pub cpu_wio: u32,    /* time waiting for I/O to complete (ms) */
-    pub cpu_intr: u32,   /* time servicing interrupts (ms) */
-    pub cpu_sintr: u32,  /* time servicing soft interrupts (ms) */
-    pub interrupts: u32, /* interrupt count */
-    pub contexts: u32,   /* context switch count */
-
-    // theos fields might not empty
-    pub cpu_steal: u32,
-    pub cpu_guest: u32,
-    pub cpu_guest_nice: u32,
-}
-
-#[derive(Debug)]
-pub struct HostMemory {
-    pub mem_total: u64,   /* total kB */
-    pub mem_free: u64,    /* free kB */
-    pub mem_shared: u64,  /* shared kB */
-    pub mem_buffers: u64, /* buffers kB */
-    pub mem_cached: u64,  /* cached kB */
-    pub swap_total: u64,  /* swap total kB */
-    pub swap_free: u64,   /* swap free kB */
-    pub page_in: u32,     /* page in count */
-    pub page_out: u32,    /* page out count */
-    pub swap_in: u32,     /* swap in count */
-    pub swap_out: u32,    /* swap out count */
-}
-
-#[derive(Debug)]
-pub struct HostDiskIO {
-    pub disk_total: u64,    /* total disk size in bytes */
-    pub disk_free: u64,     /* total disk free in bytes */
-    pub part_max_used: u32, /* utilization of most utilized partition */
-
-    pub reads: u32,      /* reads issued */
-    pub bytes_read: u64, /* bytes read */
-    pub read_time: u32,  /* read time (ms) */
-
-    pub writes: u32,        /* writes completed */
-    pub bytes_written: u64, /* bytes written */
-    pub write_time: u32,    /* write time (ms) */
-}
-
-#[derive(Debug)]
-pub struct HostNetIO {
-    pub bytes_in: u64,    /* total bytes in */
-    pub packets_in: u32,  /* total packets in */
-    pub errs_in: u32,     /* total errors in */
-    pub drops_in: u32,    /* total drops in */
-    pub bytes_out: u64,   /* total bytes out */
-    pub packets_out: u32, /* total packets out */
-    pub errs_out: u32,    /* total errors out */
-    pub drops_out: u32,   /* total drops out */
-}
-
-#[derive(Debug)]
-pub struct Mib2IpGroup {
-    pub forwarding: u32,
-    pub default_ttl: u32,
-    pub in_receives: u32,
-    pub in_hdr_errors: u32,
-    pub in_addr_errors: u32,
-    pub forw_datagrams: u32,
-    pub in_unknown_protos: u32,
-    pub in_discards: u32,
-    pub in_delivers: u32,
-    pub out_requests: u32,
-    pub out_discards: u32,
-    pub out_no_routes: u32,
-    pub reasm_timeout: u32,
-    pub reasm_reqds: u32,
-    pub reasm_oks: u32,
-    pub reasm_fails: u32,
-    pub frag_oks: u32,
-    pub frag_fails: u32,
-    pub frag_creates: u32,
-}
-
-#[derive(Debug)]
-pub struct Mib2IcmpGroup {
-    pub in_msgs: u32,
-    pub in_errors: u32,
-    pub in_dest_unreachs: u32,
-    pub in_time_excds: u32,
-    pub in_param_probs: u32,
-    pub in_src_quenchs: u32,
-    pub in_redirects: u32,
-    pub in_echos: u32,
-    pub in_echo_reps: u32,
-    pub in_timestamps: u32,
-    pub in_addr_masks: u32,
-    pub in_addr_mask_reps: u32,
-    pub out_msgs: u32,
-    pub out_errors: u32,
-    pub out_dest_unreachs: u32,
-    pub out_time_excds: u32,
-    pub out_param_probs: u32,
-    pub out_src_quenchs: u32,
-    pub out_redirects: u32,
-    pub out_echos: u32,
-    pub out_echo_reps: u32,
-    pub out_timestamps: u32,
-    pub out_timestamp_reps: u32,
-    pub out_addr_masks: u32,
-    pub out_addr_mask_reps: u32,
-}
-
-#[derive(Debug)]
-pub struct Mib2TcpGroup {
-    pub rto_algorithm: u32,
-    pub rto_min: u32,
-    pub rto_max: u32,
-    pub max_conn: u32,
-    pub active_opens: u32,
-    pub passive_opens: u32,
-    pub attempt_fails: u32,
-    pub estab_resets: u32,
-    pub curr_estab: u32,
-    pub in_segs: u32,
-    pub out_segs: u32,
-    pub retrans_segs: u32,
-    pub in_errs: u32,
-    pub out_rsts: u32,
-    pub in_csum_errs: u32,
-}
-
-#[derive(Debug)]
-pub struct Mib2UdpGroup {
-    pub in_datagrams: u32,
-    pub no_ports: u32,
-    pub in_errors: u32,
-    pub out_datagrams: u32,
-    pub rcvbuf_errors: u32,
-    pub sndbuf_errors: u32,
-    pub in_csum_errors: u32,
-}
-
-#[derive(Debug)]
-pub struct VirtNode {
-    pub mhz: u32,         /* expected CPU frequency */
-    pub cpus: u32,        /* the number of active CPUs */
-    pub memory: u64,      /* memory size in bytes */
-    pub memory_free: u64, /* unassigned memory in bytes */
-    pub num_domains: u32, /* number of active domains */
-}
-
-#[derive(Debug)]
-pub struct VirtCpu {
-    pub state: u32,       /* virtDomainState */
-    pub cpu_time: u32,    /* the CPU time used (ms) */
-    pub nr_virt_cpu: u32, /* number of virtual CPUs for the domain */
-}
-
-#[derive(Debug)]
-pub struct VirtMemory {
-    pub memory: u64,     /* memory in bytes used by domain */
-    pub max_memory: u64, /* memory in bytes allowed */
-}
-
-#[derive(Debug)]
-pub struct VirtDiskIO {
-    pub capacity: u64,   /* logical size in bytes */
-    pub allocation: u64, /* current allocation in bytes */
-    pub available: u64,  /* remaining free bytes */
-    pub rd_req: u32,     /* number of read requests */
-    pub rd_bytes: u64,   /* number of read bytes */
-    pub wr_req: u32,     /* number of write requests */
-    pub wr_bytes: u64,   /* number of  written bytes */
-    pub errs: u32,       /* read/write errors */
-}
-
-#[derive(Debug)]
-pub struct VirtNetIO {
-    pub rx_bytes: u64,   /* total bytes received */
-    pub rx_packets: u32, /* total packets received */
-    pub rx_errs: u32,    /* total receive errors */
-    pub rx_drop: u32,    /* total receive drops */
-    pub tx_bytes: u64,   /* total bytes transmitted */
-    pub tx_packets: u32, /* total packets transmitted */
-    pub tx_errs: u32,    /* total transmit errors */
-    pub tx_drop: u32,    /* total transmit drops */
-}
-
-/// https://sflow.org/sflow_nvml.txt
-#[derive(Debug)]
-pub struct NvidiaGpu {
-    pub device_count: u32, /* see nvmlDeviceGetCount */
-    pub processes: u32,    /* see nvmlDeviceGetComputeRunningProcesses */
-    pub gpu_time: u32,     /* total milliseconds in which one or more
-                           kernels was executing on GPU
-                           sum across all devices */
-    pub mem_time: u32, /* total milliseconds during which global device
-                       memory was being read/written
-                       sum across all devices */
-    pub mem_total: u64, /* sum of framebuffer memory across devices
-                        see nvmlDeviceGetMemoryInfo */
-    pub mem_free: u64, /* sum of free framebuffer memory across devices
-                       see nvmlDeviceGetMemoryInfo */
-    pub ecc_errors: u32, /* sum of volatile ECC errors across devices
-                         see nvmlDeviceGetTotalEccErrors */
-    pub energy: u32, /* sum of millijoules across devices
-                     see nvmlDeviceGetPowerUsage */
-    pub temperature: u32, /* maximum temperature in degrees Celsius
-                          across devices
-                          see nvmlDeviceGetTemperature */
-    pub fan_speed: u32, /* maximum fan speed in percent across devices
-                        see nvmlDeviceGetFanSpeed */
-}
-
-// Broadcom switch ASIC table utilizations
-// opaque = counter_data; enterprise = 4413 (Broadcom); format = 3
-//
-// https://sflow.org/sflow_broadcom_tables.txt
-#[derive(Debug)]
-pub struct BcmTables {
-    pub host_entries: u32,
-    pub host_entries_max: u32,
-    pub ipv4_entries: u32,
-    pub ipv4_entries_max: u32,
-    pub ipv6_entries: u32,
-    pub ipv6_entries_max: u32,
-    pub ipv4_ipv6_entries: u32,
-    pub ipv4_ipv6_entries_max: u32,
-    pub long_ipv6_entries: u32,
-    pub long_ipv6_entries_max: u32,
-    pub total_routes: u32,
-    pub total_routes_max: u32,
-    pub ecmp_nexthops: u32,
-    pub ecmp_nexthops_max: u32,
-    pub mac_entries: u32,
-    pub mac_entries_max: u32,
-    pub ipv4_neighbors: u32,
-    pub ipv6_neighbors: u32,
-    pub ipv4_routes: u32,
-    pub ipv6_routes: u32,
-    pub acl_ingress_entries: u32,
-    pub acl_ingress_entries_max: u32,
-    pub acl_ingress_counters: u32,
-    pub acl_ingress_counters_max: u32,
-    pub acl_ingress_meters: u32,
-    pub acl_ingress_meters_max: u32,
-    pub acl_ingress_slices: u32,
-    pub acl_ingress_slices_max: u32,
-    pub acl_egress_entries: u32,
-    pub acl_egress_entries_max: u32,
-    pub acl_egress_counters: u32,
-    pub acl_egress_counters_max: u32,
-    pub acl_egress_meters: u32,
-    pub acl_egress_meters_max: u32,
-    pub acl_egress_slices: u32,
-    pub acl_egress_slices_max: u32,
-}
-
 #[derive(Debug)]
 pub enum CounterRecordData {
-    Interface(IfCounters),
-    Ethernet(EthernetCounters),
-    TokenRing(TokenRingCounters),
-    VgCounters(VgCounters),
-    Vlan(Vlan),
-    Sfp(Sfp),
-    Processor(Processor),
-    PortName(PortName),
-    HostDescription(HostDescription),
-    HostAdapters(HostAdapters),
-    HostParent(HostParent),
-    HostCPU(HostCPU),
-    HostMemory(HostMemory),
-    HostDiskIO(HostDiskIO),
-    HostNetIO(HostNetIO),
-    Mib2IpGroup(Mib2IpGroup),
-    Mib2IcmpGroup(Mib2IcmpGroup),
-    Mib2TcpGroup(Mib2TcpGroup),
-    Mib2UdpGroup(Mib2UdpGroup),
-    VirtNode(VirtNode),
-    VirtCpu(VirtCpu),
-    VirtMemory(VirtMemory),
-    VirtDisk(VirtDiskIO),
-    VirtNetIO(VirtNetIO),
-    NvidiaGpu(NvidiaGpu),
-    BcmTables(BcmTables),
+    Interface {
+        index: u32,
+        typ: u32,
+        speed: u64,
+        direction: u32,
+        status: u32,
+        in_octets: u64,
+        in_ucast_pkts: u32,
+        in_multicast_pkts: u32,
+        in_broadcast_pkts: u32,
+        in_discards: u32,
+        in_errors: u32,
+        in_unknown_protos: u32,
+        out_octets: u64,
+        out_ucast_pkts: u32,
+        out_multicast_pkts: u32,
+        out_broadcast_pkts: u32,
+        out_discards: u32,
+        out_errors: u32,
+        promiscuous_mode: u32,
+    },
+    Ethernet {
+        dot3_stats_alignment_errors: u32,
+        dot3_stats_fcs_errors: u32,
+        dot3_stats_single_collision_frames: u32,
+        dot3_stats_multiple_collision_frames: u32,
+        dot3_stats_sqe_test_errors: u32,
+        dot3_stats_deferred_transmissions: u32,
+        dot3_stats_late_collisions: u32,
+        dot3_stats_excessive_collisions: u32,
+        dot3_stats_internal_mac_transmit_errors: u32,
+        dot3_stats_carrier_sense_errors: u32,
+        dot3_stats_frame_too_longs: u32,
+        dot3_stats_internal_mac_receive_errors: u32,
+        dot3_stats_symbol_errors: u32,
+    },
+    TokenRing {
+        dot5_stats_line_errors: u32,
+        dot5_stats_burst_errors: u32,
+        dot5_stats_ac_errors: u32,
+        dot5_stats_abort_trans_errors: u32,
+        dot5_stats_internal_errors: u32,
+        dot5_stats_lost_frame_errors: u32,
+        dot5_stats_receive_congestions: u32,
+        dot5_stats_frame_copied_errors: u32,
+        dot5_stats_token_errors: u32,
+        dot5_stats_soft_errors: u32,
+        dot5_stats_hard_errors: u32,
+        dot5_stats_signal_loss: u32,
+        dot5_stats_transmit_beacons: u32,
+        dot5_stats_recoverys: u32,
+        dot5_stats_lobe_wires: u32,
+        dot5_stats_removes: u32,
+        dot5_stats_singles: u32,
+        dot5_stats_freq_errors: u32,
+    },
+    VgCounters {
+        dot12_in_high_priority_frames: u32,
+        dot12_in_high_priority_octets: u64,
+        dot12_in_norm_priority_frames: u32,
+        dot12_in_norm_priority_octets: u64,
+        dot12_in_ipm_errors: u32,
+        dot12_in_oversize_frame_errors: u32,
+        dot12_in_data_errors: u32,
+        dot12_in_null_addressed_frames: u32,
+        dot12_out_high_priority_frames: u32,
+        dot12_out_high_priority_octets: u64,
+        dot12_transition_into_trainings: u32,
+        dot12_hc_in_high_priority_octets: u64,
+        dot12_hc_in_norm_priority_octets: u64,
+        dot12_hc_out_high_priority_octets: u64,
+    },
+    Vlan {
+        vlan_id: u32,
+        octets: u64,
+        ucast_pkts: u32,
+        multicast_pkts: u32,
+        broadcast_pkts: u32,
+        discards: u32,
+    },
+    Sfp {
+        id: u32,
+        total_lanes: u32,    /* total lanes in module */
+        supply_voltage: u32, /* millivolts */
+        temperature: i32,    /* signed - in oC / 1000 */
+        lanes: Vec<Lane>,
+    },
+    Processor {
+        five_sec_cpu: u32, /* 5 second average CPU utilization */
+        one_min_cpu: u32,  /* 1 minute average CPU utilization */
+        five_min_cpu: u32, /* 5 minute average CPU utilization */
+        total_memory: u64, /* total memory (in bytes) */
+        free_memory: u64,  /* free memory (in bytes) */
+    },
+    PortName {
+        name: String,
+    },
+    HostDescription {
+        host: String,
+        uuid: [u8; 16],
+        machine_type: u32,
+        os_name: u32,
+        os_release: String,
+    },
+    /// Physical or virtual network adapter NIC/vNIC
+    HostAdapters {
+        length: u32,
+        adapters: Vec<HostAdapter>,
+    },
+    HostParent {
+        container_type: u32,
+        container_index: u32,
+    },
+    HostCPU {
+        load_one: f32,     /* 1-minute load avg., -1.0 = unknown */
+        load_five: f32,    /* 5-minute load avg., -1.0 = unknown */
+        load_fifteen: f32, /* 15-minute load avg., -1.0 = unknown */
+
+        proc_run: u32,   /* total number of running processes */
+        proc_total: u32, /* total number of processes */
+        cpu_num: u32,    /* number of CPUs */
+        cpu_speed: u32,  /* speed in MHz of CPU */
+        uptime: u32,     /* seconds since last reboot */
+        cpu_user: u32,   /* user time (ms) */
+        cpu_nice: u32,   /* nice time (ms) */
+        cpu_system: u32, /* system time (ms) */
+        cpu_idle: u32,   /* idle time (ms) */
+        cpu_wio: u32,    /* time waiting for I/O to complete (ms) */
+        cpu_intr: u32,   /* time servicing interrupts (ms) */
+        cpu_sintr: u32,  /* time servicing soft interrupts (ms) */
+        interrupts: u32, /* interrupt count */
+        contexts: u32,   /* context switch count */
+
+        // theos fields might not empty
+        cpu_steal: u32,
+        cpu_guest: u32,
+        cpu_guest_nice: u32,
+    },
+    HostMemory {
+        mem_total: u64,   /* total kB */
+        mem_free: u64,    /* free kB */
+        mem_shared: u64,  /* shared kB */
+        mem_buffers: u64, /* buffers kB */
+        mem_cached: u64,  /* cached kB */
+        swap_total: u64,  /* swap total kB */
+        swap_free: u64,   /* swap free kB */
+        page_in: u32,     /* page in count */
+        page_out: u32,    /* page out count */
+        swap_in: u32,     /* swap in count */
+        swap_out: u32,    /* swap out count */
+    },
+    HostDiskIO {
+        disk_total: u64,    /* total disk size in bytes */
+        disk_free: u64,     /* total disk free in bytes */
+        part_max_used: u32, /* utilization of most utilized partition */
+
+        reads: u32,      /* reads issued */
+        bytes_read: u64, /* bytes read */
+        read_time: u32,  /* read time (ms) */
+
+        writes: u32,        /* writes completed */
+        bytes_written: u64, /* bytes written */
+        write_time: u32,    /* write time (ms) */
+    },
+    HostNetIO {
+        bytes_in: u64,    /* total bytes in */
+        packets_in: u32,  /* total packets in */
+        errs_in: u32,     /* total errors in */
+        drops_in: u32,    /* total drops in */
+        bytes_out: u64,   /* total bytes out */
+        packets_out: u32, /* total packets out */
+        errs_out: u32,    /* total errors out */
+        drops_out: u32,   /* total drops out */
+    },
+    Mib2IpGroup {
+        forwarding: u32,
+        default_ttl: u32,
+        in_receives: u32,
+        in_hdr_errors: u32,
+        in_addr_errors: u32,
+        forw_datagrams: u32,
+        in_unknown_protos: u32,
+        in_discards: u32,
+        in_delivers: u32,
+        out_requests: u32,
+        out_discards: u32,
+        out_no_routes: u32,
+        reasm_timeout: u32,
+        reasm_reqds: u32,
+        reasm_oks: u32,
+        reasm_fails: u32,
+        frag_oks: u32,
+        frag_fails: u32,
+        frag_creates: u32,
+    },
+    Mib2IcmpGroup {
+        in_msgs: u32,
+        in_errors: u32,
+        in_dest_unreachs: u32,
+        in_time_excds: u32,
+        in_param_probs: u32,
+        in_src_quenchs: u32,
+        in_redirects: u32,
+        in_echos: u32,
+        in_echo_reps: u32,
+        in_timestamps: u32,
+        in_addr_masks: u32,
+        in_addr_mask_reps: u32,
+        out_msgs: u32,
+        out_errors: u32,
+        out_dest_unreachs: u32,
+        out_time_excds: u32,
+        out_param_probs: u32,
+        out_src_quenchs: u32,
+        out_redirects: u32,
+        out_echos: u32,
+        out_echo_reps: u32,
+        out_timestamps: u32,
+        out_timestamp_reps: u32,
+        out_addr_masks: u32,
+        out_addr_mask_reps: u32,
+    },
+    Mib2TcpGroup {
+        rto_algorithm: u32,
+        rto_min: u32,
+        rto_max: u32,
+        max_conn: u32,
+        active_opens: u32,
+        passive_opens: u32,
+        attempt_fails: u32,
+        estab_resets: u32,
+        curr_estab: u32,
+        in_segs: u32,
+        out_segs: u32,
+        retrans_segs: u32,
+        in_errs: u32,
+        out_rsts: u32,
+        in_csum_errs: u32,
+    },
+    Mib2UdpGroup {
+        in_datagrams: u32,
+        no_ports: u32,
+        in_errors: u32,
+        out_datagrams: u32,
+        rcvbuf_errors: u32,
+        sndbuf_errors: u32,
+        in_csum_errors: u32,
+    },
+    VirtNode {
+        mhz: u32,         /* expected CPU frequency */
+        cpus: u32,        /* the number of active CPUs */
+        memory: u64,      /* memory size in bytes */
+        memory_free: u64, /* unassigned memory in bytes */
+        num_domains: u32, /* number of active domains */
+    },
+    VirtCpu {
+        state: u32,       /* virtDomainState */
+        cpu_time: u32,    /* the CPU time used (ms) */
+        nr_virt_cpu: u32, /* number of virtual CPUs for the domain */
+    },
+    VirtMemory {
+        memory: u64,     /* memory in bytes used by domain */
+        max_memory: u64, /* memory in bytes allowed */
+    },
+    VirtDisk {
+        capacity: u64,   /* logical size in bytes */
+        allocation: u64, /* current allocation in bytes */
+        available: u64,  /* remaining free bytes */
+        rd_req: u32,     /* number of read requests */
+        rd_bytes: u64,   /* number of read bytes */
+        wr_req: u32,     /* number of write requests */
+        wr_bytes: u64,   /* number of  written bytes */
+        errs: u32,       /* read/write errors */
+    },
+    VirtNetIO {
+        rx_bytes: u64,   /* total bytes received */
+        rx_packets: u32, /* total packets received */
+        rx_errs: u32,    /* total receive errors */
+        rx_drop: u32,    /* total receive drops */
+        tx_bytes: u64,   /* total bytes transmitted */
+        tx_packets: u32, /* total packets transmitted */
+        tx_errs: u32,    /* total transmit errors */
+        tx_drop: u32,    /* total transmit drops */
+    },
+    /// https://sflow.org/sflow_nvml.txt
+    NvidiaGpu {
+        device_count: u32, /* see nvmlDeviceGetCount */
+        processes: u32,    /* see nvmlDeviceGetComputeRunningProcesses */
+        // total milliseconds in which one or more kernels was executing on GPU sum across all devices
+        gpu_time: u32,
+        // total milliseconds during which global device memory was being read/written sum across all devices
+        mem_time: u32,
+        // sum of framebuffer memory across devices, see nvmlDeviceGetMemoryInfo
+        mem_total: u64,
+        // sum of free framebuffer memory across devices, see nvmlDeviceGetMemoryInfo
+        mem_free: u64,
+        // sum of volatile ECC errors across devices, see nvmlDeviceGetTotalEccErrors
+        ecc_errors: u32,
+        // sum of millijoules across devices, see nvmlDeviceGetPowerUsage
+        energy: u32,
+        // maximum temperature in degrees Celsius across devices, see nvmlDeviceGetTemperature
+        temperature: u32,
+        // maximum fan speed in percent across devices, see nvmlDeviceGetFanSpeed
+        fan_speed: u32,
+    },
+    // Broadcom switch ASIC table utilization
+    // opaque = counter_data; enterprise = 4413 (Broadcom); format = 3
+    //
+    // https://sflow.org/sflow_broadcom_tables.txt
+    BcmTables {
+        host_entries: u32,
+        host_entries_max: u32,
+        ipv4_entries: u32,
+        ipv4_entries_max: u32,
+        ipv6_entries: u32,
+        ipv6_entries_max: u32,
+        ipv4_ipv6_entries: u32,
+        ipv4_ipv6_entries_max: u32,
+        long_ipv6_entries: u32,
+        long_ipv6_entries_max: u32,
+        total_routes: u32,
+        total_routes_max: u32,
+        ecmp_nexthops: u32,
+        ecmp_nexthops_max: u32,
+        mac_entries: u32,
+        mac_entries_max: u32,
+        ipv4_neighbors: u32,
+        ipv6_neighbors: u32,
+        ipv4_routes: u32,
+        ipv6_routes: u32,
+        acl_ingress_entries: u32,
+        acl_ingress_entries_max: u32,
+        acl_ingress_counters: u32,
+        acl_ingress_counters_max: u32,
+        acl_ingress_meters: u32,
+        acl_ingress_meters_max: u32,
+        acl_ingress_slices: u32,
+        acl_ingress_slices_max: u32,
+        acl_egress_entries: u32,
+        acl_egress_entries_max: u32,
+        acl_egress_counters: u32,
+        acl_egress_counters_max: u32,
+        acl_egress_meters: u32,
+        acl_egress_meters_max: u32,
+        acl_egress_slices: u32,
+        acl_egress_slices_max: u32,
+    },
 
     Raw(u32, Vec<u8>),
 }
@@ -1022,7 +905,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let out_errors = buf.read_u32()?;
             let promiscuous_mode = buf.read_u32()?;
 
-            CounterRecordData::Interface(IfCounters {
+            CounterRecordData::Interface {
                 index,
                 typ,
                 speed,
@@ -1042,7 +925,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 out_discards,
                 out_errors,
                 promiscuous_mode,
-            })
+            }
         }
         COUNTER_TYPE_ETHERNET => {
             let dot3_stats_alignment_errors = buf.read_u32()?;
@@ -1059,7 +942,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let dot3_stats_internal_mac_receive_errors = buf.read_u32()?;
             let dot3_stats_symbol_errors = buf.read_u32()?;
 
-            CounterRecordData::Ethernet(EthernetCounters {
+            CounterRecordData::Ethernet {
                 dot3_stats_alignment_errors,
                 dot3_stats_fcs_errors,
                 dot3_stats_single_collision_frames,
@@ -1073,7 +956,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 dot3_stats_frame_too_longs,
                 dot3_stats_internal_mac_receive_errors,
                 dot3_stats_symbol_errors,
-            })
+            }
         }
         COUNTER_TYPE_TOKEN_RING => {
             let dot5_stats_line_errors = buf.read_u32()?;
@@ -1095,7 +978,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let dot5_stats_singles = buf.read_u32()?;
             let dot5_stats_freq_errors = buf.read_u32()?;
 
-            CounterRecordData::TokenRing(TokenRingCounters {
+            CounterRecordData::TokenRing {
                 dot5_stats_line_errors,
                 dot5_stats_burst_errors,
                 dot5_stats_ac_errors,
@@ -1114,7 +997,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 dot5_stats_removes,
                 dot5_stats_singles,
                 dot5_stats_freq_errors,
-            })
+            }
         }
         COUNTER_TYPE_VG => {
             let dot12_in_high_priority_frames = buf.read_u32()?;
@@ -1132,7 +1015,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let dot12_hc_in_norm_priority_octets = buf.read_u64()?;
             let dot12_hc_out_high_priority_octets = buf.read_u64()?;
 
-            CounterRecordData::VgCounters(VgCounters {
+            CounterRecordData::VgCounters {
                 dot12_in_high_priority_frames,
                 dot12_in_high_priority_octets,
                 dot12_in_norm_priority_frames,
@@ -1147,7 +1030,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 dot12_hc_in_high_priority_octets,
                 dot12_hc_in_norm_priority_octets,
                 dot12_hc_out_high_priority_octets,
-            })
+            }
         }
         COUNTER_TYPE_VLAN => {
             let vlan_id = buf.read_u32()?;
@@ -1157,14 +1040,14 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let broadcast_pkts = buf.read_u32()?;
             let discards = buf.read_u32()?;
 
-            CounterRecordData::Vlan(Vlan {
+            CounterRecordData::Vlan {
                 vlan_id,
                 octets,
                 ucast_pkts,
                 multicast_pkts,
                 broadcast_pkts,
                 discards,
-            })
+            }
         }
         COUNTER_TYPE_SFP => {
             let id = buf.read_u32()?;
@@ -1199,13 +1082,13 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 })
             }
 
-            CounterRecordData::Sfp(Sfp {
+            CounterRecordData::Sfp {
                 id,
                 total_lanes,
                 supply_voltage,
                 temperature,
                 lanes,
-            })
+            }
         }
         COUNTER_TYPE_HOST_CPU => {
             let load_one = buf.read_f32()?;
@@ -1231,7 +1114,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let cpu_guest = buf.read_u32()?;
             let cpu_guest_nice = buf.read_u32()?;
 
-            CounterRecordData::HostCPU(HostCPU {
+            CounterRecordData::HostCPU {
                 load_one,
                 load_five,
                 load_fifteen,
@@ -1253,7 +1136,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 cpu_steal,
                 cpu_guest,
                 cpu_guest_nice,
-            })
+            }
         }
         COUNTER_TYPE_PROCESSOR => {
             let five_sec_cpu = buf.read_u32()?;
@@ -1262,17 +1145,17 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let total_memory = buf.read_u64()?;
             let free_memory = buf.read_u64()?;
 
-            CounterRecordData::Processor(Processor {
+            CounterRecordData::Processor {
                 five_sec_cpu,
                 one_min_cpu,
                 five_min_cpu,
                 total_memory,
                 free_memory,
-            })
+            }
         }
         COUNTER_TYPE_PORT_NAME => {
             let name = read_string(buf)?;
-            CounterRecordData::PortName(PortName { name })
+            CounterRecordData::PortName { name }
         }
         COUNTER_TYPE_HOST_DESCRIPTION => {
             let host = read_string(buf)?;
@@ -1285,13 +1168,13 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
 
             let os_release = read_string(buf)?;
 
-            CounterRecordData::HostDescription(HostDescription {
+            CounterRecordData::HostDescription {
                 host,
                 uuid,
                 machine_type,
                 os_name,
                 os_release,
-            })
+            }
         }
         COUNTER_TYPE_HOST_ADAPTERS => {
             let length = buf.read_u32()?;
@@ -1311,16 +1194,16 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 });
             }
 
-            CounterRecordData::HostAdapters(HostAdapters { length, adapters })
+            CounterRecordData::HostAdapters { length, adapters }
         }
         COUNTER_TYPE_HOST_PARENT => {
             let container_type = buf.read_u32()?;
             let container_index = buf.read_u32()?;
 
-            CounterRecordData::HostParent(HostParent {
+            CounterRecordData::HostParent {
                 container_type,
                 container_index,
-            })
+            }
         }
         COUNTER_TYPE_HOST_MEMORY => {
             let mem_total = buf.read_u64()?;
@@ -1335,7 +1218,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let swap_in = buf.read_u32()?;
             let swap_out = buf.read_u32()?;
 
-            CounterRecordData::HostMemory(HostMemory {
+            CounterRecordData::HostMemory {
                 mem_total,
                 mem_free,
                 mem_shared,
@@ -1347,7 +1230,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 page_out,
                 swap_in,
                 swap_out,
-            })
+            }
         }
         COUNTER_TYPE_HOST_DISK_IO => {
             let disk_total = buf.read_u64()?;
@@ -1360,7 +1243,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let bytes_written = buf.read_u64()?;
             let write_time = buf.read_u32()?;
 
-            CounterRecordData::HostDiskIO(HostDiskIO {
+            CounterRecordData::HostDiskIO {
                 disk_total,
                 disk_free,
                 part_max_used,
@@ -1370,7 +1253,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 writes,
                 bytes_written,
                 write_time,
-            })
+            }
         }
         COUNTER_TYPE_HOST_NET_IO => {
             let bytes_in = buf.read_u64()?;
@@ -1382,7 +1265,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let errs_out = buf.read_u32()?;
             let drops_out = buf.read_u32()?;
 
-            CounterRecordData::HostNetIO(HostNetIO {
+            CounterRecordData::HostNetIO {
                 bytes_in,
                 packets_in,
                 errs_in,
@@ -1391,7 +1274,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 packets_out,
                 errs_out,
                 drops_out,
-            })
+            }
         }
         COUNTER_TYPE_MIB2_IP_GROUP => {
             let forwarding = buf.read_u32()?;
@@ -1414,7 +1297,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let frag_fails = buf.read_u32()?;
             let frag_creates = buf.read_u32()?;
 
-            CounterRecordData::Mib2IpGroup(Mib2IpGroup {
+            CounterRecordData::Mib2IpGroup {
                 forwarding,
                 default_ttl,
                 in_receives,
@@ -1434,7 +1317,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 frag_oks,
                 frag_fails,
                 frag_creates,
-            })
+            }
         }
         COUNTER_TYPE_MIB2_ICMP_GROUP => {
             let in_msgs = buf.read_u32()?;
@@ -1463,7 +1346,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let out_addr_masks = buf.read_u32()?;
             let out_addr_mask_reps = buf.read_u32()?;
 
-            CounterRecordData::Mib2IcmpGroup(Mib2IcmpGroup {
+            CounterRecordData::Mib2IcmpGroup {
                 in_msgs,
                 in_errors,
                 in_dest_unreachs,
@@ -1489,7 +1372,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 out_timestamp_reps,
                 out_addr_masks,
                 out_addr_mask_reps,
-            })
+            }
         }
         COUNTER_TYPE_MIB2_TCP_GROUP => {
             let rto_algorithm = buf.read_u32()?;
@@ -1508,7 +1391,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let out_rsts = buf.read_u32()?;
             let in_csum_errs = buf.read_u32()?;
 
-            CounterRecordData::Mib2TcpGroup(Mib2TcpGroup {
+            CounterRecordData::Mib2TcpGroup {
                 rto_algorithm,
                 rto_min,
                 rto_max,
@@ -1524,7 +1407,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 in_errs,
                 out_rsts,
                 in_csum_errs,
-            })
+            }
         }
         COUNTER_TYPE_MIB2_UDP_GROUP => {
             let in_datagrams = buf.read_u32()?;
@@ -1535,7 +1418,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let sndbuf_errors = buf.read_u32()?;
             let in_csum_errors = buf.read_u32()?;
 
-            CounterRecordData::Mib2UdpGroup(Mib2UdpGroup {
+            CounterRecordData::Mib2UdpGroup {
                 in_datagrams,
                 no_ports,
                 in_errors,
@@ -1543,7 +1426,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 rcvbuf_errors,
                 sndbuf_errors,
                 in_csum_errors,
-            })
+            }
         }
         COUNTER_TYPE_VIRT_NODE => {
             let mhz = buf.read_u32()?;
@@ -1552,30 +1435,30 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let memory_free = buf.read_u64()?;
             let num_domains = buf.read_u32()?;
 
-            CounterRecordData::VirtNode(VirtNode {
+            CounterRecordData::VirtNode {
                 mhz,
                 cpus,
                 memory,
                 memory_free,
                 num_domains,
-            })
+            }
         }
         COUNTER_TYPE_VIRT_CPU => {
             let state = buf.read_u32()?;
             let cpu_time = buf.read_u32()?;
             let nr_virt_cpu = buf.read_u32()?;
 
-            CounterRecordData::VirtCpu(VirtCpu {
+            CounterRecordData::VirtCpu {
                 state,
                 cpu_time,
                 nr_virt_cpu,
-            })
+            }
         }
         COUNTER_TYPE_VIRT_MEMORY => {
             let memory = buf.read_u64()?;
             let max_memory = buf.read_u64()?;
 
-            CounterRecordData::VirtMemory(VirtMemory { memory, max_memory })
+            CounterRecordData::VirtMemory { memory, max_memory }
         }
         COUNTER_TYPE_VIRT_DISK_IO => {
             let capacity = buf.read_u64()?;
@@ -1587,7 +1470,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let wr_bytes = buf.read_u64()?;
             let errs = buf.read_u32()?;
 
-            CounterRecordData::VirtDisk(VirtDiskIO {
+            CounterRecordData::VirtDisk {
                 capacity,
                 allocation,
                 available,
@@ -1596,7 +1479,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 wr_req,
                 wr_bytes,
                 errs,
-            })
+            }
         }
 
         COUNTER_TYPE_VIRT_NET_IO => {
@@ -1609,7 +1492,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let tx_errs = buf.read_u32()?;
             let tx_drop = buf.read_u32()?;
 
-            CounterRecordData::VirtNetIO(VirtNetIO {
+            CounterRecordData::VirtNetIO {
                 rx_bytes,
                 rx_packets,
                 rx_errs,
@@ -1618,7 +1501,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 tx_packets,
                 tx_errs,
                 tx_drop,
-            })
+            }
         }
 
         COUNTER_TYPE_NVIDIA_GPU => {
@@ -1633,7 +1516,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let temperature = buf.read_u32()?;
             let fan_speed = buf.read_u32()?;
 
-            CounterRecordData::NvidiaGpu(NvidiaGpu {
+            CounterRecordData::NvidiaGpu {
                 device_count,
                 processes,
                 gpu_time,
@@ -1644,7 +1527,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 energy,
                 temperature,
                 fan_speed,
-            })
+            }
         }
 
         COUNTER_TYPE_BCM_TABLES => {
@@ -1685,7 +1568,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
             let acl_egress_slices = buf.read_u32()?;
             let acl_egress_slices_max = buf.read_u32()?;
 
-            CounterRecordData::BcmTables(BcmTables {
+            CounterRecordData::BcmTables {
                 host_entries,
                 host_entries_max,
                 ipv4_entries,
@@ -1722,7 +1605,7 @@ fn decode_counter_record(buf: &mut Cursor<&[u8]>) -> Result<CounterRecord, Error
                 acl_egress_meters_max,
                 acl_egress_slices,
                 acl_egress_slices_max,
-            })
+            }
         }
 
         _ => {
@@ -1756,17 +1639,17 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             let mut header_bytes = vec![0; length as usize - 4 * 4];
             buf.read_exact(&mut header_bytes)?;
 
-            FlowRecord::Raw(FlowRecordRaw {
+            FlowRecord::Raw {
                 protocol,
                 frame_length,
                 stripped,
                 original_length,
                 header_bytes,
-            })
+            }
         }
         FLOW_TYPE_EXT_LINUX_REASON => {
             let reason = read_string(buf)?;
-            FlowRecord::ExtendedLinuxReason(ExtendedLinuxReason { reason })
+            FlowRecord::ExtendedLinuxReason { reason }
         }
         FLOW_TYPE_ETH => {
             let length = buf.read_u32()?;
@@ -1776,12 +1659,12 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             buf.read_exact(&mut dst_mac)?;
             let eth_type = buf.read_u32()?;
 
-            FlowRecord::SampledEthernet(FlowRecordSampleEthernet {
+            FlowRecord::SampledEthernet {
                 length,
                 src_mac,
                 dst_mac,
                 eth_type,
-            })
+            }
         }
         FLOW_TYPE_IPV4 => {
             let length = buf.read_u32()?;
@@ -1797,7 +1680,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             let tcp_flags = buf.read_u32()?;
             let tos = buf.read_u32()?;
 
-            FlowRecord::SampledIpv4(SampledIpv4 {
+            FlowRecord::SampledIpv4 {
                 length,
                 protocol,
                 src_ip,
@@ -1806,7 +1689,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
                 dst_port,
                 tcp_flags,
                 tos,
-            })
+            }
         }
         FLOW_TYPE_IPV6 => {
             let length = buf.read_u32()?;
@@ -1822,7 +1705,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             let tcp_flags = buf.read_u32()?;
             let priority = buf.read_u32()?;
 
-            FlowRecord::SampledIpv6(SampledIpv6 {
+            FlowRecord::SampledIpv6 {
                 length,
                 protocol,
                 src_ip,
@@ -1831,7 +1714,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
                 dst_port,
                 tcp_flags,
                 priority,
-            })
+            }
         }
         FLOW_TYPE_EXT_SWITCH => {
             let src_vlan = buf.read_u32()?;
@@ -1839,23 +1722,23 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             let dst_vlan = buf.read_u32()?;
             let dst_priority = buf.read_u32()?;
 
-            FlowRecord::ExtendedSwitch(ExtendedSwitch {
+            FlowRecord::ExtendedSwitch {
                 src_vlan,
                 src_priority,
                 dst_vlan,
                 dst_priority,
-            })
+            }
         }
         FLOW_TYPE_EXT_ROUTER => {
             let next_hop = decode_ipaddr(buf)?;
             let src_mask_len = buf.read_u32()?;
             let dst_mask_len = buf.read_u32()?;
 
-            FlowRecord::ExtendedRouter(ExtendedRouter {
+            FlowRecord::ExtendedRouter {
                 next_hop,
                 src_mask_len,
                 dst_mask_len,
-            })
+            }
         }
         FLOW_TYPE_EXT_GATEWAY => {
             let next_hop = decode_ipaddr(buf)?;
@@ -1900,7 +1783,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
 
             let local_pref = buf.read_u32()?;
 
-            FlowRecord::ExtendedGateway(ExtendedGateway {
+            FlowRecord::ExtendedGateway {
                 next_hop,
                 r#as,
                 src_as,
@@ -1912,26 +1795,26 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
                 communities_length,
                 communities,
                 local_pref,
-            })
+            }
         }
-        FLOW_TYPE_EGRESS_QUEUE => FlowRecord::EgressQueue(EgressQueue {
+        FLOW_TYPE_EGRESS_QUEUE => FlowRecord::EgressQueue {
             queue: buf.read_u32()?,
-        }),
+        },
         FLOW_TYPE_EXT_ACL => {
             let number = buf.read_u32()?;
             let name = read_string(buf)?;
             let direction = buf.read_u32()?;
 
-            FlowRecord::ExtendedACL(ExtendedACL {
+            FlowRecord::ExtendedACL {
                 number,
                 name,
                 direction,
-            })
+            }
         }
         FLOW_TYPE_EXT_FUNCTION => {
             let symbol = read_string(buf)?;
 
-            FlowRecord::ExtendedFunction(ExtendedFunction { symbol })
+            FlowRecord::ExtendedFunction { symbol }
         }
         FLOW_TYPE_EXT_TCP_INFO => {
             let direction = buf.read_u32()?;
@@ -1947,7 +1830,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
             let reordering = buf.read_u32()?;
             let min_rtt = buf.read_u32()?;
 
-            FlowRecord::ExtendedTCPInfo(ExtendedTCPInfo {
+            FlowRecord::ExtendedTCPInfo {
                 direction,
                 snd_mss,
                 rcv_mss,
@@ -1960,7 +1843,7 @@ fn decode_flow_record(buf: &mut Cursor<&[u8]>) -> Result<FlowRecord, Error> {
                 snd_cwnd,
                 reordering,
                 min_rtt,
-            })
+            }
         }
         _ => {
             // not support yet
@@ -2295,9 +2178,7 @@ mod tests {
             SampleData::Drop { records, .. } => {
                 assert_eq!(records.len(), 1);
 
-                assert!(
-                    matches!(records[0], FlowRecord::EgressQueue(EgressQueue { queue }) if queue == 42)
-                )
+                assert!(matches!(records[0], FlowRecord::EgressQueue { queue } if queue == 42))
             }
             _ => panic!(),
         }
@@ -2324,7 +2205,7 @@ mod tests {
                 assert_eq!(records.len(), 1);
 
                 assert!(
-                    matches!(&records[0], FlowRecord::ExtendedACL(ExtendedACL {number,name,direction}) if *number == 42 && name == "foo!" && *direction == 2 )
+                    matches!(&records[0], FlowRecord::ExtendedACL {number,name,direction} if *number == 42 && name == "foo!" && *direction == 2 )
                 )
             }
             _ => panic!(),
@@ -2352,7 +2233,7 @@ mod tests {
                 assert_eq!(records.len(), 1);
 
                 assert!(
-                    matches!(&records[0], FlowRecord::ExtendedFunction(ExtendedFunction { symbol }) if symbol == "foobar")
+                    matches!(&records[0], FlowRecord::ExtendedFunction { symbol } if symbol == "foobar")
                 )
             }
             _ => panic!(),
