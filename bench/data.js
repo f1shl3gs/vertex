@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748664183432,
+  "lastUpdate": 1748664222940,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca43575d3953fb304c74618702ac949694bdb18a",
-          "message": "Merge pull request #2262 from f1shl3gs/dependabot/cargo/tokio-util-0.7.14\n\nchore(deps): bump tokio-util from 0.7.13 to 0.7.14",
-          "timestamp": "2025-03-14T12:38:26+08:00",
-          "tree_id": "4a8c5c0d0f6a014c4033f4e216e692720183c640",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca43575d3953fb304c74618702ac949694bdb18a"
-        },
-        "date": 1741927710564,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22924000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 584150,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.421,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "245382f7d1dea5ae013ed707602ca3ef780d4fa9",
           "message": "Merge pull request #2261 from f1shl3gs/dependabot/cargo/tokio-1.44.1\n\nchore(deps): bump tokio from 1.44.0 to 1.44.1",
           "timestamp": "2025-03-14T13:29:25+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.846,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bbbb63d3befb52715b868e0429b7788586f19c27",
+          "message": "Merge pull request #2371 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
+          "timestamp": "2025-05-31T11:52:40+08:00",
+          "tree_id": "8113dba7bd69db9cf1232453e1f3705bcfbd653b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bbbb63d3befb52715b868e0429b7788586f19c27"
+        },
+        "date": 1748664200976,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22973000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 615480,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.851,
             "unit": "ns/op"
           }
         ]
