@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748714167311,
+  "lastUpdate": 1748714459230,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3885b2061a4949dfdac7569bab2367a030cf0d94",
-          "message": "Merge pull request #2265 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-03-15T00:29:07+08:00",
-          "tree_id": "7aefb33daeff4a7b4158f798e89e133783bd4090",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3885b2061a4949dfdac7569bab2367a030cf0d94"
-        },
-        "date": 1741969863684,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 537820,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 548460,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f0c1359d54e1cc7a340aa4dffee9a61efb842d25",
+          "message": "Merge pull request #2376 from f1shl3gs/sources/audit/optimize_syscall_lookup\n\nsources/audit: optimize syscall lookup, reduce binary size",
+          "timestamp": "2025-06-01T01:58:21+08:00",
+          "tree_id": "cd53a319d95c7be598f23f4678b9284e32f2434e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f0c1359d54e1cc7a340aa4dffee9a61efb842d25"
+        },
+        "date": 1748714437234,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 533030,
             "unit": "ns/op"
           }
         ]
