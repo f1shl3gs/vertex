@@ -18,11 +18,11 @@ use tokio::{io::AsyncRead, io::ReadBuf, net::TcpStream};
 use tokio_rustls::TlsConnector;
 use tokio_util::codec::Encoder;
 
-use super::{SinkBuildError, SocketMode};
+use super::socket_bytes_sink::{BytesSink, ShutdownCheck};
+use super::util::{SinkBuildError, SocketMode};
 use crate::batch::EncodedEvent;
 use crate::dns::Resolver;
 use crate::sink::VecSinkExt;
-use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsStream, TlsConfig, TlsError};
 use crate::{Healthcheck, Sink, StreamSink, dns};

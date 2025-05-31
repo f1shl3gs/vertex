@@ -2,7 +2,7 @@ use std::io;
 
 use bytes::Bytes;
 use event::{Event, EventFinalizers, Finalizable};
-use framework::sink::util::http::HttpRequest;
+use framework::sink::http::HttpRequest;
 use framework::sink::util::{Compression, EncodeResult, RequestBuilder};
 
 use super::encoder::HttpEncoder;
