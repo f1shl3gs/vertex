@@ -4,7 +4,7 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
 use chrono::Utc;
 use configurable::configurable_component;
-use datagram::*;
+use datagram::{CounterRecord, CounterRecordData, Datagram, FlowRecord, Lane, Sample, SampleData};
 use event::{LogRecord, Metric, tags};
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::{Error, Source};
@@ -303,34 +303,34 @@ fn convert_flow_record(record: FlowRecord) -> Value {
     let mut value = Value::Object(Default::default());
 
     match record {
-        FlowRecord::Raw(FlowRecordRaw {
+        FlowRecord::Raw {
             protocol,
             frame_length,
             stripped,
             original_length,
             header_bytes,
-        }) => {
+        } => {
             value.insert("protocol", protocol);
             value.insert("frame_length", frame_length);
             value.insert("stripped", stripped);
             value.insert("original_length", original_length);
             value.insert("header_bytes", header_bytes);
         }
-        FlowRecord::ExtendedLinuxReason(ExtendedLinuxReason { reason }) => {
+        FlowRecord::ExtendedLinuxReason { reason } => {
             value.insert("reason", reason);
         }
-        FlowRecord::SampledEthernet(FlowRecordSampleEthernet {
+        FlowRecord::SampledEthernet {
             length,
             src_mac,
             dst_mac,
             eth_type,
-        }) => {
+        } => {
             value.insert("length", length);
             value.insert("src_mac", mac_to_string(src_mac));
             value.insert("dst_mac", mac_to_string(dst_mac));
             value.insert("eth_type", eth_type);
         }
-        FlowRecord::SampledIpv4(SampledIpv4 {
+        FlowRecord::SampledIpv4 {
             protocol,
             src_ip,
             dst_ip,
@@ -339,7 +339,7 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             tcp_flags,
             tos,
             ..
-        }) => {
+        } => {
             value.insert("protocol", protocol);
             value.insert("src_ip", src_ip.to_string());
             value.insert("dst_ip", dst_ip.to_string());
@@ -348,7 +348,7 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             value.insert("tcp_flags", tcp_flags);
             value.insert("tos", tos);
         }
-        FlowRecord::SampledIpv6(SampledIpv6 {
+        FlowRecord::SampledIpv6 {
             protocol,
             src_ip,
             dst_ip,
@@ -357,7 +357,7 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             tcp_flags,
             priority,
             ..
-        }) => {
+        } => {
             value.insert("protocol", protocol);
             value.insert("src_ip", src_ip.to_string());
             value.insert("dst_ip", dst_ip.to_string());
@@ -366,28 +366,28 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             value.insert("tcp_flags", tcp_flags);
             value.insert("priority", priority);
         }
-        FlowRecord::ExtendedSwitch(ExtendedSwitch {
+        FlowRecord::ExtendedSwitch {
             src_vlan,
             src_priority,
             dst_vlan,
             dst_priority,
-        }) => {
+        } => {
             value.insert("src_vlan", src_vlan);
             value.insert("src_priority", src_priority);
             value.insert("dst_vlan", dst_vlan);
             value.insert("dst_priority", dst_priority);
         }
-        FlowRecord::ExtendedRouter(ExtendedRouter {
+        FlowRecord::ExtendedRouter {
             next_hop,
             src_mask_len,
             dst_mask_len,
             ..
-        }) => {
+        } => {
             value.insert("next_hop", next_hop.to_string());
             value.insert("src_mask_len", src_mask_len);
             value.insert("dst_mask_len", dst_mask_len);
         }
-        FlowRecord::ExtendedGateway(ExtendedGateway {
+        FlowRecord::ExtendedGateway {
             next_hop,
             r#as,
             src_as,
@@ -398,7 +398,7 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             communities,
             local_pref,
             ..
-        }) => {
+        } => {
             value.insert("next_hop", next_hop.to_string());
             value.insert("as", r#as);
             value.insert("src_as", src_as);
@@ -409,22 +409,22 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             value.insert("communities", communities);
             value.insert("local_pref", local_pref);
         }
-        FlowRecord::EgressQueue(EgressQueue { queue }) => {
+        FlowRecord::EgressQueue { queue } => {
             value.insert("queue", queue);
         }
-        FlowRecord::ExtendedACL(ExtendedACL {
+        FlowRecord::ExtendedACL {
             number,
             name,
             direction,
-        }) => {
+        } => {
             value.insert("number", number);
             value.insert("name", name);
             value.insert("direction", direction);
         }
-        FlowRecord::ExtendedFunction(ExtendedFunction { symbol }) => {
+        FlowRecord::ExtendedFunction { symbol } => {
             value.insert("symbol", symbol);
         }
-        FlowRecord::ExtendedTCPInfo(ExtendedTCPInfo {
+        FlowRecord::ExtendedTCPInfo {
             direction,
             snd_mss,
             rcv_mss,
@@ -437,7 +437,7 @@ fn convert_flow_record(record: FlowRecord) -> Value {
             snd_cwnd,
             reordering,
             min_rtt,
-        }) => {
+        } => {
             value.insert("direction", direction);
             value.insert("snd_mss", snd_mss);
             value.insert("rcv_mss", rcv_mss);
@@ -458,7 +458,7 @@ fn convert_flow_record(record: FlowRecord) -> Value {
 
 fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
     match record.data {
-        CounterRecordData::Interface(IfCounters {
+        CounterRecordData::Interface {
             index,
             typ,
             speed,
@@ -478,7 +478,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             out_discards,
             out_errors,
             promiscuous_mode,
-        }) => {
+        } => {
             let tags = tags!(
                 "index" => index,
                 "type" => typ,
@@ -570,7 +570,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 ),
             ]
         }
-        CounterRecordData::Ethernet(EthernetCounters {
+        CounterRecordData::Ethernet {
             dot3_stats_alignment_errors,
             dot3_stats_fcs_errors,
             dot3_stats_single_collision_frames,
@@ -584,7 +584,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             dot3_stats_frame_too_longs,
             dot3_stats_internal_mac_receive_errors,
             dot3_stats_symbol_errors,
-        }) => {
+        } => {
             vec![
                 Metric::sum(
                     "dot3_stats_alignment_errors",
@@ -633,7 +633,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("dot3_stats_symbol_errors", "", dot3_stats_symbol_errors),
             ]
         }
-        CounterRecordData::TokenRing(TokenRingCounters {
+        CounterRecordData::TokenRing {
             dot5_stats_line_errors,
             dot5_stats_burst_errors,
             dot5_stats_ac_errors,
@@ -652,7 +652,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             dot5_stats_removes,
             dot5_stats_singles,
             dot5_stats_freq_errors,
-        }) => {
+        } => {
             vec![
                 Metric::sum(
                     "sflow_token_ring_dot5_stats_line_errors",
@@ -746,7 +746,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 ),
             ]
         }
-        CounterRecordData::VgCounters(VgCounters {
+        CounterRecordData::VgCounters {
             dot12_in_high_priority_frames,
             dot12_in_high_priority_octets,
             dot12_in_norm_priority_frames,
@@ -761,7 +761,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             dot12_hc_in_high_priority_octets,
             dot12_hc_in_norm_priority_octets,
             dot12_hc_out_high_priority_octets,
-        }) => {
+        } => {
             vec![
                 Metric::sum(
                     "dot12_in_high_priority_frames",
@@ -827,14 +827,14 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 ),
             ]
         }
-        CounterRecordData::Vlan(Vlan {
+        CounterRecordData::Vlan {
             vlan_id,
             octets,
             ucast_pkts,
             multicast_pkts,
             broadcast_pkts,
             discards,
-        }) => {
+        } => {
             let tags = tags!(
                 "id" => vlan_id,
             );
@@ -857,7 +857,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum_with_tags("sflow_vlan_discards", "", discards, tags),
             ]
         }
-        CounterRecordData::HostCPU(HostCPU {
+        CounterRecordData::HostCPU {
             load_one,
             load_five,
             load_fifteen,
@@ -876,7 +876,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             interrupts,
             contexts,
             ..
-        }) => {
+        } => {
             vec![
                 Metric::gauge(
                     "sflow_host_cpu_load_one",
@@ -929,13 +929,13 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_host_cpu_contexts", "context switch count", contexts),
             ]
         }
-        CounterRecordData::Processor(Processor {
+        CounterRecordData::Processor {
             five_sec_cpu,
             one_min_cpu,
             five_min_cpu,
             total_memory,
             free_memory,
-        }) => {
+        } => {
             vec![
                 Metric::gauge(
                     "sflow_processor_five_sec_cpu",
@@ -964,7 +964,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 ),
             ]
         }
-        CounterRecordData::HostAdapters(HostAdapters { adapters, .. }) => {
+        CounterRecordData::HostAdapters { adapters, .. } => {
             let mut metrics = Vec::with_capacity(adapters.len());
 
             for adapter in adapters {
@@ -981,13 +981,13 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
 
             metrics
         }
-        CounterRecordData::HostDescription(HostDescription {
+        CounterRecordData::HostDescription {
             host,
             uuid,
             machine_type,
             os_name,
             os_release,
-        }) => {
+        } => {
             vec![Metric::gauge_with_tags(
                 "sflow_host_info",
                 "physical or virtual host description",
@@ -1001,7 +1001,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 ),
             )]
         }
-        CounterRecordData::HostMemory(HostMemory {
+        CounterRecordData::HostMemory {
             mem_total,
             mem_free,
             mem_shared,
@@ -1013,7 +1013,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             page_out,
             swap_in,
             swap_out,
-        }) => {
+        } => {
             vec![
                 Metric::gauge("sflow_host_mem_total", "", mem_total),
                 Metric::gauge("sflow_host_mem_free", "", mem_free),
@@ -1028,7 +1028,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::gauge("sflow_host_swap_out", "", swap_out),
             ]
         }
-        CounterRecordData::HostNetIO(HostNetIO {
+        CounterRecordData::HostNetIO {
             bytes_in,
             packets_in,
             errs_in,
@@ -1037,7 +1037,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             packets_out,
             errs_out,
             drops_out,
-        }) => {
+        } => {
             vec![
                 Metric::sum("sflow_host_network_bytes_in", "", bytes_in),
                 Metric::sum("sflow_host_network_packets_in", "", packets_in),
@@ -1049,7 +1049,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_host_network_drops_out", "", drops_out),
             ]
         }
-        CounterRecordData::HostDiskIO(HostDiskIO {
+        CounterRecordData::HostDiskIO {
             disk_total,
             disk_free,
             part_max_used,
@@ -1059,7 +1059,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             writes,
             bytes_written,
             write_time,
-        }) => {
+        } => {
             vec![
                 Metric::sum(
                     "sflow_host_disk_total",
@@ -1084,7 +1084,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_host_write_time", "write time (ms)", write_time),
             ]
         }
-        CounterRecordData::Mib2IpGroup(Mib2IpGroup {
+        CounterRecordData::Mib2IpGroup {
             forwarding,
             default_ttl,
             in_receives,
@@ -1104,7 +1104,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             frag_oks,
             frag_fails,
             frag_creates,
-        }) => {
+        } => {
             vec![
                 Metric::sum("sflow_ip_forwarding", "", forwarding),
                 Metric::sum("sflow_ip_default_ttl", "", default_ttl),
@@ -1127,7 +1127,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_ip_frag_creates", "", frag_creates),
             ]
         }
-        CounterRecordData::Mib2IcmpGroup(Mib2IcmpGroup {
+        CounterRecordData::Mib2IcmpGroup {
             in_msgs,
             in_errors,
             in_dest_unreachs,
@@ -1153,7 +1153,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             out_timestamp_reps,
             out_addr_masks,
             out_addr_mask_reps,
-        }) => {
+        } => {
             vec![
                 Metric::sum("sflow_icmp_in_msgs", "", in_msgs),
                 Metric::sum("sflow_icmp_in_errors", "", in_errors),
@@ -1182,7 +1182,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_icmp_out_addr_mask_reps", "", out_addr_mask_reps),
             ]
         }
-        CounterRecordData::Mib2TcpGroup(Mib2TcpGroup {
+        CounterRecordData::Mib2TcpGroup {
             rto_algorithm,
             rto_min,
             rto_max,
@@ -1198,7 +1198,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             in_errs,
             out_rsts,
             in_csum_errs,
-        }) => {
+        } => {
             vec![
                 Metric::sum("sflow_tcp_rto_algorithm", "", rto_algorithm),
                 Metric::sum("sflow_tcp_rto_min", "", rto_min),
@@ -1217,7 +1217,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_tcp_in_csum_errs", "", in_csum_errs),
             ]
         }
-        CounterRecordData::Mib2UdpGroup(Mib2UdpGroup {
+        CounterRecordData::Mib2UdpGroup {
             in_datagrams,
             no_ports,
             in_errors,
@@ -1225,7 +1225,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             rcvbuf_errors,
             sndbuf_errors,
             in_csum_errors,
-        }) => {
+        } => {
             vec![
                 Metric::sum("sflow_udp_in_datagrams", "", in_datagrams),
                 Metric::sum("sflow_udp_no_ports", "", no_ports),
@@ -1236,19 +1236,19 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_udp_in_csum_errors", "", in_csum_errors),
             ]
         }
-        CounterRecordData::PortName(PortName { .. }) => {
+        CounterRecordData::PortName { .. } => {
             vec![]
         }
-        CounterRecordData::HostParent(HostParent { .. }) => {
+        CounterRecordData::HostParent { .. } => {
             vec![]
         }
-        CounterRecordData::Sfp(Sfp {
+        CounterRecordData::Sfp {
             id,
             total_lanes,
             supply_voltage,
             temperature,
             lanes,
-        }) => {
+        } => {
             let mut metrics = Vec::with_capacity(2 + lanes.len() * 9);
 
             metrics.extend([
@@ -1350,13 +1350,13 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
 
             metrics
         }
-        CounterRecordData::VirtNode(VirtNode {
+        CounterRecordData::VirtNode {
             mhz,
             cpus,
             memory,
             memory_free,
             num_domains,
-        }) => {
+        } => {
             vec![
                 Metric::gauge("sflow_virt_node_mhz", "", mhz),
                 Metric::gauge("sflow_virt_node_cpus", "", cpus),
@@ -1365,24 +1365,24 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::gauge("sflow_virt_node_num_domains", "", num_domains),
             ]
         }
-        CounterRecordData::VirtCpu(VirtCpu {
+        CounterRecordData::VirtCpu {
             state,
             cpu_time,
             nr_virt_cpu,
-        }) => {
+        } => {
             vec![
                 Metric::gauge("sflow_virt_cpu_state", "", state),
                 Metric::sum("sflow_virt_cpu_cpu_time_seconds", "", cpu_time / 1000),
                 Metric::gauge("sflow_virt_cpu_total", "", nr_virt_cpu),
             ]
         }
-        CounterRecordData::VirtMemory(VirtMemory { memory, max_memory }) => {
+        CounterRecordData::VirtMemory { memory, max_memory } => {
             vec![
                 Metric::gauge("sflow_virt_memory_bytes", "", memory),
                 Metric::gauge("sflow_virt_memory_max_bytes", "", max_memory),
             ]
         }
-        CounterRecordData::VirtDisk(VirtDiskIO {
+        CounterRecordData::VirtDisk {
             capacity,
             allocation,
             available,
@@ -1391,7 +1391,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             wr_req,
             wr_bytes,
             errs,
-        }) => {
+        } => {
             vec![
                 Metric::gauge(
                     "sflow_virt_disk_capacity",
@@ -1431,7 +1431,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::gauge("sflow_virt_disk_errs", "read/write errors", errs),
             ]
         }
-        CounterRecordData::VirtNetIO(VirtNetIO {
+        CounterRecordData::VirtNetIO {
             rx_bytes,
             rx_packets,
             rx_errs,
@@ -1440,7 +1440,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             tx_packets,
             tx_errs,
             tx_drop,
-        }) => {
+        } => {
             vec![
                 Metric::sum("sflow_virt_net_rx_bytes", "total bytes received", rx_bytes),
                 Metric::sum(
@@ -1464,7 +1464,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 Metric::sum("sflow_virt_net_tx_drop", "total transmit drops", tx_drop),
             ]
         }
-        CounterRecordData::NvidiaGpu(NvidiaGpu {
+        CounterRecordData::NvidiaGpu {
             device_count,
             processes,
             gpu_time,
@@ -1475,7 +1475,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             energy,
             temperature,
             fan_speed,
-        }) => {
+        } => {
             vec![
                 Metric::gauge(
                     "sflow_nvidia_gpu_device_count",
@@ -1529,7 +1529,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
                 ),
             ]
         }
-        CounterRecordData::BcmTables(BcmTables {
+        CounterRecordData::BcmTables {
             host_entries,
             host_entries_max,
             ipv4_entries,
@@ -1566,7 +1566,7 @@ fn convert_counter_record(record: CounterRecord) -> Vec<Metric> {
             acl_egress_meters_max,
             acl_egress_slices,
             acl_egress_slices_max,
-        }) => {
+        } => {
             vec![
                 Metric::gauge("sflow_bcm_tables_host_entries", "", host_entries),
                 Metric::gauge("sflow_bcm_tables_host_entries_max", "", host_entries_max),
