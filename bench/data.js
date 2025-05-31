@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748714533031,
+  "lastUpdate": 1748714537608,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3885b2061a4949dfdac7569bab2367a030cf0d94",
-          "message": "Merge pull request #2265 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-03-15T00:29:07+08:00",
-          "tree_id": "7aefb33daeff4a7b4158f798e89e133783bd4090",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3885b2061a4949dfdac7569bab2367a030cf0d94"
-        },
-        "date": 1741969878195,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.323,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 103.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.36,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.04,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f0c1359d54e1cc7a340aa4dffee9a61efb842d25",
+          "message": "Merge pull request #2376 from f1shl3gs/sources/audit/optimize_syscall_lookup\n\nsources/audit: optimize syscall lookup, reduce binary size",
+          "timestamp": "2025-06-01T01:58:21+08:00",
+          "tree_id": "cd53a319d95c7be598f23f4678b9284e32f2434e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f0c1359d54e1cc7a340aa4dffee9a61efb842d25"
+        },
+        "date": 1748714515945,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.392,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.499,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 166.57,
             "unit": "ns/op"
           }
         ]
