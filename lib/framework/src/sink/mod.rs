@@ -1,11 +1,4 @@
-pub mod http;
-pub mod socket_bytes_sink;
-pub mod tcp;
-pub mod udp;
-#[cfg(unix)]
-pub mod unix;
 pub mod util;
-
 mod vec;
 
 // Re-export
@@ -28,7 +21,7 @@ pub type Healthcheck = BoxFuture<'static, crate::Result<()>>;
 #[derive(Debug, Error)]
 pub enum HealthcheckError {
     #[error("Unexpected status: {0}, {1}")]
-    UnexpectedStatus(::http::StatusCode, String),
+    UnexpectedStatus(http::StatusCode, String),
 }
 
 #[async_trait]

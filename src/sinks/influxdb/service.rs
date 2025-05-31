@@ -1,6 +1,6 @@
 use bytes::Bytes;
-use framework::sink::http::{HttpRequest, HttpRequestBuilder};
 use framework::sink::util::Compression;
+use framework::sink::util::http::{HttpRequest, HttpRequestBuilder};
 use http::header::{AUTHORIZATION, CONTENT_ENCODING, CONTENT_TYPE};
 use http::{HeaderMap, Request};
 

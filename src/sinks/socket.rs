@@ -3,8 +3,8 @@ use codecs::{Encoder, EncodingConfig, EncodingConfigWithFraming};
 use configurable::{Configurable, configurable_component};
 use framework::config::{DataType, SinkConfig, SinkContext};
 #[cfg(unix)]
-use framework::sink::unix::UnixSinkConfig;
-use framework::sink::{tcp::TcpSinkConfig, udp::UdpSinkConfig};
+use framework::sink::util::unix::UnixSinkConfig;
+use framework::sink::util::{tcp::TcpSinkConfig, udp::UdpSinkConfig};
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 

@@ -3,12 +3,18 @@ pub mod buffer;
 pub mod builder;
 mod compressor;
 pub mod encoding;
+pub mod http;
 mod partitioner;
 mod request_builder;
 pub mod retries;
 pub mod service;
 pub mod sink;
 mod snappy;
+mod socket_bytes_sink;
+pub mod tcp;
+pub mod udp;
+#[cfg(unix)]
+pub mod unix;
 mod zstd;
 
 #[cfg(any(test, feature = "test-util"))]
@@ -28,7 +34,7 @@ pub use request_builder::{EncodeResult, RequestBuilder, RequestMetadata};
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum SinkBuildError {
+enum SinkBuildError {
     #[error("Missing host in address field")]
     MissingHost,
     #[error("Missing port in address field")]
@@ -43,7 +49,7 @@ pub enum SocketMode {
 }
 
 impl SocketMode {
-    pub const fn as_str(self) -> &'static str {
+    const fn as_str(self) -> &'static str {
         match self {
             Self::Tcp => "tcp",
             Self::Udp => "udp",
