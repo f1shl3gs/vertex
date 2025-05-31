@@ -4,11 +4,11 @@ use std::task::{Context, Poll};
 
 use futures::future::BoxFuture;
 use hyper_util::client::legacy::connect::dns::Name;
-use resolver::RecordData;
+use resolver::{LookupIntoIter, RecordData};
 use thiserror::Error;
 use tower::Service;
 
-pub struct LookupIp(::resolver::LookupIntoIter);
+pub struct LookupIp(LookupIntoIter);
 
 impl Iterator for LookupIp {
     type Item = SocketAddr;

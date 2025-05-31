@@ -5,10 +5,8 @@ edition = "2024"
 publish = false
 
 [features]
-default = ["listenfd", "sources-utils-tcp-keepalive"]
+default = []
 
-sources-utils-tcp-socket = []
-sources-utils-tcp-keepalive = ["sources-utils-tcp-socket"]
 test-util = []
 tokio-console = ["console-subscriber", "tokio/tracing"]
 
@@ -51,7 +49,7 @@ hyper-util = { version = "0.1.13", default-features = false, features = ["client
 indexmap = { version = "2.9.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.20", default-features = false }
 ipnet = { version = "2.11.0", default-features = false }
-listenfd = { version = "1.0.2", default-features = false, optional = true }
+listenfd = { version = "1.0.2", default-features = false }
 libc = { version = "0.2.172", default-features = false }
 log_schema = { path = "../log_schema" }
 bytesize = { path = "../bytesize" }

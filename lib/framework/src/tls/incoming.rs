@@ -12,9 +12,6 @@ use tokio_rustls::TlsAcceptor;
 use tokio_rustls::server::TlsStream;
 
 use super::TlsError;
-#[cfg(feature = "sources-utils-tcp-socket")]
-use crate::tcp;
-#[cfg(feature = "sources-utils-tcp-keepalive")]
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTls, TlsConfig};
 
@@ -111,7 +108,6 @@ impl MaybeTlsListener {
         })
     }
 
-    #[cfg(feature = "listenfd")]
     pub fn local_addr(&self) -> io::Result<SocketAddr> {
         self.listener.local_addr()
     }
@@ -146,17 +142,11 @@ enum StreamState<S> {
 }
 
 impl<S> MaybeTlsIncomingStream<S> {
-    #[cfg_attr(not(feature = "listenfd"), allow(dead_code))]
     pub const fn peer_addr(&self) -> SocketAddr {
         self.peer_addr
     }
 
     /// None if connection still hasn't been established.
-    #[cfg(any(
-        feature = "listenfd",
-        feature = "sources-utils-tcp-keepalive",
-        feature = "sources-utils-tcp-socket"
-    ))]
     pub fn get_ref(&self) -> Option<&S> {
         match &self.state {
             StreamState::Accepted(stream) => Some(match stream {
@@ -189,7 +179,6 @@ impl MaybeTlsIncomingStream<TcpStream> {
     }
 
     // Explicit handshake method
-    #[cfg(feature = "listenfd")]
     pub async fn handshake(&mut self) -> Result<(), TlsError> {
         if let StreamState::Accepting(fut) = &mut self.state {
             let stream = fut.await?;
@@ -210,7 +199,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
         if let Some(timeout) = keepalive.timeout {
             let config = socket2::TcpKeepalive::new().with_time(timeout);
 
-            tcp::set_keepalive(stream, &config)?;
+            crate::tcp::set_keepalive(stream, &config)?;
         }
 
         Ok(())
@@ -224,7 +213,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
             )
         })?;
 
-        tcp::set_receive_buffer_size(stream, bytes)
+        crate::tcp::set_receive_buffer_size(stream, bytes)
     }
 
     fn poll_io<T, F>(self: Pin<&mut Self>, cx: &mut Context, poll_fn: F) -> Poll<io::Result<T>>
