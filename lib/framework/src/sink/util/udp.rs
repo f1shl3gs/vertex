@@ -15,7 +15,7 @@ use thiserror::Error;
 use tokio::{net::UdpSocket, sync::oneshot};
 use tokio_util::codec::Encoder;
 
-use super::util::SinkBuildError;
+use super::SinkBuildError;
 use crate::dns::Resolver;
 use crate::{Healthcheck, Sink, StreamSink, dns, udp};
 

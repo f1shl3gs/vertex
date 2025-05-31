@@ -4,7 +4,7 @@ use event::Event;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
-use framework::sink::http::{BatchedHttpSink, HttpEventEncoder, HttpRetryLogic, HttpSink};
+use framework::sink::util::http::{BatchedHttpSink, HttpEventEncoder, HttpRetryLogic, HttpSink};
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::{Buffer, Compression};
 use framework::tls::TlsConfig;

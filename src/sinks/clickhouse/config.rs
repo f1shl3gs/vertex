@@ -4,7 +4,7 @@ use configurable::configurable_component;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::http::{Auth, HttpClient};
-use framework::sink::http::BatchedHttpSink;
+use framework::sink::util::http::BatchedHttpSink;
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::{Buffer, Compression};
 use framework::tls::TlsConfig;
