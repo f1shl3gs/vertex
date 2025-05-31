@@ -60,6 +60,7 @@ has already been ported.
 | selfstat                | Collect metrics of Vertex itself, e.g. cpu, memory usage and etc. | &check; | &cross; | &cross; |
 | sflow                   | Receive sflow packets and decode it to logs                       | &cross; | &check; | &cross; |
 | syslog                  | Start a TCP/UDP server to receive logs                            | &cross; | &check; | &cross; |
+| systemd                 | Systemd unit monitoring and resource usage                        | &check; | &cross; | &cross; |
 | tail                    | Watch and collect log files                                       | &cross; | &check; | &cross; |
 | zookeeper               | Collect metrics from Zookeeper ( mntr )                           | &cross; | &check; | &cross; |
 
