@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748868846782,
+  "lastUpdate": 1748868928341,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "20c79cd7ca9e4b4c7043a937e9ed1f7f891cfefb",
-          "message": "Merge pull request #2267 from f1shl3gs/dependabot/cargo/async-trait-0.1.88\n\nchore(deps): bump async-trait from 0.1.87 to 0.1.88",
-          "timestamp": "2025-03-15T16:56:18+08:00",
-          "tree_id": "b6fe952cde8c247be9ab0d4339aa5005a7a8938d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/20c79cd7ca9e4b4c7043a937e9ed1f7f891cfefb"
-        },
-        "date": 1742029097989,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534700,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 545400,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fcf923a21f7a7cac3f3810ece47d0edc953c72bb",
+          "message": "Merge pull request #2378 from f1shl3gs/sources/redis/update_metrics_map\n\nsources/redis: update metric map",
+          "timestamp": "2025-06-02T20:52:46+08:00",
+          "tree_id": "b0bac88dde35e5cedac6a2284058f80ca8ac0d80",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fcf923a21f7a7cac3f3810ece47d0edc953c72bb"
+        },
+        "date": 1748868906730,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 535520,
             "unit": "ns/op"
           }
         ]
