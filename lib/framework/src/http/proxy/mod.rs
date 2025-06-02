@@ -108,6 +108,7 @@ pub struct NoProxy {
     ips: IpMatcher,
 }
 
+#[cfg(test)]
 impl From<&str> for NoProxy {
     fn from(value: &str) -> Self {
         Self::from_iterator(value.split(','))
