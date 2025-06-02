@@ -215,7 +215,7 @@ fn build_message(
     interface: &str,
     body: &[&str],
 ) -> Vec<u8> {
-    let mut buf = Vec::with_capacity(256);
+    let mut buf = Vec::with_capacity(512);
 
     // little endian
     buf.push(b'l');

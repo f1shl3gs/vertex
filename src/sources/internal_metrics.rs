@@ -4,13 +4,10 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::Bucket;
 use event::tags::Tags;
-use framework::config::Output;
+use framework::Source;
+use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::{
-    Source,
-    config::{SourceConfig, SourceContext, default_interval},
-};
 use metrics::{Attributes, Observation};
 
 /// Exposes Vertex's own internal metrics, allowing you to collect,
