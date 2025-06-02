@@ -19,14 +19,26 @@ use thiserror::Error;
 
 static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock::new(|| {
     let mut m = BTreeMap::new();
+
     // # Server
     m.insert("uptime_in_seconds", "uptime_in_seconds");
     m.insert("process_id", "process_id");
+    m.insert("io_threads_active", "io_threads_active");
 
     // # Clients
     m.insert("connected_clients", "connected_clients");
     m.insert("blocked_clients", "blocked_clients");
+    m.insert("maxclients", "max_clients");
     m.insert("tracking_clients", "tracking_clients");
+    m.insert("clients_in_timeout_table", "clients_in_timeout_table");
+    m.insert("pubsub_clients", "pubsub_clients"); // Added in Redis 7.4
+    m.insert("watching_clients", "watching_clients"); // Added in Redis 7.4
+    m.insert("total_watched_keys", "total_watched_keys"); // Added in Redis 7.4
+    m.insert("total_blocking_keys", "total_blocking_keys"); // Added in Redis 7.2
+    m.insert(
+        "total_blocking_keys_on_nokey",
+        "total_blocking_keys_on_nokey",
+    ); // Added in Redis 7.2
 
     // redis 2,3,4.x
     m.insert("client_longest_output_list", "client_longest_output_list");
@@ -48,6 +60,7 @@ static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock:
     m.insert("allocator_resident", "allocator_resident_bytes");
     m.insert("allocator_frag_ratio", "allocator_frag_ratio");
     m.insert("allocator_frag_bytes", "allocator_frag_bytes");
+    m.insert("allocator_muzzy", "allocator_muzzy_bytes");
     m.insert("allocator_rss_ratio", "allocator_rss_ratio");
     m.insert("allocator_rss_bytes", "allocator_rss_bytes");
 
@@ -55,25 +68,62 @@ static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock:
     m.insert("used_memory_rss", "memory_used_rss_bytes");
     m.insert("used_memory_peak", "memory_used_peak_bytes");
     m.insert("used_memory_lua", "memory_used_lua_bytes");
+    m.insert("used_memory_vm_eval", "memory_used_vm_eval_bytes"); // Added in Redis 7.0
+    m.insert("used_memory_scripts_eval", "memory_used_scripts_eval_bytes"); // Added in Redis 7.0
     m.insert("used_memory_overhead", "memory_used_overhead_bytes");
     m.insert("used_memory_startup", "memory_used_startup_bytes");
     m.insert("used_memory_dataset", "memory_used_dataset_bytes");
-    m.insert("used_memory_scripts", "memory_used_scripts_bytes");
+    m.insert("number_of_cached_scripts", "number_of_cached_scripts"); // Added in Redis 7.0
+    m.insert("number_of_functions", "number_of_functions"); // Added in Redis 7.0
+    m.insert("number_of_libraries", "number_of_libraries"); // Added in Redis 7.4
+    m.insert("used_memory_vm_functions", "memory_used_vm_functions_bytes"); // Added in Redis 7.0
+    m.insert("used_memory_scripts", "memory_used_scripts_bytes"); // Added in Redis 7.0
+    m.insert("used_memory_functions", "memory_used_functions_bytes"); // Added in Redis 7.0
+    m.insert("used_memory_vm_total", "memory_used_vm_total"); // Added in Redis 7.0
     m.insert("maxmemory", "memory_max_bytes");
+
+    m.insert("maxmemory_reservation", "memory_max_reservation_bytes");
+    m.insert(
+        "maxmemory_desired_reservation",
+        "memory_max_reservation_desired_bytes",
+    );
+
+    m.insert(
+        "maxfragmentationmemory_reservation",
+        "memory_max_fragmentation_reservation_bytes",
+    );
+    m.insert(
+        "maxfragmentationmemory_desired_reservation",
+        "memory_max_fragmentation_reservation_desired_bytes",
+    );
 
     m.insert("mem_fragmentation_ratio", "mem_fragmentation_ratio");
     m.insert("mem_fragmentation_bytes", "mem_fragmentation_bytes");
     m.insert("mem_clients_slaves", "mem_clients_slaves");
     m.insert("mem_clients_normal", "mem_clients_normal");
+    m.insert("mem_cluster_links", "mem_cluster_links_bytes");
+    m.insert("mem_aof_buffer", "mem_aof_buffer_bytes");
+    m.insert("mem_replication_backlog", "mem_replication_backlog_bytes");
+
+    m.insert("expired_stale_perc", "expired_stale_percentage");
 
     // https://github.com/antirez/redis/blob/17bf0b25c1171486e3a1b089f3181fff2bc0d4f0/src/evict.c#L349-L352
-    // ... the sum of AOF and slaves buffer ....
+    // ... the sum of AOF and slaves buffer ...
     m.insert(
         "mem_not_counted_for_evict",
         "mem_not_counted_for_eviction_bytes",
     );
+    m.insert(
+        "mem_total_replication_buffers",
+        "mem_total_replication_buffers_bytes",
+    ); // Added in Redis 7.0
+    m.insert(
+        "mem_overhead_db_hashtable_rehashing",
+        "mem_overhead_db_hashtable_rehashing_bytes",
+    ); // Added in Redis 7.4
 
     m.insert("lazyfree_pending_objects", "lazyfree_pending_objects");
+    m.insert("lazyfreed_objects", "lazyfreed_objects");
     m.insert("active_defrag_running", "active_defrag_running");
 
     m.insert("migrate_cached_sockets", "migrate_cached_sockets_total");
@@ -91,6 +141,7 @@ static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock:
 
     // # Persistence
     m.insert("loading", "loading_dump_file");
+    m.insert("async_loading", "async_loading"); // Added in Redis 7.0
     m.insert("rdb_changes_since_last_save", "rdb_changes_since_last_save");
     m.insert("rdb_bgsave_in_progress", "rdb_bgsave_in_progress");
     m.insert("rdb_last_save_time", "rdb_last_save_timestamp_seconds");
@@ -100,7 +151,10 @@ static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock:
         "rdb_current_bgsave_time_sec",
         "rdb_current_bgsave_duration_sec",
     );
+    m.insert("rdb_saves", "rdb_saves_total");
     m.insert("rdb_last_cow_size", "rdb_last_cow_size_bytes");
+    m.insert("rdb_last_load_keys_expired", "rdb_last_load_expired_keys"); // Added in Redis 7.0
+    m.insert("rdb_last_load_keys_loaded", "rdb_last_load_loaded_keys"); // Added in Redis 7.0
     m.insert("aof_enabled", "aof_enabled");
     m.insert("aof_rewrite_in_progress", "aof_rewrite_in_progress");
     m.insert("aof_rewrite_scheduled", "aof_rewrite_scheduled");
@@ -114,7 +168,7 @@ static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock:
     m.insert("aof_base_size", "aof_base_size_bytes");
     m.insert("aof_pending_rewrite", "aof_pending_rewrite");
     m.insert("aof_buffer_length", "aof_buffer_length");
-    m.insert("aof_rewrite_buffer_length", "aof_rewrite_buffer_length");
+    m.insert("aof_rewrite_buffer_length", "aof_rewrite_buffer_length"); // Added in Redis 7.0
     m.insert("aof_pending_bio_fsync", "aof_pending_bio_fsync");
     m.insert("aof_delayed_fsync", "aof_delayed_fsync");
     m.insert("aof_last_bgrewrite_status", "aof_last_bgrewrite_status");
@@ -123,10 +177,17 @@ static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock:
     m.insert("module_fork_last_cow_size", "module_fork_last_cow_size");
 
     // # Stats
+    m.insert(
+        "current_eviction_exceeded_time",
+        "current_eviction_exceeded_time_ms",
+    );
     m.insert("pubsub_channels", "pubsub_channels");
     m.insert("pubsub_patterns", "pubsub_patterns");
+    m.insert("pubsubshard_channels", "pubsubshard_channels"); // Added in Redis 7.0.3
     m.insert("latest_fork_usec", "latest_fork_usec");
-    m.insert("instantaneous_ops_per_sec", "instantaneous_ops");
+    m.insert("tracking_total_keys", "tracking_total_keys");
+    m.insert("tracking_total_items", "tracking_total_items");
+    m.insert("tracking_total_prefixes", "tracking_total_prefixes");
 
     // # Replication
     m.insert("connected_slaves", "connected_slaves");
@@ -155,26 +216,93 @@ static GAUGE_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLock:
     // # Tile38
     // based on https://tile38.com/commands/server/
     m.insert("tile38_aof_size", "tile38_aof_size_bytes");
-    m.insert("tile38_avg_item_size", "tile38_avg_item_size_bytes");
-    m.insert("tile38_cpus", "tile38_cpus_total");
-    m.insert("tile38_heap_released", "tile38_heap_released_bytes");
-    m.insert("tile38_heap_size", "tile38_heap_size_bytes");
+    m.insert("tile38_avg_point_size", "tile38_avg_item_size_bytes");
+    m.insert("tile38_sys_cpus", "tile38_cpus_total");
+    m.insert("tile38_heap_released_bytes", "tile38_heap_released_bytes");
+    m.insert("tile38_heap_alloc_bytes", "tile38_heap_size_bytes");
     m.insert("tile38_http_transport", "tile38_http_transport");
     m.insert("tile38_in_memory_size", "tile38_in_memory_size_bytes");
     m.insert("tile38_max_heap_size", "tile38_max_heap_size_bytes");
-    m.insert("tile38_mem_alloc", "tile38_mem_alloc_bytes");
+    m.insert("tile38_alloc_bytes", "tile38_mem_alloc_bytes");
     m.insert("tile38_num_collections", "tile38_num_collections_total");
     m.insert("tile38_num_hooks", "tile38_num_hooks_total");
     m.insert("tile38_num_objects", "tile38_num_objects_total");
     m.insert("tile38_num_points", "tile38_num_points_total");
     m.insert("tile38_pointer_size", "tile38_pointer_size_bytes");
     m.insert("tile38_read_only", "tile38_read_only");
-    m.insert("tile38_threads", "tile38_threads_total");
+    m.insert("tile38_go_threads", "tile38_threads_total");
+    m.insert("tile38_go_goroutines", "tile38_go_goroutines_total");
+    m.insert("tile38_last_gc_time_seconds", "tile38_last_gc_time_seconds");
+    m.insert("tile38_next_gc_bytes", "tile38_next_gc_bytes");
 
     // addtl. KeyDB metrics
     m.insert("server_threads", "server_threads_total");
     m.insert("long_lock_waits", "long_lock_waits_total");
     m.insert("current_client_thread", "current_client_thread");
+
+    // Redis Modules metrics, RediSearch module
+    m.insert("search_number_of_indexes", "search_number_of_indexes");
+    m.insert(
+        "search_used_memory_indexes",
+        "search_used_memory_indexes_bytes",
+    );
+    m.insert("search_global_idle", "search_global_idle");
+    m.insert("search_global_total", "search_global_total");
+    m.insert("search_bytes_collected", "search_collected_bytes");
+    m.insert("search_dialect_1", "search_dialect_1");
+    m.insert("search_dialect_2", "search_dialect_2");
+    m.insert("search_dialect_3", "search_dialect_3");
+    m.insert("search_dialect_4", "search_dialect_4");
+
+    // RediSearch module v8.0
+    m.insert(
+        "search_number_of_active_indexes",
+        "search_number_of_active_indexes",
+    );
+    m.insert(
+        "search_number_of_active_indexes_running_queries",
+        "search_number_of_active_indexes_running_queries",
+    );
+    m.insert(
+        "search_number_of_active_indexes_indexing",
+        "search_number_of_active_indexes_indexing",
+    );
+    m.insert(
+        "search_total_active_write_threads",
+        "search_total_active_write_threads",
+    );
+    m.insert(
+        "search_smallest_memory_index",
+        "search_smallest_memory_index_bytes",
+    );
+    m.insert(
+        "search_largest_memory_index",
+        "search_largest_memory_index_bytes",
+    );
+    m.insert(
+        "search_used_memory_vector_index",
+        "search_used_memory_vector_index_bytes",
+    );
+    m.insert("search_global_idle_user", "search_global_idle_user"); // search_gc metrics were split into user and internal
+    m.insert("search_global_idle_internal", "search_global_idle_internal"); // in PR, https://github.com/RediSearch/RediSearch/pull/5616
+    m.insert("search_global_total_user", "search_global_total_user");
+    m.insert(
+        "search_global_total_internal",
+        "search_global_total_internal",
+    );
+    m.insert("search_gc_bytes_collected", "search_gc_collected_bytes"); // search_bytes_collected was renamed in https://github.com/RediSearch/RediSearch/pull/5616
+    m.insert(
+        "search_gc_total_docs_not_collected",
+        "search_gc_total_docs_not_collected",
+    );
+    m.insert(
+        "search_gc_marked_deleted_vectors",
+        "search_gc_marked_deleted_vectors",
+    );
+    m.insert(
+        "search_errors_indexing_failures",
+        "search_errors_indexing_failures",
+    );
 
     m
 });
@@ -189,8 +317,26 @@ static COUNTER_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLoc
     m.insert("total_net_input_bytes", "net_input_bytes_total");
     m.insert("total_net_output_bytes", "net_output_bytes_total");
 
+    m.insert("total_net_repl_input_bytes", "net_repl_input_bytes_total");
+    m.insert("total_net_repl_output_bytes", "net_repl_output_bytes_total");
+
+    m.insert("expired_subkeys", "expired_subkeys_total");
     m.insert("expired_keys", "expired_keys_total");
+    m.insert(
+        "expired_time_cap_reached_count",
+        "expired_time_cap_reached_total",
+    );
+    m.insert(
+        "expire_cycle_cpu_milliseconds",
+        "expire_cycle_cpu_time_ms_total",
+    );
     m.insert("evicted_keys", "evicted_keys_total");
+    m.insert("evicted_clients", "evicted_clients_total"); // Added in Redis 7.0
+    m.insert("evicted_scripts", "evicted_scripts_total"); // Added in Redis 7.4
+    m.insert(
+        "total_eviction_exceeded_time",
+        "eviction_exceeded_time_ms_total",
+    );
     m.insert("keyspace_hits", "keyspace_hits_total");
     m.insert("keyspace_misses", "keyspace_misses_total");
 
@@ -198,6 +344,72 @@ static COUNTER_METRICS: LazyLock<BTreeMap<&'static str, &'static str>> = LazyLoc
     m.insert("used_cpu_user", "cpu_user_seconds_total");
     m.insert("used_cpu_sys_children", "cpu_sys_children_seconds_total");
     m.insert("used_cpu_user_children", "cpu_user_children_seconds_total");
+    m.insert(
+        "used_cpu_sys_main_thread",
+        "cpu_sys_main_thread_seconds_total",
+    );
+    m.insert(
+        "used_cpu_user_main_thread",
+        "cpu_user_main_thread_seconds_total",
+    );
+
+    m.insert("unexpected_error_replies", "unexpected_error_replies");
+    m.insert("total_error_replies", "total_error_replies");
+    m.insert("dump_payload_sanitizations", "dump_payload_sanitizations");
+    m.insert("total_reads_processed", "total_reads_processed");
+    m.insert("total_writes_processed", "total_writes_processed");
+    m.insert("io_threaded_reads_processed", "io_threaded_reads_processed");
+    m.insert(
+        "io_threaded_writes_processed",
+        "io_threaded_writes_processed",
+    );
+    m.insert(
+        "client_query_buffer_limit_disconnections",
+        "client_query_buffer_limit_disconnections_total",
+    );
+    m.insert(
+        "client_output_buffer_limit_disconnections",
+        "client_output_buffer_limit_disconnections_total",
+    );
+    m.insert("reply_buffer_shrinks", "reply_buffer_shrinks_total");
+    m.insert("reply_buffer_expands", "reply_buffer_expands_total");
+    m.insert("acl_access_denied_auth", "acl_access_denied_auth_total");
+    m.insert("acl_access_denied_cmd", "acl_access_denied_cmd_total");
+    m.insert("acl_access_denied_key", "acl_access_denied_key_total");
+    m.insert(
+        "acl_access_denied_channel",
+        "acl_access_denied_channel_total",
+    );
+
+    // addtl. KeyDB metrics
+    m.insert("cached_keys", "cached_keys_total");
+    m.insert("storage_provider_read_hits", "storage_provider_read_hits");
+    m.insert(
+        "storage_provider_read_misses",
+        "storage_provider_read_misses",
+    );
+
+    // Redis Modules metrics, RediSearch module
+    m.insert(
+        "search_total_indexing_time",
+        "search_indexing_time_ms_total",
+    );
+    m.insert("search_total_cycles", "search_cycles_total");
+    m.insert("search_total_ms_run", "search_run_ms_total");
+
+    // RediSearch module v8.0
+    m.insert("search_gc_total_cycles", "search_gc_cycles_total"); // search_gc metrics were renamed
+    m.insert("search_gc_total_ms_run", "search_gc_run_ms_total"); // in PR, https://github.com/RediSearch/RediSearch/pull/5616
+    m.insert(
+        "search_total_queries_processed",
+        "search_queries_processed_total",
+    );
+    m.insert("search_total_query_commands", "search_query_commands_total");
+    m.insert(
+        "search_total_query_execution_time_ms",
+        "search_query_execution_time_ms_total",
+    );
+    m.insert("search_total_active_queries", "search_active_queries_total");
 
     m
 });
