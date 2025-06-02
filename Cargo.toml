@@ -9,6 +9,15 @@ publish = false
 rust-version = "1.86"
 exclude = [ "tests/node" ]
 
+# Optimized for binary size, and it will take alot time
+[profile.minimal]
+inherits = "release"
+debug = false
+strip = true
+lto = "fat"
+codegen-units = 1
+opt-level = "z"
+
 # This profile optimizes for runtime performance and small binary size at the expense of longer
 # build times. It's most suitable for final release builds.
 [profile.release]
