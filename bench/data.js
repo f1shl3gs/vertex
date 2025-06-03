@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748869422358,
+  "lastUpdate": 1748949152172,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9f1bf3a9cd79bfc950cd186506ff6b0698ab0a68",
-          "message": "Merge pull request #2268 from f1shl3gs/misc/fix_consul_observe\n\nfix extensions/consul_observer",
-          "timestamp": "2025-03-15T19:31:37+08:00",
-          "tree_id": "664fd3daa34c8958a98ca311c767ec2536c28af3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9f1bf3a9cd79bfc950cd186506ff6b0698ab0a68"
-        },
-        "date": 1742038428483,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540680,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535520,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "473c4c20b2f87d9e4dae06074a8a8604f092f1e6",
+          "message": "Merge pull request #2379 from f1shl3gs/dependabot/cargo/headers-0.4.1\n\nchore(deps): bump headers from 0.4.0 to 0.4.1",
+          "timestamp": "2025-06-03T19:09:50+08:00",
+          "tree_id": "44e0e5e09df4b64e01eed5f499242bc9e912c29f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/473c4c20b2f87d9e4dae06074a8a8604f092f1e6"
+        },
+        "date": 1748949130304,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537560,
             "unit": "ns/op"
           }
         ]
