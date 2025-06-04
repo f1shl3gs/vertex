@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749069364358,
+  "lastUpdate": 1749069379752,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e210e63e2380a4f2b3d1fc5276a52b60095c0ad4",
-          "message": "Merge pull request #2269 from f1shl3gs/observe/add_type_to_endpoint\n\nlib/framework: add type to observer's Endpoint",
-          "timestamp": "2025-03-15T22:58:05+08:00",
-          "tree_id": "bd066b3432ed0c4ffbe622f40efda7f09bec3c8d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e210e63e2380a4f2b3d1fc5276a52b60095c0ad4"
-        },
-        "date": 1742050836281,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.406,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.48,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 664.29,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "237dd4975ea0aef284c20e3a73796af1f1603a3b",
           "message": "Merge pull request #2270 from f1shl3gs/extensions/dns_observer\n\nextensions/dns_observer: init",
           "timestamp": "2025-03-16T02:12:55+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 683.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "50c362a280e510f90dbb5a70b30721d59763ded4",
+          "message": "Merge pull request #2380 from f1shl3gs/dependabot/cargo/hyper-util-0.1.14\n\nchore(deps): bump hyper-util from 0.1.13 to 0.1.14",
+          "timestamp": "2025-06-05T04:33:06+08:00",
+          "tree_id": "dfcf8224b8b22833ed81cb98e9e838eab80cefb8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/50c362a280e510f90dbb5a70b30721d59763ded4"
+        },
+        "date": 1749069357683,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.323,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 334.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 670.57,
             "unit": "ns/op"
           }
         ]
