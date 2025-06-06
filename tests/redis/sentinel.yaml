@@ -1,0 +1,132 @@
+version: "3.8"
+
+services:
+  master:
+    image: redis:5.0
+    ports:
+      - "6379:6379"
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--replica-announce-ip",
+        master,
+        "--replica-announce-port",
+        "6379",
+        "--protected-mode",
+        "no"
+      ]
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.11
+
+  slave-1:
+    image: redis:5.0
+    depends_on:
+      - master
+    ports:
+      - "6380:6379"
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--replicaof",
+        "master",
+        "6379",
+        "--replica-announce-ip",
+        "slave-1",
+        "--replica-announce-port",
+        "6380",
+        "--protected-mode",
+        "no"
+      ]
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.12
+
+  slave-2:
+    image: redis:5.0
+    depends_on:
+      - master
+    ports:
+      - "6381:6379"
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--replicaof",
+        "master",
+        "6379",
+        "--replica-announce-ip",
+        "slave-2",
+        "--replica-announce-port",
+        "6381",
+        "--protected-mode",
+        "no"
+      ]
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.13
+
+  sentinel-1:
+    image: redis:5.0
+    depends_on:
+      - master
+    ports:
+      - "26379:26379"
+    command: >
+      sh -c 'echo "bind 0.0.0.0" > /etc/sentinel.conf &&
+            echo "sentinel monitor mymaster 10.5.0.11 6379 2" >> /etc/sentinel.conf &&
+            echo "sentinel down-after-milliseconds mymaster 10000" >> /etc/sentinel.conf &&
+            echo "sentinel failover-timeout mymaster 10000" >> /etc/sentinel.conf &&
+            echo "sentinel parallel-syncs mymaster 1" >> /etc/sentinel.conf &&
+            redis-sentinel /etc/sentinel.conf'
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.14
+
+  sentinel-2:
+    image: redis:5.0
+    depends_on:
+      - master
+    ports:
+      - "26380:26379"
+    command: >
+      sh -c 'echo "bind 0.0.0.0" > /etc/sentinel.conf &&
+            echo "sentinel monitor mymaster 10.5.0.12 6379 2" >> /etc/sentinel.conf &&
+            echo "sentinel down-after-milliseconds mymaster 10000" >> /etc/sentinel.conf &&
+            echo "sentinel failover-timeout mymaster 10000" >> /etc/sentinel.conf &&
+            echo "sentinel parallel-syncs mymaster 1" >> /etc/sentinel.conf &&
+            redis-sentinel /etc/sentinel.conf'
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.15
+
+  sentinel-3:
+    image: redis:5.0
+    depends_on:
+      - master
+    ports:
+      - "26381:26379"
+    command: >
+      sh -c 'echo "bind 0.0.0.0" > /etc/sentinel.conf &&
+            echo "sentinel monitor mymaster 10.5.0.13 6379 2" >> /etc/sentinel.conf &&
+            echo "sentinel down-after-milliseconds mymaster 10000" >> /etc/sentinel.conf &&
+            echo "sentinel failover-timeout mymaster 10000" >> /etc/sentinel.conf &&
+            echo "sentinel parallel-syncs mymaster 1" >> /etc/sentinel.conf &&
+            redis-sentinel /etc/sentinel.conf'
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.16
+
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
