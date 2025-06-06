@@ -1453,10 +1453,6 @@ async fn cluster_info(conn: &mut Connection) -> Result<Vec<Metric>, Error> {
             continue;
         };
 
-        if !include_metric(key) {
-            continue;
-        }
-
         if let Some(metric) = parse_generic(key, value) {
             metrics.push(metric);
         }
@@ -1685,14 +1681,6 @@ fn parse_generic(key: &str, value: &str) -> Option<Metric> {
     }
 
     None
-}
-
-fn include_metric(s: &str) -> bool {
-    if s.starts_with("db") || s.starts_with("cmdstat_") || s.starts_with("cluster_") {
-        return true;
-    }
-
-    GAUGE_METRICS.contains_key(s) || COUNTER_METRICS.contains_key(s)
 }
 
 // valid example: db0:keys=1,expires=0,avg_ttl=0,cached_keys=0
