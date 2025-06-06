@@ -1691,7 +1691,7 @@ fn parse_keyspace(key: &str, value: &str) -> Result<(f64, f64, f64, f64), Error>
 
     let mut keys = 0.0;
     let mut expires = 0.0;
-    let mut avg_ttl = 0.0;
+    let mut avg_ttl = -1.0;
     let mut cached_keys = 0.0;
 
     for pair in value.split(',') {
@@ -1702,7 +1702,7 @@ fn parse_keyspace(key: &str, value: &str) -> Result<(f64, f64, f64, f64), Error>
         match k {
             "keys" => keys = v.parse()?,
             "expires" => expires = v.parse()?,
-            "avg_ttl" => avg_ttl = v.parse()?,
+            "avg_ttl" => avg_ttl = v.parse::<f64>()? / 1000.0,
             "cached_keys" => cached_keys = v.parse()?,
             _ => {}
         }
