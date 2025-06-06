@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749227699450,
+  "lastUpdate": 1749227724761,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d6ea9c2abd2394e20c87c8ed0135eecc4f89e794",
-          "message": "Merge pull request #2276 from f1shl3gs/extensions/kubernetes_observer\n\nadd extensions/kubernetes_observer",
-          "timestamp": "2025-03-20T17:48:21+08:00",
-          "tree_id": "46e9f22bdfc9a5e5d417086dd59ab8f6790bb13e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d6ea9c2abd2394e20c87c8ed0135eecc4f89e794"
-        },
-        "date": 1742464846639,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 650,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40392.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2f9a26705cc2aa6c7a2ae44f921c36471ca5d815",
           "message": "Merge pull request #2277 from f1shl3gs/deps/remove_kube_rs\n\ndeps: remove kube-rs & k8s-openapi",
           "timestamp": "2025-03-24T05:27:09+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37526.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6b8a332094935cdec6df37d7058b411e03f8bbd",
+          "message": "Merge pull request #2382 from f1shl3gs/dependabot/cargo/tracing-core-0.1.34\n\nchore(deps): bump tracing-core from 0.1.33 to 0.1.34",
+          "timestamp": "2025-06-07T00:24:56+08:00",
+          "tree_id": "0ccb8ef4da2df835463798fbab65b10888b28b56",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e6b8a332094935cdec6df37d7058b411e03f8bbd"
+        },
+        "date": 1749227703262,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 507,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37526.6,
             "unit": "KiB"
           }
         ]
