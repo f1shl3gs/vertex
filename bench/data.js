@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749227245075,
+  "lastUpdate": 1749227257610,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7e5d38b49dfa24395d1867468702bb13f0db250c",
-          "message": "Merge pull request #2273 from f1shl3gs/lib/kubernetes\n\nlib/kubernetes: init",
-          "timestamp": "2025-03-18T07:58:12+08:00",
-          "tree_id": "61ef7184eb223ec073d65869a085dae5353aca9f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7e5d38b49dfa24395d1867468702bb13f0db250c"
-        },
-        "date": 1742256008964,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 546950,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540540,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6b8a332094935cdec6df37d7058b411e03f8bbd",
+          "message": "Merge pull request #2382 from f1shl3gs/dependabot/cargo/tracing-core-0.1.34\n\nchore(deps): bump tracing-core from 0.1.33 to 0.1.34",
+          "timestamp": "2025-06-07T00:24:56+08:00",
+          "tree_id": "0ccb8ef4da2df835463798fbab65b10888b28b56",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e6b8a332094935cdec6df37d7058b411e03f8bbd"
+        },
+        "date": 1749227235525,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540440,
             "unit": "ns/op"
           }
         ]
