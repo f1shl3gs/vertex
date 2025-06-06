@@ -487,6 +487,38 @@ impl Metric {
         }
     }
 
+    #[inline]
+    pub fn summary_with_tags<N, D, C, S, A>(
+        name: N,
+        desc: D,
+        count: C,
+        sum: S,
+        quantiles: Vec<Quantile>,
+        tags: A,
+    ) -> Metric
+    where
+        N: Into<String>,
+        D: Into<String>,
+        C: Into<u64>,
+        S: IntoF64,
+        A: Into<Tags>,
+    {
+        Self {
+            series: MetricSeries {
+                name: name.into(),
+                tags: tags.into(),
+            },
+            description: Some(desc.into()),
+            timestamp: None,
+            metadata: EventMetadata::default(),
+            value: MetricValue::Summary {
+                count: count.into(),
+                sum: sum.into_f64(),
+                quantiles,
+            },
+        }
+    }
+
     pub fn metadata(&self) -> &EventMetadata {
         &self.metadata
     }
