@@ -75,7 +75,7 @@ tokio-stream = { version = "0.1.17", default-features = false, features = ["net"
 tokio-util = { version = "0.7.15", default-features = false, features = ["time"] }
 tower = { version = "0.5.2", default-features = false, features = ["limit", "retry", "timeout"] }
 tracing = { version = "0.1.41", default-features = false }
-tracing-core = { version = "0.1.33", default-features = false }
+tracing-core = { version = "0.1.34", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["std-future"] }
 tracing-limit = { path = "../tracing-limit" }
