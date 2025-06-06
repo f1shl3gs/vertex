@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749227298785,
+  "lastUpdate": 1749227314467,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "79614ef34bae402fae5d4917a71b70faf4c69faf",
-          "message": "Merge pull request #2271 from f1shl3gs/dependabot/cargo/rustls-0.23.24\n\nchore(deps): bump rustls from 0.23.23 to 0.23.24",
-          "timestamp": "2025-03-17T18:41:19+08:00",
-          "tree_id": "c8f8d972a43d1ffc6effea6be2a85f53e21871cb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/79614ef34bae402fae5d4917a71b70faf4c69faf"
-        },
-        "date": 1742208277497,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 203.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 19739,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 98074,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 199930,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 127.05,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 12728,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 64455,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 127210,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7e5d38b49dfa24395d1867468702bb13f0db250c",
           "message": "Merge pull request #2273 from f1shl3gs/lib/kubernetes\n\nlib/kubernetes: init",
           "timestamp": "2025-03-18T07:58:12+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 128840,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ae498377c7e7b59dd46eb9883c05b05d37591c3",
+          "message": "Merge pull request #2383 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.7\n\nchore(deps): bump hyper-rustls from 0.27.6 to 0.27.7",
+          "timestamp": "2025-06-07T00:24:41+08:00",
+          "tree_id": "1d8a6114ebd8eae0b651960fe48f2cce0f603bac",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ae498377c7e7b59dd46eb9883c05b05d37591c3"
+        },
+        "date": 1749227292578,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 200.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 20138,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 98830,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 193250,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 126.35,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12576,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 63334,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 125620,
             "unit": "ns/op"
           }
         ]
