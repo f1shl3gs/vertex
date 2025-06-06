@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749224259826,
+  "lastUpdate": 1749224313014,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "98577473566baa65bb0fe1ee1d4ae1fe4445620f",
-          "message": "Merge pull request #2274 from f1shl3gs/dependabot/cargo/mimalloc-0.1.44\n\nchore(deps): bump mimalloc from 0.1.43 to 0.1.44",
-          "timestamp": "2025-03-19T20:42:25+08:00",
-          "tree_id": "1e7e42ea3907d8aaa43a70d25a40c015efcca772",
-          "url": "https://github.com/f1shl3gs/vertex/commit/98577473566baa65bb0fe1ee1d4ae1fe4445620f"
-        },
-        "date": 1742388821434,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 583,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39378.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d6ea9c2abd2394e20c87c8ed0135eecc4f89e794",
           "message": "Merge pull request #2276 from f1shl3gs/extensions/kubernetes_observer\n\nadd extensions/kubernetes_observer",
           "timestamp": "2025-03-20T17:48:21+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37445.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "076c0919df8aa3ff580365587f7dc0ed6d972595",
+          "message": "Merge pull request #2381 from f1shl3gs/sources/redis/refactor_and_add_more_details\n\nsources/redis: refactor and add more details",
+          "timestamp": "2025-06-06T23:27:56+08:00",
+          "tree_id": "5e7463e5b5089bd31180f54d83af62ce6b15f601",
+          "url": "https://github.com/f1shl3gs/vertex/commit/076c0919df8aa3ff580365587f7dc0ed6d972595"
+        },
+        "date": 1749224291218,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 514,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37526.2,
             "unit": "KiB"
           }
         ]
