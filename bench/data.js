@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749069833036,
+  "lastUpdate": 1749223831513,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "237dd4975ea0aef284c20e3a73796af1f1603a3b",
-          "message": "Merge pull request #2270 from f1shl3gs/extensions/dns_observer\n\nextensions/dns_observer: init",
-          "timestamp": "2025-03-16T02:12:55+08:00",
-          "tree_id": "ae289c6af7288388cb7ad13e7fce382b5004854d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/237dd4975ea0aef284c20e3a73796af1f1603a3b"
-        },
-        "date": 1742062492333,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541090,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 537780,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "076c0919df8aa3ff580365587f7dc0ed6d972595",
+          "message": "Merge pull request #2381 from f1shl3gs/sources/redis/refactor_and_add_more_details\n\nsources/redis: refactor and add more details",
+          "timestamp": "2025-06-06T23:27:56+08:00",
+          "tree_id": "5e7463e5b5089bd31180f54d83af62ce6b15f601",
+          "url": "https://github.com/f1shl3gs/vertex/commit/076c0919df8aa3ff580365587f7dc0ed6d972595"
+        },
+        "date": 1749223809913,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 538620,
             "unit": "ns/op"
           }
         ]
