@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749256366169,
+  "lastUpdate": 1749256448963,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4e455a105cfc1cb5d0e6658736416a83c5c44429",
-          "message": "Merge pull request #2278 from f1shl3gs/lib/kubernetes/add_watch\n\nlib/kubernetes: add watcher",
-          "timestamp": "2025-03-25T05:41:23+08:00",
-          "tree_id": "9988e6a509c681ce48ed4e40d8509fb537ef7935",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e455a105cfc1cb5d0e6658736416a83c5c44429"
-        },
-        "date": 1742853123900,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 550,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37977.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "14d63a2a9d47c656b5b73940ac42de84b3a0aed0",
           "message": "Merge pull request #2279 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.3\n\nchore(deps): bump chrono-tz from 0.10.1 to 0.10.3",
           "timestamp": "2025-03-25T06:00:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37525.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e156b2135f18216b4d48058de7b2c96bab8c793a",
+          "message": "Merge pull request #2384 from f1shl3gs/sources/systemd/impl_watchdog\n\nsources/systemd: impl watchdog",
+          "timestamp": "2025-06-07T08:22:47+08:00",
+          "tree_id": "468c05347d2a6a75551077f40e515109b3c91993",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e156b2135f18216b4d48058de7b2c96bab8c793a"
+        },
+        "date": 1749256427387,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 513,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37530.6,
             "unit": "KiB"
           }
         ]
