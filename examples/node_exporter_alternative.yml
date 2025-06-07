@@ -2,7 +2,7 @@ sources:
   selfstat:
     type: selfstat
   node:
-    type: node_metrics
+    type: node
 
 sinks:
   prom:
