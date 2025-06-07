@@ -141,7 +141,7 @@ all-integration-tests = [
 
 extensions-consul_observer = []
 extensions-dns_observer = ["dep:resolver"]
-extensions-exec_observer = []
+extensions-exec_observer = ["tokio/process"]
 extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "dep:parking_lot"]
 extensions-healthcheck = []
 extensions-http = []
@@ -167,7 +167,7 @@ extensions = [
 ]
 
 # Sources
-sources-audit = ["dep:libc"]
+sources-audit = []
 sources-bind = ["dep:quick-xml"]
 sources-chrony = []
 sources-clickhouse_metrics = []
@@ -189,30 +189,30 @@ sources-internal_logs = []
 sources-internal_metrics = []
 sources-internal_traces = []
 sources-jaeger = ["dep:jaeger", "tonic/server", "tonic/router"]
-sources-journald = []
+sources-journald = ["tokio/fs", "tokio/process"]
 sources-kafka = ["dep:rskafka", "dep:async-stream"]
 sources-kafka_metrics = ["dep:rskafka"]
-sources-kmsg = []
+sources-kmsg = ["tokio/fs"]
 sources-kubernetes_logs = ["dep:tail", "dep:multiline", "dep:kubernetes"]
 sources-kubernetes_events = ["dep:kubernetes"]
-sources-libvirt = ["dep:virt"]
+sources-libvirt = ["dep:virt", "dep:quick-xml"]
 sources-memcached = []
 sources-mongodb = []
 sources-mqtt = []
 sources-multiplier = []
 sources-mysqld = ["dep:sqlx"]
-sources-netflow = []
+sources-netflow = ["dep:parking_lot"]
 sources-nginx_stub = []
-sources-node_metrics = ["dep:libc"]
+sources-node_metrics = []
 sources-ntp = ["dep:ntp"]
 sources-nvidia = ["tokio/process"]
 sources-ping = ["dep:socket2", "dep:parking_lot"]
-sources-prometheus_pushgateway = ["dep:base64"]
+sources-prometheus_pushgateway = ["dep:base64", "dep:prometheus"]
 sources-prometheus_scrape = ["dep:prometheus"]
-sources-prometheus_remote_write = ["dep:snap"]
+sources-prometheus_remote_write = ["dep:snap", "dep:prometheus"]
 sources-redfish = []
 sources-redis = []
-sources-selfstat = ["dep:libc"]
+sources-selfstat = []
 sources-sflow = []
 sources-socket = []
 sources-static_metrics = []
@@ -278,7 +278,7 @@ sources = [
 ]
 
 transforms-cardinality = ["dep:dashmap", "dep:sbbf"]
-transforms-dedup = ["dep:lru"]
+transforms-dedup = ["dep:lru", "dep:parking_lot"]
 transforms-filter = []
 transforms-geoip = ["dep:maxminddb"]
 transforms-metricalize = ["dep:async-stream"]
@@ -286,7 +286,7 @@ transforms-relabel = ["dep:md-5"]
 transforms-rewrite = []
 transforms-route = []
 transforms-sample = []
-transforms-throttle = ["dep:gcra"]
+transforms-throttle = ["dep:gcra", "dep:async-stream"]
 
 # transforms
 transforms = [
@@ -310,10 +310,10 @@ sinks-elasticsearch = []
 sinks-http = []
 sinks-influxdb = []
 sinks-jaeger = ["dep:jaeger"]
-sinks-kafka = ["dep:rskafka"]
+sinks-kafka = ["dep:rskafka", "dep:parking_lot"]
 sinks-loki = ["dep:snap"]
-sinks-prometheus_exporter = ["dep:flate2", "dep:parking_lot"]
-sinks-prometheus_remote_write = ["dep:snap"]
+sinks-prometheus_exporter = ["dep:flate2", "dep:parking_lot", "dep:prometheus"]
+sinks-prometheus_remote_write = ["dep:snap", "dep:prometheus"]
 sinks-skywalking = ["tonic/gzip", "tonic/zstd", "tonic/transport", "tonic/codegen"]
 sinks-socket = []
 
@@ -479,7 +479,7 @@ glob = { version = "0.3.2", default-features = false }
 hyper-unix = { path = "lib/hyper-unix", optional = true }
 indexmap = { version = "2.9.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.20", default-features = false }
-libc = { version = "0.2.172", default-features = false, optional = true }
+libc = { version = "0.2.172", default-features = false }
 lru = { version = "0.14.0", default-features = false, optional = true }
 maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d1861cfe7313589c0e0281ddbb660a88962", optional = true, features = ["mmap", "unsafe-str"] }
 md-5 = { version = "0.10.6", default-features = false, optional = true }
