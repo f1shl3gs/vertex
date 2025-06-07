@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749304083865,
+  "lastUpdate": 1749304126143,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cbcf953e9fc53ac87e7acf14498a1db2812b4da8",
-          "message": "Merge pull request #2280 from f1shl3gs/dependabot/cargo/tonic-0dfe49084d\n\nchore(deps): bump the tonic group with 3 updates",
-          "timestamp": "2025-03-26T14:24:55+08:00",
-          "tree_id": "47106805b81dfc0bc32f6b2febd59192891a148a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cbcf953e9fc53ac87e7acf14498a1db2812b4da8"
-        },
-        "date": 1742970937981,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 538,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38019,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "88e57803b34ff1a40643eb0a6443929de1c3efa3",
           "message": "Merge pull request #2282 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
           "timestamp": "2025-03-26T19:35:52+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 515,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37525.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "183b4c31f227b47fba227f95070edeb8d201d2b7",
+          "message": "Merge pull request #2387 from f1shl3gs/cargo/add_necessary_features_for_each_component\n\ncargo: add necessary dep features for each component",
+          "timestamp": "2025-06-07T21:38:09+08:00",
+          "tree_id": "c28f418a0ef0abe7888e4be8abbfc88818a8d4cf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/183b4c31f227b47fba227f95070edeb8d201d2b7"
+        },
+        "date": 1749304104622,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 512,
             "unit": "s"
           },
           {
