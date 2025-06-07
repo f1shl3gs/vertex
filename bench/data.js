@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749259497905,
+  "lastUpdate": 1749259512871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "14d63a2a9d47c656b5b73940ac42de84b3a0aed0",
-          "message": "Merge pull request #2279 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.3\n\nchore(deps): bump chrono-tz from 0.10.1 to 0.10.3",
-          "timestamp": "2025-03-25T06:00:41+08:00",
-          "tree_id": "b38a8f6f236f31d0daff311404b47d32ca42dad7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/14d63a2a9d47c656b5b73940ac42de84b3a0aed0"
-        },
-        "date": 1742854263832,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 533,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37977.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "84f3a5e4a7857be96b9695ac2c55d934bb570aa7",
           "message": "Merge pull request #2281 from f1shl3gs/dependabot/cargo/quick-xml-0.37.3\n\nchore(deps): bump quick-xml from 0.37.2 to 0.37.3",
           "timestamp": "2025-03-26T13:44:52+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37530.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d959cecce1cfe91b292922642d0440825cbec7be",
+          "message": "Merge pull request #2385 from f1shl3gs/sources/systemd/small_refactor\n\nsources/systemd: small refactor to reduce binary size",
+          "timestamp": "2025-06-07T09:13:49+08:00",
+          "tree_id": "a0f52622eb097b29f865bc97df5c69d03a185edb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d959cecce1cfe91b292922642d0440825cbec7be"
+        },
+        "date": 1749259490872,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 513,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37526,
             "unit": "KiB"
           }
         ]
