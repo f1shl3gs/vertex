@@ -5,7 +5,7 @@ use super::dbus::{Client, Error};
 pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
 
-    let resp = client
+    let device = client
         .call::<String>(
             "/org/freedesktop/systemd1",
             "Get",
@@ -18,36 +18,70 @@ pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
     metrics.push(Metric::gauge(
         "systemd_watchdog_enabled",
         "systemd watchdog enabled",
-        !resp.is_empty(),
+        !device.is_empty(),
     ));
 
-    if resp.is_empty() {
+    if device.is_empty() {
         return Ok(metrics);
     }
+
+    let last_ping_timestamp_monotonic = client
+        .call::<u64>(
+            "/org/freedesktop/systemd1",
+            "Get",
+            "org.freedesktop.systemd1",
+            "org.freedesktop.DBus.Properties",
+            &[
+                "org.freedesktop.systemd1.Manager",
+                "WatchdogLastPingTimestampMonotonic",
+            ],
+        )
+        .await?;
+    let last_ping_timestamp = client
+        .call::<u64>(
+            "/org/freedesktop/systemd1",
+            "Get",
+            "org.freedesktop.systemd1",
+            "org.freedesktop.DBus.Properties",
+            &[
+                "org.freedesktop.systemd1.Manager",
+                "WatchdogLastPingTimestamp",
+            ],
+        )
+        .await?;
+    let runtime_usec = client
+        .call::<u64>(
+            "/org/freedesktop/systemd1",
+            "Get",
+            "org.freedesktop.systemd1",
+            "org.freedesktop.DBus.Properties",
+            &["org.freedesktop.systemd1.Manager", "RuntimeWatchdogUSec"],
+        )
+        .await?;
 
     metrics.extend([
         Metric::gauge_with_tags(
             "systemd_watchdog_last_ping_monotonic_seconds",
             "systemd watchdog last ping monotonic seconds",
-            1,
+            last_ping_timestamp_monotonic,
             tags!(
-                "device" => "type",
+                "device" => &device,
             ),
         ),
         Metric::gauge_with_tags(
             "systemd_watchdog_last_ping_time_seconds",
             "systemd watchdog last ping time seconds",
-            1,
+            last_ping_timestamp,
             tags!(
-                "device" => "type",
+                "device" => &device,
             ),
         ),
         Metric::gauge_with_tags(
             "systemd_watchdog_runtime_seconds",
             "systemd watchdog runtime seconds",
-            1,
+            runtime_usec / 1_000_000,
             tags!(
-                "device" => "type",
+                "device" => device,
             ),
         ),
     ]);
