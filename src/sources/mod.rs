@@ -68,7 +68,7 @@ mod mysqld;
 mod netflow;
 #[cfg(feature = "sources-nginx_stub")]
 mod nginx_stub;
-#[cfg(all(target_os = "linux", feature = "sources-node_metrics"))]
+#[cfg(all(target_os = "linux", feature = "sources-node"))]
 pub mod node;
 #[cfg(feature = "sources-ntp")]
 mod ntp;

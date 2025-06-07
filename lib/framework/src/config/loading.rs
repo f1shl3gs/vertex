@@ -278,7 +278,7 @@ sources:
   kmsg:
     type: kmsg
   node:
-    type: node_metrics
+    type: node
     interval: 15s
   selfstat:
     type: selfstat

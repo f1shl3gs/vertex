@@ -93,7 +93,7 @@ target-x86_64-unknown-linux-gnu = [
 ]
 
 benches = [
-    "sources-node_metrics",
+    "sources-node",
     "sources-haproxy",
     "sinks-loki"
 ]
@@ -203,7 +203,7 @@ sources-multiplier = []
 sources-mysqld = ["dep:sqlx"]
 sources-netflow = ["dep:parking_lot"]
 sources-nginx_stub = []
-sources-node_metrics = []
+sources-node = []
 sources-ntp = ["dep:ntp"]
 sources-nvidia = ["tokio/process"]
 sources-ping = ["dep:socket2", "dep:parking_lot"]
@@ -258,7 +258,7 @@ sources = [
     "sources-mysqld",
     "sources-netflow",
     "sources-nginx_stub",
-    "sources-node_metrics",
+    "sources-node",
     "sources-ntp",
     "sources-nvidia",
     "sources-ping",
@@ -349,7 +349,7 @@ snmalloc = [ "dep:snmalloc-rs" ]
 bench = [
     "sinks-loki",
     "sources-haproxy",
-    "sources-node_metrics",
+    "sources-node",
 ]
 
 [[bench]]
@@ -362,7 +362,7 @@ required-features = ["sinks-loki"]
 name = "hwmon_gather"
 harness = false
 path = "benches/node_source_hwmon.rs"
-required-features = ["sources-node_metrics"]
+required-features = ["sources-node"]
 
 [[bench]]
 name = "haproxy"
