@@ -118,7 +118,7 @@ pub async fn collect(
 const STATE_NAMES: [&str; 5] = ["active", "activating", "deactivating", "inactive", "failed"];
 
 async fn collect_unit(client: &mut Client, unit: Unit, version: f64) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
+    let mut metrics = Vec::with_capacity(9);
 
     let typ = if let Some(pos) = unit.name.rfind('.') {
         &unit.name[pos + 1..]
@@ -139,7 +139,7 @@ async fn collect_unit(client: &mut Client, unit: Unit, version: f64) -> Result<V
         ))
     }
 
-    let value = client
+    let active_enter_timestamp = client
         .call::<u64>(
             unit.path.as_str(),
             "Get",
@@ -148,17 +148,7 @@ async fn collect_unit(client: &mut Client, unit: Unit, version: f64) -> Result<V
             &["org.freedesktop.systemd1.Unit", "ActiveEnterTimestamp"],
         )
         .await?;
-    metrics.push(Metric::gauge_with_tags(
-        "systemd_unit_active_enter_time_seconds",
-        "Last time the unit transitioned into the active state",
-        value as f64 / 1_000_000.0,
-        tags!(
-            "name" => unit.name.as_str(),
-            "type" => typ,
-        ),
-    ));
-
-    let value = client
+    let active_exit_timestamp = client
         .call::<u64>(
             unit.path.as_str(),
             "Get",
@@ -167,17 +157,7 @@ async fn collect_unit(client: &mut Client, unit: Unit, version: f64) -> Result<V
             &["org.freedesktop.systemd1.Unit", "ActiveExitTimestamp"],
         )
         .await?;
-    metrics.push(Metric::gauge_with_tags(
-        "systemd_unit_active_exit_time_seconds",
-        "Last time the unit transitioned out of the active state",
-        value as f64 / 1_000_000.0,
-        tags!(
-            "name" => unit.name.as_str(),
-            "type" => typ,
-        ),
-    ));
-
-    let value = client
+    let inactive_enter_timestamp = client
         .call::<u64>(
             unit.path.as_str(),
             "Get",
@@ -186,17 +166,7 @@ async fn collect_unit(client: &mut Client, unit: Unit, version: f64) -> Result<V
             &["org.freedesktop.systemd1.Unit", "InactiveEnterTimestamp"],
         )
         .await?;
-    metrics.push(Metric::gauge_with_tags(
-        "systemd_unit_inactive_enter_time_seconds",
-        "Last time the unit transitioned into the inactive state",
-        value as f64 / 1_000_000.0,
-        tags!(
-            "name" => unit.name.as_str(),
-            "type" => typ,
-        ),
-    ));
-
-    let value = client
+    let inactive_exit_timestamp = client
         .call::<u64>(
             unit.path.as_str(),
             "Get",
@@ -205,15 +175,45 @@ async fn collect_unit(client: &mut Client, unit: Unit, version: f64) -> Result<V
             &["org.freedesktop.systemd1.Unit", "InactiveExitTimestamp"],
         )
         .await?;
-    metrics.push(Metric::gauge_with_tags(
-        "systemd_unit_inactive_exit_time_seconds",
-        "Last time the unit transitioned out of the inactive state",
-        value as f64 / 1_000_000.0,
-        tags!(
-            "name" => unit.name.as_str(),
-            "type" => typ,
+
+    metrics.extend([
+        Metric::gauge_with_tags(
+            "systemd_unit_active_enter_time_seconds",
+            "Last time the unit transitioned into the active state",
+            active_enter_timestamp as f64 / 1_000_000.0,
+            tags!(
+                "name" => unit.name.as_str(),
+                "type" => typ,
+            ),
         ),
-    ));
+        Metric::gauge_with_tags(
+            "systemd_unit_active_exit_time_seconds",
+            "Last time the unit transitioned out of the active state",
+            active_exit_timestamp as f64 / 1_000_000.0,
+            tags!(
+                "name" => unit.name.as_str(),
+                "type" => typ,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "systemd_unit_inactive_enter_time_seconds",
+            "Last time the unit transitioned into the inactive state",
+            inactive_enter_timestamp as f64 / 1_000_000.0,
+            tags!(
+                "name" => unit.name.as_str(),
+                "type" => typ,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "systemd_unit_inactive_exit_time_seconds",
+            "Last time the unit transitioned out of the inactive state",
+            inactive_exit_timestamp as f64 / 1_000_000.0,
+            tags!(
+                "name" => unit.name.as_str(),
+                "type" => typ,
+            ),
+        ),
+    ]);
 
     match typ {
         "service" => {
@@ -287,8 +287,6 @@ async fn collect_service_info(
     unit: &Unit,
     typ: &str,
 ) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
-
     let service_type = client
         .call::<String>(
             unit.path.as_str(),
@@ -298,17 +296,6 @@ async fn collect_service_info(
             &["org.freedesktop.systemd1.Service", "Type"],
         )
         .await?;
-
-    metrics.push(Metric::gauge_with_tags(
-        "systemd_unit_info",
-        "Mostly-static metadata for all unit types",
-        1,
-        tags!(
-            "name" => unit.name.as_str(),
-            "type" => typ,
-            "service_type" => service_type
-        ),
-    ));
 
     let start = if unit.active_state == "active" {
         client
@@ -324,15 +311,27 @@ async fn collect_service_info(
         0
     };
 
-    metrics.push(Metric::gauge_with_tags(
-        "systemd_unit_start_time_seconds",
-        "Start time of the unit since unix epoch in seconds.",
-        start as f64 / 1_000_000.0,
-        tags!(
-            "name" => unit.name.as_str(),
-            "type" => typ,
+    let mut metrics = vec![
+        Metric::gauge_with_tags(
+            "systemd_unit_info",
+            "Mostly-static metadata for all unit types",
+            1,
+            tags!(
+                "name" => unit.name.as_str(),
+                "type" => typ,
+                "service_type" => service_type
+            ),
         ),
-    ));
+        Metric::gauge_with_tags(
+            "systemd_unit_start_time_seconds",
+            "Start time of the unit since unix epoch in seconds.",
+            start as f64 / 1_000_000.0,
+            tags!(
+                "name" => unit.name.as_str(),
+                "type" => typ,
+            ),
+        ),
+    ];
 
     match collect_service_tasks(client, unit, typ).await {
         Ok(partial) => metrics.extend(partial),

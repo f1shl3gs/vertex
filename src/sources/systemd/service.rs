@@ -24,16 +24,10 @@ const STAGES: [&str; 18] = [
 ];
 
 pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
-    let metrics = boot_stage_timestamps(client).await?;
-
-    Ok(metrics)
-}
-
-async fn boot_stage_timestamps(client: &mut Client) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
+    let mut metrics = Vec::with_capacity(2 * STAGES.len());
 
     for stage in STAGES {
-        let value = client
+        let timestamp_monotonic = client
             .call::<u64>(
                 "/org/freedesktop/systemd1",
                 "Get",
@@ -45,17 +39,7 @@ async fn boot_stage_timestamps(client: &mut Client) -> Result<Vec<Metric>, Error
                 ],
             )
             .await?;
-
-        metrics.push(Metric::gauge_with_tags(
-            "systemd_boot_monotonic_seconds",
-            "Systemd boot stage monotonic timestamps",
-            value as f64 / 1_000_000.0,
-            tags!(
-                "stage" => stage,
-            ),
-        ));
-
-        match client
+        let timestamp = client
             .call::<u64>(
                 "/org/freedesktop/systemd1",
                 "Get",
@@ -66,23 +50,26 @@ async fn boot_stage_timestamps(client: &mut Client) -> Result<Vec<Metric>, Error
                     format!("{}Timestamp", stage).as_str(),
                 ],
             )
-            .await
-        {
-            Ok(value) => metrics.push(Metric::gauge_with_tags(
-                "systemd_boot_time_seconds",
-                "Systemd boot stage timestamps",
-                value / 1000000,
+            .await?;
+
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "systemd_boot_monotonic_seconds",
+                "Systemd boot stage monotonic timestamps",
+                timestamp_monotonic as f64 / 1_000_000.0,
                 tags!(
                     "stage" => stage,
                 ),
-            )),
-            Err(err) => {
-                warn!(
-                    message = "Failed to get systemd boot stage timestamps",
-                    ?err
-                );
-            }
-        };
+            ),
+            Metric::gauge_with_tags(
+                "systemd_boot_time_seconds",
+                "Systemd boot stage timestamps",
+                timestamp / 1_000_000,
+                tags!(
+                    "stage" => stage,
+                ),
+            ),
+        ]);
     }
 
     Ok(metrics)
