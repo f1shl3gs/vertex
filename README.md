@@ -137,7 +137,7 @@ strip /path/to/your/binary
 - Custom your Vertex is recommended, build a lite version of vertex to collect host metrics, and export them via
   a HTTP server just like `node_exporter`.
 ```shell
-cargo build --release --no-default-features --features=sources-node_metrics,sources-selfstat,sinks-prometheus_exporter
+cargo build --release --no-default-features --features=sources-node,sources-selfstat,sinks-prometheus_exporter
 ```
 
 `NOTE`: If you build with `x86_64-unknown-linux-musl`, you should specify an allocator, cause the default one is bad
@@ -151,7 +151,7 @@ sources:
   selfstat:
     type: selfstat
   node:
-    type: node_metrics
+    type: node
     # default value is 15s
     # interval: 15s
 

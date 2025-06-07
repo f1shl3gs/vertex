@@ -784,7 +784,7 @@ async fn run(
 }
 
 #[async_trait::async_trait]
-#[typetag::serde(name = "node_metrics")]
+#[typetag::serde(name = "node")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         Ok(Box::pin(run(
