@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749299318594,
+  "lastUpdate": 1749299389247,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2f9a26705cc2aa6c7a2ae44f921c36471ca5d815",
-          "message": "Merge pull request #2277 from f1shl3gs/deps/remove_kube_rs\n\ndeps: remove kube-rs & k8s-openapi",
-          "timestamp": "2025-03-24T05:27:09+08:00",
-          "tree_id": "70c045579bcbe41cb28aab49eecfc1789163fa4a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2f9a26705cc2aa6c7a2ae44f921c36471ca5d815"
-        },
-        "date": 1742765384505,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.383,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 183.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 327.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 663.87,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e455a105cfc1cb5d0e6658736416a83c5c44429",
           "message": "Merge pull request #2278 from f1shl3gs/lib/kubernetes/add_watch\n\nlib/kubernetes: add watcher",
           "timestamp": "2025-03-25T05:41:23+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 722.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "851a1cbd0997abf0adb6c8ce501f1e9b29a083fb",
+          "message": "Merge pull request #2386 from f1shl3gs/dependabot/cargo/flate2-1.1.2\n\nchore(deps): bump flate2 from 1.1.1 to 1.1.2",
+          "timestamp": "2025-06-07T20:25:12+08:00",
+          "tree_id": "489e3df4e0f1d3f23b4b66a73dd6ac1d9efc478d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/851a1cbd0997abf0adb6c8ce501f1e9b29a083fb"
+        },
+        "date": 1749299367344,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.314,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 338.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 707.18,
             "unit": "ns/op"
           }
         ]
