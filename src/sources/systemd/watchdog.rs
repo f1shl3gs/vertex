@@ -3,8 +3,6 @@ use event::{Metric, tags};
 use super::dbus::{Client, Error};
 
 pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
-    let mut metrics = Vec::new();
-
     let device = client
         .call::<String>(
             "/org/freedesktop/systemd1",
@@ -15,14 +13,12 @@ pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
         )
         .await?;
 
-    metrics.push(Metric::gauge(
-        "systemd_watchdog_enabled",
-        "systemd watchdog enabled",
-        !device.is_empty(),
-    ));
-
     if device.is_empty() {
-        return Ok(metrics);
+        return Ok(vec![Metric::gauge(
+            "systemd_watchdog_enabled",
+            "systemd watchdog enabled",
+            0,
+        )]);
     }
 
     let last_ping_timestamp_monotonic = client
@@ -59,11 +55,12 @@ pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
         )
         .await?;
 
-    metrics.extend([
+    Ok(vec![
+        Metric::gauge("systemd_watchdog_enabled", "systemd watchdog enabled", 1),
         Metric::gauge_with_tags(
             "systemd_watchdog_last_ping_monotonic_seconds",
             "systemd watchdog last ping monotonic seconds",
-            last_ping_timestamp_monotonic,
+            last_ping_timestamp_monotonic / 1_000_000,
             tags!(
                 "device" => &device,
             ),
@@ -71,7 +68,7 @@ pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
         Metric::gauge_with_tags(
             "systemd_watchdog_last_ping_time_seconds",
             "systemd watchdog last ping time seconds",
-            last_ping_timestamp,
+            last_ping_timestamp / 1_000_000,
             tags!(
                 "device" => &device,
             ),
@@ -84,7 +81,5 @@ pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
                 "device" => device,
             ),
         ),
-    ]);
-
-    Ok(metrics)
+    ])
 }
