@@ -69,7 +69,9 @@ impl Connection {
 
         buf.clear();
         loop {
-            self.stream.read_buf(&mut buf).await?;
+            if self.stream.read_buf(&mut buf).await? == 0 {
+                return Err(Error::Io(std::io::ErrorKind::UnexpectedEof.into()));
+            }
 
             match Frame::parse(&buf) {
                 Ok(Some(frame)) => {
@@ -115,7 +117,8 @@ impl Frame<'_> {
     }
 
     fn parse_with_pos<'a>(buf: &'a [u8], pos: &mut usize) -> Result<Option<Frame<'a>>, Error> {
-        // buf is too short
+        // buf is too short,
+        // the shortest response looks like `:0\r\n` which is 4 bytes
         if buf.len() - *pos < 1 + 1 + 2 {
             return Ok(None);
         }
@@ -124,54 +127,38 @@ impl Frame<'_> {
         *pos += 1;
 
         match typ {
-            b'+' => {
-                let start = *pos;
+            b'+' => match read_until_crlf(buf, pos) {
+                Some((start, end)) => {
+                    let s = unsafe { std::str::from_utf8_unchecked(&buf[start..end]) };
 
-                match buf[start..].windows(2).position(|window| window == b"\r\n") {
-                    Some(len) => {
-                        let s = unsafe { std::str::from_utf8_unchecked(&buf[start..start + len]) };
-                        *pos += len + 2;
-
-                        Ok(Some(Frame::Simple(s)))
-                    }
-                    None => Ok(None),
+                    Ok(Some(Frame::Simple(s)))
                 }
-            }
-            b'-' => {
-                let start = *pos;
+                None => Ok(None),
+            },
+            b'-' => match read_until_crlf(buf, pos) {
+                Some((start, end)) => {
+                    let s = unsafe { std::str::from_utf8_unchecked(&buf[start..end]) };
 
-                match buf[start..].windows(2).position(|window| window == b"\r\n") {
-                    Some(len) => {
-                        let s = unsafe { std::str::from_utf8_unchecked(&buf[start..start + len]) };
-                        *pos += len + 2;
-
-                        Ok(Some(Frame::Error(s)))
-                    }
-                    None => Ok(None),
+                    Ok(Some(Frame::Error(s)))
                 }
-            }
-            b':' => {
-                let start = *pos;
-                match buf[start..].windows(2).position(|window| window == b"\r\n") {
-                    Some(len) => {
-                        let s = unsafe { std::str::from_utf8_unchecked(&buf[start..start + len]) };
-                        let value = s.parse::<i64>()?;
-                        *pos += len + 2;
+                None => Ok(None),
+            },
+            b':' => match read_until_crlf(buf, pos) {
+                Some((start, end)) => {
+                    let s = unsafe { std::str::from_utf8_unchecked(&buf[start..end]) };
+                    let value = s.parse::<i64>()?;
 
-                        Ok(Some(Frame::Integer(value)))
-                    }
-                    None => Ok(None),
+                    Ok(Some(Frame::Integer(value)))
                 }
-            }
+                None => Ok(None),
+            },
             b'$' => {
                 if b'-' == buf[*pos] {
-                    let start = *pos;
-                    match buf[start..].windows(2).position(|window| window == b"\r\n") {
-                        Some(len) => {
-                            if &buf[start..start + len] != b"-1" {
+                    match read_until_crlf(buf, pos) {
+                        Some((start, end)) => {
+                            if &buf[start..end] != b"-1" {
                                 return Err(Error::Server("protocol error".to_string()));
                             }
-                            *pos += len + 2;
 
                             Ok(Some(Frame::Null))
                         }
@@ -179,13 +166,10 @@ impl Frame<'_> {
                     }
                 } else {
                     // read the bulk string
-                    let start = *pos;
-                    match buf[start..].windows(2).position(|window| window == b"\r\n") {
-                        Some(len) => {
-                            let s =
-                                unsafe { std::str::from_utf8_unchecked(&buf[start..start + len]) };
+                    match read_until_crlf(buf, pos) {
+                        Some((start, end)) => {
+                            let s = unsafe { std::str::from_utf8_unchecked(&buf[start..end]) };
                             let value = s.parse::<usize>()?;
-                            *pos += len + 2;
 
                             if buf.len() - *pos < value + 2 {
                                 return Ok(None);
@@ -201,11 +185,9 @@ impl Frame<'_> {
                 }
             }
             b'*' => {
-                let start = *pos;
-                let len = match buf[start..].windows(2).position(|window| window == b"\r\n") {
-                    Some(len) => {
-                        let s = unsafe { std::str::from_utf8_unchecked(&buf[start..start + len]) };
-                        *pos += len + 2;
+                let len = match read_until_crlf(buf, pos) {
+                    Some((start, end)) => {
+                        let s = unsafe { std::str::from_utf8_unchecked(&buf[start..end]) };
 
                         s.parse::<usize>()?
                     }
@@ -226,6 +208,18 @@ impl Frame<'_> {
             _ => Err(Error::UnknownFrameType),
         }
     }
+}
+
+#[inline]
+fn read_until_crlf(buf: &[u8], pos: &mut usize) -> Option<(usize, usize)> {
+    let start = *pos;
+    let len = buf[start..]
+        .windows(2)
+        .position(|window| window == b"\r\n")?;
+
+    *pos += len + 2;
+
+    Some((start, start + len))
 }
 
 pub trait FromFrame: Sized {
