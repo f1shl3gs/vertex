@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749393276031,
+  "lastUpdate": 1749393284252,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fbbca0a90e27a284252ca88183ecc9826b1dc711",
-          "message": "Merge pull request #2283 from f1shl3gs/extensions/exec_observer/init\n\nextensions/exec_observer: init",
-          "timestamp": "2025-03-26T22:49:10+08:00",
-          "tree_id": "1fa15d40df755568cb041ad973cb81a037b3721c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fbbca0a90e27a284252ca88183ecc9826b1dc711"
-        },
-        "date": 1743000686809,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.707,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 104.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 181.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 173.35,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3845faf0b5595d7c4699960cef05243bf284ccfc",
+          "message": "Merge pull request #2392 from f1shl3gs/lib/vtl/small_refactor_to_reduce_codebase\n\nlib/vtl: remove `FunctionCompileContext`",
+          "timestamp": "2025-06-08T22:32:16+08:00",
+          "tree_id": "b369a7336b30591da582dc6f06b83e29c2ac9f32",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3845faf0b5595d7c4699960cef05243bf284ccfc"
+        },
+        "date": 1749393262487,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.337,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.406,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.3,
             "unit": "ns/op"
           }
         ]
