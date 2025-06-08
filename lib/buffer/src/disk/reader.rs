@@ -93,43 +93,18 @@ impl BufReader {
         self.buf.capacity()
     }
 
-    /// discard drops the unused buffer, and return the actual amount of discard bytes
-    #[allow(dead_code)]
-    fn discard(&mut self, amount: usize) -> usize {
-        let len = self.len();
-
-        if amount < len {
-            self.start += amount;
-            amount
-        } else {
-            self.start = 0;
-            self.end = 0;
-
-            if amount > len { amount - len } else { amount }
-        }
-    }
-
     fn grow(&mut self) {
+        // Case 1: Buffer is full, need to double it
         if self.len() == self.buf.len() {
-            // this buffer is already full, double its size
-            self.buf.reserve(self.buf.len());
-
-            // It's totally fine
-            #[allow(clippy::uninit_vec)]
-            unsafe {
-                self.buf.set_len(self.buf.len() * 2);
-            };
-        } else if self.end == self.buf.len() {
-            // there is still some room, filling existing buffer
-            if self.len() != 0 && self.start != 0 {
-                self.buf.copy_within(self.start..self.end, 0);
-
-                self.end -= self.start;
-                self.start = 0;
-            }
+            self.buf.resize(self.buf.len() * 2, 0);
+        } else if self.end == self.buf.len() && self.start > 0 {
+            // Case 2: No space at the end, but there's some room in front we can shift
+            self.buf.copy_within(self.start..self.end, 0);
+            self.end -= self.start;
+            self.start = 0;
         }
 
-        // there's still some room in `unfilled()`, nothing to do
+        // Case 3: There is still room in unfilled area, do nothing
     }
 
     #[inline]
@@ -143,8 +118,8 @@ impl BufReader {
             self.grow();
         }
 
-        let uf = &mut self.buf[self.end..];
-        let amount = self.file.read(uf)?;
+        let unfilled = &mut self.buf[self.end..];
+        let amount = self.file.read(unfilled)?;
         self.end += amount;
 
         Ok(amount)

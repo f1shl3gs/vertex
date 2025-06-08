@@ -372,14 +372,13 @@ struct NodeMetrics {
 
 /// The files this function will(should) be reading is under `/sys` and `/proc` which is
 /// very small, so the performance should never be a problem.
-pub fn read_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
+pub fn read_string<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
     let mut data = read_file(path)?;
 
     let trimmed = data.trim_ascii_end();
     unsafe { data.set_len(trimmed.len()) }
 
-    String::from_utf8(data)
-        .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err.to_string()))
+    String::from_utf8(data).map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err))
 }
 
 /// `read_file` read contents of entire file. This is similar to `std::fs::read`
@@ -387,35 +386,34 @@ pub fn read_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
 /// incorrect file sizes (either 0 or 4096). Reads a max file size of 1024kB. For
 /// files larger than this, a reader should be used.
 #[inline]
-fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>, std::io::Error> {
+fn read_file<P: AsRef<Path>>(path: P) -> std::io::Result<Vec<u8>> {
     const MAX_BUF_SIZE: usize = 1024 * 1024;
     const STEP: usize = 32;
 
     let mut file = std::fs::File::open(&path)?;
+    let mut buf = Vec::with_capacity(STEP);
+    let mut total_read = 0;
 
-    let mut offset = 0;
-    let mut buf = vec![0; STEP];
     loop {
-        let cnt = file.read(&mut buf.as_mut_slice()[offset..])?;
-        offset += cnt;
-
-        if offset >= MAX_BUF_SIZE {
-            return Err(std::io::Error::from(std::io::ErrorKind::FileTooLarge));
+        if total_read + STEP > MAX_BUF_SIZE {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::FileTooLarge,
+                "file exceeds maximum allowed size",
+            ));
         }
 
-        if cnt < STEP {
+        // Ensure there's at least one byte available for reading
+        buf.resize(total_read + STEP, 0);
+
+        let cnt = file.read(&mut buf[total_read..total_read + STEP])?;
+        total_read += cnt;
+
+        if cnt == 0 {
             break;
-        }
-
-        #[allow(clippy::uninit_vec)]
-        if cnt == STEP {
-            // grow one STEP more
-            buf.reserve(STEP);
-            unsafe { buf.set_len(offset + STEP) };
         }
     }
 
-    unsafe { buf.set_len(offset) };
+    buf.truncate(total_read);
 
     Ok(buf)
 }
