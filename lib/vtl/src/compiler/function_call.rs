@@ -1,25 +1,18 @@
 use value::Value;
 
 use super::state::TypeState;
-use super::{Expression, ExpressionError, Span, TypeDef};
+use super::{Expression, ExpressionError, TypeDef};
 use crate::context::Context;
 
 #[derive(Clone)]
 pub struct FunctionCall {
     pub function: Box<dyn Expression>,
-    pub span: Span,
 }
 
 impl Expression for FunctionCall {
     #[inline]
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        self.function.resolve(cx).map_err(|err| match err {
-            ExpressionError::Error { message, .. } => ExpressionError::Error {
-                message,
-                span: self.span,
-            },
-            err => err,
-        })
+        self.function.resolve(cx)
     }
 
     #[inline]

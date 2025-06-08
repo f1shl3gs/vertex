@@ -3,7 +3,7 @@ use std::fmt::Write;
 use value::Value;
 
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext};
+use crate::compiler::function::{ArgumentList, Function};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::state::TypeState;
@@ -17,17 +17,12 @@ impl Function for Log {
         "log"
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let format = arguments.get_string()?.node;
         let arguments = arguments.inner();
 
         Ok(FunctionCall {
             function: Box::new(LogFunc { format, arguments }),
-            span: cx.span,
         })
     }
 }

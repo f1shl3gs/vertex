@@ -6,7 +6,7 @@ use value::{Kind, Value};
 
 use crate::SyntaxError;
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
@@ -98,17 +98,12 @@ impl Function for CidrContains {
         ]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let cidr = arguments.get();
         let value = arguments.get();
 
         Ok(FunctionCall {
             function: Box::new(CidrContainsFunc { cidr, value }),
-            span: cx.span,
         })
     }
 }

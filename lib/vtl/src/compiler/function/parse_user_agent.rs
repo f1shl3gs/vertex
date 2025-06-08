@@ -3,7 +3,7 @@ use value::{Kind, Value};
 
 use crate::SyntaxError;
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Spanned, TypeDef};
@@ -31,17 +31,12 @@ impl Function for ParseUserAgent {
         ]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
         // let mode = arguments.get_opt();
 
         Ok(FunctionCall {
             function: Box::new(ParseUserAgentFunc { value }),
-            span: cx.span,
         })
     }
 }
@@ -75,7 +70,7 @@ impl Expression for ParseUserAgentFunc {
                 None => Ok(Value::Null),
             },
             _ => Err(ExpressionError::UnexpectedValue {
-                msg: "value cannot be parse as user-agent".to_string(),
+                msg: "value cannot be parsed as user-agent".to_string(),
                 span: self.value.span,
             }),
         }

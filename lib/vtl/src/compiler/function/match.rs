@@ -3,7 +3,7 @@ use value::Value;
 
 use crate::SyntaxError;
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
@@ -31,11 +31,7 @@ impl Function for Match {
         ]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
         let pattern = arguments.get_string()?;
         let pattern = Regex::new(pattern.as_str()).map_err(|err| SyntaxError::InvalidValue {
@@ -47,7 +43,6 @@ impl Function for Match {
 
         Ok(FunctionCall {
             function: Box::new(MatchFunc { value, pattern }),
-            span: cx.span,
         })
     }
 }

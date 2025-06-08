@@ -3,7 +3,7 @@ use std::ops::Deref;
 use value::Value;
 
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::state::TypeState;
@@ -37,11 +37,7 @@ impl Function for Contains {
         ]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
         let substring = arguments.get();
         let case_sensitive = arguments.get_opt();
@@ -52,7 +48,6 @@ impl Function for Contains {
                 substring,
                 case_sensitive,
             }),
-            span: cx.span,
         })
     }
 }

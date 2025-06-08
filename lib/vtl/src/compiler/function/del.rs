@@ -1,7 +1,7 @@
 use value::Value;
 
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::query::Query;
@@ -31,11 +31,7 @@ impl Function for Del {
         ]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let Spanned { node, span } = arguments.get();
         let query = match node {
             Expr::Query(query) => Spanned::new(query, span),
@@ -54,7 +50,6 @@ impl Function for Del {
 
         Ok(FunctionCall {
             function: Box::new(DelFunc { query, compact }),
-            span: cx.span,
         })
     }
 }

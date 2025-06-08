@@ -2,7 +2,7 @@ use value::Value;
 
 use crate::SyntaxError;
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
@@ -35,11 +35,7 @@ impl Function for StartsWith {
         ]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
         let substring = arguments.get();
         let case_sensitive = arguments.get_opt();
@@ -50,7 +46,6 @@ impl Function for StartsWith {
                 substring,
                 case_sensitive,
             }),
-            span: cx.span,
         })
     }
 }

@@ -4,7 +4,7 @@ use value::Value;
 use super::to_unix_timestamp::Unit;
 use crate::SyntaxError;
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::state::TypeState;
 use crate::compiler::{Expression, ExpressionError, Kind, Spanned, TypeDef};
@@ -32,11 +32,7 @@ impl Function for FromUnixTimestamp {
         ]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let value = arguments.get();
         let unit = match arguments.get_string_opt()? {
             Some(value) => value.try_into()?,
@@ -45,7 +41,6 @@ impl Function for FromUnixTimestamp {
 
         Ok(FunctionCall {
             function: Box::new(FromUnixTimestampFunc { value, unit }),
-            span: cx.span,
         })
     }
 }
