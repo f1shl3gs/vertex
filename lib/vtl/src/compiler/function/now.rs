@@ -1,7 +1,7 @@
 use chrono::Utc;
 use value::Value;
 
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext};
+use crate::compiler::function::{ArgumentList, Function};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::state::TypeState;
@@ -16,14 +16,9 @@ impl Function for Now {
         "now"
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        _arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, _arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         Ok(FunctionCall {
             function: Box::new(NowFunc),
-            span: cx.span,
         })
     }
 }

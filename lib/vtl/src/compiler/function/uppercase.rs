@@ -1,6 +1,6 @@
 use value::Value;
 
-use super::{Function, FunctionCompileContext};
+use super::Function;
 use crate::compiler::expr::Expr;
 use crate::compiler::function::{ArgumentList, Parameter};
 use crate::compiler::function_call::FunctionCall;
@@ -24,16 +24,11 @@ impl Function for Uppercase {
         }]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let expr = arguments.get();
 
         Ok(FunctionCall {
             function: Box::new(UppercaseFunc { expr }),
-            span: cx.span,
         })
     }
 }

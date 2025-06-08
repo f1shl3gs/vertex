@@ -12,7 +12,7 @@ use super::binary::{Binary, BinaryOp};
 use super::block::Block;
 use super::expr::Expr;
 use super::for_statement::ForStatement;
-use super::function::{ArgumentList, Function, FunctionCompileContext, builtin_functions};
+use super::function::{ArgumentList, Function, builtin_functions};
 use super::if_statement::IfStatement;
 use super::levenshtein::distance;
 use super::lex::{LexError, Lexer, Token};
@@ -988,7 +988,7 @@ impl Compiler<'_> {
             });
         }
 
-        let compiled = func.compile(FunctionCompileContext { span }, arguments)?;
+        let compiled = func.compile(arguments)?;
 
         Ok(Expr::Call(compiled).with(span))
     }

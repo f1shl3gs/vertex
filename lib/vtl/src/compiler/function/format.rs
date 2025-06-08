@@ -2,7 +2,7 @@ use bytes::BytesMut;
 use value::Value;
 
 use crate::compiler::expr::Expr;
-use crate::compiler::function::{ArgumentList, Function, FunctionCompileContext, Parameter};
+use crate::compiler::function::{ArgumentList, Function, Parameter};
 use crate::compiler::function_call::FunctionCall;
 use crate::compiler::parser::SyntaxError;
 use crate::compiler::state::TypeState;
@@ -25,11 +25,7 @@ impl Function for Format {
         }]
     }
 
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        mut arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError> {
+    fn compile(&self, mut arguments: ArgumentList) -> Result<FunctionCall, SyntaxError> {
         let format = arguments.get_string()?;
         let template = Template::parse(&format.node)
             .map_err(|_err| SyntaxError::InvalidTemplate { span: format.span })?;
@@ -54,7 +50,6 @@ impl Function for Format {
                 template,
                 arguments,
             }),
-            span: cx.span,
         })
     }
 }

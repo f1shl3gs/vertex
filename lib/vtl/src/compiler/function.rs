@@ -78,7 +78,7 @@ use super::expr::Expr;
 use super::function_call::FunctionCall;
 use super::parser::SyntaxError;
 use super::state::TypeState;
-use super::{Kind, Span, Spanned};
+use super::{Kind, Spanned};
 
 pub struct ArgumentList {
     name: &'static str,
@@ -184,11 +184,6 @@ impl ArgumentList {
     }
 }
 
-pub struct FunctionCompileContext {
-    // span of the Token::FunctionCall
-    pub span: Span,
-}
-
 pub struct Parameter {
     /// The name of the parameter
     pub name: &'static str,
@@ -220,11 +215,7 @@ pub trait Function: Send + Sync {
     ///
     /// At runtime, the `Expression` returned by this function is executed and
     /// resolved to its final [`Value`].
-    fn compile(
-        &self,
-        cx: FunctionCompileContext,
-        arguments: ArgumentList,
-    ) -> Result<FunctionCall, SyntaxError>;
+    fn compile(&self, arguments: ArgumentList) -> Result<FunctionCall, SyntaxError>;
 }
 
 pub fn builtin_functions() -> Vec<Box<dyn Function>> {
@@ -323,19 +314,13 @@ pub fn compile_and_run<F: Function>(
 
     let mut arguments_list = ArgumentList::new(func.identifier(), func.parameters());
     for argument in arguments {
-        if let Err(err) = arguments_list.push(Spanned::new(argument, Span::empty()), &state) {
+        if let Err(err) = arguments_list.push(Spanned::new(argument, super::Span::empty()), &state)
+        {
             panic!("build arguments list failed, {}", err)
         }
     }
 
-    let call = func
-        .compile(
-            FunctionCompileContext {
-                span: Span::empty(),
-            },
-            arguments_list,
-        )
-        .unwrap();
+    let call = func.compile(arguments_list).unwrap();
 
     assert_eq!(
         call.type_def(&state),
