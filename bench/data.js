@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749393284252,
+  "lastUpdate": 1749393316702,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fbbca0a90e27a284252ca88183ecc9826b1dc711",
-          "message": "Merge pull request #2283 from f1shl3gs/extensions/exec_observer/init\n\nextensions/exec_observer: init",
-          "timestamp": "2025-03-26T22:49:10+08:00",
-          "tree_id": "1fa15d40df755568cb041ad973cb81a037b3721c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fbbca0a90e27a284252ca88183ecc9826b1dc711"
-        },
-        "date": 1743000711043,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.887,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 181.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 348.25,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 691.23,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e88e27d5226c1b5645a1291d16adf631fa1003eb",
           "message": "Merge pull request #2284 from f1shl3gs/observer/simplify_observer_register\n\nlib/framework: simplify observer register & warning if the observer have no receivers",
           "timestamp": "2025-03-27T22:07:32+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 639.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3845faf0b5595d7c4699960cef05243bf284ccfc",
+          "message": "Merge pull request #2392 from f1shl3gs/lib/vtl/small_refactor_to_reduce_codebase\n\nlib/vtl: remove `FunctionCompileContext`",
+          "timestamp": "2025-06-08T22:32:16+08:00",
+          "tree_id": "b369a7336b30591da582dc6f06b83e29c2ac9f32",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3845faf0b5595d7c4699960cef05243bf284ccfc"
+        },
+        "date": 1749393294861,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.245,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 316.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 646.41,
             "unit": "ns/op"
           }
         ]
