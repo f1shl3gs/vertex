@@ -22,26 +22,36 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             continue;
         }
 
-        tasks.spawn(async move { hwmon_metrics(entry.path()) });
+        tasks.spawn(async move {
+            let path = entry.path();
+
+            match hwmon_metrics(&path) {
+                Ok(metrics) => metrics,
+                Err(err) => {
+                    warn!(
+                        message = "gather hwmon metrics failed",
+                        ?path,
+                        %err
+                    );
+
+                    vec![]
+                }
+            }
+        });
     }
 
     let mut metrics = vec![];
-    while let Some(Ok(result)) = tasks.join_next().await {
-        match result {
-            Ok(partial) => metrics.extend(partial),
-            Err(err) => {
-                warn!(message = "gather metrics failed", %err);
-            }
-        }
+    while let Some(Ok(partial)) = tasks.join_next().await {
+        metrics.extend(partial)
     }
 
     Ok(metrics)
 }
 
-fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
-    let chip = &hwmon_name(&dir)?;
+fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
+    let chip = &hwmon_name(dir)?;
 
-    let mut data = collect_sensor_data(&dir)?;
+    let mut data = collect_sensor_data(dir)?;
     let dev_path = dir.join("device");
     if std::fs::exists(&dev_path)? {
         let device_data = collect_sensor_data(&dev_path)?;
@@ -61,7 +71,7 @@ fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
     }
 
     let mut metrics = Vec::new();
-    if let Ok(chip_name) = human_readable_chip_name(&dir) {
+    if let Ok(chip_name) = human_readable_chip_name(dir) {
         metrics.push(Metric::gauge_with_tags(
             "node_hwmon_chip_names",
             "Annotation metric for human-readable chip names",
@@ -81,18 +91,16 @@ fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
         };
 
         if let Some(label) = props.get("label") {
-            if !label.is_empty() {
-                metrics.push(Metric::gauge_with_tags(
-                    "node_hwmon_sensor_label",
-                    "Label for given chip and sensor",
-                    1f64,
-                    tags!(
-                        "chip" => chip,
-                        "label" => label,
-                        "sensor" => sensor.clone(),
-                    ),
-                ));
-            }
+            metrics.push(Metric::gauge_with_tags(
+                "node_hwmon_sensor_label",
+                "Label for given chip and sensor",
+                1f64,
+                tags!(
+                    "chip" => chip,
+                    "label" => label,
+                    "sensor" => sensor.clone(),
+                ),
+            ));
         }
 
         if sensor_type == "beep_enable" {
@@ -160,15 +168,18 @@ fn hwmon_metrics(dir: PathBuf) -> Result<Vec<Metric>, Error> {
                 continue;
             }
 
-            let mut name = prefix.clone();
-            if element == "input" {
+            let name = if element == "input" {
                 // input is actually the value
                 if props.contains_key("") {
-                    name += "_input";
+                    prefix.clone() + "_input"
+                } else {
+                    prefix.clone()
                 }
             } else if !element.is_empty() {
-                name = format!("{}_{}", name, sanitized(element));
-            }
+                format!("{}_{}", prefix, sanitized(element))
+            } else {
+                prefix.clone()
+            };
 
             let pv = match value.parse::<f64>() {
                 Ok(v) => v,
