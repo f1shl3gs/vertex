@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749384941983,
+  "lastUpdate": 1749385025535,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "88e57803b34ff1a40643eb0a6443929de1c3efa3",
-          "message": "Merge pull request #2282 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
-          "timestamp": "2025-03-26T19:35:52+08:00",
-          "tree_id": "c89f6f067d071b1cd4738e0a9144924c7d8a405e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88e57803b34ff1a40643eb0a6443929de1c3efa3"
-        },
-        "date": 1742989110870,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.492,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 178.09,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 326.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 698.16,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fbbca0a90e27a284252ca88183ecc9826b1dc711",
           "message": "Merge pull request #2283 from f1shl3gs/extensions/exec_observer/init\n\nextensions/exec_observer: init",
           "timestamp": "2025-03-26T22:49:10+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 688.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b3b882906f3fc44f8696c7679c7e4103d07faba1",
+          "message": "Merge pull request #2391 from f1shl3gs/dependabot/cargo/proptest-derive-0.6.0\n\nchore(deps): bump proptest-derive from 0.5.1 to 0.6.0",
+          "timestamp": "2025-06-08T20:11:50+08:00",
+          "tree_id": "b4622c9fc550beb8b558bef75e22bfac74c946bb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b3b882906f3fc44f8696c7679c7e4103d07faba1"
+        },
+        "date": 1749385003332,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.226,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 178.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 314.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 639.9,
             "unit": "ns/op"
           }
         ]
