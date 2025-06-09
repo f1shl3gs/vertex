@@ -1,5 +1,3 @@
-#[cfg(feature = "sources-http")]
-pub mod http;
 #[cfg(any(feature = "sources-http_check", feature = "sources-prometheus_scrape"))]
 pub mod offset;
 #[cfg(any(
