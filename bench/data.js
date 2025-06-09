@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749498001957,
+  "lastUpdate": 1749498350986,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e5ffda71092d371d72e88ea2075e28ffff4be69a",
-          "message": "Merge pull request #2285 from f1shl3gs/misc/remove_unused\n\nmisc: remove unused",
-          "timestamp": "2025-03-29T02:43:31+08:00",
-          "tree_id": "349fb58a47d4f46a0b23be22e571ac53cf769a2e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e5ffda71092d371d72e88ea2075e28ffff4be69a"
-        },
-        "date": 1743188022500,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22781000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 550950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.072,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1cd5d7533872859ae43f78e524e7fd8f30415d33",
           "message": "Merge pull request #2286 from f1shl3gs/dependabot/cargo/socket2-0.5.9\n\nchore(deps): bump socket2 from 0.5.8 to 0.5.9",
           "timestamp": "2025-03-31T02:54:28+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.14,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "33d688e4f7198469564aa0f1f67102c203ee8a4c",
+          "message": "Merge pull request #2394 from f1shl3gs/sources/node/add_xfrm\n\nsources/node: add xfrm",
+          "timestamp": "2025-06-10T03:35:17+08:00",
+          "tree_id": "83d605afa81057922bfecd8d1a2738d55d753d3d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/33d688e4f7198469564aa0f1f67102c203ee8a4c"
+        },
+        "date": 1749498328469,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23273000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 624970,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.161,
             "unit": "ns/op"
           }
         ]
