@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749510676603,
+  "lastUpdate": 1749510721764,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8dddbad38419b01743a7256c8a718fe5834012e5",
-          "message": "Merge pull request #2290 from f1shl3gs/dependabot/cargo/quick-xml-0.37.4\n\nchore(deps): bump quick-xml from 0.37.3 to 0.37.4",
-          "timestamp": "2025-04-02T18:22:56+08:00",
-          "tree_id": "2271266a67155841f9123294a8e8b416697ac159",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8dddbad38419b01743a7256c8a718fe5834012e5"
-        },
-        "date": 1743589514676,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 568430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 553560,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d119db057395d87c05ed6cdcd8ecc45a4da4f377",
+          "message": "Merge pull request #2399 from f1shl3gs/sources/selfstat/cache_btime\n\nsources/selfstat: cache `btime`",
+          "timestamp": "2025-06-10T07:08:15+08:00",
+          "tree_id": "badfc6e5f122ae4e023207114354a329e0e1b494",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d119db057395d87c05ed6cdcd8ecc45a4da4f377"
+        },
+        "date": 1749510699900,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 556150,
             "unit": "ns/op"
           }
         ]
