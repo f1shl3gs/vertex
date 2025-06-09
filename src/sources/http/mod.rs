@@ -1,3 +1,5 @@
+mod param;
+
 use std::net::SocketAddr;
 
 use bytes::{Bytes, BytesMut};
@@ -11,12 +13,12 @@ use framework::source::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
 use framework::tls::TlsConfig;
 use glob::MatchOptions;
 use http::{HeaderMap, HeaderValue, Method, StatusCode, Uri};
+use param::HttpParamKind;
 use tokio_util::codec::Decoder as _;
 use url::form_urlencoded;
 use value::{path, value};
 
 use super::default_framing_message_based;
-use crate::common::http::HttpParamKind;
 
 #[configurable_component(source, name = "http")]
 struct Config {
