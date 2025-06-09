@@ -54,6 +54,7 @@ mod uname;
 mod vmstat;
 mod watchdog;
 mod wifi;
+mod xfrm;
 #[cfg(target_os = "linux")]
 mod xfs;
 mod zfs;
@@ -258,6 +259,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     watchdog: bool,
 
+    #[serde(default)]
+    xfrm: bool,
+
     #[cfg(target_os = "linux")]
     #[serde(default = "default_true")]
     xfs: bool,
@@ -320,6 +324,7 @@ impl Default for Collectors {
             uname: true,
             vmstat: default_vmstat_config(),
             watchdog: true,
+            xfrm: false,
             xfs: true,
             zfs: true,
 
@@ -742,6 +747,12 @@ async fn run(
             let sys_path = sys_path.clone();
 
             tasks.spawn(async move { record_gather!("watchdog", watchdog::gather(sys_path)) });
+        }
+
+        if collectors.xfrm {
+            let proc = proc_path.clone();
+
+            tasks.spawn(async move { record_gather!("xfrm", xfrm::collect(proc)) });
         }
 
         #[cfg(target_os = "linux")]
