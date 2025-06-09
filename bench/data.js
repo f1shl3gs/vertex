@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749508166276,
+  "lastUpdate": 1749508176273,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c3b03ac2f6099e266780e62eda1e9d9c967773a8",
-          "message": "Merge pull request #2289 from f1shl3gs/dependabot/cargo/hyper-util-0.1.11\n\nchore(deps): bump hyper-util from 0.1.10 to 0.1.11",
-          "timestamp": "2025-04-01T10:37:21+08:00",
-          "tree_id": "28516f139378ee213a1468efee9645ed8d413223",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c3b03ac2f6099e266780e62eda1e9d9c967773a8"
-        },
-        "date": 1743475155651,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 558060,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 555220,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bef9afec017053ccd7583e6202d91f8b8d70a101",
+          "message": "Merge pull request #2398 from f1shl3gs/cargo/disable_opt-level\n\ncargo: disable `opt-level = \"z\"` for minimal",
+          "timestamp": "2025-06-10T06:26:56+08:00",
+          "tree_id": "993998486832856de920f8a3e3f02b0ab36a836b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bef9afec017053ccd7583e6202d91f8b8d70a101"
+        },
+        "date": 1749508153947,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 553560,
             "unit": "ns/op"
           }
         ]
