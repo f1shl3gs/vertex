@@ -16,7 +16,8 @@ debug = false
 strip = true
 lto = "fat"
 codegen-units = 1
-opt-level = "z"
+# This option will increase a lot CPU
+# opt-level = "z"
 
 # This profile optimizes for runtime performance and small binary size at the expense of longer
 # build times. It's most suitable for final release builds.
