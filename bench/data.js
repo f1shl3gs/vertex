@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749500798133,
+  "lastUpdate": 1749500803381,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c3b03ac2f6099e266780e62eda1e9d9c967773a8",
-          "message": "Merge pull request #2289 from f1shl3gs/dependabot/cargo/hyper-util-0.1.11\n\nchore(deps): bump hyper-util from 0.1.10 to 0.1.11",
-          "timestamp": "2025-04-01T10:37:21+08:00",
-          "tree_id": "28516f139378ee213a1468efee9645ed8d413223",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c3b03ac2f6099e266780e62eda1e9d9c967773a8"
-        },
-        "date": 1743475665634,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 539,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38046.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8dddbad38419b01743a7256c8a718fe5834012e5",
           "message": "Merge pull request #2290 from f1shl3gs/dependabot/cargo/quick-xml-0.37.4\n\nchore(deps): bump quick-xml from 0.37.3 to 0.37.4",
           "timestamp": "2025-04-02T18:22:56+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 514,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37531.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4f7e90271372c48abe24a797e1ecd6b89361fcf",
+          "message": "Merge pull request #2395 from f1shl3gs/sources/http/tidy\n\nsources/http: move common/http.rs to sources/http",
+          "timestamp": "2025-06-10T04:16:12+08:00",
+          "tree_id": "c60a7f85063912b1bbb5238df1f4e71d760be78d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4f7e90271372c48abe24a797e1ecd6b89361fcf"
+        },
+        "date": 1749500781639,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 509,
             "unit": "s"
           },
           {
