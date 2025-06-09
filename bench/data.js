@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749497885015,
+  "lastUpdate": 1749497886520,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e5ffda71092d371d72e88ea2075e28ffff4be69a",
-          "message": "Merge pull request #2285 from f1shl3gs/misc/remove_unused\n\nmisc: remove unused",
-          "timestamp": "2025-03-29T02:43:31+08:00",
-          "tree_id": "349fb58a47d4f46a0b23be22e571ac53cf769a2e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e5ffda71092d371d72e88ea2075e28ffff4be69a"
-        },
-        "date": 1743187546718,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.663,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 108.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 181,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "33d688e4f7198469564aa0f1f67102c203ee8a4c",
+          "message": "Merge pull request #2394 from f1shl3gs/sources/node/add_xfrm\n\nsources/node: add xfrm",
+          "timestamp": "2025-06-10T03:35:17+08:00",
+          "tree_id": "83d605afa81057922bfecd8d1a2738d55d753d3d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/33d688e4f7198469564aa0f1f67102c203ee8a4c"
+        },
+        "date": 1749497864785,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.377,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.236,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.46,
             "unit": "ns/op"
           }
         ]
