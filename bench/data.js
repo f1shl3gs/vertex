@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749500341666,
+  "lastUpdate": 1749500360316,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1cd5d7533872859ae43f78e524e7fd8f30415d33",
-          "message": "Merge pull request #2286 from f1shl3gs/dependabot/cargo/socket2-0.5.9\n\nchore(deps): bump socket2 from 0.5.8 to 0.5.9",
-          "timestamp": "2025-03-31T02:54:28+08:00",
-          "tree_id": "76fb7135aa99040e81db354a0697208366d6ac79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1cd5d7533872859ae43f78e524e7fd8f30415d33"
-        },
-        "date": 1743361049478,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.782,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 335.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 689.31,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e48bece723949477dd15ec8a90254d2ef6166ead",
           "message": "Merge pull request #2287 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
           "timestamp": "2025-03-31T03:38:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 678.09,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4f7e90271372c48abe24a797e1ecd6b89361fcf",
+          "message": "Merge pull request #2395 from f1shl3gs/sources/http/tidy\n\nsources/http: move common/http.rs to sources/http",
+          "timestamp": "2025-06-10T04:16:12+08:00",
+          "tree_id": "c60a7f85063912b1bbb5238df1f4e71d760be78d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4f7e90271372c48abe24a797e1ecd6b89361fcf"
+        },
+        "date": 1749500338308,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.294,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 175.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 320.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 664.84,
             "unit": "ns/op"
           }
         ]
