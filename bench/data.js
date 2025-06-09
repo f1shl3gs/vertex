@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749503586228,
+  "lastUpdate": 1749503605941,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e48bece723949477dd15ec8a90254d2ef6166ead",
-          "message": "Merge pull request #2287 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
-          "timestamp": "2025-03-31T03:38:39+08:00",
-          "tree_id": "d0f2e3333df725fe3d77a6d9c5a028820ed4618d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e48bece723949477dd15ec8a90254d2ef6166ead"
-        },
-        "date": 1743363668203,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.662,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 165.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 292.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 676.45,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e52155f22c52af0b38feadb40e06a75ecaf59e62",
           "message": "Merge pull request #2288 from f1shl3gs/misc/simplify\n\nmisc: simplify",
           "timestamp": "2025-03-31T13:32:13+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 664.84,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d36140e84a6c5c95964a07b61182f2246557a54",
+          "message": "Merge pull request #2396 from f1shl3gs/dependabot/cargo/twox-hash-2.1.1\n\nchore(deps): bump twox-hash from 2.1.0 to 2.1.1",
+          "timestamp": "2025-06-10T05:10:20+08:00",
+          "tree_id": "adb4a87a7c177a45f5aa9b93f9489c257f605927",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1d36140e84a6c5c95964a07b61182f2246557a54"
+        },
+        "date": 1749503583869,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.099,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 178.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 347.18,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 711.92,
             "unit": "ns/op"
           }
         ]
