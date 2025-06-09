@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749511071843,
+  "lastUpdate": 1749511166078,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ea671a4efad8ae6158b184d39c53b6f9a0df46e6",
-          "message": "Merge pull request #2294 from f1shl3gs/misc/move_buffers_to_right_place\n\nmisc: move `buffers` to right place",
-          "timestamp": "2025-04-04T20:31:17+08:00",
-          "tree_id": "4df7f0b669199edee64a608537c38653bc45187e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ea671a4efad8ae6158b184d39c53b6f9a0df46e6"
-        },
-        "date": 1743770514404,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 533,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38102.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "89ae05b201b96224873f73c22ebc8078891dc924",
           "message": "Merge pull request #2295 from f1shl3gs/dependabot/cargo/indexmap-2.9.0\n\nchore(deps): bump indexmap from 2.8.0 to 2.9.0",
           "timestamp": "2025-04-05T11:10:12+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37527.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d119db057395d87c05ed6cdcd8ecc45a4da4f377",
+          "message": "Merge pull request #2399 from f1shl3gs/sources/selfstat/cache_btime\n\nsources/selfstat: cache `btime`",
+          "timestamp": "2025-06-10T07:08:15+08:00",
+          "tree_id": "badfc6e5f122ae4e023207114354a329e0e1b494",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d119db057395d87c05ed6cdcd8ecc45a4da4f377"
+        },
+        "date": 1749511143617,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 503,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37527.7,
             "unit": "KiB"
           }
         ]
