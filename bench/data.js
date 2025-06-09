@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749508176273,
+  "lastUpdate": 1749508191752,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c3b03ac2f6099e266780e62eda1e9d9c967773a8",
-          "message": "Merge pull request #2289 from f1shl3gs/dependabot/cargo/hyper-util-0.1.11\n\nchore(deps): bump hyper-util from 0.1.10 to 0.1.11",
-          "timestamp": "2025-04-01T10:37:21+08:00",
-          "tree_id": "28516f139378ee213a1468efee9645ed8d413223",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c3b03ac2f6099e266780e62eda1e9d9c967773a8"
-        },
-        "date": 1743475198901,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.752,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.6,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 316.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 644.51,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8dddbad38419b01743a7256c8a718fe5834012e5",
           "message": "Merge pull request #2290 from f1shl3gs/dependabot/cargo/quick-xml-0.37.4\n\nchore(deps): bump quick-xml from 0.37.3 to 0.37.4",
           "timestamp": "2025-04-02T18:22:56+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 647.56,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bef9afec017053ccd7583e6202d91f8b8d70a101",
+          "message": "Merge pull request #2398 from f1shl3gs/cargo/disable_opt-level\n\ncargo: disable `opt-level = \"z\"` for minimal",
+          "timestamp": "2025-06-10T06:26:56+08:00",
+          "tree_id": "993998486832856de920f8a3e3f02b0ab36a836b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bef9afec017053ccd7583e6202d91f8b8d70a101"
+        },
+        "date": 1749508170030,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.216,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 326.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 702.1,
             "unit": "ns/op"
           }
         ]
