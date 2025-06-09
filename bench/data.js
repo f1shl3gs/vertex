@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749505279556,
+  "lastUpdate": 1749505310830,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5d88e44bf795ae3c959cf59b8e0f782cd45bc5c5",
-          "message": "Merge pull request #2291 from f1shl3gs/dependabot/cargo/flate2-1.1.1\n\nchore(deps): bump flate2 from 1.1.0 to 1.1.1",
-          "timestamp": "2025-04-02T18:50:38+08:00",
-          "tree_id": "c7ab6e50362ad56f762462df86d66ab75982a092",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5d88e44bf795ae3c959cf59b8e0f782cd45bc5c5"
-        },
-        "date": 1743591658707,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 537,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38040.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f2be2f3d515df1fd5c5780b45e5ca54f62554926",
           "message": "Merge pull request #2293 from f1shl3gs/toolchain/1.86.0\n\ntoolchain: 1.86.0",
           "timestamp": "2025-04-04T19:43:44+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37531.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "edcd802c936d6ab80d69c4fb6033fcc971efa0f3",
+          "message": "Merge pull request #2397 from f1shl3gs/lib/vtl/xxhash64\n\nlib/vtl: switch `xxhash3_64` to `xxhash64`",
+          "timestamp": "2025-06-10T05:31:02+08:00",
+          "tree_id": "5b1a20d27f6f91ee82f5f743409a64661d3bc2d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/edcd802c936d6ab80d69c4fb6033fcc971efa0f3"
+        },
+        "date": 1749505288665,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 523,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37527.2,
             "unit": "KiB"
           }
         ]
