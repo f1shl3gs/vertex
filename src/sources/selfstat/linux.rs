@@ -1,11 +1,16 @@
 use std::path::Path;
+use std::sync::OnceLock;
 
 use event::Metric;
 
 const USER_HZ: f64 = 100.0;
 const PAGE_SIZE: f64 = 4096.0;
 
+static BOOT_TIME: OnceLock<f64> = OnceLock::new();
+
 pub fn proc_info(root: &Path) -> Vec<Metric> {
+    BOOT_TIME.get_or_init(|| get_boot_time(root).expect("get boot time"));
+
     let pid = std::process::id();
     let mut metrics = Vec::with_capacity(10);
 
@@ -174,7 +179,7 @@ fn get_proc_stat(root: &Path, pid: u32) -> Result<(f64, f64, f64, f64, f64), std
     let content = std::fs::read_to_string(path)?;
     let parts = content.split_ascii_whitespace().collect::<Vec<_>>();
 
-    let btime = get_boot_time(root)?;
+    let btime = BOOT_TIME.get().expect("btime should be init already");
     let utime = parts[13].parse().unwrap_or(0f64);
     let stime = parts[14].parse().unwrap_or(0f64);
     let threads = parts[19].parse().unwrap_or(0f64);
