@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749500330624,
+  "lastUpdate": 1749500341666,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1cd5d7533872859ae43f78e524e7fd8f30415d33",
-          "message": "Merge pull request #2286 from f1shl3gs/dependabot/cargo/socket2-0.5.9\n\nchore(deps): bump socket2 from 0.5.8 to 0.5.9",
-          "timestamp": "2025-03-31T02:54:28+08:00",
-          "tree_id": "76fb7135aa99040e81db354a0697208366d6ac79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1cd5d7533872859ae43f78e524e7fd8f30415d33"
-        },
-        "date": 1743360993162,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.516,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 102.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.46,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4f7e90271372c48abe24a797e1ecd6b89361fcf",
+          "message": "Merge pull request #2395 from f1shl3gs/sources/http/tidy\n\nsources/http: move common/http.rs to sources/http",
+          "timestamp": "2025-06-10T04:16:12+08:00",
+          "tree_id": "c60a7f85063912b1bbb5238df1f4e71d760be78d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4f7e90271372c48abe24a797e1ecd6b89361fcf"
+        },
+        "date": 1749500320055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.631,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.996,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.36,
             "unit": "ns/op"
           }
         ]
