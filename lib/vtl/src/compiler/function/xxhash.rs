@@ -40,7 +40,7 @@ struct XXHashFunc {
 impl Expression for XXHashFunc {
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
         let hash = match self.value.resolve(cx)? {
-            Value::Bytes(b) => twox_hash::XxHash3_64::oneshot(&b),
+            Value::Bytes(b) => twox_hash::XxHash64::oneshot(0, &b),
             value => {
                 return Err(ExpressionError::UnexpectedType {
                     want: Kind::BYTES,
