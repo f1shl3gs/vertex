@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749504895089,
+  "lastUpdate": 1749505279556,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e52155f22c52af0b38feadb40e06a75ecaf59e62",
-          "message": "Merge pull request #2288 from f1shl3gs/misc/simplify\n\nmisc: simplify",
-          "timestamp": "2025-03-31T13:32:13+08:00",
-          "tree_id": "d34e7caea401dc9cfefbbd6455cfe829bc44d152",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e52155f22c52af0b38feadb40e06a75ecaf59e62"
-        },
-        "date": 1743399771954,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23820000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 601280,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.756,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c3b03ac2f6099e266780e62eda1e9d9c967773a8",
           "message": "Merge pull request #2289 from f1shl3gs/dependabot/cargo/hyper-util-0.1.11\n\nchore(deps): bump hyper-util from 0.1.10 to 0.1.11",
           "timestamp": "2025-04-01T10:37:21+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.381,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "edcd802c936d6ab80d69c4fb6033fcc971efa0f3",
+          "message": "Merge pull request #2397 from f1shl3gs/lib/vtl/xxhash64\n\nlib/vtl: switch `xxhash3_64` to `xxhash64`",
+          "timestamp": "2025-06-10T05:31:02+08:00",
+          "tree_id": "5b1a20d27f6f91ee82f5f743409a64661d3bc2d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/edcd802c936d6ab80d69c4fb6033fcc971efa0f3"
+        },
+        "date": 1749505257629,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22013000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 625070,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.093,
             "unit": "ns/op"
           }
         ]
