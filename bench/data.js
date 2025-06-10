@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749523869073,
+  "lastUpdate": 1749523892399,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "89ae05b201b96224873f73c22ebc8078891dc924",
-          "message": "Merge pull request #2295 from f1shl3gs/dependabot/cargo/indexmap-2.9.0\n\nchore(deps): bump indexmap from 2.8.0 to 2.9.0",
-          "timestamp": "2025-04-05T11:10:12+08:00",
-          "tree_id": "0097d845a86317fb5932dab148fcc870b9204468",
-          "url": "https://github.com/f1shl3gs/vertex/commit/89ae05b201b96224873f73c22ebc8078891dc924"
-        },
-        "date": 1743823252975,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 547,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38102.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "020f92bfbca12dc3f5f7682c553770e0f8de0924",
           "message": "Merge pull request #2296 from f1shl3gs/misc/some_small_optimizes\n\nmisc: some small optimizes",
           "timestamp": "2025-04-05T18:37:49+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 503,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37527.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "371aa85edbeafa06111ccc1d6ecb9625c9723fce",
+          "message": "Merge pull request #2400 from f1shl3gs/lib/vtl/fix_some_compiler_errors\n\nlib/vtl: fix some compiler error",
+          "timestamp": "2025-06-10T10:41:22+08:00",
+          "tree_id": "2d9462b10d67dccd22283274af3c0c9d41b1ef39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/371aa85edbeafa06111ccc1d6ecb9625c9723fce"
+        },
+        "date": 1749523870558,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 505,
             "unit": "s"
           },
           {
