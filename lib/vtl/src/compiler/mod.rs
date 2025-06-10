@@ -63,7 +63,17 @@ impl Program {
 
     #[inline]
     pub fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        self.statements.resolve(cx)
+        match self.statements.resolve(cx) {
+            Ok(value) => Ok(value),
+            Err(err) => match err {
+                // this `Return` err is not an actual error
+                ExpressionError::Return { value } => match value {
+                    Some(value) => Ok(value),
+                    None => Ok(Value::Null),
+                },
+                err => Err(err),
+            },
+        }
     }
 
     #[inline]

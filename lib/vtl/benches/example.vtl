@@ -1,0 +1,19 @@
+.msg, err = parse_json(.msg)
+if err != null {
+    .err = err
+    return
+}
+
+.url, err = parse_url("https://example.io?foo=bar")
+if err != null {
+    .url_err = err
+    return
+}
+.url.fragment = "blah"
+
+.partition = %partition
+.offset = %offset
+
+.foo_bar = 1
+
+del(.array)
