@@ -4293,6 +4293,7 @@ dependencies = [
  "base64 0.22.1",
  "bytes",
  "chrono",
+ "criterion",
  "dyn-clone",
  "glob",
  "hostname",

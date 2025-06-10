@@ -3,7 +3,16 @@ name = "vtl"
 version = "0.1.0"
 edition = "2024"
 
+[[bench]]
+name = "compile"
+harness = false
+
+[[bench]]
+name = "run"
+harness = false
+
 [dev-dependencies]
+criterion = { version = "0.6.0", default-features = false }
 glob = { version = "0.3.2", default-features = false }
 
 [dependencies]

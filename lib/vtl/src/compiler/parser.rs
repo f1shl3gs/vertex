@@ -434,7 +434,10 @@ impl Compiler<'_> {
             match token {
                 Token::If => statements.push(self.parse_if()?),
                 Token::For => statements.push(self.parse_for()?),
-                Token::Return => statements.push(Statement::Return(None)),
+                Token::Return => {
+                    self.lexer.next();
+                    statements.push(Statement::Return(None))
+                }
                 // end of block
                 Token::RightBrace => {
                     break;
@@ -639,11 +642,6 @@ impl Compiler<'_> {
     }
 
     fn parse_expr(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
-        // maybe array or object
-        self.parse_expr_or()
-    }
-
-    fn parse_expr_or(&mut self) -> Result<Spanned<Expr>, SyntaxError> {
         let mut expr = self.parse_expr_and()?;
 
         while let Some((token, _span)) = self.lexer.peek().transpose()? {

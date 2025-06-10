@@ -31,7 +31,7 @@ impl DiagnosticMessage for LexError {
     fn labels(&self) -> Vec<Label> {
         match self {
             LexError::UnexpectedChar { ch, span } => {
-                vec![Label::new(format!("unexpected char {}", ch), span)]
+                vec![Label::new(format!("unexpected char '{}'", ch), span)]
             }
             LexError::NumericLiteral { err, span } => {
                 vec![Label::new(err, span)]
@@ -715,7 +715,7 @@ impl<'input> Lexer<'input> {
 
         while self.pos < self.text.len() {
             match self.text[self.pos] {
-                b'a'..=b'z' | b'A'..=b'Z' | b'0'..=b'9' | b'.' | b'[' | b']' | b'%' => {
+                b'a'..=b'z' | b'A'..=b'Z' | b'0'..=b'9' | b'.' | b'[' | b']' | b'%' | b'_' => {
                     self.pos += 1
                 }
                 _ => break,
