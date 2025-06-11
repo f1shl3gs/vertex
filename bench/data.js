@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749610348941,
+  "lastUpdate": 1749610385703,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f2be2f3d515df1fd5c5780b45e5ca54f62554926",
-          "message": "Merge pull request #2293 from f1shl3gs/toolchain/1.86.0\n\ntoolchain: 1.86.0",
-          "timestamp": "2025-04-04T19:43:44+08:00",
-          "tree_id": "a42b0632fe2b9591bdd10310e206a809bde28f51",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f2be2f3d515df1fd5c5780b45e5ca54f62554926"
-        },
-        "date": 1743767184439,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.839,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 334.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 706.13,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ea671a4efad8ae6158b184d39c53b6f9a0df46e6",
           "message": "Merge pull request #2294 from f1shl3gs/misc/move_buffers_to_right_place\n\nmisc: move `buffers` to right place",
           "timestamp": "2025-04-04T20:31:17+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 712.81,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ab7b55f2491b8e370b6606fcecdf3e8b216d358a",
+          "message": "Merge pull request #2401 from f1shl3gs/dependabot/cargo/syn-2.0.102\n\nchore(deps): bump syn from 2.0.101 to 2.0.102",
+          "timestamp": "2025-06-11T10:50:06+08:00",
+          "tree_id": "6409ea15698bdecfbabb21a9977aba63c72bc66e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ab7b55f2491b8e370b6606fcecdf3e8b216d358a"
+        },
+        "date": 1749610363390,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.322,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 170.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 323.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.96,
             "unit": "ns/op"
           }
         ]
