@@ -13,7 +13,7 @@ tokio = { version = "1.45.1", default-features = false, features = ["macros", "r
 bytes = { version = "1.10.1", default-features = false }
 futures = { version = "0.3.31", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
-memchr = { version = "2.7.4", default-features = false }
+memchr = { version = "2.7.5", default-features = false }
 pin-project-lite = { version = "0.2.16" }
 regex = { version = "1.11.1", default-features = false }
 serde = { version = "1.0.219", default-features = false, features = ["derive"] }
