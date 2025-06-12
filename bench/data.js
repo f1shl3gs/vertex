@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749723203262,
+  "lastUpdate": 1749723249523,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b35e2c331a0c4efa0d8c96edac2e58c2c8372578",
-          "message": "Merge pull request #2297 from f1shl3gs/dependabot/cargo/tokio-1.44.2\n\nchore(deps): bump tokio from 1.44.1 to 1.44.2",
-          "timestamp": "2025-04-07T10:29:31+08:00",
-          "tree_id": "3d081bbcf020473c9f2f43b3e4df54df95cf7a32",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b35e2c331a0c4efa0d8c96edac2e58c2c8372578"
-        },
-        "date": 1743993595298,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 535,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38120.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0b8688b6935b2c18647b89f910cea2d8ba916310",
           "message": "Merge pull request #2298 from f1shl3gs/dependabot/cargo/mimalloc-0.1.46\n\nchore(deps): bump mimalloc from 0.1.44 to 0.1.46",
           "timestamp": "2025-04-08T18:39:44+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37542.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aa4f5032f67c08e70f1da776a4c4e951b1630528",
+          "message": "Merge pull request #2402 from f1shl3gs/dependabot/cargo/memchr-2.7.5\n\nchore(deps): bump memchr from 2.7.4 to 2.7.5",
+          "timestamp": "2025-06-12T18:03:46+08:00",
+          "tree_id": "10b3c6fad3476dfa19f9eecb4df54a209d34d8a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aa4f5032f67c08e70f1da776a4c4e951b1630528"
+        },
+        "date": 1749723227830,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 512,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37543.6,
             "unit": "KiB"
           }
         ]
