@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749722773001,
+  "lastUpdate": 1749722799024,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ea671a4efad8ae6158b184d39c53b6f9a0df46e6",
-          "message": "Merge pull request #2294 from f1shl3gs/misc/move_buffers_to_right_place\n\nmisc: move `buffers` to right place",
-          "timestamp": "2025-04-04T20:31:17+08:00",
-          "tree_id": "4df7f0b669199edee64a608537c38653bc45187e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ea671a4efad8ae6158b184d39c53b6f9a0df46e6"
-        },
-        "date": 1743770050788,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 350.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 706.26,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "89ae05b201b96224873f73c22ebc8078891dc924",
           "message": "Merge pull request #2295 from f1shl3gs/dependabot/cargo/indexmap-2.9.0\n\nchore(deps): bump indexmap from 2.8.0 to 2.9.0",
           "timestamp": "2025-04-05T11:10:12+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 681.96,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aa4f5032f67c08e70f1da776a4c4e951b1630528",
+          "message": "Merge pull request #2402 from f1shl3gs/dependabot/cargo/memchr-2.7.5\n\nchore(deps): bump memchr from 2.7.4 to 2.7.5",
+          "timestamp": "2025-06-12T18:03:46+08:00",
+          "tree_id": "10b3c6fad3476dfa19f9eecb4df54a209d34d8a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aa4f5032f67c08e70f1da776a4c4e951b1630528"
+        },
+        "date": 1749722776830,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.206,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 332.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 685.91,
             "unit": "ns/op"
           }
         ]
