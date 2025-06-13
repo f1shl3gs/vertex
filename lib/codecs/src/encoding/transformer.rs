@@ -4,7 +4,7 @@ use std::fmt::Formatter;
 use configurable::Configurable;
 use event::log::path::{PathPrefix, parse_target_path};
 use event::log::{OwnedValuePath, Value};
-use event::{Event, LogRecord, event_path};
+use event::{Event, LogRecord, MaybeAsLogMut, event_path};
 use serde::de::MapAccess;
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -156,7 +156,7 @@ impl Transformer {
     /// Prepare an event for serialization by the given transformation rules.
     pub fn transform(&self, event: &mut Event) {
         // Rules are currently applied to logs only
-        if let Event::Log(log) = event {
+        if let Some(log) = event.maybe_as_log_mut() {
             // Ordering in here should not matter.
             self.apply_except_fields(log);
             self.apply_only_fields(log);
