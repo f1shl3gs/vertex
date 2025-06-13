@@ -1,6 +1,7 @@
 use std::fmt::Debug;
 use std::sync::OnceLock;
 
+use bytes::Bytes;
 use chrono::Utc;
 use tracing::field::Field;
 use value::{OwnedTargetPath, Value, event_path, owned_value_path};
@@ -76,9 +77,9 @@ impl From<&tracing::Event<'_>> for LogRecord {
         log.insert(
             &target_paths.kind,
             if meta.is_event() {
-                Value::Bytes("event".to_string().into())
+                Value::Bytes(Bytes::from_static(b"event"))
             } else if meta.is_span() {
-                Value::Bytes("span".to_string().into())
+                Value::Bytes(Bytes::from_static(b"span"))
             } else {
                 Value::Null
             },
