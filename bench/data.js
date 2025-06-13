@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749815340892,
+  "lastUpdate": 1749815738916,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0b8688b6935b2c18647b89f910cea2d8ba916310",
-          "message": "Merge pull request #2298 from f1shl3gs/dependabot/cargo/mimalloc-0.1.46\n\nchore(deps): bump mimalloc from 0.1.44 to 0.1.46",
-          "timestamp": "2025-04-08T18:39:44+08:00",
-          "tree_id": "fc64ee6c4e118ad2f65d903b8bcf4153aa219427",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0b8688b6935b2c18647b89f910cea2d8ba916310"
-        },
-        "date": 1744109438266,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23266000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 569030,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 58.393,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ea8d503bde592329922ee7528a8ea36a672c549c",
           "message": "Merge pull request #2300 from f1shl3gs/dependabot/cargo/rustls-0.23.26\n\nchore(deps): bump rustls from 0.23.25 to 0.23.26",
           "timestamp": "2025-04-11T20:22:01+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.376,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4e40bf8f18a382d1ae7174769f329c9e833a000",
+          "message": "Merge pull request #2407 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: implement tapestats",
+          "timestamp": "2025-06-13T19:45:39+08:00",
+          "tree_id": "32ffa43a8299f53076da8c8567d43ea5268ca7ba",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4e40bf8f18a382d1ae7174769f329c9e833a000"
+        },
+        "date": 1749815716928,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 20967000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 576590,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.021,
             "unit": "ns/op"
           }
         ]
