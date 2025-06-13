@@ -236,6 +236,9 @@ struct Collectors {
     stat: bool,
 
     #[serde(default = "default_true")]
+    tapestats: bool,
+
+    #[serde(default = "default_true")]
     tcpstat: bool,
 
     #[serde(default = "default_true")]
@@ -316,6 +319,7 @@ impl Default for Collectors {
             softnet: true,
             softirqs: false,
             stat: true,
+            tapestats: true,
             time: true,
             timex: true,
             tcpstat: true,
@@ -705,6 +709,11 @@ async fn run(
         if collectors.stat {
             let proc_path = proc_path.clone();
             tasks.spawn(async move { record_gather!("stat", stat::gather(proc_path)) });
+        }
+
+        if collectors.tapestats {
+            let sys_path = sys_path.clone();
+            tasks.spawn(async move { record_gather!("tapestats", tapestats::collect(sys_path)) });
         }
 
         if collectors.tcpstat {
