@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749823527690,
+  "lastUpdate": 1749823884455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "09301090290c06c81dc165f3d2a996176fb13eb5",
-          "message": "Merge pull request #2299 from f1shl3gs/dependabot/cargo/crossbeam-channel-0.5.15\n\nchore(deps): bump crossbeam-channel from 0.5.14 to 0.5.15",
-          "timestamp": "2025-04-11T20:22:27+08:00",
-          "tree_id": "2d98671cfd7a3cb571778e785161eb35ebe095ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09301090290c06c81dc165f3d2a996176fb13eb5"
-        },
-        "date": 1744374793545,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22826000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 629290,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.969,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3973b2c9b52f45d5a6de7952ed492e9fab88d8b6",
           "message": "Merge pull request #2303 from f1shl3gs/dependabot/cargo/sqlx-0.8.4\n\nchore(deps): bump sqlx from 0.8.3 to 0.8.4",
           "timestamp": "2025-04-14T21:08:50+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.86,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8dfb0bf4ce632ed7b4ca15da094e6e5e87c6cb2c",
+          "message": "Merge pull request #2409 from f1shl3gs/sources/zookeeper/add_ruok\n\nsources/zookeeper: add ruok",
+          "timestamp": "2025-06-13T22:02:01+08:00",
+          "tree_id": "e155bb484893fa3075816cadbe9d2aba96c1a20d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8dfb0bf4ce632ed7b4ca15da094e6e5e87c6cb2c"
+        },
+        "date": 1749823861972,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22758000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 660420,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.882,
             "unit": "ns/op"
           }
         ]
