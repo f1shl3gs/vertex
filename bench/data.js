@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749816668068,
+  "lastUpdate": 1749816707454,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "24fe151777669df4a12aaf72704b90bb0dd1d09e",
-          "message": "Merge pull request #2302 from f1shl3gs/dependabot/cargo/lru-0.14.0\n\nchore(deps): bump lru from 0.13.0 to 0.14.0",
-          "timestamp": "2025-04-14T21:21:14+08:00",
-          "tree_id": "1c5ceb255a0196032abf60dfbf89dbf936cffd61",
-          "url": "https://github.com/f1shl3gs/vertex/commit/24fe151777669df4a12aaf72704b90bb0dd1d09e"
-        },
-        "date": 1744637552476,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 542,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38113.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9c8dfa2387db3d19515cca2e0ad17812cf130ea0",
           "message": "Merge pull request #2304 from f1shl3gs/dependabot/cargo/libc-0.2.172\n\nchore(deps): bump libc from 0.2.171 to 0.2.172",
           "timestamp": "2025-04-15T22:45:56+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 514,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37557.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bb0a601a3ea8b0f1d699d814cc1907ee1921a31f",
+          "message": "Merge pull request #2408 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: fix `node_tape_write_time_seconds_total` value",
+          "timestamp": "2025-06-13T20:01:30+08:00",
+          "tree_id": "b289d4f6b8985a84136bf89e4a63e3c43c8551b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bb0a601a3ea8b0f1d699d814cc1907ee1921a31f"
+        },
+        "date": 1749816685753,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 502,
             "unit": "s"
           },
           {
