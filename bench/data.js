@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749809770718,
+  "lastUpdate": 1749809784296,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ea8d503bde592329922ee7528a8ea36a672c549c",
-          "message": "Merge pull request #2300 from f1shl3gs/dependabot/cargo/rustls-0.23.26\n\nchore(deps): bump rustls from 0.23.25 to 0.23.26",
-          "timestamp": "2025-04-11T20:22:01+08:00",
-          "tree_id": "7b06f99871e44ec75a9f04eb3172e9fe41e82bb0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ea8d503bde592329922ee7528a8ea36a672c549c"
-        },
-        "date": 1744374740747,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 537,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38117.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "09301090290c06c81dc165f3d2a996176fb13eb5",
           "message": "Merge pull request #2299 from f1shl3gs/dependabot/cargo/crossbeam-channel-0.5.15\n\nchore(deps): bump crossbeam-channel from 0.5.14 to 0.5.15",
           "timestamp": "2025-04-11T20:22:27+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37531.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "066c32f5457ce1d6acd01f20e9923de891902f8d",
+          "message": "Merge pull request #2405 from f1shl3gs/misc/optimize\n\nmisc/clean: remove unused",
+          "timestamp": "2025-06-13T18:05:59+08:00",
+          "tree_id": "ff82d3808afcb15a1aa4698b930189a4c59fb4b2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/066c32f5457ce1d6acd01f20e9923de891902f8d"
+        },
+        "date": 1749809761999,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 516,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37532,
             "unit": "KiB"
           }
         ]
