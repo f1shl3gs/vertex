@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749823884455,
+  "lastUpdate": 1749823934693,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9c8dfa2387db3d19515cca2e0ad17812cf130ea0",
-          "message": "Merge pull request #2304 from f1shl3gs/dependabot/cargo/libc-0.2.172\n\nchore(deps): bump libc from 0.2.171 to 0.2.172",
-          "timestamp": "2025-04-15T22:45:56+08:00",
-          "tree_id": "ebc9081e3031ae9b627e6183ba4cc40a6bd6d456",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9c8dfa2387db3d19515cca2e0ad17812cf130ea0"
-        },
-        "date": 1744728995877,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 541,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38119.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "80cbc09646647baa81dd1d2021afec8e34e9c067",
           "message": "Merge pull request #2305 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.95\n\nchore(deps): bump proc-macro2 from 1.0.94 to 1.0.95",
           "timestamp": "2025-04-16T14:05:47+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37557.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8dfb0bf4ce632ed7b4ca15da094e6e5e87c6cb2c",
+          "message": "Merge pull request #2409 from f1shl3gs/sources/zookeeper/add_ruok\n\nsources/zookeeper: add ruok",
+          "timestamp": "2025-06-13T22:02:01+08:00",
+          "tree_id": "e155bb484893fa3075816cadbe9d2aba96c1a20d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8dfb0bf4ce632ed7b4ca15da094e6e5e87c6cb2c"
+        },
+        "date": 1749823912909,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 509,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37561.1,
             "unit": "KiB"
           }
         ]
