@@ -19,7 +19,9 @@ pub use value::{
 
 use crate::log::keys::{all_fields, keys};
 use crate::metadata::EventMetadata;
-use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
+use crate::{
+    BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, MaybeAsLogMut,
+};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LogRecord {
@@ -49,6 +51,12 @@ impl Default for LogRecord {
 impl EventDataEq for LogRecord {
     fn event_data_eq(&self, other: &Self) -> bool {
         self.fields == other.fields
+    }
+}
+
+impl MaybeAsLogMut for LogRecord {
+    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
+        Some(self)
     }
 }
 
