@@ -480,7 +480,7 @@ glob = { version = "0.3.2", default-features = false }
 hyper-unix = { path = "lib/hyper-unix", optional = true }
 indexmap = { version = "2.9.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.20", default-features = false }
-libc = { version = "0.2.172", default-features = false }
+libc = { version = "0.2.173", default-features = false }
 lru = { version = "0.14.0", default-features = false, optional = true }
 maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d1861cfe7313589c0e0281ddbb660a88962", optional = true, features = ["mmap", "unsafe-str"] }
 md-5 = { version = "0.10.6", default-features = false, optional = true }
