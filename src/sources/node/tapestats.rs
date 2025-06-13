@@ -85,7 +85,7 @@ pub async fn collect(sysfs: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_tape_write_time_seconds_total",
                 "The amount of time spent waiting for write requests to complete.",
-                stats.write_ns,
+                stats.write_ns * 0.000000001,
                 tags!("device" => name.to_string()),
             )
         ]);
