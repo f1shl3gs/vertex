@@ -1,14 +1,16 @@
 use std::collections::BTreeMap;
+use std::io::BufRead;
 use std::net::SocketAddr;
 use std::time::Duration;
+use std::time::Instant;
 
+use bytes::{Bytes, BytesMut};
 use configurable::configurable_component;
 use event::{Metric, tags};
 use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{Error, Source};
-use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 
 #[configurable_component(source, name = "zookeeper")]
@@ -51,6 +53,8 @@ async fn run(
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     let mut ticker = tokio::time::interval(interval);
+    let mut scrapes = 0;
+    let mut errors = 0;
 
     loop {
         tokio::select! {
@@ -60,76 +64,45 @@ async fn run(
             _ = ticker.tick() => {}
         }
 
-        let mut metrics = match fetch_stats(target).await {
-            Ok((version, state, peer_state, stats)) => {
-                let mut metrics = Vec::with_capacity(stats.len() + 2);
-                metrics.extend([
-                    Metric::gauge_with_tags(
-                        "zk_up",
-                        "",
-                        1,
-                        tags!(
-                            "instance" => target.to_string(),
-                        ),
-                    ),
-                    Metric::gauge_with_tags(
-                        "zk_version",
-                        "",
-                        1,
-                        tags!(
-                            "version" => version,
-                            "instance" => target.to_string()
-                        ),
-                    ),
-                    Metric::gauge_with_tags(
-                        "zk_server_state",
-                        "",
-                        1,
-                        tags!(
-                            "state" => state,
-                            "instance" => target.to_string()
-                        ),
-                    ),
-                    Metric::gauge_with_tags(
-                        "zk_peer_state",
-                        "",
-                        1,
-                        tags!(
-                            "state" => peer_state,
-                            "instance" => target.to_string(),
-                        ),
-                    ),
-                ]);
-
-                for (key, value) in stats {
-                    metrics.push(Metric::gauge_with_tags(
-                        key.as_str(),
-                        format!("{} value of mntr", key),
-                        value,
-                        tags!(
-                            "instance" => target.to_string()
-                        ),
-                    ));
-                }
-
-                metrics
-            }
+        scrapes += 1;
+        let start = Instant::now();
+        let (mut metrics, last_err) = match collect(target).await {
+            Ok(metrics) => (metrics, 0),
             Err(err) => {
-                warn!(
-                    message = "Fetch zookeeper stats failed",
-                    %err
-                );
+                warn!(message = "failed to collect metrics", ?err);
+                errors += 1;
 
-                vec![Metric::gauge_with_tags(
-                    "zk_up",
-                    "",
-                    0,
-                    tags!(
-                        "instance" => target.to_string()
-                    ),
-                )]
+                (vec![], 1)
             }
         };
+        let elapsed = start.elapsed();
+
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "zk_scrape_total",
+                "",
+                scrapes,
+                tags!("instance" => target.to_string()),
+            ),
+            Metric::gauge_with_tags(
+                "zk_scrape_errors",
+                "",
+                errors,
+                tags!("instance" => target.to_string()),
+            ),
+            Metric::gauge_with_tags(
+                "zk_last_scrape_error",
+                "",
+                last_err,
+                tags!("instance" => target.to_string()),
+            ),
+            Metric::gauge_with_tags(
+                "zk_last_scrape_duration_seconds",
+                "",
+                elapsed,
+                tags!("instance" => target.to_string()),
+            ),
+        ]);
 
         let now = chrono::Utc::now();
         metrics.iter_mut().for_each(|m| m.timestamp = Some(now));
@@ -147,6 +120,83 @@ async fn run(
     Ok(())
 }
 
+async fn collect(target: SocketAddr) -> Result<Vec<Metric>, Error> {
+    let mut metrics = Vec::new();
+
+    match request(target, "mntr\n").await {
+        Ok(resp) => {
+            let (version, state, peer_state, stats) = parse_mntr(resp)?;
+            metrics.reserve(stats.len() + 2);
+
+            metrics.extend([
+                Metric::gauge_with_tags(
+                    "zk_version",
+                    "",
+                    1,
+                    tags!(
+                        "version" => version,
+                        "instance" => target.to_string()
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "zk_server_state",
+                    "",
+                    1,
+                    tags!(
+                        "state" => state,
+                        "instance" => target.to_string()
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "zk_peer_state",
+                    "",
+                    1,
+                    tags!(
+                        "state" => peer_state,
+                        "instance" => target.to_string(),
+                    ),
+                ),
+            ]);
+
+            for (key, value) in stats {
+                metrics.push(Metric::gauge_with_tags(
+                    key.as_str(),
+                    format!("{} value of mntr", key),
+                    value,
+                    tags!(
+                        "instance" => target.to_string()
+                    ),
+                ));
+            }
+        }
+        Err(err) => {
+            warn!(
+                message = "fetch mntr stats failed",
+                %err
+            );
+        }
+    }
+
+    match request(target, "ruok\n").await {
+        Ok(resp) => metrics.push(Metric::gauge_with_tags(
+            "zk_ok",
+            "Is ZooKeeper currently OK",
+            resp.as_ref() == b"imok",
+            tags!(
+                "instance" => target.to_string()
+            ),
+        )),
+        Err(err) => {
+            warn!(
+                message = "fetch ruok stats failed",
+                %err
+            );
+        }
+    }
+
+    Ok(metrics)
+}
+
 fn parse_version(input: &str) -> String {
     let input = input.strip_prefix("zk_version").unwrap_or(input);
     let version = input.trim_start().split(',').next().unwrap_or("");
@@ -154,23 +204,32 @@ fn parse_version(input: &str) -> String {
     version.to_string()
 }
 
-async fn fetch_stats(
-    addr: SocketAddr,
-) -> Result<(String, String, String, BTreeMap<String, f64>), Error> {
-    let socket = TcpStream::connect(addr).await?;
-    let (reader, mut writer) = tokio::io::split(socket);
+async fn request(addr: SocketAddr, cmd: &str) -> Result<Bytes, Error> {
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
-    // Write `mntr`
-    writer.write_all(b"mntr\n").await?;
+    let mut socket = TcpStream::connect(addr).await?;
 
-    let reader = tokio::io::BufReader::new(reader);
-    let mut lines = reader.lines();
+    socket.write_all(cmd.as_bytes()).await?;
+
+    let mut buf = BytesMut::with_capacity(128);
+    loop {
+        let cnt = socket.read_buf(&mut buf).await?;
+        if cnt == 0 {
+            break;
+        }
+    }
+
+    Ok(buf.freeze())
+}
+
+fn parse_mntr(input: Bytes) -> Result<(String, String, String, BTreeMap<String, f64>), Error> {
+    let mut lines = input.lines();
 
     let mut version = String::new();
     let mut server_state = String::new();
     let mut peer_state = String::new();
     let mut stats = BTreeMap::new();
-    while let Some(line) = lines.next_line().await? {
+    while let Some(Ok(line)) = lines.next() {
         let (key, value) = match line.split_once('\t') {
             Some(pair) => pair,
             None => {
@@ -228,7 +287,7 @@ mod integration_tests {
     use testify::container::Container;
     use testify::next_addr;
 
-    use super::fetch_stats;
+    use super::*;
     use crate::testing::trace_init;
 
     #[tokio::test]
@@ -243,7 +302,9 @@ mod integration_tests {
             .run(async move {
                 tokio::time::sleep(Duration::from_secs(5)).await;
 
-                let (version, state, _peer_state, stats) = fetch_stats(service_addr).await.unwrap();
+                let resp = request(service_addr, "mntr\n").await.unwrap();
+                let (version, state, _peer_state, stats) = parse_mntr(resp).unwrap();
+
                 assert_eq!(version, "3.6.2--803c7f1a12f85978cb049af5e4ef23bd8b688715");
                 assert_eq!(state, "standalone");
                 assert!(*stats.get("zk_uptime").unwrap() > 0.0);
