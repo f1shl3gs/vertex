@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749723249523,
+  "lastUpdate": 1749800687420,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "89ae05b201b96224873f73c22ebc8078891dc924",
-          "message": "Merge pull request #2295 from f1shl3gs/dependabot/cargo/indexmap-2.9.0\n\nchore(deps): bump indexmap from 2.8.0 to 2.9.0",
-          "timestamp": "2025-04-05T11:10:12+08:00",
-          "tree_id": "0097d845a86317fb5932dab148fcc870b9204468",
-          "url": "https://github.com/f1shl3gs/vertex/commit/89ae05b201b96224873f73c22ebc8078891dc924"
-        },
-        "date": 1743822752132,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 538680,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 536020,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9f28e51b57c3a1afdf5c8677dfb9727efddd27fa",
+          "message": "Merge pull request #2404 from f1shl3gs/dependabot/cargo/syn-2.0.103\n\nchore(deps): bump syn from 2.0.102 to 2.0.103",
+          "timestamp": "2025-06-13T15:42:39+08:00",
+          "tree_id": "3b1b17b12b56bb56169234acc444c25a3830216c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9f28e51b57c3a1afdf5c8677dfb9727efddd27fa"
+        },
+        "date": 1749800665789,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 547880,
             "unit": "ns/op"
           }
         ]
