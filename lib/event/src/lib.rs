@@ -401,54 +401,6 @@ impl EventDataEq<Event> for EventRef<'_> {
     }
 }
 
-impl TryInto<serde_json::Value> for Event {
-    type Error = serde_json::Error;
-
-    fn try_into(self) -> Result<serde_json::Value, Self::Error> {
-        match self {
-            Event::Log(log) => serde_json::to_value(log),
-            Event::Metric(metric) => serde_json::to_value(metric),
-            Event::Trace(trace) => serde_json::to_value(trace),
-        }
-    }
-}
-
-/// TODO: Share this Error type
-/// Vertex's basic error type, dynamically dispatched and safe to send across
-/// threads.
-pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
-
-impl TryFrom<serde_json::Value> for Event {
-    type Error = Error;
-
-    fn try_from(map: serde_json::Value) -> Result<Self, Self::Error> {
-        match map {
-            serde_json::Value::Object(fields) => Ok(Event::from(
-                fields
-                    .into_iter()
-                    .map(|(k, v)| (k, v.into()))
-                    .collect::<BTreeMap<_, _>>(),
-            )),
-            _ => Err(Error::from(
-                "Attempted to convert non-Object JSON into an Event",
-            )),
-        }
-    }
-}
-
-pub trait MaybeAsLogMut {
-    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord>;
-}
-
-impl MaybeAsLogMut for Event {
-    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
-        match self {
-            Event::Log(log) => Some(log),
-            _ => None,
-        }
-    }
-}
-
 /// A related trait to `PartialEq`, `EventDataEq` tests if two events
 /// contain the same data, exclusive of the metadata. This is used to
 /// test for events having the same values but potentially different
