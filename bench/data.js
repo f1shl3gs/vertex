@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749810676037,
+  "lastUpdate": 1749810720274,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "09301090290c06c81dc165f3d2a996176fb13eb5",
-          "message": "Merge pull request #2299 from f1shl3gs/dependabot/cargo/crossbeam-channel-0.5.15\n\nchore(deps): bump crossbeam-channel from 0.5.14 to 0.5.15",
-          "timestamp": "2025-04-11T20:22:27+08:00",
-          "tree_id": "2d98671cfd7a3cb571778e785161eb35ebe095ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09301090290c06c81dc165f3d2a996176fb13eb5"
-        },
-        "date": 1744374822312,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38117.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3973b2c9b52f45d5a6de7952ed492e9fab88d8b6",
           "message": "Merge pull request #2303 from f1shl3gs/dependabot/cargo/sqlx-0.8.4\n\nchore(deps): bump sqlx from 0.8.3 to 0.8.4",
           "timestamp": "2025-04-14T21:08:50+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37532,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "38588a3f78eb8553aa593ddf1f7316857eb66f86",
+          "message": "Merge pull request #2406 from f1shl3gs/revert-2405-misc/optimize\n\nRevert \"misc/clean: remove unused\"",
+          "timestamp": "2025-06-13T18:21:38+08:00",
+          "tree_id": "3b1b17b12b56bb56169234acc444c25a3830216c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/38588a3f78eb8553aa593ddf1f7316857eb66f86"
+        },
+        "date": 1749810698430,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 507,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37531.9,
             "unit": "KiB"
           }
         ]
