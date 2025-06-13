@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749815774348,
+  "lastUpdate": 1749816223239,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "09301090290c06c81dc165f3d2a996176fb13eb5",
-          "message": "Merge pull request #2299 from f1shl3gs/dependabot/cargo/crossbeam-channel-0.5.15\n\nchore(deps): bump crossbeam-channel from 0.5.14 to 0.5.15",
-          "timestamp": "2025-04-11T20:22:27+08:00",
-          "tree_id": "2d98671cfd7a3cb571778e785161eb35ebe095ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09301090290c06c81dc165f3d2a996176fb13eb5"
-        },
-        "date": 1744374276601,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 545630,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bb0a601a3ea8b0f1d699d814cc1907ee1921a31f",
+          "message": "Merge pull request #2408 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: fix `node_tape_write_time_seconds_total` value",
+          "timestamp": "2025-06-13T20:01:30+08:00",
+          "tree_id": "b289d4f6b8985a84136bf89e4a63e3c43c8551b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bb0a601a3ea8b0f1d699d814cc1907ee1921a31f"
+        },
+        "date": 1749816201328,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 545040,
             "unit": "ns/op"
           }
         ]
