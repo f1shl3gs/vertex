@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749903678209,
+  "lastUpdate": 1749903714842,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "eb5d4b999302ffa924eb08f1a60c26fa3b6c659b",
-          "message": "Merge pull request #2308 from f1shl3gs/sources/audit/init\n\nsources/audit: init",
-          "timestamp": "2025-04-19T01:05:30+08:00",
-          "tree_id": "848bdc841a43b9a2042d47b43ed72ec9007a593b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eb5d4b999302ffa924eb08f1a60c26fa3b6c659b"
-        },
-        "date": 1744996596714,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 565,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38220,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0800e8d7f85c9b1b377c7e8051bbeda5c544fd08",
           "message": "Merge pull request #2309 from f1shl3gs/lib/vt/fix_type_def_of_to_integer\n\nlib/vtl: fix type_def of `to_integer`",
           "timestamp": "2025-04-19T01:12:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37568.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "330d8b936fd7a15d20ca55bc4d7e6b012c74222c",
+          "message": "Merge pull request #2413 from f1shl3gs/sinks/prometheus_exporter/add_const_labels\n\nsinks/prometheus: add `const_labels`",
+          "timestamp": "2025-06-14T20:11:31+08:00",
+          "tree_id": "854b24d7bbc4528241a99357cd4e7d0790aa98f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/330d8b936fd7a15d20ca55bc4d7e6b012c74222c"
+        },
+        "date": 1749903693213,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 505,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37578,
             "unit": "KiB"
           }
         ]
