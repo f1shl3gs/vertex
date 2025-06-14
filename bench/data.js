@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749873785925,
+  "lastUpdate": 1749873812362,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c780214dcabf07d01f1748e3ddd66591b081eed0",
-          "message": "Merge pull request #2306 from f1shl3gs/dependabot/cargo/sqlx-0.8.5\n\nchore(deps): bump sqlx from 0.8.4 to 0.8.5",
-          "timestamp": "2025-04-16T14:05:57+08:00",
-          "tree_id": "e68dc4694626d84eeb9883687c5141b9fc18a5d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c780214dcabf07d01f1748e3ddd66591b081eed0"
-        },
-        "date": 1744784204192,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 558,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38117.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c17e1d2f11be7d003762210d08d7cb16df5a9aa1",
           "message": "Merge pull request #2307 from f1shl3gs/dependabot/cargo/rand-0.9.1\n\nchore(deps): bump rand from 0.9.0 to 0.9.1",
           "timestamp": "2025-04-18T13:58:36+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37568.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0b129ae61da9ea815699a6673ad4f1992f48670e",
+          "message": "Merge pull request #2411 from f1shl3gs/sources/haproxy/optimize_parse\n\nsources/haproxy: optimize CSV parse",
+          "timestamp": "2025-06-14T11:53:09+08:00",
+          "tree_id": "1a555fc9f862c16e61d7e157dcc9f0437a0bce83",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0b129ae61da9ea815699a6673ad4f1992f48670e"
+        },
+        "date": 1749873790495,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 511,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37568.5,
             "unit": "KiB"
           }
         ]
