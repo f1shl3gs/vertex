@@ -5,7 +5,7 @@ use criterion::{
 };
 
 pub fn parse_haproxy_csv(c: &mut Criterion) {
-    let input = include_str!("../tests/haproxy/stats.csv");
+    let input = include_bytes!("../tests/haproxy/stats.csv");
 
     let mut group: BenchmarkGroup<WallTime> = c.benchmark_group("haproxy");
 
@@ -13,8 +13,7 @@ pub fn parse_haproxy_csv(c: &mut Criterion) {
     group.measurement_time(Duration::from_secs(10));
     group.bench_function("parse_csv", |b| {
         b.iter(|| {
-            let reader = std::io::Cursor::new(input);
-            vertex::sources::haproxy::parse_csv(reader).unwrap();
+            vertex::sources::haproxy::parse_csv(input).unwrap();
         });
     });
 }

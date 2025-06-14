@@ -1,6 +1,6 @@
+use std::io::BufRead;
 use std::time::Duration;
 
-use bytes::Buf;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Key, Tags};
@@ -143,7 +143,7 @@ async fn scrap(client: &HttpClient, uri: &Uri, auth: Option<Auth>) -> Result<Vec
         StatusCode::OK => {
             let body = incoming.collect().await?.to_bytes();
 
-            match parse_csv(body.reader()) {
+            match parse_csv(&body) {
                 Ok(metrics) => metrics,
                 Err(err) => {
                     warn!(
@@ -209,19 +209,12 @@ pub enum ParseError {
     UnknownTypeOfMetrics(String),
 }
 
-pub fn parse_csv(mut reader: impl std::io::BufRead) -> Result<Vec<Metric>, ParseError> {
+pub fn parse_csv(input: &[u8]) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
-    let mut buf = String::new();
+    let mut lines = input.lines();
 
-    loop {
-        buf.clear();
-        match reader.read_line(&mut buf) {
-            Ok(0) => break,
-            Err(_err) => break,
-            _ => {}
-        }
-
-        let parts = buf.split(',').collect::<Vec<_>>();
+    while let Some(Ok(line)) = lines.next() {
+        let parts = line.split(',').collect::<Vec<_>>();
         if parts.len() < MINIMUM_CSV_FIELD_COUNT {
             return Err(ParseError::RowTooShort);
         }
@@ -999,8 +992,6 @@ fn parse_status_field(value: &str) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use std::io;
-
     use super::*;
 
     #[test]
@@ -1022,9 +1013,8 @@ mod tests {
 
     #[test]
     fn parse() {
-        let content = include_str!("../../tests/haproxy/stats.csv");
-        let reader = io::Cursor::new(content);
-        let metrics = parse_csv(reader).unwrap();
+        let content = include_bytes!("../../tests/haproxy/stats.csv");
+        let metrics = parse_csv(content).unwrap();
 
         assert!(!metrics.is_empty());
     }
