@@ -5,7 +5,6 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use bytes::{BufMut, Bytes, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
@@ -31,13 +30,19 @@ struct Config {
     #[configurable(required, format = "ip-address", example = "0.0.0.0:9100")]
     endpoint: SocketAddr,
 
+    tls: Option<TlsConfig>,
+
     /// TTL for metrics, any metrics not received for ttl will be removed
     /// from cache.
     #[serde(default = "default_ttl")]
     #[serde(with = "humanize::duration::serde")]
     ttl: Duration,
 
-    tls: Option<TlsConfig>,
+    /// This allows you to add custom labels to all metrics exposed through
+    /// this prometheus exporter
+    ///
+    /// `const_labels` honors the original metric tags
+    const_labels: BTreeMap<String, String>,
 }
 
 fn default_endpoint() -> SocketAddr {
@@ -48,11 +53,16 @@ const fn default_ttl() -> Duration {
     Duration::from_secs(5 * 60)
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let sink = PrometheusExporter::new(self.endpoint, self.tls.clone(), self.ttl);
+        let sink = PrometheusExporter::new(
+            self.endpoint,
+            self.tls.clone(),
+            self.ttl,
+            self.const_labels.clone(),
+        );
         let health_check = futures::future::ok(()).boxed();
 
         Ok((Sink::Stream(Box::new(sink)), health_check))
@@ -126,17 +136,28 @@ struct PrometheusExporter {
     endpoint: SocketAddr,
     tls: Option<TlsConfig>,
     ttl: Duration,
+    const_labels: BTreeMap<String, String>,
 }
 
 impl PrometheusExporter {
-    fn new(endpoint: SocketAddr, tls: Option<TlsConfig>, ttl: Duration) -> Self {
-        Self { endpoint, tls, ttl }
+    fn new(
+        endpoint: SocketAddr,
+        tls: Option<TlsConfig>,
+        ttl: Duration,
+        const_labels: BTreeMap<String, String>,
+    ) -> Self {
+        Self {
+            endpoint,
+            tls,
+            ttl,
+            const_labels,
+        }
     }
 }
 
 #[inline]
-fn write_tags<T: Write>(buf: &mut T, tags: &Tags) {
-    if tags.is_empty() {
+fn write_tags<T: Write>(buf: &mut T, tags: &Tags, const_labels: &BTreeMap<String, String>) {
+    if tags.is_empty() && const_labels.is_empty() {
         let _ = buf.write_all(b" ");
         return;
     }
@@ -156,13 +177,37 @@ fn write_tags<T: Write>(buf: &mut T, tags: &Tags) {
         buf.write_all(b"\"").unwrap();
     }
 
+    for (key, value) in const_labels {
+        if tags.contains(key) {
+            continue
+        }
+
+        if first {
+            first = false;
+            buf.write_all(b"{").unwrap();
+        } else {
+            buf.write_all(b",").unwrap();
+        }
+
+        buf.write_all(key.as_bytes()).unwrap();
+        buf.write_all(b"=\"").unwrap();
+        buf.write_all(value.as_bytes()).unwrap();
+        buf.write_all(b"\"").unwrap();
+    }
+
     buf.write_all(b"} ").unwrap();
 }
 
 #[inline]
-fn write_simple_metric<T: Write>(buf: &mut T, name: &str, tags: &Tags, value: f64) {
+fn write_simple_metric<T: Write>(
+    buf: &mut T,
+    name: &str,
+    tags: &Tags,
+    value: f64,
+    const_labels: &BTreeMap<String, String>,
+) {
     buf.write_all(name.as_bytes()).unwrap();
-    write_tags(buf, tags);
+    write_tags(buf, tags, const_labels);
     buf.write_all(value.to_string().as_bytes()).unwrap();
     buf.write_all(b"\n").unwrap();
 }
@@ -174,6 +219,7 @@ fn write_summary_metric<T: Write>(
     quantiles: &[Quantile],
     sum: f64,
     count: u64,
+    const_labels: &BTreeMap<String, String>,
 ) {
     // write quantiles
     for quantile in quantiles {
@@ -201,14 +247,14 @@ fn write_summary_metric<T: Write>(
     // write sum
     buf.write_all(name.as_bytes()).unwrap();
     buf.write_all(b"_sum").unwrap();
-    write_tags(buf, tags);
+    write_tags(buf, tags, const_labels);
     buf.write_all(sum.to_string().as_bytes()).unwrap();
     buf.write_all(b"\n").unwrap();
 
     // write count
     buf.write_all(name.as_bytes()).unwrap();
     buf.write_all(b"_count").unwrap();
-    write_tags(buf, tags);
+    write_tags(buf, tags, const_labels);
     buf.write_all(count.to_string().as_bytes()).unwrap();
     buf.write_all(b"\n").unwrap();
 }
@@ -220,6 +266,7 @@ fn write_histogram_metric<T: Write>(
     buckets: &[Bucket],
     sum: f64,
     count: u64,
+    const_labels: &BTreeMap<String, String>,
 ) {
     // write buckets
     for bucket in buckets {
@@ -250,14 +297,14 @@ fn write_histogram_metric<T: Write>(
     // write sum
     buf.write_all(name.as_bytes()).unwrap();
     buf.write_all(b"_sum").unwrap();
-    write_tags(buf, tags);
+    write_tags(buf, tags, const_labels);
     buf.write_all(sum.to_string().as_bytes()).unwrap();
     buf.write_all(b"\n").unwrap();
 
     // write count
     buf.write_all(name.as_bytes()).unwrap();
     buf.write_all(b"_count").unwrap();
-    write_tags(buf, tags);
+    write_tags(buf, tags, const_labels);
     buf.write_all(count.to_string().as_bytes()).unwrap();
     buf.write_all(b"\n").unwrap();
 }
@@ -265,6 +312,7 @@ fn write_histogram_metric<T: Write>(
 fn handle(
     req: Request<Incoming>,
     metrics: Arc<RwLock<BTreeMap<String, Sets>>>,
+    const_labels: BTreeMap<String, String>,
 ) -> Response<Full<Bytes>> {
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/metrics") => {
@@ -318,24 +366,40 @@ fn handle(
 
                     match &value {
                         MetricValue::Sum(value) => {
-                            write_simple_metric(&mut buf, name, tags, *value);
+                            write_simple_metric(&mut buf, name, tags, *value, &const_labels);
                         }
                         MetricValue::Gauge(value) => {
-                            write_simple_metric(&mut buf, name, tags, *value);
+                            write_simple_metric(&mut buf, name, tags, *value, &const_labels);
                         }
                         MetricValue::Histogram {
                             count,
                             sum,
                             buckets,
                         } => {
-                            write_histogram_metric(&mut buf, name, tags, buckets, *sum, *count);
+                            write_histogram_metric(
+                                &mut buf,
+                                name,
+                                tags,
+                                buckets,
+                                *sum,
+                                *count,
+                                &const_labels,
+                            );
                         }
                         MetricValue::Summary {
                             count,
                             sum,
                             quantiles,
                         } => {
-                            write_summary_metric(&mut buf, name, tags, quantiles, *sum, *count);
+                            write_summary_metric(
+                                &mut buf,
+                                name,
+                                tags,
+                                quantiles,
+                                *sum,
+                                *count,
+                                &const_labels,
+                            );
                         }
                     }
                 }
@@ -360,7 +424,7 @@ fn handle(
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl StreamSink for PrometheusExporter {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
         // The state key is metric name, `Sets` is a container of tags, value and timestamp.
@@ -375,11 +439,14 @@ impl StreamSink for PrometheusExporter {
             .map_err(|err| error!(message = "Server TLS error", %err))?;
         let http_states = Arc::clone(&states);
         let http_shutdown = shutdown.clone();
+        let const_labels = self.const_labels.clone();
+
         let service = service_fn(move |req: Request<Incoming>| {
             let metrics = Arc::clone(&http_states);
+            let const_labels = const_labels.clone();
 
             async move {
-                let resp = handle(req, metrics);
+                let resp = handle(req, metrics, const_labels);
 
                 Ok::<_, hyper::Error>(resp)
             }
@@ -593,6 +660,7 @@ mod tests {
             quantiles,
             sum,
             count,
+            &BTreeMap::new(),
         );
 
         write_summary_metric(
@@ -602,6 +670,7 @@ mod tests {
             quantiles,
             sum,
             count,
+            &BTreeMap::new(),
         );
 
         assert_eq!(
@@ -664,6 +733,7 @@ rpc_duration_seconds_count{foo="bar"} 2693
             buckets,
             sum,
             count,
+            &BTreeMap::new(),
         );
 
         // with tags
@@ -676,6 +746,7 @@ rpc_duration_seconds_count{foo="bar"} 2693
             buckets,
             sum,
             count,
+            &BTreeMap::new(),
         );
 
         assert_eq!(
