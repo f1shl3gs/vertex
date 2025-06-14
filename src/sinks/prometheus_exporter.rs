@@ -179,7 +179,7 @@ fn write_tags<T: Write>(buf: &mut T, tags: &Tags, const_labels: &BTreeMap<String
 
     for (key, value) in const_labels {
         if tags.contains(key) {
-            continue
+            continue;
         }
 
         if first {
