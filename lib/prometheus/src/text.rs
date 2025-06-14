@@ -76,6 +76,7 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
             description: description
                 .strip_prefix(name)
                 .unwrap_or(description)
+                .trim()
                 .to_string(),
             metrics,
         })
