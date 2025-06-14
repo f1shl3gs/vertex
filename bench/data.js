@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749903135174,
+  "lastUpdate": 1749903254818,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "80cbc09646647baa81dd1d2021afec8e34e9c067",
-          "message": "Merge pull request #2305 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.95\n\nchore(deps): bump proc-macro2 from 1.0.94 to 1.0.95",
-          "timestamp": "2025-04-16T14:05:47+08:00",
-          "tree_id": "82f9e1270115342b14b61f7f1889d9706fdcd781",
-          "url": "https://github.com/f1shl3gs/vertex/commit/80cbc09646647baa81dd1d2021afec8e34e9c067"
-        },
-        "date": 1744783673827,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541110,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 545070,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "330d8b936fd7a15d20ca55bc4d7e6b012c74222c",
+          "message": "Merge pull request #2413 from f1shl3gs/sinks/prometheus_exporter/add_const_labels\n\nsinks/prometheus: add `const_labels`",
+          "timestamp": "2025-06-14T20:11:31+08:00",
+          "tree_id": "854b24d7bbc4528241a99357cd4e7d0790aa98f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/330d8b936fd7a15d20ca55bc4d7e6b012c74222c"
+        },
+        "date": 1749903232423,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 544810,
             "unit": "ns/op"
           }
         ]
