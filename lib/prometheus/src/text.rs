@@ -28,7 +28,7 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
         let (name, kind) = match lines.next() {
             Some(line) => {
                 if let Some(value) = line.strip_prefix("# TYPE ") {
-                    if let Some((name, kind)) = value.trim().split_once(' ') {
+                    if let Some((name, kind)) = value.split_once(' ') {
                         (name, kind)
                     } else {
                         // invalid TYPE line, ignore it
@@ -42,26 +42,33 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
             None => return Ok(groups),
         };
 
-        let mut group = match kind {
-            "counter" => GroupKind::new(MetricKind::Counter),
-            "histogram" => GroupKind::new(MetricKind::Histogram),
-            "gauge" => GroupKind::new(MetricKind::Gauge),
-            "summary" => GroupKind::new(MetricKind::Summary),
-            "untyped" => GroupKind::new(MetricKind::Untyped),
-            _ => return Err(Error::InvalidType(kind.to_string())),
-        };
-
-        // parse metric lines
-        match group.metric_kind() {
-            MetricKind::Counter | MetricKind::Gauge | MetricKind::Untyped => {
+        let metrics = match kind {
+            "counter" => {
+                let mut group = GroupKind::new(MetricKind::Counter);
                 parse_simple_metrics(name, &mut group, &mut lines)?;
+                group
             }
-            MetricKind::Histogram => {
+            "gauge" => {
+                let mut group = GroupKind::new(MetricKind::Gauge);
+                parse_simple_metrics(name, &mut group, &mut lines)?;
+                group
+            }
+            "histogram" => {
+                let mut group = GroupKind::new(MetricKind::Histogram);
                 parse_histograms(&mut group, &mut lines)?;
+                group
             }
-            MetricKind::Summary => {
+            "summary" => {
+                let mut group = GroupKind::new(MetricKind::Summary);
                 parse_summaries(&mut group, &mut lines)?;
+                group
             }
+            "untyped" => {
+                let mut group = GroupKind::new(MetricKind::Untyped);
+                parse_simple_metrics(name, &mut group, &mut lines)?;
+                group
+            }
+            _ => return Err(Error::InvalidType(kind.to_string())),
         };
 
         groups.push(MetricGroup {
@@ -69,9 +76,8 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
             description: description
                 .strip_prefix(name)
                 .unwrap_or(description)
-                .trim()
                 .to_string(),
-            metrics: group,
+            metrics,
         })
     }
 }

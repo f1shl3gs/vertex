@@ -130,16 +130,6 @@ impl GroupKind {
         }
     }
 
-    fn metric_kind(&self) -> MetricKind {
-        match self {
-            Self::Counter { .. } => MetricKind::Counter,
-            Self::Gauge { .. } => MetricKind::Gauge,
-            Self::Histogram { .. } => MetricKind::Histogram,
-            Self::Summary { .. } => MetricKind::Summary,
-            Self::Untyped { .. } => MetricKind::Untyped,
-        }
-    }
-
     /// Err(_) if there are irrecoverable error.
     /// Ok(Some(metric)) if this metric belongs to another group.
     /// Ok(None) pushed successfully.
