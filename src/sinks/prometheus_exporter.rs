@@ -42,6 +42,7 @@ struct Config {
     /// this prometheus exporter
     ///
     /// `const_labels` honors the original metric tags
+    #[serde(default)]
     const_labels: BTreeMap<String, String>,
 }
 
