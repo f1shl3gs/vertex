@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749873812362,
+  "lastUpdate": 1749902628625,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9c8dfa2387db3d19515cca2e0ad17812cf130ea0",
-          "message": "Merge pull request #2304 from f1shl3gs/dependabot/cargo/libc-0.2.172\n\nchore(deps): bump libc from 0.2.171 to 0.2.172",
-          "timestamp": "2025-04-15T22:45:56+08:00",
-          "tree_id": "ebc9081e3031ae9b627e6183ba4cc40a6bd6d456",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9c8dfa2387db3d19515cca2e0ad17812cf130ea0"
-        },
-        "date": 1744728505734,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.524,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.91,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "210c1f47154200fd6c08169f88feea92af8b4038",
+          "message": "Merge pull request #2412 from f1shl3gs/lib/prometheus/optimize\n\nlib/prometheus: optimize `parse_text`",
+          "timestamp": "2025-06-14T20:01:30+08:00",
+          "tree_id": "b7e8c48a644ea0b4a2ed7703b25f7414e1da7d5e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/210c1f47154200fd6c08169f88feea92af8b4038"
+        },
+        "date": 1749902606965,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.402,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 181.63,
             "unit": "ns/op"
           }
         ]
