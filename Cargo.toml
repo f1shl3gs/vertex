@@ -347,12 +347,6 @@ jemalloc = [
 ]
 snmalloc = [ "dep:snmalloc-rs" ]
 
-bench = [
-    "sinks-loki",
-    "sources-haproxy",
-    "sources-node",
-]
-
 [[bench]]
 name = "loki"
 harness = false
