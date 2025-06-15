@@ -2,8 +2,8 @@ use std::collections::BTreeMap;
 use std::iter::Peekable;
 
 use crate::{
-    Error, GroupKey, GroupKind, HistogramBucket, HistogramMetric, MetricGroup, MetricKind,
-    SummaryMetric, SummaryQuantile,
+    Error, GroupKey, GroupKind, HistogramBucket, HistogramMetric, MetricGroup, MetricMap,
+    SimpleMetric, SummaryMetric, SummaryQuantile,
 };
 
 pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
@@ -44,29 +44,24 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
 
         let metrics = match kind {
             "counter" => {
-                let mut group = GroupKind::new(MetricKind::Counter);
-                parse_simple_metrics(name, &mut group, &mut lines)?;
-                group
+                let group = parse_simple_metrics(name, &mut lines)?;
+                GroupKind::Counter(group)
             }
             "gauge" => {
-                let mut group = GroupKind::new(MetricKind::Gauge);
-                parse_simple_metrics(name, &mut group, &mut lines)?;
-                group
+                let group = parse_simple_metrics(name, &mut lines)?;
+                GroupKind::Gauge(group)
             }
             "histogram" => {
-                let mut group = GroupKind::new(MetricKind::Histogram);
-                parse_histograms(&mut group, &mut lines)?;
-                group
+                let group = parse_histograms(&mut lines)?;
+                GroupKind::Histogram(group)
             }
             "summary" => {
-                let mut group = GroupKind::new(MetricKind::Summary);
-                parse_summaries(&mut group, &mut lines)?;
-                group
+                let group = parse_summaries(&mut lines)?;
+                GroupKind::Summary(group)
             }
             "untyped" => {
-                let mut group = GroupKind::new(MetricKind::Untyped);
-                parse_simple_metrics(name, &mut group, &mut lines)?;
-                group
+                let group = parse_simple_metrics(name, &mut lines)?;
+                GroupKind::Untyped(group)
             }
             _ => return Err(Error::InvalidType(kind.to_string())),
         };
@@ -85,19 +80,20 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
 
 fn parse_simple_metrics<'a, I>(
     prefix: &str,
-    group: &mut GroupKind,
     lines: &mut Peekable<I>,
-) -> Result<(), Error>
+) -> Result<MetricMap<SimpleMetric>, Error>
 where
     I: Iterator<Item = &'a str>,
 {
+    let mut group = MetricMap::<SimpleMetric>::new();
+
     loop {
         if let Some(line) = lines.peek() {
             if line.starts_with('#') {
                 break;
             }
         } else {
-            return Ok(());
+            return Ok(group);
         }
 
         // The next line already peeked, so error should not happened.
@@ -105,19 +101,21 @@ where
         match line.strip_prefix(prefix) {
             Some(stripped) => {
                 let (gk, value) = parse_labels(stripped)?;
-                group.push(gk, value);
+                group.insert(gk, value.into());
             }
             None => return Err(Error::InvalidMetric(line.into())),
         }
     }
 
-    Ok(())
+    Ok(group)
 }
 
-fn parse_histograms<'a, I>(group: &mut GroupKind, lines: &mut Peekable<I>) -> Result<(), Error>
+fn parse_histograms<'a, I>(lines: &mut Peekable<I>) -> Result<MetricMap<HistogramMetric>, Error>
 where
     I: Iterator<Item = &'a str>,
 {
+    let mut group = MetricMap::<HistogramMetric>::new();
+
     let mut hm = HistogramMetric::default();
     let mut current = GroupKey {
         timestamp: None,
@@ -136,7 +134,7 @@ where
         if metric_name.ends_with("_bucket") {
             if let Some(s) = gk.labels.remove("le") {
                 if gk.labels != current.labels {
-                    group.push_histogram(gk.clone(), hm);
+                    group.insert(gk.clone(), hm);
 
                     current = gk;
                     hm = HistogramMetric::default();
@@ -163,15 +161,17 @@ where
         }
     }
 
-    group.push_histogram(current, hm);
+    group.insert(current, hm);
 
-    Ok(())
+    Ok(group)
 }
 
-fn parse_summaries<'a, I>(group: &mut GroupKind, lines: &mut Peekable<I>) -> Result<(), Error>
+fn parse_summaries<'a, I>(lines: &mut Peekable<I>) -> Result<MetricMap<SummaryMetric>, Error>
 where
     I: Iterator<Item = &'a str>,
 {
+    let mut group = MetricMap::<SummaryMetric>::new();
+
     let mut sm = SummaryMetric::default();
     let mut labels = Default::default();
 
@@ -181,7 +181,7 @@ where
                 break;
             }
         } else {
-            return Ok(());
+            return Ok(group);
         }
 
         // The next line already peeked, so error should not happened.
@@ -192,7 +192,7 @@ where
             sm.sum = value;
         } else if metric_name.ends_with("_count") {
             sm.count = value as u32;
-            group.push_summary(gk, sm);
+            group.insert(gk, sm);
             sm = SummaryMetric::default();
         } else {
             if let Some(s) = gk.labels.remove("quantile") {
@@ -207,7 +207,7 @@ where
             }
 
             if gk.labels != labels {
-                group.push_summary(gk.clone(), sm);
+                group.insert(gk.clone(), sm);
 
                 labels = gk.labels;
                 sm = SummaryMetric::default();
@@ -215,7 +215,7 @@ where
         }
     }
 
-    Ok(())
+    Ok(group)
 }
 
 fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
@@ -232,14 +232,16 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
             None
         };
 
-        Ok((
+        return Ok((
             GroupKey {
                 timestamp,
                 labels: Default::default(),
             },
             value,
-        ))
-    } else if line.starts_with('{') {
+        ));
+    }
+
+    if line.starts_with('{') {
         // got some labels
         let mut pos = 1; // skip '{'
         let buf = line.as_bytes();
@@ -287,8 +289,8 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
                 pos += 1;
             }
 
-            let value = String::from_utf8_lossy(&buf[value_start..pos]).to_string();
-            let key = String::from_utf8_lossy(&buf[key_start..key_end]).to_string();
+            let key = unsafe { String::from_utf8_unchecked(buf[key_start..key_end].to_vec()) };
+            let value = unsafe { String::from_utf8_unchecked(buf[value_start..pos].to_vec()) };
             labels.insert(key, value);
 
             if pos == length {
@@ -309,7 +311,7 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
             pos += 1;
         }
 
-        let line = line[pos..].trim();
+        let line = &line[pos..];
 
         let mut parts = line.split_whitespace();
         let value = parts.next().ok_or(Error::MissingValue)?.parse::<f64>()?;
@@ -320,10 +322,10 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
             None
         };
 
-        Ok((GroupKey { timestamp, labels }, value))
-    } else {
-        Err(Error::InvalidMetric(line.into()))
+        return Ok((GroupKey { timestamp, labels }, value));
     }
+
+    Err(Error::InvalidMetric(line.into()))
 }
 
 fn parse_metric(line: &str) -> Result<(&str, GroupKey, f64), Error> {

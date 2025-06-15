@@ -230,27 +230,6 @@ impl GroupKind {
 
         Ok(None)
     }
-
-    fn push(&mut self, gk: GroupKey, value: f64) {
-        match self {
-            GroupKind::Gauge(m) | GroupKind::Counter(m) | GroupKind::Untyped(m) => {
-                m.insert(gk, value.into());
-            }
-            _ => {}
-        };
-    }
-
-    fn push_histogram(&mut self, key: GroupKey, value: HistogramMetric) {
-        if let GroupKind::Histogram(m) = self {
-            m.insert(key, value);
-        }
-    }
-
-    fn push_summary(&mut self, key: GroupKey, value: SummaryMetric) {
-        if let GroupKind::Summary(m) = self {
-            m.insert(key, value);
-        }
-    }
 }
 
 fn matching_group<T: Default>(values: &mut MetricMap<T>, group: GroupKey) -> &mut T {
