@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749999895657,
+  "lastUpdate": 1749999908045,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0800e8d7f85c9b1b377c7e8051bbeda5c544fd08",
-          "message": "Merge pull request #2309 from f1shl3gs/lib/vt/fix_type_def_of_to_integer\n\nlib/vtl: fix type_def of `to_integer`",
-          "timestamp": "2025-04-19T01:12:54+08:00",
-          "tree_id": "8b8aa310602aefa6d994296f674b25094f808015",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0800e8d7f85c9b1b377c7e8051bbeda5c544fd08"
-        },
-        "date": 1744997022917,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 552,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38220.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c54bf46b8139becc88533e321c05fc1d517fcd82",
           "message": "Merge pull request #2311 from f1shl3gs/lib/framework/add_timeout_to_healtcheck_config\n\nlib/framework: add timeout for HealthcheckConfig",
           "timestamp": "2025-04-24T01:39:28+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37578,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "05572943273d061910ba0d893f6bc550747ad850",
+          "message": "Merge pull request #2414 from f1shl3gs/lib/prometheus/simplify\n\nlib/prometheus: simplify",
+          "timestamp": "2025-06-15T22:54:56+08:00",
+          "tree_id": "2744e022dcb3e8deafbbd84a89ca2432b140f01b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/05572943273d061910ba0d893f6bc550747ad850"
+        },
+        "date": 1749999886147,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 508,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37574,
             "unit": "KiB"
           }
         ]
