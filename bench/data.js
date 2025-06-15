@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1749999425730,
+  "lastUpdate": 1749999442790,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c780214dcabf07d01f1748e3ddd66591b081eed0",
-          "message": "Merge pull request #2306 from f1shl3gs/dependabot/cargo/sqlx-0.8.5\n\nchore(deps): bump sqlx from 0.8.4 to 0.8.5",
-          "timestamp": "2025-04-16T14:05:57+08:00",
-          "tree_id": "e68dc4694626d84eeb9883687c5141b9fc18a5d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c780214dcabf07d01f1748e3ddd66591b081eed0"
-        },
-        "date": 1744783692843,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.404,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 176.62,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.09,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "05572943273d061910ba0d893f6bc550747ad850",
+          "message": "Merge pull request #2414 from f1shl3gs/lib/prometheus/simplify\n\nlib/prometheus: simplify",
+          "timestamp": "2025-06-15T22:54:56+08:00",
+          "tree_id": "2744e022dcb3e8deafbbd84a89ca2432b140f01b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/05572943273d061910ba0d893f6bc550747ad850"
+        },
+        "date": 1749999420719,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.483,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.507,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.33,
             "unit": "ns/op"
           }
         ]
