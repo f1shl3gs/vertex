@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750084696003,
+  "lastUpdate": 1750084709716,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "eb5d4b999302ffa924eb08f1a60c26fa3b6c659b",
-          "message": "Merge pull request #2308 from f1shl3gs/sources/audit/init\n\nsources/audit: init",
-          "timestamp": "2025-04-19T01:05:30+08:00",
-          "tree_id": "848bdc841a43b9a2042d47b43ed72ec9007a593b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eb5d4b999302ffa924eb08f1a60c26fa3b6c659b"
-        },
-        "date": 1744996101862,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.407,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.77,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 176.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 169.16,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bf6bc38e8d6ab372b672a317ebba2608205309c8",
+          "message": "Merge pull request #2416 from f1shl3gs/dependabot/cargo/mimalloc-0.1.47\n\nchore(deps): bump mimalloc from 0.1.46 to 0.1.47",
+          "timestamp": "2025-06-16T22:35:52+08:00",
+          "tree_id": "97d205a3effe6f1ad46e8bd0322a5d6872b2c413",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bf6bc38e8d6ab372b672a317ebba2608205309c8"
+        },
+        "date": 1750084687691,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.434,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.306,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 170.59,
             "unit": "ns/op"
           }
         ]
