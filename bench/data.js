@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750085160321,
+  "lastUpdate": 1750125898377,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0800e8d7f85c9b1b377c7e8051bbeda5c544fd08",
-          "message": "Merge pull request #2309 from f1shl3gs/lib/vt/fix_type_def_of_to_integer\n\nlib/vtl: fix type_def of `to_integer`",
-          "timestamp": "2025-04-19T01:12:54+08:00",
-          "tree_id": "8b8aa310602aefa6d994296f674b25094f808015",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0800e8d7f85c9b1b377c7e8051bbeda5c544fd08"
-        },
-        "date": 1744996495933,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539410,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 490090,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e60da378619f363c886deb05c7075b3804dfdc5",
+          "message": "Merge pull request #2417 from f1shl3gs/dependabot/cargo/syslog_loose-0.22.0\n\nchore(deps): bump syslog_loose from 0.21.0 to 0.22.0",
+          "timestamp": "2025-06-17T10:02:38+08:00",
+          "tree_id": "5519561965eef80bee5c42b9b2d6a0a866d20dec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e60da378619f363c886deb05c7075b3804dfdc5"
+        },
+        "date": 1750125876470,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 490870,
             "unit": "ns/op"
           }
         ]
