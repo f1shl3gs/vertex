@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750126324350,
+  "lastUpdate": 1750126368709,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e7a0e30dd0ea9ede220f74ae30162243c1f28771",
-          "message": "Merge pull request #2313 from f1shl3gs/revert-2310-dependabot/cargo/tokio-util-0.7.15\n\nRevert \"chore(deps): bump tokio-util from 0.7.14 to 0.7.15\"",
-          "timestamp": "2025-04-24T02:06:58+08:00",
-          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e7a0e30dd0ea9ede220f74ae30162243c1f28771"
-        },
-        "date": 1745432245090,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 541,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38224.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a45e28b6911bc1fba607821d57cdc96f7d0a49f2",
           "message": "Merge pull request #2312 from f1shl3gs/lib/buffer\n\nlib/buffer: init",
           "timestamp": "2025-04-26T18:15:15+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37578.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e60da378619f363c886deb05c7075b3804dfdc5",
+          "message": "Merge pull request #2417 from f1shl3gs/dependabot/cargo/syslog_loose-0.22.0\n\nchore(deps): bump syslog_loose from 0.21.0 to 0.22.0",
+          "timestamp": "2025-06-17T10:02:38+08:00",
+          "tree_id": "5519561965eef80bee5c42b9b2d6a0a866d20dec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e60da378619f363c886deb05c7075b3804dfdc5"
+        },
+        "date": 1750126346827,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 504,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37568.5,
             "unit": "KiB"
           }
         ]
