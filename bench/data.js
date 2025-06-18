@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750214657865,
+  "lastUpdate": 1750214684896,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c54bf46b8139becc88533e321c05fc1d517fcd82",
-          "message": "Merge pull request #2311 from f1shl3gs/lib/framework/add_timeout_to_healtcheck_config\n\nlib/framework: add timeout for HealthcheckConfig",
-          "timestamp": "2025-04-24T01:39:28+08:00",
-          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c54bf46b8139becc88533e321c05fc1d517fcd82"
-        },
-        "date": 1745430103555,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.395,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.12,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 168.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e98255c8212c1c3ff4ceafe82f26c8da3f411fac",
+          "message": "Merge pull request #2418 from f1shl3gs/dependabot/cargo/libc-0.2.174\n\nchore(deps): bump libc from 0.2.173 to 0.2.174",
+          "timestamp": "2025-06-18T10:42:02+08:00",
+          "tree_id": "2c7e3b39aa7a4ab2a138503ec5ab29947a4531b2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e98255c8212c1c3ff4ceafe82f26c8da3f411fac"
+        },
+        "date": 1750214662862,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.413,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.298,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 170.51,
             "unit": "ns/op"
           }
         ]
