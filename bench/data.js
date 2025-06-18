@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750214684896,
+  "lastUpdate": 1750214695203,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c54bf46b8139becc88533e321c05fc1d517fcd82",
-          "message": "Merge pull request #2311 from f1shl3gs/lib/framework/add_timeout_to_healtcheck_config\n\nlib/framework: add timeout for HealthcheckConfig",
-          "timestamp": "2025-04-24T01:39:28+08:00",
-          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c54bf46b8139becc88533e321c05fc1d517fcd82"
-        },
-        "date": 1745430128594,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.746,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 150.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 312.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 674.17,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1f1a05cae19f42d4638996961b7becbf04cd4acd",
           "message": "Merge pull request #2310 from f1shl3gs/dependabot/cargo/tokio-util-0.7.15\n\nchore(deps): bump tokio-util from 0.7.14 to 0.7.15",
           "timestamp": "2025-04-24T01:54:36+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 661.98,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e98255c8212c1c3ff4ceafe82f26c8da3f411fac",
+          "message": "Merge pull request #2418 from f1shl3gs/dependabot/cargo/libc-0.2.174\n\nchore(deps): bump libc from 0.2.173 to 0.2.174",
+          "timestamp": "2025-06-18T10:42:02+08:00",
+          "tree_id": "2c7e3b39aa7a4ab2a138503ec5ab29947a4531b2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e98255c8212c1c3ff4ceafe82f26c8da3f411fac"
+        },
+        "date": 1750214672855,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.761,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 320.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 650.47,
             "unit": "ns/op"
           }
         ]
