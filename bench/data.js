@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750334419280,
+  "lastUpdate": 1750334801295,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e7a0e30dd0ea9ede220f74ae30162243c1f28771",
-          "message": "Merge pull request #2313 from f1shl3gs/revert-2310-dependabot/cargo/tokio-util-0.7.15\n\nRevert \"chore(deps): bump tokio-util from 0.7.14 to 0.7.15\"",
-          "timestamp": "2025-04-24T02:06:58+08:00",
-          "tree_id": "9af72caff30aa1c8811fb0419fa91db9a92d0027",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e7a0e30dd0ea9ede220f74ae30162243c1f28771"
-        },
-        "date": 1745432249167,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23020000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 558260,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.371,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a45e28b6911bc1fba607821d57cdc96f7d0a49f2",
           "message": "Merge pull request #2312 from f1shl3gs/lib/buffer\n\nlib/buffer: init",
           "timestamp": "2025-04-26T18:15:15+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.918,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cbfd2798e180e7d19bc04accfbc06a0629db3f54",
+          "message": "Merge pull request #2422 from f1shl3gs/sources/journald/fix_checkpoint\n\nsources/journald: fix checkpoint",
+          "timestamp": "2025-06-19T19:56:52+08:00",
+          "tree_id": "70e74bafa1fe018f3427ae2693735b44552def17",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cbfd2798e180e7d19bc04accfbc06a0629db3f54"
+        },
+        "date": 1750334778801,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14517000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 576010,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.995,
             "unit": "ns/op"
           }
         ]
