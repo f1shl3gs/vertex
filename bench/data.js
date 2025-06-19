@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750336815818,
+  "lastUpdate": 1750337153213,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a45e28b6911bc1fba607821d57cdc96f7d0a49f2",
-          "message": "Merge pull request #2312 from f1shl3gs/lib/buffer\n\nlib/buffer: init",
-          "timestamp": "2025-04-26T18:15:15+08:00",
-          "tree_id": "12916d279f67a35e0a2960753101d26f01e92cb8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a45e28b6911bc1fba607821d57cdc96f7d0a49f2"
-        },
-        "date": 1745663154181,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22614000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 644630,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.968,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "822333b5d5858b9e5ffe0d78c08d404d21707209",
           "message": "Merge pull request #2314 from f1shl3gs/dependabot/cargo/tokio-util-0.7.15\n\nchore(deps): bump tokio-util from 0.7.14 to 0.7.15",
           "timestamp": "2025-04-27T15:52:56+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.995,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0a0ca8b6194eeade9e2898b6d6173753edce0d5b",
+          "message": "Merge pull request #2423 from f1shl3gs/sources/dpdk/avoid_overflow_when_read\n\nsources/dpdk: avoid buffer overflow",
+          "timestamp": "2025-06-19T20:36:38+08:00",
+          "tree_id": "4c1c4029b396bb129c4be0f967e136be0c5173db",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0a0ca8b6194eeade9e2898b6d6173753edce0d5b"
+        },
+        "date": 1750337130320,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14729000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 659570,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.728,
             "unit": "ns/op"
           }
         ]
