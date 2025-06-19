@@ -40,6 +40,7 @@ has already been ported.
 | internal_metrics        | Collect internal metrics                                          | &check; | &cross; | &cross; |
 | internal_traces         | Collect internal traces                                           | &cross; | &cross; | &check; |
 | jaeger                  | Running as a agent/collector to collect metrics                   | &cross; | &cross; | &check; |
+| journald                | Collect logs from journald                                        | &cross; | &check; | &cross; |
 | kafka                   | Consume kafka messages as log events                              | &cross; | &check; | &cross; |
 | kmsg                    | Read logs from /dev/kmsg                                          | &cross; | &check; | &cross; |
 | kubernetes_events       | Watch kubernetes event and convert it to log event                | &cross; | &check; | &cross; |
