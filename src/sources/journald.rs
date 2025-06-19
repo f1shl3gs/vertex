@@ -241,10 +241,8 @@ impl JournaldSource {
                     }
                 };
 
-                if let Some(tmp) = entry.remove(CURSOR) {
-                    if let Value::Bytes(data) = tmp {
-                        *cursor = Some(unsafe { String::from_utf8_unchecked(data.to_vec()) });
-                    }
+                if let Some(Value::Bytes(data)) = entry.remove(CURSOR) {
+                    *cursor = Some(unsafe { String::from_utf8_unchecked(data.to_vec()) });
                 }
 
                 saw_record = true;
