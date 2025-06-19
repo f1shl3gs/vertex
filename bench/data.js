@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750334801295,
+  "lastUpdate": 1750334814079,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f61c52b64ef09f279936be726f22c6b246e1f78f",
-          "message": "Merge pull request #2316 from f1shl3gs/dependabot/cargo/quick-xml-0.37.5\n\nchore(deps): bump quick-xml from 0.37.4 to 0.37.5",
-          "timestamp": "2025-04-27T16:06:55+08:00",
-          "tree_id": "ed549744f67184a48491910078dabd2274b5ab5f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f61c52b64ef09f279936be726f22c6b246e1f78f"
-        },
-        "date": 1745741853953,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37679.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "10719538d2f1072dbffc91a4a9fc301a58914d98",
           "message": "Merge pull request #2315 from f1shl3gs/dependabot/cargo/syn-2.0.101\n\nchore(deps): bump syn from 2.0.100 to 2.0.101",
           "timestamp": "2025-04-27T16:08:01+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37570.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cbfd2798e180e7d19bc04accfbc06a0629db3f54",
+          "message": "Merge pull request #2422 from f1shl3gs/sources/journald/fix_checkpoint\n\nsources/journald: fix checkpoint",
+          "timestamp": "2025-06-19T19:56:52+08:00",
+          "tree_id": "70e74bafa1fe018f3427ae2693735b44552def17",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cbfd2798e180e7d19bc04accfbc06a0629db3f54"
+        },
+        "date": 1750334792129,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 504,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37574.4,
             "unit": "KiB"
           }
         ]
