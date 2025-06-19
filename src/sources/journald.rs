@@ -47,10 +47,12 @@ struct Config {
     /// A list of unit names to monitor. If empty or not present, all units are accepted.
     /// Unit names lacking a `.` have `.service` appended to make them a valid service
     /// unit name.
+    #[serde(default)]
     units: Vec<String>,
 
     /// The list of unit names to exclude from monitoring. Unit names lacking a "." will have
     /// ".service" appended to make them a valid service unit name.
+    #[serde(default)]
     excludes: Vec<String>,
 
     /// The systemd journal is read in batches, and a checkpoint is set at the end of each batch.
@@ -240,8 +242,8 @@ impl JournaldSource {
                 };
 
                 if let Some(tmp) = entry.remove(CURSOR) {
-                    if let Value::Bytes(_) = tmp {
-                        *cursor = Some(tmp.to_string());
+                    if let Value::Bytes(data) = tmp {
+                        *cursor = Some(unsafe { String::from_utf8_unchecked(data.to_vec()) });
                     }
                 }
 
