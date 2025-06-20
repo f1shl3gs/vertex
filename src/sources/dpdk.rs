@@ -460,11 +460,10 @@ impl AsyncRead for UnixSeqStream {
             let unfilled = buf.initialize_unfilled();
             match guard.try_io(|inner| {
                 let ret = unsafe {
-                    libc::recv(
+                    libc::read(
                         inner.as_raw_fd(),
                         unfilled.as_mut_ptr() as *mut libc::c_void,
                         unfilled.len(),
-                        0,
                     )
                 };
                 if ret == -1 {
@@ -546,9 +545,11 @@ async fn query<T: for<'a> Deserialize<'a>>(
 }
 
 async fn read<T: for<'a> Deserialize<'a>>(stream: &mut UnixSeqStream) -> std::io::Result<T> {
+    // https://github.com/DPDK/dpdk/blob/main/lib/telemetry/telemetry.c#L30
     let mut buf = [0u8; 16 * 1024];
 
-    // Unix SeqPacket is something like UDP
+    // Unix SeqPacket is something like UDP, we can't read the packet with multiple
+    // `libc::read`
     let size = stream.read(&mut buf).await?;
 
     serde_json::from_slice(&buf[..size])
