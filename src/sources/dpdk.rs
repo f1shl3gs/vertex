@@ -546,9 +546,10 @@ async fn query<T: for<'a> Deserialize<'a>>(
 }
 
 async fn read<T: for<'a> Deserialize<'a>>(stream: &mut UnixSeqStream) -> std::io::Result<T> {
-    let mut buf = Vec::new();
+    let mut buf = [0u8; 16 * 1024];
 
-    let size = stream.read_buf(&mut buf).await?;
+    // Unix SeqPacket is something like UDP
+    let size = stream.read(&mut buf).await?;
 
     serde_json::from_slice(&buf[..size])
         .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err))
