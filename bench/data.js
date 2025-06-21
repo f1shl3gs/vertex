@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750473646989,
+  "lastUpdate": 1750473648098,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f61c52b64ef09f279936be726f22c6b246e1f78f",
-          "message": "Merge pull request #2316 from f1shl3gs/dependabot/cargo/quick-xml-0.37.5\n\nchore(deps): bump quick-xml from 0.37.4 to 0.37.5",
-          "timestamp": "2025-04-27T16:06:55+08:00",
-          "tree_id": "ed549744f67184a48491910078dabd2274b5ab5f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f61c52b64ef09f279936be726f22c6b246e1f78f"
-        },
-        "date": 1745741341103,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540610,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 490030,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dae27f3bf959ea110106ccbc1fe050f440c347f5",
+          "message": "Merge pull request #2425 from f1shl3gs/sources/dpdk/add_comment_about_recv_buf\n\nsources/dpdk: add comment for recv buf",
+          "timestamp": "2025-06-21T10:38:20+08:00",
+          "tree_id": "9f45dd047a170d23187788dd236ee4b406c6946f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dae27f3bf959ea110106ccbc1fe050f440c347f5"
+        },
+        "date": 1750473625398,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 490770,
             "unit": "ns/op"
           }
         ]
