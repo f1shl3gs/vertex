@@ -262,37 +262,101 @@ async fn memory(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
 #[allow(dead_code)]
 #[derive(Deserialize)]
 struct EthDeviceInfo {
+    /// Unique identifier name
     name: String,
-    state: i64,
-    nb_rx_queues: i64,
-    nb_tx_queues: i64,
-    port_id: i64,
+    /// Flag indicating the port state
+    ///
+    /// UNUSED -- 0
+    /// ATTACHED -- 1
+    /// REMOVED -- 2
+    state: i32,
+    /// Number of Rx queues
+    nb_rx_queues: u16,
+    /// Number of Tx queues
+    nb_tx_queues: u16,
+    /// Device [external] port identifier
+    port_id: u16,
+    /// Maximum transmission unit
     mtu: i64,
-    rx_mbuf_size_min: i64,
+    /// Common rx buffer size handled by all queues
+    rx_mbuf_size_min: u32,
+    /// Device ethernet link addresses
+    /// All entries are unique
+    /// The firest entry (index zero) is the default address
     mac_addr: String,
-    promiscuous: i64,
-    scattered_rx: i64,
-    all_multicast: i64,
-    dev_started: i64,
-    lro: i64,
-    dev_configured: i64,
-    rxq_state: Vec<i64>,
-    txq_state: Vec<i64>,
-    numa_node: i64,
+
+    /// Rx promiscuous mode ON(1) / OFF(0)
+    promiscuous: u8,
+    /// Rx of scattered packets is ON(1) / OFF(0)
+    scattered_rx: u8,
+    /// Rx all multicast mode
+    all_multicast: u8,
+    /// Device state
+    dev_started: u8,
+    /// Rx LRO
+    lro: u8,
+    /// Indicates whether the device is configured:
+    /// 0 -- NOT CONFIGURED
+    /// 1 -- CONFIGURED
+    dev_configured: u8,
+    /// Queues state
+    ///
+    /// 0 -- STOPPED
+    /// 1 -- STARTED
+    /// 2 -- HAIRPIN
+    rxq_state: Vec<u8>,
+    /// Queues state
+    ///
+    /// 0 -- STOPPED
+    /// 1 -- STARTED
+    /// 2 -- HAIRPIN
+    txq_state: Vec<u8>,
+    /// NUMA node connection
+    numa_node: i32,
+    /// Capabilities
     dev_flags: String,
+
+    // rx_offloads
+    // tx_offloads
+    /// Indicates the type of packets or the specific part of packets
+    /// to which RSS hashing is to be applied
     ethdev_rss_hf: String,
 }
 
+/// The common stats for a port
 #[derive(Deserialize)]
-struct EthDeviceStats {
+struct EthStats {
+    /// Total number of successfully received packets
     ipackets: i64,
+    /// Total number of successfully transmitted packets
     opackets: i64,
+    /// Total number of successfully received bytes
     ibytes: i64,
+    /// Total number of successfully transmitted bytes
     obytes: i64,
+
+    /// Total of Rx packets dropped by the Hardware, because there are no
+    /// available buffer (i.e. Rx queues are full)
     imissed: i64,
+    /// Total number of erroneous received packets
     ierrors: i64,
+    /// Total number of failed transmitted packets
     oerrors: i64,
+    /// Total number of Rx mbuf allocation failures
     rx_nombuf: i64,
+
+    /// Queue stats are limited to max 256 queues
+    ///
+    /// Total number of queue Rx packets
+    q_ipackets: Vec<u64>,
+    /// Total number of queue Tx packets
+    q_opackets: Vec<u64>,
+    /// Total number of successfully received queue bytes
+    q_ibytes: Vec<u64>,
+    /// Total number of successfully transmitted queue bytes
+    q_obytes: Vec<u64>,
+    /// Total number of queue packets received that qre dropped
+    q_errors: Vec<u64>,
 }
 
 async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
@@ -301,20 +365,42 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
     let mut metrics = Vec::with_capacity(ids.len());
     for id in ids {
         let info = query::<EthDeviceInfo>(stream, format!("/ethdev/info,{id}")).await?;
-        let stats = query::<EthDeviceStats>(stream, format!("/ethdev/stats,{id}")).await?;
+        let stats = query::<EthStats>(stream, format!("/ethdev/stats,{id}")).await?;
 
         metrics.extend([
             Metric::gauge_with_tags(
-                "dpdk_eth_device_info",
+                "dpdk_ethdev_info",
                 "Ethernet device info",
                 1,
                 tags!(
                     "port" => &info.name,
+                    "state" => match info.state {
+                        0 => "unused",
+                        1 => "attached",
+                        2 => "removed",
+                        _ => "unknown",
+                    },
+                    "rx_queues" => info.nb_rx_queues,
+                    "tx_queues" => info.nb_tx_queues,
+                    "port_id" => info.port_id,
                     "mtu" => info.mtu,
+                    "mac_addr" => info.mac_addr,
+                    "promiscuous" => on_off(info.promiscuous),
+                    "scattered_rx" => on_off(info.scattered_rx),
+                    "all_multicast" => on_off(info.all_multicast),
+                    "dev_started" => if info.dev_started == 1 { "started" } else { "stopped" },
+                    "lro" => on_off(info.lro),
+                    "dev_configured" => match info.dev_configured {
+                        0 => "not_configured",
+                        1 => "configured",
+                        _ => "unknown",
+                    },
+                    "numa_node" => info.numa_node,
+                    "dev_flags" => info.dev_flags,
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_receive_packets",
+                "dpdk_ethdev_receive_packets",
                 "Number of successfully received packets.",
                 stats.ipackets,
                 tags!(
@@ -322,7 +408,7 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_transmit_packets",
+                "dpdk_ethdev_transmit_packets",
                 "Number of successfully transmitted packets.",
                 stats.opackets,
                 tags!(
@@ -330,7 +416,7 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_receive_bytes",
+                "dpdk_ethdev_receive_bytes",
                 "Number of successfully received bytes.",
                 stats.ibytes,
                 tags!(
@@ -338,7 +424,7 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_transmit_bytes",
+                "dpdk_ethdev_transmit_bytes",
                 "Number of successfully transmitted bytes.",
                 stats.obytes,
                 tags!(
@@ -346,7 +432,7 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_receive_missed_packets",
+                "dpdk_ethdev_receive_missed_packets",
                 "Number of packets dropped by the HW because Rx queues are full.",
                 stats.imissed,
                 tags!(
@@ -354,7 +440,7 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_receive_errors",
+                "dpdk_ethdev_receive_errors",
                 "Number of erroneous received packets.",
                 stats.ierrors,
                 tags!(
@@ -362,7 +448,7 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_transmit_errors",
+                "dpdk_ethdev_transmit_errors",
                 "Number of packet transmission failures.",
                 stats.oerrors,
                 tags!(
@@ -370,17 +456,73 @@ async fn ethdev(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
                 ),
             ),
             Metric::sum_with_tags(
-                "dpdk_eth_device_receive_nombuf",
+                "dpdk_ethdev_receive_nombuf",
                 "Number of Rx mbuf allocation failures.",
                 stats.rx_nombuf,
                 tags!(
-                    "port" => info.name
+                    "port" => &info.name
                 ),
             ),
-        ])
+        ]);
+
+        metrics.extend(queue_stats(
+            "dpdk_ethdev_received_packets",
+            "Total number of queue Rx packets",
+            &info.name,
+            stats.q_ipackets,
+        ));
+        metrics.extend(queue_stats(
+            "dpdk_ethdev_transmit_packets",
+            "Total number of queue Tx packets",
+            &info.name,
+            stats.q_opackets,
+        ));
+        metrics.extend(queue_stats(
+            "dpdk_ethdev_received_bytes",
+            "Total number of successfully received queue bytes",
+            &info.name,
+            stats.q_ibytes,
+        ));
+        metrics.extend(queue_stats(
+            "dpdk_ethdev_transmit_bytes",
+            "Total number of successfully transmitted queue bytes",
+            &info.name,
+            stats.q_obytes,
+        ));
+        metrics.extend(queue_stats(
+            "dpdk_ethdev_receive_errors",
+            "Total number of queue packets received that are dropped",
+            &info.name,
+            stats.q_errors,
+        ));
     }
 
     Ok(metrics)
+}
+
+#[inline]
+fn queue_stats(
+    name: &str,
+    desc: &str,
+    port: &str,
+    values: Vec<u64>,
+) -> impl Iterator<Item = Metric> {
+    values.into_iter().enumerate().map(move |(queue, value)| {
+        Metric::sum_with_tags(
+            name,
+            desc,
+            value,
+            tags!(
+                "port" => port,
+                "queue" => queue
+            ),
+        )
+    })
+}
+
+#[inline]
+fn on_off(state: u8) -> &'static str {
+    if state == 1 { "on" } else { "off" }
 }
 
 struct UnixSeqStream {
