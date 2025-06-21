@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750473709067,
+  "lastUpdate": 1750473715345,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10719538d2f1072dbffc91a4a9fc301a58914d98",
-          "message": "Merge pull request #2315 from f1shl3gs/dependabot/cargo/syn-2.0.101\n\nchore(deps): bump syn from 2.0.100 to 2.0.101",
-          "timestamp": "2025-04-27T16:08:01+08:00",
-          "tree_id": "97d2ba664ac1e7a70c202d7d1f030928e60362b5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10719538d2f1072dbffc91a4a9fc301a58914d98"
-        },
-        "date": 1745741436580,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.755,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 311.7,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 636.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "03a7ce05ab34ab81d55ddd8f49cf70e002ef18f3",
           "message": "Merge pull request #2317 from f1shl3gs/lib/buffer/fix_queue_test\n\nlib/buffer: fix queue's mpsc test",
           "timestamp": "2025-04-27T16:20:49+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 679.98,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed761a890220c0f5f3cf144e11f0ee1fde75796d",
+          "message": "Merge pull request #2426 from f1shl3gs/dependabot/cargo/syn-2.0.104\n\nchore(deps): bump syn from 2.0.103 to 2.0.104",
+          "timestamp": "2025-06-21T10:39:19+08:00",
+          "tree_id": "38e431dbeb0cbbdfd196e045e632d25d4bd600e8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed761a890220c0f5f3cf144e11f0ee1fde75796d"
+        },
+        "date": 1750473693356,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.511,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 161.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 311.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 652,
             "unit": "ns/op"
           }
         ]
