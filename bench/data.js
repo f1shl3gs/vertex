@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750569352266,
+  "lastUpdate": 1750569400743,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36",
-          "message": "Merge pull request #2321 from f1shl3gs/dependabot/cargo/chrono-0.4.41\n\nchore(deps): bump chrono from 0.4.40 to 0.4.41",
-          "timestamp": "2025-04-29T17:34:09+08:00",
-          "tree_id": "bbcf63c5d27dd3116a2abf450e2756444003bc42",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36"
-        },
-        "date": 1745919893088,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 537,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37681.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9de7465a00858a5eb18e3e64ba581db59757a9ce",
           "message": "Merge pull request #2322 from f1shl3gs/misc/small_build_steps\n\nmisc: add information about building a small binary",
           "timestamp": "2025-04-29T19:06:58+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37563.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b03bc1db0c0818b0e9f951ac8c31f05132dba96c",
+          "message": "Merge pull request #2427 from f1shl3gs/sources/dpdk/add_more_detail\n\nsources/dpdk: add more detail for dpdk metrics",
+          "timestamp": "2025-06-22T13:06:37+08:00",
+          "tree_id": "e4681c6fa361c034479f30f6d7a1ca10f80d14cc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b03bc1db0c0818b0e9f951ac8c31f05132dba96c"
+        },
+        "date": 1750569379182,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 502,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37577.5,
             "unit": "KiB"
           }
         ]
