@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750569006264,
+  "lastUpdate": 1750569352266,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "03a7ce05ab34ab81d55ddd8f49cf70e002ef18f3",
-          "message": "Merge pull request #2317 from f1shl3gs/lib/buffer/fix_queue_test\n\nlib/buffer: fix queue's mpsc test",
-          "timestamp": "2025-04-27T16:20:49+08:00",
-          "tree_id": "e5ad9f346cf2137c3f9b59424d46014279f2657d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03a7ce05ab34ab81d55ddd8f49cf70e002ef18f3"
-        },
-        "date": 1745742672065,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22504000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 583660,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.619,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a01cd3b12fa8d76049a82468affc9effeab885de",
           "message": "Merge pull request #2319 from f1shl3gs/lib/framework/remove_duplicate_finalizer\n\nlib/framework: remove duplicate finalizer",
           "timestamp": "2025-04-28T05:38:12+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.929,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b03bc1db0c0818b0e9f951ac8c31f05132dba96c",
+          "message": "Merge pull request #2427 from f1shl3gs/sources/dpdk/add_more_detail\n\nsources/dpdk: add more detail for dpdk metrics",
+          "timestamp": "2025-06-22T13:06:37+08:00",
+          "tree_id": "e4681c6fa361c034479f30f6d7a1ca10f80d14cc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b03bc1db0c0818b0e9f951ac8c31f05132dba96c"
+        },
+        "date": 1750569330019,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14645000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 664050,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.536,
             "unit": "ns/op"
           }
         ]
