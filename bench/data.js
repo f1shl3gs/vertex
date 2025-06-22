@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750568926137,
+  "lastUpdate": 1750568940484,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "03a7ce05ab34ab81d55ddd8f49cf70e002ef18f3",
-          "message": "Merge pull request #2317 from f1shl3gs/lib/buffer/fix_queue_test\n\nlib/buffer: fix queue's mpsc test",
-          "timestamp": "2025-04-27T16:20:49+08:00",
-          "tree_id": "e5ad9f346cf2137c3f9b59424d46014279f2657d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03a7ce05ab34ab81d55ddd8f49cf70e002ef18f3"
-        },
-        "date": 1745742225209,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.312,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.524,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.59,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 169.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b03bc1db0c0818b0e9f951ac8c31f05132dba96c",
+          "message": "Merge pull request #2427 from f1shl3gs/sources/dpdk/add_more_detail\n\nsources/dpdk: add more detail for dpdk metrics",
+          "timestamp": "2025-06-22T13:06:37+08:00",
+          "tree_id": "e4681c6fa361c034479f30f6d7a1ca10f80d14cc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b03bc1db0c0818b0e9f951ac8c31f05132dba96c"
+        },
+        "date": 1750568918682,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.094,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.64,
             "unit": "ns/op"
           }
         ]
