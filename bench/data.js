@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750657701751,
+  "lastUpdate": 1750658074695,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36",
-          "message": "Merge pull request #2321 from f1shl3gs/dependabot/cargo/chrono-0.4.41\n\nchore(deps): bump chrono from 0.4.40 to 0.4.41",
-          "timestamp": "2025-04-29T17:34:09+08:00",
-          "tree_id": "bbcf63c5d27dd3116a2abf450e2756444003bc42",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36"
-        },
-        "date": 1745919858534,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22999000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 605530,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.777,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aa73e324b7ca4b4ff1da39a9dc58e37737416581",
           "message": "Merge pull request #2323 from f1shl3gs/deps/remove_futures-util\n\ndeps: remove futures-utils",
           "timestamp": "2025-04-30T11:09:42+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.162,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ceb8e878f2c2684f9e56c30b302f4cd092e6a14c",
+          "message": "Merge pull request #2430 from f1shl3gs/lib/framework/remove_unsed\n\nlib/framework: remove unused",
+          "timestamp": "2025-06-23T13:44:49+08:00",
+          "tree_id": "d19d66cb23d5c9cf54ded7e8b4f2b96ad546ecae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ceb8e878f2c2684f9e56c30b302f4cd092e6a14c"
+        },
+        "date": 1750658052536,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14368000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 642340,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.244,
             "unit": "ns/op"
           }
         ]
