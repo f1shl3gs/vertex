@@ -197,7 +197,7 @@ struct MemZone {
     #[serde(rename = "Hugepage_base")]
     hugepage_base: String,
     #[serde(rename = "Hugepage_used")]
-    hugepage_used: i32,
+    hugepage_used: i64,
 }
 
 async fn memory(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
