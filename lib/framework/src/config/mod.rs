@@ -205,21 +205,6 @@ impl<T: Into<String>> From<(T, DataType)> for Output {
     }
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
-pub struct PipelineConfig {
-    pub sources: Vec<String>,
-
-    pub transforms: Vec<String>,
-
-    pub sinks: Vec<String>,
-}
-
-#[derive(Debug, Default, Serialize, Deserialize)]
-pub struct ServiceConfig {
-    pub extensions: Vec<String>,
-    pub pipelines: Vec<PipelineConfig>,
-}
-
 #[derive(Debug, Clone, Ord, PartialOrd, PartialEq, Eq)]
 pub enum ConfigPath {
     File(PathBuf, FormatHint),
