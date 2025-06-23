@@ -179,21 +179,25 @@ async fn cpu(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
 #[derive(Deserialize)]
 struct MemZone {
     #[serde(rename = "Zone")]
-    zone: i64,
+    zone: u32,
+    /// Name of the memory zone
     #[serde(rename = "Name")]
     name: String,
+    /// Length of the memzone
     #[serde(rename = "Length")]
     length: i64,
+    /// NUMA socket ID
     #[serde(rename = "Socket")]
-    socket: i64,
+    socket: i32,
+    /// Characteristics of this memzone
     #[serde(rename = "Flags")]
-    flags: i64,
+    flags: u32,
     #[serde(rename = "Hugepage_size")]
     hugepage_size: i64,
     #[serde(rename = "Hugepage_base")]
     hugepage_base: String,
     #[serde(rename = "Hugepage_used")]
-    hugepage_used: i64,
+    hugepage_used: i32,
 }
 
 async fn memory(stream: &mut UnixSeqStream) -> std::io::Result<Vec<Metric>> {
@@ -327,23 +331,23 @@ struct EthDeviceInfo {
 #[derive(Deserialize)]
 struct EthStats {
     /// Total number of successfully received packets
-    ipackets: i64,
+    ipackets: u64,
     /// Total number of successfully transmitted packets
-    opackets: i64,
+    opackets: u64,
     /// Total number of successfully received bytes
-    ibytes: i64,
+    ibytes: u64,
     /// Total number of successfully transmitted bytes
-    obytes: i64,
+    obytes: u64,
 
     /// Total of Rx packets dropped by the Hardware, because there are no
     /// available buffer (i.e. Rx queues are full)
-    imissed: i64,
+    imissed: u64,
     /// Total number of erroneous received packets
-    ierrors: i64,
+    ierrors: u64,
     /// Total number of failed transmitted packets
-    oerrors: i64,
+    oerrors: u64,
     /// Total number of Rx mbuf allocation failures
-    rx_nombuf: i64,
+    rx_nombuf: u64,
 
     /// Queue stats are limited to max 256 queues
     ///
