@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750654870701,
+  "lastUpdate": 1750654885979,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9de7465a00858a5eb18e3e64ba581db59757a9ce",
-          "message": "Merge pull request #2322 from f1shl3gs/misc/small_build_steps\n\nmisc: add information about building a small binary",
-          "timestamp": "2025-04-29T19:06:58+08:00",
-          "tree_id": "acb62364789b1088c15125481af0c023758be10c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9de7465a00858a5eb18e3e64ba581db59757a9ce"
-        },
-        "date": 1745925461731,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 538,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37681.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aa73e324b7ca4b4ff1da39a9dc58e37737416581",
           "message": "Merge pull request #2323 from f1shl3gs/deps/remove_futures-util\n\ndeps: remove futures-utils",
           "timestamp": "2025-04-30T11:09:42+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 502,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37577.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2859ba4b661e9a9dc3a9323d631d9a1ff1b34add",
+          "message": "Merge pull request #2428 from f1shl3gs/sources/dpdk/fix_field_type\n\nsources/dpdk: fix field type",
+          "timestamp": "2025-06-23T12:51:24+08:00",
+          "tree_id": "1ade331bbc92e69efd3fcfe34192b95a8b8a5e5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2859ba4b661e9a9dc3a9323d631d9a1ff1b34add"
+        },
+        "date": 1750654863613,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 504,
             "unit": "s"
           },
           {
