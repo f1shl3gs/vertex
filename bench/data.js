@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750707914116,
+  "lastUpdate": 1750707927904,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bdd6f938b9b8acedc53db664a2be10bb89851543",
-          "message": "Merge pull request #2325 from f1shl3gs/lib/multline/impl_preset\n\nlib/multiline: implement some preset",
-          "timestamp": "2025-05-01T22:21:14+08:00",
-          "tree_id": "21ac94eddecad355d5bc60eac27264e3b078a73f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bdd6f938b9b8acedc53db664a2be10bb89851543"
-        },
-        "date": 1746109913987,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 544,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38065.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1f0477cee27af8b84b643dcd41f2048a61733233",
           "message": "Merge pull request #2326 from f1shl3gs/sources/dnsmasq\n\nsources/dnsmasq: init",
           "timestamp": "2025-05-02T23:16:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37576.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d12ea94046854fd142506ceb2e7731678b11d5b2",
+          "message": "Merge pull request #2431 from f1shl3gs/sources/journald/simplify_config\n\nsources/journald: simplify `current_boot_only`",
+          "timestamp": "2025-06-24T03:35:10+08:00",
+          "tree_id": "044b5c000f8257d100448812f51e7efc82de19ce",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d12ea94046854fd142506ceb2e7731678b11d5b2"
+        },
+        "date": 1750707905027,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 516,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37576.1,
             "unit": "KiB"
           }
         ]
