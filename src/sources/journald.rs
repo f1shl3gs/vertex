@@ -41,6 +41,12 @@ const JOURNALCTL: &str = "journalctl";
 #[configurable_component(source, name = "journald")]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
 struct Config {
+    /// Only include entries that appended to the journal after the entries have been read.
+    ///
+    /// NOTE: works only if the `cursor` is not found
+    #[serde(default)]
+    since_now: bool,
+
     /// Only include entries that occurred after the current boot of the system.
     current_boot_only: Option<bool>,
 
@@ -94,6 +100,7 @@ impl SourceConfig for Config {
             .clone()
             .unwrap_or_else(|| JOURNALCTL.into());
         let journal_dir = self.journal_directory.clone();
+        let since_now = self.since_now;
         let current_boot_only = self.current_boot_only.unwrap_or(true);
 
         let src = JournaldSource {
@@ -108,6 +115,7 @@ impl SourceConfig for Config {
                 &journalctl_path,
                 journal_dir.as_ref(),
                 current_boot_only,
+                since_now,
                 cursor,
             );
 
@@ -164,9 +172,8 @@ impl JournaldSource {
         let mut on_stop = None;
         let run = Box::pin(self.run(&mut checkpointer, &mut cursor, &mut on_stop, start));
 
-        info!(message = "start selecting");
         futures::future::select(run, shutdown).await;
-        info!(message = "stopping journal");
+
         if let Some(stop) = on_stop {
             stop();
         }
@@ -184,7 +191,7 @@ impl JournaldSource {
         start: StartJournalctlFn,
     ) {
         loop {
-            info!(message = "starting journalctl");
+            debug!(message = "starting journalctl");
 
             match start(&*cursor) {
                 Ok((stream, stop)) => {
@@ -225,7 +232,7 @@ impl JournaldSource {
             let mut saw_record = false;
 
             for _ in 0..self.batch_size {
-                let mut entry = match stream.next().await {
+                let entry = match stream.next().await {
                     None => {
                         warn!(message = "journalctl process stopped");
                         return true;
@@ -241,11 +248,11 @@ impl JournaldSource {
                     }
                 };
 
-                if let Some(Value::Bytes(data)) = entry.remove(CURSOR) {
+                if let Some(Value::Bytes(data)) = entry.get(CURSOR) {
+                    saw_record = true;
                     *cursor = Some(unsafe { String::from_utf8_unchecked(data.to_vec()) });
                 }
 
-                saw_record = true;
                 if let Some(Value::Bytes(value)) = entry.get(SYSTEMD_UNIT) {
                     let s = String::from_utf8_lossy(value);
                     if self.filter(&s) {
@@ -254,7 +261,11 @@ impl JournaldSource {
                 }
 
                 match self.output.send(create_event(entry)).await {
-                    Ok(_) => {}
+                    Ok(_) => {
+                        if saw_record {
+                            Self::save_checkpoint(checkpointer, cursor).await;
+                        }
+                    }
                     Err(err) => {
                         error!(
                             message = "Could not send journald log",
@@ -265,10 +276,6 @@ impl JournaldSource {
                         return false;
                     }
                 }
-            }
-
-            if saw_record {
-                Self::save_checkpoint(checkpointer, cursor).await;
             }
         }
     }
@@ -351,6 +358,7 @@ fn create_command(
     path: &Path,
     journal_dir: Option<&PathBuf>,
     current_boot_only: bool,
+    since_now: bool,
     cursor: &Option<String>,
 ) -> Command {
     let mut command = Command::new(path);
@@ -368,7 +376,11 @@ fn create_command(
     }
 
     if let Some(cursor) = cursor {
+        // Show entries after the specified cursor
         command.arg(format!("--after-cursor={}", cursor));
+    } else if since_now {
+        // Show entries not older than the specified date
+        command.arg(format!("--since={}", Utc::now().to_rfc3339()));
     } else {
         // journalctl --follow only outputs a few lines without a starting point
         command.arg("--since=2000-01-01");
@@ -394,6 +406,12 @@ fn start_journalctl(
     Ok((stream, stop))
 }
 
+/// journalctl support
+/// ```text
+/// --cursor-file=FILE      Show entries after cursor in FILE and update FILE
+/// ```
+///
+/// we don't use this, because we are not sure which version support it.
 struct Checkpointer {
     file: tokio::fs::File,
     path: PathBuf,
