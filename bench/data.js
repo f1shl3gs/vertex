@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750657636569,
+  "lastUpdate": 1750657656169,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36",
-          "message": "Merge pull request #2321 from f1shl3gs/dependabot/cargo/chrono-0.4.41\n\nchore(deps): bump chrono from 0.4.40 to 0.4.41",
-          "timestamp": "2025-04-29T17:34:09+08:00",
-          "tree_id": "bbcf63c5d27dd3116a2abf450e2756444003bc42",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d74bfde8d95dfddc0f855e8ab8cf7e6c22d04f36"
-        },
-        "date": 1745919412533,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.59,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.25,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 657.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aa73e324b7ca4b4ff1da39a9dc58e37737416581",
           "message": "Merge pull request #2323 from f1shl3gs/deps/remove_futures-util\n\ndeps: remove futures-utils",
           "timestamp": "2025-04-30T11:09:42+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 681.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ceb8e878f2c2684f9e56c30b302f4cd092e6a14c",
+          "message": "Merge pull request #2430 from f1shl3gs/lib/framework/remove_unsed\n\nlib/framework: remove unused",
+          "timestamp": "2025-06-23T13:44:49+08:00",
+          "tree_id": "d19d66cb23d5c9cf54ded7e8b4f2b96ad546ecae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ceb8e878f2c2684f9e56c30b302f4cd092e6a14c"
+        },
+        "date": 1750657633780,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.697,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 169.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 316.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 663.8,
             "unit": "ns/op"
           }
         ]
