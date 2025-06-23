@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750658074695,
+  "lastUpdate": 1750658121300,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "88729370d01191cba01a0f86be90e78d801d795b",
-          "message": "Merge pull request #2324 from f1shl3gs/sources/docker/init\n\nsources/docker: init",
-          "timestamp": "2025-05-01T14:20:00+08:00",
-          "tree_id": "8730d41327a71b2e5ccf884818645e259501555c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88729370d01191cba01a0f86be90e78d801d795b"
-        },
-        "date": 1746081061255,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38039.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bdd6f938b9b8acedc53db664a2be10bb89851543",
           "message": "Merge pull request #2325 from f1shl3gs/lib/multline/impl_preset\n\nlib/multiline: implement some preset",
           "timestamp": "2025-05-01T22:21:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 509,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37576.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ceb8e878f2c2684f9e56c30b302f4cd092e6a14c",
+          "message": "Merge pull request #2430 from f1shl3gs/lib/framework/remove_unsed\n\nlib/framework: remove unused",
+          "timestamp": "2025-06-23T13:44:49+08:00",
+          "tree_id": "d19d66cb23d5c9cf54ded7e8b4f2b96ad546ecae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ceb8e878f2c2684f9e56c30b302f4cd092e6a14c"
+        },
+        "date": 1750658099416,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
             "unit": "s"
           },
           {
