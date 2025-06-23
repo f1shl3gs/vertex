@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750658121300,
+  "lastUpdate": 1750707444155,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "aa73e324b7ca4b4ff1da39a9dc58e37737416581",
-          "message": "Merge pull request #2323 from f1shl3gs/deps/remove_futures-util\n\ndeps: remove futures-utils",
-          "timestamp": "2025-04-30T11:09:42+08:00",
-          "tree_id": "1c5061ac8f5a5b80e0eee9ec7a89f233cab85793",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aa73e324b7ca4b4ff1da39a9dc58e37737416581"
-        },
-        "date": 1745982701915,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541420,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 493140,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d12ea94046854fd142506ceb2e7731678b11d5b2",
+          "message": "Merge pull request #2431 from f1shl3gs/sources/journald/simplify_config\n\nsources/journald: simplify `current_boot_only`",
+          "timestamp": "2025-06-24T03:35:10+08:00",
+          "tree_id": "044b5c000f8257d100448812f51e7efc82de19ce",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d12ea94046854fd142506ceb2e7731678b11d5b2"
+        },
+        "date": 1750707422079,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 490640,
             "unit": "ns/op"
           }
         ]
