@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750654435367,
+  "lastUpdate": 1750654447848,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b4a0f0ef8fe4cd4327494b62b7b7579138a63f87",
-          "message": "Merge pull request #2320 from f1shl3gs/misc/small_tweak\n\nlib/buffer: small tweak",
-          "timestamp": "2025-04-29T15:49:22+08:00",
-          "tree_id": "77e0a948785d27ed5be9f5051f264e02497a8b33",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b4a0f0ef8fe4cd4327494b62b7b7579138a63f87"
-        },
-        "date": 1745913104126,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.435,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.44,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 179.43,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3385a8823d2a409081f901f243359c66263a514",
+          "message": "Merge pull request #2429 from f1shl3gs/sources/journal/add_more_feature\n\nsources/journald: add since_now and fix re-start",
+          "timestamp": "2025-06-23T12:51:39+08:00",
+          "tree_id": "d7b6a57d518fa92f3790f830795ad93148bbccd9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f3385a8823d2a409081f901f243359c66263a514"
+        },
+        "date": 1750654424970,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.404,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.348,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.1,
             "unit": "ns/op"
           }
         ]
