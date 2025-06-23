@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750654433933,
+  "lastUpdate": 1750654435367,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a01cd3b12fa8d76049a82468affc9effeab885de",
-          "message": "Merge pull request #2319 from f1shl3gs/lib/framework/remove_duplicate_finalizer\n\nlib/framework: remove duplicate finalizer",
-          "timestamp": "2025-04-28T05:38:12+08:00",
-          "tree_id": "5eddd8ffe7d952e0b3335eb33fd50c42cd82f343",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a01cd3b12fa8d76049a82468affc9effeab885de"
-        },
-        "date": 1745790027939,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.386,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 168.64,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2859ba4b661e9a9dc3a9323d631d9a1ff1b34add",
+          "message": "Merge pull request #2428 from f1shl3gs/sources/dpdk/fix_field_type\n\nsources/dpdk: fix field type",
+          "timestamp": "2025-06-23T12:51:24+08:00",
+          "tree_id": "1ade331bbc92e69efd3fcfe34192b95a8b8a5e5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2859ba4b661e9a9dc3a9323d631d9a1ff1b34add"
+        },
+        "date": 1750654413386,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.403,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.611,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 179.43,
             "unit": "ns/op"
           }
         ]
