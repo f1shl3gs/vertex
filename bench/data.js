@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750654447848,
+  "lastUpdate": 1750654452729,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a01cd3b12fa8d76049a82468affc9effeab885de",
-          "message": "Merge pull request #2319 from f1shl3gs/lib/framework/remove_duplicate_finalizer\n\nlib/framework: remove duplicate finalizer",
-          "timestamp": "2025-04-28T05:38:12+08:00",
-          "tree_id": "5eddd8ffe7d952e0b3335eb33fd50c42cd82f343",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a01cd3b12fa8d76049a82468affc9effeab885de"
-        },
-        "date": 1745790052668,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.792,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 305.09,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 669.24,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b4a0f0ef8fe4cd4327494b62b7b7579138a63f87",
           "message": "Merge pull request #2320 from f1shl3gs/misc/small_tweak\n\nlib/buffer: small tweak",
           "timestamp": "2025-04-29T15:49:22+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 633.36,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2859ba4b661e9a9dc3a9323d631d9a1ff1b34add",
+          "message": "Merge pull request #2428 from f1shl3gs/sources/dpdk/fix_field_type\n\nsources/dpdk: fix field type",
+          "timestamp": "2025-06-23T12:51:24+08:00",
+          "tree_id": "1ade331bbc92e69efd3fcfe34192b95a8b8a5e5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2859ba4b661e9a9dc3a9323d631d9a1ff1b34add"
+        },
+        "date": 1750654430196,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.282,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 336.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 664.13,
             "unit": "ns/op"
           }
         ]
