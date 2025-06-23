@@ -9,7 +9,7 @@ use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Event, event_path, log::Value};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{Output, SourceConfig, SourceContext, default_true};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use futures::{StreamExt, stream::BoxStream};
@@ -48,7 +48,8 @@ struct Config {
     since_now: bool,
 
     /// Only include entries that occurred after the current boot of the system.
-    current_boot_only: Option<bool>,
+    #[serde(default = "default_true")]
+    current_boot_only: bool,
 
     /// A list of unit names to monitor. If empty or not present, all units are accepted.
     /// Unit names lacking a `.` have `.service` appended to make them a valid service
@@ -65,11 +66,11 @@ struct Config {
     /// This option limits the size of the batch.
     batch_size: Option<usize>,
 
-    /// The absolutely path of the `journalctl` executable. If not set, a search is done for
+    /// The absolute path of the `journalctl` executable. If not set, a search is done for
     /// the journalctl path.
     journalctl_path: Option<PathBuf>,
 
-    /// The absolutely path of the journal directory. If not set, `journalctl` uses the
+    /// The absolute path of the journal directory. If not set, `journalctl` uses the
     /// default system journal path.
     journal_directory: Option<PathBuf>,
 }
@@ -101,7 +102,7 @@ impl SourceConfig for Config {
             .unwrap_or_else(|| JOURNALCTL.into());
         let journal_dir = self.journal_directory.clone();
         let since_now = self.since_now;
-        let current_boot_only = self.current_boot_only.unwrap_or(true);
+        let current_boot_only = self.current_boot_only;
 
         let src = JournaldSource {
             includes,
@@ -221,7 +222,7 @@ impl JournaldSource {
     }
 
     /// Process `journalctl` output until some error occurs.
-    /// Return `true` if should restart `journalctl`
+    /// Return `true`, if we should restart `journalctl`
     async fn run_stream<'a>(
         &'a mut self,
         mut stream: BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
