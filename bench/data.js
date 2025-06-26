@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750920410318,
+  "lastUpdate": 1750920458688,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "88729370d01191cba01a0f86be90e78d801d795b",
-          "message": "Merge pull request #2324 from f1shl3gs/sources/docker/init\n\nsources/docker: init",
-          "timestamp": "2025-05-01T14:20:00+08:00",
-          "tree_id": "8730d41327a71b2e5ccf884818645e259501555c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88729370d01191cba01a0f86be90e78d801d795b"
-        },
-        "date": 1746081024567,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23086000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 639590,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.978,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bdd6f938b9b8acedc53db664a2be10bb89851543",
           "message": "Merge pull request #2325 from f1shl3gs/lib/multline/impl_preset\n\nlib/multiline: implement some preset",
           "timestamp": "2025-05-01T22:21:14+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.301,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8fa37f0e802efce8975cb0450cc4e597af9e1667",
+          "message": "Merge pull request #2432 from f1shl3gs/deps/sbbf/update\n\ndeps/sbbf: update sbbf to support aarch64",
+          "timestamp": "2025-06-26T14:36:30+08:00",
+          "tree_id": "91fcf9d16d6edfea2e6efab111159624f82e0009",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8fa37f0e802efce8975cb0450cc4e597af9e1667"
+        },
+        "date": 1750920435899,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15880000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 647810,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.986,
             "unit": "ns/op"
           }
         ]
