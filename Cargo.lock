@@ -3036,7 +3036,7 @@ dependencies = [
 [[package]]
 name = "sbbf"
 version = "0.1.0"
-source = "git+https://github.com/f1shl3gs/sbbf.git?rev=d9e6fb1fa67f362491c0bd4da63fc727ef14f8f0#d9e6fb1fa67f362491c0bd4da63fc727ef14f8f0"
+source = "git+https://github.com/f1shl3gs/sbbf.git?rev=d619ab889a9637dd849206568a3023dee7046a8f#d619ab889a9637dd849206568a3023dee7046a8f"
 
 [[package]]
 name = "schannel"
