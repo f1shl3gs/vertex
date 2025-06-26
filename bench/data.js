@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1750919932360,
+  "lastUpdate": 1750919958134,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "88729370d01191cba01a0f86be90e78d801d795b",
-          "message": "Merge pull request #2324 from f1shl3gs/sources/docker/init\n\nsources/docker: init",
-          "timestamp": "2025-05-01T14:20:00+08:00",
-          "tree_id": "8730d41327a71b2e5ccf884818645e259501555c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88729370d01191cba01a0f86be90e78d801d795b"
-        },
-        "date": 1746080554572,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.015,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 332.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 692.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bdd6f938b9b8acedc53db664a2be10bb89851543",
           "message": "Merge pull request #2325 from f1shl3gs/lib/multline/impl_preset\n\nlib/multiline: implement some preset",
           "timestamp": "2025-05-01T22:21:14+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 691.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8fa37f0e802efce8975cb0450cc4e597af9e1667",
+          "message": "Merge pull request #2432 from f1shl3gs/deps/sbbf/update\n\ndeps/sbbf: update sbbf to support aarch64",
+          "timestamp": "2025-06-26T14:36:30+08:00",
+          "tree_id": "91fcf9d16d6edfea2e6efab111159624f82e0009",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8fa37f0e802efce8975cb0450cc4e597af9e1667"
+        },
+        "date": 1750919935265,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.751,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 316.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 688.73,
             "unit": "ns/op"
           }
         ]
