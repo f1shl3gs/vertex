@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751007038612,
+  "lastUpdate": 1751007051900,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bdd6f938b9b8acedc53db664a2be10bb89851543",
-          "message": "Merge pull request #2325 from f1shl3gs/lib/multline/impl_preset\n\nlib/multiline: implement some preset",
-          "timestamp": "2025-05-01T22:21:14+08:00",
-          "tree_id": "21ac94eddecad355d5bc60eac27264e3b078a73f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bdd6f938b9b8acedc53db664a2be10bb89851543"
-        },
-        "date": 1746109436207,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 335.96,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 703.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1f0477cee27af8b84b643dcd41f2048a61733233",
           "message": "Merge pull request #2326 from f1shl3gs/sources/dnsmasq\n\nsources/dnsmasq: init",
           "timestamp": "2025-05-02T23:16:25+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 688.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4af8636aad012813a76d06234bd449775bc1e305",
+          "message": "Merge pull request #2433 from f1shl3gs/dependabot/cargo/indexmap-2.10.0\n\nchore(deps): bump indexmap from 2.9.0 to 2.10.0",
+          "timestamp": "2025-06-27T14:48:02+08:00",
+          "tree_id": "fe2e7466a7111be81c8b2ce7b190c77e91f1dc34",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4af8636aad012813a76d06234bd449775bc1e305"
+        },
+        "date": 1751007031649,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 25.647,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 330.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 723.03,
             "unit": "ns/op"
           }
         ]
