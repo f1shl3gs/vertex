@@ -228,9 +228,7 @@ mod tests {
                                 }
                             })
                             .collect::<Vec<_>>(),
-                        "lookup {:?} in {}",
-                        transformed,
-                        path,
+                        "lookup {transformed:?} in {path}"
                     );
                 }
             }

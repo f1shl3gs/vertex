@@ -35,7 +35,7 @@ pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
                 "org.freedesktop.DBus.Properties",
                 &[
                     "org.freedesktop.systemd1.Manager",
-                    format!("{}TimestampMonotonic", stage).as_str(),
+                    format!("{stage}TimestampMonotonic").as_str(),
                 ],
             )
             .await?;
@@ -47,7 +47,7 @@ pub async fn collect(client: &mut Client) -> Result<Vec<Metric>, Error> {
                 "org.freedesktop.DBus.Properties",
                 &[
                     "org.freedesktop.systemd1.Manager",
-                    format!("{}Timestamp", stage).as_str(),
+                    format!("{stage}Timestamp").as_str(),
                 ],
             )
             .await?;

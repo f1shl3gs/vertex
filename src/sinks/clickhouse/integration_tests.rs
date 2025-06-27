@@ -58,11 +58,10 @@ impl ClickhouseClient {
             .method(Method::POST)
             .uri(&self.host)
             .body(Full::new(Bytes::from(format!(
-                "CREATE TABLE {}
-                    ({})
+                "CREATE TABLE {table}
+                    ({schema})
                     ENGINE = MergeTree()
                     ORDER BY (host, timestamp);",
-                table, schema
             ))))
             .unwrap();
 
@@ -72,7 +71,7 @@ impl ClickhouseClient {
         if !parts.status.is_success() {
             let data = incoming.collect().await.unwrap().to_bytes();
             let body = String::from_utf8_lossy(data.as_ref());
-            panic!("create table failed, {}", body)
+            panic!("create table failed, {body}")
         }
     }
 
@@ -81,8 +80,7 @@ impl ClickhouseClient {
             .method(Method::POST)
             .uri(&self.host)
             .body(Full::new(Bytes::from(format!(
-                "SELECT * FROM {} FORMAT JSON",
-                table
+                "SELECT * FROM {table} FORMAT JSON",
             ))))
             .unwrap();
 
@@ -92,11 +90,11 @@ impl ClickhouseClient {
         let body = String::from_utf8_lossy(data.as_ref());
 
         if !parts.status.is_success() {
-            panic!("select all failed, {}", body);
+            panic!("select all failed, {body}");
         } else {
             match serde_json::from_str(&body) {
                 Ok(value) => value,
-                Err(err) => panic!("unmarshal resp failed, {}", err),
+                Err(err) => panic!("unmarshal resp failed, {err}"),
             }
         }
     }

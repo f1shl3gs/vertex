@@ -249,7 +249,7 @@ impl<T: Debug> OrderedAcknowledgements<T> {
                 let last_marker = self
                     .pending_markers
                     .tail_mut()
-                    .unwrap_or_else(|| panic!("pending markers should have items"));
+                    .expect("pending markers should have items");
 
                 last_marker.len = PendingMarkerLength::Assumed(len);
             }

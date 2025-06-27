@@ -26,7 +26,7 @@ impl NoProxyInterceptor {
                 let matches = host.is_some_and(|host| {
                     self.0.matches(host)
                         || port.is_some_and(|port| {
-                            let url = format!("{}:{}", host, port);
+                            let url = format!("{host}:{port}");
                             self.0.matches(&url)
                         })
                 });

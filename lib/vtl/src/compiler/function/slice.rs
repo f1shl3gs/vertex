@@ -100,8 +100,7 @@ impl Expression for SliceFunc {
                     if end < start {
                         return Err(ExpressionError::UnexpectedValue {
                             msg: format!(
-                                "end {} must be greater or equal to start {}",
-                                original, start
+                                "end {original} must be greater or equal to start {start}",
                             ),
                             span: expr.span,
                         });

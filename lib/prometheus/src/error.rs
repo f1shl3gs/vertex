@@ -35,11 +35,11 @@ impl Display for Error {
             Error::MissingValue => f.write_str("value is not found"),
             Error::MissingQuantile(line) => write!(f, "quantile label is not found in `{line}`"),
             Error::InvalidQuantile { line, err } => {
-                write!(f, "invalid quantile label value {}, err: {}", line, err)
+                write!(f, "invalid quantile label value {line}, {err}")
             }
             Error::MissingBucket(line) => write!(f, "bucket label is not found in `{line}`"),
             Error::InvalidBucket { line, err } => {
-                write!(f, "invalid bucket value in {line}, err: {err}")
+                write!(f, "invalid bucket value in {line}, {err}")
             }
             Error::InvalidMetricValue(err) => write!(f, "invalid metric value, {err}"),
             Error::InvalidTimestamp(err) => write!(f, "invalid timestamp {err}"),

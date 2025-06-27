@@ -13,7 +13,7 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum ConsulError {
-    #[error("Parse url failed, err: {0}")]
+    #[error("Parse url failed, {0}")]
     ParseUrl(#[from] url::ParseError),
     #[error("Build request failed, {0}")]
     BuildRequest(#[from] http::Error),
@@ -214,7 +214,7 @@ impl QueryOptions {
         }
         if !self.node_meta.is_empty() {
             for (key, value) in &self.node_meta {
-                params.push(("node-meta", format!("{}:{}", key, value)));
+                params.push(("node-meta", format!("{key}:{value}")));
             }
         }
         if self.relay_factor != 0 {
@@ -295,7 +295,7 @@ impl Client {
         opts: &Option<QueryOptions>,
     ) -> Result<Vec<ServiceEntry>, ConsulError> {
         let name = percent_encode(name.as_bytes(), NON_ALPHANUMERIC).to_string();
-        let uri = format!("/v1/health/service/{}", name);
+        let uri = format!("/v1/health/service/{name}");
         match self.fetch(uri.as_str(), opts).await {
             Ok(entries) => Ok(entries),
             Err(err) => match err {

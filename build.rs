@@ -24,7 +24,7 @@ impl TrackedEnv {
 
     pub fn emit_rerun_stanzas(&self) {
         for env in &self.envs {
-            println!("cargo:rerun-if-env-changed={}", env);
+            println!("cargo:rerun-if-env-changed={env}");
         }
     }
 }
@@ -54,10 +54,7 @@ impl BuildConstants {
         )?;
 
         for (name, desc, value) in self.values {
-            let full = format!(
-                "#[doc=r#\"{}\"#]\npub const {}: &str = {:?};\n",
-                desc, name, value
-            );
+            let full = format!("#[doc=r#\"{desc}\"#]\npub const {name}: &str = {value:?};\n",);
             output_file.write_all(full.as_ref())?;
         }
 
@@ -230,7 +227,7 @@ fn git_info() -> Result<(String, String)> {
 
             let text = std::str::from_utf8(&output.stdout)
                 .map_err(|err| {
-                    Error::other(format!("Unexpected output when get branch, err: {}", err))
+                    Error::other(format!("Unexpected output when get branch, {err}"))
                 })?
                 .trim();
 
@@ -239,7 +236,7 @@ fn git_info() -> Result<(String, String)> {
                 None => match text.strip_prefix("refs/remotes/") {
                     Some(v) => v,
                     None => {
-                        println!("strip branch prefix failed, branch: {}", text);
+                        println!("strip branch prefix failed, branch: {text}");
                         text
                     }
                 },
@@ -263,7 +260,7 @@ fn git_info() -> Result<(String, String)> {
 
             std::str::from_utf8(&output.stdout)
                 .map_err(|err| {
-                    Error::other(format!("Unexpected output when get hash, err: {}", err))
+                    Error::other(format!("Unexpected output when get hash, {err}"))
                 })?
                 .trim()
                 .to_string()

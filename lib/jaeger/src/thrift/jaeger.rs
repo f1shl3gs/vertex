@@ -58,7 +58,7 @@ impl TryFrom<i32> for TagType {
           thrift::Error::Protocol(
             ProtocolError::new(
               ProtocolErrorKind::InvalidData,
-              format!("cannot convert enum constant {} to TagType", i)
+              format!("cannot convert enum constant {i} to TagType")
             )
           )
         )
@@ -92,7 +92,7 @@ impl TryFrom<i32> for SpanRefType {
           thrift::Error::Protocol(
             ProtocolError::new(
               ProtocolErrorKind::InvalidData,
-              format!("cannot convert enum constant {} to SpanRefType", i)
+              format!("cannot convert enum constant {i} to SpanRefType")
             )
           )
         )

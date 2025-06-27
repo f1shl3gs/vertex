@@ -135,7 +135,7 @@ impl regex::Replacer for &Redactor {
                 let _ = &caps[0].hash(&mut hasher);
                 let hv = hasher.finish();
 
-                dst.push_str(&format!("{:x}", hv));
+                dst.push_str(&format!("{hv:x}"));
             }
         }
     }
@@ -231,7 +231,7 @@ mod tests {
         let mut hasher = std::collections::hash_map::DefaultHasher::new();
         "123456".hash(&mut hasher);
         let hv = hasher.finish();
-        let redacted = format!("{:x}", hv);
+        let redacted = format!("{hv:x}");
 
         compile_and_run(
             vec![
@@ -241,7 +241,7 @@ mod tests {
             ],
             Redact,
             TypeDef::bytes(),
-            Ok(Value::Bytes(format!("hello {} world", redacted).into())),
+            Ok(Value::Bytes(format!("hello {redacted} world").into())),
         )
     }
 }

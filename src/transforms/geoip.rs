@@ -370,8 +370,7 @@ mod tests {
             assert_eq!(
                 event.as_log().value().get("geo").unwrap(),
                 &want,
-                "test: {}",
-                name
+                "test: {name}"
             );
         }
     }

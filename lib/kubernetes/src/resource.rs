@@ -35,7 +35,7 @@ pub trait Resource: DeserializeOwned {
             format!("{}/{}", Self::GROUP, Self::VERSION)
         };
         let namespace = match namespace {
-            Some(namespace) => format!("namespaces/{}/", namespace),
+            Some(namespace) => format!("namespaces/{namespace}/"),
             None => String::new(),
         };
         let plural = Self::PLURAL;

@@ -30,8 +30,8 @@ fn generate() {
     let root_schema = generate_root_schema::<Config>();
 
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
-    println!("{}", text);
+    println!("{text}");
 
     let example = generate_config_with_schema(root_schema);
-    println!("{}", example)
+    println!("{example}")
 }

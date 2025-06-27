@@ -131,7 +131,7 @@ impl From<msgpack::Error> for DecodeError {
 impl std::fmt::Display for DecodeError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            DecodeError::IO(err) => write!(f, "io error: {}", err),
+            DecodeError::IO(err) => write!(f, "io error: {err}"),
             DecodeError::Decode(err) => err.fmt(f),
             DecodeError::Decompression => f.write_str("decompression entries failed"),
         }
@@ -822,7 +822,7 @@ mod integration_tests {
             .with_tcp(8080, service_addr.port())
             .run(async move {
                 let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
-                let req = Request::post(format!("http://{}/{}", service_addr, tag))
+                let req = Request::post(format!("http://{service_addr}/{tag}"))
                     .header("content-type", "application/json")
                     .body(Full::new(Bytes::from(payload.clone())))
                     .unwrap();
@@ -926,7 +926,7 @@ mod integration_tests {
             .with_tcp(8080, service_addr.port())
             .run(async move {
                 let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
-                let req = Request::post(format!("http://{}/{}", service_addr, tag))
+                let req = Request::post(format!("http://{service_addr}/{tag}"))
                     .header("content-type", "application/json")
                     .body(Full::new(Bytes::from(payload.clone())))
                     .unwrap();

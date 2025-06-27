@@ -315,7 +315,7 @@ mod tests {
                     // ok
                 }
                 (got, want) => {
-                    panic!("want: {:?}, got: {:?}", want, got)
+                    panic!("want: {want:?}, got: {got:?}")
                 }
             }
         }

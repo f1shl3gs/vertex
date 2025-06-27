@@ -191,7 +191,7 @@ impl HttpSource for SimpleHttpSource {
                 Err(err) => {
                     return Err(ErrorMessage::new(
                         StatusCode::BAD_REQUEST,
-                        format!("failed decoding body, {}", err),
+                        format!("failed decoding body, {err}"),
                     ));
                 }
             }
@@ -349,7 +349,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}/", addr),
+            format!("http://{addr}/"),
             btreemap! {},
             "".to_string(),
             StatusCode::BAD_REQUEST,
@@ -376,7 +376,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}/", addr),
+            format!("http://{addr}/"),
             btreemap! {},
             "foo\nbar\n".to_string(),
             StatusCode::OK,
@@ -409,7 +409,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}/", addr),
+            format!("http://{addr}/"),
             btreemap! {},
             "foo\nbar".to_string(),
             StatusCode::OK,
@@ -441,7 +441,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}/", addr),
+            format!("http://{addr}/"),
             btreemap! {},
             "{}\n{\"foo\":\"bar\"}\n".to_string(),
             StatusCode::OK,
@@ -475,7 +475,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}/", addr),
+            format!("http://{addr}/"),
             btreemap! {
                 "User-Agent" => "test_client",
                 "Upgrade-Insecure-Requests" => "false",
@@ -528,7 +528,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}/", addr),
+            format!("http://{addr}/"),
             btreemap! {
                 "User-Agent" => "test_client",
                 "Upgrade-Insecure-Requests" => "false",
@@ -567,7 +567,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}?source=staging&region=gb", addr),
+            format!("http://{addr}?source=staging&region=gb"),
             btreemap! {
                 "User-Agent" => "test_client",
                 "Upgrade-Insecure-Requests" => "false",
@@ -614,7 +614,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}?source=staging&region=gb", addr),
+            format!("http://{addr}?source=staging&region=gb"),
             btreemap! {
                 "User-Agent" => "test_client",
                 "Upgrade-Insecure-Requests" => "false",
@@ -651,7 +651,7 @@ mod tests {
 
         send(
             Method::POST,
-            format!("http://{}/some/path", addr),
+            format!("http://{addr}/some/path"),
             btreemap! {},
             "foo\n".to_string(),
             StatusCode::OK,
@@ -664,7 +664,7 @@ mod tests {
         assert_eq!(got.len(), 1);
         let log = got.remove(0);
 
-        println!("{:#?}", log);
+        println!("{log:#?}");
 
         assert_eq!(
             log.metadata().value().get("http.path").unwrap(),

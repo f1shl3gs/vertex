@@ -198,7 +198,7 @@ fn no_truncations(action: Vec<FileWatcherAction>) {
             }
             FileWatcherAction::RotateFile => {
                 let mut new_path = path.clone();
-                new_path.set_extension(format!("log.{}", rotation_count));
+                new_path.set_extension(format!("log.{rotation_count}"));
                 rotation_count += 1;
                 fs::rename(&path, &new_path).expect("could not rename");
                 fp = fs::File::create(&path).expect("could not create");

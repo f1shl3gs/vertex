@@ -162,7 +162,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             continue;
         }
 
-        let prefix = format!("node_hwmon_{}", sensor_type);
+        let prefix = format!("node_hwmon_{sensor_type}");
         for (element, value) in props {
             if element == "label" {
                 continue;
@@ -190,7 +190,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             if element == "fault" || element == "alarm" {
                 metrics.push(Metric::gauge_with_tags(
                     name,
-                    format!("Hardware sensor {} status ({})", element, sensor_type),
+                    format!("Hardware sensor {element} status ({sensor_type})"),
                     pv,
                     tags!(
                         "chip" => chip,
@@ -217,7 +217,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             if sensor_type == "in" || sensor_type == "cpu" {
                 metrics.push(Metric::gauge_with_tags(
                     name + "_volts",
-                    format!("Hardware monitor for voltage ({})", element),
+                    format!("Hardware monitor for voltage ({element})"),
                     pv * 0.001,
                     tags!(
                         "chip" => chip,
@@ -235,7 +235,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
 
                 metrics.push(Metric::gauge_with_tags(
                     name + "_celsius",
-                    format!("Hardware monitor for temperature ({})", element),
+                    format!("Hardware monitor for temperature ({element})"),
                     pv * 0.001,
                     tags!(
                         "chip" => chip,
@@ -248,7 +248,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             if sensor_type == "curr" {
                 metrics.push(Metric::gauge_with_tags(
                     name + "_amps",
-                    format!("Hardware monitor for current ({})", element),
+                    format!("Hardware monitor for current ({element})"),
                     pv * 0.001,
                     tags!(
                         "chip" => chip,
@@ -261,7 +261,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             if sensor_type == "energy" {
                 metrics.push(Metric::sum_with_tags(
                     name + "_joule_total",
-                    format!("Hardware monitor for joules used so far ({})", sensor),
+                    format!("Hardware monitor for joules used so far ({sensor})"),
                     pv / 1000000.0,
                     tags!(
                         "chip" => chip,
@@ -291,7 +291,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             {
                 metrics.push(Metric::gauge_with_tags(
                     name + "_seconds",
-                    format!("Hardware monitor power usage update interval ({})", element),
+                    format!("Hardware monitor power usage update interval ({element})"),
                     pv * 0.001,
                     tags!(
                         "chip" => chip,
@@ -304,7 +304,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             if sensor_type == "power" {
                 metrics.push(Metric::gauge_with_tags(
                     name + "_watt",
-                    format!("Hardware monitor for power usage in watts ({})", element),
+                    format!("Hardware monitor for power usage in watts ({element})"),
                     pv / 1000000.0,
                     tags!(
                         "chip" => chip,
@@ -318,7 +318,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             if sensor_type == "humidity" {
                 metrics.push(Metric::gauge_with_tags(
                     name,
-                    format!("Hardware monitor for humidity, as a ratio (multiply with 100.0 to get the humidity as a percentage) ({})", element),
+                    format!("Hardware monitor for humidity, as a ratio (multiply with 100.0 to get the humidity as a percentage) ({element})"),
                     pv / 1000000.0,
                     tags!(
                         "chip" => chip,
@@ -337,10 +337,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             {
                 metrics.push(Metric::gauge_with_tags(
                     name + "_rpm",
-                    format!(
-                        "Hardware monitor for fan revolutions per minute ({})",
-                        element
-                    ),
+                    format!("Hardware monitor for fan revolutions per minute ({element})"),
                     pv,
                     tags!(
                         "chip" => chip,
@@ -371,7 +368,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             // fallback, just dump the metric as is
             metrics.push(Metric::gauge_with_tags(
                 name,
-                format!("Hardware monitor {} element {}", sensor_type, element),
+                format!("Hardware monitor {sensor_type} element {element}"),
                 pv,
                 tags!(
                     "chip" => chip,
@@ -496,7 +493,7 @@ fn hwmon_name(path: &Path) -> Result<String, Error> {
         let clean_dev_typ = sanitized(dev_type);
 
         if !clean_dev_typ.is_empty() && !clean_dev_name.is_empty() {
-            return Ok(format!("{}_{}", clean_dev_typ, clean_dev_name));
+            return Ok(format!("{clean_dev_typ}_{clean_dev_name}"));
         }
 
         if !clean_dev_name.is_empty() {
@@ -575,7 +572,7 @@ mod tests {
             ("bEeP", "beep"),
         ] {
             let got = sanitized(input);
-            assert_eq!(got, want, "input: {}", input);
+            assert_eq!(got, want, "input: {input}");
         }
     }
 

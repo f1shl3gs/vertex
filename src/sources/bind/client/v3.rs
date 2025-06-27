@@ -264,7 +264,7 @@ mod tests {
             Err(err) => {
                 let inner = err.inner();
                 let path = err.path();
-                panic!("{} {:?}", path, inner)
+                panic!("{path} {inner:?}")
             }
         };
 
@@ -285,7 +285,7 @@ mod tests {
         if let Err(err) = result {
             let inner = err.inner();
             let path = err.path();
-            panic!("{} {:?}", path, inner)
+            panic!("{path} {inner:?}")
         }
     }
 }

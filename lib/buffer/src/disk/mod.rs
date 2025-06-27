@@ -49,7 +49,7 @@ pub struct Config {
 
 impl Config {
     fn chunk_path(&self, id: u16) -> PathBuf {
-        let name = format!("{:04x}.chunk", id);
+        let name = format!("{id:04x}.chunk");
         self.root.join(name)
     }
 

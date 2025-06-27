@@ -180,7 +180,7 @@ impl<T> Future for FinalizerFuture<T> {
         let status = std::task::ready!(self.receiver.poll_unpin(ctx));
         // The use of this above in a `Futures{Ordered|Unordered|`
         // will only take this once before dropping the future.
-        Poll::Ready((status, self.entry.take().unwrap_or_else(|| unreachable!())))
+        Poll::Ready((status, self.entry.take().expect("must found")))
     }
 }
 

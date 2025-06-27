@@ -256,20 +256,14 @@ fn decode_label_pair(key: &str, value: &str) -> Result<(String, String), ErrorMe
     let decoded_bytes = BASE64_URL_SAFE.decode(padded_value).map_err(|_err| {
         ErrorMessage::new(
             StatusCode::BAD_REQUEST,
-            format!(
-                "Grouping key invalid - invalid base64 value for key {}: {}",
-                key, value
-            ),
+            format!("Grouping key invalid - invalid base64 value for key {key}: {value}"),
         )
     })?;
 
     let decoded = String::from_utf8(decoded_bytes).map_err(|_err| {
         ErrorMessage::new(
             StatusCode::BAD_REQUEST,
-            format!(
-                "Grouping key invalid - invalid UTF-8 in decoded base64 value for key {}",
-                key
-            ),
+            format!("Grouping key invalid - invalid UTF-8 in decoded base64 value for key {key}"),
         )
     })?;
 
@@ -437,7 +431,7 @@ jobs_summary_count{type="a"} 1.0 1612411506789
         let (parts, incoming) = resp.into_parts();
         let body = incoming.collect().await.unwrap().to_bytes();
         let body = std::str::from_utf8(&body).unwrap();
-        println!("{}", body);
+        println!("{body}");
         assert_eq!(parts.status, StatusCode::OK);
 
         let got = collect_ready(rx)

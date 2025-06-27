@@ -37,7 +37,7 @@ impl Function for ParseRegex {
         let value = arguments.get();
         let Spanned { node, span } = arguments.get_string()?;
         let pattern = Regex::new(&node).map_err(|err| SyntaxError::InvalidValue {
-            err: format!("parse regex pattern failed, {}", err),
+            err: format!("parse regex pattern failed, {err}"),
             want: "valid regex".to_string(),
             got: node,
             span,

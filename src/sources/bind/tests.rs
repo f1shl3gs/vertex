@@ -91,7 +91,7 @@ where
     // sleep 1s to wait for the http server
     tokio::time::sleep(Duration::from_secs(1)).await;
 
-    format!("http://{}", addr)
+    format!("http://{addr}")
 }
 
 fn assert_statistics(s: client::Statistics, want: Vec<&str>) {
@@ -103,7 +103,7 @@ fn assert_statistics(s: client::Statistics, want: Vec<&str>) {
         .collect::<Vec<_>>();
 
     for want in want {
-        assert!(got.contains(&want.to_string()), "want {}", want)
+        assert!(got.contains(&want.to_string()), "want {want}")
     }
 }
 

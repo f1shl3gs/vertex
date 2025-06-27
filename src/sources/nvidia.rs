@@ -430,7 +430,7 @@ mod tests {
             .await
             .unwrap();
         for (name, desc) in metric_infos {
-            println!("{}: {}", name, desc);
+            println!("{name}: {desc}");
         }
     }
 }

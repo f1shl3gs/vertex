@@ -77,7 +77,7 @@ impl ComponentTester {
 
         if env::var("DEBUG_COMPONENT_COMPLIANCE").is_ok() {
             for metric in &metrics {
-                println!("capture metric: {}", metric);
+                println!("capture metric: {metric}");
             }
         }
 
@@ -85,9 +85,11 @@ impl ComponentTester {
     }
 
     fn emitted_all_counters(&mut self, names: &[&str], tags: &[&str]) {
-        let tag_suffix = (!tags.is_empty())
-            .then(|| format!("{{{}}}", tags.join(",")))
-            .unwrap_or_default();
+        let tag_suffix = if !tags.is_empty() {
+            format!("{{{}}}", tags.join(","))
+        } else {
+            Default::default()
+        };
 
         for name in names {
             if !self.metrics.iter().any(|m| {
@@ -117,10 +119,8 @@ impl ComponentTester {
                     .collect::<Vec<_>>();
                 let partial = partial_matches.join("");
 
-                self.errors.push(format!(
-                    "  - Missing metric `{}{}`{}",
-                    name, tag_suffix, partial
-                ));
+                self.errors
+                    .push(format!("  - Missing metric `{name}{tag_suffix}`{partial}",));
             }
         }
     }

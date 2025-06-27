@@ -31,9 +31,9 @@ impl From<std::io::Error> for EncodingError {
 impl Display for EncodingError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            EncodingError::Framing(err) => write!(f, "Framing failed, {:?}", err),
-            EncodingError::Serialize(err) => write!(f, "Serializing failed, {:?}", err),
-            EncodingError::Io(err) => write!(f, "IO error, {}", err),
+            EncodingError::Framing(err) => write!(f, "Framing failed, {err:?}"),
+            EncodingError::Serialize(err) => write!(f, "Serializing failed, {err:?}"),
+            EncodingError::Io(err) => write!(f, "IO error, {err}"),
         }
     }
 }

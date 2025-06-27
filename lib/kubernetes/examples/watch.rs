@@ -81,7 +81,7 @@ async fn main() {
                 }
             },
             Err(err) => {
-                println!("poll next {:?}", err);
+                println!("poll next {err:?}");
 
                 // backoff
                 tokio::time::sleep(Duration::from_secs(5)).await;

@@ -67,10 +67,10 @@ impl From<serde_json::Error> for SerializeError {
 impl Display for SerializeError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            SerializeError::Io(err) => write!(f, "IO error, {}", err),
-            SerializeError::Fmt(err) => write!(f, "format error, {}", err),
-            SerializeError::Json(err) => write!(f, "serialize json failed, {}", err),
-            SerializeError::Other(msg) => write!(f, "unknown error, {}", msg),
+            SerializeError::Io(err) => write!(f, "IO error, {err}"),
+            SerializeError::Fmt(err) => write!(f, "format error, {err}"),
+            SerializeError::Json(err) => write!(f, "serialize json failed, {err}"),
+            SerializeError::Other(msg) => write!(f, "unknown error, {msg}"),
         }
     }
 }

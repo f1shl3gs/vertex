@@ -234,7 +234,7 @@ impl DataStreamConfig {
             (dtype, dataset, namespace)
         };
 
-        Some(format!("{}-{}-{}", dtype, dataset, namespace))
+        Some(format!("{dtype}-{dataset}-{namespace}"))
     }
 }
 

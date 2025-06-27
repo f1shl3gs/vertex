@@ -52,7 +52,7 @@ impl Elasticsearch {
         let mut metrics = vec![];
         for (name, _repo) in repos {
             let stats = self
-                .fetch::<SnapshotsStats>(format!("/_snapshot/{}/_all", name).as_str())
+                .fetch::<SnapshotsStats>(format!("/_snapshot/{name}/_all").as_str())
                 .await?;
 
             // Repositories

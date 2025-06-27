@@ -107,7 +107,7 @@ mod tests {
             match serde_json::from_slice::<Root>(data.as_bytes()) {
                 Ok(_) => {}
                 Err(err) => {
-                    panic!("{:?}\n{}\n{}", path, err, data);
+                    panic!("{path:?}\n{err}\n{data}");
                 }
             }
         }
@@ -124,7 +124,7 @@ mod tests {
             match serde_json::from_slice::<Root>(data.as_bytes()) {
                 Ok(_) => {}
                 Err(err) => {
-                    panic!("{:?}\n{}\n{}", path, err, data);
+                    panic!("{path:?}\n{err}\n{data}");
                 }
             }
         }

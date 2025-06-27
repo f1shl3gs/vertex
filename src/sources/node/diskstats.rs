@@ -319,7 +319,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
 }
 
 fn udev_device_properties(major: &str, minor: &str) -> Result<HashMap<String, String>, Error> {
-    let path = format!("/run/udev/data/b{}:{}", major, minor);
+    let path = format!("/run/udev/data/b{major}:{minor}");
     let data = std::fs::read_to_string(path)?;
 
     let mut properties = HashMap::new();

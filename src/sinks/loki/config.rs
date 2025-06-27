@@ -214,7 +214,7 @@ mod tests {
 
         for (input, want) in inputs {
             let tmpl = input.try_into().unwrap();
-            assert_eq!(valid_label_name(&tmpl), want, "input: {}", input);
+            assert_eq!(valid_label_name(&tmpl), want, "input: {input}");
         }
     }
 }

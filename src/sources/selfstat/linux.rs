@@ -110,7 +110,7 @@ pub fn proc_info(root: &Path) -> Vec<Metric> {
 }
 
 fn open_fds(pid: u32) -> Result<usize, std::io::Error> {
-    let path = format!("/proc/{}/fd", pid);
+    let path = format!("/proc/{pid}/fd");
 
     std::fs::read_dir(path)?.try_fold(0usize, |acc, item| {
         let entry = item?;
@@ -122,7 +122,7 @@ fn open_fds(pid: u32) -> Result<usize, std::io::Error> {
 }
 
 fn get_limits(pid: u32) -> Result<(f64, f64), std::io::Error> {
-    let path = format!("/proc/{}/limits", pid);
+    let path = format!("/proc/{pid}/limits");
     let data = std::fs::read_to_string(path)?;
 
     let mut max_fds = 0.0;

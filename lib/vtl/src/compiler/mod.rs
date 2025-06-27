@@ -110,17 +110,17 @@ impl Display for ExpressionError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             ExpressionError::Error { message, .. } => f.write_str(message),
-            ExpressionError::NotFound { path, .. } => write!(f, "path \"{}\" is not exist", path),
-            ExpressionError::Binary { err, .. } => write!(f, "binary operate \"{}\"", err),
+            ExpressionError::NotFound { path, .. } => write!(f, "path \"{path}\" is not exist"),
+            ExpressionError::Binary { err, .. } => write!(f, "binary operate \"{err}\""),
             ExpressionError::UnexpectedType { want, got, .. } => {
-                write!(f, "invalid type \"{}\" found, want: \"{}\"", got, want)
+                write!(f, "invalid type \"{got}\" found, want: \"{want}\"")
             }
             ExpressionError::UnexpectedValue { msg, .. } => f.write_str(msg),
             ExpressionError::Break => f.write_str("break"),
             ExpressionError::Continue => f.write_str("continue"),
             ExpressionError::Return { value } => match value {
                 Some(value) => {
-                    write!(f, "return {}", value)
+                    write!(f, "return {value}")
                 }
                 None => f.write_str("return None"),
             },
@@ -137,13 +137,13 @@ impl DiagnosticMessage for ExpressionError {
                 vec![Label::new(message, span)]
             }
             ExpressionError::NotFound { path, span } => {
-                vec![Label::new(format!("{} path not found", path), span)]
+                vec![Label::new(format!("{path} path not found"), span)]
             }
             ExpressionError::Binary { err, span } => {
                 vec![Label::new(err.to_string(), span)]
             }
             ExpressionError::UnexpectedType { want, got, span } => {
-                vec![Label::new(format!("got {}, want: {}", got, want), span)]
+                vec![Label::new(format!("got {got}, want: {want}"), span)]
             }
             ExpressionError::UnexpectedValue { msg, span } => {
                 vec![Label::new(msg, span)]

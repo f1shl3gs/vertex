@@ -18,5 +18,5 @@ fn test_generate() {
     let json = serde_json::to_string_pretty(&schema)
         .expect("rendering root schema to JSON should not fail");
 
-    println!("{}", json);
+    println!("{json}");
 }

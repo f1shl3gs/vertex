@@ -65,7 +65,7 @@ impl Container {
     where
         S: std::fmt::Display,
     {
-        self.volumes.push(format!("{}:{}", orig, dest));
+        self.volumes.push(format!("{orig}:{dest}"));
         self
     }
 
@@ -218,7 +218,7 @@ mod tests {
                     hyper_util::client::legacy::Client::builder(TokioExecutor::default())
                         .build(HttpConnector::new());
 
-                let uri = Uri::from_str(&format!("http://{}", output)).unwrap();
+                let uri = Uri::from_str(&format!("http://{output}")).unwrap();
                 let resp = client.get(uri).await.unwrap();
 
                 assert_eq!(resp.status(), 200);

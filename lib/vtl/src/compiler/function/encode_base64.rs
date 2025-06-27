@@ -103,8 +103,7 @@ impl Expression for EncodeBase64Func {
                     value => {
                         return Err(ExpressionError::UnexpectedValue {
                             msg: format!(
-                                "base64's charset should be \"standard\" or \"url_safe\", but found \"{}\"",
-                                value
+                                "base64's charset should be \"standard\" or \"url_safe\", but found \"{value}\"",
                             ),
                             span: spanned.span,
                         });

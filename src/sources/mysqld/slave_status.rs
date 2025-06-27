@@ -85,7 +85,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
             Err(_err) => {
                 // Leverage lock-free SHOW SLAVE STATUS by guessing the right suffix
                 for suffix in [" NONBLOCKING", " NOLOCK", ""] {
-                    let query = format!("{}{}", query, suffix);
+                    let query = format!("{query}{suffix}");
 
                     match sqlx::query_as::<_, Record>(&query).fetch_one(pool).await {
                         Ok(r) => {
@@ -109,7 +109,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
 
             for (k, v) in record.values {
                 metrics.push(Metric::gauge_with_tags(
-                    format!("mysql_slave_status_{}", k),
+                    format!("mysql_slave_status_{k}"),
                     "Generic metric from SHOW SLAVE STATUS",
                     v,
                     tags!(
@@ -189,13 +189,7 @@ mod tests {
             ("100", Some(100.0)),
             ("123.4", Some(123.4)),
         ] {
-            assert_eq!(
-                parse_status(input),
-                want,
-                "input: {}, want: {:?}",
-                input,
-                want,
-            );
+            assert_eq!(parse_status(input), want, "input: {input}, want: {want:?}",);
         }
     }
 }

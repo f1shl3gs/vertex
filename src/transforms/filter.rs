@@ -144,11 +144,7 @@ mod tests {
             let program = vtl::compile(input).unwrap();
             let mut transform = Filter::new(program);
             let got = transform_one(&mut transform, log.clone());
-            assert_eq!(
-                got, want,
-                "input: {}\nwant: {:?}\ngot:  {:?}",
-                input, want, got
-            );
+            assert_eq!(got, want, "input: {input}\nwant: {want:?}\ngot:  {got:?}");
         }
     }
 }

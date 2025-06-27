@@ -67,7 +67,7 @@ impl UriSerde {
         let uri = self.uri.to_string();
         let self_path = uri.trim_end_matches('/');
         let other_path = path.trim_start_matches('/');
-        let path = format!("{}/{}", self_path, other_path);
+        let path = format!("{self_path}/{other_path}");
         let uri = path.parse::<Uri>()?;
         Ok(Self {
             uri,
@@ -103,15 +103,15 @@ impl Display for UriSerde {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match (self.uri.authority(), &self.auth) {
             (Some(authority), Some(Auth::Basic { user, password })) => {
-                let authority = format!("{}:{}@{}", user, password, authority);
+                let authority = format!("{user}:{password}@{authority}");
                 let authority =
                     Authority::from_maybe_shared(authority).map_err(|_| std::fmt::Error)?;
                 let mut parts = self.uri.clone().into_parts();
                 parts.authority = Some(authority);
-                std::fmt::Display::fmt(&Uri::from_parts(parts).unwrap(), f)
+                Display::fmt(&Uri::from_parts(parts).unwrap(), f)
             }
 
-            _ => std::fmt::Display::fmt(&self.uri, f),
+            _ => Display::fmt(&self.uri, f),
         }
     }
 }

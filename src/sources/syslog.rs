@@ -542,7 +542,7 @@ address: 127.0.0.1:12345
             ),
         ] {
             let event = event_from_bytes("host", input.clone().into()).unwrap();
-            assert_eq!(there_is_map_called_empty(event), want, "input: {}", input);
+            assert_eq!(there_is_map_called_empty(event), want, "input: {input}");
         }
     }
 
@@ -563,7 +563,7 @@ address: 127.0.0.1:12345
     #[test]
     fn syslog_ng_default_network() {
         let msg = "i am foobar";
-        let raw = format!(r#"<13>Feb 13 20:07:26 74794bfb6795 root[8539]: {}"#, msg);
+        let raw = format!(r#"<13>Feb 13 20:07:26 74794bfb6795 root[8539]: {msg}"#);
         let log = event_from_bytes("host", raw.into()).unwrap();
 
         let value = log.get(log_schema().timestamp_key()).unwrap();
@@ -597,8 +597,7 @@ address: 127.0.0.1:12345
     fn rsyslog_omfwd_tcp_default() {
         let msg = "start";
         let raw = format!(
-            r#"<190>Feb 13 21:31:56 74794bfb6795 liblogging-stdlog:  [origin software="rsyslogd" swVersion="8.24.0" x-pid="8979" x-info="http://www.rsyslog.com"] {}"#,
-            msg
+            r#"<190>Feb 13 21:31:56 74794bfb6795 liblogging-stdlog:  [origin software="rsyslogd" swVersion="8.24.0" x-pid="8979" x-info="http://www.rsyslog.com"] {msg}"#
         );
         let log = event_from_bytes("host", raw.into()).unwrap();
 
@@ -638,8 +637,7 @@ address: 127.0.0.1:12345
     fn rsyslog_omfwd_tcp_forward_format() {
         let msg = "start";
         let raw = format!(
-            r#"<190>2019-02-13T21:53:30.605850+00:00 74794bfb6795 liblogging-stdlog:  [origin software="rsyslogd" swVersion="8.24.0" x-pid="9043" x-info="http://www.rsyslog.com"] {}"#,
-            msg
+            r#"<190>2019-02-13T21:53:30.605850+00:00 74794bfb6795 liblogging-stdlog:  [origin software="rsyslogd" swVersion="8.24.0" x-pid="9043" x-info="http://www.rsyslog.com"] {msg}"#
         );
         let event = event_from_bytes("host", raw.into()).unwrap();
 

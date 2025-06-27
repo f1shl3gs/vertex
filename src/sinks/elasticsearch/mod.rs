@@ -45,7 +45,7 @@ impl TryFrom<&str> for BulkAction {
         match value {
             "index" => Ok(BulkAction::Index),
             "create" => Ok(BulkAction::Create),
-            _ => Err(format!("Invalid bulk action: {}", value)),
+            _ => Err(format!("Invalid bulk action: {value}")),
         }
     }
 }

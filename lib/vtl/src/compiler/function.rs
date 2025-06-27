@@ -316,7 +316,7 @@ pub fn compile_and_run<F: Function>(
     for argument in arguments {
         if let Err(err) = arguments_list.push(Spanned::new(argument, super::Span::empty()), &state)
         {
-            panic!("build arguments list failed, {}", err)
+            panic!("build arguments list failed, {err}")
         }
     }
 

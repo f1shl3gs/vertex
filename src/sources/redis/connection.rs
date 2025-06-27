@@ -369,7 +369,7 @@ mod tests {
                // ("*-1\r\n", Ok(Some(Frame::Array(vec![])))),
         ] {
             let got = Frame::parse_with_pos(input.as_bytes(), &mut 0);
-            assert_eq!(got, expected, "incorrect input: {:?}", input);
+            assert_eq!(got, expected, "incorrect input: {input:?}");
         }
     }
 }

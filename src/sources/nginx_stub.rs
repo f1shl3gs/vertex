@@ -109,7 +109,7 @@ enum NginxError {
     #[error("invalid response status: {0}")]
     InvalidResponseStatus(StatusCode),
 
-    #[error("failed to parse {field}, err: {err}")]
+    #[error("failed to parse {field}, {err}")]
     Parse {
         err: ParseIntError,
         field: &'static str,
@@ -144,7 +144,7 @@ impl NginxStub {
 
         let host = match (uri.host().unwrap_or(""), uri.port()) {
             (host, None) => host.to_owned(),
-            (host, Some(port)) => format!("{}:{}", host, port),
+            (host, Some(port)) => format!("{host}:{port}"),
         };
 
         Ok(host)
@@ -374,7 +374,7 @@ mod integration_tests {
 
                 // without auth
                 let status =
-                    get_stub_status(&cli, &format!("http://{}/basic_status", service_addr), None)
+                    get_stub_status(&cli, &format!("http://{service_addr}/basic_status"), None)
                         .await
                         .unwrap();
                 assert_eq!(status.requests, 1);
@@ -383,7 +383,7 @@ mod integration_tests {
                 // with auth
                 let status = get_stub_status(
                     &cli,
-                    &format!("http://{}/basic_status_auth", service_addr),
+                    &format!("http://{service_addr}/basic_status_auth"),
                     Some(&Auth::Basic {
                         user: "tom".to_string(),
                         password: "123456".into(),

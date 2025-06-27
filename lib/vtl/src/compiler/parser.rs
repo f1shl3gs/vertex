@@ -145,19 +145,17 @@ impl Display for SyntaxError {
             SyntaxError::EmptyBlock { .. } => f.write_str("empty block is not allowed"),
             SyntaxError::UnexpectedEof => f.write_str("unexpected end of file"),
             SyntaxError::UnexpectedToken { got, want, .. } => match want {
-                Some(want) => write!(f, "unexpected token: {}, want: {}", got, want),
-                None => write!(f, "unexpected token: \"{}\"", got),
+                Some(want) => write!(f, "unexpected token: {got}, want: {want}"),
+                None => write!(f, "unexpected token: \"{got}\""),
             },
             SyntaxError::UndefinedVariable { name, maybe, .. } => match maybe {
-                Some(maybe) => write!(
-                    f,
-                    "undefined variable \"{}\", do you mean \"{}\"?",
-                    name, maybe
-                ),
-                None => write!(f, "undefined variable {}", name),
+                Some(maybe) => {
+                    write!(f, "undefined variable \"{name}\", do you mean \"{maybe}\"?",)
+                }
+                None => write!(f, "undefined variable {name}"),
             },
             SyntaxError::UndefinedFunction { name, .. } => {
-                write!(f, "unknown function {}", name)
+                write!(f, "unknown function {name}")
             }
 
             SyntaxError::Unary(err) => Display::fmt(err, f),
@@ -168,13 +166,13 @@ impl Display for SyntaxError {
             SyntaxError::FallibleArgument { .. } => f.write_str("fallible argument"),
 
             SyntaxError::InvalidPath { err, .. } => {
-                write!(f, "{}", err)
+                write!(f, "{err}")
             }
             SyntaxError::VariableNeverUsed { name, .. } => {
-                write!(f, "variable \"{}\" is never used", name)
+                write!(f, "variable \"{name}\" is never used")
             }
             SyntaxError::VariableAlreadyDefined { name, .. } => {
-                write!(f, "variable \"{}\" already defined", name)
+                write!(f, "variable \"{name}\" already defined")
             }
             SyntaxError::FunctionArgumentsArityMismatch {
                 function,
@@ -182,11 +180,7 @@ impl Display for SyntaxError {
                 got,
                 ..
             } => {
-                write!(
-                    f,
-                    "function \"{}\" takes {} but got {}",
-                    function, takes, got
-                )
+                write!(f, "function \"{function}\" takes {takes} but got {got}")
             }
 
             SyntaxError::InvalidFunctionArgumentType {
@@ -198,12 +192,11 @@ impl Display for SyntaxError {
             } => {
                 write!(
                     f,
-                    "function \"{}\"'s argument {} should be {} rather than {}",
-                    function, argument, want, got
+                    "function \"{function}\"'s argument {argument} should be {want} rather than {got}"
                 )
             }
             SyntaxError::InvalidValue { got, want, .. } => {
-                write!(f, "invalid value \"{}\", want: \"{}\"", got, want)
+                write!(f, "invalid value \"{got}\", want: \"{want}\"")
             }
             SyntaxError::UnnecessaryErrorAssignment { .. } => {
                 f.write_str("unnecessary error assignment")
@@ -248,8 +241,8 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::UnexpectedEof => vec![],
             SyntaxError::UnexpectedToken { got, want, span } => {
                 let msg = match want {
-                    Some(want) => format!("got {}, want {}", got, want),
-                    None => format!("got \"{}\"", got),
+                    Some(want) => format!("got {got}, want {want}"),
+                    None => format!("got \"{got}\""),
                 };
 
                 vec![Label::new(msg, span)]
@@ -267,7 +260,7 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::UndefinedVariable { span, maybe, .. } => {
                 let msg = match maybe {
                     Some(maybe) => {
-                        format!("undefined variable, do you mean \"{}\"?", maybe)
+                        format!("undefined variable, do you mean \"{maybe}\"?")
                     }
                     None => "undefined variable".to_string(),
                 };
@@ -283,7 +276,7 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::UndefinedFunction { maybe, span, .. } => {
                 let msg = match maybe {
                     Some(maybe) => {
-                        format!("undefined function, do you mean \"{}\"?", maybe)
+                        format!("undefined function, do you mean \"{maybe}\"?")
                     }
                     None => "undefined function".to_string(),
                 };
@@ -296,19 +289,19 @@ impl DiagnosticMessage for SyntaxError {
                 span,
             } => {
                 vec![Label::new(
-                    format!("{} takes {}, got {}", function, takes, got),
+                    format!("{function} takes {takes}, got {got}"),
                     span,
                 )]
             }
             SyntaxError::InvalidFunctionArgumentType {
                 want, got, span, ..
             } => {
-                vec![Label::new(format!("want: {}, got {}", want, got), span)]
+                vec![Label::new(format!("want: {want}, got {got}"), span)]
             }
             SyntaxError::InvalidValue {
                 want, got, span, ..
             } => {
-                vec![Label::new(format!("want: {}, got: {}", want, got), span)]
+                vec![Label::new(format!("want: {want}, got: {got}"), span)]
             }
 
             SyntaxError::FalliblePrediction { span } => {
@@ -322,7 +315,7 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::Binary { err, .. } => err.labels(),
 
             SyntaxError::InvalidType { want, got, span } => {
-                vec![Label::new(format!("want: {}, got: {}", want, got), span)]
+                vec![Label::new(format!("want: {want}, got: {got}"), span)]
             }
             SyntaxError::FallibleIterator { span } => {
                 vec![Label::new("fallible iterator is not allowed", span)]
@@ -330,7 +323,7 @@ impl DiagnosticMessage for SyntaxError {
 
             SyntaxError::NonBooleanPrediction { got, span } => {
                 vec![Label::new(
-                    format!("prediction must be resolved to boolean, instead of {}", got),
+                    format!("prediction must be resolved to boolean, instead of {got}"),
                     span,
                 )]
             }
@@ -1341,12 +1334,12 @@ mod tests {
                             println!("{:2}-{:2}:  {:?}", span.start, span.end, token)
                         }
                         Err(err) => {
-                            panic!("lex error: {:?}", err);
+                            panic!("lex error: {err:?}");
                         }
                     }
                 }
 
-                panic!("compile failed: {:?}", err);
+                panic!("compile failed: {err:?}");
             }
         }
     }
@@ -1454,7 +1447,7 @@ mod tests {
                 } => {
                     // ok
                 }
-                err => panic!("invalid error, {}", err),
+                err => panic!("invalid error, {err}"),
             },
         }
     }
@@ -1516,7 +1509,7 @@ mod tests {
                     println!("{:3}-{:3}:  {:?}", span.start, span.end, token)
                 }
                 Err(err) => {
-                    panic!("lex error: {:?}", err);
+                    panic!("lex error: {err:?}");
                 }
             }
         }

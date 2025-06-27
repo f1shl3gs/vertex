@@ -203,7 +203,7 @@ impl SpanRef<'_> {
             match inner.lock() {
                 Ok(mut locked) => f(&mut locked),
                 Err(err) => {
-                    eprintln!("Trace error occurred. {}", err)
+                    eprintln!("Trace error occurred. {err}")
                 }
             }
         }

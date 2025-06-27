@@ -37,15 +37,15 @@ impl std::fmt::Display for Error {
         match self {
             Error::IO(err) => err.fmt(f),
             Error::UnknownType(v, when) => {
-                write!(f, "Unknown type mark 0x{:x} found when parse {}", v, when)
+                write!(f, "Unknown type mark 0x{v:x} found when parse {when}")
             }
-            Error::InvalidStringType(v) => write!(f, "Invalid string type: 0x{:x}", v),
+            Error::InvalidStringType(v) => write!(f, "Invalid string type: 0x{v:x}"),
             Error::Timestamp => write!(f, "Invalid timestamp"),
             Error::Utf8(err) => err.fmt(f),
             Error::EntryLength => f.write_str("entry length must 2"),
-            Error::UnknownExtType(typ) => write!(f, "Unknown Ext type 0x{:x}", typ),
-            Error::EventTimeExt(msg) => write!(f, "EventTimeExt {}", msg),
-            Error::UnknownOptionField(field) => write!(f, "Unknown Option field {:?}", field),
+            Error::UnknownExtType(typ) => write!(f, "Unknown Ext type 0x{typ:x}"),
+            Error::EventTimeExt(msg) => write!(f, "EventTimeExt {msg}"),
+            Error::UnknownOptionField(field) => write!(f, "Unknown Option field {field:?}"),
         }
     }
 }

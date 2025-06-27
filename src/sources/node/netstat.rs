@@ -44,7 +44,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
     let mut metrics = Vec::new();
     for (protocol, stats) in net_stats {
         for (name, value) in stats {
-            let key = format!("{}_{}", protocol, name);
+            let key = format!("{protocol}_{name}");
             let v = match value.parse::<f64>() {
                 Ok(v) => v,
                 _ => continue,
@@ -55,8 +55,8 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             }
 
             metrics.push(Metric::gauge(
-                format!("node_netstat_{}", key),
-                format!("Statistic {}{}", protocol, name),
+                format!("node_netstat_{key}"),
+                format!("Statistic {protocol}{name}"),
                 v,
             ));
         }

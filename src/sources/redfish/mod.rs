@@ -1434,7 +1434,7 @@ mod integration_tests {
                                     .header("Content-Type", "application/json")
                                     .body(Full::new(data.into())),
                                 Err(err) => {
-                                    println!("Failed to read file {:?}, {}", path, err);
+                                    println!("Failed to read file {path:?}, {err}");
                                     Response::builder()
                                         .status(StatusCode::INTERNAL_SERVER_ERROR)
                                         .body(Full::new(err.to_string().into()))
@@ -1450,7 +1450,7 @@ mod integration_tests {
                     .serve_connection(TokioIo::new(stream), service)
                     .await
                 {
-                    panic!("failed to serve connection: {}", err)
+                    panic!("failed to serve connection: {err}")
                 }
             });
         }
@@ -1497,7 +1497,7 @@ mod integration_tests {
         for target in targets {
             let client = Client {
                 client: HttpClient::new(None, &ProxyConfig::default()).unwrap(),
-                target: format!("http://{}", target),
+                target: format!("http://{target}"),
                 auth: None,
             };
 

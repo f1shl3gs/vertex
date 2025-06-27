@@ -161,7 +161,7 @@ async fn collect(target: SocketAddr) -> Result<Vec<Metric>, Error> {
             for (key, value) in stats {
                 metrics.push(Metric::gauge_with_tags(
                     key.as_str(),
-                    format!("{} value of mntr", key),
+                    format!("{key} value of mntr"),
                     value,
                     tags!(
                         "instance" => target.to_string()

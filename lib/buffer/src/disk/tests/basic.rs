@@ -58,7 +58,7 @@ async fn reader_exits_cleanly_when_writer_done_and_inflight_acknowledgements() {
         writer.write(msg).await.unwrap();
         writer.flush().unwrap();
         drop(writer);
-        println!("{:#?}", ledger);
+        println!("{ledger:#?}");
         assert_eq!(ledger.get_next_write_record_id(), 2);
 
         // And read that single value

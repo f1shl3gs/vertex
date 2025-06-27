@@ -89,25 +89,25 @@ impl Builder {
 
         with.sources.keys().for_each(|k| {
             if self.sources.contains_key(k) {
-                errors.push(format!("duplicate source name found: {}", k));
+                errors.push(format!("duplicate source name found: {k}"));
             }
         });
 
         with.transforms.keys().for_each(|k| {
             if self.transforms.contains_key(k) {
-                errors.push(format!("duplicate transform name found: {}", k))
+                errors.push(format!("duplicate transform name found: {k}"))
             }
         });
 
         with.sinks.keys().for_each(|k| {
             if self.sinks.contains_key(k) {
-                errors.push(format!("duplicate sink name found: {}", k))
+                errors.push(format!("duplicate sink name found: {k}"))
             }
         });
 
         with.sinks.keys().for_each(|k| {
             if self.extensions.contains_key(k) {
-                errors.push(format!("duplicate extension name found: {}", k))
+                errors.push(format!("duplicate extension name found: {k}"))
             }
         });
 

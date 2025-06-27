@@ -490,7 +490,7 @@ async fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Erro
                     continue;
                 }
 
-                return Err(format!("failed to read file {}, err: {}", name, err).into());
+                return Err(format!("failed to read file {name}, {err}").into());
             }
         };
 
@@ -549,7 +549,7 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
 fn parse_state(s: &str) -> Result<(u32, String), Error> {
     let parts = s.split(':').map(|p| p.trim()).collect::<Vec<_>>();
     if parts.len() != 2 {
-        return Err(format!("failed to split {} into 'ID: Name'", s).into());
+        return Err(format!("failed to split {s} into 'ID: Name'").into());
     }
 
     let name = parts[1].to_string();
@@ -562,7 +562,7 @@ fn parse_state(s: &str) -> Result<(u32, String), Error> {
 fn parse_rate(s: &str) -> Result<u64, Error> {
     let parts = s.splitn(2, ' ').collect::<Vec<_>>();
     if parts.len() != 2 {
-        return Err(format!("failed to split {}", s).into());
+        return Err(format!("failed to split {s}").into());
     }
 
     let v = parts[0].parse::<f64>()?;
@@ -588,7 +588,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                     continue;
                 }
 
-                return Err(format!("failed to read file {}, err: {}", name, err).into());
+                return Err(format!("failed to read file {name}, {err}").into());
             }
         };
 

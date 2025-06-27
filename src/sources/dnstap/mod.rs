@@ -553,7 +553,7 @@ impl tokio_util::codec::Decoder for FStrmDecoder {
 
                     Err(DecoderError::Io(std::io::Error::new(
                         std::io::ErrorKind::InvalidData,
-                        format!("want STOP control frame, but got {}", typ),
+                        format!("want STOP control frame, but got {typ}"),
                     )))
                 }
                 Err(err) => Err(DecoderError::Io(std::io::Error::new(

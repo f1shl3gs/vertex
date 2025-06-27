@@ -348,7 +348,7 @@ pub async fn build_pieces(
         let ext = match extension.inner.build(cx).instrument(span.clone()).await {
             Ok(ext) => ext,
             Err(err) => {
-                errors.push(format!("Extension {}: {}", key, err));
+                errors.push(format!("Extension {key}: {err}"));
 
                 continue;
             }
@@ -459,7 +459,7 @@ pub async fn build_pieces(
         let server = match source.inner.build(cx).await {
             Ok(server) => server,
             Err(err) => {
-                errors.push(format!("Source \"{}\": {}", key, err));
+                errors.push(format!("Source \"{key}\": {err}"));
                 continue;
             }
         };
@@ -519,7 +519,7 @@ pub async fn build_pieces(
         let transform = match transform.inner.build(&ctx).await {
             Ok(trans) => trans,
             Err(err) => {
-                errors.push(format!("Transform \"{}\": {}", key, err));
+                errors.push(format!("Transform \"{key}\": {err}"));
                 continue;
             }
         };
@@ -561,7 +561,7 @@ pub async fn build_pieces(
             match result {
                 Ok((tx, rx)) => (tx, Arc::new(Mutex::new(Some(rx.into_stream())))),
                 Err(err) => {
-                    errors.push(format!("Sink \"{}\": {}", name, err));
+                    errors.push(format!("Sink \"{name}\": {err}"));
                     continue;
                 }
             }
@@ -576,7 +576,7 @@ pub async fn build_pieces(
         let (sink, healthcheck_fut) = match sink.inner.build(cx).await {
             Ok(built) => built,
             Err(err) => {
-                errors.push(format!("Sink \"{}\": {}", name, err));
+                errors.push(format!("Sink \"{name}\": {err}"));
                 continue;
             }
         };
@@ -674,11 +674,11 @@ pub async fn build_pieces(
         match receiver_count(&name) {
             Some(count) => {
                 if count == 0 {
-                    errors.push(format!("observer {:?} has no receiver", name));
+                    errors.push(format!("observer {name:?} has no receiver"));
                 }
             }
             None => {
-                errors.push(format!("observer {:?} is not available", name));
+                errors.push(format!("observer {name:?} is not available"));
             }
         }
     }

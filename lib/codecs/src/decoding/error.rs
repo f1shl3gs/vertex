@@ -43,9 +43,9 @@ impl From<std::io::Error> for DecodeError {
 impl Display for DecodeError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            DecodeError::Io(err) => write!(f, "io error {:?}", err),
-            DecodeError::Framing(err) => write!(f, "framing error {:?}", err),
-            DecodeError::Deserialize(err) => write!(f, "deserialize error {:?}", err),
+            DecodeError::Io(err) => write!(f, "io error {err:?}"),
+            DecodeError::Framing(err) => write!(f, "framing error {err:?}"),
+            DecodeError::Deserialize(err) => write!(f, "deserialize error {err:?}"),
         }
     }
 }

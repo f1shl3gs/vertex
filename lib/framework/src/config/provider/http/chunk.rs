@@ -135,7 +135,7 @@ mod tests {
 
         for (input, want) in tests {
             let got = parse_hex(input.as_bytes()).unwrap();
-            assert_eq!(want, got, "{}", input)
+            assert_eq!(want, got, "{input}")
         }
     }
 

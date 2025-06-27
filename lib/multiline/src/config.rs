@@ -544,7 +544,7 @@ mod tests {
             let deserialized: Result<Config, _> =
                 serde_yaml::from_str(input).map_err(|err| err.to_string());
 
-            assert_eq!(deserialized, want, "input: {}", input)
+            assert_eq!(deserialized, want, "input: {input}")
         }
     }
 
@@ -562,7 +562,7 @@ mod tests {
             let deserialized: Result<Config, _> =
                 serde_json::from_str(input).map_err(|err| err.to_string());
 
-            assert_eq!(deserialized, want, "input: {}", input)
+            assert_eq!(deserialized, want, "input: {input}")
         }
     }
 }

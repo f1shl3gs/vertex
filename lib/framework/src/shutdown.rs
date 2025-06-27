@@ -61,50 +61,32 @@ impl ShutdownCoordinator {
         let existing = self.begun_triggers.insert(
             name.clone(),
             other.begun_triggers.remove(name).unwrap_or_else(|| {
-                panic!(
-                    "other ShutdownCoordinator didn't have a begun trigger for {}",
-                    name
-                )
+                panic!("other ShutdownCoordinator didn't have a begun trigger for {name}",)
             }),
         );
 
         if existing.is_some() {
-            panic!(
-                "ShutdownCoordinator already has a begun trigger for source {}",
-                name
-            )
+            panic!("ShutdownCoordinator already has a begun trigger for source {name}")
         }
 
         let existing = self.force_triggers.insert(
             name.clone(),
             other.force_triggers.remove(name).unwrap_or_else(|| {
-                panic!(
-                    "other ShutdownCoordinator didn't have a force trigger for {}",
-                    name
-                )
+                panic!("other ShutdownCoordinator didn't have a force trigger for {name}")
             }),
         );
         if existing.is_some() {
-            panic!(
-                "ShutdownCoordinator already has a force trigger for source {}",
-                name
-            );
+            panic!("ShutdownCoordinator already has a force trigger for source {name}");
         }
 
         let existing = self.complete_tripwires.insert(
             name.clone(),
             other.complete_tripwires.remove(name).unwrap_or_else(|| {
-                panic!(
-                    "Other ShutdownCoordinator didn't have a complete tripwire for {}",
-                    name
-                );
+                panic!("Other ShutdownCoordinator didn't have a complete tripwire for {name}");
             }),
         );
         if existing.is_some() {
-            panic!(
-                "ShutdownCoordinator already has a complete tripwire for source {}",
-                name
-            );
+            panic!("ShutdownCoordinator already has a complete tripwire for source {name}");
         }
     }
 
@@ -123,16 +105,12 @@ impl ShutdownCoordinator {
 
             let complete_tripwire = complete_tripwires.remove(&name).unwrap_or_else(|| {
                 panic!(
-                    "complete tripwire for source '{}' not found in the ShutdownCoordinator",
-                    name
+                    "complete tripwire for source '{name}' not found in the ShutdownCoordinator",
                 )
             });
 
             let force_trigger = force_triggers.remove(&name).unwrap_or_else(|| {
-                panic!(
-                    "force_trigger for source '{}' not found in the ShutdownCoordinator",
-                    name,
-                )
+                panic!("force_trigger for source '{name}' not found in the ShutdownCoordinator")
             });
 
             complete_futures.push(ShutdownCoordinator::shutdown_source_complete(
@@ -158,27 +136,18 @@ impl ShutdownCoordinator {
         deadline: Instant,
     ) -> impl Future<Output = bool> + use<> {
         let begin_trigger = self.begun_triggers.remove(name).unwrap_or_else(|| {
-            panic!(
-                "begun_trigger for source '{}' not found in the ShutdownCoordinator",
-                name
-            )
+            panic!("begun_trigger for source '{name}' not found in the ShutdownCoordinator",)
         });
 
         // This is what actually triggers the source to begin shutting down
         begin_trigger.cancel();
 
         let complete_tripwire = self.complete_tripwires.remove(name).unwrap_or_else(|| {
-            panic!(
-                "complete_tripwire for source '{}' not found in the ShutdownCoordinator",
-                name
-            )
+            panic!("complete_tripwire for source '{name}' not found in the ShutdownCoordinator",)
         });
 
         let force_trigger = self.force_triggers.remove(name).unwrap_or_else(|| {
-            panic!(
-                "force_trigger for source '{}' not found in the ShutdownCoordinator",
-                name
-            )
+            panic!("force_trigger for source '{name}' not found in the ShutdownCoordinator",)
         });
 
         ShutdownCoordinator::shutdown_source_complete(

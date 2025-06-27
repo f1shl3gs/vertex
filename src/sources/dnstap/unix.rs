@@ -61,8 +61,7 @@ impl Config {
         if let Some(permission) = self.permission {
             if !(448..=511).contains(&permission) {
                 return Err(format!(
-                    "invalid socket permission {:#o}, which must between 0o700 and 0o777",
-                    permission
+                    "invalid socket permission {permission:#o}, which must between 0o700 and 0o777",
                 )
                 .into());
             }

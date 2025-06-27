@@ -91,7 +91,7 @@ impl SyslogMessageRfc5424 {
         //"secfrac" can contain up to 6 digits, but TCP sinks uses `AutoSi`
 
         Self {
-            msgid: format!("test{}", id),
+            msgid: format!("test{id}"),
             severity: Severity::LOG_INFO,
             facility: Facility::LOG_USER,
             version: 1,
@@ -156,7 +156,7 @@ fn random_structured_data(
         .filter(|m| !m.is_empty()) //syslog_rfc5424 ignores empty maps, tested separately
         .take(amount)
         .enumerate()
-        .map(|(i, map)| (format!("id{}", i), map))
+        .map(|(i, map)| (format!("id{i}"), map))
         .collect()
 }
 

@@ -34,7 +34,7 @@ pub enum MysqlError {
     #[error("query slave status failed")]
     QuerySlaveStatus,
 
-    #[error("task join failed, err: {0}")]
+    #[error("task join failed, {0}")]
     TaskJoin(#[from] tokio::task::JoinError),
 }
 

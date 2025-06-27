@@ -68,7 +68,7 @@ impl Function for ParseBytes {
                     "eb" | "e" => EBYTE,
                     unit => {
                         return Err(SyntaxError::InvalidValue {
-                            err: format!("invalid unit {}", unit),
+                            err: format!("invalid unit {unit}"),
                             want: "b, k, kib, m, mib...".to_string(),
                             got: unit.to_string(),
                             span,
@@ -106,7 +106,7 @@ impl Expression for ParseBytesFunc {
 
         let bytes = humanize::bytes::parse_bytes(String::from_utf8_lossy(&value).as_ref())
             .map_err(|err| ExpressionError::UnexpectedValue {
-                msg: format!("parse bytes failed, {}", err),
+                msg: format!("parse bytes failed, {err}"),
                 span: self.value.span,
             })?;
 

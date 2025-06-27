@@ -127,7 +127,7 @@ impl Expression for CidrContainsFunc {
 
         let cidr = Cidr::parse(String::from_utf8_lossy(&value).as_ref()).map_err(|err| {
             ExpressionError::UnexpectedValue {
-                msg: format!("invalid cidr, {}", err),
+                msg: format!("invalid cidr, {err}"),
                 span: self.cidr.span,
             }
         })?;
@@ -142,7 +142,7 @@ impl Expression for CidrContainsFunc {
         };
         let ip = String::from_utf8_lossy(&value);
         let ip = IpAddr::from_str(ip.as_ref()).map_err(|err| ExpressionError::UnexpectedValue {
-            msg: format!("invalid ip address, {}", err),
+            msg: format!("invalid ip address, {err}"),
             span: self.value.span,
         })?;
 

@@ -868,7 +868,7 @@ mod tests {
             let mut pos = 0;
             let got = decode_name(input, &mut pos);
 
-            assert_eq!(got, want, "label: {}", label);
+            assert_eq!(got, want, "label: {label}");
         }
     }
 

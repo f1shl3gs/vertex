@@ -20,7 +20,7 @@ impl TryFrom<Vec<u64>> for Network {
 
     fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         if values.len() != 4 {
-            return Err(format!("invalid Network {:?}", values).into());
+            return Err(format!("invalid Network {values:?}").into());
         }
 
         Ok(Network {
@@ -220,7 +220,7 @@ impl TryFrom<Vec<u64>> for ClientV4Stats {
     fn try_from(mut v: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = v[0] as usize;
         if v.len() - 1 != vs {
-            return Err(format!("invalid ClientV4Stats line {:?}", v).into());
+            return Err(format!("invalid ClientV4Stats line {v:?}").into());
         }
 
         // This function currently supports mapping 59 NFS v4 client stats. Older
@@ -335,7 +335,7 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
         let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if parts.len() < 2 {
-            return Err(format!("invalid NFS metric line, {}", line).into());
+            return Err(format!("invalid NFS metric line, {line}").into());
         }
 
         // TODO: the error is not handled

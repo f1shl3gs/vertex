@@ -392,7 +392,7 @@ async fn xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<Stats>, Error> {
         "{}/fs/xfs/*/stats/stats",
         sys_path.to_string_lossy()
     ))
-    .map_err(|err| Error::from(format!("glob xfs stats failed, {}", err)))?;
+    .map_err(|err| Error::from(format!("glob xfs stats failed, {err}")))?;
 
     let mut stats = Vec::new();
     for ent in paths {

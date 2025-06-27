@@ -124,7 +124,7 @@ fn random_number(min: usize, max: usize) -> usize {
 fn random_domain() -> String {
     let name = random_from_slice(&DOMAINS);
     let tld = random_from_slice(&TLDS);
-    format!("{}.{}", name, tld)
+    format!("{name}.{tld}")
 }
 
 fn random_ipv4() -> String {
@@ -139,7 +139,7 @@ fn random_ipv4() -> String {
             let c = rnd.random_range(0..255);
             let d = rnd.random_range(0..255);
 
-            return format!("{}.{}.{}.{}", a, b, c, d);
+            return format!("{a}.{b}.{c}.{d}");
         }
 
         // 11.0.0.0 – 126.255.255.255
@@ -148,7 +148,7 @@ fn random_ipv4() -> String {
             let c = rnd.random_range(0..255);
             let d = rnd.random_range(0..255);
 
-            return format!("{}.{}.{}.{}", a, b, c, d);
+            return format!("{a}.{b}.{c}.{d}");
         }
 
         // 129.0.0.0 – 169.253.255.255
@@ -162,7 +162,7 @@ fn random_ipv4() -> String {
             let c = rnd.random_range(0..255);
             let d = rnd.random_range(0..255);
 
-            return format!("{}.{}.{}.{}", a, b, c, d);
+            return format!("{a}.{b}.{c}.{d}");
         }
 
         // 169.255.0.0 – 172.15.255.255
@@ -178,7 +178,7 @@ fn random_ipv4() -> String {
             let c = rnd.random_range(0..255);
             let d = rnd.random_range(0..255);
 
-            return format!("{}.{}.{}.{}", a, b, c, d);
+            return format!("{a}.{b}.{c}.{d}");
         }
 
         // 172.32.0.0 – 191.0.1.255
@@ -194,7 +194,7 @@ fn random_ipv4() -> String {
             let c = rnd.random_range(0..255);
             let d = rnd.random_range(0..255);
 
-            return format!("{}.{}.{}.{}", a, b, c, d);
+            return format!("{a}.{b}.{c}.{d}");
         }
 
         // 192.0.3.0 – 192.88.98.255
@@ -213,7 +213,7 @@ fn random_ipv4() -> String {
 
                 let d = rnd.random_range(0..255);
 
-                return format!("{}.{}.{}.{}", a, b, c, d);
+                return format!("{a}.{b}.{c}.{d}");
             }
 
             // 192.88.100.0 – 192.167.255.255
@@ -226,14 +226,14 @@ fn random_ipv4() -> String {
 
                 let d = rnd.random_range(0..255);
 
-                return format!("{}.{}.{}.{}", a, b, c, d);
+                return format!("{a}.{b}.{c}.{d}");
             }
 
             if b == 169 {
                 let c = rnd.random_range(0..255);
                 let d = rnd.random_range(0..255);
 
-                return format!("{}.{}.{}.{}", a, b, c, d);
+                return format!("{a}.{b}.{c}.{d}");
             }
 
             continue;
@@ -250,7 +250,7 @@ fn random_ipv4() -> String {
             let c = rnd.random_range(0..255);
             let d = rnd.random_range(0..255);
 
-            return format!("{}.{}.{}.{}", a, b, c, d);
+            return format!("{a}.{b}.{c}.{d}");
         }
 
         // 198.20.0.0 – 223.255.255.255
@@ -264,7 +264,7 @@ fn random_ipv4() -> String {
             let c = rnd.random_range(0..255);
             let d = rnd.random_range(0..255);
 
-            return format!("{}.{}.{}.{}", a, b, c, d);
+            return format!("{a}.{b}.{c}.{d}");
         }
     }
 }
@@ -276,7 +276,7 @@ fn internal_ipv4() -> String {
     let c = rnd.random_range(1..255);
     let d = rnd.random_range(1..255);
 
-    format!("10.{}.{}.{}", b, c, d)
+    format!("10.{b}.{c}.{d}")
 }
 
 fn syslog_5424_log_line() -> String {
@@ -350,7 +350,7 @@ impl OutputFormat {
                 let line = lines.choose(&mut rand::rng()).unwrap();
 
                 if *sequence {
-                    format!("{} {}", n, line)
+                    format!("{n} {line}")
                 } else {
                     line.to_string()
                 }

@@ -462,15 +462,15 @@ fn proxy_dst(dst: &Uri, proxy: &Uri) -> Result<Uri, Error> {
         .scheme(
             proxy
                 .scheme_str()
-                .ok_or_else(|| Error::other(format!("proxy uri missing scheme: {}", proxy)))?,
+                .ok_or_else(|| Error::other(format!("proxy uri missing scheme: {proxy}")))?,
         )
         .authority(
             proxy
                 .authority()
-                .ok_or_else(|| Error::other(format!("proxy uri missing host: {}", proxy)))?
+                .ok_or_else(|| Error::other(format!("proxy uri missing host: {proxy}")))?
                 .clone(),
         )
         .path_and_query(dst.path_and_query().unwrap().clone())
         .build()
-        .map_err(|err| Error::other(format!("other error: {}", err)))
+        .map_err(|err| Error::other(format!("other error: {err}")))
 }

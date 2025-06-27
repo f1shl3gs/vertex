@@ -99,7 +99,7 @@ async fn roll_to_next_writer() {
         tx.flush().unwrap();
 
         for i in 0..3 {
-            let path = root.join(format!("{:04x}.chunk", i));
+            let path = root.join(format!("{i:04x}.chunk"));
             let size = path.metadata().unwrap().len();
             assert_eq!(size, 2 * (4 + 4 + 8 + 40));
             assert!(size <= 128);

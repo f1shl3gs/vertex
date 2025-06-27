@@ -219,8 +219,8 @@ mod integration_tests {
 
     async fn write_testdata(conn: &mut Connection) {
         for i in 0..100 {
-            let key = format!("key_{}", i);
-            let value = format!("value_{}", i);
+            let key = format!("key_{i}");
+            let value = format!("value_{i}");
             let resp = conn
                 .execute::<String>(&["set", &key, &value])
                 .await

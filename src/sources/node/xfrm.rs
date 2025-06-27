@@ -133,7 +133,7 @@ mod tests {
         let metrics = collect(path).await.unwrap();
 
         for metric in metrics {
-            println!("{}", metric);
+            println!("{metric}");
         }
     }
 }

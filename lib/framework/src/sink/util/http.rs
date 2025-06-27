@@ -42,7 +42,7 @@ impl RetryLogic for HttpRetryLogic {
                 format!("{}: {}", status, String::from_utf8_lossy(resp.body())).into(),
             ),
             _ if status.is_success() => RetryAction::Successful,
-            _ => RetryAction::DontRetry(format!("response status: {}", status).into()),
+            _ => RetryAction::DontRetry(format!("response status: {status}").into()),
         }
     }
 }
@@ -470,10 +470,10 @@ where
                 RetryAction::DontRetry("endpoint not implemented".into())
             }
             _ if status.is_server_error() => {
-                RetryAction::Retry(format!("Http Status: {}", status).into())
+                RetryAction::Retry(format!("Http Status: {status}").into())
             }
             _ if status.is_success() => RetryAction::Successful,
-            _ => RetryAction::DontRetry(format!("Http status: {}", status).into()),
+            _ => RetryAction::DontRetry(format!("Http status: {status}").into()),
         }
     }
 }

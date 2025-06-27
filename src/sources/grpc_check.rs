@@ -216,7 +216,7 @@ mod tests {
         let (health_reporter, health_service) = tonic_health::server::health_reporter();
         let addr = testify::next_addr();
         let dummy_service = DummyService {};
-        let endpoint = format!("http://{}", addr);
+        let endpoint = format!("http://{addr}");
 
         // server not start
         let metrics = scrape(

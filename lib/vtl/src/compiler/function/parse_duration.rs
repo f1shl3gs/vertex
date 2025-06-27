@@ -81,7 +81,7 @@ impl Expression for ParseDurationFunc {
         let s = String::from_utf8_lossy(&value);
         let d = humanize::duration::parse_duration(s.as_ref()).map_err(|err| {
             ExpressionError::UnexpectedValue {
-                msg: format!("invalid duration {}, {}", s, err),
+                msg: format!("invalid duration {s}, {err}"),
                 span: self.value.span,
             }
         })?;

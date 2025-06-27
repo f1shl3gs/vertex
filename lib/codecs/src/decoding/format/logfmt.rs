@@ -195,11 +195,7 @@ mod tests {
 
             let log = logs.remove(0);
             let got = log.value();
-            assert_eq!(
-                got, &want,
-                "input: {}\ngot:  {:?}\nwant: {:?}",
-                input, got, want
-            );
+            assert_eq!(got, &want, "input: {input}\ngot:  {got:?}\nwant: {want:?}");
         }
     }
 }

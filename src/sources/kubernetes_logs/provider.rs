@@ -291,8 +291,7 @@ mod tests {
             assert_eq!(
                 extract_pod_logs_directory(&input),
                 want.map(PathBuf::from),
-                "{:#?}",
-                input
+                "{input:#?}",
             );
         }
     }

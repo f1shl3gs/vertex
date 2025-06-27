@@ -356,6 +356,6 @@ mod tests {
             .lookup("127.0.0.1", RecordType::A, RecordClass::INET)
             .await
             .unwrap();
-        println!("{:#?}", msg);
+        println!("{msg:#?}");
     }
 }

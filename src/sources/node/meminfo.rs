@@ -13,14 +13,14 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     for (key, value) in infos {
         if key.ends_with("_total") {
             metrics.push(Metric::sum(
-                format!("node_memory_{}", key),
-                format!("Memory information field {}", key),
+                format!("node_memory_{key}"),
+                format!("Memory information field {key}"),
                 value,
             ));
         } else {
             metrics.push(Metric::gauge(
-                format!("node_memory_{}", key),
-                format!("Memory information field {}", key),
+                format!("node_memory_{key}"),
+                format!("Memory information field {key}"),
                 value,
             ));
         }

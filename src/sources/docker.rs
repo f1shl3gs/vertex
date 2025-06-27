@@ -510,7 +510,7 @@ enum Error {
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Error::UnexpectedStatusCode(code) => write!(f, "unexpected status code: {}", code),
+            Error::UnexpectedStatusCode(code) => write!(f, "unexpected status code: {code}"),
             Error::Hyper(err) => err.fmt(f),
             Error::Client(err) => err.fmt(f),
             Error::Deserialize(err) => err.fmt(f),

@@ -105,7 +105,7 @@ async fn query(
                     } => {
                         let target = String::from_utf8_lossy(&target);
 
-                        let id = format!("SRV_{}_{}:{}", name, target, port);
+                        let id = format!("SRV_{name}_{target}:{port}");
                         let details = value!({
                             "priority": priority,
                             "port": port,
@@ -116,7 +116,7 @@ async fn query(
                         Some(Endpoint {
                             id,
                             typ: "SRV".to_string(),
-                            target: format!("{}:{}", target, port),
+                            target: format!("{target}:{port}"),
                             details,
                         })
                     }
@@ -137,8 +137,8 @@ async fn query(
                 .into_iter()
                 .filter_map(|record| match record.data {
                     RecordData::A(ip) => {
-                        let id = format!("A_{}_{}", ip, default_port);
-                        let target = format!("{}:{}", ip, default_port);
+                        let id = format!("A_{ip}_{default_port}");
+                        let target = format!("{ip}:{default_port}");
 
                         Some(Endpoint {
                             id,
@@ -164,8 +164,8 @@ async fn query(
                 .into_iter()
                 .filter_map(|record| match record.data {
                     RecordData::AAAA(ip) => {
-                        let id = format!("AAAA_{}_{}", ip, default_port);
-                        let target = format!("{}:{}", ip, default_port);
+                        let id = format!("AAAA_{ip}_{default_port}");
+                        let target = format!("{ip}:{default_port}");
 
                         Some(Endpoint {
                             id,
@@ -196,8 +196,8 @@ async fn query(
                     } => {
                         let exchange = String::from_utf8_lossy(&exchange).to_string();
 
-                        let id = format!("MX_{}_{}:{}", name, exchange, default_port);
-                        let target = format!("{}:{}", exchange, default_port);
+                        let id = format!("MX_{name}_{exchange}:{default_port}");
+                        let target = format!("{exchange}:{default_port}");
 
                         Some(Endpoint {
                             id,
@@ -227,8 +227,8 @@ async fn query(
                 .filter_map(|record| match record.data {
                     RecordData::NS(ns) => {
                         let ns = String::from_utf8_lossy(&ns).to_string();
-                        let id = format!("NS_{}_{}:{}", name, ns, default_port);
-                        let target = format!("{}:{}", ns, default_port);
+                        let id = format!("NS_{name}_{ns}:{default_port}");
+                        let target = format!("{ns}:{default_port}");
 
                         Some(Endpoint {
                             id,

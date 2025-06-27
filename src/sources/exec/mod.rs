@@ -554,8 +554,8 @@ mod tests {
         expected_command.args(vec!["arg1".to_string(), "arg2".to_string()]);
 
         // Unfortunately the current_dir is not included in the formatted string
-        let expected_command_string = format!("{:?}", expected_command);
-        let command_string = format!("{:?}", command);
+        let expected_command_string = format!("{expected_command:?}");
+        let command_string = format!("{command:?}");
 
         assert_eq!(expected_command_string, command_string);
     }
@@ -632,7 +632,7 @@ mod tests {
         if let Poll::Ready(Some(events)) = futures::poll!(rx.next()) {
             let log = events.into_logs().unwrap().remove(0);
 
-            println!("{:?}", log);
+            println!("{log:?}");
 
             assert_eq!(log.get(COMMAND_KEY).unwrap(), &Value::from(command));
             assert_eq!(log.get(STREAM_KEY).unwrap(), &Value::from(STDOUT));

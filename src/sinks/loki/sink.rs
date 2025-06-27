@@ -53,7 +53,7 @@ impl LokiRequestBuilder {
 
 #[derive(Debug, Error)]
 pub enum RequestBuildError {
-    #[error("Failed to build payload, err: {0}")]
+    #[error("Failed to build payload, {0}")]
     IO(Error),
 }
 

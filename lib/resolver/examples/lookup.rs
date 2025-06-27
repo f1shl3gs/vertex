@@ -9,6 +9,6 @@ async fn main() {
 
     let lookup = resolver.lookup_ipv4(hostname.as_str()).await.unwrap();
     for addr in lookup {
-        println!("{:?}", addr);
+        println!("{addr:?}");
     }
 }

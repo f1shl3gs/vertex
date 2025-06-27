@@ -71,7 +71,7 @@ impl Expression for AssertFunc {
                 })
             }
             None => Err(ExpressionError::Error {
-                message: format!("assertion failed, {}", condition),
+                message: format!("assertion failed, {condition}"),
                 span: self.condition.span,
             }),
         }

@@ -71,15 +71,14 @@ async fn gather() {
                                         // percona does
                                     } else {
                                         panic!(
-                                            "Incorrect error code returned when querying: {}",
-                                            err
+                                            "Incorrect error code returned when querying: {err}",
                                         );
                                     }
                                 }
-                                None => panic!("unknown database error: {:?}", err),
+                                None => panic!("unknown database error: {err:?}"),
                             }
                         }
-                        err => panic!("unexpected error: {:?}", err),
+                        err => panic!("unexpected error: {err:?}"),
                     },
                 }
             }

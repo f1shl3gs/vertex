@@ -67,7 +67,7 @@ impl RetryLogic for ElasticsearchRetryLogic {
             ),
             _ if status.is_client_error() => {
                 let body = String::from_utf8_lossy(resp.http_response.body());
-                RetryAction::DontRetry(format!("client-side error, {}: {}", status, body).into())
+                RetryAction::DontRetry(format!("client-side error, {status}: {body}").into())
             }
             _ if status.is_success() => {
                 let body = String::from_utf8_lossy(resp.http_response.body());
@@ -78,20 +78,17 @@ impl RetryLogic for ElasticsearchRetryLogic {
                     RetryAction::Successful
                 }
             }
-            _ => RetryAction::DontRetry(format!("response status: {}", status).into()),
+            _ => RetryAction::DontRetry(format!("response status: {status}").into()),
         }
     }
 }
 
 fn get_error_reason(body: &str) -> String {
     match serde_json::from_str::<ElasticsearchResultResponse>(body) {
-        Err(err) => format!(
-            "some messages failed, could not parse response, err: {}",
-            err
-        ),
+        Err(err) => format!("some messages failed, could not parse response, {err}",),
         Ok(resp) => match resp.items.into_iter().find_map(|item| item.result().error) {
             Some(err) => format!("error type: {}, reason: {}", err.err_type, err.reason),
-            None => format!("error response: {}", body),
+            None => format!("error response: {body}"),
         },
     }
 }

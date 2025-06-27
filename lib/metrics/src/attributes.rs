@@ -58,7 +58,6 @@ pub fn assert_legal_key(s: &str) {
     assert!(!s.is_empty(), "string must not be empty");
     assert!(
         s.chars().all(|c| matches!(c, '0'..='9' | 'a'..='z' | '_')),
-        "string must be [0-9a-z_]+ got: \"{}\"",
-        s
+        "string must be [0-9a-z_]+ got: \"{s}\""
     )
 }
