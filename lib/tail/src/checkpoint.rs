@@ -139,10 +139,10 @@ impl CheckpointsView {
 
     fn set_state(&self, state: State, ignore_before: Option<DateTime<Utc>>) {
         for checkpoint in state.checkpoints {
-            if let Some(ignore_before) = ignore_before {
-                if checkpoint.modified < ignore_before {
-                    continue;
-                }
+            if let Some(ignore_before) = ignore_before
+                && checkpoint.modified < ignore_before
+            {
+                continue;
             }
 
             self.load(checkpoint);

@@ -199,13 +199,13 @@ mod _serde {
                         }
                     }
 
-                    if let Some(BufferType::Disk { max_chunk_size, .. }) = &typ {
-                        if *max_chunk_size > 1024 * 1024 * 1024 {
-                            return Err(Error::invalid_value(
-                                Unexpected::Unsigned(*max_chunk_size as u64),
-                                &"an unsigned value less than 1G",
-                            ));
-                        }
+                    if let Some(BufferType::Disk { max_chunk_size, .. }) = &typ
+                        && *max_chunk_size > 1024 * 1024 * 1024
+                    {
+                        return Err(Error::invalid_value(
+                            Unexpected::Unsigned(*max_chunk_size as u64),
+                            &"an unsigned value less than 1G",
+                        ));
                     }
 
                     Ok(BufferConfig {

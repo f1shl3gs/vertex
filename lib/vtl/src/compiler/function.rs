@@ -103,16 +103,16 @@ impl ArgumentList {
     pub fn push(&mut self, expr: Spanned<Expr>, state: &TypeState) -> Result<(), SyntaxError> {
         let index = self.arguments.len();
 
-        if let Some(parameter) = self.parameters.get(index) {
-            if !parameter.kind.intersects(expr.type_def(state).kind) {
-                return Err(SyntaxError::InvalidFunctionArgumentType {
-                    function: self.name,
-                    argument: parameter.name,
-                    want: parameter.kind,
-                    got: expr.type_def(state).kind,
-                    span: expr.span,
-                });
-            }
+        if let Some(parameter) = self.parameters.get(index)
+            && !parameter.kind.intersects(expr.type_def(state).kind)
+        {
+            return Err(SyntaxError::InvalidFunctionArgumentType {
+                function: self.name,
+                argument: parameter.name,
+                want: parameter.kind,
+                got: expr.type_def(state).kind,
+                span: expr.span,
+            });
         }
 
         self.arguments.push(expr);
