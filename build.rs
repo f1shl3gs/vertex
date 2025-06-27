@@ -226,9 +226,7 @@ fn git_info() -> Result<(String, String)> {
             }
 
             let text = std::str::from_utf8(&output.stdout)
-                .map_err(|err| {
-                    Error::other(format!("Unexpected output when get branch, {err}"))
-                })?
+                .map_err(|err| Error::other(format!("Unexpected output when get branch, {err}")))?
                 .trim();
 
             match text.strip_prefix("refs/heads/") {
@@ -259,9 +257,7 @@ fn git_info() -> Result<(String, String)> {
             }
 
             std::str::from_utf8(&output.stdout)
-                .map_err(|err| {
-                    Error::other(format!("Unexpected output when get hash, {err}"))
-                })?
+                .map_err(|err| Error::other(format!("Unexpected output when get hash, {err}")))?
                 .trim()
                 .to_string()
         }
