@@ -175,15 +175,6 @@ impl<T> Queue<T> {
             unsafe { (*head).value.as_ref() }
         }
     }
-
-    pub fn tail_mut(&self) -> Option<&mut T> {
-        let head = self.head.load(Ordering::Relaxed);
-        if head.is_null() {
-            None
-        } else {
-            unsafe { (*head).value.as_mut() }
-        }
-    }
 }
 
 #[cfg(test)]

@@ -222,13 +222,13 @@ impl<B: Body> fmt::Display for FormatBody<'_, B> {
         let size = self.0.size_hint();
         match (size.lower(), size.upper()) {
             (0, None) => write!(fmt, "[unknown]"),
-            (lower, None) => write!(fmt, "[>={} bytes]", lower),
+            (lower, None) => write!(fmt, "[>={lower} bytes]"),
 
             (0, Some(0)) => write!(fmt, "[empty]"),
-            (0, Some(upper)) => write!(fmt, "[<={} bytes]", upper),
+            (0, Some(upper)) => write!(fmt, "[<={upper} bytes]"),
 
-            (lower, Some(upper)) if lower == upper => write!(fmt, "[{} bytes]", lower),
-            (lower, Some(upper)) => write!(fmt, "[{}..={} bytes]", lower, upper),
+            (lower, Some(upper)) if lower == upper => write!(fmt, "[{lower} bytes]"),
+            (lower, Some(upper)) => write!(fmt, "[{lower}..={upper} bytes]"),
         }
     }
 }
@@ -429,7 +429,7 @@ mod tests {
         let client = HttpClient::new(tls.as_ref(), &ProxyConfig::default()).unwrap();
         let req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://{}", addr))
+            .uri(format!("http://{addr}"))
             .body(Empty::<Bytes>::default())
             .unwrap();
 
@@ -440,7 +440,7 @@ mod tests {
         let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://{}", addr))
+            .uri(format!("http://{addr}"))
             .body(Empty::<Bytes>::default())
             .unwrap();
 

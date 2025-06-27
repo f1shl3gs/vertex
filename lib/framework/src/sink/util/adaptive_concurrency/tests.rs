@@ -159,7 +159,7 @@ impl SinkConfig for TestConfig {
                 batch_settings.timeout,
             )
             .with_flat_map(|event| stream::iter(Some(Ok(EncodedEvent::new(event, 0)))))
-            .sink_map_err(|err| panic!("Fatal test sink error: {}", err));
+            .sink_map_err(|err| panic!("Fatal test sink error: {err}"));
 
         let healthcheck = futures::future::ok(()).boxed();
 
@@ -566,14 +566,14 @@ impl Range {
     fn assert_usize(&self, value: usize, name1: &str, name2: &str) -> Option<Failure> {
         if value < self.0 as usize {
             Some(Failure {
-                stat_name: format!("{} {}", name1, name2),
+                stat_name: format!("{name1} {name2}"),
                 mode: FailureMode::ExceededMinimum,
                 value: value as f64,
                 reference: self.0,
             })
         } else if value > self.1 as usize {
             Some(Failure {
-                stat_name: format!("{} {}", name1, name2),
+                stat_name: format!("{name1} {name2}"),
                 mode: FailureMode::ExceededMaximum,
                 value: value as f64,
                 reference: self.1,
@@ -586,14 +586,14 @@ impl Range {
     fn assert_f64(&self, value: f64, name1: &str, name2: &str) -> Option<Failure> {
         if value < self.0 {
             Some(Failure {
-                stat_name: format!("{} {}", name1, name2),
+                stat_name: format!("{name1} {name2}"),
                 mode: FailureMode::ExceededMinimum,
                 value,
                 reference: self.0,
             })
         } else if value > self.1 {
             Some(Failure {
-                stat_name: format!("{} {}", name1, name2),
+                stat_name: format!("{name1} {name2}"),
                 mode: FailureMode::ExceededMaximum,
                 value,
                 reference: self.1,
@@ -666,7 +666,7 @@ struct TestInput {
 }
 
 async fn run_compare(file_path: PathBuf, input: TestInput) {
-    eprintln!("Running test in {:?}", file_path);
+    eprintln!("Running test in {file_path:?}");
 
     let results = run_test(input.params).await;
     let mut failures = Vec::new();
@@ -713,7 +713,7 @@ async fn run_compare(file_path: PathBuf, input: TestInput) {
         );
     }
 
-    assert!(failures.is_empty(), "{:#?}", results)
+    assert!(failures.is_empty(), "{results:#?}")
 }
 
 // TODO: enable this
@@ -738,7 +738,7 @@ async fn all_tests() {
                     .read_to_string(&mut data)
                     .unwrap();
                 let input: TestInput = serde_yaml::from_str(&data)
-                    .unwrap_or_else(|err| panic!("Invalid YAML in {:?}: {:?}", file_path, err));
+                    .unwrap_or_else(|err| panic!("Invalid YAML in {file_path:?}: {err:?}"));
 
                 Some((file_path, input))
             } else {

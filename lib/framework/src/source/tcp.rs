@@ -35,7 +35,7 @@ impl std::fmt::Display for SocketListenAddr {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::SocketAddr(addr) => addr.fmt(f),
-            Self::SystemFd(index) => write!(f, "system socket ${}", index),
+            Self::SystemFd(index) => write!(f, "system socket ${index}"),
         }
     }
 }

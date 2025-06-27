@@ -80,7 +80,7 @@ mod tests {
 
             serializer.encode(event, &mut buf).unwrap();
 
-            assert_eq!(buf.freeze(), want, "case {}", name);
+            assert_eq!(buf.freeze(), want, "case {name}");
         }
     }
 }

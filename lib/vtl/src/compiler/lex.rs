@@ -18,7 +18,7 @@ impl Display for LexError {
         match self {
             LexError::UnexpectedChar { .. } => f.write_str("unexpected char"),
             LexError::NumericLiteral { err, .. } => {
-                write!(f, "parse numeric token \"{}\" failed", err)
+                write!(f, "parse numeric token \"{err}\" failed")
             }
             LexError::StringLiteral { .. } => f.write_str("invalid string literal"),
         }
@@ -31,7 +31,7 @@ impl DiagnosticMessage for LexError {
     fn labels(&self) -> Vec<Label> {
         match self {
             LexError::UnexpectedChar { ch, span } => {
-                vec![Label::new(format!("unexpected char '{}'", ch), span)]
+                vec![Label::new(format!("unexpected char '{ch}'"), span)]
             }
             LexError::NumericLiteral { err, span } => {
                 vec![Label::new(err, span)]
@@ -120,7 +120,7 @@ where
             Token::LessEqual => f.write_str("<="),
             Token::LessThan => f.write_char('<'),
             Token::String(s) => s.fmt(f),
-            Token::Integer(i) => write!(f, "{}", i),
+            Token::Integer(i) => write!(f, "{i}"),
             Token::Float(n) => write!(f, "{}", *n),
             Token::If => f.write_str("if"),
             Token::Else => f.write_str("{"),

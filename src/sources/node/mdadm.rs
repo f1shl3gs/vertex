@@ -68,10 +68,7 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
 
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 3 {
-            let msg = format!(
-                "not enough fields in mdline(expect at least 3), line: {}",
-                line
-            );
+            let msg = format!("not enough fields in mdline(expect at least 3), line: {line}");
             return Err(Error::from(msg));
         }
 
@@ -79,7 +76,7 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
         let mut state = parts[2]; // active or inactive
 
         if line_count <= i + 3 {
-            let msg = format!("error parsing: {}, too few lines for md device", name);
+            let msg = format!("error parsing: {name}, too few lines for md device");
             return Err(Error::from(msg));
         }
 
@@ -120,7 +117,7 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
                 synced_blocks = 0;
             } else {
                 (pct, synced_blocks, finish, speed) = recovery_line(sync_line).map_err(|err| {
-                    let msg = format!("parse recovery line failed, err: {}", err);
+                    let msg = format!("parse recovery line failed, {err}");
                     Error::from(msg)
                 })?;
             }
@@ -207,7 +204,7 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
     };
 
     if caps.len() != 5 {
-        let msg = format!("couldn't find all the substring matches {}", status_line);
+        let msg = format!("couldn't find all the substring matches {status_line}");
         return Err(Error::from(msg));
     }
 

@@ -108,9 +108,9 @@ pub struct RootCommand {
 impl RootCommand {
     #![allow(clippy::print_stdout)]
     fn show_version(&self) {
-        println!("Vertex {} -- {}", PKG_VERSION, GIT_HASH);
-        println!("Target {}", TARGET);
-        println!("rustc  {}", RUSTC_VERSION);
+        println!("Vertex {PKG_VERSION} -- {GIT_HASH}");
+        println!("Target {TARGET}");
+        println!("rustc  {RUSTC_VERSION}");
     }
 
     fn config_paths_with_formats(&self) -> Vec<config::ConfigPath> {

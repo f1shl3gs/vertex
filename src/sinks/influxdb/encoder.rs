@@ -35,10 +35,10 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
 
             match &metric.value {
                 MetricValue::Sum(value) => {
-                    writeln!(writer, "counter={}", value)?;
+                    writeln!(writer, "counter={value}")?;
                 }
                 MetricValue::Gauge(value) => {
-                    writeln!(writer, "gauge={}", value)?;
+                    writeln!(writer, "gauge={value}")?;
                 }
                 MetricValue::Histogram {
                     buckets,
@@ -56,8 +56,8 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
                             write!(writer, "{}={}", bucket.upper, bucket.count)?;
                         }
                     }
-                    write!(writer, ",count={}", count)?;
-                    writeln!(writer, ",sum={}", sum)?;
+                    write!(writer, ",count={count}")?;
+                    writeln!(writer, ",sum={sum}")?;
                 }
                 MetricValue::Summary {
                     quantiles,
@@ -71,8 +71,8 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
                             write!(writer, ",{}={}", quantile.quantile, quantile.value)?;
                         }
                     }
-                    write!(writer, ",count={}", count)?;
-                    writeln!(writer, ",sum={}", sum)?;
+                    write!(writer, ",count={count}")?;
+                    writeln!(writer, ",sum={sum}")?;
                 }
             }
         }

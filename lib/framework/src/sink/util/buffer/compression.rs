@@ -397,7 +397,7 @@ mod tests {
         for (input, want) in tests {
             let compression: Compression = serde_yaml::from_str(input).unwrap();
 
-            assert_eq!(compression, want, "input: {}", input);
+            assert_eq!(compression, want, "input: {input}");
         }
     }
 

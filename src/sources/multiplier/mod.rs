@@ -125,16 +125,12 @@ impl ShutdownCoordinator {
 
         let complete_tripwire = self.complete_tripwires.remove(name).unwrap_or_else(|| {
             panic!(
-                "complete_tripwire for sub source '{}' not found in the ShutdownCoordinator",
-                name
+                "complete_tripwire for sub source '{name}' not found in the ShutdownCoordinator",
             )
         });
 
         let force_trigger = self.force_triggers.remove(name).unwrap_or_else(|| {
-            panic!(
-                "force_trigger for sub source '{}' not found in the ShutdownCoordinator",
-                name
-            )
+            panic!("force_trigger for sub source '{name}' not found in the ShutdownCoordinator",)
         });
 
         shutdown_source_complete(name.to_string(), complete_tripwire, force_trigger, timeout).await
@@ -148,16 +144,12 @@ impl ShutdownCoordinator {
 
             let complete_tripwire = self.complete_tripwires.remove(&name).unwrap_or_else(|| {
                 panic!(
-                    "complete tripwire for sub source '{}' not found in the ShutdownCoordinator",
-                    name
+                    "complete tripwire for sub source '{name}' not found in the ShutdownCoordinator",
                 )
             });
 
             let force_trigger = self.force_triggers.remove(&name).unwrap_or_else(|| {
-                panic!(
-                    "force_trigger for source '{}' not found in the ShutdownCoordinator",
-                    name
-                )
+                panic!("force_trigger for source '{name}' not found in the ShutdownCoordinator",)
             });
 
             complete_futures.push(shutdown_source_complete(

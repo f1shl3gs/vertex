@@ -121,7 +121,7 @@ mod tests {
 
     fn assert_approx_eq(a: f64, b: f64, delta: f64) {
         if !(a - b < delta || b - a < delta) {
-            panic!("{} not approx equal to {}", a, b);
+            panic!("{a} not approx equal to {b}");
         }
     }
 

@@ -37,14 +37,13 @@ async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64
     let mut status = HashMap::new();
     let parts = masters.split_ascii_whitespace();
     for master in parts {
-        let path = sys_path.join(format!("class/net/{}/bonding/slaves", master));
+        let path = sys_path.join(format!("class/net/{master}/bonding/slaves"));
 
         if let Ok(slaves) = read_string(path) {
             let mut sstat = vec![0f64, 0f64];
             for slave in slaves.split_ascii_whitespace() {
                 let path = sys_path.join(format!(
-                    "class/net/{}/lower_{}/bonding_slave/mii_status",
-                    master, slave
+                    "class/net/{master}/lower_{slave}/bonding_slave/mii_status",
                 ));
                 if let Ok(state) = read_string(path) {
                     sstat[0] += 1f64;
@@ -55,8 +54,7 @@ async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64
 
                 // some older? kernels use slave_ prefix
                 let path = sys_path.join(format!(
-                    "class/net/{}/slave_{}/bonding_slave/mii_status",
-                    master, slave
+                    "class/net/{master}/slave_{slave}/bonding_slave/mii_status",
                 ));
                 if let Ok(state) = read_string(path) {
                     sstat[0] += 1f64;

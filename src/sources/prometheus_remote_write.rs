@@ -66,14 +66,14 @@ impl RemoteWriteSource {
         let req = proto::WriteRequest::decode(body).map_err(|err| {
             ErrorMessage::new(
                 StatusCode::BAD_REQUEST,
-                format!("Could not decode write request: {}", err),
+                format!("Could not decode write request: {err}"),
             )
         })?;
 
         let metrics = prometheus::parse_request(req).map_err(|err| {
             ErrorMessage::new(
                 StatusCode::BAD_REQUEST,
-                format!("Could not decode write request, err: {:?}", err),
+                format!("Could not decode write request, {err:?}"),
             )
         })?;
 

@@ -416,7 +416,7 @@ impl<'a> TryFrom<BorrowedSegment<'a>> for OwnedSegment {
 impl Display for OwnedSegment {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            OwnedSegment::Index(i) => write!(f, "[{}]", i),
+            OwnedSegment::Index(i) => write!(f, "[{i}]"),
             OwnedSegment::Field(field) => f.write_str(field),
         }
     }

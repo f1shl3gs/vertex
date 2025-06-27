@@ -604,14 +604,14 @@ mod tests {
     #[tokio::test]
     async fn check() {
         let content = std::fs::read_to_string("/etc/hosts").unwrap();
-        println!("{}", content);
+        println!("{content}");
 
         use hyper::server::conn::http1;
 
         trace_init();
 
         let addr = testify::next_addr();
-        let endpoint = format!("http://{}", addr);
+        let endpoint = format!("http://{addr}");
         let listener = TcpListener::bind(addr).await.unwrap();
 
         // start http server

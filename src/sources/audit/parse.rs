@@ -276,7 +276,7 @@ impl Display for Error<'_> {
 pub fn parse(input: &[u8]) -> Result<Value, Error> {
     let id = u16::from_ne_bytes(input[4..6].try_into().unwrap());
     let msg_typ = match message_typ(id) {
-        None => Bytes::from(format!("UNKNOWN[{}]", id)),
+        None => Bytes::from(format!("UNKNOWN[{id}]")),
         Some(value) => Bytes::from_static(value.as_ref()),
     };
 
@@ -352,7 +352,7 @@ fn parse_pairs(input: &[u8]) -> BTreeMap<String, Value> {
                             for (suffix, value) in
                                 SELINUX_SUBJ_KEY_SUFFIXES.iter().zip(buf.split(":"))
                             {
-                                fields.insert(format!("subj{}", suffix), value.into());
+                                fields.insert(format!("subj{suffix}"), value.into());
                             }
                         } else {
                             fields.insert(key, buf.into());
@@ -411,7 +411,7 @@ fn parse_pairs(input: &[u8]) -> BTreeMap<String, Value> {
             Some(key) if key == "subj" => {
                 if key == "subj" {
                     for (suffix, value) in SELINUX_SUBJ_KEY_SUFFIXES.iter().zip(buf.split(":")) {
-                        fields.insert(format!("subj{}", suffix), value.into());
+                        fields.insert(format!("subj{suffix}"), value.into());
                     }
                 }
             }

@@ -33,7 +33,7 @@ del(.array)
         Ok(program) => program,
         Err(err) => {
             let output = diagnostic.snippets(err);
-            println!("{}", output);
+            println!("{output}");
             return;
         }
     };
@@ -54,9 +54,9 @@ del(.array)
 
     if let Err(err) = program.run(&mut target) {
         let output = diagnostic.snippets(err);
-        println!("{}", output);
+        println!("{output}");
     }
 
     let output = serde_json::to_string_pretty(&target.value).unwrap();
-    println!("{}", output);
+    println!("{output}");
 }

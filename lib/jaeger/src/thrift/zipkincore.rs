@@ -62,7 +62,7 @@ impl TryFrom<i32> for AnnotationType {
           thrift::Error::Protocol(
             ProtocolError::new(
               ProtocolErrorKind::InvalidData,
-              format!("cannot convert enum constant {} to AnnotationType", i)
+              format!("cannot convert enum constant {i} to AnnotationType")
             )
           )
         )

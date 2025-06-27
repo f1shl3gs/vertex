@@ -358,17 +358,11 @@ mod tests {
             .unwrap()
         {
             Value::Integer(_) => {}
-            e => panic!(
-                "Timestamp was not transformed into a Unix timestamp. Was {:?}",
-                e
-            ),
+            err => panic!("Timestamp was not transformed into a Unix timestamp. Was {err:?}",),
         }
         match event.as_mut_log().get("another").unwrap() {
             Value::Integer(_) => {}
-            e => panic!(
-                "Timestamp was not transformed into a Unix timestamp. Was {:?}",
-                e
-            ),
+            err => panic!("Timestamp was not transformed into a Unix timestamp. Was {err:?}"),
         }
     }
 

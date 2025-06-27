@@ -249,7 +249,7 @@ impl<T: Debug> OrderedAcknowledgements<T> {
                 let last_marker = self
                     .pending_markers
                     .back_mut()
-                    .unwrap_or_else(|| panic!("pending markers should have items"));
+                    .expect("pending markers should have items");
 
                 last_marker.len = PendingMarkerLength::Assumed(len);
             }
@@ -323,15 +323,13 @@ impl<T: Debug> OrderedAcknowledgements<T> {
                 let PendingMarker { id, data, .. } = self
                     .pending_markers
                     .pop_front()
-                    .unwrap_or_else(|| unreachable!("pending markers should not be empty"));
+                    .expect("pending markers should not be empty");
 
                 if acknowledged > 0 {
-                    self.unclaimed =
-                        self.unclaimed.checked_sub(acknowledged).unwrap_or_else(|| {
-                            unreachable!(
-                                "should not be able to claim more acknowledgements than unclaimed"
-                            )
-                        });
+                    self.unclaimed = self
+                        .unclaimed
+                        .checked_sub(acknowledged)
+                        .expect("should not be able to claim more acknowledgements than unclaimed");
                 }
 
                 self.watermark = id.wrapping_add(match len {
@@ -416,22 +414,22 @@ mod tests {
     #[test]
     fn demo() {
         let mut acker: OrderedAcknowledgements<()> = OrderedAcknowledgements::from_acked(1);
-        println!("init\n{:#?}", acker);
+        println!("init\n{acker:#?}");
 
         acker.add_marker(1, Some(25), None).unwrap();
-        println!("{:#?}", acker);
+        println!("{acker:#?}");
 
         while let Some(mark) = acker.get_next_eligible_marker() {
-            println!("{:?}", mark);
+            println!("{mark:?}");
         }
 
         acker.add_marker(26, Some(1), None).unwrap();
-        println!("{:#?}", acker);
+        println!("{acker:#?}");
 
         acker.add_acknowledgements(25);
 
         while let Some(mark) = acker.get_next_eligible_marker() {
-            println!("{:?}", mark);
+            println!("{mark:?}");
         }
         // println!("{:#?}", acker);
     }

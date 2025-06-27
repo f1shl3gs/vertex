@@ -102,7 +102,7 @@ async fn class_drm_card_amdgpu_stats(
 }
 
 async fn read_drm_card_field(card: &str, field: &str) -> Result<u64, Error> {
-    let path = format!("{}/device/{}", card, field);
+    let path = format!("{card}/device/{field}");
     read_into(path)
 }
 
@@ -147,7 +147,7 @@ struct ClassDRMCardAMDGPUStats {
 }
 
 async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUStats, Error> {
-    let uevent = read_string(format!("{}/device/uevent", card))?;
+    let uevent = read_string(format!("{card}/device/uevent"))?;
     if !uevent.contains("DRIVER=amdgpu") {
         return Err(Error::from("the device is not an amdgpu"));
     }
@@ -175,11 +175,11 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
         .await
         .unwrap_or(0);
 
-    let path = format!("{}/device/mem_info_vram_vendor", card);
+    let path = format!("{card}/device/mem_info_vram_vendor");
     let memory_vram_vendor = read_string(path).unwrap_or_default();
-    let path = format!("{}/device/power_dpm_force_performance_level", card);
+    let path = format!("{card}/device/power_dpm_force_performance_level");
     let power_dpm_force_performance_level = read_string(path).unwrap_or_default();
-    let path = format!("{}/device/unique_id", card);
+    let path = format!("{card}/device/unique_id");
     let unique_id = read_string(path).unwrap_or_default();
 
     Ok(ClassDRMCardAMDGPUStats {

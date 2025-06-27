@@ -37,7 +37,7 @@ fn get_enabled(proc_path: PathBuf) -> Result<bool, Error> {
         thread_self
     } else {
         let thread_id = unsafe { libc::syscall(libc::SYS_gettid) as i64 };
-        proc_path.join(format!("self/task/{}/attr/current", thread_id))
+        proc_path.join(format!("self/task/{thread_id}/attr/current"))
     };
 
     // The content is end with '0x0000'
@@ -56,7 +56,7 @@ fn default_enforce_mode() -> Result<bool, Error> {
             } else if value == "permissive" {
                 Ok(false)
             } else {
-                Err(format!("unknown enforce mode \"{}\"", value).into())
+                Err(format!("unknown enforce mode \"{value}\"").into())
             };
         }
     }

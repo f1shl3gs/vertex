@@ -50,7 +50,7 @@ async fn file_id_wraps_around_when_max_file_id_hit() {
         }
 
         for i in 0..8 {
-            let path = root.join(format!("{:04x}.chunk", i));
+            let path = root.join(format!("{i:04x}.chunk"));
             assert!(path.exists());
         }
 
@@ -58,7 +58,7 @@ async fn file_id_wraps_around_when_max_file_id_hit() {
         rx.read().await.unwrap();
 
         for i in 0..8 {
-            let path = root.join(format!("{:04x}.chunk", i));
+            let path = root.join(format!("{i:04x}.chunk"));
             assert!(path.exists());
         }
     })

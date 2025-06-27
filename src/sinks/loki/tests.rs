@@ -104,7 +104,7 @@ auth:
     .unwrap();
 
     let addr = testify::next_addr();
-    let endpoint = format!("http://{}", addr);
+    let endpoint = format!("http://{addr}");
     config.endpoint = endpoint
         .clone()
         .parse::<Url>()

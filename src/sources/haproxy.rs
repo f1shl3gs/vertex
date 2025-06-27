@@ -1066,7 +1066,7 @@ mod integration_tests {
             .run(async move {
                 // test unhealth gather
                 let uncorrect_port = 111; // dummy, but ok
-                let uri = format!("http://127.0.0.1:{}/stats?stats;csv", uncorrect_port)
+                let uri = format!("http://127.0.0.1:{uncorrect_port}/stats?stats;csv")
                     .parse()
                     .unwrap();
                 let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
@@ -1074,7 +1074,7 @@ mod integration_tests {
                 assert_eq!(metrics.len(), 2);
 
                 // test health gather
-                let uri = format!("http://{}/stats?stats;csv", service_addr)
+                let uri = format!("http://{service_addr}/stats?stats;csv")
                     .parse()
                     .unwrap();
                 let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();

@@ -130,8 +130,7 @@ impl Config {
             let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
             if parts.len() < 10 {
                 return Err(Error::Other(format!(
-                    "malformed mount point information: {}",
-                    line
+                    "malformed mount point information: {line}"
                 )));
             }
 

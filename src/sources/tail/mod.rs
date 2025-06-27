@@ -567,8 +567,8 @@ mod tests {
             sleep_500_millis().await;
 
             for i in 0..n {
-                writeln!(file1, "foo {}", i).unwrap();
-                writeln!(file2, "bar {}", i).unwrap();
+                writeln!(file1, "foo {i}").unwrap();
+                writeln!(file2, "bar {i}").unwrap();
             }
 
             sleep_500_millis().await;
@@ -582,14 +582,14 @@ mod tests {
             let line = log.get(".").unwrap().to_string_lossy();
 
             if line.starts_with("foo") {
-                assert_eq!(line, format!("foo {}", foo));
+                assert_eq!(line, format!("foo {foo}"));
                 assert_eq!(
                     log.get("%tail.file").unwrap().to_string_lossy(),
                     path1.to_str().unwrap()
                 );
                 foo += 1;
             } else {
-                assert_eq!(line, format!("bar {}", bar));
+                assert_eq!(line, format!("bar {bar}"));
                 assert_eq!(
                     log.get("%tail.file").unwrap().to_string_lossy(),
                     path2.to_str().unwrap()
@@ -655,7 +655,7 @@ mod tests {
             sleep_500_millis().await;
 
             for i in 0..n {
-                writeln!(&mut file, "prerot {}", i).unwrap();
+                writeln!(&mut file, "prerot {i}").unwrap();
             }
 
             // The writes must be observed before rotating
@@ -668,7 +668,7 @@ mod tests {
             sleep_500_millis().await;
 
             for i in 0..n {
-                writeln!(&mut file, "postrot {}", i).unwrap();
+                writeln!(&mut file, "postrot {i}").unwrap();
             }
 
             sleep_500_millis().await
@@ -690,9 +690,9 @@ mod tests {
 
             let line = log["."].to_string_lossy();
             if pre_rot {
-                assert_eq!(line, format!("prerot {}", i));
+                assert_eq!(line, format!("prerot {i}"));
             } else {
-                assert_eq!(line, format!("postrot {}", i));
+                assert_eq!(line, format!("postrot {i}"));
             }
 
             i += 1;
@@ -729,10 +729,10 @@ mod tests {
             sleep_500_millis().await;
 
             for i in 0..n {
-                writeln!(&mut file1, "1 {}", i).unwrap();
-                writeln!(&mut file2, "2 {}", i).unwrap();
-                writeln!(&mut file3, "3 {}", i).unwrap();
-                writeln!(&mut file4, "4 {}", i).unwrap();
+                writeln!(&mut file1, "1 {i}").unwrap();
+                writeln!(&mut file2, "2 {i}").unwrap();
+                writeln!(&mut file3, "3 {i}").unwrap();
+                writeln!(&mut file4, "4 {i}").unwrap();
             }
 
             sleep_500_millis().await;
@@ -1019,7 +1019,7 @@ mod tests {
             writeln!(&mut file, "this is too long").unwrap();
             writeln!(&mut file, "11 eleven11").unwrap();
             let super_long = "This line is super long and will take up more space than BufReader's internal buffer, just to make sure that everything works properly when multiple read calls are involved".repeat(10000);
-            writeln!(&mut file, "{}", super_long).unwrap();
+            writeln!(&mut file, "{super_long}").unwrap();
             writeln!(&mut file, "exactly 10").unwrap();
             writeln!(&mut file, "it can end on a line that's too long").unwrap();
 

@@ -97,7 +97,7 @@ impl ElasticsearchCommon {
 pub async fn healthcheck(client: HttpClient, uri: String, auth: Option<Auth>) -> crate::Result<()> {
     let mut req = Request::builder()
         .method(Method::GET)
-        .uri(format!("{}/_cluster/health", uri))
+        .uri(format!("{uri}/_cluster/health"))
         .body(Full::default())?;
     if let Some(auth) = auth {
         auth.apply(&mut req);

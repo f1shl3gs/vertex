@@ -103,7 +103,7 @@ impl Display for PathParseError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             PathParseError::InvalidPathSyntax { path } => {
-                f.write_fmt(format_args!("Invalid field path {:?}", path))
+                f.write_fmt(format_args!("Invalid field path {path:?}"))
             }
         }
     }

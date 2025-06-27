@@ -193,6 +193,6 @@ mod tests {
 
         let n = interpolate(&input, &endpoint).unwrap();
 
-        println!("{}", n);
+        println!("{n}");
     }
 }

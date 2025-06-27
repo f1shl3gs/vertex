@@ -16,7 +16,7 @@ fn assert_no_log_lines(output: &[u8]) {
     let keywords = ["ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
     for line in output.lines() {
         let present = keywords.iter().any(|word| line.contains(word));
-        assert!(!present, "Log detected in output line: {:?}", line);
+        assert!(!present, "Log detected in output line: {line:?}");
     }
 }
 
@@ -39,7 +39,7 @@ fn clean_output() {
     for (args, want) in tests {
         let (output, status) = run_command(args.clone());
         assert_no_log_lines(&output);
-        assert_eq!(status.success(), want, "args: {:?}", args)
+        assert_eq!(status.success(), want, "args: {args:?}")
     }
 }
 

@@ -91,7 +91,7 @@ mod tests {
 
     #[test]
     fn test_parse_os_release() {
-        let path = format!("tests/node/{}", USR_LIB_OS_RELEASE);
+        let path = format!("tests/node/{USR_LIB_OS_RELEASE}");
         let m = parse_os_release(&path).unwrap();
 
         assert_eq!(m.get("NAME").unwrap(), "Ubuntu");
@@ -108,6 +108,6 @@ mod tests {
         let support_end = "2025-12-15";
         let date = NaiveDate::parse_from_str(support_end, "%Y-%m-%d").unwrap();
         let timestamp = date.and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp();
-        println!("{:?}", timestamp);
+        println!("{timestamp:?}");
     }
 }

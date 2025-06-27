@@ -91,7 +91,7 @@ impl Expression for DecodeBase64Func {
             .decode(value)
             .map(|value| Value::Bytes(value.into()))
             .map_err(|err| ExpressionError::Error {
-                message: format!("decode base64 failed, {}", err),
+                message: format!("decode base64 failed, {err}"),
                 span: self.value.span,
             })
     }

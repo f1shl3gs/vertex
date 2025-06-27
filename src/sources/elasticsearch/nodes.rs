@@ -430,7 +430,7 @@ struct NodeStatsResp {
 
 impl Elasticsearch {
     pub async fn node_stats(&self, node: &str) -> Vec<Metric> {
-        let url = format!("/_nodes/{}/stats", node);
+        let url = format!("/_nodes/{node}/stats");
         let start = Instant::now();
         let result = self.fetch::<NodeStatsResp>(url.as_str()).await;
         let elapsed = start.elapsed();
@@ -1463,7 +1463,7 @@ mod tests {
 
         let http_client = framework::http::HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let es = Elasticsearch {
-            endpoint: format!("http://{}", addr),
+            endpoint: format!("http://{addr}"),
             http_client,
             auth,
             slm: false,
@@ -1471,7 +1471,7 @@ mod tests {
         };
 
         let metrics = es.node_stats("_all").await;
-        assert!(metrics.len() > 2, "version: {}", version);
+        assert!(metrics.len() > 2, "version: {version}");
     }
 
     #[tokio::test]
@@ -1499,7 +1499,7 @@ mod tests {
         if let Err(err) = result {
             let inner = err.inner();
             let path = err.path();
-            panic!("{} {:?}", path, inner)
+            panic!("{path} {inner:?}")
         }
     }
 }

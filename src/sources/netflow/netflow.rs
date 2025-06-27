@@ -231,7 +231,7 @@ mod tests {
             0x00, 0xea, 0x00, 0x04, 0x00, 0xeb, 0x00, 0x04,
         ];
         let netflow = NetFlow::decode(&data, &mut templates).unwrap();
-        println!("{:#?}", netflow);
+        println!("{netflow:#?}");
 
         let data = [
             0x00, 0x09, 0x00, 0x15, 0xb3, 0xbf, 0xf6, 0x83, 0x61, 0x8a, 0xa3, 0xa8, 0x32, 0x01,
@@ -336,6 +336,6 @@ mod tests {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         ];
         let netflow = NetFlow::decode(&data, &mut templates).unwrap();
-        println!("{:#?}", netflow);
+        println!("{netflow:#?}");
     }
 }

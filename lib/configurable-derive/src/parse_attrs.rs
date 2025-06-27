@@ -157,9 +157,8 @@ impl FieldAttrs {
                         _ => {
                             return Err(syn::Error::new(
                                 meta.path.span(),
-                                format!("Invalid `configurable` attribute \"{}\"\n\
-                                Expected one of: `default`, `description`, `required`, `examples`, `skip`",
-                                        name),
+                                format!("Invalid `configurable` attribute \"{name}\"\n\
+                                Expected one of: `default`, `description`, `required`, `examples`, `skip`"),
                             ))
                         }
                     }

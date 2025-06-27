@@ -22,7 +22,7 @@ pub async fn collect(conn: &mut Connection) -> Result<Vec<Metric>, Error> {
             continue;
         };
 
-        let master_addr = format!("{}:{}", ip, port);
+        let master_addr = format!("{ip}:{port}");
 
         let (status, msg) = match conn
             .execute::<String>(&["sentinel", "ckquorum", master.as_str()])

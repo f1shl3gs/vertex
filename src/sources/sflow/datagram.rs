@@ -2279,6 +2279,6 @@ mod tests {
 
         assert_eq!(datagram.samples_count, 1);
 
-        println!("{:#?}", datagram);
+        println!("{datagram:#?}");
     }
 }

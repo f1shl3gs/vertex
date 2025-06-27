@@ -1,5 +1,5 @@
 use std::collections::{HashMap, HashSet};
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 use std::hash::Hash;
 use std::net::SocketAddr;
 
@@ -82,10 +82,10 @@ impl Resource {
 impl Display for Resource {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Resource::Port(addr, proto) => write!(f, "{} {}", proto, addr),
-            Resource::UnixSocket(path) => write!(f, "{}", path),
+            Resource::Port(addr, proto) => write!(f, "{proto} {addr}"),
+            Resource::UnixSocket(path) => Display::fmt(&path, f),
             Resource::SystemFd(index) => write!(f, "systemd {}th socket", index + 1),
-            Resource::DiskBuffer(name) => write!(f, "disk buffer {:?}", name),
+            Resource::DiskBuffer(name) => write!(f, "disk buffer {name:?}"),
         }
     }
 }

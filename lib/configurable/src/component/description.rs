@@ -15,7 +15,7 @@ impl Display for ExampleError {
             ExampleError::MissingExample => {
                 f.write_str("unable to create an example for this component")
             }
-            ExampleError::DoesNotExist(s) => write!(f, r#"type "{}" does not exist"#, s),
+            ExampleError::DoesNotExist(s) => write!(f, r#"type "{s}" does not exist"#),
         }
     }
 }

@@ -29,7 +29,7 @@ impl Vtl {
             Ok(program) => program,
             Err(err) => {
                 let snippets = Diagnostic::new(script).snippets(err);
-                println!("{}", snippets);
+                println!("{snippets}");
                 return Err(exitcode::SOFTWARE);
             }
         };
@@ -41,11 +41,11 @@ impl Vtl {
         match program.run(&mut target) {
             Ok(_result) => {
                 let output = serde_json::to_string_pretty(&target).expect("must success");
-                println!("{}", output);
+                println!("{output}");
             }
             Err(err) => {
                 let output = Diagnostic::new(script).snippets(err);
-                println!("{}", output);
+                println!("{output}");
                 return Err(exitcode::SOFTWARE);
             }
         }

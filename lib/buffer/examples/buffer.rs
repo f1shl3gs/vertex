@@ -89,7 +89,7 @@ async fn main() {
                 tx.send(message::new(i)).await.unwrap();
             }
 
-            println!("thread {} finished", tid);
+            println!("thread {tid} finished");
         });
     }
 

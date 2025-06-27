@@ -363,19 +363,19 @@ mod tests {
 
             let got = Config::load(path).unwrap();
 
-            assert_eq!(got.servers, expected.servers, "{}", path);
-            assert_eq!(got.search, expected.search, "{}", path);
-            assert_eq!(got.ndots, expected.ndots, "{}", path);
-            assert_eq!(got.timeout, expected.timeout, "{}", path);
-            assert_eq!(got.attempts, expected.attempts, "{}", path);
-            assert_eq!(got.rotate, expected.rotate, "{}", path);
+            assert_eq!(got.servers, expected.servers, "{path}");
+            assert_eq!(got.search, expected.search, "{path}");
+            assert_eq!(got.ndots, expected.ndots, "{path}");
+            assert_eq!(got.timeout, expected.timeout, "{path}");
+            assert_eq!(got.attempts, expected.attempts, "{path}");
+            assert_eq!(got.rotate, expected.rotate, "{path}");
             #[cfg(target_os = "openbsd")]
             assert_eq!(got.unknown_opt, expected.unknown_opt, "{}", path);
-            assert_eq!(got.mtime, expected.mtime, "{}", path);
-            assert_eq!(got.single_request, expected.single_request, "{}", path);
-            assert_eq!(got.use_tcp, expected.use_tcp, "{}", path);
-            assert_eq!(got.trust_ad, expected.trust_ad, "{}", path);
-            assert_eq!(got.no_reload, expected.no_reload, "{}", path);
+            assert_eq!(got.mtime, expected.mtime, "{path}");
+            assert_eq!(got.single_request, expected.single_request, "{path}");
+            assert_eq!(got.use_tcp, expected.use_tcp, "{path}");
+            assert_eq!(got.trust_ad, expected.trust_ad, "{path}");
+            assert_eq!(got.no_reload, expected.no_reload, "{path}");
         }
     }
 
@@ -395,7 +395,7 @@ mod tests {
             ("foo.", Vec::<&str>::new(), false),
         ] {
             let got = default_search_with(name.as_bytes());
-            assert_eq!(got, want, "input {}", name);
+            assert_eq!(got, want, "input {name}");
         }
     }
 
@@ -425,7 +425,7 @@ mod tests {
             file.flush().unwrap();
 
             let config = Config::load(&path).unwrap();
-            assert_eq!(config.ndots, ndots, "content: *{}*", content);
+            assert_eq!(config.ndots, ndots, "content: *{content}*");
         }
 
         std::fs::remove_file(&path).unwrap();
@@ -457,7 +457,7 @@ mod tests {
             file.flush().unwrap();
 
             let config = Config::load(&path).unwrap();
-            assert_eq!(config.attempts, attempts, "content: *{}*", content);
+            assert_eq!(config.attempts, attempts, "content: *{content}*");
         }
     }
 }

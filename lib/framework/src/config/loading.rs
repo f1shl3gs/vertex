@@ -53,7 +53,7 @@ pub fn load_builder_from_paths(
                 if let Some(file) = open_config(path) {
                     inputs.push((file, format.or_else(move || Format::from_path(&path).ok())));
                 } else {
-                    errors.push(format!("Config file not found in path: {:?}", path))
+                    errors.push(format!("Config file not found in path: {path:?}"))
                 };
             }
 
@@ -70,15 +70,14 @@ pub fn load_builder_from_paths(
                                 }
                             }
                             Err(err) => errors.push(format!(
-                                "Could not read file in config dir: {:?}, {}",
-                                path, err
+                                "Could not read file in config dir: {path:?}, {err}"
                             )),
                         }
                     }
                 }
 
                 Err(err) => {
-                    errors.push(format!("Could not read config dir: {:?}, {}", path, err));
+                    errors.push(format!("Could not read config dir: {path:?}, {err}"));
                 }
             },
         }

@@ -18,13 +18,13 @@ struct HealthResponse {
 pub async fn healthcheck(client: HttpClient, endpoint: String, token: String) -> crate::Result<()> {
     let mut req = Request::builder()
         .method(Method::GET)
-        .uri(format!("{}/health", endpoint))
+        .uri(format!("{endpoint}/health"))
         .body(Full::<Bytes>::default())?;
 
     // Authorization: Token INFLUX_API_TOKEN
     req.headers_mut().insert(
         "Authorization",
-        HeaderValue::from_str(&format!("Token {}", token)).unwrap(),
+        HeaderValue::from_str(&format!("Token {token}")).unwrap(),
     );
 
     let resp = client.send(req).await?;

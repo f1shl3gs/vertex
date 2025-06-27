@@ -46,7 +46,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
 
         if is_global_status(&key) {
             metrics.push(Metric::gauge(
-                format!("mysql_global_status_{}", key),
+                format!("mysql_global_status_{key}"),
                 "Generic metric from SHOW GLOBAL STATUS",
                 fv,
             ));

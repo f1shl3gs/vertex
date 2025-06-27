@@ -19,5 +19,5 @@ fn struct_in_struct() {
     }
 
     let example = configurable::generate_config::<Outer>();
-    println!("{}", example)
+    println!("{example}")
 }

@@ -176,63 +176,63 @@ impl DomainStatsRecord {
             infos.push(BlockInfo {
                 name: self
                     .params
-                    .get_string(&format!("block.{}.name", i))
+                    .get_string(&format!("block.{i}.name"))
                     .unwrap_or_default(),
                 backing_index: self
                     .params
-                    .get_u32(&format!("block.{}.backingIndex", i))
+                    .get_u32(&format!("block.{i}.backingIndex"))
                     .unwrap_or_default(),
                 path: self
                     .params
-                    .get_string(&format!("block.{}.path", i))
+                    .get_string(&format!("block.{i}.path"))
                     .unwrap_or_default(),
                 read_requests: self
                     .params
-                    .get_u64(&format!("block.{}.rd.reqs", i))
+                    .get_u64(&format!("block.{i}.rd.reqs"))
                     .unwrap_or_default(),
                 read_bytes: self
                     .params
-                    .get_u64(&format!("block.{}.rd.bytes", i))
+                    .get_u64(&format!("block.{i}.rd.bytes"))
                     .unwrap_or_default(),
                 read_time: self
                     .params
-                    .get_u64(&format!("block.{}.rd.times", i))
+                    .get_u64(&format!("block.{i}.rd.times"))
                     .unwrap_or_default(),
                 write_requests: self
                     .params
-                    .get_u64(&format!("block.{}.wr.reqs", i))
+                    .get_u64(&format!("block.{i}.wr.reqs"))
                     .unwrap_or_default(),
                 write_bytes: self
                     .params
-                    .get_u64(&format!("block.{}.wr.bytes", i))
+                    .get_u64(&format!("block.{i}.wr.bytes"))
                     .unwrap_or_default(),
                 write_time: self
                     .params
-                    .get_u64(&format!("block.{}.wr.times", i))
+                    .get_u64(&format!("block.{i}.wr.times"))
                     .unwrap_or_default(),
                 flush_requests: self
                     .params
-                    .get_u64(&format!("block.{}.fl.reqs", i))
+                    .get_u64(&format!("block.{i}.fl.reqs"))
                     .unwrap_or_default(),
                 flush_time: self
                     .params
-                    .get_u64(&format!("block.{}.fl.times", i))
+                    .get_u64(&format!("block.{i}.fl.times"))
                     .unwrap_or_default(),
                 errors: self
                     .params
-                    .get_u64(&format!("block.{}.errors", i))
+                    .get_u64(&format!("block.{i}.errors"))
                     .unwrap_or_default(),
                 capacity: self
                     .params
-                    .get_u64(&format!("block.{}.capacity", i))
+                    .get_u64(&format!("block.{i}.capacity"))
                     .unwrap_or_default(),
                 allocation: self
                     .params
-                    .get_u64(&format!("block.{}.allocation", i))
+                    .get_u64(&format!("block.{i}.allocation"))
                     .unwrap_or_default(),
                 physical: self
                     .params
-                    .get_u64(&format!("block.{}.physical", i))
+                    .get_u64(&format!("block.{i}.physical"))
                     .unwrap_or_default(),
             });
         }
@@ -247,39 +247,39 @@ impl DomainStatsRecord {
             stats.push(InterfaceStats {
                 name: self
                     .params
-                    .get_string(format!("net.{}.name", i).as_str())
+                    .get_string(format!("net.{i}.name").as_str())
                     .unwrap_or_default(),
                 rx_bytes: self
                     .params
-                    .get_u64(format!("net.{}.rx.bytes", i).as_str())
+                    .get_u64(format!("net.{i}.rx.bytes").as_str())
                     .unwrap_or_default(),
                 rx_packets: self
                     .params
-                    .get_u64(format!("net.{}.rx.pkts", i).as_str())
+                    .get_u64(format!("net.{i}.rx.pkts").as_str())
                     .unwrap_or_default(),
                 rx_errs: self
                     .params
-                    .get_u64(format!("net.{}.rx.errs", i).as_str())
+                    .get_u64(format!("net.{i}.rx.errs").as_str())
                     .unwrap_or_default(),
                 rx_drop: self
                     .params
-                    .get_u64(format!("net.{}.rx.drop", i).as_str())
+                    .get_u64(format!("net.{i}.rx.drop").as_str())
                     .unwrap_or_default(),
                 tx_bytes: self
                     .params
-                    .get_u64(format!("net.{}.tx.bytes", i).as_str())
+                    .get_u64(format!("net.{i}.tx.bytes").as_str())
                     .unwrap_or_default(),
                 tx_packets: self
                     .params
-                    .get_u64(format!("net.{}.tx.pkets", i).as_str())
+                    .get_u64(format!("net.{i}.tx.pkets").as_str())
                     .unwrap_or_default(),
                 tx_errs: self
                     .params
-                    .get_u64(format!("net.{}.tx.errs", i).as_str())
+                    .get_u64(format!("net.{i}.tx.errs").as_str())
                     .unwrap_or_default(),
                 tx_drop: self
                     .params
-                    .get_u64(format!("net.{}.tx.drop", i).as_str())
+                    .get_u64(format!("net.{i}.tx.drop").as_str())
                     .unwrap_or_default(),
             });
         }
@@ -289,10 +289,10 @@ impl DomainStatsRecord {
 
     pub fn vcpu_delay_and_wait(&self, vcpu: u32) -> (u64, u64) {
         let delay = self
-            .get_u64(format!("vcpu.{}.delay", vcpu).as_str())
+            .get_u64(format!("vcpu.{vcpu}.delay").as_str())
             .unwrap_or_default();
         let wait = self
-            .get_u64(format!("vcpu.{}.wait", vcpu).as_str())
+            .get_u64(format!("vcpu.{vcpu}.wait").as_str())
             .unwrap_or_default();
         (delay, wait)
     }

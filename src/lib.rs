@@ -38,5 +38,5 @@ pub fn get_version() -> String {
         _ => built_info::TARGET.to_string(),
     };
 
-    format!("{} ({})", pkg_version, build_string)
+    format!("{pkg_version} ({build_string})")
 }

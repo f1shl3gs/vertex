@@ -468,14 +468,13 @@ mod tests {
             assert_eq!(
                 output.len(),
                 wants.len(),
-                "metrics count not match, case: {}",
-                test
+                "metrics count not match, case: {test}"
             );
             #[allow(unused_variables)] // want_value did used
             for (got, (want_name, want_tags, want_value)) in output.iter().zip(wants) {
-                assert_eq!(got.name(), want_name, "case: {}", test);
-                assert_eq!(got.tags(), &want_tags, "case: {}", test);
-                assert!(matches!(&got.value, want_value), "case: {}", test);
+                assert_eq!(got.name(), want_name, "case: {test}");
+                assert_eq!(got.tags(), &want_tags, "case: {test}");
+                assert!(matches!(&got.value, want_value), "case: {test}");
             }
         }
     }

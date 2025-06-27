@@ -141,7 +141,7 @@ fn fixup_unit(unit: &str) -> String {
     if unit.contains('.') {
         unit.into()
     } else {
-        format!("{}.service", unit)
+        format!("{unit}.service")
     }
 }
 
@@ -378,7 +378,7 @@ fn create_command(
 
     if let Some(cursor) = cursor {
         // Show entries after the specified cursor
-        command.arg(format!("--after-cursor={}", cursor));
+        command.arg(format!("--after-cursor={cursor}"));
     } else if since_now {
         // Show entries not older than the specified date
         command.arg(format!("--since={}", Utc::now().to_rfc3339()));

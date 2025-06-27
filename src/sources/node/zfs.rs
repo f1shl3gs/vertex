@@ -36,7 +36,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     parse_subsystem_metrics!(metrics, proc_path, "zfs_zil", "zil");
 
     // pool stats
-    let pattern = format!("{}/spl/kstat/zfs/*/io", proc_path);
+    let pattern = format!("{proc_path}/spl/kstat/zfs/*/io");
     let paths = glob::glob(&pattern)?;
 
     for path in paths.flatten() {
@@ -45,7 +45,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         let kvs = parse_pool_procfs_file(path).await?;
         for (key, value) in kvs {
             metrics.push(Metric::gauge_with_tags(
-                format!("node_zfs_zpool_{}", key),
+                format!("node_zfs_zpool_{key}"),
                 key,
                 value,
                 tags! {
@@ -55,7 +55,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    let pattern = format!("{}/spl/kstat/zfs/*/objset-*", proc_path);
+    let pattern = format!("{proc_path}/spl/kstat/zfs/*/objset-*");
     let paths = glob::glob(&pattern)?;
     for path in paths.flatten() {
         let path = path.to_str().unwrap();
@@ -67,7 +67,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             let dataset = fields[2].to_string();
 
             metrics.push(Metric::gauge_with_tags(
-                format!("node_zfs_zpool_dataset_{}", key),
+                format!("node_zfs_zpool_dataset_{key}"),
                 desc,
                 value,
                 tags!(
@@ -78,7 +78,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    let pattern = format!("{}/spl/kstat/zfs/*/state", proc_path);
+    let pattern = format!("{proc_path}/spl/kstat/zfs/*/state");
     let paths = glob::glob(&pattern)?;
     for path in paths.flatten() {
         let path = path.to_string_lossy();

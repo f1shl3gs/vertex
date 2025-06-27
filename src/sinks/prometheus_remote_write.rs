@@ -258,7 +258,7 @@ mod tests {
         let (mut rx, trigger, server) = build_test_server(addr);
         tokio::spawn(server);
 
-        let config = format!("endpoint: \"http://{}/write\"\n{}", addr, config);
+        let config = format!("endpoint: \"http://{addr}/write\"\n{config}");
         let config: Config = serde_yaml::from_str(&config).unwrap();
         let cx = SinkContext::new_test();
 
@@ -410,7 +410,7 @@ mod integration_tests {
                 wait_for_tcp(service_addr).await;
 
                 // Setup sink
-                let config = format!("endpoint: http://{}/api/v1/push", service_addr);
+                let config = format!("endpoint: http://{service_addr}/api/v1/push");
                 let config: Config = serde_yaml::from_str(&config).unwrap();
                 let cx = SinkContext::new_test();
 
@@ -423,10 +423,8 @@ mod integration_tests {
                 tokio::time::sleep(Duration::from_secs(2)).await;
 
                 // Query label values
-                let endpoint = format!(
-                    "http://{}/prometheus/api/v1/label/__name__/values",
-                    service_addr
-                );
+                let endpoint =
+                    format!("http://{service_addr}/prometheus/api/v1/label/__name__/values");
                 let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 
                 let req = http::Request::get(endpoint)

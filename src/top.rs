@@ -197,7 +197,7 @@ fn format_row(total: u64, throughput: u64) -> String {
         return "N/A".to_string();
     }
 
-    format!("{}/{}ps", total, throughput)
+    format!("{total}/{throughput}ps")
 }
 
 struct Table {

@@ -179,20 +179,20 @@ impl Validate {
                         .healthcheck()
                         .enabled
                     {
-                        fmt.success(format!("Health check \"{}\"", id));
+                        fmt.success(format!("Health check \"{id}\""));
                     } else {
-                        fmt.warning(format!("Health check disabled for \"{}\"", id));
+                        fmt.warning(format!("Health check disabled for \"{id}\""));
                         validated &= !self.deny_warnings;
                     }
                 }
 
-                Ok(Err(())) => failed(format!("Health check for \"{}\" failed", id)),
+                Ok(Err(())) => failed(format!("Health check for \"{id}\" failed")),
 
                 Err(err) if err.is_cancelled() => {
-                    failed(format!("Health check for \"{}\" was cancelled", id))
+                    failed(format!("Health check for \"{id}\" was cancelled"))
                 }
 
-                Err(_) => failed(format!("Health check for \"{}\" panicked", id)),
+                Err(_) => failed(format!("Health check for \"{id}\" panicked")),
             }
         }
 
@@ -245,7 +245,7 @@ fn create_tmp_directory(config: &mut Config, fmt: &mut Formatter) -> Option<Path
             Some(path)
         }
         Err(err) => {
-            fmt.error(format!("{:?}", err));
+            fmt.error(format!("{err:?}"));
             None
         }
     }

@@ -59,15 +59,15 @@ fn generate_example() {
     let root_schema = generate_root_schema::<NtpConfig>();
 
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
-    println!("{}", text);
+    println!("{text}");
 
     let example = generate_config_with_schema(root_schema);
-    println!("{}", example)
+    println!("{example}")
 }
 
 #[test]
 fn ser() {
     let d = Duration::from_secs(10);
     let n = humanize::duration::serde::serialize(&d, serde_json::value::Serializer).unwrap();
-    println!("{}", n);
+    println!("{n}");
 }

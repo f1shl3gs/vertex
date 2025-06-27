@@ -32,10 +32,10 @@ impl fmt::Debug for ControlMessage {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "ControlMessage::")?;
         match self {
-            Self::Add(id, _) => write!(f, "Add({:?})", id),
-            Self::Remove(id) => write!(f, "Remove({:?})", id),
-            Self::Pause(id) => write!(f, "Pause({:?})", id),
-            Self::Replace(id, _) => write!(f, "Replace({:?})", id),
+            Self::Add(id, _) => write!(f, "Add({id:?})"),
+            Self::Remove(id) => write!(f, "Remove({id:?})"),
+            Self::Pause(id) => write!(f, "Pause({id:?})"),
+            Self::Replace(id, _) => write!(f, "Replace({id:?})"),
         }
     }
 }
@@ -811,7 +811,7 @@ mod tests {
     }
 
     fn _make_events(count: usize) -> impl Iterator<Item = LogRecord> {
-        (0..count).map(|i| LogRecord::from(format!("line {}", i)))
+        (0..count).map(|i| LogRecord::from(format!("line {i}")))
     }
 
     fn make_events(count: usize) -> Vec<Event> {

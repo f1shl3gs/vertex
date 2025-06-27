@@ -46,7 +46,7 @@ async fn tcp_to_tcp() {
     let input_messages: Vec<String> = (0..num)
         .map(|i| {
             // simple message is enough
-            format!("{{\"seq\": {},\"key\": \"value\"}}", i)
+            format!("{{\"seq\": {i},\"key\": \"value\"}}")
         })
         .collect();
 

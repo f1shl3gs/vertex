@@ -117,8 +117,8 @@ impl Config {
         }?;
 
         let selector = match &self.field_selector {
-            Some(extra) => format!("spec.nodeName={},{}", node_name, extra),
-            None => format!("spec.nodeName={}", node_name),
+            Some(extra) => format!("spec.nodeName={node_name},{extra}"),
+            None => format!("spec.nodeName={node_name}"),
         };
 
         Ok(selector)

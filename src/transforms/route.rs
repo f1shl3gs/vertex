@@ -216,7 +216,7 @@ route:
                 match want {
                     None => assert!(events.is_empty()),
                     Some(want) => {
-                        assert_eq!(events.len(), 1, "{}", test);
+                        assert_eq!(events.len(), 1, "{test}");
                         let events = events.pop().unwrap();
                         assert_eq!(events.len(), 1);
                         if let Events::Logs(mut logs) = events {

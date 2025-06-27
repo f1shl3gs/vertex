@@ -39,7 +39,7 @@ pub fn os() -> Option<String> {
         }
     }
 
-    Some(format!("Linux {} {}", name, version))
+    Some(format!("Linux {name} {version}"))
 }
 
 pub fn machine_id() -> std::io::Result<String> {

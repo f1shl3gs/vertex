@@ -487,7 +487,7 @@ mod integration_tests {
                 tokio::time::sleep(Duration::from_secs(2)).await;
 
                 let source = Config {
-                    endpoint: format!("http://{}", service_addr).parse().unwrap(),
+                    endpoint: format!("http://{service_addr}").parse().unwrap(),
                     tls: None,
                     auth: None,
                     interval: Duration::from_secs(10),

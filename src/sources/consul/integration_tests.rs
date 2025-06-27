@@ -90,7 +90,7 @@ async fn register_service(
     client: &HttpClient,
     svc: &ServiceRegistration,
 ) -> Result<(), ConsulError> {
-    let path = format!("{}/v1/agent/service/register", endpoint);
+    let path = format!("{endpoint}/v1/agent/service/register");
     let body = serde_json::to_vec(svc).unwrap();
     let req = http::Request::put(path)
         .body(Full::new(body.into()))
@@ -133,7 +133,7 @@ async fn run(services: &[ServiceRegistration]) -> (SocketAddr, Vec<Metric>) {
             // wait for raft stable
             tokio::time::sleep(Duration::from_secs(5)).await;
 
-            let endpoint = format!("http://{}", service_addr);
+            let endpoint = format!("http://{service_addr}");
             let http_client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
             for svc in services {
                 register_service(&endpoint, &http_client, svc)
@@ -212,7 +212,7 @@ async fn simple_collect() {
         ("consul_serf_lan_members", tags!(), MetricValue::gauge(1)),
         ("consul_up", tags!(), MetricValue::gauge(1)),
     ] {
-        tags.insert("instance".to_string(), format!("http://{}", instance));
+        tags.insert("instance".to_string(), format!("http://{instance}"));
 
         assert!(
             metrics
@@ -224,11 +224,7 @@ async fn simple_collect() {
             metrics
                 .iter()
                 .any(|m| m.name() == name && m.tags() == &tags && m.value == value),
-            "want {} {:?} {:?}\n\n{:#?}",
-            name,
-            tags,
-            value,
-            metrics
+            "want {name} {tags:?} {value:?}\n\n{metrics:#?}",
         );
     }
 }
@@ -282,7 +278,7 @@ async fn duplicate_tag_values() {
             MetricValue::gauge(1),
         ),
     ] {
-        tags.insert("instance".to_string(), format!("http://{}", instance));
+        tags.insert("instance".to_string(), format!("http://{instance}"));
 
         assert!(
             metrics
@@ -294,11 +290,7 @@ async fn duplicate_tag_values() {
             metrics
                 .iter()
                 .any(|m| m.name() == name && m.tags() == &tags && m.value == value),
-            "want {} {:?} {:?}\n\n{:#?}",
-            name,
-            tags,
-            value,
-            metrics
+            "want {name} {tags:?} {value:?}\n\n{metrics:#?}",
         );
     }
 }
@@ -342,7 +334,7 @@ async fn forward_slash_service_name() {
         ),
         ("consul_catalog_services", tags!(), MetricValue::gauge(3)),
     ] {
-        tags.insert("instance".to_string(), format!("http://{}", instance));
+        tags.insert("instance".to_string(), format!("http://{instance}"));
 
         assert!(
             metrics
@@ -354,11 +346,7 @@ async fn forward_slash_service_name() {
             metrics
                 .iter()
                 .any(|m| m.name() == name && m.tags() == &tags && m.value == value),
-            "want {} {:?} {:?}\n\n{:#?}",
-            name,
-            tags,
-            value,
-            metrics
+            "want {name} {tags:?} {value:?}\n\n{metrics:#?}",
         );
     }
 }
@@ -390,7 +378,7 @@ async fn service_check_name() {
         ),
         MetricValue::gauge(1),
     );
-    tags.insert("instance".to_string(), format!("http://{}", instance));
+    tags.insert("instance".to_string(), format!("http://{instance}"));
 
     assert!(
         metrics
@@ -402,10 +390,6 @@ async fn service_check_name() {
         metrics
             .iter()
             .any(|m| m.name() == name && m.tags() == &tags && m.value == value),
-        "want {} {:?} {:?}\n\n{:#?}",
-        name,
-        tags,
-        value,
-        metrics
+        "want {name} {tags:?} {value:?}\n\n{metrics:#?}",
     );
 }

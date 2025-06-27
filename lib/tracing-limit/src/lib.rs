@@ -336,7 +336,7 @@ impl Visit for RateLimitedSpanKeys {
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
         if field.name() == COMPONENT_ID_FIELD {
-            self.component_id = Some(format!("{:?}", value))
+            self.component_id = Some(format!("{value:?}"))
         }
     }
 }
@@ -385,7 +385,7 @@ impl Visit for MessageVisitor {
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
         if self.message.is_none() && field.name() == MESSAGE_FIELD {
-            self.message = Some(format!("{:?}", value));
+            self.message = Some(format!("{value:?}"));
         }
     }
 }

@@ -16,7 +16,7 @@ pub fn clear_recorded_events() {
 pub fn debug_print_events() {
     EVENTS_RECORDED.with_borrow(|events| {
         events.iter().for_each(|event| {
-            println!("{}", event);
+            println!("{event}");
         })
     })
 }

@@ -169,15 +169,16 @@ pub fn check_resources(builder: &Builder) -> Result<(), Vec<String>> {
     if conflicting_components.is_empty() {
         Ok(())
     } else {
-        Err(conflicting_components
-            .into_iter()
-            .map(|(resource, components)| {
-                format!(
-                    "Resource \"{}\" is claimed by multiple components: {:?}",
-                    resource, components,
-                )
-            })
-            .collect())
+        Err(
+            conflicting_components
+                .into_iter()
+                .map(|(resource, components)| {
+                    format!(
+                        "Resource \"{resource}\" is claimed by multiple components: {components:?}",
+                    )
+                })
+                .collect(),
+        )
     }
 }
 

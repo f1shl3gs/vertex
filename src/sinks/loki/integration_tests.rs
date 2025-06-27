@@ -34,7 +34,7 @@ async fn write_and_query() {
             // wait for loki get ready
             wait_for_duration(
                 async move || {
-                    let url = Url::parse(&format!("http://{}", service_addr)).unwrap();
+                    let url = Url::parse(&format!("http://{service_addr}")).unwrap();
                     let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
 
                     healthcheck(url, None, client).await.is_ok()
@@ -75,7 +75,7 @@ labels:
             tokio::time::sleep(Duration::from_secs(2)).await;
 
             // Query label values
-            let endpoint = format!("http://{}/loki/api/v1/label/foo/values", service_addr);
+            let endpoint = format!("http://{service_addr}/loki/api/v1/label/foo/values");
             let client: HttpClient<Full<Bytes>> =
                 HttpClient::new(None, &ProxyConfig::default()).unwrap();
             let req = http::Request::get(endpoint).body(Full::default()).unwrap();

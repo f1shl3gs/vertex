@@ -345,7 +345,7 @@ impl tracing::field::Visit for SpanAttributeVisitor<'_> {
     }
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        self.0.tags.insert(field.name(), format!("{:?}", value))
+        self.0.tags.insert(field.name(), format!("{value:?}"))
     }
 }
 
@@ -369,9 +369,7 @@ impl tracing::field::Visit for SpanEventVisitor<'_> {
     }
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        self.0
-            .attributes
-            .insert(field.name(), format!("{:?}", value))
+        self.0.attributes.insert(field.name(), format!("{value:?}"))
     }
 }
 

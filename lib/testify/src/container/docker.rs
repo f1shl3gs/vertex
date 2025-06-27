@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 use std::net::IpAddr;
 use std::path::PathBuf;
 
@@ -28,15 +29,15 @@ pub enum Error {
     AlreadyRunning,
 }
 
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Error::ReadResponse(err) => write!(f, "failed to read response: {}", err),
-            Error::Http(err) => write!(f, "{}", err),
-            Error::Request(err) => write!(f, "request failed: {}", err),
+            Error::ReadResponse(err) => write!(f, "failed to read response: {err}"),
+            Error::Http(err) => Display::fmt(&err, f),
+            Error::Request(err) => write!(f, "request failed: {err}"),
             Error::Deserialize(err) => err.fmt(f),
             Error::Api(code, err) => {
-                write!(f, "docker engine error, code: {} message: {}", code, err)
+                write!(f, "docker engine error, code: {code} message: {err}")
             }
             Error::AlreadyRunning => f.write_str("container already running"),
         }
@@ -133,7 +134,7 @@ impl Client {
 
         let fv = serde_json::to_string(&filters).unwrap();
         let filters = percent_encoding::utf8_percent_encode(&fv, NON_ALPHANUMERIC);
-        let uri = format!("http://localhost/images/json?filters={}", filters);
+        let uri = format!("http://localhost/images/json?filters={filters}");
         let req = Request::builder()
             .method(Method::GET)
             .uri(&uri)
@@ -159,10 +160,7 @@ impl Client {
 
         info!(message = "image not found locally", image, tag);
 
-        let uri = format!(
-            "http://localhost/images/create?fromImage={}&tag={}",
-            image, tag
-        );
+        let uri = format!("http://localhost/images/create?fromImage={image}&tag={tag}");
         let req = Request::builder()
             .method(Method::POST)
             .uri(uri)
@@ -222,7 +220,7 @@ impl Client {
     pub async fn start(&self, id: &str) -> Result<(), Error> {
         let req = Request::builder()
             .method(Method::POST)
-            .uri(format!("http://localhost/containers/{}/start", id))
+            .uri(format!("http://localhost/containers/{id}/start"))
             .body(Full::default())
             .unwrap();
 
@@ -244,7 +242,7 @@ impl Client {
     pub async fn stop(&self, id: &str) -> Result<(), Error> {
         let req = hyper::Request::builder()
             .method(Method::POST)
-            .uri(format!("http://localhost/containers/{}/stop", id))
+            .uri(format!("http://localhost/containers/{id}/stop"))
             .body(Full::default())
             .unwrap();
 
@@ -263,7 +261,7 @@ impl Client {
     pub async fn remove(&self, id: &str) -> Result<(), Error> {
         let req = Request::builder()
             .method(Method::DELETE)
-            .uri(format!("http://localhost/containers/{}", id))
+            .uri(format!("http://localhost/containers/{id}"))
             .body(Full::default())
             .unwrap();
 

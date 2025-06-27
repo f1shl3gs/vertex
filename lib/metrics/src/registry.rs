@@ -171,13 +171,13 @@ mod tests {
 
         let s = attrs.iter().fold("".to_string(), |acc, (k, v)| {
             if acc.is_empty() {
-                format!("{}=\"{}\"", k, v)
+                format!("{k}=\"{v}\"")
             } else {
-                format!("{},{}=\"{}\"", acc, k, v)
+                format!("{acc},{k}=\"{v}\"")
             }
         });
 
-        format!("{{{}}}", s)
+        format!("{{{s}}}")
     }
 
     #[test]
@@ -189,8 +189,8 @@ mod tests {
         #[allow(clippy::print_stdout)]
         impl Reporter for StdoutReporter {
             fn start_metric(&mut self, name: &'static str, description: &'static str) {
-                println!("# {}", name);
-                println!("# {}", description);
+                println!("# {name}");
+                println!("# {description}");
                 self.reporting = Some((name, description))
             }
 

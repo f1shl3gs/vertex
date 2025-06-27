@@ -1400,7 +1400,7 @@ fn extract_info_metrics(infos: &str, databases: u64) -> Result<Vec<Metric>, Erro
     }
 
     for i in 0..databases {
-        let name = format!("db{}", i);
+        let name = format!("db{i}");
 
         if !handled_dbs.contains(name.as_str()) {
             metrics.extend([

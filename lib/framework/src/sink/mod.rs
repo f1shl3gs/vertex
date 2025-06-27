@@ -75,7 +75,7 @@ impl Sink {
     pub fn into_sink(self) -> Box<dyn futures::Sink<Events, Error = ()> + Send + Unpin> {
         match self {
             Self::Sink(sink) => sink,
-            _ => panic!("Failed type coercion, {:?} is not a Sink", self),
+            _ => panic!("Failed type coercion, {self:?} is not a Sink"),
         }
     }
 
@@ -87,7 +87,7 @@ impl Sink {
     pub fn into_stream(self) -> Box<dyn StreamSink + Send> {
         match self {
             Self::Stream(stream) => stream,
-            _ => panic!("Failed type coercion, {:?} is not a Stream", self),
+            _ => panic!("Failed type coercion, {self:?} is not a Stream"),
         }
     }
 

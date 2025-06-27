@@ -111,10 +111,10 @@ fn default_value() {
     let root_schema = generate_root_schema::<Outer>();
 
     let text = serde_json::to_string_pretty(&root_schema).unwrap();
-    println!("{}", text);
+    println!("{text}");
 
     let example = generate_config_with_schema(root_schema);
-    println!("{}", example);
+    println!("{example}");
 
     serde_yaml::from_str::<Outer>(&example).unwrap();
 }
@@ -123,5 +123,5 @@ fn default_value() {
 fn none() {
     let value: Concurrency = Default::default();
     let value = serde_json::to_value(value).unwrap();
-    println!("{}", value)
+    println!("{value}")
 }
