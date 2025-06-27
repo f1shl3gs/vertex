@@ -59,11 +59,9 @@ fn validate_example_configs() {
             continue;
         }
 
-        if let Some(ext) = path.extension() {
-            if ext != "yaml" && ext != "yml" {
-                continue;
-            }
-
+        if let Some(ext) = path.extension()
+            && (ext == "yaml" || ext == "yml")
+        {
             let args = vec!["validate", "-c", path.to_str().unwrap(), "--no-environment"];
             let (output, status) = run_command(args.clone());
             assert_no_log_lines(&output);

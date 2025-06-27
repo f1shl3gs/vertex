@@ -129,28 +129,35 @@ fn get_limits(pid: u32) -> Result<(f64, f64), std::io::Error> {
     let mut max_vss = 0.0;
     for line in data.lines() {
         if let Some(s) = line.strip_prefix("Max open files") {
-            let fields = s.split_whitespace().collect::<Vec<_>>();
-            max_fds = fields[1].parse().map_err(|_err| {
-                std::io::Error::new(
-                    std::io::ErrorKind::InvalidData,
-                    "parse `Max open files` failed",
-                )
-            })?;
+            if let Some(field) = s.split_whitespace().next() {
+                max_fds = field.parse().map_err(|_err| {
+                    std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        "parse `Max open files` failed",
+                    )
+                })?;
+            }
+
             continue;
         }
 
         if let Some(s) = line.strip_prefix("Max address space") {
-            let fields = s.split_whitespace().collect::<Vec<_>>();
-            if fields[1] == "unlimited" {
+            let mut fields = s.split_whitespace();
+            if let Some(field) = fields.next()
+                && field == "unlimited"
+            {
                 continue;
             }
 
-            max_vss = fields[1].parse().map_err(|_err| {
-                std::io::Error::new(
-                    std::io::ErrorKind::InvalidData,
-                    "parse `Max address space` failed",
-                )
-            })?;
+            if let Some(field) = fields.next() {
+                max_vss = field.parse().map_err(|_err| {
+                    std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        "parse `Max address space` failed",
+                    )
+                })?;
+            }
+
             continue;
         }
     }

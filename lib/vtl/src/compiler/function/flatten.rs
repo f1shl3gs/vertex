@@ -178,6 +178,7 @@ impl<'a> Iterator for MapFlatten<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(ref mut inner) = self.inner {
             let next = inner.next();
+
             match next {
                 Some(_) => return next,
                 None => self.inner = None,

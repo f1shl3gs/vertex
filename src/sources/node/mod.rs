@@ -370,15 +370,6 @@ struct Config {
     collectors: Collectors,
 }
 
-#[derive(Debug, Default, Deserialize, Serialize)]
-struct NodeMetrics {
-    interval: Duration,
-    proc_path: PathBuf,
-    sys_path: PathBuf,
-
-    collectors: Collectors,
-}
-
 /// The files this function will(should) be reading is under `/sys` and `/proc` which is
 /// very small, so the performance should never be a problem.
 pub fn read_string<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
