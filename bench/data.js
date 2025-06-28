@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751113943761,
+  "lastUpdate": 1751113955504,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9751b2b05dcd1611cd29756537d483c8cfc0e89e",
-          "message": "Merge pull request #2331 from f1shl3gs/sources/http_check/refine_config_and_target\n\nsources/http_check: refine config and target",
-          "timestamp": "2025-05-04T01:23:18+08:00",
-          "tree_id": "0d78521c0b8cda710321df804e25c8e3553c03e6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9751b2b05dcd1611cd29756537d483c8cfc0e89e"
-        },
-        "date": 1746293156032,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.249,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 176.15,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 313.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 694.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 688.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9ad0217a003e2173ca1734e6f3accf9fce8db669",
+          "message": "Merge pull request #2437 from f1shl3gs/extensions/heartbeat/remove\n\nextensions/heartbeat: remove",
+          "timestamp": "2025-06-28T20:29:41+08:00",
+          "tree_id": "8a72c8fba908a479a3f7d22a6f90b26fe4e8c541",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9ad0217a003e2173ca1734e6f3accf9fce8db669"
+        },
+        "date": 1751113935256,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.046,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 305,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 664.1,
             "unit": "ns/op"
           }
         ]
