@@ -1,7 +1,11 @@
-/// Collect messages from /dev/kmsg
-///
-/// https://www.kernel.org/doc/Documentation/ABI/testing/dev-kmsg
+//! Collect messages from /dev/kmsg
+//!
+//! https://www.kernel.org/doc/Documentation/ABI/testing/dev-kmsg
+
+use std::fs::{File, OpenOptions};
 use std::io::{self, Read};
+use std::os::unix::fs::FileExt;
+use std::path::Path;
 use std::time;
 
 use chrono::{DateTime, Utc};
@@ -9,7 +13,7 @@ use configurable::configurable_component;
 use event::LogRecord;
 use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext};
-use tokio::io::AsyncReadExt;
+use tokio::io::AsyncBufReadExt;
 use value::value;
 
 #[configurable_component(source, name = "kmsg")]
@@ -20,53 +24,72 @@ struct Config {}
 #[typetag::serde(name = "kmsg")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut shutdown = cx.shutdown;
-        let mut output = cx.output;
+        let f = tokio::fs::File::open("/dev/kmsg").await?;
+        let mut reader = tokio::io::BufReader::new(f);
+
         let boot = boot_time("/proc/uptime")?;
 
+        let path = cx.globals.make_subdir(cx.key.id())?;
+        let mut checkpointer = Checkpointer::new(path.join("checkpoint.data"))?;
+        let mut last_sent = checkpointer.load()?;
+
+        let mut shutdown = cx.shutdown;
+        let mut output = cx.output;
+
         Ok(Box::pin(async move {
-            let f = tokio::fs::File::open("/dev/kmsg").await.unwrap();
-            let mut reader = tokio::io::BufReader::new(f);
-            let mut buf = [0; 4096];
+            let mut buf = String::new();
 
             loop {
+                buf.clear();
                 tokio::select! {
-                    _ = &mut shutdown => {
-                        return Ok(())
+                    _ = &mut shutdown => break,
+                    result = reader.read_line(&mut buf) => if let Err(err) = result {
+                        warn!(
+                            message = "Error reading from /dev/kmsg",
+                            ?err,
+                            internal_log_rate_secs = 30
+                        );
+
+                        continue;
+                    }
+                }
+
+                if let Ok((priority, seq, ts, msg)) = parse_line(buf.as_bytes()) {
+                    let nano_seconds = boot + ts * 1000;
+                    if nano_seconds <= last_sent {
+                        continue;
                     }
 
-                    result = reader.read(&mut buf[..]) => {
-                        let n = match result {
-                            Ok(n) => n,
-                            Err(err) => {
-                                if err.kind() == io::ErrorKind::BrokenPipe {
-                                    continue;
-                                }
+                    let timestamp = DateTime::<Utc>::from_timestamp(
+                        (nano_seconds / (1000 * 1000 * 1000)) as i64,
+                        (nano_seconds % (1000 * 1000 * 1000)) as u32,
+                    )
+                    .unwrap();
+                    let record = LogRecord::from(value!({
+                        "priority": priority,
+                        "sequence": seq,
+                        "message": msg,
+                        "timestamp": timestamp
+                    }));
 
-                                error!(
-                                    message = "read /dev/kmsg failed",
-                                    %err
-                                );
+                    if let Err(_err) = output.send(record).await {
+                        warn!(message = "Error while sending kmsg log record",);
 
-                                return Err(())
-                            }
-                        };
+                        break;
+                    }
 
-                        if let Ok((priority, seq, ts, msg)) = parse_line(&buf, n) {
-                            let nano_seconds = boot + ts * 1000;
-                                let timestamp = DateTime::<Utc>::from_timestamp((nano_seconds / (1000 * 1000 * 1000)) as i64, (nano_seconds % (1000 * 1000 * 1000)) as u32).unwrap();
-                                let record = LogRecord::from(value!({
-                                        "priority": priority,
-                                        "sequence": seq,
-                                        "message": msg,
-                                        "timestamp": timestamp
-                                    }));
-
-                                output.send(record).await.unwrap();
-                        }
+                    last_sent = nano_seconds;
+                    if let Err(err) = checkpointer.set(last_sent) {
+                        warn!(
+                            message = "Error while save checkpoint for kmsg",
+                            ?err,
+                            internal_log_rate_secs = 30
+                        );
                     }
                 }
             }
+
+            Ok(())
         }))
     }
 
@@ -79,7 +102,7 @@ impl SourceConfig for Config {
     }
 }
 
-fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
+fn parse_line(buf: &[u8]) -> Result<(u8, u64, u64, String), ()> {
     let priority = buf[0] - b'0';
     if buf[1] != b',' {
         return Err(());
@@ -87,7 +110,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
 
     let mut consumed = 2;
     let mut seq = 0u64;
-    while consumed < size {
+    while consumed < buf.len() {
         let c = buf[consumed];
         consumed += 1;
         if !c.is_ascii_digit() {
@@ -102,7 +125,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
     }
 
     let mut ts = 0u64;
-    while consumed < size {
+    while consumed < buf.len() {
         let c = buf[consumed];
         consumed += 1;
         if !c.is_ascii_digit() {
@@ -117,7 +140,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
     }
 
     // parse flags
-    while consumed < size {
+    while consumed < buf.len() {
         let c = buf[consumed];
         consumed += 1;
 
@@ -126,15 +149,16 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
         }
     }
 
-    let msg = buf[consumed..size].to_vec();
+    let msg = buf[consumed..].to_vec();
     let msg = String::from_utf8(msg).map_err(|_| ())?;
 
     Ok((priority, seq, ts, msg))
 }
 
+/// https://man7.org/linux/man-pages/man5/proc_uptime.5.html
 fn boot_time(path: &str) -> Result<u64, io::Error> {
     let mut buf = [0u8; 256];
-    let mut f = std::fs::File::open(path)?;
+    let mut f = File::open(path)?;
     let size = f.read(&mut buf[..])?;
     let mut pos = 0;
     let mut sec = 0u64;
@@ -184,6 +208,43 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
     }
 }
 
+struct Checkpointer {
+    file: File,
+}
+
+impl Checkpointer {
+    fn new(path: impl AsRef<Path>) -> io::Result<Checkpointer> {
+        let file = OpenOptions::new()
+            .create(true)
+            .truncate(false)
+            .read(true)
+            .write(true)
+            .open(path)?;
+
+        Ok(Checkpointer { file })
+    }
+
+    fn load(&mut self) -> io::Result<u64> {
+        let mut buf = [0u8; size_of::<u64>()];
+
+        match self.file.read_exact(&mut buf) {
+            Ok(_) => Ok(u64::from_le_bytes(buf)),
+            Err(err) => {
+                if err.kind() == io::ErrorKind::UnexpectedEof {
+                    return Ok(0);
+                }
+
+                Err(err)
+            }
+        }
+    }
+
+    #[inline]
+    fn set(&mut self, timestamp: u64) -> io::Result<()> {
+        self.file.write_all_at(&timestamp.to_ne_bytes(), 0)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -202,7 +263,7 @@ mod tests {
     #[test]
     fn test_parse_line() {
         let input = r#"4,334322,8544044980,-;RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000007"#.as_bytes();
-        let (priority, seq, ts, msg) = parse_line(input, input.len()).unwrap();
+        let (priority, seq, ts, msg) = parse_line(input).unwrap();
 
         assert_eq!(priority, 4);
         assert_eq!(seq, 334322);
