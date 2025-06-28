@@ -143,7 +143,6 @@ all-integration-tests = [
 extensions-consul_observer = []
 extensions-dns_observer = ["dep:resolver"]
 extensions-exec_observer = ["tokio/process"]
-extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "dep:parking_lot"]
 extensions-healthcheck = []
 extensions-http = []
 extensions-kubernetes_observer = ["dep:kubernetes"]
@@ -157,7 +156,6 @@ extensions = [
     "extensions-dns_observer",
     "extensions-exec_observer",
     "extensions-healthcheck",
-    "extensions-heartbeat",
     "extensions-http",
     "extensions-kubernetes_observer",
     "extensions-port_observer",

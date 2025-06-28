@@ -104,7 +104,6 @@ An extension is
 | Name        | Description                                                                                                                              |
 |-------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | healthcheck | Start an HTTP server, and return 200 to represent Vertex is health                                                                       |
-| heartbeat   | Post Vertex's status to an HTTP endpoint periodically, like current config, hostname, os and etc.                                        |
 | pprof       | Start an HTTP server to help user profile Vertex, implement by [pprof-rs](https://github.com/tikv/pprof-rs)                              |
 | zpages      | In-process web pages that display collected data from the process that they are attached to. See [zPages](https://opencensus.io/zpages/) |
 
