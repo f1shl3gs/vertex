@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751119289534,
+  "lastUpdate": 1751119291698,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "0954cd8d5bd5116c999cbbfb53a90703a3d89e7e",
-          "message": "reduce some code generated",
-          "timestamp": "2025-05-04T03:25:05+08:00",
-          "tree_id": "abc43e3b70191dfba465efcd48f3c0b53d712ed4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0954cd8d5bd5116c999cbbfb53a90703a3d89e7e"
-        },
-        "date": 1746300563435,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 333.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 706.79,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 664.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "429404e3045a1cd168addce168fd8b8e49701bfc",
+          "message": "Merge pull request #2438 from f1shl3gs/sources/kmsg/add_checkpoint\n\nsources/kmsg: add checkpoint support",
+          "timestamp": "2025-06-28T21:58:50+08:00",
+          "tree_id": "bde300756b0cc26bea0b12f8f86ca31bb9755ee9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/429404e3045a1cd168addce168fd8b8e49701bfc"
+        },
+        "date": 1751119271186,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.005,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 335.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 709.18,
             "unit": "ns/op"
           }
         ]
