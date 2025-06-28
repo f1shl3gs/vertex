@@ -6,8 +6,6 @@ mod dns_observer;
 mod exec_observer;
 #[cfg(feature = "extensions-healthcheck")]
 pub mod healthcheck;
-#[cfg(feature = "extensions-heartbeat")]
-pub mod heartbeat;
 #[cfg(feature = "extensions-http")]
 mod http_observer;
 #[cfg(feature = "extensions-kubernetes_observer")]

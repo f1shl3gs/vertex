@@ -12,8 +12,6 @@ use tracing::{error, info, warn};
 use vertex::built_info::{GIT_HASH, PKG_VERSION, RUSTC_VERSION, TARGET};
 #[cfg(feature = "extensions-healthcheck")]
 use vertex::extensions::healthcheck;
-#[cfg(feature = "extensions-heartbeat")]
-use vertex::extensions::heartbeat;
 #[cfg(feature = "extensions-zpages")]
 use vertex::extensions::zpages;
 
@@ -215,8 +213,6 @@ impl RootCommand {
 
             let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
-            #[cfg(feature = "extensions-heartbeat")]
-            heartbeat::report_config(topology.config());
             #[cfg(feature = "extensions-zpages")]
             zpages::update_config(topology.config());
 
@@ -238,8 +234,6 @@ impl RootCommand {
                                         new_config.healthcheck.set_require_healthy(true);
                                         match topology.reload_config_and_respawn(new_config).await {
                                             Ok(true) => {
-                                                #[cfg(feature = "extensions-heartbeat")]
-                                                heartbeat::report_config(topology.config());
                                                 #[cfg(feature = "extensions-zpages")]
                                                 zpages::update_config(topology.config());
 
@@ -274,8 +268,6 @@ impl RootCommand {
                                     new_config.healthcheck.set_require_healthy(true);
                                     match topology.reload_config_and_respawn(new_config).await {
                                         Ok(true) => {
-                                            #[cfg(feature = "extensions-heartbeat")]
-                                            heartbeat::report_config(topology.config());
                                             #[cfg(feature = "extensions-zpages")]
                                             zpages::update_config(topology.config());
 
