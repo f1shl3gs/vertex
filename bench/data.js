@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751119747712,
+  "lastUpdate": 1751184182045,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a3dbcaea78dc76b030df5959cececae6dd339600",
-          "message": "Merge pull request #2332 from f1shl3gs/lib/configurable/simplify\n\nlib/configurable: remove unused",
-          "timestamp": "2025-05-05T21:13:35+08:00",
-          "tree_id": "5e3392e9d958cf9598a167f3568b70bb1f574312",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a3dbcaea78dc76b030df5959cececae6dd339600"
-        },
-        "date": 1746450938842,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 558000,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 496350,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a696d877f1c13e86069da06dcba66eb56888f77e",
+          "message": "Merge pull request #2439 from f1shl3gs/dependabot/cargo/quick-xml-0.38.0\n\nchore(deps): bump quick-xml from 0.37.5 to 0.38.0",
+          "timestamp": "2025-06-29T16:00:33+08:00",
+          "tree_id": "e7ae93d9ad99caf0854a9bf05d66e99bfcf7aba3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a696d877f1c13e86069da06dcba66eb56888f77e"
+        },
+        "date": 1751184161820,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 500950,
             "unit": "ns/op"
           }
         ]
