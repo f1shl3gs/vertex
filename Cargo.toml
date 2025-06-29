@@ -144,7 +144,7 @@ extensions-consul_observer = []
 extensions-dns_observer = ["dep:resolver"]
 extensions-exec_observer = ["tokio/process"]
 extensions-healthcheck = []
-extensions-http = []
+extensions-http_observer = []
 extensions-kubernetes_observer = ["dep:kubernetes"]
 extensions-port_observer = []
 extensions-pprof = ["dep:pprof"]
@@ -156,7 +156,7 @@ extensions = [
     "extensions-dns_observer",
     "extensions-exec_observer",
     "extensions-healthcheck",
-    "extensions-http",
+    "extensions-http_observer",
     "extensions-kubernetes_observer",
     "extensions-port_observer",
     # Musl does not provide "pthread_getname_np" in current release.
