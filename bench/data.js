@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751193180344,
+  "lastUpdate": 1751193238857,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "18fab6b9d1ccfaecbdb038eed4632a2646e36d56",
-          "message": "Merge pull request #2334 from f1shl3gs/dependabot/cargo/tonic-2d232a9b87\n\nchore(deps): bump the tonic group with 3 updates",
-          "timestamp": "2025-05-06T13:38:58+08:00",
-          "tree_id": "abdd1305be86bccdb16190cafd7caf7b74a0a739",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18fab6b9d1ccfaecbdb038eed4632a2646e36d56"
-        },
-        "date": 1746510574232,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 546,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37942.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9de16eb3f002daf81a4c575d86a422ec5cd0ee68",
           "message": "Merge pull request #2335 from f1shl3gs/dependabot/cargo/tokio-1.45.0\n\nchore(deps): bump tokio from 1.44.2 to 1.45.0",
           "timestamp": "2025-05-07T03:15:44+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 506,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37512.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d41e576d5e9f6beff0ebaaca78ad9a581915481",
+          "message": "Merge pull request #2440 from f1shl3gs/extensions/http_observer/fix_feature_name\n\nextensions/http_observer: fix feature name",
+          "timestamp": "2025-06-29T18:23:23+08:00",
+          "tree_id": "8f274e1aef131f764da491cf980f828080fb557a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d41e576d5e9f6beff0ebaaca78ad9a581915481"
+        },
+        "date": 1751193218401,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 530,
             "unit": "s"
           },
           {
