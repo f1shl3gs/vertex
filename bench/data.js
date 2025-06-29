@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751184643158,
+  "lastUpdate": 1751192744068,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9241c10284cb5dab572330b1d1a20dde888ea08f",
-          "message": "Merge pull request #2333 from f1shl3gs/dependabot/cargo/rustls-0.23.27\n\nchore(deps): bump rustls from 0.23.26 to 0.23.27",
-          "timestamp": "2025-05-06T13:37:38+08:00",
-          "tree_id": "57f5ca1db9cf42cffcd78947d37cb7d7b358589f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9241c10284cb5dab572330b1d1a20dde888ea08f"
-        },
-        "date": 1746509984911,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 558950,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 500950,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d41e576d5e9f6beff0ebaaca78ad9a581915481",
+          "message": "Merge pull request #2440 from f1shl3gs/extensions/http_observer/fix_feature_name\n\nextensions/http_observer: fix feature name",
+          "timestamp": "2025-06-29T18:23:23+08:00",
+          "tree_id": "8f274e1aef131f764da491cf980f828080fb557a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d41e576d5e9f6beff0ebaaca78ad9a581915481"
+        },
+        "date": 1751192723891,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 490260,
             "unit": "ns/op"
           }
         ]
