@@ -491,4 +491,3 @@ tonic = { version = "0.13.1", default-features = false, optional = true, feature
 tonic-health = { version = "0.13.1", default-features = false, optional = true }
 typetag = { version = "0.2.20" }
 url = { version = "2.5.4", default-features = false, features = ["serde"] }
-uuid = { version = "1.17.0", default-features = false, features = ["v4"], optional = true }
