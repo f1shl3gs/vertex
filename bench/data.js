@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751291368591,
+  "lastUpdate": 1751291380482,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9de16eb3f002daf81a4c575d86a422ec5cd0ee68",
-          "message": "Merge pull request #2335 from f1shl3gs/dependabot/cargo/tokio-1.45.0\n\nchore(deps): bump tokio from 1.44.2 to 1.45.0",
-          "timestamp": "2025-05-07T03:15:44+08:00",
-          "tree_id": "716edd7bd37f6b14b164cf28fb8c5c1a427689ba",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9de16eb3f002daf81a4c575d86a422ec5cd0ee68"
-        },
-        "date": 1746559575286,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 551,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37943.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "33ec1a3061053343abc02c4ad6cc0b1fc50d95e3",
           "message": "Merge pull request #2336 from f1shl3gs/dependabot/cargo/backtrace-0.3.75\n\nchore(deps): bump backtrace from 0.3.74 to 0.3.75",
           "timestamp": "2025-05-07T18:40:17+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 530,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37512.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2bebdd969d57622f9d731f175e744800d74c5b53",
+          "message": "Merge pull request #2441 from f1shl3gs/misc/rename_owned_event_path\n\nlib/value: fix owned_target_path",
+          "timestamp": "2025-06-30T21:39:30+08:00",
+          "tree_id": "afcf277a84f62f31f98ba2fb5e07fb02028883f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2bebdd969d57622f9d731f175e744800d74c5b53"
+        },
+        "date": 1751291360203,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 503,
             "unit": "s"
           },
           {
