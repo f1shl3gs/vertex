@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751295591861,
+  "lastUpdate": 1751295652268,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "33ec1a3061053343abc02c4ad6cc0b1fc50d95e3",
-          "message": "Merge pull request #2336 from f1shl3gs/dependabot/cargo/backtrace-0.3.75\n\nchore(deps): bump backtrace from 0.3.74 to 0.3.75",
-          "timestamp": "2025-05-07T18:40:17+08:00",
-          "tree_id": "d99cb16d441c65e969af97afd0681205e5bb1821",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33ec1a3061053343abc02c4ad6cc0b1fc50d95e3"
-        },
-        "date": 1746615119925,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 536,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37945.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c1508bfd95fd28fec7277bad7ab7eb187cb79307",
           "message": "Merge pull request #2337 from f1shl3gs/deps/remove_ahash\n\ndeps: remove ahash",
           "timestamp": "2025-05-08T14:48:05+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 503,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37512.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "957e242564bf00a014c043f5527e4cc022c0931e",
+          "message": "Merge pull request #2442 from f1shl3gs/deps/remove_uuid\n\ndeps: remove uuid since we don't need it",
+          "timestamp": "2025-06-30T22:50:19+08:00",
+          "tree_id": "75672cc8e9fce7b383f59dd9ec79af563f8b186d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/957e242564bf00a014c043f5527e4cc022c0931e"
+        },
+        "date": 1751295631657,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 522,
             "unit": "s"
           },
           {
