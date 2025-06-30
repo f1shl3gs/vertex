@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751290910319,
+  "lastUpdate": 1751290919559,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "18fab6b9d1ccfaecbdb038eed4632a2646e36d56",
-          "message": "Merge pull request #2334 from f1shl3gs/dependabot/cargo/tonic-2d232a9b87\n\nchore(deps): bump the tonic group with 3 updates",
-          "timestamp": "2025-05-06T13:38:58+08:00",
-          "tree_id": "abdd1305be86bccdb16190cafd7caf7b74a0a739",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18fab6b9d1ccfaecbdb038eed4632a2646e36d56"
-        },
-        "date": 1746510069241,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.345,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 104.02,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.94,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2bebdd969d57622f9d731f175e744800d74c5b53",
+          "message": "Merge pull request #2441 from f1shl3gs/misc/rename_owned_event_path\n\nlib/value: fix owned_target_path",
+          "timestamp": "2025-06-30T21:39:30+08:00",
+          "tree_id": "afcf277a84f62f31f98ba2fb5e07fb02028883f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2bebdd969d57622f9d731f175e744800d74c5b53"
+        },
+        "date": 1751290899081,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.412,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.405,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.87,
             "unit": "ns/op"
           }
         ]
