@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751290981091,
+  "lastUpdate": 1751291368591,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "18fab6b9d1ccfaecbdb038eed4632a2646e36d56",
-          "message": "Merge pull request #2334 from f1shl3gs/dependabot/cargo/tonic-2d232a9b87\n\nchore(deps): bump the tonic group with 3 updates",
-          "timestamp": "2025-05-06T13:38:58+08:00",
-          "tree_id": "abdd1305be86bccdb16190cafd7caf7b74a0a739",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18fab6b9d1ccfaecbdb038eed4632a2646e36d56"
-        },
-        "date": 1746510527364,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22526000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 590550,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.663,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9de16eb3f002daf81a4c575d86a422ec5cd0ee68",
           "message": "Merge pull request #2335 from f1shl3gs/dependabot/cargo/tokio-1.45.0\n\nchore(deps): bump tokio from 1.44.2 to 1.45.0",
           "timestamp": "2025-05-07T03:15:44+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.08,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2bebdd969d57622f9d731f175e744800d74c5b53",
+          "message": "Merge pull request #2441 from f1shl3gs/misc/rename_owned_event_path\n\nlib/value: fix owned_target_path",
+          "timestamp": "2025-06-30T21:39:30+08:00",
+          "tree_id": "afcf277a84f62f31f98ba2fb5e07fb02028883f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2bebdd969d57622f9d731f175e744800d74c5b53"
+        },
+        "date": 1751291347687,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14405000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 565220,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.56,
             "unit": "ns/op"
           }
         ]
