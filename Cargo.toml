@@ -93,12 +93,6 @@ target-x86_64-unknown-linux-gnu = [
     "transforms",
 ]
 
-benches = [
-    "sources-node",
-    "sources-haproxy",
-    "sinks-loki"
-]
-
 # Integration tests
 clickhouse-integration-tests = []
 consul-integration-tests = []
@@ -143,7 +137,7 @@ all-integration-tests = [
 extensions-consul_observer = []
 extensions-dns_observer = ["dep:resolver"]
 extensions-exec_observer = ["tokio/process"]
-extensions-healthcheck = []
+extensions-healthcheck = ["tonic/router", "dep:tonic-health"]
 extensions-http_observer = []
 extensions-kubernetes_observer = ["dep:kubernetes"]
 extensions-port_observer = []
@@ -431,6 +425,7 @@ tokio-util = { version = "0.7.15", default-features = false, features = ["codec"
 tracing = { version = "0.1.41", default-features = false }
 
 # HTTP
+headers = { version = "0.4.0", default-features = false }
 hyper = { version = "1.6.0", default-features = false, features = ["server"] }
 hyper-rustls = { version = "0.27.7", default-features = false, features = ["rustls-native-certs"] }
 hyper-util = { version = "0.1.14", default-features = false, features = ["client"] }
@@ -487,7 +482,7 @@ snap = { version = "1.1.1", default-features = false, optional = true }
 socket2 = { version = "0.5.10", optional = true, default-features = false}
 sqlx = { version = "0.8.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "2.0.12", default-features = false }
-tonic = { version = "0.13.1", default-features = false, optional = true, features = ["prost"] }
+tonic = { version = "0.13.1", default-features = false, optional = true, features = ["prost", "transport"] }
 tonic-health = { version = "0.13.1", default-features = false, optional = true }
 typetag = { version = "0.2.20" }
 url = { version = "2.5.4", default-features = false, features = ["serde"] }
