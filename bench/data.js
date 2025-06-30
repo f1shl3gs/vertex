@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751295652268,
+  "lastUpdate": 1751316628871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c1508bfd95fd28fec7277bad7ab7eb187cb79307",
-          "message": "Merge pull request #2337 from f1shl3gs/deps/remove_ahash\n\ndeps: remove ahash",
-          "timestamp": "2025-05-08T14:48:05+08:00",
-          "tree_id": "4c9e0149ec26f3aa305896fcc4aa72c253823510",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1508bfd95fd28fec7277bad7ab7eb187cb79307"
-        },
-        "date": 1746687555109,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 560,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37945.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f",
           "message": "Merge pull request #2338 from f1shl3gs/lib/configurable/simplify_and_reduce_codebase\n\nlib/configurable: reduce codebase and the binary size",
           "timestamp": "2025-05-12T14:00:17+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37512.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f466d6e8220a41f88cabe24731849e820ea4efb6",
+          "message": "Merge pull request #2443 from f1shl3gs/extensions/healthcheck/add_grpc\n\nextensions/healthcheck: add GRPC support",
+          "timestamp": "2025-07-01T04:39:21+08:00",
+          "tree_id": "9caf727eb2a8eb28196957bfc5e100762007d206",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f466d6e8220a41f88cabe24731849e820ea4efb6"
+        },
+        "date": 1751316608170,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 550,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37756.8,
             "unit": "KiB"
           }
         ]
