@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751295161173,
+  "lastUpdate": 1751295181691,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9de16eb3f002daf81a4c575d86a422ec5cd0ee68",
-          "message": "Merge pull request #2335 from f1shl3gs/dependabot/cargo/tokio-1.45.0\n\nchore(deps): bump tokio from 1.44.2 to 1.45.0",
-          "timestamp": "2025-05-07T03:15:44+08:00",
-          "tree_id": "716edd7bd37f6b14b164cf28fb8c5c1a427689ba",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9de16eb3f002daf81a4c575d86a422ec5cd0ee68"
-        },
-        "date": 1746559072088,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 54.623,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 103.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.51,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "957e242564bf00a014c043f5527e4cc022c0931e",
+          "message": "Merge pull request #2442 from f1shl3gs/deps/remove_uuid\n\ndeps: remove uuid since we don't need it",
+          "timestamp": "2025-06-30T22:50:19+08:00",
+          "tree_id": "75672cc8e9fce7b383f59dd9ec79af563f8b186d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/957e242564bf00a014c043f5527e4cc022c0931e"
+        },
+        "date": 1751295160843,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.392,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.989,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 169.4,
             "unit": "ns/op"
           }
         ]
