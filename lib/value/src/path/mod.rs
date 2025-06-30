@@ -153,7 +153,7 @@ macro_rules! owned_value_path {
 /// Syntactic sugar for creating a pre-parsed owned event path.
 /// This path points at the event (as opposed to metadata).
 #[macro_export]
-macro_rules! owned_event_path {
+macro_rules! owned_target_path {
     ($($tokens:tt)*) => {
         $crate::path::OwnedTargetPath::event($crate::owned_value_path!($($tokens)*))
     }
@@ -326,7 +326,7 @@ mod test {
 
     #[test]
     fn test_parse_target_path() {
-        assert_eq!(parse_target_path("i"), Ok(owned_event_path!("i")));
+        assert_eq!(parse_target_path("i"), Ok(owned_target_path!("i")));
     }
 
     #[test]
