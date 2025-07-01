@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751366269317,
+  "lastUpdate": 1751373564684,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
-          "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
-          "timestamp": "2025-05-12T14:44:59+08:00",
-          "tree_id": "e628ab01e96ac4984882ee064f0645fa50d7f090",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f8d51363a24a984c53ab2a5ded87b9e9054a1bf"
-        },
-        "date": 1747032928825,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 540,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37705.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6f6d998cb2f9a82d84c86cb958e6846f3331e109",
           "message": "Merge pull request #2340 from f1shl3gs/lib/tracked_alloc/remove\n\nlib/tracked_alloc: remove",
           "timestamp": "2025-05-14T22:03:09+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 526,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37756.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e06409df4ae2d950672ac9fc44728c0f0dee1d8f",
+          "message": "Merge pull request #2445 from f1shl3gs/deps/remove_tokio-stream\n\ndeps: remove tokio-stream",
+          "timestamp": "2025-07-01T20:29:15+08:00",
+          "tree_id": "065b356ff49a2d0e7637c43898f622d5f3d088d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e06409df4ae2d950672ac9fc44728c0f0dee1d8f"
+        },
+        "date": 1751373544189,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 505,
             "unit": "s"
           },
           {
