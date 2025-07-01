@@ -6,8 +6,6 @@ use std::time::Duration;
 use argh::FromArgs;
 use exitcode::ExitCode;
 use framework::{SignalTo, config, signal, topology};
-use futures::StreamExt;
-use tokio_stream::wrappers::UnboundedReceiverStream;
 use tracing::{error, info, warn};
 use vertex::built_info::{GIT_HASH, PKG_VERSION, RUSTC_VERSION, TARGET};
 #[cfg(feature = "extensions-healthcheck")]
@@ -211,13 +209,12 @@ impl RootCommand {
             #[cfg(feature = "extensions-healthcheck")]
             healthcheck::set_readiness(true);
 
-            let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
+            let (mut topology, mut graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
             #[cfg(feature = "extensions-zpages")]
             zpages::update_config(topology.config());
 
             // run
-            let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
             let mut sources_finished = topology.sources_finished();
 
             // Any internal_logs source will have grabbed a copy of the early buffer by this
@@ -292,7 +289,7 @@ impl RootCommand {
                     },
 
                     // Trigger graceful shutdown if a component crashed, or all sources have ended
-                    _ = graceful_crash.next() => break SignalTo::Shutdown,
+                    _ = graceful_crash.recv() => break SignalTo::Shutdown,
                     _ = &mut sources_finished => break SignalTo::Shutdown,
                     else => unreachable!("Signal streams never end"),
                 }

@@ -4277,7 +4277,6 @@ dependencies = [
  "tikv-jemalloc-ctl",
  "tikv-jemallocator",
  "tokio",
- "tokio-stream",
  "tokio-util",
  "tonic 0.13.1",
  "tonic-build",
