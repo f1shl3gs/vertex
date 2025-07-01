@@ -128,7 +128,7 @@ mod tests {
 
         let req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://{}/ready", addr))
+            .uri(format!("http://{addr}/ready"))
             .body(Full::<Bytes>::default())
             .expect("request build successful");
         let resp = client.send(req).await.unwrap();
@@ -137,7 +137,7 @@ mod tests {
         READINESS.store(true, Ordering::Release);
         let req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://{}/ready", addr))
+            .uri(format!("http://{addr}/ready"))
             .body(Full::<Bytes>::default())
             .expect("request build successful");
         let resp = client.send(req).await.unwrap();
@@ -146,7 +146,7 @@ mod tests {
         READINESS.store(false, Ordering::Release);
         let req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://{}/ready", addr))
+            .uri(format!("http://{addr}/ready"))
             .body(Full::<Bytes>::default())
             .expect("request build successful");
         let resp = client.send(req).await.unwrap();
@@ -165,7 +165,7 @@ mod tests {
         let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let mut req = Request::builder()
             .method(Method::GET)
-            .uri(format!("http://{}/healthy", addr))
+            .uri(format!("http://{addr}/healthy"))
             .body(Full::<Bytes>::default())
             .unwrap();
         if let Some(auth) = &auth {
@@ -222,7 +222,7 @@ mod tests {
         ] {
             let mut req = Request::builder()
                 .method(Method::GET)
-                .uri(format!("http://{}/healthy", addr))
+                .uri(format!("http://{addr}/healthy"))
                 .body(Full::<Bytes>::default())
                 .unwrap();
 

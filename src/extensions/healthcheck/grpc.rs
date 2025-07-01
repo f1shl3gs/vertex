@@ -75,7 +75,7 @@ mod tests {
 
         wait_for_tcp(addr).await;
 
-        let endpoint = tonic::transport::Endpoint::new(format!("http://{}", addr))
+        let endpoint = tonic::transport::Endpoint::new(format!("http://{addr}"))
             .unwrap()
             .connect()
             .await
