@@ -425,7 +425,7 @@ tokio-util = { version = "0.7.15", default-features = false, features = ["codec"
 tracing = { version = "0.1.41", default-features = false }
 
 # HTTP
-headers = { version = "0.4.0", default-features = false }
+headers = { version = "0.4.1", default-features = false }
 hyper = { version = "1.6.0", default-features = false, features = ["server"] }
 hyper-rustls = { version = "0.27.7", default-features = false, features = ["rustls-native-certs"] }
 hyper-util = { version = "0.1.14", default-features = false, features = ["client"] }
