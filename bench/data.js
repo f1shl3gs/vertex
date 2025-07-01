@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751316628871,
+  "lastUpdate": 1751366269317,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f",
-          "message": "Merge pull request #2338 from f1shl3gs/lib/configurable/simplify_and_reduce_codebase\n\nlib/configurable: reduce codebase and the binary size",
-          "timestamp": "2025-05-12T14:00:17+08:00",
-          "tree_id": "260c584d8c061d9bf755426787925231590baa47",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f"
-        },
-        "date": 1747030252710,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 558,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37705.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
           "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
           "timestamp": "2025-05-12T14:44:59+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 550,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37756.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5776d3cc6a4336d4798ed7a23421f55f3268eeea",
+          "message": "Merge pull request #2444 from f1shl3gs/deps/bump_headers_to_0.4.1\n\ndeps: bump headers to 0.4.1",
+          "timestamp": "2025-07-01T18:26:55+08:00",
+          "tree_id": "20c3229220a47330433ff4da42f2af9c6851a54e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5776d3cc6a4336d4798ed7a23421f55f3268eeea"
+        },
+        "date": 1751366248800,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
             "unit": "s"
           },
           {
