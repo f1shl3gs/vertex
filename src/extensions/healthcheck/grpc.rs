@@ -13,6 +13,8 @@ use tonic_health::pb::health_server::{Health, HealthServer};
 use tonic_health::pb::{HealthCheckRequest, HealthCheckResponse};
 use tonic_health::server::WatchStream;
 
+use super::READINESS;
+
 struct HealthService;
 
 #[async_trait::async_trait]
@@ -21,7 +23,7 @@ impl Health for HealthService {
         &self,
         _req: Request<HealthCheckRequest>,
     ) -> Result<Response<HealthCheckResponse>, Status> {
-        let readiness = super::READINESS.load(Ordering::Acquire);
+        let readiness = READINESS.load(Ordering::Acquire);
 
         Ok(Response::new(HealthCheckResponse {
             status: if readiness {
@@ -55,4 +57,56 @@ pub async fn serve(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), Err
         .add_service(service)
         .serve_with_shutdown(addr, shutdown.map(|_| ()))
         .await
+}
+
+#[cfg(test)]
+mod tests {
+    use framework::ShutdownSignal;
+    use testify::wait::wait_for_tcp;
+
+    use super::*;
+
+    #[tokio::test]
+    async fn check() {
+        let addr = testify::next_addr();
+        let shutdown = ShutdownSignal::noop();
+
+        tokio::spawn(serve(addr, shutdown));
+
+        wait_for_tcp(addr).await;
+
+        let endpoint = tonic::transport::Endpoint::new(format!("http://{}", addr))
+            .unwrap()
+            .connect()
+            .await
+            .unwrap();
+        let mut client = tonic_health::pb::health_client::HealthClient::new(endpoint);
+
+        // default NotServing
+        let resp = client
+            .check(Request::new(HealthCheckRequest {
+                service: "foo".to_string(),
+            }))
+            .await
+            .unwrap();
+        assert_eq!(resp.get_ref().status, 2); // ServingStatus::NotServing
+
+        READINESS.store(true, Ordering::Release);
+        let resp = client
+            .check(Request::new(HealthCheckRequest {
+                service: "foo".to_string(),
+            }))
+            .await
+            .unwrap();
+        assert_eq!(resp.get_ref().status, 1); // ServingStatus::Serving
+
+        READINESS.store(false, Ordering::Release);
+        let resp = client
+            .check(Request::new(HealthCheckRequest {
+                service: "foo".to_string(),
+            }))
+            .await
+            .unwrap();
+        assert_eq!(resp.get_ref().status, 2); // ServingStatus::NotServing
+    }
 }
