@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751423276166,
+  "lastUpdate": 1751424946646,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "678af446b9f94ebc26fef552648ec51b7dd2ae39",
-          "message": "Merge pull request #2341 from f1shl3gs/toolchain/1.87.0\n\nbump toolchain to 1.87.0",
-          "timestamp": "2025-05-16T04:02:18+08:00",
-          "tree_id": "339a371087679b5022cb7a06cf1e86382f2f7c98",
-          "url": "https://github.com/f1shl3gs/vertex/commit/678af446b9f94ebc26fef552648ec51b7dd2ae39"
-        },
-        "date": 1747339979317,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 543,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 38572.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "133063c56acd8eec474e10bad4881bc58ab4de6c",
           "message": "Merge pull request #2342 from f1shl3gs/lib/kubernetes/get_home_with_home_dir_in_std\n\nlib/kubernetes: get home_dir with stable api",
           "timestamp": "2025-05-19T09:43:00+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 520,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37757,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a2504859a52eaa07446679e22c35ff3843552d71",
+          "message": "Merge pull request #2447 from f1shl3gs/ci/fix_bench\n\nci: fix bench",
+          "timestamp": "2025-07-02T10:45:24+08:00",
+          "tree_id": "80202b31b5537b8b81f68bc0ad03f4fd80c44deb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a2504859a52eaa07446679e22c35ff3843552d71"
+        },
+        "date": 1751424926068,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 513,
             "unit": "s"
           },
           {
