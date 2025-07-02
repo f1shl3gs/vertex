@@ -14,7 +14,7 @@ use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
 
-use crate::Error;
+use super::READINESS;
 
 enum HttpAuth {
     Basic(HeaderValue),
@@ -28,15 +28,8 @@ impl HttpAuth {
     pub fn handle(&self, headers: &HeaderMap) -> bool {
         match self {
             HttpAuth::None => true,
-            HttpAuth::Basic(expect) => {
+            HttpAuth::Basic(expect) | HttpAuth::Bearer(expect) => {
                 if let Some(got) = headers.get(AUTHORIZATION) {
-                    return got == expect;
-                }
-
-                false
-            }
-            HttpAuth::Bearer(expect) => {
-                if let Some(got) = headers.get("bearer") {
                     return got == expect;
                 }
 
@@ -51,7 +44,7 @@ pub async fn serve(
     tls: Option<&TlsConfig>,
     auth: Option<Auth>,
     shutdown: ShutdownSignal,
-) -> Result<(), Error> {
+) -> Result<(), crate::Error> {
     let listener = MaybeTlsListener::bind(&addr, tls).await?;
 
     let auth = Arc::new(match auth {
@@ -59,10 +52,7 @@ pub async fn serve(
             Auth::Basic { user, password } => {
                 HttpAuth::Basic(Authorization::basic(user, password).0.encode())
             }
-            Auth::Bearer { token } => {
-                let value = HeaderValue::from_str(token)?;
-                HttpAuth::Bearer(value)
-            }
+            Auth::Bearer { token } => HttpAuth::Bearer(Authorization::bearer(token)?.0.encode()),
         },
         None => HttpAuth::None,
     });
@@ -90,7 +80,7 @@ pub async fn serve(
             let (status, body) = match req.uri().path() {
                 "/healthy" => (StatusCode::OK, "Vertex is Healthy.\n"),
                 "/ready" => {
-                    if super::READINESS.load(Ordering::Acquire) {
+                    if READINESS.load(Ordering::Acquire) {
                         (StatusCode::OK, "Vertex is Ready.\n")
                     } else {
                         (StatusCode::SERVICE_UNAVAILABLE, "Vertex is not ready.\n")
@@ -112,4 +102,136 @@ pub async fn serve(
     framework::http::serve(listener, service)
         .with_graceful_shutdown(shutdown)
         .await
+}
+
+#[cfg(test)]
+mod tests {
+    use bytes::Bytes;
+    use framework::ShutdownSignal;
+    use framework::config::ProxyConfig;
+    use framework::http::{Auth, HttpClient};
+    use http::{Method, Request, StatusCode};
+    use testify::wait::wait_for_tcp;
+
+    use super::*;
+
+    #[tokio::test]
+    async fn readiness() {
+        let addr = testify::next_addr();
+
+        let (_trigger, shutdown, _) = ShutdownSignal::new_wired();
+        tokio::spawn(async move { serve(addr, None, None, shutdown).await.unwrap() });
+
+        wait_for_tcp(addr).await;
+
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+
+        let req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("http://{addr}/ready"))
+            .body(Full::<Bytes>::default())
+            .expect("request build successful");
+        let resp = client.send(req).await.unwrap();
+        assert_eq!(resp.status(), StatusCode::SERVICE_UNAVAILABLE);
+
+        READINESS.store(true, Ordering::Release);
+        let req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("http://{addr}/ready"))
+            .body(Full::<Bytes>::default())
+            .expect("request build successful");
+        let resp = client.send(req).await.unwrap();
+        assert_eq!(resp.status(), StatusCode::OK);
+
+        READINESS.store(false, Ordering::Release);
+        let req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("http://{addr}/ready"))
+            .body(Full::<Bytes>::default())
+            .expect("request build successful");
+        let resp = client.send(req).await.unwrap();
+        assert_eq!(resp.status(), StatusCode::SERVICE_UNAVAILABLE);
+    }
+
+    async fn run(auth: Option<Auth>) {
+        let addr = testify::next_addr();
+
+        let (trigger, shutdown, _) = ShutdownSignal::new_wired();
+        let srv_auth = auth.clone();
+        tokio::spawn(async move { serve(addr, None, srv_auth, shutdown).await.unwrap() });
+
+        wait_for_tcp(addr).await;
+
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+        let mut req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("http://{addr}/healthy"))
+            .body(Full::<Bytes>::default())
+            .unwrap();
+        if let Some(auth) = &auth {
+            auth.apply(&mut req);
+        }
+
+        let resp = client.send(req).await.unwrap();
+
+        drop(trigger);
+
+        assert_eq!(resp.status(), StatusCode::OK);
+    }
+
+    #[tokio::test]
+    async fn authorized() {
+        run(None).await;
+        run(Some(Auth::Basic {
+            user: "foo".into(),
+            password: "bar".into(),
+        }))
+        .await;
+        run(Some(Auth::Bearer {
+            token: "test".into(),
+        }))
+        .await;
+    }
+
+    #[tokio::test]
+    async fn unauthorized() {
+        let addr = testify::next_addr();
+        let (_trigger, shutdown, _) = ShutdownSignal::new_wired();
+
+        tokio::spawn(async move {
+            let auth = Auth::Basic {
+                user: "foo".into(),
+                password: "bar".into(),
+            };
+            serve(addr, None, Some(auth), shutdown).await.unwrap()
+        });
+
+        wait_for_tcp(addr).await;
+
+        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+
+        for auth in [
+            None,
+            Some(Auth::Basic {
+                user: "foo".into(),
+                password: "foo".into(), // should be `bar`
+            }),
+            Some(Auth::Bearer {
+                token: "test".into(),
+            }),
+        ] {
+            let mut req = Request::builder()
+                .method(Method::GET)
+                .uri(format!("http://{addr}/healthy"))
+                .body(Full::<Bytes>::default())
+                .unwrap();
+
+            if let Some(auth) = &auth {
+                auth.apply(&mut req);
+            }
+
+            let resp = client.send(req).await.unwrap();
+            assert_eq!(resp.status(), StatusCode::UNAUTHORIZED);
+        }
+    }
 }
