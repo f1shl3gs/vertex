@@ -150,7 +150,10 @@ bench-event:
 
 .PHONY: bench-vertex
 bench-vertex:
-	cargo bench --no-default-features
+	cargo bench --no-default-features \
+		--features sources-haproxy \
+		--features sources-node \
+		--features sinks-loki
 
 .PHONY: bench-prometheus
 bench-prometheus:
