@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751424946646,
+  "lastUpdate": 1751425354504,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33ec1a3061053343abc02c4ad6cc0b1fc50d95e3",
-          "message": "Merge pull request #2336 from f1shl3gs/dependabot/cargo/backtrace-0.3.75\n\nchore(deps): bump backtrace from 0.3.74 to 0.3.75",
-          "timestamp": "2025-05-07T18:40:17+08:00",
-          "tree_id": "d99cb16d441c65e969af97afd0681205e5bb1821",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33ec1a3061053343abc02c4ad6cc0b1fc50d95e3"
-        },
-        "date": 1746614537768,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 553060,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 493970,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c6ceac81018a129bcea818984d170aed5746a15a",
+          "message": "Merge pull request #2448 from f1shl3gs/cargo/update\n\ncargo: update",
+          "timestamp": "2025-07-02T11:00:15+08:00",
+          "tree_id": "de6c3a025cdfbf8f2cbed929634968194d3107fe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c6ceac81018a129bcea818984d170aed5746a15a"
+        },
+        "date": 1751425334023,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 491300,
             "unit": "ns/op"
           }
         ]
