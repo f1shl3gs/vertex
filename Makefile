@@ -150,7 +150,7 @@ bench-event:
 
 .PHONY: bench-vertex
 bench-vertex:
-	cargo bench --no-default-features --features benches
+	cargo bench --no-default-features
 
 .PHONY: bench-prometheus
 bench-prometheus:
