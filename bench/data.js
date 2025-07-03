@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751524190802,
+  "lastUpdate": 1751524205292,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f",
-          "message": "Merge pull request #2338 from f1shl3gs/lib/configurable/simplify_and_reduce_codebase\n\nlib/configurable: reduce codebase and the binary size",
-          "timestamp": "2025-05-12T14:00:17+08:00",
-          "tree_id": "260c584d8c061d9bf755426787925231590baa47",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f"
-        },
-        "date": 1747029736462,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.341,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 103.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 169.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef86afff44554dc3626c13139bbe070a080f65cc",
+          "message": "Merge pull request #2450 from f1shl3gs/dependabot/cargo/lru-0.16.0\n\nchore(deps): bump lru from 0.15.0 to 0.16.0",
+          "timestamp": "2025-07-03T14:27:34+08:00",
+          "tree_id": "d1e883b74d2b496f43836d83a042ecba2c3c6135",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef86afff44554dc3626c13139bbe070a080f65cc"
+        },
+        "date": 1751524184823,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.442,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 106.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.41,
             "unit": "ns/op"
           }
         ]
