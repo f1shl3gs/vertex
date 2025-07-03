@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751524205292,
+  "lastUpdate": 1751524237202,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f",
-          "message": "Merge pull request #2338 from f1shl3gs/lib/configurable/simplify_and_reduce_codebase\n\nlib/configurable: reduce codebase and the binary size",
-          "timestamp": "2025-05-12T14:00:17+08:00",
-          "tree_id": "260c584d8c061d9bf755426787925231590baa47",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f"
-        },
-        "date": 1747029755530,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.911,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 337.26,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 712.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
           "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
           "timestamp": "2025-05-12T14:44:59+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 674.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef86afff44554dc3626c13139bbe070a080f65cc",
+          "message": "Merge pull request #2450 from f1shl3gs/dependabot/cargo/lru-0.16.0\n\nchore(deps): bump lru from 0.15.0 to 0.16.0",
+          "timestamp": "2025-07-03T14:27:34+08:00",
+          "tree_id": "d1e883b74d2b496f43836d83a042ecba2c3c6135",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef86afff44554dc3626c13139bbe070a080f65cc"
+        },
+        "date": 1751524216570,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.964,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 307.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 639.37,
             "unit": "ns/op"
           }
         ]
