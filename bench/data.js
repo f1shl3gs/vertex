@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751725350103,
+  "lastUpdate": 1751725365004,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "678af446b9f94ebc26fef552648ec51b7dd2ae39",
-          "message": "Merge pull request #2341 from f1shl3gs/toolchain/1.87.0\n\nbump toolchain to 1.87.0",
-          "timestamp": "2025-05-16T04:02:18+08:00",
-          "tree_id": "339a371087679b5022cb7a06cf1e86382f2f7c98",
-          "url": "https://github.com/f1shl3gs/vertex/commit/678af446b9f94ebc26fef552648ec51b7dd2ae39"
-        },
-        "date": 1747339546005,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.319,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 166.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 341.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 701.89,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "133063c56acd8eec474e10bad4881bc58ab4de6c",
           "message": "Merge pull request #2342 from f1shl3gs/lib/kubernetes/get_home_with_home_dir_in_std\n\nlib/kubernetes: get home_dir with stable api",
           "timestamp": "2025-05-19T09:43:00+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 678.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ae74930b49700a125baec45bb5ef25ba33f8f12c",
+          "message": "Merge pull request #2455 from f1shl3gs/lib/prometheus/remove_unused_types\n\nlib/prometheus: remove unused types",
+          "timestamp": "2025-07-05T22:19:56+08:00",
+          "tree_id": "abc0310ab10034a47a0be10e4b392e0726d018b8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ae74930b49700a125baec45bb5ef25ba33f8f12c"
+        },
+        "date": 1751725344429,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 163.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 309.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 668.64,
             "unit": "ns/op"
           }
         ]
