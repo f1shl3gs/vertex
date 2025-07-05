@@ -353,7 +353,7 @@ impl Client {
             builder.finish()
         };
 
-        let req = Request::builder()
+        let mut req = Request::builder()
             .method(Method::GET)
             .uri(format!(
                 "{}{}?{}",
@@ -362,6 +362,8 @@ impl Client {
                 query
             ))
             .body(Full::<Bytes>::default())?;
+
+        self.auth.apply(&mut req).map_err(Error::RefreshToken)?;
 
         let resp = self.http_client.request(req).await.map_err(Error::Http)?;
         let (parts, incoming) = resp.into_parts();

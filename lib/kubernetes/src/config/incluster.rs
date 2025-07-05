@@ -11,9 +11,9 @@ const SERVICE_HOSTENV: &str = "KUBERNETES_SERVICE_HOST";
 const SERVICE_PORTENV: &str = "KUBERNETES_SERVICE_PORT";
 
 // Mounted credential files
-const SERVICE_TOKENFILE: &str = "/var/run/secrets/kubernetes.io/serviceaccount.yaml/token";
-const SERVICE_CERTFILE: &str = "/var/run/secrets/kubernetes.io/serviceaccount.yaml/ca.crt";
-const SERVICE_DEFAULT_NS: &str = "/var/run/secrets/kubernetes.io/serviceaccount.yaml/namespace";
+const SERVICE_TOKENFILE: &str = "/var/run/secrets/kubernetes.io/serviceaccount/token";
+const SERVICE_CERTFILE: &str = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt";
+const SERVICE_DEFAULT_NS: &str = "/var/run/secrets/kubernetes.io/serviceaccount/namespace";
 
 /// Errors from loading in-cluster config
 #[derive(Debug, thiserror::Error)]

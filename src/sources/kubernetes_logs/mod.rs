@@ -112,9 +112,19 @@ pub struct Config {
 impl Config {
     fn prepare_field_selector(&self) -> crate::Result<String> {
         let node_name = match &self.self_node_name {
-            Some(key) => std::env::var(key),
-            None => std::env::var("VERTEX_NODE_NAME"),
-        }?;
+            Some(key) => std::env::var(key).map_err(|_err| {
+                std::io::Error::new(
+                    std::io::ErrorKind::NotFound,
+                    format!("environment variable `{key}` not set"),
+                )
+            })?,
+            None => std::env::var("VERTEX_NODE_NAME").map_err(|_err| {
+                std::io::Error::new(
+                    std::io::ErrorKind::NotFound,
+                    "environment variable `VERTEX_NODE_NAME` not set",
+                )
+            })?,
+        };
 
         let selector = match &self.field_selector {
             Some(extra) => format!("spec.nodeName={node_name},{extra}"),
