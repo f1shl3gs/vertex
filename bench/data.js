@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751722835032,
+  "lastUpdate": 1751722837092,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2443a31d4f6e26532fe671af2ecd6c2dc36ed89f",
-          "message": "Merge pull request #2347 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-05-21T14:59:31+08:00",
-          "tree_id": "dc88619dc9994f3db2c74f4a5c58f5960eed8b82",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2443a31d4f6e26532fe671af2ecd6c2dc36ed89f"
-        },
-        "date": 1747811360558,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 499,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37377.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d70238d8b5380708bb0d1e06c0e7c466fa7c00e9",
           "message": "Merge pull request #2348 from f1shl3gs/lib/resolver/simplify_decode\n\nlib/resolver: simplify decode_message",
           "timestamp": "2025-05-21T18:03:38+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 513,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37729.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "72a626d78b2926b8e546e6d7556113716c7faf77",
+          "message": "Merge pull request #2452 from f1shl3gs/ci/distroless\n\nci: use distroless to reduce docker image size",
+          "timestamp": "2025-07-05T21:30:19+08:00",
+          "tree_id": "f071463225c34ccccf8b905f2e6d24980016e105",
+          "url": "https://github.com/f1shl3gs/vertex/commit/72a626d78b2926b8e546e6d7556113716c7faf77"
+        },
+        "date": 1751722816278,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 511,
             "unit": "s"
           },
           {
