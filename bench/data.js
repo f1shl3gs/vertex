@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751725403883,
+  "lastUpdate": 1751725804230,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
-          "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
-          "timestamp": "2025-05-12T14:44:59+08:00",
-          "tree_id": "e628ab01e96ac4984882ee064f0645fa50d7f090",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f8d51363a24a984c53ab2a5ded87b9e9054a1bf"
-        },
-        "date": 1747032929857,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22285000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 532400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.579,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6f6d998cb2f9a82d84c86cb958e6846f3331e109",
           "message": "Merge pull request #2340 from f1shl3gs/lib/tracked_alloc/remove\n\nlib/tracked_alloc: remove",
           "timestamp": "2025-05-14T22:03:09+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.651,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ae74930b49700a125baec45bb5ef25ba33f8f12c",
+          "message": "Merge pull request #2455 from f1shl3gs/lib/prometheus/remove_unused_types\n\nlib/prometheus: remove unused types",
+          "timestamp": "2025-07-05T22:19:56+08:00",
+          "tree_id": "abc0310ab10034a47a0be10e4b392e0726d018b8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ae74930b49700a125baec45bb5ef25ba33f8f12c"
+        },
+        "date": 1751725782989,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14500000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 661650,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.676,
             "unit": "ns/op"
           }
         ]
