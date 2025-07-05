@@ -62,4 +62,4 @@ jobs:
           context: distribution/docker
           push: true
           tags: f1shl3gs/vertex:nightly-distroless
-          file: distribution/docker/distroless-libc/Dockerfile
+          file: distribution/docker/distroless/Dockerfile

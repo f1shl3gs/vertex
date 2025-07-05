@@ -169,17 +169,16 @@ bench-metrics:
 
 .PHONY: images
 images: x86_64-unknown-linux-gnu
-	cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker/distroless-libc
-	cd distribution/docker/distroless-libc && docker build -t f1shl3gs/vertex:nightly-distroless .
-
-.PHONY: kind_load
-kind_load: images
-	kind load docker-image f1shl3gs/vertex:nightly-distroless
+	cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker/distroless
+	cd distribution/docker/distroless && docker build -t f1shl3gs/vertex:nightly-distroless .
 
 .PHONY: regression
 regression: build
 	docker build -f regression/Dockerfile  -t vertex:regression .
 	cd regression/$(CASE) && docker-compose -f ../docker-compose.yaml up --abort-on-container-exit
 
-# profile when bench
-# cargo bench --bench hwmon_gather -- --profile-time=30
+.PHONY: deploy-dev
+deploy-dev: build
+	strip target/release/vertex && cp target/release/vertex distribution/docker/distroless/vertex
+	cd distribution/docker/distroless && docker build -t f1shl3gs/vertex:nightly-distroless .
+	kind load docker-image f1shl3gs/vertex:nightly-distroless --name dev
