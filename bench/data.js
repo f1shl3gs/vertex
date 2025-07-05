@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751703250379,
+  "lastUpdate": 1751703252134,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
-          "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
-          "timestamp": "2025-05-12T14:44:59+08:00",
-          "tree_id": "e628ab01e96ac4984882ee064f0645fa50d7f090",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5f8d51363a24a984c53ab2a5ded87b9e9054a1bf"
-        },
-        "date": 1747032418715,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.508,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 106.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 186.47,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 168.41,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a8a5f55c31e53bf53bbdcf5d380289cf8585550",
+          "message": "Merge pull request #2451 from f1shl3gs/dependabot/cargo/tokio-1.46.1\n\nchore(deps): bump tokio from 1.46.0 to 1.46.1",
+          "timestamp": "2025-07-05T16:11:31+08:00",
+          "tree_id": "222fc1672fd80088d443639da69e9140ab879c59",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a8a5f55c31e53bf53bbdcf5d380289cf8585550"
+        },
+        "date": 1751703231295,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.391,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.372,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.22,
             "unit": "ns/op"
           }
         ]
