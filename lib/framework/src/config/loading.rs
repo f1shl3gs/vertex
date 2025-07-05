@@ -53,7 +53,7 @@ pub fn load_builder_from_paths(
                 if let Some(file) = open_config(path) {
                     inputs.push((file, format.or_else(move || Format::from_path(&path).ok())));
                 } else {
-                    errors.push(format!("Config file not found in path: {path:?}"))
+                    errors.push(format!("Config file {path:?} not found"))
                 };
             }
 
@@ -95,7 +95,7 @@ fn open_config(path: &Path) -> Option<File> {
         Ok(f) => Some(f),
         Err(err) => {
             if let std::io::ErrorKind::NotFound = err.kind() {
-                error!(message = "Config file not found in path", ?path);
+                error!(message = "Config file not found", ?path);
             } else {
                 error!(
                     message = "Error opening config file",
@@ -219,7 +219,7 @@ pub fn process_paths(paths: &[ConfigPath]) -> Option<Vec<ConfigPath>> {
 
         if matches.is_empty() {
             error!(
-                message = "Config file not found in path",
+                message = "Config file not found",
                 path = ?pattern
             );
 

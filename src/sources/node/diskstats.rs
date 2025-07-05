@@ -97,7 +97,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         let info = match udev_device_properties(major, minor) {
             Ok(info) => info,
             Err(err) => {
-                warn!(
+                debug!(
                     message = "read udev properties failed",
                     major,
                     minor,
