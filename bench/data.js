@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751722454249,
+  "lastUpdate": 1751722835032,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f",
-          "message": "Merge pull request #2338 from f1shl3gs/lib/configurable/simplify_and_reduce_codebase\n\nlib/configurable: reduce codebase and the binary size",
-          "timestamp": "2025-05-12T14:00:17+08:00",
-          "tree_id": "260c584d8c061d9bf755426787925231590baa47",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10b6d16e73b60e3171f9fd9b6660c4e1d0bcdf7f"
-        },
-        "date": 1747030215160,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22760000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 537280,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.523,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5f8d51363a24a984c53ab2a5ded87b9e9054a1bf",
           "message": "Merge pull request #2339 from f1shl3gs/remove_tracked_allocator\n\ndeps: remove tracked_allocator",
           "timestamp": "2025-05-12T14:44:59+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.449,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a85209ac700ef043295532b3ed9409c817c0dfc6",
+          "message": "Merge pull request #2453 from f1shl3gs/lib/kubernetes/fix_list\n\nlib/kubernetes: fix API `list`",
+          "timestamp": "2025-07-05T21:30:38+08:00",
+          "tree_id": "99b82246d4f80b462134b81287b666924a6ee5ff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a85209ac700ef043295532b3ed9409c817c0dfc6"
+        },
+        "date": 1751722814628,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14439000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 569680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.651,
             "unit": "ns/op"
           }
         ]
