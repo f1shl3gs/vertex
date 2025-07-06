@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: vertex
+  annotations: {}
+spec:
+  selector: {}
+  minReadySeconds: 0
+  template:
+    metadata:
+      annotations: {}
+    spec:
+      serviceAccountName: vertex
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: vertex
+          image: f1shl3gs/vertex:nightly-distroless
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 500m
+              memory: 200Mi
+            limits:
+              cpu: 1000m
+              memory: 600Mi
+          env:
+            - name: VERTEX_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: config
+              mountPath: /etc/vertex
+              readOnly: true
+            - name: procfs
+              mountPath: /host/proc
+              readOnly: true
+            - name: sysfs
+              mountPath: /host/sys
+              readOnly: true
+            - name: udev
+              mountPath: /run/udev
+              readOnly: true
+            - name: data
+              mountPath: /var/lib/vertex
+            - name: logs
+              mountPath: /var/log/pods
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: config
+          configMap:
+            name: vertex
+            items:
+              - key: agent
+                path: vertex.yaml
+        - name: procfs
+          hostPath:
+            path: /proc
+        - name: sysfs
+          hostPath:
+            path: /sys
+        - name: udev
+          hostPath:
+            path: /run/udev
+        - name: data
+          hostPath:
+            path: /var/lib/vertex # somewhere in the host
+        - name: logs
+          hostPath:
+            path: /var/log/pods
