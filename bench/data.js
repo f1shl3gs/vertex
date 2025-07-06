@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751791088922,
+  "lastUpdate": 1751791118065,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "b454f99f2ed2105cd81e61cd831baf6a680de47a",
-          "message": "rename demo_logs to generate",
-          "timestamp": "2025-05-21T20:34:39+08:00",
-          "tree_id": "0bc0e7fdaaa4f259de33bbd917a5e357eb69bb3c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b454f99f2ed2105cd81e61cd831baf6a680de47a"
-        },
-        "date": 1747831479080,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 505,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37278.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37733.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4e944c9aaa87c044a702748a95b884bffd616cb",
+          "message": "Merge pull request #2457 from f1shl3gs/sources/node/fix_some_error\n\nsources/node: align to node_exporter",
+          "timestamp": "2025-07-06T16:28:30+08:00",
+          "tree_id": "dedf518a041da59ae16f6b8cacf57e70e49c21ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4e944c9aaa87c044a702748a95b884bffd616cb"
+        },
+        "date": 1751791097652,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 509,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37729.5,
             "unit": "KiB"
           }
         ]
