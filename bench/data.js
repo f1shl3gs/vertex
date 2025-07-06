@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751790724582,
+  "lastUpdate": 1751791088922,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6f6d998cb2f9a82d84c86cb958e6846f3331e109",
-          "message": "Merge pull request #2340 from f1shl3gs/lib/tracked_alloc/remove\n\nlib/tracked_alloc: remove",
-          "timestamp": "2025-05-14T22:03:09+08:00",
-          "tree_id": "8c683b920a6a85127a6bdb326294158ca985bf2c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6f6d998cb2f9a82d84c86cb958e6846f3331e109"
-        },
-        "date": 1747231977320,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23349000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 656180,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.291,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "678af446b9f94ebc26fef552648ec51b7dd2ae39",
           "message": "Merge pull request #2341 from f1shl3gs/toolchain/1.87.0\n\nbump toolchain to 1.87.0",
           "timestamp": "2025-05-16T04:02:18+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.676,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4e944c9aaa87c044a702748a95b884bffd616cb",
+          "message": "Merge pull request #2457 from f1shl3gs/sources/node/fix_some_error\n\nsources/node: align to node_exporter",
+          "timestamp": "2025-07-06T16:28:30+08:00",
+          "tree_id": "dedf518a041da59ae16f6b8cacf57e70e49c21ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4e944c9aaa87c044a702748a95b884bffd616cb"
+        },
+        "date": 1751791067613,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14193000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 572420,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.66,
             "unit": "ns/op"
           }
         ]
