@@ -177,8 +177,12 @@ regression: build
 	docker build -f regression/Dockerfile  -t vertex:regression .
 	cd regression/$(CASE) && docker-compose -f ../docker-compose.yaml up --abort-on-container-exit
 
+.PHONY: chiseled
+chiseled:
+	cd distribution/docker/chiseled && docker build -t chiseled ./
+
 .PHONY: deploy-dev
 deploy-dev: build
-	strip target/release/vertex && cp target/release/vertex distribution/docker/distroless/vertex
-	cd distribution/docker/distroless && docker build -t f1shl3gs/vertex:nightly-distroless .
+	strip target/release/vertex && cp target/release/vertex distribution/docker/kind/vertex
+	cd distribution/docker/kind && docker build -t f1shl3gs/vertex:nightly-distroless .
 	kind load docker-image f1shl3gs/vertex:nightly-distroless --name dev

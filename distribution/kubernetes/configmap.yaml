@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vertex
+data:
+  agent: |
+    sources: 
+      k8s_logs:
+        type: kubernetes_logs
+      # node:
+      #   type: node
+      #   proc_path: /host/proc
+      #   sys_path: /host/sys
+      #   filesystem: 
+      #     mount_points_exclude: ^/(dev|proc|sys|run/k3s/containerd/.+|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)
+      #   hwmon: false
+      #   btrfs: false
+      #   netclass: 
+      #     ignores: ^(veth.*|[a-f0-9]{15})$
+      #   netdev:
+      #     exclude: ^(veth.*|[a-f0-9]{15})$
+      # selfstat:
+      #   type: selfstat
+      # internal_logs:
+      #   type: internal_logs
+    sinks:
+      # prom:
+      #   type: prometheus_exporter
+      #   inputs:
+      #     - node
+      #     - selfstat
+      blackhole:
+        type: blackhole
+        inputs:
+          - k8s_logs
+      # stdout:
+      #   type: console
+      #   inputs:
+      #     - k8s_logs
+      #   encoding:
+      #     codec: text
