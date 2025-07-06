@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1751791118065,
+  "lastUpdate": 1751803382032,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "79c99fa78a87608fd3ca9a3fece441546a12ac42",
-          "message": "Merge pull request #2350 from f1shl3gs/sources/http_check/fix_trace_start\n\nsources/http_check: set start before resolve",
-          "timestamp": "2025-05-22T07:48:36+08:00",
-          "tree_id": "c7ffdb94fa8365392c0cbdbf6412d40a5bc9e55f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/79c99fa78a87608fd3ca9a3fece441546a12ac42"
-        },
-        "date": 1747871913586,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 509,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37278.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "72d5c7114067ae02bc3be82b36e6b6bdfb72220c",
           "message": "Merge pull request #2351 from f1shl3gs/sources/generate\n\nsources/geneate: rename demo_logs to generate",
           "timestamp": "2025-05-22T08:42:43+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 509,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37729.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1b4b0a3d52dbc5fa69ae9513d5f18be0ca48021d",
+          "message": "Merge pull request #2458 from f1shl3gs/misc/add_dockerfiles_for_k8s_tests\n\nmisc: add Dockerfiles for k8s tests",
+          "timestamp": "2025-07-06T19:52:41+08:00",
+          "tree_id": "34212d628f519d27a33b471b1035b183a45815cf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1b4b0a3d52dbc5fa69ae9513d5f18be0ca48021d"
+        },
+        "date": 1751803361370,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 510,
             "unit": "s"
           },
           {
