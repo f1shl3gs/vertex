@@ -126,7 +126,7 @@ fn get_limits(pid: u32) -> Result<(f64, f64), std::io::Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut max_fds = 0.0;
-    let mut max_vss = 0.0;
+    let mut max_vss = 1.8446744073709552e19;
     for line in data.lines() {
         if let Some(s) = line.strip_prefix("Max open files") {
             if let Some(field) = s.split_whitespace().next() {

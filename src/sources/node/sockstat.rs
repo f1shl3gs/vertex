@@ -57,14 +57,14 @@ impl NetSockstat {
         for nsp in &self.protocols {
             metrics.push(Metric::gauge(
                 format!("node_sockstat_{}_inuse", nsp.protocol),
-                format!("Number of {} sockets in stat inuse", nsp.protocol),
+                format!("Number of {} sockets in state inuse", nsp.protocol),
                 nsp.inuse,
             ));
 
             if let Some(v) = nsp.orphan {
                 metrics.push(Metric::gauge(
                     format!("node_sockstat_{}_orphan", nsp.protocol),
-                    format!("Number of {} sockets in stat orphan", nsp.protocol),
+                    format!("Number of {} sockets in state orphan", nsp.protocol),
                     v,
                 ));
             }
@@ -72,7 +72,7 @@ impl NetSockstat {
             if let Some(v) = nsp.tw {
                 metrics.push(Metric::gauge(
                     format!("node_sockstat_{}_tw", nsp.protocol),
-                    format!("Number of {} sockets in stat tw", nsp.protocol),
+                    format!("Number of {} sockets in state tw", nsp.protocol),
                     v,
                 ));
             }
@@ -80,7 +80,7 @@ impl NetSockstat {
             if let Some(v) = nsp.alloc {
                 metrics.push(Metric::gauge(
                     format!("node_sockstat_{}_alloc", nsp.protocol),
-                    format!("Number of {} sockets in stat alloc", nsp.protocol),
+                    format!("Number of {} sockets in state alloc", nsp.protocol),
                     v,
                 ));
             }
@@ -88,7 +88,7 @@ impl NetSockstat {
             if let Some(v) = nsp.mem {
                 metrics.push(Metric::gauge(
                     format!("node_sockstat_{}_mem_bytes", nsp.protocol),
-                    format!("Number of {} sockets in stat mem", nsp.protocol),
+                    format!("Number of {} sockets in state mem", nsp.protocol),
                     v as f64 * PAGESIZE,
                 ));
             }
@@ -96,7 +96,7 @@ impl NetSockstat {
             if let Some(value) = nsp.memory {
                 metrics.push(Metric::gauge(
                     format!("node_sockstat_{}_memory", nsp.protocol),
-                    format!("Number of {} sockets in stat memory", nsp.protocol),
+                    format!("Number of {} sockets in state memory", nsp.protocol),
                     value,
                 ))
             }

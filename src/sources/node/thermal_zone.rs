@@ -40,14 +40,13 @@ async fn thermal_zone_stats(root: &Path) -> Result<Vec<ThermalZoneStats>, Error>
 
     let mut stats = vec![];
     for path in paths.flatten() {
-        let stat = parse_thermal_zone(&path).await?;
-        stats.push(stat);
+        stats.push(parse_thermal_zone(&path)?);
     }
 
     Ok(stats)
 }
 
-async fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
+fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
     let name = root
         .file_name()
         .unwrap()
@@ -154,7 +153,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         metrics.push(Metric::gauge_with_tags(
             "node_thermal_zone_temp",
             "Zone temperature in Celsius",
-            stat.temp,
+            stat.temp / 1000,
             tags!(
                 "zone" => stat.name,
                 "type" => stat.typ,

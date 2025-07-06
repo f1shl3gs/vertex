@@ -34,29 +34,32 @@ async fn get_mem_info(root: PathBuf) -> Result<HashMap<String, f64>, std::io::Er
 
     let mut infos = HashMap::new();
     for line in data.lines() {
-        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+        let mut parts = line.split_ascii_whitespace();
 
-        let mut fv = parts[1]
-            .parse::<f64>()
-            .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?;
+        let Some(key) = parts.next() else { continue };
 
-        let mut key = parts[0].replace(':', "").replace(['(', ')'], "_");
+        if let Some(value) = parts.next() {
+            let value = value
+                .parse::<f64>()
+                .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?;
 
-        match parts.len() {
-            2 => { /* no unit */ }
-            3 => {
-                // with unit, we presume kB
-                fv *= 1024.0;
-                if key.ends_with('_') {
-                    key += "byte"
-                } else {
-                    key += "_bytes";
+            let mut key = key.replace(':', "").replace(['(', ')'], "_");
+
+            let value = match parts.next() {
+                Some(_) => {
+                    if key.ends_with('_') {
+                        key += "bytes"
+                    } else {
+                        key += "_bytes";
+                    }
+
+                    value * 1024.0
                 }
-            }
-            _ => unreachable!(),
-        }
+                None => value,
+            };
 
-        infos.insert(key, fv);
+            infos.insert(key, value);
+        }
     }
 
     Ok(infos)
@@ -76,6 +79,7 @@ mod tests {
             infos.get("DirectMap2M_bytes").unwrap(),
             &(16039936.0 * 1024.0)
         );
+        assert_eq!(*infos.get("Active_bytes").unwrap(), 6761276.0 * 1024.0);
         assert_eq!(infos.get("HugePages_Total").unwrap(), &0.0);
     }
 }
