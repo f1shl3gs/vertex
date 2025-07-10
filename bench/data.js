@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752171877266,
+  "lastUpdate": 1752171883236,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "91dec175fad00ee024638cc893cd4f1436636138",
-          "message": "Merge pull request #2345 from f1shl3gs/dependabot/cargo/sqlx-0.8.6\n\nchore(deps): bump sqlx from 0.8.5 to 0.8.6",
-          "timestamp": "2025-05-20T11:22:41+08:00",
-          "tree_id": "9aa4fcfd09eb892aeb2cab3c2904654c98ea1ad0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/91dec175fad00ee024638cc893cd4f1436636138"
-        },
-        "date": 1747711495332,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.446,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.273,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.47,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bb312dc661a3b031f307ff4b27f59c22d473f821",
+          "message": "Merge pull request #2461 from f1shl3gs/misc/remove_buf_trait\n\nmisc: remove bytes::Buf if it's not necessary",
+          "timestamp": "2025-07-11T02:22:19+08:00",
+          "tree_id": "ba68a3341e750733c93d391dfdfdb602a40f65bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bb312dc661a3b031f307ff4b27f59c22d473f821"
+        },
+        "date": 1752171862569,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.407,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.75,
             "unit": "ns/op"
           }
         ]
