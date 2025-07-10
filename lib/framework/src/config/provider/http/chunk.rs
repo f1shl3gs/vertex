@@ -29,7 +29,7 @@ impl Decoder for ChunkedDecoder {
                     Some(next) => {
                         let part = buf.split_to(next).freeze();
 
-                        let size = match parse_hex(part.chunk()) {
+                        let size = match parse_hex(part.as_ref()) {
                             Ok(n) => n,
                             Err(err) => {
                                 return Err(std::io::Error::new(
@@ -47,7 +47,7 @@ impl Decoder for ChunkedDecoder {
                 },
 
                 ChunkedState::SizeLf => {
-                    let char = buf.chunk()[0];
+                    let char = buf[0];
 
                     if char == b'\n' {
                         buf.advance(1);
@@ -73,7 +73,7 @@ impl Decoder for ChunkedDecoder {
                 }
 
                 ChunkedState::BodyLf => {
-                    let char = buf.chunk()[0];
+                    let char = buf[0];
 
                     if char == b'\n' {
                         buf.advance(1);
@@ -149,7 +149,7 @@ mod tests {
 
         assert_eq!(3, got.len());
         for i in 0..3 {
-            assert_eq!(want[i], String::from_utf8_lossy(got[i].chunk()));
+            assert_eq!(want[i], String::from_utf8_lossy(got[i].as_ref()));
         }
     }
 }

@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use bytes::Buf;
 use configurable::Configurable;
 use framework::config::default_true;
 use framework::http::HttpClient;
@@ -335,7 +334,7 @@ impl Client {
                             .map_err(ConsulError::ReadBody)?
                             .to_bytes();
 
-                        let body = serde_json::from_slice::<T>(data.chunk())?;
+                        let body = serde_json::from_slice::<T>(data.as_ref())?;
 
                         Ok(body)
                     }
