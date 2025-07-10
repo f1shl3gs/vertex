@@ -37,16 +37,22 @@ pub use serve::{Serve, WithGracefulShutdown, serve};
 pub enum HttpError {
     #[error("Failed to build TLS connector: {0}")]
     BuildTlsConnector(#[from] TlsError),
+
     #[error("Failed to build HTTPS connector: {0}")]
     MakeHttpsConnector(#[from] rustls::Error),
+
     #[error("Failed to build Proxy connector: {0}")]
     MakeProxyConnector(#[from] InvalidUri),
+
     #[error("Failed to make HTTP(S) request: {0}")]
     CallRequest(#[from] hyper_util::client::legacy::Error),
+
     #[error("Failed to reading response: {0}")]
     ReadIncoming(#[from] hyper::Error),
+
     #[error("Failed to build HTTP request: {0}")]
     BuildRequest(#[from] http::Error),
+
     #[error("unexpected status code {0}")]
     UnexpectedStatus(http::StatusCode),
 

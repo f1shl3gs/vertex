@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use async_stream::stream;
 use backoff::ExponentialBackoff;
-use bytes::{Buf, Bytes};
+use bytes::Bytes;
 use chunk::ChunkedDecoder;
 use configurable::{Configurable, configurable_component};
 use futures::{Stream, StreamExt, TryStreamExt};
@@ -183,7 +183,7 @@ fn poll_http(
                             continue;
                         }
 
-                        let builder = match config::load(data.chunk(), None) {
+                        let builder = match config::load(data.as_ref(), None) {
                             Ok((builder, warnings)) => {
                                 for warning in warnings.into_iter() {
                                     warn!(message = warning)
@@ -256,7 +256,7 @@ fn poll_http(
                             continue;
                         }
 
-                        let builder = match config::load(data.chunk(), None) {
+                        let builder = match config::load(data.as_ref(), None) {
                             Ok((builder, warnings)) => {
                                 for warning in warnings.into_iter() {
                                     warn!(message = warning)
