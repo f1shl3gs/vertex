@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752163479704,
+  "lastUpdate": 1752163498555,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fd0cb9c429ca4522dd941a01893db01fb4782ca8",
-          "message": "Merge pull request #2344 from f1shl3gs/dependabot/cargo/criterion-0.6.0\n\nchore(deps): bump criterion from 0.5.1 to 0.6.0",
-          "timestamp": "2025-05-20T09:53:01+08:00",
-          "tree_id": "51b39bd25379deff5cd7344c5ec7a76b29b370a5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fd0cb9c429ca4522dd941a01893db01fb4782ca8"
-        },
-        "date": 1747706148579,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.712,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 661.38,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "91dec175fad00ee024638cc893cd4f1436636138",
           "message": "Merge pull request #2345 from f1shl3gs/dependabot/cargo/sqlx-0.8.6\n\nchore(deps): bump sqlx from 0.8.5 to 0.8.6",
           "timestamp": "2025-05-20T11:22:41+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 657.85,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9f54073a5a4e990450c15329351bcce4cc8cabbe",
+          "message": "Merge pull request #2460 from f1shl3gs/dependabot/cargo/rustls-0.23.29\n\nchore(deps): bump rustls from 0.23.28 to 0.23.29",
+          "timestamp": "2025-07-11T00:02:11+08:00",
+          "tree_id": "8ef91b7afb72f3e5f26c9bc22cbe0b99a10bd033",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9f54073a5a4e990450c15329351bcce4cc8cabbe"
+        },
+        "date": 1752163477372,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.281,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 178.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 334.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 691.2,
             "unit": "ns/op"
           }
         ]
