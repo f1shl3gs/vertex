@@ -118,10 +118,10 @@ impl Config {
                     format!("environment variable `{key}` not set"),
                 )
             })?,
-            None => std::env::var("VERTEX_NODE_NAME").map_err(|_err| {
+            None => std::env::var("NODE_NAME").map_err(|_err| {
                 std::io::Error::new(
                     std::io::ErrorKind::NotFound,
-                    "environment variable `VERTEX_NODE_NAME` not set",
+                    "default environment variable `NODE_NAME` not set",
                 )
             })?,
         };
