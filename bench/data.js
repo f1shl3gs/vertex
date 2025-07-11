@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752236566842,
+  "lastUpdate": 1752236583950,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f5328d5486b59bd4955929ea76849a08dcf4bf7b",
-          "message": "Merge pull request #2357 from f1shl3gs/dependabot/cargo/uuid-1.17.0\n\nchore(deps): bump uuid from 1.16.0 to 1.17.0",
-          "timestamp": "2025-05-23T11:53:00+08:00",
-          "tree_id": "07587dc4d4fe7205b6abfd5c11ea2250f1018073",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f5328d5486b59bd4955929ea76849a08dcf4bf7b"
-        },
-        "date": 1747972982603,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 514,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37262,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7476dcff96013948fb68a7f4ed11199c21ba3d64",
           "message": "Merge pull request #2358 from f1shl3gs/sources/dnsmasq/add_leases_count_metric\n\nsources/dnsmasq: add leases count metric",
           "timestamp": "2025-05-23T14:14:49+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 536,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37768.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f8a437dcc8884517b8e86164b76744acada7769",
+          "message": "Merge pull request #2462 from f1shl3gs/sources/kubernetes_logs/fix_default_nodename_env\n\nsources/kubernetes_logs: fix default node_name environment",
+          "timestamp": "2025-07-11T20:13:02+08:00",
+          "tree_id": "62a0a0012c7de957e7a551a35af394d31be82e5c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f8a437dcc8884517b8e86164b76744acada7769"
+        },
+        "date": 1752236563203,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 506,
             "unit": "s"
           },
           {
