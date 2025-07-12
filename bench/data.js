@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752319172269,
+  "lastUpdate": 1752320216620,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d70238d8b5380708bb0d1e06c0e7c466fa7c00e9",
-          "message": "Merge pull request #2348 from f1shl3gs/lib/resolver/simplify_decode\n\nlib/resolver: simplify decode_message",
-          "timestamp": "2025-05-21T18:03:38+08:00",
-          "tree_id": "47e1e5a538eb1775fd712626105fc750657384b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d70238d8b5380708bb0d1e06c0e7c466fa7c00e9"
-        },
-        "date": 1747821941249,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 497020,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4",
+          "message": "Merge pull request #2464 from f1shl3gs/deps/chrono-tz/remove_serde_feature\n\ndeps: remove serde feature of chrono-tz",
+          "timestamp": "2025-07-12T19:34:37+08:00",
+          "tree_id": "15e01a0c6a12937742577e807bc36e14be870845",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4"
+        },
+        "date": 1752320195483,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 491260,
             "unit": "ns/op"
           }
         ]
