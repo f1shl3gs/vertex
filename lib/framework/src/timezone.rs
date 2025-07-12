@@ -117,20 +117,15 @@ pub mod ser_de {
 #[cfg(test)]
 mod tests {
     use chrono_tz::Tz;
-    use serde::{Deserialize, Serialize};
+
+    use super::TimeZone;
 
     #[test]
     fn deserialize() {
-        #[derive(Deserialize, Serialize)]
-        struct TzWrapper {
-            tz: Tz,
-        }
+        let want = "CET".parse::<Tz>().unwrap();
+        let input = r#"CET"#;
 
-        let input = r#"
-tz: CET
-        "#;
-
-        let w: TzWrapper = serde_yaml::from_str(input).unwrap();
-        assert_eq!(w.tz.name(), "CET");
+        let tz: TimeZone = serde_yaml::from_str(input).unwrap();
+        assert!(matches!(tz, TimeZone::Named(got) if got == want ));
     }
 }
