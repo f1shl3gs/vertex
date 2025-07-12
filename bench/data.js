@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752318680336,
+  "lastUpdate": 1752318702182,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2443a31d4f6e26532fe671af2ecd6c2dc36ed89f",
-          "message": "Merge pull request #2347 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-05-21T14:59:31+08:00",
-          "tree_id": "dc88619dc9994f3db2c74f4a5c58f5960eed8b82",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2443a31d4f6e26532fe671af2ecd6c2dc36ed89f"
-        },
-        "date": 1747810929462,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.724,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.6,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.04,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 680.72,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d70238d8b5380708bb0d1e06c0e7c466fa7c00e9",
           "message": "Merge pull request #2348 from f1shl3gs/lib/resolver/simplify_decode\n\nlib/resolver: simplify decode_message",
           "timestamp": "2025-05-21T18:03:38+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 687.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bf0d8c81d85be59a9ec255aa3e78b18705f2372a",
+          "message": "Merge pull request #2463 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.4\n\nchore(deps): bump chrono-tz from 0.10.3 to 0.10.4",
+          "timestamp": "2025-07-12T19:08:54+08:00",
+          "tree_id": "f99787774553e8ebeba6a4dc866561ddf06834ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bf0d8c81d85be59a9ec255aa3e78b18705f2372a"
+        },
+        "date": 1752318681821,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.079,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 329.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 704.96,
             "unit": "ns/op"
           }
         ]
