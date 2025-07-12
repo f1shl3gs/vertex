@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752320280170,
+  "lastUpdate": 1752320630744,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4a77bc945be333fb4721e24b325cf9d2090c9ed6",
-          "message": "Merge pull request #2346 from f1shl3gs/lib/resolver/init\n\nlib/resolver: init and remove hickory-resolver",
-          "timestamp": "2025-05-21T14:11:01+08:00",
-          "tree_id": "359902fef8165dd2e7fb04df902877f96855b763",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a77bc945be333fb4721e24b325cf9d2090c9ed6"
-        },
-        "date": 1747808457355,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23765000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 605420,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.04,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2443a31d4f6e26532fe671af2ecd6c2dc36ed89f",
           "message": "Merge pull request #2347 from f1shl3gs/cargo/update\n\ncargo update",
           "timestamp": "2025-05-21T14:59:31+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 49.928,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4",
+          "message": "Merge pull request #2464 from f1shl3gs/deps/chrono-tz/remove_serde_feature\n\ndeps: remove serde feature of chrono-tz",
+          "timestamp": "2025-07-12T19:34:37+08:00",
+          "tree_id": "15e01a0c6a12937742577e807bc36e14be870845",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4"
+        },
+        "date": 1752320608878,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14220000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 581000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.772,
             "unit": "ns/op"
           }
         ]
