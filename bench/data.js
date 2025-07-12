@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752319115064,
+  "lastUpdate": 1752319172269,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7476dcff96013948fb68a7f4ed11199c21ba3d64",
-          "message": "Merge pull request #2358 from f1shl3gs/sources/dnsmasq/add_leases_count_metric\n\nsources/dnsmasq: add leases count metric",
-          "timestamp": "2025-05-23T14:14:49+08:00",
-          "tree_id": "abc4d74cdfa684073fec159a9b1c5806d709e905",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7476dcff96013948fb68a7f4ed11199c21ba3d64"
-        },
-        "date": 1747981497640,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 501,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37248.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c36bda1a36393d99fadcc79c9e1b099492b1e03f",
           "message": "Merge pull request #2359 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.6\n\nchore(deps): bump hyper-rustls from 0.27.5 to 0.27.6",
           "timestamp": "2025-05-24T08:45:48+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37768.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bf0d8c81d85be59a9ec255aa3e78b18705f2372a",
+          "message": "Merge pull request #2463 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.4\n\nchore(deps): bump chrono-tz from 0.10.3 to 0.10.4",
+          "timestamp": "2025-07-12T19:08:54+08:00",
+          "tree_id": "f99787774553e8ebeba6a4dc866561ddf06834ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bf0d8c81d85be59a9ec255aa3e78b18705f2372a"
+        },
+        "date": 1752319151927,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 522,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37768.4,
             "unit": "KiB"
           }
         ]
