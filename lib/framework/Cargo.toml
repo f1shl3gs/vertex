@@ -27,7 +27,7 @@ backoff = { path = "../backoff" }
 buffer = { path = "../buffer" }
 bytes = { version = "1.10.1", default-features = false }
 chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
-chrono-tz = { version = "0.10.3", default-features = false, features = ["serde"] }
+chrono-tz = { version = "0.10.4", default-features = false, features = ["serde"] }
 codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }
 console-subscriber = { version = "0.4.1", optional = true }
