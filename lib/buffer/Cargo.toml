@@ -14,7 +14,7 @@ tracing = { version = "0.1.41", default-features = false, features = ["attribute
 
 [dependencies]
 bytes = { version = "1.10.1", default-features = false }
-crc32fast = { version = "1.4.2", default-features = false, features = ["std"] }
+crc32fast = { version = "1.5.0", default-features = false, features = ["std"] }
 finalize = { path = "../finalize" }
 # TODO: file lock will be stable in 1.87
 # See https://github.com/rust-lang/rust/issues/130994
