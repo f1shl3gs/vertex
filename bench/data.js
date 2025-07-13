@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752420412210,
+  "lastUpdate": 1752420432889,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "b454f99f2ed2105cd81e61cd831baf6a680de47a",
-          "message": "rename demo_logs to generate",
-          "timestamp": "2025-05-21T20:34:39+08:00",
-          "tree_id": "0bc0e7fdaaa4f259de33bbd917a5e357eb69bb3c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b454f99f2ed2105cd81e61cd831baf6a680de47a"
-        },
-        "date": 1747831018795,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.409,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.835,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.74,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.58,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "baf9deeea5e332eaadbede5a6d9632984abe4753",
+          "message": "Merge pull request #2466 from f1shl3gs/dependabot/cargo/crc32fast-1.5.0\n\nchore(deps): bump crc32fast from 1.4.2 to 1.5.0",
+          "timestamp": "2025-07-13T23:24:39+08:00",
+          "tree_id": "c337329e3a057ef366663584602f7b669c175091",
+          "url": "https://github.com/f1shl3gs/vertex/commit/baf9deeea5e332eaadbede5a6d9632984abe4753"
+        },
+        "date": 1752420412261,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.397,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.393,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 169.22,
             "unit": "ns/op"
           }
         ]
