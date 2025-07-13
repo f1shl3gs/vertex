@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752420484374,
+  "lastUpdate": 1752420856170,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d70238d8b5380708bb0d1e06c0e7c466fa7c00e9",
-          "message": "Merge pull request #2348 from f1shl3gs/lib/resolver/simplify_decode\n\nlib/resolver: simplify decode_message",
-          "timestamp": "2025-05-21T18:03:38+08:00",
-          "tree_id": "47e1e5a538eb1775fd712626105fc750657384b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d70238d8b5380708bb0d1e06c0e7c466fa7c00e9"
-        },
-        "date": 1747822372940,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23112000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 589440,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.307,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f6d46452264cef4e78ce169aeae66c668787d146",
           "message": "Merge pull request #2349 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
           "timestamp": "2025-05-21T20:14:08+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.012,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "baf9deeea5e332eaadbede5a6d9632984abe4753",
+          "message": "Merge pull request #2466 from f1shl3gs/dependabot/cargo/crc32fast-1.5.0\n\nchore(deps): bump crc32fast from 1.4.2 to 1.5.0",
+          "timestamp": "2025-07-13T23:24:39+08:00",
+          "tree_id": "c337329e3a057ef366663584602f7b669c175091",
+          "url": "https://github.com/f1shl3gs/vertex/commit/baf9deeea5e332eaadbede5a6d9632984abe4753"
+        },
+        "date": 1752420834996,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14817000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 586190,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.371,
             "unit": "ns/op"
           }
         ]
