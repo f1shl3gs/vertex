@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752662450127,
+  "lastUpdate": 1752662510771,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d72cae22a88c7ca8bd7006ab0d97fd504daf07f4",
-          "message": "Merge pull request #2362 from f1shl3gs/dependabot/cargo/socket2-0.5.10\n\nchore(deps): bump socket2 from 0.5.9 to 0.5.10",
-          "timestamp": "2025-05-27T09:51:19+08:00",
-          "tree_id": "66d78f423f27d70b154800a07c8703bf9ecfce55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d72cae22a88c7ca8bd7006ab0d97fd504daf07f4"
-        },
-        "date": 1748311293516,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 513,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37245.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "185ebadfcd4e34d0a2145ec2936aeaec2fbe6e15",
           "message": "Merge pull request #2364 from f1shl3gs/dependabot/cargo/hyper-util-0.1.13\n\nchore(deps): bump hyper-util from 0.1.12 to 0.1.13",
           "timestamp": "2025-05-28T01:18:29+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37783.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66b2d8e9b35af11cd1b187821b30ab82bf4e10cb",
+          "message": "Merge pull request #2467 from f1shl3gs/sources/kmsg/fix_checkpoint_loading\n\nsources/kmsg: fix checkpoint loading",
+          "timestamp": "2025-07-16T18:31:02+08:00",
+          "tree_id": "e8e09e3c1d5a1b47192295e2f8266bf039a2fb43",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66b2d8e9b35af11cd1b187821b30ab82bf4e10cb"
+        },
+        "date": 1752662489786,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 538,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37787.3,
             "unit": "KiB"
           }
         ]
