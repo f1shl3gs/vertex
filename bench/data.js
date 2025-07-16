@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1752662084338,
+  "lastUpdate": 1752662450127,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f6d46452264cef4e78ce169aeae66c668787d146",
-          "message": "Merge pull request #2349 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
-          "timestamp": "2025-05-21T20:14:08+08:00",
-          "tree_id": "8f81cd2edb91d1e66240f22241eb12a4f0650bb0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f6d46452264cef4e78ce169aeae66c668787d146"
-        },
-        "date": 1747830231230,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22179000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 642280,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.371,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66b2d8e9b35af11cd1b187821b30ab82bf4e10cb",
+          "message": "Merge pull request #2467 from f1shl3gs/sources/kmsg/fix_checkpoint_loading\n\nsources/kmsg: fix checkpoint loading",
+          "timestamp": "2025-07-16T18:31:02+08:00",
+          "tree_id": "e8e09e3c1d5a1b47192295e2f8266bf039a2fb43",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66b2d8e9b35af11cd1b187821b30ab82bf4e10cb"
+        },
+        "date": 1752662428923,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14982000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 653970,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.981,
             "unit": "ns/op"
           }
         ]
