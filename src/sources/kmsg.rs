@@ -227,8 +227,8 @@ impl Checkpointer {
     fn load(&mut self) -> io::Result<u64> {
         let mut buf = [0u8; size_of::<u64>()];
 
-        match self.file.read_exact(&mut buf) {
-            Ok(_) => Ok(u64::from_le_bytes(buf)),
+        match self.file.read_exact_at(&mut buf, 0) {
+            Ok(_) => Ok(u64::from_ne_bytes(buf)),
             Err(err) => {
                 if err.kind() == io::ErrorKind::UnexpectedEof {
                     return Ok(0);
