@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753007040852,
+  "lastUpdate": 1753007068572,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "72d5c7114067ae02bc3be82b36e6b6bdfb72220c",
-          "message": "Merge pull request #2351 from f1shl3gs/sources/generate\n\nsources/geneate: rename demo_logs to generate",
-          "timestamp": "2025-05-22T08:42:43+08:00",
-          "tree_id": "75bb879c00e915f299d0341bc33de4dd0c796b7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/72d5c7114067ae02bc3be82b36e6b6bdfb72220c"
-        },
-        "date": 1747874721763,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.821,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 177.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 321.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 679.69,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "10537cc937d8703e260bb86045d62ee38583df16",
           "message": "Merge pull request #2352 from f1shl3gs/lib/configurable-derive/set_require_to_false_for_optional\n\nlib/configurable-derive: set required to false for Option<T>",
           "timestamp": "2025-05-22T08:51:18+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 681.83,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd50e4e3770d87aa8ca8a28092e07c8e1e5daa70",
+          "message": "Merge pull request #2468 from f1shl3gs/dependabot/cargo/serde_json-1.0.141\n\nchore(deps): bump serde_json from 1.0.140 to 1.0.141",
+          "timestamp": "2025-07-20T18:21:39+08:00",
+          "tree_id": "ec51de4d06414717f4e77c1759794205ca107b15",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd50e4e3770d87aa8ca8a28092e07c8e1e5daa70"
+        },
+        "date": 1753007048230,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.259,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 151.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 298.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 660.84,
             "unit": "ns/op"
           }
         ]
