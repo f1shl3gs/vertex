@@ -473,7 +473,7 @@ md-5 = { version = "0.10.6", default-features = false, optional = true }
 parking_lot = { version = "0.12.4", default-features = false, optional = true }
 percent-encoding = { version = "2.3.1", default-features = false }
 quick-xml = { version = "0.38.0", default-features = false, features = ["serialize"], optional = true }
-rand = { version = "0.9.1", default-features = false }
+rand = { version = "0.9.2", default-features = false }
 regex = { version = "1.11.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "7ee5c942a83d8a391794913ed7a012f5c33b6efb", optional = true, features = ["transport-tls"] }
 sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d619ab889a9637dd849206568a3023dee7046a8f", optional = true }
