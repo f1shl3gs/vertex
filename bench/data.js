@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753074602333,
+  "lastUpdate": 1753074633480,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "10537cc937d8703e260bb86045d62ee38583df16",
-          "message": "Merge pull request #2352 from f1shl3gs/lib/configurable-derive/set_require_to_false_for_optional\n\nlib/configurable-derive: set required to false for Option<T>",
-          "timestamp": "2025-05-22T08:51:18+08:00",
-          "tree_id": "d16f8b9f5dca8bebe15768c26788dac1d548d393",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10537cc937d8703e260bb86045d62ee38583df16"
-        },
-        "date": 1747875202408,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541500,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 496790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ad8a8110a7ed7e7f3a32f6fc3f25ad885fab5173",
+          "message": "Merge pull request #2469 from f1shl3gs/dependabot/cargo/rand-0.9.2\n\nchore(deps): bump rand from 0.9.1 to 0.9.2",
+          "timestamp": "2025-07-21T13:07:09+08:00",
+          "tree_id": "df40b990ca7679889036435f0738c4c3b7ed6a82",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ad8a8110a7ed7e7f3a32f6fc3f25ad885fab5173"
+        },
+        "date": 1753074613043,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 492840,
             "unit": "ns/op"
           }
         ]
