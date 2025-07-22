@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753227368159,
+  "lastUpdate": 1753227682011,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "72d5c7114067ae02bc3be82b36e6b6bdfb72220c",
-          "message": "Merge pull request #2351 from f1shl3gs/sources/generate\n\nsources/geneate: rename demo_logs to generate",
-          "timestamp": "2025-05-22T08:42:43+08:00",
-          "tree_id": "75bb879c00e915f299d0341bc33de4dd0c796b7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/72d5c7114067ae02bc3be82b36e6b6bdfb72220c"
-        },
-        "date": 1747875139433,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 24891000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 606630,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.687,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "10537cc937d8703e260bb86045d62ee38583df16",
           "message": "Merge pull request #2352 from f1shl3gs/lib/configurable-derive/set_require_to_false_for_optional\n\nlib/configurable-derive: set required to false for Option<T>",
           "timestamp": "2025-05-22T08:51:18+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.497,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d4cd89d15e04d7120ad1f1e58ac0cbfcfaa4c3b",
+          "message": "Merge pull request #2470 from f1shl3gs/dependabot/cargo/hyper-util-0.1.16\n\nchore(deps): bump hyper-util from 0.1.15 to 0.1.16",
+          "timestamp": "2025-07-23T07:31:37+08:00",
+          "tree_id": "da6fe668e16bc8bf859966933bac8f8fe04ac912",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d4cd89d15e04d7120ad1f1e58ac0cbfcfaa4c3b"
+        },
+        "date": 1753227656030,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14932000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 641540,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.656,
             "unit": "ns/op"
           }
         ]
