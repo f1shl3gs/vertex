@@ -8,7 +8,7 @@ publish = false
 parking_lot = { version = "0.12.4", default-features = false }
 
 [dev-dependencies]
-criterion = { version = "0.6.0", default-features = false }
+criterion = { version = "0.7.0", default-features = false }
 
 [[bench]]
 name = "register"

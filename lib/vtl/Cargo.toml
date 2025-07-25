@@ -12,7 +12,7 @@ name = "run"
 harness = false
 
 [dev-dependencies]
-criterion = { version = "0.6.0", default-features = false }
+criterion = { version = "0.7.0", default-features = false }
 glob = { version = "0.3.2", default-features = false }
 
 [dependencies]
