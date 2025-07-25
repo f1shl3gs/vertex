@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753451140277,
+  "lastUpdate": 1753451510540,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10537cc937d8703e260bb86045d62ee38583df16",
-          "message": "Merge pull request #2352 from f1shl3gs/lib/configurable-derive/set_require_to_false_for_optional\n\nlib/configurable-derive: set required to false for Option<T>",
-          "timestamp": "2025-05-22T08:51:18+08:00",
-          "tree_id": "d16f8b9f5dca8bebe15768c26788dac1d548d393",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10537cc937d8703e260bb86045d62ee38583df16"
-        },
-        "date": 1747875654115,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23033000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 593780,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.224,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3924d18c3ed0a093655d32930566de0b80550e8b",
           "message": "Merge pull request #2353 from f1shl3gs/sources/nvidia/refactor\n\nsources/nvidia: refactor and remove quick-xml",
           "timestamp": "2025-05-22T17:01:25+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.656,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "665651182374884b6d74b726d227ebc2e4450f57",
+          "message": "Merge pull request #2471 from f1shl3gs/dependabot/cargo/criterion-0.7.0\n\nchore(deps): bump criterion from 0.6.0 to 0.7.0",
+          "timestamp": "2025-07-25T21:42:12+08:00",
+          "tree_id": "59694f1e749311da0f7ce557737cbd05562e7d90",
+          "url": "https://github.com/f1shl3gs/vertex/commit/665651182374884b6d74b726d227ebc2e4450f57"
+        },
+        "date": 1753451489340,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14650000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 571570,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.632,
             "unit": "ns/op"
           }
         ]
