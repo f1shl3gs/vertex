@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753451554963,
+  "lastUpdate": 1753543589475,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7476dcff96013948fb68a7f4ed11199c21ba3d64",
-          "message": "Merge pull request #2358 from f1shl3gs/sources/dnsmasq/add_leases_count_metric\n\nsources/dnsmasq: add leases count metric",
-          "timestamp": "2025-05-23T14:14:49+08:00",
-          "tree_id": "abc4d74cdfa684073fec159a9b1c5806d709e905",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7476dcff96013948fb68a7f4ed11199c21ba3d64"
-        },
-        "date": 1747981014603,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 543580,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 492090,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5815abe2876ed128cb47d78e8342a72d4682b622",
+          "message": "Merge pull request #2472 from f1shl3gs/dependabot/cargo/tokio-1.47.0\n\nchore(deps): bump tokio from 1.46.1 to 1.47.0",
+          "timestamp": "2025-07-26T23:24:18+08:00",
+          "tree_id": "e0dcb56942347de66e01da64dd0116579b4df0ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5815abe2876ed128cb47d78e8342a72d4682b622"
+        },
+        "date": 1753543568712,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 497920,
             "unit": "ns/op"
           }
         ]
