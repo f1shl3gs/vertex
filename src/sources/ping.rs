@@ -40,12 +40,12 @@ struct Config {
 #[typetag::serde(name = "ping")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let raw_socket = Socket::new(Domain::IPV4, Type::DGRAM, Some(Protocol::ICMPV4))?;
-        raw_socket.set_nonblocking(true)?;
-        raw_socket.set_ttl(self.ttl)?;
+        let socket = Socket::new(Domain::IPV4, Type::DGRAM, Some(Protocol::ICMPV4))?;
+        socket.set_nonblocking(true)?;
+        socket.set_ttl_v4(self.ttl)?;
 
         // TODO: bind the source address
-        let socket = UdpSocket::from_std(raw_socket.into()).map(Arc::new)?;
+        let socket = UdpSocket::from_std(socket.into()).map(Arc::new)?;
 
         let flush_interval = self.interval;
         let shutdown = cx.shutdown;
