@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753545115527,
+  "lastUpdate": 1753545455563,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f5328d5486b59bd4955929ea76849a08dcf4bf7b",
-          "message": "Merge pull request #2357 from f1shl3gs/dependabot/cargo/uuid-1.17.0\n\nchore(deps): bump uuid from 1.16.0 to 1.17.0",
-          "timestamp": "2025-05-23T11:53:00+08:00",
-          "tree_id": "07587dc4d4fe7205b6abfd5c11ea2250f1018073",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f5328d5486b59bd4955929ea76849a08dcf4bf7b"
-        },
-        "date": 1747972996499,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22772000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 625290,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 53.232,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7476dcff96013948fb68a7f4ed11199c21ba3d64",
           "message": "Merge pull request #2358 from f1shl3gs/sources/dnsmasq/add_leases_count_metric\n\nsources/dnsmasq: add leases count metric",
           "timestamp": "2025-05-23T14:14:49+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.535,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "959aae39b5aa8f4e57bb63433432974d918ae897",
+          "message": "Merge pull request #2454 from f1shl3gs/dependabot/cargo/socket2-0.6.0\n\nchore(deps): bump socket2 from 0.5.10 to 0.6.0",
+          "timestamp": "2025-07-26T23:48:30+08:00",
+          "tree_id": "1bd30d2004449a7692b9c07b669c66a863fcf62c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/959aae39b5aa8f4e57bb63433432974d918ae897"
+        },
+        "date": 1753545434768,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14703000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 639270,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.132,
             "unit": "ns/op"
           }
         ]
