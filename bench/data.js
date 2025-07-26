@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753545033410,
+  "lastUpdate": 1753545053413,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c36bda1a36393d99fadcc79c9e1b099492b1e03f",
-          "message": "Merge pull request #2359 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.6\n\nchore(deps): bump hyper-rustls from 0.27.5 to 0.27.6",
-          "timestamp": "2025-05-24T08:45:48+08:00",
-          "tree_id": "70629d8a132b629f7ced4f1f35aae12cc6ba69eb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c36bda1a36393d99fadcc79c9e1b099492b1e03f"
-        },
-        "date": 1748047683721,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.473,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.101,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.55,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "959aae39b5aa8f4e57bb63433432974d918ae897",
+          "message": "Merge pull request #2454 from f1shl3gs/dependabot/cargo/socket2-0.6.0\n\nchore(deps): bump socket2 from 0.5.10 to 0.6.0",
+          "timestamp": "2025-07-26T23:48:30+08:00",
+          "tree_id": "1bd30d2004449a7692b9c07b669c66a863fcf62c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/959aae39b5aa8f4e57bb63433432974d918ae897"
+        },
+        "date": 1753545032815,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.469,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.708,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 170.66,
             "unit": "ns/op"
           }
         ]
