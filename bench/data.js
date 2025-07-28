@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753681324673,
+  "lastUpdate": 1753681326184,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c36bda1a36393d99fadcc79c9e1b099492b1e03f",
-          "message": "Merge pull request #2359 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.6\n\nchore(deps): bump hyper-rustls from 0.27.5 to 0.27.6",
-          "timestamp": "2025-05-24T08:45:48+08:00",
-          "tree_id": "70629d8a132b629f7ced4f1f35aae12cc6ba69eb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c36bda1a36393d99fadcc79c9e1b099492b1e03f"
-        },
-        "date": 1748048098254,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 20824000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 654050,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.158,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6e6e65416975612be6fa794738db4fd43832ebaf",
           "message": "Merge pull request #2360 from f1shl3gs/dependabot/cargo/tokio-1.45.1\n\nchore(deps): bump tokio from 1.45.0 to 1.45.1",
           "timestamp": "2025-05-25T13:47:02+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.744,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7",
+          "message": "Merge pull request #2474 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.20\n\nchore(deps): bump dyn-clone from 1.0.19 to 1.0.20",
+          "timestamp": "2025-07-28T13:32:21+08:00",
+          "tree_id": "a772f3cece58f0967c6310dc41534ec952239ce7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7"
+        },
+        "date": 1753681303650,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14580000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 586970,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.568,
             "unit": "ns/op"
           }
         ]
