@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753680878510,
+  "lastUpdate": 1753680884231,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0e3fd995384f509e664ce5806efc38c927127a87",
-          "message": "Merge pull request #2361 from f1shl3gs/lib/framework/simplify_pipeline\n\nlib/framework: simplify pipeline",
-          "timestamp": "2025-05-26T11:47:58+08:00",
-          "tree_id": "07a37d4e2e8fbfefa4fff71ed2add35b9c285834",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0e3fd995384f509e664ce5806efc38c927127a87"
-        },
-        "date": 1748231416554,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.368,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.211,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.76,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7",
+          "message": "Merge pull request #2474 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.20\n\nchore(deps): bump dyn-clone from 1.0.19 to 1.0.20",
+          "timestamp": "2025-07-28T13:32:21+08:00",
+          "tree_id": "a772f3cece58f0967c6310dc41534ec952239ce7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7"
+        },
+        "date": 1753680864122,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.484,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.444,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.72,
             "unit": "ns/op"
           }
         ]
