@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753681326184,
+  "lastUpdate": 1753681359365,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bbbb63d3befb52715b868e0429b7788586f19c27",
-          "message": "Merge pull request #2371 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
-          "timestamp": "2025-05-31T11:52:40+08:00",
-          "tree_id": "8113dba7bd69db9cf1232453e1f3705bcfbd653b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bbbb63d3befb52715b868e0429b7788586f19c27"
-        },
-        "date": 1748664161863,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 502,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37452.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0c380197274f3fb046d457efbabe014ccc0f5b96",
           "message": "Merge pull request #2372 from f1shl3gs/misc/readme/add_systemd\n\nmisc: add systemd to readme",
           "timestamp": "2025-05-31T12:44:11+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37772.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7",
+          "message": "Merge pull request #2474 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.20\n\nchore(deps): bump dyn-clone from 1.0.19 to 1.0.20",
+          "timestamp": "2025-07-28T13:32:21+08:00",
+          "tree_id": "a772f3cece58f0967c6310dc41534ec952239ce7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7"
+        },
+        "date": 1753681338943,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 514,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37768.5,
             "unit": "KiB"
           }
         ]
