@@ -307,7 +307,7 @@ sinks-kafka = ["dep:rskafka", "dep:parking_lot"]
 sinks-loki = ["dep:snap"]
 sinks-prometheus_exporter = ["dep:flate2", "dep:parking_lot", "dep:prometheus"]
 sinks-prometheus_remote_write = ["dep:snap", "dep:prometheus"]
-sinks-skywalking = ["tonic/gzip", "tonic/zstd", "tonic/transport", "tonic/codegen"]
+sinks-skywalking = ["tonic/gzip", "tonic/zstd", "tonic/transport", "tonic/codegen", "dep:tonic-prost"]
 sinks-socket = []
 
 sinks = [
@@ -366,8 +366,8 @@ name = "syslog"
 required-features = ["sinks-socket"]
 
 [build-dependencies]
-prost-build = { version = "0.13.5", default-features = false }
-tonic-build = { version = "0.13.1", default-features = false, features = ["prost", "transport"] }
+prost-build = { version = "0.14.1", default-features = false }
+tonic-prost-build = { version = "0.14.0", default-features = false, features = ["transport"] }
 
 [dev-dependencies]
 base64 = { version = "0.22.1", default-features = false }
@@ -379,7 +379,7 @@ pretty_assertions = { version = "1.4.1", default-features = false, features = ["
 serde_path_to_error = { version = "0.1.17", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.47.0", default-features = false, features = ["test-util"] }
-tonic = { version = "0.13.1", default-features = false, features = ["server", "router"]}
+tonic = { version = "0.14.0", default-features = false, features = ["server", "router"]}
 
 [dependencies]
 # Workspaces
@@ -443,9 +443,12 @@ serde = { version = "1.0.219", default-features = false, features = ["derive"] }
 serde_yaml = { version = "0.9.34", default-features = false }
 serde_json = { version = "1.0.141", default-features = false }
 
-# Protobuf
-prost = { version = "0.13.5", default-features = false, features = ["std"] }
-prost-types = { version = "0.13.5", default-features = false }
+# GRPC & Protobuf
+prost = { version = "0.14.1", default-features = false, features = ["std"] }
+prost-types = { version = "0.14.1", default-features = false }
+tonic = { version = "0.14.0", default-features = false, optional = true, features = ["transport"] }
+tonic-prost = { version = "0.14.0", default-features = false, optional = true }
+tonic-health = { version = "0.14.0", default-features = false, optional = true }
 
 # Profile
 pprof = { version = "0.15.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
@@ -481,7 +484,5 @@ snap = { version = "1.1.1", default-features = false, optional = true }
 socket2 = { version = "0.6.0", optional = true, default-features = false}
 sqlx = { version = "0.8.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "2.0.12", default-features = false }
-tonic = { version = "0.13.1", default-features = false, optional = true, features = ["prost", "transport"] }
-tonic-health = { version = "0.13.1", default-features = false, optional = true }
 typetag = { version = "0.2.20" }
 url = { version = "2.5.4", default-features = false, features = ["serde"] }

@@ -159,7 +159,7 @@ fn main() {
         println!("cargo:rerun-if-changed=src/sinks/skywalking");
         let src = std::path::PathBuf::from("src/sinks/skywalking");
 
-        tonic_build::configure()
+        tonic_prost_build::configure()
             .build_client(true)
             .build_server(false)
             .compile_protos(&[src.join("logging.proto")], &[src])
