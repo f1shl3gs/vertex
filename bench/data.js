@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753766995384,
+  "lastUpdate": 1753767008663,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d72cae22a88c7ca8bd7006ab0d97fd504daf07f4",
-          "message": "Merge pull request #2362 from f1shl3gs/dependabot/cargo/socket2-0.5.10\n\nchore(deps): bump socket2 from 0.5.9 to 0.5.10",
-          "timestamp": "2025-05-27T09:51:19+08:00",
-          "tree_id": "66d78f423f27d70b154800a07c8703bf9ecfce55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d72cae22a88c7ca8bd7006ab0d97fd504daf07f4"
-        },
-        "date": 1748310833479,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.423,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 166.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 674.55,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "185ebadfcd4e34d0a2145ec2936aeaec2fbe6e15",
           "message": "Merge pull request #2364 from f1shl3gs/dependabot/cargo/hyper-util-0.1.13\n\nchore(deps): bump hyper-util from 0.1.12 to 0.1.13",
           "timestamp": "2025-05-28T01:18:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 686,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4c8366131c25fc4b9d0557da90554b768fee022",
+          "message": "Merge pull request #2476 from f1shl3gs/dependabot/cargo/tonic-825aa02f21\n\nchore(deps): bump tonic-health from 0.13.1 to 0.14.0 in the tonic group",
+          "timestamp": "2025-07-29T13:27:29+08:00",
+          "tree_id": "cc53a57df3d4d1473dd4267f33e87f7cfdb54f3a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4c8366131c25fc4b9d0557da90554b768fee022"
+        },
+        "date": 1753766988304,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.109,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 351.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 698.06,
             "unit": "ns/op"
           }
         ]
