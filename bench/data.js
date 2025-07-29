@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753766991056,
+  "lastUpdate": 1753766995384,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d72cae22a88c7ca8bd7006ab0d97fd504daf07f4",
-          "message": "Merge pull request #2362 from f1shl3gs/dependabot/cargo/socket2-0.5.10\n\nchore(deps): bump socket2 from 0.5.9 to 0.5.10",
-          "timestamp": "2025-05-27T09:51:19+08:00",
-          "tree_id": "66d78f423f27d70b154800a07c8703bf9ecfce55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d72cae22a88c7ca8bd7006ab0d97fd504daf07f4"
-        },
-        "date": 1748310823859,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.483,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.326,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 168.86,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4c8366131c25fc4b9d0557da90554b768fee022",
+          "message": "Merge pull request #2476 from f1shl3gs/dependabot/cargo/tonic-825aa02f21\n\nchore(deps): bump tonic-health from 0.13.1 to 0.14.0 in the tonic group",
+          "timestamp": "2025-07-29T13:27:29+08:00",
+          "tree_id": "cc53a57df3d4d1473dd4267f33e87f7cfdb54f3a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4c8366131c25fc4b9d0557da90554b768fee022"
+        },
+        "date": 1753766974397,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.329,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.32,
             "unit": "ns/op"
           }
         ]
