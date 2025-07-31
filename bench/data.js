@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1753846476361,
+  "lastUpdate": 1753973740352,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dfcf4d18411e702d0c0617be7bae4c2b21cc868f",
-          "message": "Merge pull request #2365 from f1shl3gs/dependabot/cargo/pprof-0.15.0\n\nchore(deps): bump pprof from 0.14.0 to 0.15.0",
-          "timestamp": "2025-05-28T01:18:44+08:00",
-          "tree_id": "c388b8c56cfcc36347eaab4c9f2d25a63777e7db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dfcf4d18411e702d0c0617be7bae4c2b21cc868f"
-        },
-        "date": 1748366450693,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539610,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 485080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e26513472ef596dab24a0f561349ab084c5891ce",
+          "message": "Merge pull request #2478 from f1shl3gs/sources/dnstap/refine_fstrm\n\nsources/dnstamp: move fstrm to an independent file",
+          "timestamp": "2025-07-31T22:53:23+08:00",
+          "tree_id": "1cce23261c3e18f50e0ebda6fd734202af5ddc83",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e26513472ef596dab24a0f561349ab084c5891ce"
+        },
+        "date": 1753973719944,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 487030,
             "unit": "ns/op"
           }
         ]
