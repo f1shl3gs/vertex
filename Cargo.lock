@@ -2896,8 +2896,8 @@ dependencies = [
 
 [[package]]
 name = "rskafka"
-version = "0.5.0"
-source = "git+https://github.com/f1shl3gs/rskafka?rev=7ee5c942a83d8a391794913ed7a012f5c33b6efb#7ee5c942a83d8a391794913ed7a012f5c33b6efb"
+version = "0.6.0"
+source = "git+https://github.com/f1shl3gs/rskafka?rev=c18c924934f3d0edf8e442212fa595f81c20d027#c18c924934f3d0edf8e442212fa595f81c20d027"
 dependencies = [
  "chrono",
  "crc32c",
