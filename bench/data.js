@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754059085484,
+  "lastUpdate": 1754059453021,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9da47cf876a8f4ec6391d9d18e0bdc9798fb6489",
-          "message": "Merge pull request #2366 from f1shl3gs/sources/systemd\n\nsources/systemd: init",
-          "timestamp": "2025-05-28T18:52:10+08:00",
-          "tree_id": "af3276b46fca6aa4988eb6ea458d5c60aa0c7466",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9da47cf876a8f4ec6391d9d18e0bdc9798fb6489"
-        },
-        "date": 1748430102493,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22587000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 590150,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.814,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "da062de29a5a6b3b9753bca8dd5cda4ac8c217ca",
           "message": "Merge pull request #2367 from f1shl3gs/sources/systemd/fix_unit_filter\n\nsources/systemd: fix units filter",
           "timestamp": "2025-05-28T19:46:02+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.549,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bfdea90cde1f8e9176300ceb93dfaf7e66911d8",
+          "message": "Merge pull request #2481 from f1shl3gs/deps/rskafka/bump_to_latest_version\n\ndeps/rskafka: bump to latest version",
+          "timestamp": "2025-08-01T22:34:31+08:00",
+          "tree_id": "5ba4ede5a62b2869de5f160bb474cefa5aa19ff6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bfdea90cde1f8e9176300ceb93dfaf7e66911d8"
+        },
+        "date": 1754059431831,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14489000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 602690,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.536,
             "unit": "ns/op"
           }
         ]
