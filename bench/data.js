@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754035560240,
+  "lastUpdate": 1754035568488,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9da47cf876a8f4ec6391d9d18e0bdc9798fb6489",
-          "message": "Merge pull request #2366 from f1shl3gs/sources/systemd\n\nsources/systemd: init",
-          "timestamp": "2025-05-28T18:52:10+08:00",
-          "tree_id": "af3276b46fca6aa4988eb6ea458d5c60aa0c7466",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9da47cf876a8f4ec6391d9d18e0bdc9798fb6489"
-        },
-        "date": 1748429658376,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.535,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.265,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 170.55,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1a9ce143418ef21ff0fa6849e5893c988b24aabd",
+          "message": "Merge pull request #2479 from f1shl3gs/dependabot/cargo/serde_json-1.0.142\n\nchore(deps): bump serde_json from 1.0.141 to 1.0.142",
+          "timestamp": "2025-08-01T16:03:39+08:00",
+          "tree_id": "c95a0222766f7815d94eaf9217623030c5198902",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1a9ce143418ef21ff0fa6849e5893c988b24aabd"
+        },
+        "date": 1754035547202,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.343,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.026,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 163.6,
             "unit": "ns/op"
           }
         ]
