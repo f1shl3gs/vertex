@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754059453021,
+  "lastUpdate": 1754059506127,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b7c30f167e1233c74c80b57386c7dacb9fef79c9",
-          "message": "Merge pull request #2377 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
-          "timestamp": "2025-06-02T20:42:54+08:00",
-          "tree_id": "6f27508b0780309240df4c0f17192d7d109027e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b7c30f167e1233c74c80b57386c7dacb9fef79c9"
-        },
-        "date": 1748868797752,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 516,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37448.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fcf923a21f7a7cac3f3810ece47d0edc953c72bb",
           "message": "Merge pull request #2378 from f1shl3gs/sources/redis/update_metrics_map\n\nsources/redis: update metric map",
           "timestamp": "2025-06-02T20:52:46+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37763.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bfdea90cde1f8e9176300ceb93dfaf7e66911d8",
+          "message": "Merge pull request #2481 from f1shl3gs/deps/rskafka/bump_to_latest_version\n\ndeps/rskafka: bump to latest version",
+          "timestamp": "2025-08-01T22:34:31+08:00",
+          "tree_id": "5ba4ede5a62b2869de5f160bb474cefa5aa19ff6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bfdea90cde1f8e9176300ceb93dfaf7e66911d8"
+        },
+        "date": 1754059485569,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 515,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37763.7,
             "unit": "KiB"
           }
         ]
