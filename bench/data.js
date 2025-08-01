@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754059017388,
+  "lastUpdate": 1754059044739,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "27f60f62f28e096689064c8ab88f77ef4ab7f21b",
-          "message": "Merge pull request #2368 from f1shl3gs/sources/systemd/reuse_buffers\n\nsources/systemd: always try to reuse buffers, which will reduce memory usage",
-          "timestamp": "2025-05-30T02:15:20+08:00",
-          "tree_id": "cef4343b190654de7a2c96826a7088e8f70bec0a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/27f60f62f28e096689064c8ab88f77ef4ab7f21b"
-        },
-        "date": 1748542802713,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 31.532,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 193.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 344.17,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 714.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d813a2d53b049fab4c42ea633ed87c2bcf3acaf6",
           "message": "Merge pull request #2369 from f1shl3gs/dependabot/cargo/parking_lot-0.12.4\n\nchore(deps): bump parking_lot from 0.12.3 to 0.12.4",
           "timestamp": "2025-05-30T10:49:32+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 649.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bfdea90cde1f8e9176300ceb93dfaf7e66911d8",
+          "message": "Merge pull request #2481 from f1shl3gs/deps/rskafka/bump_to_latest_version\n\ndeps/rskafka: bump to latest version",
+          "timestamp": "2025-08-01T22:34:31+08:00",
+          "tree_id": "5ba4ede5a62b2869de5f160bb474cefa5aa19ff6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bfdea90cde1f8e9176300ceb93dfaf7e66911d8"
+        },
+        "date": 1754059023656,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.305,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 316.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 650.5,
             "unit": "ns/op"
           }
         ]
