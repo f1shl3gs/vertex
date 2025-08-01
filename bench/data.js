@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754050192920,
+  "lastUpdate": 1754050196744,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "da062de29a5a6b3b9753bca8dd5cda4ac8c217ca",
-          "message": "Merge pull request #2367 from f1shl3gs/sources/systemd/fix_unit_filter\n\nsources/systemd: fix units filter",
-          "timestamp": "2025-05-28T19:46:02+08:00",
-          "tree_id": "5f29032ea5595e375bfa06b33d6249c50d785c5d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/da062de29a5a6b3b9753bca8dd5cda4ac8c217ca"
-        },
-        "date": 1748432923087,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.418,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.59,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 705.47,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "27f60f62f28e096689064c8ab88f77ef4ab7f21b",
           "message": "Merge pull request #2368 from f1shl3gs/sources/systemd/reuse_buffers\n\nsources/systemd: always try to reuse buffers, which will reduce memory usage",
           "timestamp": "2025-05-30T02:15:20+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 655.76,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "21ea80d72243e836ce608ed4820f6ec0c8a787ac",
+          "message": "Merge pull request #2480 from f1shl3gs/dependabot/cargo/tokio-1.47.1\n\nchore(deps): bump tokio from 1.47.0 to 1.47.1",
+          "timestamp": "2025-08-01T20:07:22+08:00",
+          "tree_id": "124fc4465c5221927013a4ab9e71b351c7e70230",
+          "url": "https://github.com/f1shl3gs/vertex/commit/21ea80d72243e836ce608ed4820f6ec0c8a787ac"
+        },
+        "date": 1754050176455,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.315,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 305.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 649.71,
             "unit": "ns/op"
           }
         ]
