@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754035568488,
+  "lastUpdate": 1754035583538,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9da47cf876a8f4ec6391d9d18e0bdc9798fb6489",
-          "message": "Merge pull request #2366 from f1shl3gs/sources/systemd\n\nsources/systemd: init",
-          "timestamp": "2025-05-28T18:52:10+08:00",
-          "tree_id": "af3276b46fca6aa4988eb6ea458d5c60aa0c7466",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9da47cf876a8f4ec6391d9d18e0bdc9798fb6489"
-        },
-        "date": 1748429689398,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.884,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 337.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 673.57,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "da062de29a5a6b3b9753bca8dd5cda4ac8c217ca",
           "message": "Merge pull request #2367 from f1shl3gs/sources/systemd/fix_unit_filter\n\nsources/systemd: fix units filter",
           "timestamp": "2025-05-28T19:46:02+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 692.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1a9ce143418ef21ff0fa6849e5893c988b24aabd",
+          "message": "Merge pull request #2479 from f1shl3gs/dependabot/cargo/serde_json-1.0.142\n\nchore(deps): bump serde_json from 1.0.141 to 1.0.142",
+          "timestamp": "2025-08-01T16:03:39+08:00",
+          "tree_id": "c95a0222766f7815d94eaf9217623030c5198902",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1a9ce143418ef21ff0fa6849e5893c988b24aabd"
+        },
+        "date": 1754035563189,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.328,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 158.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.33,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 655.76,
             "unit": "ns/op"
           }
         ]
