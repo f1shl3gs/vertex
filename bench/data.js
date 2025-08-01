@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754050682821,
+  "lastUpdate": 1754059016331,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "27f60f62f28e096689064c8ab88f77ef4ab7f21b",
-          "message": "Merge pull request #2368 from f1shl3gs/sources/systemd/reuse_buffers\n\nsources/systemd: always try to reuse buffers, which will reduce memory usage",
-          "timestamp": "2025-05-30T02:15:20+08:00",
-          "tree_id": "cef4343b190654de7a2c96826a7088e8f70bec0a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/27f60f62f28e096689064c8ab88f77ef4ab7f21b"
-        },
-        "date": 1748542670148,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.422,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.646,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 170.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 162.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bfdea90cde1f8e9176300ceb93dfaf7e66911d8",
+          "message": "Merge pull request #2481 from f1shl3gs/deps/rskafka/bump_to_latest_version\n\ndeps/rskafka: bump to latest version",
+          "timestamp": "2025-08-01T22:34:31+08:00",
+          "tree_id": "5ba4ede5a62b2869de5f160bb474cefa5aa19ff6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bfdea90cde1f8e9176300ceb93dfaf7e66911d8"
+        },
+        "date": 1754058995319,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.354,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.473,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 163.3,
             "unit": "ns/op"
           }
         ]
