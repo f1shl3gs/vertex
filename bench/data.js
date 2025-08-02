@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754114205691,
+  "lastUpdate": 1754114229633,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fcf923a21f7a7cac3f3810ece47d0edc953c72bb",
-          "message": "Merge pull request #2378 from f1shl3gs/sources/redis/update_metrics_map\n\nsources/redis: update metric map",
-          "timestamp": "2025-06-02T20:52:46+08:00",
-          "tree_id": "b0bac88dde35e5cedac6a2284058f80ca8ac0d80",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fcf923a21f7a7cac3f3810ece47d0edc953c72bb"
-        },
-        "date": 1748869400685,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 525,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37456.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "473c4c20b2f87d9e4dae06074a8a8604f092f1e6",
           "message": "Merge pull request #2379 from f1shl3gs/dependabot/cargo/headers-0.4.1\n\nchore(deps): bump headers from 0.4.0 to 0.4.1",
           "timestamp": "2025-06-03T19:09:50+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 515,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37763.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7db9779f5fedd27bfcea0d59c1e49cfe28920558",
+          "message": "Merge pull request #2482 from f1shl3gs/sinks/kafka/better_deserialize_error\n\nsinks/kafka: better deserialize error message",
+          "timestamp": "2025-08-02T13:46:53+08:00",
+          "tree_id": "46f9717bd94d79200ff9a35943a27875e2f741da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7db9779f5fedd27bfcea0d59c1e49cfe28920558"
+        },
+        "date": 1754114208711,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 514,
             "unit": "s"
           },
           {
