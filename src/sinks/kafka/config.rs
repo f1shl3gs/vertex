@@ -17,6 +17,7 @@ mod compression_serde {
     use std::ops::Deref;
 
     use rskafka::client::partition::Compression;
+    use serde::de::Error;
     use serde::{Deserializer, Serializer};
 
     pub fn deserialize<'de, D: Deserializer<'de>>(
@@ -30,7 +31,12 @@ mod compression_serde {
             "snappy" => Compression::Snappy,
             "zstd" => Compression::Zstd,
 
-            _ => return Err(serde::de::Error::custom("unknown compression")),
+            variant => {
+                return Err(Error::unknown_variant(
+                    variant,
+                    &["none", "gzip", "lz4", "snappy", "zstd"],
+                ));
+            }
         };
 
         Ok(compression)
