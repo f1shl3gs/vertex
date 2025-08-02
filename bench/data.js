@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754113822779,
+  "lastUpdate": 1754114205691,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "da062de29a5a6b3b9753bca8dd5cda4ac8c217ca",
-          "message": "Merge pull request #2367 from f1shl3gs/sources/systemd/fix_unit_filter\n\nsources/systemd: fix units filter",
-          "timestamp": "2025-05-28T19:46:02+08:00",
-          "tree_id": "5f29032ea5595e375bfa06b33d6249c50d785c5d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/da062de29a5a6b3b9753bca8dd5cda4ac8c217ca"
-        },
-        "date": 1748433351789,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22162000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 590440,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.146,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "27f60f62f28e096689064c8ab88f77ef4ab7f21b",
           "message": "Merge pull request #2368 from f1shl3gs/sources/systemd/reuse_buffers\n\nsources/systemd: always try to reuse buffers, which will reduce memory usage",
           "timestamp": "2025-05-30T02:15:20+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.536,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7db9779f5fedd27bfcea0d59c1e49cfe28920558",
+          "message": "Merge pull request #2482 from f1shl3gs/sinks/kafka/better_deserialize_error\n\nsinks/kafka: better deserialize error message",
+          "timestamp": "2025-08-02T13:46:53+08:00",
+          "tree_id": "46f9717bd94d79200ff9a35943a27875e2f741da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7db9779f5fedd27bfcea0d59c1e49cfe28920558"
+        },
+        "date": 1754114184182,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14769000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 659370,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.359,
             "unit": "ns/op"
           }
         ]
