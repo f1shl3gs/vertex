@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754113777074,
+  "lastUpdate": 1754113778192,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d813a2d53b049fab4c42ea633ed87c2bcf3acaf6",
-          "message": "Merge pull request #2369 from f1shl3gs/dependabot/cargo/parking_lot-0.12.4\n\nchore(deps): bump parking_lot from 0.12.3 to 0.12.4",
-          "timestamp": "2025-05-30T10:49:32+08:00",
-          "tree_id": "2d9bc9468d7c0258ffa89284c70517a1ecd21979",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d813a2d53b049fab4c42ea633ed87c2bcf3acaf6"
-        },
-        "date": 1748573546994,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.498,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 168.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 331.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 659.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "12704f93b0860ac0c17012009011f93cf5f2356c",
           "message": "Merge pull request #2370 from f1shl3gs/misc/add_more_detail\n\nmisc: add more detail of config",
           "timestamp": "2025-05-31T00:26:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 650.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7db9779f5fedd27bfcea0d59c1e49cfe28920558",
+          "message": "Merge pull request #2482 from f1shl3gs/sinks/kafka/better_deserialize_error\n\nsinks/kafka: better deserialize error message",
+          "timestamp": "2025-08-02T13:46:53+08:00",
+          "tree_id": "46f9717bd94d79200ff9a35943a27875e2f741da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7db9779f5fedd27bfcea0d59c1e49cfe28920558"
+        },
+        "date": 1754113757865,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.385,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 310.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 660.76,
             "unit": "ns/op"
           }
         ]
