@@ -418,7 +418,7 @@ async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.88", default-features = false }
 futures = { version = "0.3.31", default-features = false }
 tokio = { version = "1.47.1", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
-tokio-util = { version = "0.7.15", default-features = false, features = ["codec", "time", "net"] }
+tokio-util = { version = "0.7.16", default-features = false, features = ["codec", "time", "net"] }
 
 # Tracing
 tracing = { version = "0.1.41", default-features = false }
