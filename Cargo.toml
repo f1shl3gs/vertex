@@ -475,7 +475,7 @@ maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d18
 md-5 = { version = "0.10.6", default-features = false, optional = true }
 parking_lot = { version = "0.12.4", default-features = false, optional = true }
 percent-encoding = { version = "2.3.1", default-features = false }
-quick-xml = { version = "0.38.0", default-features = false, features = ["serialize"], optional = true }
+quick-xml = { version = "0.38.1", default-features = false, features = ["serialize"], optional = true }
 rand = { version = "0.9.2", default-features = false }
 regex = { version = "1.11.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "c18c924934f3d0edf8e442212fa595f81c20d027", optional = true, features = ["transport-tls"] }
