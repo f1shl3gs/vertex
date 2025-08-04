@@ -39,6 +39,9 @@ pub trait Provider {
 pub trait Conveyor {
     type Metadata: Debug;
 
+    /// This function used to read FileReader and send it other sinks, caller must
+    /// track the offset and handle shutdown properly, otherwise harvest will not
+    /// start/end properly.
     fn run(
         &self,
         reader: FileReader,

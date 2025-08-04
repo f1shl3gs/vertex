@@ -67,7 +67,13 @@ where
 
                 continue;
             }
-            _ = &mut shutdown => break,
+            _ = &mut shutdown => {
+                debug!(
+                    message = "shutdown signal received"
+                );
+
+                break
+            },
             result = provider.scan() => match result {
                 Ok(paths) => paths.into_iter().filter_map(|(path , metadata)| {
                     match path.metadata() {
@@ -203,6 +209,11 @@ where
         // send might fail, if the task is not polled
         drop(trigger);
 
+        debug!(
+            message = "await conveyor task finished successfully",
+            ?path
+        );
+
         if let Err(err) = handle.await {
             error!(message = "await tail task handle failed", ?path, ?err);
         }
@@ -216,55 +227,3 @@ where
 
     Ok(())
 }
-
-/*
-async fn tail<D, L, M, O>(
-    reader: FileReader,
-    offset: Arc<AtomicU64>,
-    metadata: &M,
-    decoder: D,
-    multiline: L,
-    mut output: O,
-    mut shutdown: Receiver<()>,
-) -> std::io::Result<()>
-where
-    D: Decoder<Item = (Bytes, usize)> + Clone,
-    D::Error: Debug + Unpin,
-    L: Logic,
-    M: Debug,
-{
-    let stream = FramedRead::with_capacity(reader, decoder, 32 * 1024);
-    let stream = Multiline::new(stream, multiline);
-    let mut stream = ReadyFrames::new(
-        stream,
-        128,
-        4 * 1024 * 1024, // 4MiB
-    );
-
-    loop {
-        let result = tokio::select! {
-            result = stream.next() => result,
-            _ = &mut shutdown => break,
-        };
-
-        match result {
-            Some(Ok((items, size))) => {
-                if let Err(_err) = output.send(items, metadata).await {
-                    break;
-                }
-
-                offset.fetch_add(size as u64, Ordering::Release);
-            }
-            Some(Err(err)) => {
-                // TODO: some err might not recoverable
-                warn!(message = "decode new record failed", ?err);
-            }
-            None => {
-                break;
-            }
-        }
-    }
-
-    Ok(())
-}
-*/

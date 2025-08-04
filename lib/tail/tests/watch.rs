@@ -60,9 +60,10 @@ impl Conveyor for OrderedOutput {
         reader: FileReader,
         _meta: Self::Metadata,
         _offset: Arc<AtomicU64>,
-        _shutdown: Shutdown,
+        shutdown: Shutdown,
     ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
-        let mut reader = FramedRead::new(reader, NewlineDecoder::new(4 * 1024));
+        let mut reader = FramedRead::new(reader, NewlineDecoder::new(4 * 1024))
+            .take_until(shutdown);
         let seq = Arc::clone(&self.seq);
 
         Box::pin(async move {
