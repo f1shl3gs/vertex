@@ -62,8 +62,8 @@ impl Conveyor for OrderedOutput {
         _offset: Arc<AtomicU64>,
         shutdown: Shutdown,
     ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
-        let mut reader = FramedRead::new(reader, NewlineDecoder::new(4 * 1024))
-            .take_until(shutdown);
+        let mut reader =
+            FramedRead::new(reader, NewlineDecoder::new(4 * 1024)).take_until(shutdown);
         let seq = Arc::clone(&self.seq);
 
         Box::pin(async move {

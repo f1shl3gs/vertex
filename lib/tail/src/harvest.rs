@@ -209,10 +209,7 @@ where
         // send might fail, if the task is not polled
         drop(trigger);
 
-        debug!(
-            message = "await conveyor task finished successfully",
-            ?path
-        );
+        debug!(message = "await conveyor task finished successfully", ?path);
 
         if let Err(err) = handle.await {
             error!(message = "await tail task handle failed", ?path, ?err);

@@ -63,8 +63,8 @@ impl Conveyor for StdoutOutput {
         _offset: Arc<AtomicU64>,
         shutdown: Shutdown,
     ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
-        let mut reader = FramedRead::new(reader, NewlineDecoder::new(4 * 1024))
-            .take_until(shutdown);
+        let mut reader =
+            FramedRead::new(reader, NewlineDecoder::new(4 * 1024)).take_until(shutdown);
 
         Box::pin(async move {
             while let Some(Ok((data, _size))) = reader.next().await {
@@ -92,8 +92,8 @@ impl Conveyor for TrackedOutput {
         _offset: Arc<AtomicU64>,
         shutdown: Shutdown,
     ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
-        let mut reader = FramedRead::new(reader, NewlineDecoder::new(4 * 1024))
-            .take_until(shutdown);
+        let mut reader =
+            FramedRead::new(reader, NewlineDecoder::new(4 * 1024)).take_until(shutdown);
         let sender = self.sender.clone();
         let want = self.want;
 
