@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 /// A single application container that you want to run within a pod.
 #[cfg_attr(test, derive(Default))]
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Container {
     /// Name of the container specified as a DNS_LABEL. Each container in a pod
     /// must have a unique name (DNS_LABEL). Cannot be updated.
@@ -21,7 +21,7 @@ pub struct Container {
 ///
 /// See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#podspec-v1-core
 #[cfg_attr(test, derive(Default))]
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct PodSpec {
     /// NodeName is a request to schedule this pod onto a specific node. If it
     /// is non-empty, the scheduler simply schedules this pod onto that node,
@@ -36,7 +36,7 @@ pub struct PodSpec {
 }
 
 /// PodIp represents a single IP address allocated to the pod
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct PodIP {
     /// IP is the ip address assigned to the pod
     pub ip: String,
@@ -44,7 +44,7 @@ pub struct PodIP {
 
 /// ContainerStatus contains details for the current status of this container.
 #[cfg_attr(test, derive(Default))]
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ContainerStatus {
     /// Name is a DNS_LABEL representing the unique name of the container. Each container
     /// in a pod must have a unique name across all container types. Cannot be updated.
@@ -61,7 +61,7 @@ pub struct ContainerStatus {
 /// the actual state of a system, especially if the node that hosts the pod cannot
 /// contact the control plane.
 #[cfg_attr(test, derive(Default))]
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct PodStatus {
     /// IP address allocated to the pod. Routable at least within the cluster. Empty if not
     /// yet allocated.
@@ -108,6 +108,12 @@ impl Resource for Pod {
     const VERSION: &'static str = "v1";
     const KIND: &'static str = "Pod";
     const PLURAL: &'static str = "pods";
+}
+
+#[derive(Debug, Deserialize)]
+pub struct PodList {
+    #[serde(default)]
+    pub items: Vec<Pod>,
 }
 
 #[cfg(test)]
