@@ -70,10 +70,17 @@ members = [
 default = [
     # "snmalloc",
 
-    "extensions",
-    "sources",
-    "transforms",
-    "sinks",
+    "sources-tail",
+    "sources-selfstat",
+    "sources-kubernetes_logs",
+    "sinks-console",
+    "sinks-loki",
+    "sinks-prometheus_exporter"
+
+    # "extensions",
+    # "sources",
+    # "transforms",
+    # "sinks",
 ]
 
 target-x86_64-unknown-linux-musl = [
