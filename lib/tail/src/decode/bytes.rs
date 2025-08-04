@@ -26,8 +26,8 @@ pub struct BytesDelimitDecoder {
 
 impl BytesDelimitDecoder {
     #[inline]
-    pub fn new(delimiter: Vec<u8>, max_length: usize) -> Self {
-        let delimiter = Finder::new(&delimiter).into_owned();
+    pub fn new(delimiter: &[u8], max_length: usize) -> Self {
+        let delimiter = Finder::new(delimiter).into_owned();
 
         Self {
             delimiter,
