@@ -2049,23 +2049,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "multiline"
-version = "0.1.0"
-dependencies = [
- "bytes",
- "futures",
- "humanize",
- "memchr",
- "pin-project-lite",
- "regex",
- "serde",
- "serde_json",
- "serde_yaml",
- "tokio",
- "tokio-util",
-]
-
-[[package]]
 name = "multimap"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4281,7 +4264,6 @@ dependencies = [
  "md-5",
  "metrics",
  "mimalloc",
- "multiline",
  "ntp",
  "parking_lot",
  "percent-encoding",
