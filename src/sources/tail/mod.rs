@@ -210,14 +210,11 @@ impl Conveyor for OutputSender {
         mut shutdown: Shutdown,
     ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
         let mut decoder = self.encoding.map(Decoder::new);
-        let reader = FramedRead::new(
-            reader,
-            BytesDelimitDecoder::new(self.delimiter.clone(), 4 * 1024),
-        )
-        .map(move |result| match &mut decoder {
-            Some(d) => result.map(|(data, size)| (d.decode(data), size)),
-            None => result,
-        });
+        let reader = FramedRead::new(reader, BytesDelimitDecoder::new(&self.delimiter, 4 * 1024))
+            .map(move |result| match &mut decoder {
+                Some(d) => result.map(|(data, size)| (d.decode(data), size)),
+                None => result,
+            });
 
         let mut stream = ReadyFrames::new(reader, 128, 4 * 1024 * 1024);
         let mut output = self.output.clone();
