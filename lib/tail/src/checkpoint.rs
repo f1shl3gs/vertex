@@ -1,310 +1,339 @@
-use std::collections::BTreeSet;
-use std::fs;
-use std::io;
+use std::collections::HashMap;
+use std::fmt::Display;
+use std::fs::Metadata;
 use std::os::unix::fs::MetadataExt;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
+use std::time::SystemTime;
 
-use chrono::{DateTime, TimeDelta, Utc};
-use dashmap::DashMap;
-use serde::{Deserialize, Serialize};
+/// Header is the header of the binary file, basic information contained
+///
+/// ```no_run
+/// struct Header {
+///     // timestamp of when this binary file created, it does not necessary for us
+///     timestamp: u64,
+///     running: u32,
+///     deleted: u32,
+/// }
+/// ```
+const HEADER_SIZE: usize = size_of::<u64>() + 2 * size_of::<u32>();
+const ENTRY_SIZE: usize = 4 * size_of::<u64>();
 
-const STATE_VERSION: &str = "v1";
-const TMP_FILE_NAME: &str = "checkpoints.new.json";
-const STABLE_FILE_NAME: &str = "checkpoints.json";
+const DATA_FILENAME: &str = "checkpoints.data";
+const TEMP_DATA_FILENAME: &str = "checkpoints.temp";
 
-pub type Position = u64;
+// if any entries timestamp is older than `now - EXPIRATION_IN_MILLIS`, and it doesn't
+// appear in running, it should be deleted
+const EXPIRATION_IN_MILLIS: u64 = 7 * 24 * 60 * 60 * 1000; // a week
 
-#[derive(Debug, Deserialize, Serialize, PartialEq, Eq)]
-struct State {
-    version: String,
-    checkpoints: BTreeSet<Checkpoint>,
-}
-
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, Hash, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Fingerprint {
     dev: u64,
     inode: u64,
 }
 
-impl TryFrom<&PathBuf> for Fingerprint {
-    type Error = io::Error;
+impl Display for Fingerprint {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}:{}", self.dev, self.inode)
+    }
+}
 
-    fn try_from(path: &PathBuf) -> Result<Self, Self::Error> {
-        let metadata = path.metadata()?;
-
-        Ok(Self {
+impl From<&Metadata> for Fingerprint {
+    fn from(metadata: &Metadata) -> Self {
+        Fingerprint {
             dev: metadata.dev(),
             inode: metadata.ino(),
-        })
-    }
-}
-
-#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Checkpoint {
-    fingerprint: Fingerprint,
-    position: Position,
-    modified: DateTime<Utc>,
-}
-
-/// A thread-safe handle for reading and writing checkpoints in-memory
-/// access multiple threads
-#[derive(Debug, Default)]
-pub struct CheckpointsView {
-    checkpoints: DashMap<Fingerprint, Position>,
-    modified_times: DashMap<Fingerprint, DateTime<Utc>>,
-    removed_times: DashMap<Fingerprint, DateTime<Utc>>,
-}
-
-impl CheckpointsView {
-    pub fn update(&self, fp: Fingerprint, pos: Position) {
-        self.checkpoints.insert(fp, pos);
-        self.modified_times.insert(fp, Utc::now());
-        self.removed_times.remove(&fp);
-    }
-
-    pub fn get(&self, fp: Fingerprint) -> Option<Position> {
-        self.checkpoints.get(&fp).map(|r| *r.value())
-    }
-
-    pub fn set_dead(&self, fp: Fingerprint) {
-        self.removed_times.insert(fp, Utc::now());
-    }
-
-    pub fn update_key(&self, old: Fingerprint, new: Fingerprint) {
-        if let Some((_, value)) = self.checkpoints.remove(&old) {
-            self.checkpoints.insert(new, value);
-        }
-
-        if let Some((_, value)) = self.modified_times.remove(&old) {
-            self.modified_times.insert(new, value);
-        }
-
-        if let Some((_, value)) = self.removed_times.remove(&old) {
-            self.removed_times.insert(new, value);
-        }
-    }
-
-    pub fn remove_expired(&self) {
-        let now = Utc::now();
-
-        // Collect all of the expired keys. Removing them while iterating can
-        // lead to deadlocks, the set should be small, and this is not a
-        // performance-sensitive path
-        let to_remove = self
-            .removed_times
-            .iter()
-            .filter(|entry| {
-                let ts = entry.value();
-                let duration = now - *ts;
-                duration > TimeDelta::try_seconds(60).unwrap()
-            })
-            .map(|entry| *entry.key())
-            .collect::<Vec<Fingerprint>>();
-
-        for fp in to_remove {
-            self.checkpoints.remove(&fp);
-            self.modified_times.remove(&fp);
-            self.removed_times.remove(&fp);
-        }
-    }
-
-    fn get_state(&self) -> State {
-        State {
-            version: STATE_VERSION.to_string(),
-            checkpoints: self
-                .checkpoints
-                .iter()
-                .map(|entry| {
-                    let fp = entry.key();
-                    let pos = entry.value();
-                    Checkpoint {
-                        fingerprint: *fp,
-                        position: *pos,
-                        modified: self
-                            .modified_times
-                            .get(fp)
-                            .map(|r| *r.value())
-                            .unwrap_or_else(Utc::now),
-                    }
-                })
-                .collect(),
-        }
-    }
-
-    fn load(&self, checkpoint: Checkpoint) {
-        self.checkpoints
-            .insert(checkpoint.fingerprint, checkpoint.position);
-    }
-
-    fn set_state(&self, state: State, ignore_before: Option<DateTime<Utc>>) {
-        for checkpoint in state.checkpoints {
-            if let Some(ignore_before) = ignore_before
-                && checkpoint.modified < ignore_before
-            {
-                continue;
-            }
-
-            self.load(checkpoint);
         }
     }
 }
 
 pub struct Checkpointer {
-    tmp_file_path: PathBuf,
-    stable_file_path: PathBuf,
+    /// The directory to store checkpoints data
+    root: PathBuf,
 
-    checkpoints: Arc<CheckpointsView>,
-    last: Mutex<Option<State>>,
+    // The get or insert operation is not a hot path, so std::sync::Mutex
+    // is good enough.
+    state: Arc<Mutex<State>>,
 }
 
 impl Checkpointer {
-    pub fn new(data_dir: &Path) -> Self {
-        let tmp_file_path = data_dir.join(TMP_FILE_NAME);
-        let stable_file_path = data_dir.join(STABLE_FILE_NAME);
+    pub fn load(root: PathBuf) -> std::io::Result<Checkpointer> {
+        if !root.exists() {
+            std::fs::create_dir_all(&root)?;
+        }
 
-        Checkpointer {
-            tmp_file_path,
-            stable_file_path,
-            checkpoints: Arc::new(CheckpointsView::default()),
-            last: Mutex::new(None),
+        let path = root.join(DATA_FILENAME);
+        if !path.exists() {
+            std::fs::File::create(&path)?;
+
+            return Ok(Checkpointer {
+                root,
+                state: Default::default(),
+            });
+        }
+
+        let buf = std::fs::read(&path)?;
+        if buf.is_empty() {
+            return Ok(Checkpointer {
+                root,
+                state: Default::default(),
+            });
+        }
+
+        // read header
+        if buf.len() < HEADER_SIZE {
+            return Err(std::io::Error::other("data file is too short"));
+        }
+        // timestamp is skipped
+        let running_entries = u32::from_ne_bytes(buf[8..12].try_into().unwrap());
+        let deleted_entries = u32::from_ne_bytes(buf[12..16].try_into().unwrap());
+
+        // reading running & deleted
+        if buf.len() != HEADER_SIZE + ENTRY_SIZE * (running_entries + deleted_entries) as usize {
+            return Err(std::io::Error::other("data file is corrupted"));
+        }
+        let mut pos = HEADER_SIZE;
+
+        let mut running = HashMap::with_capacity(running_entries as usize);
+        for _ in 0..running_entries {
+            let dev = u64::from_ne_bytes(buf[pos..pos + 8].try_into().unwrap());
+            let inode = u64::from_ne_bytes(buf[pos + 8..pos + 16].try_into().unwrap());
+            let timestamp = u64::from_ne_bytes(buf[pos + 16..pos + 24].try_into().unwrap());
+            let offset = u64::from_ne_bytes(buf[pos + 24..pos + 32].try_into().unwrap());
+
+            pos += ENTRY_SIZE;
+
+            running.insert(
+                Fingerprint { dev, inode },
+                (timestamp, offset, Arc::new(AtomicU64::new(offset))),
+            );
+        }
+
+        let mut deleted = HashMap::with_capacity(deleted_entries as usize);
+        for _ in 0..deleted_entries {
+            let dev = u64::from_ne_bytes(buf[pos..pos + 8].try_into().unwrap());
+            let inode = u64::from_ne_bytes(buf[pos + 8..pos + 16].try_into().unwrap());
+            let timestamp = u64::from_ne_bytes(buf[pos + 16..pos + 24].try_into().unwrap());
+            let offset = u64::from_ne_bytes(buf[pos + 24..pos + 32].try_into().unwrap());
+
+            pos += ENTRY_SIZE;
+
+            deleted.insert(
+                Fingerprint { dev, inode },
+                (timestamp, Arc::new(AtomicU64::new(offset))),
+            );
+        }
+
+        Ok(Checkpointer {
+            root,
+            state: Arc::new(Mutex::new(State { running, deleted })),
+        })
+    }
+
+    pub fn get(&self, fingerprint: Fingerprint) -> Option<Arc<AtomicU64>> {
+        let mut state = self.state.lock().unwrap();
+
+        if let Some((_timestamp, _last_offset, offset)) = state.running.get(&fingerprint) {
+            return Some(Arc::clone(offset));
+        }
+
+        if let Some((timestamp, offset)) = state.deleted.remove(&fingerprint) {
+            let last_offset = offset.load(Ordering::Acquire);
+
+            state
+                .running
+                .insert(fingerprint, (timestamp, last_offset, Arc::clone(&offset)));
+
+            return Some(offset);
+        }
+
+        None
+    }
+
+    pub fn insert(&self, fingerprint: Fingerprint, offset: u64) -> Arc<AtomicU64> {
+        let mut state = self.state.lock().unwrap();
+
+        let timestamp = match state.deleted.remove(&fingerprint) {
+            Some((timestamp, _offset)) => timestamp,
+            None => 0,
+        };
+
+        let ret = Arc::new(AtomicU64::new(offset));
+        state
+            .running
+            .insert(fingerprint, (timestamp, offset, Arc::clone(&ret)));
+
+        ret
+    }
+
+    #[inline]
+    pub fn view(&self) -> CheckpointsView {
+        CheckpointsView {
+            state: Arc::clone(&self.state),
         }
     }
 
-    pub fn view(&self) -> Arc<CheckpointsView> {
-        Arc::clone(&self.checkpoints)
-    }
+    // delete won't really delete the checkpoint, it just moves it to the `deleted` map,
+    // and it will be cleared in the future.
+    pub fn delete(&self, fingerprint: &Fingerprint) {
+        let mut state = self.state.lock().unwrap();
 
-    /// Persist the current checkpoints state to disk, makeing our best effort to
-    /// do so in an atomic way that allow for recovering the previous state in
-    /// the event of a crash
-    pub fn write_checkpoints(&self) -> Result<usize, io::Error> {
-        // First drop any checkpoints for files that were removed more than 60s
-        // ago. This keeps our working set as small as possible and makes sure we
-        // don't spend time and IO writing checkpoints that don't matter anymore.
-        self.checkpoints.remove_expired();
-
-        let current = self.checkpoints.get_state();
-
-        // Fetch last written state
-        let mut last = self.last.lock().expect("Data poisoned");
-        if last.as_ref() != Some(&current) {
-            // Write the new checkpoints to a tmp file and flush it fully to
-            // disk. If Vertex dies anywhere during this section, the existing
-            // stable file will still be in its current valid state and we'll be
-            // able to recover.
-            let mut f = io::BufWriter::new(fs::File::create(&self.tmp_file_path)?);
-            serde_json::to_writer(&mut f, &current)?;
-            f.into_inner()?.sync_all()?;
-
-            // Once the temp file is fully flushed, rename the tmp file to replace
-            // the previous stable file. This is an atomic operation on POSIX systems
-            // (and the stdlib claims to provide equivalent behavior on Windows),
-            // which should prevent scenarios where we don't have at least one full
-            // valid file to recover from.
-            fs::rename(&self.tmp_file_path, &self.stable_file_path)?;
-
-            *last = Some(current);
-        }
-
-        Ok(self.checkpoints.checkpoints.len())
-    }
-
-    /// Read persisted checkpoints from disk
-    pub fn read_checkpoints(&mut self, ignore_before: Option<DateTime<Utc>>) {
-        // First try reading from the tmp file location. If this works, it means that
-        // the previous process was interrupted in the process of checkpointing and
-        // the temp file should contain more recent data that should be preferred.
-        match self.read_checkpoints_file(&self.tmp_file_path) {
-            Ok(state) => {
-                info!(message = "Recovered checkpoint data from interrupted process");
-
-                self.checkpoints.set_state(state, ignore_before);
-
-                // Try to move this tmp file to the stable location so we don't
-                // immediately overwrite it when we next persist checkpoints.
-                if let Err(err) = fs::rename(&self.tmp_file_path, &self.stable_file_path) {
-                    warn!(
-                        message = "Error persisting recovered checkpoint file",
-                        %err
-                    );
-                }
-
-                return;
-            }
-            Err(err) if err.kind() == io::ErrorKind::NotFound => {
-                // This is expected, so no warning needed
-            }
-            Err(err) => {
-                error!(
-                    message = "Unable to recover checkpoint data from interrupted process",
-                    %err
-                );
-            }
-        }
-
-        // Next, attempt to read checkpoints from the stable file location. This is the expected
-        // location, so warn more aggressively if something goes wrong.
-        match self.read_checkpoints_file(&self.stable_file_path) {
-            Ok(state) => {
-                info!(message = "checkpoint data loaded");
-
-                self.checkpoints.set_state(state, ignore_before);
-            }
-            Err(err) if err.kind() == io::ErrorKind::NotFound => {
-                // This is expected, so no warning needed
-            }
-            Err(err) => {
-                warn!(
-                    message = "Unable to load checkpoint data",
-                    %err
-                );
-            }
+        if let Some((timestamp, _last_offset, offset)) = state.running.remove(fingerprint) {
+            state.deleted.insert(*fingerprint, (timestamp, offset));
         }
     }
 
-    fn read_checkpoints_file(&self, path: &Path) -> Result<State, io::Error> {
-        let reader = io::BufReader::new(fs::File::open(path)?);
-        serde_json::from_reader(reader)
-            .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))
+    /// persist the checkpoints to the filesystem
+    ///
+    /// TODO: maybe we can avoid this function call if nothing changes
+    pub fn flush(&self) -> std::io::Result<()> {
+        let mut state = self.state.lock().unwrap();
+
+        let now = SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .expect("system clock set to invalid time")
+            .as_millis() as u64;
+
+        let mut buf = Vec::with_capacity(
+            HEADER_SIZE + ENTRY_SIZE * (state.running.len() + state.deleted.len()),
+        );
+
+        // write header
+        buf.extend_from_slice(&now.to_ne_bytes());
+        buf.extend_from_slice(&(state.running.len() as u32).to_ne_bytes());
+        buf.extend_from_slice(&(state.deleted.len() as u32).to_ne_bytes());
+
+        state
+            .running
+            .iter_mut()
+            .for_each(|(fingerprint, (timestamp, last_offset, offset))| {
+                let offset = offset.load(Ordering::Acquire);
+                let timestamp = if *last_offset == offset {
+                    *timestamp
+                } else {
+                    *timestamp = now;
+                    *last_offset = offset;
+                    now
+                };
+
+                buf.extend_from_slice(&fingerprint.dev.to_ne_bytes());
+                buf.extend_from_slice(&fingerprint.inode.to_ne_bytes());
+                buf.extend_from_slice(&timestamp.to_ne_bytes());
+                buf.extend_from_slice(&offset.to_ne_bytes());
+            });
+
+        state
+            .deleted
+            .retain(|_fingerprint, (timestamp, _offset)| now - *timestamp < EXPIRATION_IN_MILLIS);
+
+        state
+            .deleted
+            .iter()
+            .for_each(|(fingerprint, (timestamp, offset))| {
+                let offset = offset.load(Ordering::Acquire);
+
+                buf.extend_from_slice(&fingerprint.dev.to_ne_bytes());
+                buf.extend_from_slice(&fingerprint.inode.to_ne_bytes());
+                buf.extend_from_slice(&timestamp.to_ne_bytes());
+                buf.extend_from_slice(&offset.to_ne_bytes());
+            });
+
+        let from = self.root.join(TEMP_DATA_FILENAME);
+        let to = self.root.join(DATA_FILENAME);
+
+        std::fs::write(&from, &buf)?;
+
+        // rename is an atomic operation unless system crash
+        std::fs::rename(from, to)
+    }
+}
+
+#[derive(Default)]
+struct State {
+    running: HashMap<Fingerprint, (u64, u64, Arc<AtomicU64>)>,
+    deleted: HashMap<Fingerprint, (u64, Arc<AtomicU64>)>,
+}
+
+/// A thread-safe handle for reading checkpoints in-memory across multiple threads.
+pub struct CheckpointsView {
+    state: Arc<Mutex<State>>,
+}
+
+impl CheckpointsView {
+    pub fn get(&self, fingerprint: &Fingerprint) -> Option<Arc<AtomicU64>> {
+        let state = self.state.lock().unwrap();
+
+        if let Some((_, _, offset)) = state.running.get(fingerprint) {
+            return Some(Arc::clone(offset));
+        }
+
+        if let Some((_, offset)) = state.deleted.get(fingerprint) {
+            return Some(Arc::clone(offset));
+        }
+
+        None
+    }
+}
+
+#[cfg(test)]
+impl Checkpointer {
+    fn running(&self) -> usize {
+        self.state.lock().unwrap().running.len()
+    }
+
+    fn deleted(&self) -> usize {
+        self.state.lock().unwrap().deleted.len()
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use testify::temp_dir;
+    use temp_dir::TempDir;
 
     #[test]
-    fn simple_set_and_get() {
-        let fp = Fingerprint { dev: 1, inode: 2 };
+    fn crud() {
+        let root = TempDir::new().unwrap();
+        let checkpointer = Checkpointer::load(root.path().to_path_buf()).unwrap();
+        assert_eq!(checkpointer.running(), 0);
+        assert_eq!(checkpointer.deleted(), 0);
+        checkpointer.flush().unwrap();
+        drop(checkpointer);
 
-        let dir = temp_dir();
-        let checkpointer = Checkpointer::new(dir.as_path());
-        let checkpoints = checkpointer.checkpoints;
+        let checkpointer = Checkpointer::load(root.path().to_path_buf()).unwrap();
+        assert_eq!(checkpointer.running(), 0);
+        assert_eq!(checkpointer.deleted(), 0);
 
-        checkpoints.update(fp, 3);
-        let got = checkpoints.get(Fingerprint { dev: 1, inode: 2 }).unwrap();
+        assert!(checkpointer.get(Fingerprint { dev: 1, inode: 2 }).is_none());
+        let offset = checkpointer.insert(Fingerprint { dev: 1, inode: 2 }, 2);
+        assert_eq!(checkpointer.running(), 1);
+        assert_eq!(checkpointer.deleted(), 0);
+        assert_eq!(offset.load(Ordering::Acquire), 2);
 
-        assert_eq!(got, 3)
-    }
+        offset.fetch_add(3, Ordering::AcqRel);
+        checkpointer.flush().unwrap();
+        drop(checkpointer);
 
-    #[test]
-    fn checkpointer_restart() {
-        let position = 12345;
-        let dir = temp_dir();
-        let fp = Fingerprint { dev: 1, inode: 2 };
+        let checkpointer = Checkpointer::load(root.path().to_path_buf()).unwrap();
+        assert_eq!(checkpointer.running(), 1);
+        assert_eq!(checkpointer.deleted(), 0);
 
-        {
-            // checkpointer will be dropped once this block is done.
-            let checkpointer = Checkpointer::new(dir.as_path());
-            checkpointer.checkpoints.update(fp, position);
-            checkpointer.write_checkpoints().unwrap();
-        }
+        let offset = checkpointer.get(Fingerprint { dev: 1, inode: 2 }).unwrap();
+        assert_eq!(checkpointer.running(), 1);
+        assert_eq!(checkpointer.deleted(), 0);
+        assert_eq!(offset.load(Ordering::Acquire), 5);
 
-        let mut checkpointer = Checkpointer::new(dir.as_path());
-        assert!(checkpointer.checkpoints.get(fp).is_none());
-        checkpointer.read_checkpoints(None);
-        assert_eq!(checkpointer.checkpoints.get(fp).unwrap(), position);
+        checkpointer.delete(&Fingerprint { dev: 1, inode: 2 });
+        checkpointer.flush().unwrap();
+        drop(checkpointer);
+
+        let checkpointer = Checkpointer::load(root.path().to_path_buf()).unwrap();
+        assert_eq!(checkpointer.running(), 0);
+        assert_eq!(checkpointer.deleted(), 1);
+        let offset = checkpointer.get(Fingerprint { dev: 1, inode: 2 }).unwrap();
+        assert_eq!(checkpointer.running(), 1);
+        assert_eq!(checkpointer.deleted(), 0);
+        assert_eq!(offset.load(Ordering::Acquire), 5);
     }
 }
