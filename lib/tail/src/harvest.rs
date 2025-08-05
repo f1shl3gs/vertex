@@ -30,7 +30,7 @@ where
     P: Provider<Metadata = M>,
     C: Conveyor<Metadata = M> + 'static,
     S: Future<Output = ()> + Unpin + Send + 'static,
-    M: Clone + Debug + Send + Sync + 'static,
+    M: Debug + Send + Sync + 'static,
 {
     let (registration, event_stream) = Registration::new(CONCURRENCY)?;
 
@@ -181,9 +181,6 @@ where
                 }
             };
 
-            // Add new file and start tail
-            let (trigger, shutdown) = tokio::sync::oneshot::channel::<()>();
-
             debug!(
                 message = "start tailing file",
                 ?path,
@@ -191,6 +188,9 @@ where
                 offset = offset.load(Ordering::Acquire),
                 size
             );
+
+            // Add new file and start tail
+            let (trigger, shutdown) = tokio::sync::oneshot::channel::<()>();
             let task = conveyor.run(reader, metadata, offset, shutdown);
 
             // Although, single thread reading should be fine, but the decoding might
@@ -215,8 +215,6 @@ where
             error!(message = "await tail task handle failed", ?path, ?err);
         }
     }
-
-    drop(event_stream);
 
     if let Err(err) = checkpointer.flush() {
         warn!(message = "Flush checkpoints failed", ?err);
