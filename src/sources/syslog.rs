@@ -323,9 +323,7 @@ mod tests {
     use bytes::Bytes;
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
-    use event::LogRecord;
-    use event::log::{Value, parse_value_path};
-    use testify::assert_event_data_eq;
+    use event::log::{LogRecord, Value, parse_value_path};
     use value::value;
 
     use super::*;
@@ -461,7 +459,7 @@ address: 127.0.0.1:12345
             log
         };
 
-        assert_event_data_eq!(event_from_bytes("host", raw.into()).unwrap(), want);
+        assert_eq!(event_from_bytes("host", raw.into()), Some(want));
     }
 
     #[test]
@@ -492,7 +490,7 @@ address: 127.0.0.1:12345
             log
         };
 
-        assert_event_data_eq!(event, want);
+        assert_eq!(event, want);
 
         let raw = format!(
             r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} {}"#,
@@ -500,7 +498,7 @@ address: 127.0.0.1:12345
         );
 
         let event = event_from_bytes("host", raw.into()).unwrap();
-        assert_event_data_eq!(event, want);
+        assert_eq!(event, want);
     }
 
     #[test]
@@ -554,7 +552,7 @@ address: 127.0.0.1:12345
             "#;
         let cleaned = r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - [meta sequenceId="1"] i am foobar"#;
 
-        assert_event_data_eq!(
+        assert_eq!(
             event_from_bytes("host", raw.into()).unwrap(),
             event_from_bytes("host", cleaned.into()).unwrap()
         );
@@ -590,7 +588,7 @@ address: 127.0.0.1:12345
             log
         };
 
-        assert_event_data_eq!(log, want);
+        assert_eq!(log, want);
     }
 
     #[test]
@@ -630,7 +628,7 @@ address: 127.0.0.1:12345
             log
         };
 
-        assert_event_data_eq!(log, want);
+        assert_eq!(log, want);
     }
 
     #[test]
@@ -668,6 +666,6 @@ address: 127.0.0.1:12345
             log
         };
 
-        assert_event_data_eq!(event, want);
+        assert_eq!(event, want);
     }
 }
