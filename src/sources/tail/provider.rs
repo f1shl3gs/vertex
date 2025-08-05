@@ -85,11 +85,11 @@ mod single_or_vec {
 
         #[test]
         fn deserialize() {
-            let single = r#"keys: foo"#;
+            let single = "keys: foo";
             let container = serde_yaml::from_str::<Container>(single).unwrap();
             assert_eq!(container.keys, vec!["foo"]);
 
-            let single_value = r#"key:\n  - foo"#;
+            let single_value = "keys:\n  - foo";
             let container = serde_yaml::from_str::<Container>(single_value).unwrap();
             assert_eq!(container.keys, vec!["foo"]);
         }
@@ -140,6 +140,7 @@ pub struct Ordering {
     /// Regular expression used for matching file path, then grouping and sorting.
     ///
     /// NOTE: Should contain at least one named capture which might be used in sort config.
+    #[configurable(example = r#"\/var\/log\/pods\/(?<namespace>\S+)_(?<pod>\S+)_(?<uid>\S+)\/(?<container>\S+)\/(?<seq>\S+).log"#)]
     #[serde(with = "framework::config::serde_regex")]
     pattern: Regex,
 
@@ -154,165 +155,6 @@ pub struct Ordering {
     /// Sort of the grouped paths, and make sure the latest one is the first
     sort: Sort,
 }
-
-/*
-/// Custom deserialize & serialize is much complexer than `derive`, but it
-/// can raise errors when deserializing
-impl<'de> Deserialize<'de> for Ordering {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        struct SingleOrVecVisitor;
-
-        impl<'de> Visitor<'de> for SingleOrVecVisitor {
-            type Value = Vec<String>;
-
-            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-                formatter.write_str("a single string or an array of strings")
-            }
-
-            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                todo!()
-            }
-
-            fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
-            where
-                E: serde::de::Error,
-            {
-                todo!()
-            }
-
-            fn visit_seq<A>(self, seq: A) -> Result<Self::Value, A::Error>
-            where
-                A: SeqAccess<'de>,
-            {
-                todo!()
-            }
-        }
-
-        struct OrderingVisitor;
-
-        impl<'de> Visitor<'de> for OrderingVisitor {
-            type Value = Ordering;
-
-            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-                formatter.write_str("an ordering struct")
-            }
-
-            fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
-            where
-                A: MapAccess<'de>,
-            {
-                let mut pattern = None;
-                let mut group_by = None;
-                let mut limit = None;
-                let mut sort = None;
-
-                while let Some(key) = map.next_key::<&str>()? {
-                    match key {
-                        "pattern" => {
-                            if pattern.is_some() {
-                                return Err(serde::de::Error::duplicate_field("pattern"));
-                            }
-
-                            let value = map.next_value::<&str>()?;
-
-                            match Regex::new(value) {
-                                Ok(re) => {
-                                    if re.capture_names().any(|name| name.is_some()) {
-                                        pattern = Some(re);
-                                        continue;
-                                    }
-
-                                    return Err(serde::de::Error::invalid_value(
-                                        Unexpected::Str(value),
-                                        &"A valid regex pattern with at least one named capture",
-                                    ));
-                                }
-                                Err(err) => {
-                                    return Err(serde::de::Error::invalid_value(
-                                        Unexpected::Str(value),
-                                        &(err.to_string().as_str()),
-                                    ));
-                                }
-                            }
-                        }
-                        "group_by" => {
-                            if group_by.is_some() {
-                                return Err(serde::de::Error::duplicate_field("group_by"));
-                            }
-
-                            if let Ok(array) = map.next_value::<Vec<String>>() {
-                                group_by = Some(array);
-                                continue;
-                            }
-
-                            if let Ok(value) = map.next_value::<String>() {
-                                group_by = Some(vec![value]);
-                                continue;
-                            }
-
-                            return Err(serde::de::Error::invalid_type(
-                                Unexpected::Other("aaaa"),
-                                &"string or an array of string",
-                            ))
-                        }
-                        "limit" => {
-                            if limit.is_some() {
-                                return Err(serde::de::Error::duplicate_field("limit"));
-                            }
-
-                            let value = map.next_value::<NonZeroUsize>()?;
-                            limit = Some(value);
-                        }
-                        "sort" => {
-                            if sort.is_some() {
-                                return Err(serde::de::Error::duplicate_field("sort"));
-                            }
-
-                            let value = map.next_value::<Sort>()?;
-                            sort = Some(value);
-                        }
-                        _ => {
-                            return Err(serde::de::Error::unknown_field(
-                                key,
-                                &["pattern", "group_by", "limit", "sort"],
-                            ));
-                        }
-                    }
-                }
-
-                let Some(pattern) = pattern else {
-                    return Err(serde::de::Error::missing_field("pattern"));
-                };
-
-                let Some(group_by) = group_by else {
-                    return Err(serde::de::Error::missing_field("group_by"));
-                };
-
-                let Some(sort) = sort else {
-                    return Err(serde::de::Error::missing_field("sort"));
-                };
-
-                // validate
-
-                Ok(Ordering {
-                    pattern,
-                    group_by,
-                    limit,
-                    sort
-                })
-            }
-        }
-
-        deserializer.deserialize_any(OrderingVisitor)
-    }
-}
-*/
 
 impl Ordering {
     pub fn validate(&self) -> Result<(), String> {
