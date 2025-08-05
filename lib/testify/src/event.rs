@@ -38,27 +38,3 @@ pub fn record_internal_event(event: &str) {
         events.insert(event.into());
     })
 }
-
-#[macro_export]
-macro_rules! assert_event_data_eq {
-    ($left:expr, $right:expr, $message:expr) => {{
-        use event::EventDataEq as _;
-        match (&($left), &($right)) {
-            (left, right) => {
-                if !left.event_data_eq(right) {
-                    panic!(
-                        "assertion failed: {}\n\n{}\n",
-                        $message,
-                        pretty_assertions::Comparison::new(left, right)
-                    );
-                }
-            }
-        }
-    }};
-    ($left:expr, $right:expr,) => {
-        assert_event_data_eq!($left, $right)
-    };
-    ($left:expr, $right:expr) => {
-        assert_event_data_eq!($left, $right, "`left.event_data_eq(right)`")
-    };
-}
