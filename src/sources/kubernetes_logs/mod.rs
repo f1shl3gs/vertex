@@ -45,26 +45,6 @@ struct Config {
 #[typetag::serde(name = "kubernetes_logs")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        /*
-                let node_name = match &self.node_name {
-                    Some(node_name) => node_name.to_string(),
-                    None => std::env::var("NODE_NAME").map_err(|_err| {
-                        std::io::Error::new(
-                            std::io::ErrorKind::NotFound,
-                            "default environment variable `NODE_NAME` not set",
-                        )
-                    })?,
-                };
-                let field_selector = match &self.field_selector {
-                    Some(extra) => format!("spec.nodeName={node_name},{extra}"),
-                    None => format!("spec.nodeName={node_name}"),
-                };
-                let label_selector = self.label_selector.clone();
-
-                let provider =
-                    KubernetesProvider::new(label_selector, Some(field_selector), self.fields.clone())?;
-        */
-
         let path = cx.globals.make_subdir(cx.key.id())?;
         let checkpointer = Checkpointer::load(path)?;
 
