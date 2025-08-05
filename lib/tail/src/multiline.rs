@@ -17,20 +17,6 @@ pub trait Logic: Clone {
     }
 }
 
-#[derive(Clone)]
-pub struct NoopLogic;
-
-impl Logic for NoopLogic {
-    fn timeout(&self) -> Duration {
-        // dummy
-        Duration::from_millis(100)
-    }
-
-    fn is_start(&mut self, _line: &[u8]) -> bool {
-        true
-    }
-}
-
 pin_project! {
     pub struct Multiline<S, L, E> {
         #[pin]
