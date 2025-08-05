@@ -140,7 +140,9 @@ pub struct Ordering {
     /// Regular expression used for matching file path, then grouping and sorting.
     ///
     /// NOTE: Should contain at least one named capture which might be used in sort config.
-    #[configurable(example = r#"\/var\/log\/pods\/(?<namespace>\S+)_(?<pod>\S+)_(?<uid>\S+)\/(?<container>\S+)\/(?<seq>\S+).log"#)]
+    #[configurable(
+        example = r#"\/var\/log\/pods\/(?<namespace>\S+)_(?<pod>\S+)_(?<uid>\S+)\/(?<container>\S+)\/(?<seq>\S+).log"#
+    )]
     #[serde(with = "framework::config::serde_regex")]
     pattern: Regex,
 
