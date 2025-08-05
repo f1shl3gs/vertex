@@ -1,11 +1,8 @@
-#![allow(dead_code, unused_imports)]
-
 mod kubelet;
 mod kubernetes;
 mod pod;
 
 use configurable::Configurable;
-use futures::TryStreamExt;
 use pod::{Container, Pod};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -14,8 +11,8 @@ use std::time::Duration;
 use tail::Provider;
 use value::{OwnedValuePath, Value, owned_value_path};
 
-pub use self::kubernetes::KubernetesProvider;
 pub use kubelet::KubeletProvider;
+pub use kubernetes::KubernetesProvider;
 
 fn default_kubelet_interval() -> Duration {
     Duration::from_secs(10)
