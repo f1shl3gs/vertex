@@ -26,11 +26,14 @@ data:
         type: selfstat
       # internal_logs:
       #   type: internal_logs
+      internal_metrics:
+        type: internal_metrics
     sinks:
       prom:
         type: prometheus_exporter
         inputs:
           - selfstat
+          - internal_metrics
       loki:
         type: loki
         inputs:
