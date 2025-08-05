@@ -10,6 +10,7 @@ use event::LogRecord;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, Source};
 use futures::{FutureExt, StreamExt};
+use metrics::register_counter;
 use tail::decode::NewlineDecoder;
 use tail::{
     Checkpointer, Conveyor, FileReader, Multiline, ReadFrom, ReadyFrames, Shutdown, harvest,
@@ -121,6 +122,9 @@ impl Conveyor for SendOutput {
         let mut output = self.output.clone();
         let stream = self.stream.clone();
 
+        let path = reader.path().to_path_buf();
+        let path = path.to_string_lossy().to_string();
+
         let framed = FramedRead::new(reader, NewlineDecoder::new(4 * 1024));
         let merged = Multiline::new(framed, Cri::default()).map(move |result| match result {
             Ok((data, size)) => {
@@ -138,6 +142,14 @@ impl Conveyor for SendOutput {
 
         let mut stream = ReadyFrames::new(merged, 128, 4 * 1024 * 1024);
 
+        let bytes = register_counter("k8s_logs_read_bytes", "the total bytes read by kubernetes")
+            .recorder([("path", std::borrow::Cow::Owned(path.clone()))]);
+        let events = register_counter(
+            "k8s_logs_processed_events",
+            "the total number of events processed",
+        )
+        .recorder([("path", std::borrow::Cow::Owned(path))]);
+
         Box::pin(async move {
             loop {
                 let (logs, size) = select! {
@@ -152,9 +164,13 @@ impl Conveyor for SendOutput {
                     }
                 };
 
+                let num = logs.len();
                 if let Err(_err) = output.send(logs).await {
                     break;
                 }
+
+                bytes.inc(size as u64);
+                events.inc(num as u64);
 
                 offset.fetch_add(size as u64, std::sync::atomic::Ordering::Relaxed);
             }
