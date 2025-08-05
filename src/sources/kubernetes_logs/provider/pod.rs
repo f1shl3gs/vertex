@@ -42,21 +42,6 @@ pub struct PodIP {
     pub ip: String,
 }
 
-/// ContainerStatus contains details for the current status of this container.
-#[cfg_attr(test, derive(Default))]
-#[derive(Clone, Debug, Deserialize)]
-pub struct ContainerStatus {
-    /// Name is a DNS_LABEL representing the unique name of the container. Each container
-    /// in a pod must have a unique name across all container types. Cannot be updated.
-    pub name: String,
-
-    /// ContainerID is the ID of the container in the format '<type>://<container_id>'. Where
-    /// types is a container runtime identifier, returned from Version call of CRI API
-    /// (for example "containerd").
-    #[serde(rename = "containerID")]
-    pub container_id: Option<String>,
-}
-
 /// PodStatus represents information about the status of a pod. Status may trail
 /// the actual state of a system, especially if the node that hosts the pod cannot
 /// contact the control plane.
@@ -73,12 +58,6 @@ pub struct PodStatus {
     /// IPv4 and IPv6. This list is empty if no IPs have been allocated yet.
     #[serde(default, rename = "podIPs")]
     pub pod_ips: Vec<PodIP>,
-
-    /// The list has one entry per container in the manifest.
-    ///
-    /// More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#pod-and-container-status
-    #[serde(rename = "containerStatuses")]
-    pub container_statuses: Vec<ContainerStatus>,
 }
 
 /// Pod is a collection of containers that can run on a host. This resource
