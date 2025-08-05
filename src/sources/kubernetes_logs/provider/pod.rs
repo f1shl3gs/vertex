@@ -3,7 +3,7 @@ use serde::Deserialize;
 
 /// A single application container that you want to run within a pod.
 #[cfg_attr(test, derive(Default))]
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Container {
     /// Name of the container specified as a DNS_LABEL. Each container in a pod
     /// must have a unique name (DNS_LABEL). Cannot be updated.
@@ -21,7 +21,7 @@ pub struct Container {
 ///
 /// See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.31/#podspec-v1-core
 #[cfg_attr(test, derive(Default))]
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct PodSpec {
     /// NodeName is a request to schedule this pod onto a specific node. If it
     /// is non-empty, the scheduler simply schedules this pod onto that node,
