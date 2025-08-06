@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754481009521,
+  "lastUpdate": 1754481099278,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "076c0919df8aa3ff580365587f7dc0ed6d972595",
-          "message": "Merge pull request #2381 from f1shl3gs/sources/redis/refactor_and_add_more_details\n\nsources/redis: refactor and add more details",
-          "timestamp": "2025-06-06T23:27:56+08:00",
-          "tree_id": "5e7463e5b5089bd31180f54d83af62ce6b15f601",
-          "url": "https://github.com/f1shl3gs/vertex/commit/076c0919df8aa3ff580365587f7dc0ed6d972595"
-        },
-        "date": 1749224291218,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 514,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37526.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e6b8a332094935cdec6df37d7058b411e03f8bbd",
           "message": "Merge pull request #2382 from f1shl3gs/dependabot/cargo/tracing-core-0.1.34\n\nchore(deps): bump tracing-core from 0.1.33 to 0.1.34",
           "timestamp": "2025-06-07T00:24:56+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37762,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bd3c513402284de9a8b595633dd3362f3db23c9d",
+          "message": "Merge pull request #2485 from f1shl3gs/lib/tail/refactor\n\nlib/tail: refactor, full async",
+          "timestamp": "2025-08-06T19:40:50+08:00",
+          "tree_id": "4da2d82bac867e38edbc021e4fe611294e40a6da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bd3c513402284de9a8b595633dd3362f3db23c9d"
+        },
+        "date": 1754481078602,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 546,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37642.3,
             "unit": "KiB"
           }
         ]
