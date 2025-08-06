@@ -51,7 +51,6 @@ members = [
     "lib/log_schema",
     "lib/bytesize",
     "lib/metrics",
-    "lib/multiline",
     "lib/ntp",
     "lib/prometheus",
     "lib/resolver",
@@ -186,7 +185,7 @@ sources-journald = ["tokio/fs", "tokio/process"]
 sources-kafka = ["dep:rskafka", "dep:async-stream"]
 sources-kafka_metrics = ["dep:rskafka"]
 sources-kmsg = ["tokio/fs"]
-sources-kubernetes_logs = ["dep:tail", "dep:multiline", "dep:kubernetes"]
+sources-kubernetes_logs = ["dep:tail", "dep:kubernetes"]
 sources-kubernetes_events = ["dep:kubernetes"]
 sources-libvirt = ["dep:virt", "dep:quick-xml"]
 sources-memcached = []
@@ -211,7 +210,7 @@ sources-socket = []
 sources-static_metrics = []
 sources-syslog = ["codecs/syslog"]
 sources-systemd = []
-sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs", "dep:finalize"]
+sources-tail = ["dep:tail", "dep:encoding_rs", "dep:finalize"]
 sources-zookeeper = []
 
 sources = [
@@ -375,7 +374,6 @@ buffer = { path = "lib/buffer" }
 criterion = { version = "0.7.0", default-features = false, features = ["async_tokio"] }
 event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
-pretty_assertions = { version = "1.4.1", default-features = false, features = ["std"] }
 serde_path_to_error = { version = "0.1.17", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.47.1", default-features = false, features = ["test-util"] }
@@ -394,7 +392,6 @@ jaeger = { path = "lib/jaeger", optional = true }
 kubernetes = { path = "lib/kubernetes", optional = true }
 log_schema = { path = "lib/log_schema" }
 metrics = { path = "lib/metrics" }
-multiline = { path = "lib/multiline", optional = true }
 bytesize = { path = "lib/bytesize" }
 ntp = { path = "lib/ntp", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }

@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus
+data:
+  config: |
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 15s
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets:
+            - localhost:9090
+      - job_name: vertex
+        static_configs:
+          - targets:
+            - vertex.default.svc.cluster.local:9100
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: database
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/component: database
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/component: database
+    spec:
+      containers:
+        - name: prometheus
+          imagePullPolicy: IfNotPresent
+          image: prom/prometheus:v3.5.0
+          command:
+            - /bin/prometheus
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+            - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+            - '--web.console.templates=/usr/share/prometheus/consoles'
+            - '--web.enable-lifecycle'
+          volumeMounts:
+            - mountPath: /etc/prometheus
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus
+            items:
+              - key: config
+                path: prometheus.yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  selector:
+    app.kubernetes.io/name: prometheus
+  clusterIP: None
+  ports:
+    - port: 9090
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus
+spec:
+  rules:
+    - host: prom.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: prometheus
+                port:
+                  number: 9090
+            pathType: Prefix
+            path: /

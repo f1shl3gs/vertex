@@ -1,49 +1,137 @@
-mod annotator;
-mod pod;
+mod cri;
 mod provider;
 
+use std::borrow::Cow;
 use std::collections::BTreeMap;
-use std::path::PathBuf;
-use std::sync::{Arc, RwLock};
-use std::time::Duration;
+use std::sync::Arc;
+use std::sync::atomic::AtomicU64;
 
-use annotator::{FieldsSpec, PodMetadataAnnotator};
-use bytes::Bytes;
-use bytesize::ByteSizeOf;
-use chrono::Utc;
-use configurable::configurable_component;
+use configurable::{Configurable, configurable_component};
+use cri::{Cri, Error as ParseError, Stream};
 use event::LogRecord;
-use event::log::{OwnedTargetPath, TargetPath, Value, path};
-use framework::config::{Output, SourceConfig, SourceContext, default_true};
-use framework::timezone::TimeZone;
-use framework::{Pipeline, ShutdownSignal, Source};
-use futures::{StreamExt, TryFutureExt};
-use kubernetes::{Client, Event, WatchConfig, watcher};
-use log_schema::log_schema;
-use pod::Pod;
-use provider::KubernetesPathsProvider;
-use tail::{Checkpointer, Line};
+use framework::config::{Output, SourceConfig, SourceContext};
+use framework::{Pipeline, Source};
+use futures::{FutureExt, StreamExt};
+use metrics::register_counter;
+use provider::{Metadata, ProviderConfig};
+use serde::{Deserialize, Serialize};
+use tail::decode::NewlineDecoder;
+use tail::multiline::Multiline;
+use tail::{Checkpointer, Conveyor, FileReader, ReadFrom, ReadyFrames, Shutdown, harvest};
+use tokio_util::codec::FramedRead;
+use value::{OwnedValuePath, Value, owned_value_path};
 
-pub type Store = Arc<RwLock<BTreeMap<String, Pod>>>;
-
-const fn default_max_read_bytes() -> usize {
-    2 * 1024
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+pub struct PodFieldsConfig {
+    name: Option<OwnedValuePath>,
+    namespace: Option<OwnedValuePath>,
+    uid: Option<OwnedValuePath>,
+    ip: Option<OwnedValuePath>,
+    ips: Option<OwnedValuePath>,
+    labels: Option<OwnedValuePath>,
+    annotations: Option<OwnedValuePath>,
+    node_name: Option<OwnedValuePath>,
 }
 
-const fn default_max_line_bytes() -> usize {
-    // The 16KB is the maximum size of the payload at single line for both
-    // docker and CRI log formats.
-    // We take a double of that to account for metadata and padding, and to
-    // have a power of two rounding. Line splitting is countered at the parser,
-    32 * 1024
+impl Default for PodFieldsConfig {
+    fn default() -> Self {
+        Self {
+            name: Some(owned_value_path!("pod", "name")),
+            namespace: Some(owned_value_path!("pod", "namespace")),
+            uid: Some(owned_value_path!("pod", "uid")),
+            ip: Some(owned_value_path!("pod", "ip")),
+            ips: Some(owned_value_path!("pod", "ips")),
+            labels: Some(owned_value_path!("pod", "labels")),
+            annotations: Some(owned_value_path!("pod", "annotations")),
+            node_name: Some(owned_value_path!("pod", "node_name")),
+        }
+    }
 }
 
-fn default_path_exclusion() -> Vec<PathBuf> {
-    vec![PathBuf::from("**/*.gz"), PathBuf::from("**/*.tmp")]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+pub struct ContainerFieldsConfig {
+    name: Option<OwnedValuePath>,
+    image: Option<OwnedValuePath>,
 }
 
-const fn default_delay_deletion() -> Duration {
-    Duration::from_secs(60)
+impl Default for ContainerFieldsConfig {
+    fn default() -> Self {
+        ContainerFieldsConfig {
+            name: Some(owned_value_path!("container", "name")),
+            image: Some(owned_value_path!("container", "image")),
+        }
+    }
+}
+
+#[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
+pub struct FieldsConfig {
+    pod: PodFieldsConfig,
+    container: ContainerFieldsConfig,
+}
+
+impl FieldsConfig {
+    pub fn build(&self, metadata: &Metadata) -> Value {
+        let Metadata { pod, container } = metadata;
+
+        let mut value = Value::Object(Default::default());
+
+        // pod info
+        if let Some(path) = &self.pod.name {
+            value.insert(path, pod.metadata.name.clone());
+        }
+        if let Some(path) = &self.pod.namespace {
+            value.insert(path, pod.metadata.namespace.clone());
+        }
+        if let Some(path) = &self.pod.uid {
+            value.insert(path, pod.metadata.uid.clone());
+        }
+        if let Some(path) = &self.pod.ip {
+            value.insert(path, pod.status.pod_ip.clone());
+        }
+        if let Some(path) = &self.pod.ips {
+            value.insert(
+                path,
+                pod.status
+                    .pod_ips
+                    .iter()
+                    .map(|item| item.ip.clone())
+                    .collect::<Vec<_>>(),
+            );
+        }
+        if let Some(path) = &self.pod.labels {
+            value.insert(
+                path,
+                pod.metadata
+                    .labels
+                    .iter()
+                    .map(|(key, value)| (key.clone(), Value::from(value)))
+                    .collect::<BTreeMap<_, _>>(),
+            );
+        }
+        if let Some(path) = &self.pod.annotations {
+            value.insert(
+                path,
+                pod.metadata
+                    .annotations
+                    .iter()
+                    .map(|(key, value)| (key.clone(), Value::from(value)))
+                    .collect::<BTreeMap<_, _>>(),
+            );
+        }
+        if let Some(path) = &self.pod.node_name {
+            value.insert(path, pod.spec.node_name.clone());
+        }
+
+        // container
+        if let Some(path) = &self.container.name {
+            value.insert(path, container.name.clone());
+        }
+        if let Some(path) = &self.container.image {
+            value.insert(path, container.image.clone());
+        }
+
+        value
+    }
 }
 
 /// Collects Pod logs from Kubernetes Nodes, automatically enriching data with
@@ -54,340 +142,142 @@ const fn default_delay_deletion() -> Duration {
 /// This source requires read access to the `/var/log/pods` directory. When run
 /// in a Kubernetes cluster this can be provided with a `hostPath` volume.
 #[configurable_component(source, name = "kubernetes_logs")]
-pub struct Config {
-    /// Specifies the label selector to filter `Pod`s with, to be used in
-    /// addition to the built-in `vertex.io/exclude` filter
-    label_selector: Option<String>,
+struct Config {
+    provider: ProviderConfig,
 
-    /// The `name` of the Kubernetes `Node` that Vertex runs at.
-    /// Required to filter the `Pod`s to only include the ones with the
-    /// log files accessible locally.
-    self_node_name: Option<String>,
-
-    /// Specifies the field selector to filter `Pod`s with, to be used in
-    /// addition to the built-in `Node` filter.
-    field_selector: Option<String>,
-
-    /// Automatically merge partial events.
-    #[serde(default = "default_true")]
-    auto_partial_merge: bool,
-
-    /// A list of glob patterns to exclude from reading the files.
-    #[serde(default = "default_path_exclusion")]
-    exclude_paths_glob_patterns: Vec<PathBuf>,
-
-    /// Max amount of bytes to read from a single file before switching over
-    /// to the next file.
-    /// This allows distribution the reads more or less evenly across the
-    /// files.
-    #[serde(default = "default_max_read_bytes")]
-    max_read_bytes: usize,
-
-    /// The maximum number of a bytes a line can contain before being discarded.
-    /// This protects against malformed lines or tailing incorrect files.
-    #[serde(default = "default_max_line_bytes")]
-    max_line_bytes: usize,
-
-    /// A field to use to set the timestamp when Vertex ingested the event.
-    /// This is useful to compute the latency between important event processing
-    /// stages, i.e. the time delta between log line was written and when it was
-    /// processed by the `kubernetes_logs` source.
+    /// Configuration for how the events are enriched with Pod metadata.
     #[serde(default)]
-    ingestion_timestamp_field: Option<String>,
+    fields: FieldsConfig,
 
-    /// Specifies the field names for Pod metadata annotation.
+    /// Reads from the specified streams
     #[serde(default)]
-    annotation_fields: FieldsSpec,
-
-    /// The default timezone for timestamps without an explicit zone
-    #[serde(default)]
-    timezone: Option<TimeZone>,
-
-    /// How long to delay removing entries from our map when we receive a deletion
-    /// event from the watched stream.
-    #[serde(default = "default_delay_deletion", with = "humanize::duration::serde")]
-    delay_deletion: Duration,
-}
-
-impl Config {
-    fn prepare_field_selector(&self) -> crate::Result<String> {
-        let node_name = match &self.self_node_name {
-            Some(key) => std::env::var(key).map_err(|_err| {
-                std::io::Error::new(
-                    std::io::ErrorKind::NotFound,
-                    format!("environment variable `{key}` not set"),
-                )
-            })?,
-            None => std::env::var("NODE_NAME").map_err(|_err| {
-                std::io::Error::new(
-                    std::io::ErrorKind::NotFound,
-                    "default environment variable `NODE_NAME` not set",
-                )
-            })?,
-        };
-
-        let selector = match &self.field_selector {
-            Some(extra) => format!("spec.nodeName={node_name},{extra}"),
-            None => format!("spec.nodeName={node_name}"),
-        };
-
-        Ok(selector)
-    }
-
-    fn prepare_label_selector(&self) -> Option<String> {
-        self.label_selector.as_ref().map(|extra| extra.to_string())
-    }
+    stream: Stream,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kubernetes_logs")]
 impl SourceConfig for Config {
-    async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let client = Client::new(None)?;
-        let data_dir = cx.globals.make_subdir(cx.key.id())?;
-        let field_selector = self.prepare_field_selector()?;
-        let label_selector = self.prepare_label_selector();
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let path = cx.globals.make_subdir(cx.key.id())?;
+        let checkpointer = Checkpointer::load(path)?;
+        let provider = self.provider.build(checkpointer.view())?;
 
-        let log_source = LogSource {
-            exclude_pattern: vec![],
-            fields_spec: self.annotation_fields.clone(),
-            data_dir,
-            max_read_bytes: self.max_read_bytes,
-            max_line_bytes: self.max_line_bytes,
-            ingestion_timestamp_field: None,
-            field_selector: Some(field_selector),
-            label_selector,
+        let output = SendOutput {
+            fields: self.fields.clone(),
+            stream: self.stream.clone(),
+            output: cx.output,
         };
+        let shutdown = cx.shutdown.map(|_| ());
 
-        Ok(Box::pin(
-            log_source
-                .run(client, cx.output, cx.shutdown)
-                .map_err(|err| error!(message = "Kubernetes log source failed", %err)),
-        ))
+        Ok(Box::pin(async move {
+            if let Err(err) = harvest(
+                provider,
+                ReadFrom::Beginning,
+                checkpointer,
+                output,
+                shutdown,
+            )
+            .await
+            {
+                error!(message = "harvest kubernetes logs failed", ?err);
+            }
+
+            Ok(())
+        }))
     }
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::logs()]
     }
 
-    // TODO: change to true, if checkpoint implement
     fn can_acknowledge(&self) -> bool {
         false
     }
 }
 
-struct LogSource {
-    field_selector: Option<String>,
-    label_selector: Option<String>,
-    exclude_pattern: Vec<glob::Pattern>,
-    fields_spec: FieldsSpec,
-    data_dir: PathBuf,
-    max_read_bytes: usize,
-    max_line_bytes: usize,
-    ingestion_timestamp_field: Option<OwnedTargetPath>,
+#[derive(Clone)]
+struct SendOutput {
+    fields: FieldsConfig,
+    stream: Stream,
+    output: Pipeline,
 }
 
-impl LogSource {
-    async fn run(
-        self,
-        client: Client,
-        mut output: Pipeline,
-        shutdown: ShutdownSignal,
-    ) -> crate::Result<()> {
-        let LogSource {
-            field_selector,
-            label_selector,
-            exclude_pattern,
-            fields_spec,
-            data_dir,
-            max_read_bytes,
-            max_line_bytes,
-            ingestion_timestamp_field,
-            ..
-        } = self;
+impl Conveyor for SendOutput {
+    type Metadata = Metadata;
 
-        // Build kubernetes pod store, indexed by uuid
-        let store = Arc::new(RwLock::new(BTreeMap::new()));
-        tokio::spawn(watch(
-            client,
-            Arc::clone(&store),
-            label_selector,
-            field_selector,
-            shutdown.clone(),
-        ));
+    fn run(
+        &self,
+        reader: FileReader,
+        metadata: Self::Metadata,
+        offset: Arc<AtomicU64>,
+        mut shutdown: Shutdown,
+    ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
+        let mut output = self.output.clone();
+        let stream = self.stream.clone();
+        let base = self.fields.build(&metadata);
 
-        let provider = KubernetesPathsProvider::new(Arc::clone(&store), exclude_pattern);
-        let pod_annotator = PodMetadataAnnotator::new(store, fields_spec);
-        let checkpointer = Checkpointer::new(&data_dir);
-        let harvester = tail::Harvester {
-            provider,
-            scan_minimum_cooldown: Duration::from_secs(1),
-            read_from: Default::default(),
-            max_read_bytes,
-            handle: tokio::runtime::Handle::current(),
-            ignore_before: None,
-            max_line_bytes,
-            line_delimiter: Bytes::from("\n"),
-        };
+        let path = reader.path().to_path_buf();
+        let path = path.to_string_lossy().to_string();
 
-        let checkpoints = checkpointer.view();
+        let framed = FramedRead::new(reader, NewlineDecoder::new(4 * 1024));
+        let merged = Multiline::new(framed, Cri::default()).map(move |result| match result {
+            Ok((data, size)) => {
+                let (timestamp, stream, msg) = cri::parse(data, &stream)?;
 
-        let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(16);
-        let mut stream = rx.map(move |lines| {
-            let mut logs = Vec::with_capacity(lines.len());
+                let mut value = base.clone();
+                value.insert("timestamp", timestamp);
+                value.insert("stream", stream);
+                value.insert("message", msg);
 
-            for line in lines {
-                let mut log = create_log(
-                    line.text,
-                    &line.filename,
-                    ingestion_timestamp_field.as_ref(),
-                );
-
-                match pod_annotator.annotate(&mut log, &line.filename) {
-                    Some(file_info) => {
-                        let attrs = metrics::Attributes::from([(
-                            "pod",
-                            file_info.pod_name.to_string().into(),
-                        )]);
-
-                        metrics::register_counter("component_received_events_total", "")
-                            .recorder(attrs.clone())
-                            .inc(1);
-                        metrics::register_counter("component_received_bytes_total", "")
-                            .recorder(attrs)
-                            .inc(log.size_of() as u64);
-                    }
-                    None => {
-                        // TODO: metrics
-                        // counter!("component_received_events_total", 1);
-                        // counter!("component_received_bytes_total", log.size_of() as u64);
-
-                        // counter!("kubernetes_event_annotation_failures_total", 1);
-                        error!(
-                            message = "Failed to annotate log with pod metadata",
-                            file = line.filename.as_str(),
-                            internal_log_rate_limit = true
-                        );
-                    }
-                }
-
-                checkpoints.update(line.fingerprint, line.offset);
-
-                logs.push(log);
+                Ok((LogRecord::from(value), size))
             }
-
-            logs
+            Err(err) => Err(ParseError::Frame(err)),
         });
 
-        // send events
-        tokio::spawn(async move { output.send_stream(&mut stream).await });
+        let mut stream = ReadyFrames::new(merged, 128, 4 * 1024 * 1024);
 
-        // `spawn_blocking` will run this closure in another thread, so our tokio
-        // workers wouldn't be blocked.
-        tokio::task::spawn_blocking(move || {
-            harvester
-                .run(tx, shutdown.clone(), shutdown.clone(), checkpointer)
-                .unwrap()
+        let attrs = [
+            ("path", Cow::Owned(path.clone())),
+            ("namespace", Cow::Owned(metadata.pod.metadata.namespace)),
+            ("pod", Cow::Owned(metadata.pod.metadata.name)),
+            ("container", Cow::Owned(metadata.container.name)),
+            ("node_name", Cow::Owned(metadata.pod.spec.node_name)),
+        ];
+        let bytes = register_counter("k8s_logs_read_bytes", "the total bytes read by kubernetes")
+            .recorder(attrs.clone());
+        let events = register_counter(
+            "k8s_logs_processed_events",
+            "the total number of events processed",
+        )
+        .recorder(attrs);
+
+        Box::pin(async move {
+            loop {
+                let (logs, size) = tokio::select! {
+                    _ = &mut shutdown => break,
+                    result = stream.next() => match result {
+                        Some(Ok(batched)) => batched,
+                        Some(Err(err)) => {
+                            warn!(message = "process kubernetes logs failed", %err);
+                            continue;
+                        },
+                        None => break,
+                    }
+                };
+
+                let num = logs.len();
+                if let Err(_err) = output.send(logs).await {
+                    break;
+                }
+
+                bytes.inc(size as u64);
+                events.inc(num as u64);
+
+                offset.fetch_add(size as u64, std::sync::atomic::Ordering::Relaxed);
+            }
+
+            Ok(())
         })
-        .await?;
-
-        Ok(())
-    }
-}
-
-fn create_log(
-    line: Bytes,
-    file: &str,
-    ingestion_timestamp_field: Option<&OwnedTargetPath>,
-) -> LogRecord {
-    let mut log = match serde_json::from_slice::<Value>(line.as_ref()) {
-        Ok(value) => match value {
-            Value::Object(map) => LogRecord::from(map),
-            _ => LogRecord::from(line),
-        },
-        Err(err) => {
-            // TODO: metrics
-            warn!(
-                message = "Parse kubernetes container logs failed",
-                ?err,
-                internal_log_rate_limit = true
-            );
-            LogRecord::from(line)
-        }
-    };
-
-    // Add source type
-    log.insert_metadata(
-        log_schema().source_type_key().value_path(),
-        "kubernetes_log",
-    );
-
-    // Add file
-    log.insert_metadata(path!("file"), file.to_owned());
-
-    // Add ingestion timestamp if requested
-    let now = Utc::now();
-    if let Some(ingestion_timestamp_field) = ingestion_timestamp_field {
-        log.insert(ingestion_timestamp_field, now);
-    }
-
-    log.try_insert(log_schema().timestamp_key(), now);
-
-    log
-}
-
-async fn watch(
-    client: Client,
-    store: Store,
-    label_selector: Option<String>,
-    field_selector: Option<String>,
-    mut shutdown: ShutdownSignal,
-) {
-    let config = WatchConfig {
-        label_selector,
-        field_selector,
-        bookmark: true,
-        ..Default::default()
-    };
-
-    let stream = watcher::<Pod>(client, config);
-    tokio::pin!(stream);
-
-    let mut new_store = None;
-    loop {
-        let event = tokio::select! {
-            _ = &mut shutdown => break,
-            result = stream.next() => match result {
-                Some(Ok(event)) => event,
-                Some(Err(err)) => {
-                    warn!(message = "wait next event failed", ?err);
-                    return;
-                },
-                None => break,
-            }
-        };
-
-        match event {
-            Event::Apply(pod) => {
-                store.write().unwrap().insert(pod.metadata.uid.clone(), pod);
-            }
-            Event::Deleted(pod) => {
-                store.write().unwrap().remove(&pod.metadata.uid);
-            }
-            Event::Init => {
-                new_store = Some(BTreeMap::new());
-            }
-            Event::InitApply(pod) => {
-                if let Some(store) = &mut new_store {
-                    store.insert(pod.metadata.uid.clone(), pod);
-                }
-            }
-            Event::InitDone => {
-                if let Some(new) = new_store.take() {
-                    *store.write().unwrap() = new;
-                }
-            }
-        }
     }
 }
 
