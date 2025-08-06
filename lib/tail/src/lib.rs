@@ -3,13 +3,12 @@
 mod checkpoint;
 pub mod decode;
 mod harvest;
-mod multiline;
+pub mod multiline;
 mod notify;
 mod ready_frames;
 
 pub use checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
 pub use harvest::harvest;
-pub use multiline::{Logic, Multiline};
 pub use notify::FileReader;
 pub use ready_frames::ReadyFrames;
 

@@ -1,19 +1,13 @@
 use std::collections::HashMap;
-use std::path::PathBuf;
 
 use futures::StreamExt;
 use futures::stream::BoxStream;
 use kubernetes::{Client, Error, Event, WatchConfig, watcher};
-use tail::Provider;
-use value::Value;
 
 use super::pod::Pod;
-use super::{FieldsConfig, generate};
 
 pub struct KubernetesProvider {
     stream: BoxStream<'static, Result<Event<Pod>, Error>>,
-
-    fields: FieldsConfig,
 
     pods: HashMap<String, Pod>,
 
@@ -25,7 +19,6 @@ impl KubernetesProvider {
     pub fn new(
         label_selector: Option<String>,
         field_selector: Option<String>,
-        fields: FieldsConfig,
     ) -> Result<Self, Error> {
         let client = Client::new(None)?;
 
@@ -38,18 +31,12 @@ impl KubernetesProvider {
 
         Ok(KubernetesProvider {
             stream: watcher::<Pod>(client, config).boxed(),
-
-            fields,
             pods: Default::default(),
             deleted: Default::default(),
         })
     }
-}
 
-impl Provider for KubernetesProvider {
-    type Metadata = Value;
-
-    async fn scan(&mut self) -> std::io::Result<Vec<(PathBuf, Self::Metadata)>> {
+    pub async fn list(&mut self) -> std::io::Result<Vec<Pod>> {
         while let Some(result) = self.stream.next().await {
             match result {
                 Ok(event) => match event {
@@ -81,6 +68,8 @@ impl Provider for KubernetesProvider {
             }
         }
 
-        Ok(generate(&self.fields, self.pods.values()))
+        let pods = self.pods.values().cloned().collect::<Vec<_>>();
+
+        Ok(pods)
     }
 }

@@ -1,4 +1,3 @@
-use std::path::PathBuf;
 use std::time::Duration;
 
 use bytes::Bytes;
@@ -8,31 +7,22 @@ use framework::tls::TlsConfig;
 use http::header::AUTHORIZATION;
 use http::{HeaderValue, Request, StatusCode};
 use http_body_util::{BodyExt, Full};
-use tail::Provider;
 use tokio::time::Interval;
-use value::Value;
 
-use super::pod::PodList;
-use super::{FieldsConfig, generate};
+use super::pod::{Pod, PodList};
 
 const SERVICE_ACCOUNT_TOKEN: &str = "/var/run/secrets/kubernetes.io/serviceaccount/token";
 const SERVICE_CERTFILE: &str = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt";
 
 pub struct KubeletProvider {
-    fields: FieldsConfig,
-
-    interval: Interval,
-
     endpoint: String,
     client: HttpClient,
+
+    interval: Interval,
 }
 
 impl KubeletProvider {
-    pub fn new(
-        endpoint: Option<&String>,
-        interval: Duration,
-        fields: FieldsConfig,
-    ) -> Result<Self, crate::Error> {
+    pub fn new(endpoint: Option<&String>, interval: Duration) -> Result<Self, crate::Error> {
         let endpoint = match endpoint {
             Some(value) => format!("https://{value}"),
             None => match std::env::var("NODE_NAME") {
@@ -50,18 +40,13 @@ impl KubeletProvider {
         let client = HttpClient::new(Some(&tls), &ProxyConfig::default())?;
 
         Ok(Self {
-            fields,
             client,
             endpoint,
             interval: tokio::time::interval(interval),
         })
     }
-}
 
-impl Provider for KubeletProvider {
-    type Metadata = Value;
-
-    async fn scan(&mut self) -> std::io::Result<Vec<(PathBuf, Self::Metadata)>> {
+    pub async fn list(&mut self) -> std::io::Result<Vec<Pod>> {
         let pods = loop {
             self.interval.tick().await;
 
@@ -126,6 +111,6 @@ impl Provider for KubeletProvider {
             }
         };
 
-        Ok(generate(&self.fields, pods.items.iter()))
+        Ok(pods.items)
     }
 }

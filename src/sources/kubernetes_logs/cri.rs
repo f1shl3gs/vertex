@@ -4,8 +4,8 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 use chrono::{DateTime, Utc};
 use configurable::Configurable;
 use serde::{Deserialize, Serialize};
-use tail::Logic;
 use tail::decode::Error as DelimitError;
+use tail::multiline::Logic;
 
 pub enum Error {
     Frame(DelimitError),
@@ -26,6 +26,7 @@ impl std::fmt::Display for Error {
 }
 
 #[derive(Configurable, Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum Stream {
     #[default]
     All,
@@ -130,12 +131,11 @@ pub fn parse(line: Bytes, filter: &Stream) -> Result<(DateTime<Utc>, Bytes, Byte
     Ok((timestamp, line.slice_ref(stream), line.slice_ref(msg)))
 }
 
-/*
 #[cfg(test)]
 mod tests {
     use bytes::Bytes;
     use futures::StreamExt;
-    use tail::Multiline;
+    use tail::multiline::Multiline;
 
     use super::*;
 
@@ -157,37 +157,30 @@ mod tests {
             "2019-05-07T18:57:56.904275093+00:00 stdout F 3a. non multiline 1",
             "2019-05-07T18:57:57.904275094+00:00 stdout F 4a. non multiline 2",
             "2019-05-07T18:57:56.904275093+00:00 stderr F 3b. non multiline 1",
-            "2019-05-07T18:57:57.904275094+00:00 stderr F 4b. non multiline 2}",
+            "2019-05-07T18:57:57.904275094+00:00 stderr F 4b. non multiline 2",
         ];
         let want = [
-            "1a. some multiline log",
-            "1b. some multiline log",
-            "2a. another multiline log",
-            "2b. another multiline log",
-            "3a. non multiline 1",
-            "4a. non multiline 2",
-            "3b. non multiline 1",
-            "4b. non multiline 2",
+            "2019-05-07T18:57:50.904275087+00:00 stdout P 1a. some multiline log",
+            "2019-05-07T18:57:50.904275087+00:00 stderr P 1b. some multiline log",
+            "2019-05-07T18:57:53.904275090+00:00 stdout P 2a. another multiline log",
+            "2019-05-07T18:57:53.904275090+00:00 stderr P 2b. another multiline log",
+            "2019-05-07T18:57:56.904275093+00:00 stdout F 3a. non multiline 1",
+            "2019-05-07T18:57:57.904275094+00:00 stdout F 4a. non multiline 2",
+            "2019-05-07T18:57:56.904275093+00:00 stderr F 3b. non multiline 1",
+            "2019-05-07T18:57:57.904275094+00:00 stderr F 4b. non multiline 2",
         ];
-
-        /*
-        2016-10-06T00:17:09.669794202Z stdout P:TAG1:TAG2 log content 1
-        2016-10-06T00:17:09.669794203Z stdout P:TAG1:TAG2 log content 2
-        */
 
         let reader = futures::stream::iter(input)
             .map(|line| Ok::<_, ()>((Bytes::from_static(line.as_bytes()), 1)));
 
-        let multiline = Multiline::new(reader, Cri { last: true });
+        let multiline = Multiline::new(reader, Cri::default());
 
         let array = multiline.collect::<Vec<_>>().await;
-        // assert_eq!(array.len(), 8);
+        assert_eq!(array.len(), 8);
 
-        for item in array {
-            let (data, _size) = item.unwrap();
-
-            println!("{}", String::from_utf8_lossy(&data));
+        for (item, want) in array.into_iter().zip(want) {
+            let (got, _size) = item.unwrap();
+            assert_eq!(got, want);
         }
     }
 }
-*/

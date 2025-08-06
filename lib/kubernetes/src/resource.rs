@@ -70,7 +70,7 @@ fn default_namespace() -> String {
 /// OwnerReference contains enough information to let you identify an owning
 /// object. An owning object must be in the same namespace as the dependent,
 /// or be cluster-scoped, so there is no namespace field.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct OwnerReference {
     /// Name of the referent.
     ///
@@ -88,7 +88,7 @@ pub struct OwnerReference {
 
 /// ObjectMeta is metadata that all persisted resources must have,
 /// which includes all objects users must create.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Clone, Debug, Default, Deserialize)]
 pub struct ObjectMeta {
     /// Name must be unique within a namespace. Is required when creating
     /// resources, although some resource may allow a client to request

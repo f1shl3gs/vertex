@@ -1,25 +1,138 @@
 mod cri;
 mod provider;
 
+use std::borrow::Cow;
+use std::collections::BTreeMap;
 use std::sync::Arc;
 use std::sync::atomic::AtomicU64;
 
-use configurable::configurable_component;
+use configurable::{Configurable, configurable_component};
 use cri::{Cri, Error as ParseError, Stream};
 use event::LogRecord;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, Source};
 use futures::{FutureExt, StreamExt};
 use metrics::register_counter;
+use provider::{Metadata, ProviderConfig};
+use serde::{Deserialize, Serialize};
 use tail::decode::NewlineDecoder;
-use tail::{
-    Checkpointer, Conveyor, FileReader, Multiline, ReadFrom, ReadyFrames, Shutdown, harvest,
-};
-use tokio::select;
+use tail::multiline::Multiline;
+use tail::{Checkpointer, Conveyor, FileReader, ReadFrom, ReadyFrames, Shutdown, harvest};
 use tokio_util::codec::FramedRead;
-use value::Value;
+use value::{OwnedValuePath, Value, owned_value_path};
 
-use provider::{FieldsConfig, ProviderConfig};
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+pub struct PodFieldsConfig {
+    name: Option<OwnedValuePath>,
+    namespace: Option<OwnedValuePath>,
+    uid: Option<OwnedValuePath>,
+    ip: Option<OwnedValuePath>,
+    ips: Option<OwnedValuePath>,
+    labels: Option<OwnedValuePath>,
+    annotations: Option<OwnedValuePath>,
+    node_name: Option<OwnedValuePath>,
+}
+
+impl Default for PodFieldsConfig {
+    fn default() -> Self {
+        Self {
+            name: Some(owned_value_path!("pod", "name")),
+            namespace: Some(owned_value_path!("pod", "namespace")),
+            uid: Some(owned_value_path!("pod", "uid")),
+            ip: Some(owned_value_path!("pod", "ip")),
+            ips: Some(owned_value_path!("pod", "ips")),
+            labels: Some(owned_value_path!("pod", "labels")),
+            annotations: Some(owned_value_path!("pod", "annotations")),
+            node_name: Some(owned_value_path!("pod", "node_name")),
+        }
+    }
+}
+
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
+pub struct ContainerFieldsConfig {
+    name: Option<OwnedValuePath>,
+    image: Option<OwnedValuePath>,
+}
+
+impl Default for ContainerFieldsConfig {
+    fn default() -> Self {
+        ContainerFieldsConfig {
+            name: Some(owned_value_path!("container", "name")),
+            image: Some(owned_value_path!("container", "image")),
+        }
+    }
+}
+
+#[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
+pub struct FieldsConfig {
+    pod: PodFieldsConfig,
+    container: ContainerFieldsConfig,
+}
+
+impl FieldsConfig {
+    pub fn build(&self, metadata: &Metadata) -> Value {
+        let Metadata { pod, container } = metadata;
+
+        let mut value = Value::Object(Default::default());
+
+        // pod info
+        if let Some(path) = &self.pod.name {
+            value.insert(path, pod.metadata.name.clone());
+        }
+        if let Some(path) = &self.pod.namespace {
+            value.insert(path, pod.metadata.namespace.clone());
+        }
+        if let Some(path) = &self.pod.uid {
+            value.insert(path, pod.metadata.uid.clone());
+        }
+        if let Some(path) = &self.pod.ip {
+            value.insert(path, pod.status.pod_ip.clone());
+        }
+        if let Some(path) = &self.pod.ips {
+            value.insert(
+                path,
+                pod.status
+                    .pod_ips
+                    .iter()
+                    .map(|item| item.ip.clone())
+                    .collect::<Vec<_>>(),
+            );
+        }
+        if let Some(path) = &self.pod.labels {
+            value.insert(
+                path,
+                pod.metadata
+                    .labels
+                    .iter()
+                    .map(|(key, value)| (key.clone(), Value::from(value)))
+                    .collect::<BTreeMap<_, _>>(),
+            );
+        }
+        if let Some(path) = &self.pod.annotations {
+            value.insert(
+                path,
+                pod.metadata
+                    .annotations
+                    .iter()
+                    .map(|(key, value)| (key.clone(), Value::from(value)))
+                    .collect::<BTreeMap<_, _>>(),
+            );
+        }
+        if let Some(path) = &self.pod.node_name {
+            value.insert(path, pod.spec.node_name.clone());
+        }
+
+        // container
+        if let Some(path) = &self.container.name {
+            value.insert(path, container.name.clone());
+        }
+        if let Some(path) = &self.container.image {
+            value.insert(path, container.image.clone());
+        }
+
+        value
+    }
+}
 
 /// Collects Pod logs from Kubernetes Nodes, automatically enriching data with
 /// metadata via the Kubernetes API.
@@ -47,10 +160,10 @@ impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let path = cx.globals.make_subdir(cx.key.id())?;
         let checkpointer = Checkpointer::load(path)?;
-
-        let provider = self.provider.build(self.fields.clone())?;
+        let provider = self.provider.build(checkpointer.view())?;
 
         let output = SendOutput {
+            fields: self.fields.clone(),
             stream: self.stream.clone(),
             output: cx.output,
         };
@@ -84,23 +197,24 @@ impl SourceConfig for Config {
 
 #[derive(Clone)]
 struct SendOutput {
+    fields: FieldsConfig,
     stream: Stream,
-
     output: Pipeline,
 }
 
 impl Conveyor for SendOutput {
-    type Metadata = Value;
+    type Metadata = Metadata;
 
     fn run(
         &self,
         reader: FileReader,
-        meta: Self::Metadata,
+        metadata: Self::Metadata,
         offset: Arc<AtomicU64>,
         mut shutdown: Shutdown,
     ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
         let mut output = self.output.clone();
         let stream = self.stream.clone();
+        let base = self.fields.build(&metadata);
 
         let path = reader.path().to_path_buf();
         let path = path.to_string_lossy().to_string();
@@ -110,7 +224,7 @@ impl Conveyor for SendOutput {
             Ok((data, size)) => {
                 let (timestamp, stream, msg) = cri::parse(data, &stream)?;
 
-                let mut value = meta.clone();
+                let mut value = base.clone();
                 value.insert("timestamp", timestamp);
                 value.insert("stream", stream);
                 value.insert("message", msg);
@@ -122,17 +236,24 @@ impl Conveyor for SendOutput {
 
         let mut stream = ReadyFrames::new(merged, 128, 4 * 1024 * 1024);
 
+        let attrs = [
+            ("path", Cow::Owned(path.clone())),
+            ("namespace", Cow::Owned(metadata.pod.metadata.namespace)),
+            ("pod", Cow::Owned(metadata.pod.metadata.name)),
+            ("container", Cow::Owned(metadata.container.name)),
+            ("node_name", Cow::Owned(metadata.pod.spec.node_name)),
+        ];
         let bytes = register_counter("k8s_logs_read_bytes", "the total bytes read by kubernetes")
-            .recorder([("path", std::borrow::Cow::Owned(path.clone()))]);
+            .recorder(attrs.clone());
         let events = register_counter(
             "k8s_logs_processed_events",
             "the total number of events processed",
         )
-        .recorder([("path", std::borrow::Cow::Owned(path))]);
+        .recorder(attrs);
 
         Box::pin(async move {
             loop {
-                let (logs, size) = select! {
+                let (logs, size) = tokio::select! {
                     _ = &mut shutdown => break,
                     result = stream.next() => match result {
                         Some(Ok(batched)) => batched,
