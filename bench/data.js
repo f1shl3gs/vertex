@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754588223103,
+  "lastUpdate": 1754588233580,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d959cecce1cfe91b292922642d0440825cbec7be",
-          "message": "Merge pull request #2385 from f1shl3gs/sources/systemd/small_refactor\n\nsources/systemd: small refactor to reduce binary size",
-          "timestamp": "2025-06-07T09:13:49+08:00",
-          "tree_id": "a0f52622eb097b29f865bc97df5c69d03a185edb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d959cecce1cfe91b292922642d0440825cbec7be"
-        },
-        "date": 1749259490872,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 513,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37526,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "851a1cbd0997abf0adb6c8ce501f1e9b29a083fb",
           "message": "Merge pull request #2386 from f1shl3gs/dependabot/cargo/flate2-1.1.2\n\nchore(deps): bump flate2 from 1.1.1 to 1.1.2",
           "timestamp": "2025-06-07T20:25:12+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 524,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37476.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "957ea9f81864c36490797ee71f4df9ca8dd061ac",
+          "message": "Merge pull request #2489 from f1shl3gs/lib/codecs/rename_bytes_decoder\n\nlib/codecs: rename BytesDecoder",
+          "timestamp": "2025-08-08T01:27:06+08:00",
+          "tree_id": "d19cf419c80c526450b6bc1a9036f952155128e3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/957ea9f81864c36490797ee71f4df9ca8dd061ac"
+        },
+        "date": 1754588213235,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 505,
             "unit": "s"
           },
           {
