@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754582591442,
+  "lastUpdate": 1754582984222,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d31cf862e0468209bd2d8b49ec46e21299bc447e",
-          "message": "Merge pull request #2374 from f1shl3gs/revert-2373-lib/framework/tidy\n\nRevert \"lib/framework: reorganize sink/utils\"",
-          "timestamp": "2025-06-01T00:48:22+08:00",
-          "tree_id": "669af8dc6585a07f71fe2097d5122135a0801efb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d31cf862e0468209bd2d8b49ec46e21299bc447e"
-        },
-        "date": 1748710678405,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22007000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 663630,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.619,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "51f2ae163e6398034e2983593989245eb9bda01a",
           "message": "Merge pull request #2375 from f1shl3gs/sources/sflow/small_refactor\n\nsources/sflow: reorganize data structures",
           "timestamp": "2025-06-01T01:45:41+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "72b24672aa00463dd6202da3a07ca46d7bc0ff59",
+          "message": "Merge pull request #2488 from f1shl3gs/lib/framework/set_default_concurrency_to_adaptive\n\nlib/framework: set Concurrency::Adaptive as default value",
+          "timestamp": "2025-08-07T23:59:29+08:00",
+          "tree_id": "59a42e8c0387aa6f2ff8391aa7e4a3c71a49e0f4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/72b24672aa00463dd6202da3a07ca46d7bc0ff59"
+        },
+        "date": 1754582962606,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 16131000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 666890,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.911,
             "unit": "ns/op"
           }
         ]
