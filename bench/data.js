@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754582538336,
+  "lastUpdate": 1754582540130,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f0c1359d54e1cc7a340aa4dffee9a61efb842d25",
-          "message": "Merge pull request #2376 from f1shl3gs/sources/audit/optimize_syscall_lookup\n\nsources/audit: optimize syscall lookup, reduce binary size",
-          "timestamp": "2025-06-01T01:58:21+08:00",
-          "tree_id": "cd53a319d95c7be598f23f4678b9284e32f2434e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f0c1359d54e1cc7a340aa4dffee9a61efb842d25"
-        },
-        "date": 1748714469623,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.728,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 330.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 712.03,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b7c30f167e1233c74c80b57386c7dacb9fef79c9",
           "message": "Merge pull request #2377 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
           "timestamp": "2025-06-02T20:42:54+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 682.04,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "72b24672aa00463dd6202da3a07ca46d7bc0ff59",
+          "message": "Merge pull request #2488 from f1shl3gs/lib/framework/set_default_concurrency_to_adaptive\n\nlib/framework: set Concurrency::Adaptive as default value",
+          "timestamp": "2025-08-07T23:59:29+08:00",
+          "tree_id": "59a42e8c0387aa6f2ff8391aa7e4a3c71a49e0f4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/72b24672aa00463dd6202da3a07ca46d7bc0ff59"
+        },
+        "date": 1754582518160,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 57.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 255.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 406.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 779.25,
             "unit": "ns/op"
           }
         ]
