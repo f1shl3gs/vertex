@@ -228,20 +228,20 @@ impl SchemaObject {
     }
 
     fn get_one_of(&mut self) -> Option<&mut Vec<SchemaObject>> {
-        if let Some(subschemas) = &mut self.subschemas {
-            if let Some(one_of) = &mut subschemas.one_of {
-                return Some(one_of);
-            }
+        if let Some(subschemas) = &mut self.subschemas
+            && let Some(one_of) = &mut subschemas.one_of
+        {
+            return Some(one_of);
         }
 
         None
     }
 
     fn get_all_of(&mut self) -> Option<&mut Vec<SchemaObject>> {
-        if let Some(subschemas) = &mut self.subschemas {
-            if let Some(all_of) = &mut subschemas.all_of {
-                return Some(all_of);
-            }
+        if let Some(subschemas) = &mut self.subschemas
+            && let Some(all_of) = &mut subschemas.all_of
+        {
+            return Some(all_of);
         }
 
         None

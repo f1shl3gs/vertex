@@ -333,18 +333,18 @@ impl Client {
                 builder.append_pair("continue", continue_token);
             } else {
                 // When there's a continue token, we don't want to set resourceVersion
-                if let Some(resource_version) = &params.resource_version {
-                    if resource_version != "0" || params.limit.is_none() {
-                        builder.append_pair("resourceVersion", resource_version);
+                if let Some(resource_version) = &params.resource_version
+                    && (resource_version != "0" || params.limit.is_none())
+                {
+                    builder.append_pair("resourceVersion", resource_version);
 
-                        match params.version_match {
-                            None => {}
-                            Some(VersionMatch::NotOlderThan) => {
-                                builder.append_pair("resourceVersionMatch", "NotOlderThan");
-                            }
-                            Some(VersionMatch::Exact) => {
-                                builder.append_pair("resourceVersionMatch", "Exact");
-                            }
+                    match params.version_match {
+                        None => {}
+                        Some(VersionMatch::NotOlderThan) => {
+                            builder.append_pair("resourceVersionMatch", "NotOlderThan");
+                        }
+                        Some(VersionMatch::Exact) => {
+                            builder.append_pair("resourceVersionMatch", "Exact");
                         }
                     }
                 }
@@ -385,10 +385,10 @@ impl Client {
         version: &str,
     ) -> Result<BoxStream<'static, Result<WatchEvent<R>, Error>>, Error> {
         // validate
-        if let Some(timeout) = params.timeout {
-            if timeout >= 295 {
-                return Err(Error::Validation("invalid timeout limit".into()));
-            }
+        if let Some(timeout) = params.timeout
+            && timeout >= 295
+        {
+            return Err(Error::Validation("invalid timeout limit".into()));
         }
 
         let query = {

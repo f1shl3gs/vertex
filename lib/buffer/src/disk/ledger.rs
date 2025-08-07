@@ -1,9 +1,9 @@
 use std::fmt::Debug;
+use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, AtomicUsize, Ordering};
 
-use fslock::LockFile;
 use memmap2::MmapMut;
 use tokio::sync::Notify;
 use tracing::{debug, error};
@@ -20,7 +20,7 @@ pub enum Error {
     /// processes or users from modifying the ledger file in a way that could cause
     /// undefined behavior during buffer operation.
     #[error("failed to lock ledger.lock")]
-    LockAlreadyHeld,
+    LockAlreadyHeld(#[from] std::fs::TryLockError),
 
     #[error("mmap ledger state failed, {0}")]
     Mmap(std::io::Error),
@@ -94,7 +94,7 @@ pub struct Ledger {
     backing: MmapMut,
     /// Advisory lock for this buffer directory
     #[allow(dead_code)]
-    lock: LockFile,
+    lockfile: File,
 
     /// Notify for reader-related progress
     read_notify: Notify,
@@ -124,10 +124,9 @@ impl Ledger {
     /// Create or load a ledger for the given path
     pub fn create_or_load(root: PathBuf) -> Result<Self, Error> {
         let path = root.join("ledger.lock");
-        let mut lock = LockFile::open(&path).map_err(|err| Error::CreateLock(path, err))?;
-        if !lock.try_lock()? {
-            return Err(Error::LockAlreadyHeld);
-        }
+        let lockfile = File::open(&path).map_err(|err| Error::CreateLock(path, err))?;
+
+        lockfile.try_lock()?;
 
         let path = root.join("ledger.state");
         let mut state_file = std::fs::OpenOptions::new()
@@ -199,7 +198,7 @@ impl Ledger {
 
         Ok(Ledger {
             backing,
-            lock,
+            lockfile,
             buffer_bytes: AtomicUsize::new(total_buffer_size as usize),
             buffer_records: AtomicUsize::new(buffered_records as usize),
             read_notify: Notify::default(),

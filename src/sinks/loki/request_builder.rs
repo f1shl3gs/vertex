@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::io::Write;
 
 use bytes::Bytes;
@@ -93,6 +92,7 @@ impl Serialize for LokiEvent {
     }
 }
 
+/*
 // This struct is PushRequest
 // https://github.com/grafana/loki/blob/main/pkg/logproto/logproto.proto#L29
 #[derive(Debug, Default, Serialize)]
@@ -119,6 +119,7 @@ impl From<Vec<LokiRecord>> for LokiBatch {
         batch
     }
 }
+*/
 
 #[derive(Clone)]
 pub struct LokiBatchEncoder;

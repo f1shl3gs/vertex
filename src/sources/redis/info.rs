@@ -1152,10 +1152,10 @@ pub async fn collect(conn: &mut Connection) -> Result<Vec<Metric>, Error> {
     let partial = extract_info_metrics(infos, databases)?;
     metrics.extend(partial);
 
-    if infos.contains("# Sentinel") {
-        if let Ok(partial) = sentinel::collect(conn).await {
-            metrics.extend(partial);
-        }
+    if infos.contains("# Sentinel")
+        && let Ok(partial) = sentinel::collect(conn).await
+    {
+        metrics.extend(partial);
     }
 
     Ok(metrics)
@@ -1229,11 +1229,10 @@ fn extract_info_metrics(infos: &str, databases: u64) -> Result<Vec<Metric>, Erro
 
                 if let Ok(partial) =
                     handle_replication_metrics(master_host, master_port, key, value)
+                    && !partial.is_empty()
                 {
-                    if !partial.is_empty() {
-                        metrics.extend(partial);
-                        continue;
-                    }
+                    metrics.extend(partial);
+                    continue;
                 }
             }
 

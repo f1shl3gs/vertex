@@ -273,7 +273,7 @@ impl Display for Error<'_> {
 // audit(1744907888.074:9277): pid=2886492 uid=0 auid=1000 tty=pts6 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm="vertex-worker" exe="/path/to/vertex" nl-mcgrp=1 op=connect res=1
 //
 // `exe` in the netlink response is not hex encoded
-pub fn parse(input: &[u8]) -> Result<Value, Error> {
+pub fn parse(input: &[u8]) -> Result<Value, Error<'_>> {
     let id = u16::from_ne_bytes(input[4..6].try_into().unwrap());
     let msg_typ = match message_typ(id) {
         None => Bytes::from(format!("UNKNOWN[{id}]")),
@@ -294,13 +294,13 @@ pub fn parse(input: &[u8]) -> Result<Value, Error> {
     let input = &input[index + 1..];
 
     let mut data = parse_pairs(input);
-    if let Some(value) = data.remove("msg") {
-        if let Some(input) = value.as_bytes() {
-            let pairs = parse_pairs(input.as_ref());
+    if let Some(value) = data.remove("msg")
+        && let Some(input) = value.as_bytes()
+    {
+        let pairs = parse_pairs(input.as_ref());
 
-            for (key, value) in pairs {
-                data.insert(key, value);
-            }
+        for (key, value) in pairs {
+            data.insert(key, value);
         }
     }
 

@@ -159,14 +159,10 @@ impl Dedup {
 
                 if let Some(all_fields) = log.all_fields() {
                     for (name, value) in all_fields {
-                        if let Ok(path) = parse_target_path(name.as_str()) {
-                            if !self.fields.contains(&path) {
-                                entry.push((
-                                    name,
-                                    type_id_for_value(value),
-                                    value.coerce_to_bytes(),
-                                ));
-                            }
+                        if let Ok(path) = parse_target_path(name.as_str())
+                            && !self.fields.contains(&path)
+                        {
+                            entry.push((name, type_id_for_value(value), value.coerce_to_bytes()));
                         }
                     }
                 }

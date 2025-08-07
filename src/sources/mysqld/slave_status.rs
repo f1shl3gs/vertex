@@ -155,11 +155,11 @@ fn parse_status(val: &str) -> Option<f64> {
     }
 
     // NOTE: cannot find anything about this
-    if let Some(capture) = LOG_RE.captures(&text) {
-        if capture.len() > 1 {
-            let c = capture.get(0).unwrap();
-            return c.as_str().parse().ok();
-        }
+    if let Some(capture) = LOG_RE.captures(&text)
+        && capture.len() > 1
+    {
+        let c = capture.get(0).unwrap();
+        return c.as_str().parse().ok();
     }
 
     text.parse().ok()

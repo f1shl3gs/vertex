@@ -112,10 +112,8 @@ pub fn precompute_metric_value(metric: &Metric, paths: &[OwnedTargetPath]) -> Va
                 map.insert("type".to_string(), typ.into());
             }
 
-            if !set_timestamp {
-                if let Some(ts) = metric.timestamp {
-                    map.insert("timestamp".into(), ts.into());
-                }
+            if !set_timestamp && let Some(ts) = metric.timestamp {
+                map.insert("timestamp".into(), ts.into());
             }
 
             if !set_tags {

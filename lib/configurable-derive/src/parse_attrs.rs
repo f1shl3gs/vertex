@@ -112,13 +112,11 @@ impl FieldAttrs {
                     match name.as_str() {
                         "skip" => this.skip = true,
                         "required" => {
-                            if let Type::Path(TypePath { path, .. }) = &field.ty {
-                                if let Some(first) = path.segments.first() {
-                                    if first.ident == "Option" {
+                            if let Type::Path(TypePath { path, .. }) = &field.ty
+                                && let Some(first) = path.segments.first()
+                                    && first.ident == "Option" {
                                         return Err(syn::Error::new(meta.path.span(), "required attribute cannot be applied to Option<T>"));
-                                    }
-                                }
-                            };
+                                    };
 
                             if meta.input.peek(Token![=]) {
                                 // #[configurable(require = true)] or #[configurable(require = false)]

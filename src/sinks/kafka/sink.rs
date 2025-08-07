@@ -6,10 +6,9 @@ use framework::StreamSink;
 use framework::sink::util::KeyPartitioner;
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::stream::BatcherSettings;
-use framework::template::{Template, TemplateParseError};
+use framework::template::Template;
 use futures::{StreamExt, stream::BoxStream};
 use rskafka::client::ClientBuilder;
-use thiserror::Error;
 use tower::limit::ConcurrencyLimit;
 
 use super::config::Config;
@@ -17,12 +16,6 @@ use super::request_builder::KafkaRequestBuilder;
 use super::service::KafkaService;
 
 pub const QUEUE_MIN_MESSAGES: usize = 100000;
-
-#[derive(Debug, Error)]
-pub enum BuildError {
-    #[error("invalid topic template: {0}")]
-    TopicTemplate(#[from] TemplateParseError),
-}
 
 pub struct KafkaSink {
     transformer: Transformer,

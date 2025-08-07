@@ -288,22 +288,22 @@ async fn handle_stream<T>(
         }
     }
 
-    if let Some(keepalive) = keepalive.as_ref() {
-        if let Err(err) = socket.set_keepalive(keepalive) {
-            warn!(
-                message = "Failed configuring TCP keepalive",
-                %err
-            );
-        }
+    if let Some(keepalive) = keepalive.as_ref()
+        && let Err(err) = socket.set_keepalive(keepalive)
+    {
+        warn!(
+            message = "Failed configuring TCP keepalive",
+            %err
+        );
     }
 
-    if let Some(receive_buffer_bytes) = receive_buffer_bytes {
-        if let Err(err) = socket.set_receive_buffer_bytes(receive_buffer_bytes) {
-            warn!(
-                message = "Failed configuring receive buffer size on TCP socket",
-                %err
-            );
-        }
+    if let Some(receive_buffer_bytes) = receive_buffer_bytes
+        && let Err(err) = socket.set_receive_buffer_bytes(receive_buffer_bytes)
+    {
+        warn!(
+            message = "Failed configuring receive buffer size on TCP socket",
+            %err
+        );
     }
 
     let reader = FramedRead::new(socket, source.decoder());

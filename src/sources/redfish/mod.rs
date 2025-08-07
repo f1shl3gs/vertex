@@ -412,24 +412,24 @@ async fn gather(
             }
         }
 
-        if config.thermal {
-            if let Some(path) = thermal {
-                let client = Arc::clone(&client);
+        if config.thermal
+            && let Some(path) = thermal
+        {
+            let client = Arc::clone(&client);
 
-                tasks.spawn(collect_thermal(
-                    client,
-                    path.to_string(),
-                    chassis.id.clone(),
-                ));
-            }
+            tasks.spawn(collect_thermal(
+                client,
+                path.to_string(),
+                chassis.id.clone(),
+            ));
         }
 
-        if config.power {
-            if let Some(path) = power {
-                let client = Arc::clone(&client);
+        if config.power
+            && let Some(path) = power
+        {
+            let client = Arc::clone(&client);
 
-                tasks.spawn(collect_power(client, path.to_string(), chassis.id.clone()));
-            }
+            tasks.spawn(collect_power(client, path.to_string(), chassis.id.clone()));
         }
     }
 

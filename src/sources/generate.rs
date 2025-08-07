@@ -361,10 +361,10 @@ impl OutputFormat {
     }
 
     fn validate(&self) -> Result<(), crate::Error> {
-        if let OutputFormat::Shuffle { lines, .. } = self {
-            if lines.is_empty() {
-                return Err("A non-empty list of lines is required for the shuffle format".into());
-            }
+        if let OutputFormat::Shuffle { lines, .. } = self
+            && lines.is_empty()
+        {
+            return Err("A non-empty list of lines is required for the shuffle format".into());
         }
 
         Ok(())

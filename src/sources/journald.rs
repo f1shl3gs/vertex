@@ -294,14 +294,14 @@ impl JournaldSource {
     }
 
     async fn save_checkpoint(checkpointer: &mut Checkpointer, cursor: &Option<String>) {
-        if let Some(cursor) = cursor {
-            if let Err(err) = checkpointer.set(cursor).await {
-                error!(
-                    message = "Could not set journald checkpoint",
-                    %err,
-                    filename = ?checkpointer.path,
-                );
-            }
+        if let Some(cursor) = cursor
+            && let Err(err) = checkpointer.set(cursor).await
+        {
+            error!(
+                message = "Could not set journald checkpoint",
+                %err,
+                filename = ?checkpointer.path,
+            );
         }
     }
 }
@@ -320,16 +320,15 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
     if let Some(Value::Bytes(timestamp)) = log
         .get(event_path!(SOURCE_TIMESTAMP))
         .or_else(|| log.get(event_path!(RECEIVED_TIMESTAMP)))
+        && let Ok(timestamp) = String::from_utf8_lossy(timestamp).parse::<u64>()
     {
-        if let Ok(timestamp) = String::from_utf8_lossy(timestamp).parse::<u64>() {
-            let timestamp = DateTime::<Utc>::from_timestamp(
-                (timestamp / 1_000_000) as i64,
-                (timestamp % 1_000_000) as u32 * 1_000,
-            )
-            .expect("valid timestamp");
+        let timestamp = DateTime::<Utc>::from_timestamp(
+            (timestamp / 1_000_000) as i64,
+            (timestamp % 1_000_000) as u32 * 1_000,
+        )
+        .expect("valid timestamp");
 
-            log.insert(log_schema().timestamp_key(), Value::Timestamp(timestamp));
-        }
+        log.insert(log_schema().timestamp_key(), Value::Timestamp(timestamp));
     }
 
     // Add source type

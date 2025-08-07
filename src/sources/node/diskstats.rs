@@ -325,10 +325,10 @@ fn udev_device_properties(major: &str, minor: &str) -> Result<HashMap<String, St
     let mut properties = HashMap::new();
     for line in data.lines() {
         // we're only interested in device properties
-        if let Some(value) = line.strip_prefix("E:") {
-            if let Some((key, value)) = value.split_once("=") {
-                properties.insert(key.to_string(), value.to_string());
-            }
+        if let Some(value) = line.strip_prefix("E:")
+            && let Some((key, value)) = value.split_once("=")
+        {
+            properties.insert(key.to_string(), value.to_string());
         }
     }
 

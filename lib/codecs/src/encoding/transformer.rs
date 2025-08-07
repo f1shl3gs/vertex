@@ -139,15 +139,12 @@ impl Transformer {
         only_fields: Option<&Vec<OwnedValuePath>>,
         except_fields: Option<&Vec<OwnedValuePath>>,
     ) -> Result<(), String> {
-        if let (Some(only_fields), Some(except_fields)) = (only_fields, except_fields) {
-            if except_fields
+        if let (Some(only_fields), Some(except_fields)) = (only_fields, except_fields)
+            && except_fields
                 .iter()
                 .any(|f| only_fields.iter().any(|v| v == f))
-            {
-                return Err(
-                    "`except_fields` and `only_fields` should be mutually exclusive".into(),
-                );
-            }
+        {
+            return Err("`except_fields` and `only_fields` should be mutually exclusive".into());
         }
 
         Ok(())

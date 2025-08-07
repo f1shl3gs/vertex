@@ -71,13 +71,13 @@ pub(super) async fn serve(
         .await
         .expect("Failed to bind to udp listener socket");
 
-    if let Some(receive_buffer_size) = receive_buffer_size {
-        if let Err(err) = framework::udp::set_receive_buffer_size(&socket, receive_buffer_size) {
-            warn!(
-                message = "Failed configuring receive buffer size on UDP socket",
-                %err
-            );
-        }
+    if let Some(receive_buffer_size) = receive_buffer_size
+        && let Err(err) = framework::udp::set_receive_buffer_size(&socket, receive_buffer_size)
+    {
+        warn!(
+            message = "Failed configuring receive buffer size on UDP socket",
+            %err
+        );
     }
 
     let max_length = if let Some(receive_buffer_size) = receive_buffer_size {

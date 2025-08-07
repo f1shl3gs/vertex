@@ -63,7 +63,7 @@ mod inotify {
             Ok(())
         }
 
-        pub fn into_stream(self, buf: &[u8]) -> EventStream {
+        pub fn into_stream(self, buf: &[u8]) -> EventStream<'_> {
             EventStream {
                 fd: self.fd,
                 wds: self.wds,

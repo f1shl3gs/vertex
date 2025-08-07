@@ -55,24 +55,24 @@ impl Config {
 
                 debug!(message = "accept new connection", peer = ?stream.peer_addr());
 
-                if let Some(keepalive) = &keepalive {
-                    if let Err(err) = stream.set_keepalive(keepalive) {
-                        warn!(
-                            message = "setting TCP keepalive failed",
-                            ?err,
-                            internal_log_rate_secs = 30,
-                        );
-                    }
+                if let Some(keepalive) = &keepalive
+                    && let Err(err) = stream.set_keepalive(keepalive)
+                {
+                    warn!(
+                        message = "setting TCP keepalive failed",
+                        ?err,
+                        internal_log_rate_secs = 30,
+                    );
                 }
 
-                if let Some(receive_buffer_bytes) = receive_buffer_bytes {
-                    if let Err(err) = stream.set_receive_buffer_bytes(receive_buffer_bytes) {
-                        warn!(
-                            message = "setting receive buffer bytes failed",
-                            ?err,
-                            internal_log_rate_secs = 30,
-                        );
-                    }
+                if let Some(receive_buffer_bytes) = receive_buffer_bytes
+                    && let Err(err) = stream.set_receive_buffer_bytes(receive_buffer_bytes)
+                {
+                    warn!(
+                        message = "setting receive buffer bytes failed",
+                        ?err,
+                        internal_log_rate_secs = 30,
+                    );
                 }
 
                 let shutdown = shutdown.clone();

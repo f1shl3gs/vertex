@@ -231,11 +231,11 @@ fn recovery_line(input: &str) -> Result<(f64, i64, f64, f64), Error> {
         }
 
         // synced_blocks
-        if let Some(text) = part.strip_prefix('(') {
-            if let Some((text, _)) = text.split_once('/') {
-                synced_blocks = text.parse()?;
-                continue;
-            }
+        if let Some(text) = part.strip_prefix('(')
+            && let Some((text, _)) = text.split_once('/')
+        {
+            synced_blocks = text.parse()?;
+            continue;
         }
 
         // finish

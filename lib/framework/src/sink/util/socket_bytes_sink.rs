@@ -113,10 +113,10 @@ where
     type Error = <FramedWrite<T, BytesCodec> as Sink<Bytes>>::Error;
 
     fn poll_ready(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        if self.as_mut().project().state.events_total >= MAX_PENDING_ITEMS {
-            if let Err(err) = ready!(self.as_mut().poll_flush(cx)) {
-                return Poll::Ready(Err(err));
-            }
+        if self.as_mut().project().state.events_total >= MAX_PENDING_ITEMS
+            && let Err(err) = ready!(self.as_mut().poll_flush(cx))
+        {
+            return Poll::Ready(Err(err));
         }
 
         let inner = self.project().inner;

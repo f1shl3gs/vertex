@@ -34,14 +34,14 @@ pub trait UdpSource: Sized + Send + Sync + 'static {
                 }
             };
 
-            if let Some(receive_buffer_bytes) = receive_buffer_bytes {
-                if let Err(err) = udp::set_receive_buffer_size(&socket, receive_buffer_bytes) {
-                    warn!(
-                        message = "failed configure receive buffer size on UDP socket",
-                        %listen,
-                        %err
-                    );
-                }
+            if let Some(receive_buffer_bytes) = receive_buffer_bytes
+                && let Err(err) = udp::set_receive_buffer_size(&socket, receive_buffer_bytes)
+            {
+                warn!(
+                    message = "failed configure receive buffer size on UDP socket",
+                    %listen,
+                    %err
+                );
             }
 
             let mut buf = [0u8; u16::MAX as usize];

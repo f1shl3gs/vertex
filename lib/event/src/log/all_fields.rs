@@ -10,20 +10,20 @@ use value::path::PathPrefix;
 
 /// Iterates over all paths in form `a.b[0].c[1]` in alphabetical order
 /// and their corresponding values.
-pub fn all_fields(fields: &BTreeMap<String, Value>) -> FieldsIter {
+pub fn all_fields(fields: &BTreeMap<String, Value>) -> FieldsIter<'_> {
     FieldsIter::new(fields)
 }
 
 /// Same functionality as `all_fields` but it prepends a character that denotes the
 /// path type.
 #[allow(dead_code)]
-pub fn all_metadata_fields(fields: &BTreeMap<String, Value>) -> FieldsIter {
+pub fn all_metadata_fields(fields: &BTreeMap<String, Value>) -> FieldsIter<'_> {
     FieldsIter::new_with_prefix(PathPrefix::Metadata, fields)
 }
 
 /// An iterator with a single "message" element
 #[allow(dead_code)]
-pub fn all_fields_non_object_root(value: &Value) -> FieldsIter {
+pub fn all_fields_non_object_root(value: &Value) -> FieldsIter<'_> {
     FieldsIter::non_object(value)
 }
 

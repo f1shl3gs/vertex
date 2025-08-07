@@ -256,10 +256,10 @@ fn histogram(stats: &Vec<client::Counter>) -> Result<(Vec<Bucket>, u64), ParseFl
         if c.name.starts_with("QryRTT") {
             let mut b = f64::INFINITY;
 
-            if !c.name.ends_with('+') {
-                if let Some(rtt) = c.name.strip_prefix("QryRTT") {
-                    b = rtt.parse()?;
-                }
+            if !c.name.ends_with('+')
+                && let Some(rtt) = c.name.strip_prefix("QryRTT")
+            {
+                b = rtt.parse()?;
             }
 
             count += c.counter;
