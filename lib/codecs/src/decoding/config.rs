@@ -7,7 +7,7 @@ use super::format::{
     BytesDeserializer, JsonDeserializerConfig, LogfmtDeserializer, VtlDeserializerConfig,
 };
 use super::framing::{
-    BytesDeserializerDecoder, CharacterDelimitedDecoderConfig, NewlineDelimitedDecoderConfig,
+    BytesDecoder, CharacterDelimitedDecoderConfig, NewlineDelimitedDecoderConfig,
     OctetCountingDecoderConfig,
 };
 use super::{Decoder, Deserializer, Framer};
@@ -34,7 +34,7 @@ impl FramingConfig {
     /// Build a `Framer` for this configuration.
     pub fn build(&self) -> Framer {
         match self {
-            FramingConfig::Bytes => Framer::Bytes(BytesDeserializerDecoder::new()),
+            FramingConfig::Bytes => Framer::Bytes(BytesDecoder::new()),
             FramingConfig::CharacterDelimited(config) => Framer::CharacterDelimited(config.build()),
             FramingConfig::NewlineDelimited(config) => Framer::NewlineDelimited(config.build()),
             FramingConfig::OctetCounting(config) => Framer::OctetCounting(config.build()),

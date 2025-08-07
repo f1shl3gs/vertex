@@ -20,15 +20,14 @@ pub use error::{DecodeError, StreamDecodingError};
 pub use format::SyslogDeserializer;
 use format::{BytesDeserializer, JsonDeserializer, LogfmtDeserializer, VtlDeserializer};
 pub use framing::{
-    BytesDeserializerDecoder, CharacterDelimitedDecoder, NewlineDelimitedDecoder,
-    OctetCountingDecoder,
+    BytesDecoder, CharacterDelimitedDecoder, NewlineDelimitedDecoder, OctetCountingDecoder,
 };
 
 /// Produce byte frames from a byte stream / byte message
 #[derive(Clone, Debug)]
 pub enum Framer {
     /// Uses a `BytesDecoder` for framing
-    Bytes(BytesDeserializerDecoder),
+    Bytes(BytesDecoder),
     /// Uses a `CharacterDelimitedDecoder` for framing.
     CharacterDelimited(CharacterDelimitedDecoder),
     /// Uses a `NewlineDelimitedDecoder` for framing.
@@ -43,8 +42,8 @@ impl From<OctetCountingDecoder> for Framer {
     }
 }
 
-impl From<BytesDeserializerDecoder> for Framer {
-    fn from(f: BytesDeserializerDecoder) -> Self {
+impl From<BytesDecoder> for Framer {
+    fn from(f: BytesDecoder) -> Self {
         Self::Bytes(f)
     }
 }

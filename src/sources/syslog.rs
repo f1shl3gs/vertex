@@ -4,9 +4,7 @@ use std::time::Duration;
 
 use chrono::Utc;
 use codecs::Decoder;
-use codecs::decoding::{
-    BytesDeserializerDecoder, DecodeError, OctetCountingDecoder, SyslogDeserializer,
-};
+use codecs::decoding::{BytesDecoder, DecodeError, OctetCountingDecoder, SyslogDeserializer};
 use configurable::{Configurable, configurable_component};
 use event::log::OwnedValuePath;
 use event::log::path::PathPrefix;
@@ -237,7 +235,7 @@ fn udp(
         let mut stream = UdpFramed::new(
             socket,
             Decoder::new(
-                BytesDeserializerDecoder::new().into(),
+                BytesDecoder::new().into(),
                 SyslogDeserializer::default().into(),
             ),
         )
