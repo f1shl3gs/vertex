@@ -11,10 +11,10 @@ pub enum Concurrency {
     /// A fixed concurrency of 1.
     ///
     /// Only one request can be outstanding at any given time.
-    #[default]
     None,
 
     /// Concurrency will be managed by Vertex's [Adaptive Request Concurrency] feature.
+    #[default]
     Adaptive,
 
     /// A fixed amount of concurrency will be allowed.
