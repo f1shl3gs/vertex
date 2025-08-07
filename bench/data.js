@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754587842103,
+  "lastUpdate": 1754588223103,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "51f2ae163e6398034e2983593989245eb9bda01a",
-          "message": "Merge pull request #2375 from f1shl3gs/sources/sflow/small_refactor\n\nsources/sflow: reorganize data structures",
-          "timestamp": "2025-06-01T01:45:41+08:00",
-          "tree_id": "cf4de9774605d2cdabf9908c823a3f93e6736994",
-          "url": "https://github.com/f1shl3gs/vertex/commit/51f2ae163e6398034e2983593989245eb9bda01a"
-        },
-        "date": 1748714127121,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22560000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 599740,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.08,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f0c1359d54e1cc7a340aa4dffee9a61efb842d25",
           "message": "Merge pull request #2376 from f1shl3gs/sources/audit/optimize_syscall_lookup\n\nsources/audit: optimize syscall lookup, reduce binary size",
           "timestamp": "2025-06-01T01:58:21+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.911,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "957ea9f81864c36490797ee71f4df9ca8dd061ac",
+          "message": "Merge pull request #2489 from f1shl3gs/lib/codecs/rename_bytes_decoder\n\nlib/codecs: rename BytesDecoder",
+          "timestamp": "2025-08-08T01:27:06+08:00",
+          "tree_id": "d19cf419c80c526450b6bc1a9036f952155128e3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/957ea9f81864c36490797ee71f4df9ca8dd061ac"
+        },
+        "date": 1754588202162,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14924000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 579710,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.342,
             "unit": "ns/op"
           }
         ]
