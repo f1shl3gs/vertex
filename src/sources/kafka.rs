@@ -360,11 +360,10 @@ async fn run(
                                     if let Some(batch) =
                                         convert_message(record, &topic, partition, &dec, &keys)
                                             .await
+                                        && let Err(err) = out.send_batch(batch).await
                                     {
-                                        if let Err(err) = out.send_batch(batch).await {
-                                            error!(message = "send logs failed", %err);
-                                            return;
-                                        }
+                                        error!(message = "send logs failed", %err);
+                                        return;
                                     }
                                 }
 

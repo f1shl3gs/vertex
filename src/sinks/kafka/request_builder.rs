@@ -80,8 +80,8 @@ fn get_headers(
     headers_field: &Option<OwnedTargetPath>,
 ) -> Option<BTreeMap<String, Vec<u8>>> {
     headers_field.as_ref().and_then(|headers_field| {
-        if let Event::Log(log) = ev {
-            if let Some(value) = log.get(headers_field) {
+        if let Event::Log(log) = ev
+            && let Some(value) = log.get(headers_field) {
                 match value {
                     Value::Object(map) => {
                         let mut headers = BTreeMap::new();
@@ -108,7 +108,6 @@ fn get_headers(
                     }
                 }
             }
-        }
 
         None
     })

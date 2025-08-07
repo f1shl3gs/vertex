@@ -163,10 +163,11 @@ impl TraceState {
                     return false;
                 }
                 vendor_start = Some(i);
-            } else if let Some(start) = vendor_start {
-                if i == start + 1 && !(b.is_ascii_lowercase() || b.is_ascii_digit()) {
-                    return false;
-                }
+            } else if let Some(start) = vendor_start
+                && i == start + 1
+                && !(b.is_ascii_lowercase() || b.is_ascii_digit())
+            {
+                return false;
             }
         }
 
@@ -282,11 +283,12 @@ impl TraceState {
     /// Delete key from trace state's deque. The key MUST be valid
     fn delete_from_deque(&self, key: &str) -> TraceState {
         let mut owned = self.clone();
-        if let Some(kvs) = owned.0.as_mut() {
-            if let Some(index) = kvs.iter().position(|x| *x.0 == *key) {
-                kvs.remove(index);
-            }
+        if let Some(kvs) = owned.0.as_mut()
+            && let Some(index) = kvs.iter().position(|x| *x.0 == *key)
+        {
+            kvs.remove(index);
         }
+
         owned
     }
 

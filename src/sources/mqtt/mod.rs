@@ -66,8 +66,8 @@ async fn run(
                         let output = output.clone();
                         let remote_addr = stream.peer_addr();
 
-                        if let Some(keepalive) = &keepalive {
-                            if let Err(err) = stream.set_keepalive(keepalive) {
+                        if let Some(keepalive) = &keepalive
+                            && let Err(err) = stream.set_keepalive(keepalive) {
                                 error!(
                                     message = "set keepalive failed",
                                     ?err
@@ -75,7 +75,6 @@ async fn run(
 
                                 continue;
                             }
-                        }
 
                         tokio::spawn(broker::serve_connection(remote_addr, stream, output));
                     },

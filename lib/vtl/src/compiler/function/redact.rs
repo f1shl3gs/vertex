@@ -140,7 +140,7 @@ impl regex::Replacer for &Redactor {
         }
     }
 
-    fn no_expansion(&mut self) -> Option<Cow<str>> {
+    fn no_expansion(&mut self) -> Option<Cow<'_, str>> {
         match self {
             Redactor::Full => Some(REDACTED.into()),
             Redactor::Text(s) => Some(s.into()),

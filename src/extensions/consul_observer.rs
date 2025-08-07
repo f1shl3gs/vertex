@@ -439,15 +439,15 @@ impl Client {
     }
 
     fn set_last_index(&self, parts: Parts) {
-        if let Some(value) = parts.headers.get("X-Consul-Index") {
-            if let Ok(value) = value.to_str() {
-                match value.parse::<u64>() {
-                    Ok(last_index) => {
-                        self.last_index.store(last_index, Ordering::Relaxed);
-                    }
-                    Err(err) => {
-                        warn!(message = "parse last index failed", ?err)
-                    }
+        if let Some(value) = parts.headers.get("X-Consul-Index")
+            && let Ok(value) = value.to_str()
+        {
+            match value.parse::<u64>() {
+                Ok(last_index) => {
+                    self.last_index.store(last_index, Ordering::Relaxed);
+                }
+                Err(err) => {
+                    warn!(message = "parse last index failed", ?err)
                 }
             }
         }

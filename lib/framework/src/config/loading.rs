@@ -143,10 +143,10 @@ pub fn load(
         .map_err(|err| vec![err.to_string()])?;
 
     let mut vars = std::env::vars().collect::<HashMap<_, _>>();
-    if !vars.contains_key("HOSTNAME") {
-        if let Ok(hostname) = hostname::get() {
-            vars.insert("HOSTNAME".into(), hostname);
-        }
+    if !vars.contains_key("HOSTNAME")
+        && let Ok(hostname) = hostname::get()
+    {
+        vars.insert("HOSTNAME".into(), hostname);
     }
 
     let (with_vars, warnings) = interpolate(&ss, &vars, false)?;

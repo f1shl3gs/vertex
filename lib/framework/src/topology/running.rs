@@ -193,32 +193,29 @@ impl RunningTopology {
 
         // Now let's actually build the new pieces.
         if let Some(mut new_pieces) = build_or_log_errors(&new_config, &diff, buffers.clone()).await
-        {
-            if self
+            && self
                 .run_healthchecks(&diff, &mut new_pieces, new_config.healthcheck)
                 .await
-            {
-                self.connect_diff(&diff, &mut new_pieces).await;
-                self.spawn_diff(&diff, new_pieces);
-                self.config = new_config;
-                // We have successfully changed to new config.
-                return Ok(true);
-            }
+        {
+            self.connect_diff(&diff, &mut new_pieces).await;
+            self.spawn_diff(&diff, new_pieces);
+            self.config = new_config;
+            // We have successfully changed to new config.
+            return Ok(true);
         }
 
         // We need to rebuild the removed.
         info!(message = "Rebuilding old configuration.");
         let diff = diff.flip();
-        if let Some(mut new_pieces) = build_or_log_errors(&self.config, &diff, buffers).await {
-            if self
+        if let Some(mut new_pieces) = build_or_log_errors(&self.config, &diff, buffers).await
+            && self
                 .run_healthchecks(&diff, &mut new_pieces, self.config.healthcheck)
                 .await
-            {
-                self.connect_diff(&diff, &mut new_pieces).await;
-                self.spawn_diff(&diff, new_pieces);
-                // We have successfully returned to old config.
-                return Ok(false);
-            }
+        {
+            self.connect_diff(&diff, &mut new_pieces).await;
+            self.spawn_diff(&diff, new_pieces);
+            // We have successfully returned to old config.
+            return Ok(false);
         }
 
         // We failed in rebuilding the old state.

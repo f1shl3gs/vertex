@@ -276,6 +276,7 @@ pub fn builtin_functions() -> Vec<Box<dyn Function>> {
         Box::new(push::Push),
         Box::new(redact::Redact),
         Box::new(replace::Replace),
+        Box::new(round::Round),
         Box::new(set::Set),
         Box::new(slice::Slice),
         Box::new(snakecase::SnakeCase),

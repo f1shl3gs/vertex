@@ -356,7 +356,7 @@ impl Tags {
     }
 
     #[inline]
-    pub fn iter(&self) -> Iter {
+    pub fn iter(&self) -> Iter<'_> {
         Iter {
             pos: 0,
             len: self.len,

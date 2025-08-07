@@ -309,25 +309,25 @@ impl Table {
             acc
         });
 
-        if let Some((_max_height, max_width)) = termsize::get() {
-            if let Some(mut n) = max_width.checked_sub(
+        if let Some((_max_height, max_width)) = termsize::get()
+            && let Some(mut n) = max_width.checked_sub(
                 key_width
                     + typ_width
                     + events_in_width
                     + events_out_width
                     + bytes_in_width
                     + bytes_out_width,
-            ) {
-                let padding = n % 6;
-                n /= 6;
+            )
+        {
+            let padding = n % 6;
+            n /= 6;
 
-                key_width += n;
-                typ_width += n;
-                events_in_width += n;
-                events_out_width += n;
-                bytes_in_width += n;
-                bytes_out_width += n + padding;
-            }
+            key_width += n;
+            typ_width += n;
+            events_in_width += n;
+            events_out_width += n;
+            bytes_in_width += n;
+            bytes_out_width += n + padding;
         }
 
         // header

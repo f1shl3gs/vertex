@@ -217,7 +217,7 @@ impl Events {
         }
     }
 
-    pub fn iter_events(&self) -> impl Iterator<Item = EventRef> {
+    pub fn iter_events(&self) -> impl Iterator<Item = EventRef<'_>> {
         match self {
             Events::Logs(logs) => EventsIter::Logs(logs.iter()),
             Events::Metrics(metrics) => EventsIter::Metrics(metrics.iter()),

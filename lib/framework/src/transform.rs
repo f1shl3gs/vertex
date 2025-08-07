@@ -346,7 +346,7 @@ impl OutputBuffer {
         self.0.iter().map(Events::len).sum()
     }
 
-    pub fn first(&self) -> Option<EventRef> {
+    pub fn first(&self) -> Option<EventRef<'_>> {
         self.0.first().and_then(|first| match first {
             Events::Logs(l) => l.first().map(Into::into),
             Events::Metrics(m) => m.first().map(Into::into),
@@ -364,7 +364,7 @@ impl OutputBuffer {
         }
     }
 
-    fn iter_events(&self) -> impl Iterator<Item = EventRef> {
+    fn iter_events(&self) -> impl Iterator<Item = EventRef<'_>> {
         self.0.iter().flat_map(Events::iter_events)
     }
 

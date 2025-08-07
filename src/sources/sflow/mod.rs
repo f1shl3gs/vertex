@@ -65,14 +65,14 @@ async fn run(
         }
     };
 
-    if let Some(bytes) = receive_buffer_bytes {
-        if let Err(err) = framework::udp::set_receive_buffer_size(&socket, bytes) {
-            warn!(
-                message = "set receive buffer size failed",
-                %addr,
-                %err,
-            );
-        }
+    if let Some(bytes) = receive_buffer_bytes
+        && let Err(err) = framework::udp::set_receive_buffer_size(&socket, bytes)
+    {
+        warn!(
+            message = "set receive buffer size failed",
+            %addr,
+            %err,
+        );
     }
 
     let mut buf = [0u8; u16::MAX as usize];
@@ -99,16 +99,16 @@ async fn run(
 
         match build_events(&buf[..size]) {
             Ok((logs, metrics)) => {
-                if !logs.is_empty() {
-                    if let Err(_err) = output.send_named("logs", logs.into()).await {
-                        return Err(());
-                    }
+                if !logs.is_empty()
+                    && let Err(_err) = output.send_named("logs", logs.into()).await
+                {
+                    return Err(());
                 }
 
-                if !metrics.is_empty() {
-                    if let Err(_err) = output.send_named("metrics", metrics.into()).await {
-                        return Err(());
-                    }
+                if !metrics.is_empty()
+                    && let Err(_err) = output.send_named("metrics", metrics.into()).await
+                {
+                    return Err(());
                 }
             }
             Err(err) => {

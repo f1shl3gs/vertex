@@ -1041,10 +1041,10 @@ fn calculate_cpu_percent(prev: &CpuStats, curr: &CpuStats) -> f64 {
 /// On cgroup v2 host, the result is `mem.Usage - mem.Stats["inactive_file"]`
 fn calculate_memory_usage_no_cache(stats: &MemoryStats) -> u64 {
     // cgroup v1
-    if let Some(value) = stats.stats.total_inactive_file {
-        if value < stats.usage {
-            return stats.usage - value;
-        }
+    if let Some(value) = stats.stats.total_inactive_file
+        && value < stats.usage
+    {
+        return stats.usage - value;
     }
 
     // cgroup v2

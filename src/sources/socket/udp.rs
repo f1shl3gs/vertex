@@ -58,14 +58,14 @@ pub fn udp(
             warn!(message = "binding udp socket", %err, %address);
         })?;
 
-        if let Some(bytes) = receive_buffer_size {
-            if let Err(err) = framework::udp::set_receive_buffer_size(&socket, bytes) {
-                warn!(
-                    message = "setting receive buffer size failed",
-                    %err,
-                    %address
-                );
-            }
+        if let Some(bytes) = receive_buffer_size
+            && let Err(err) = framework::udp::set_receive_buffer_size(&socket, bytes)
+        {
+            warn!(
+                message = "setting receive buffer size failed",
+                %err,
+                %address
+            );
         }
 
         let mut buf = [0u8; u16::MAX as usize];

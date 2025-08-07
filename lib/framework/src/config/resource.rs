@@ -47,10 +47,10 @@ impl Resource {
         // Find equality based conflicts
         for (key, resources) in components {
             for resource in resources {
-                if let Resource::Port(addr, protocol) = &resource {
-                    if addr.ip().is_unspecified() {
-                        unspecified.push((key.clone(), addr.port(), *protocol));
-                    }
+                if let Resource::Port(addr, protocol) = &resource
+                    && addr.ip().is_unspecified()
+                {
+                    unspecified.push((key.clone(), addr.port(), *protocol));
                 }
 
                 resource_map
@@ -65,10 +65,11 @@ impl Resource {
         // port
         for (key, port, proto0) in unspecified {
             for (resource, components) in resource_map.iter_mut() {
-                if let Resource::Port(addr, proto) = resource {
-                    if addr.port() == port && &proto0 == proto {
-                        components.insert(key.clone());
-                    }
+                if let Resource::Port(addr, proto) = resource
+                    && addr.port() == port
+                    && &proto0 == proto
+                {
+                    components.insert(key.clone());
                 }
             }
         }

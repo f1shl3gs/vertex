@@ -184,16 +184,16 @@ impl TcpConnector {
             }
         };
 
-        if let Some(keepalive) = self.keepalive {
-            if let Err(err) = maybe_tls.set_keepalive(keepalive) {
-                warn!(message = "Failed configuring TCP keepalive", %err);
-            }
+        if let Some(keepalive) = self.keepalive
+            && let Err(err) = maybe_tls.set_keepalive(keepalive)
+        {
+            warn!(message = "Failed configuring TCP keepalive", %err);
         }
 
-        if let Some(send_buffer_bytes) = self.send_buffer_bytes {
-            if let Err(err) = maybe_tls.set_send_buffer_bytes(send_buffer_bytes) {
-                warn!(message = "Failed configuring send buffer size on TCP socket", %err);
-            }
+        if let Some(send_buffer_bytes) = self.send_buffer_bytes
+            && let Err(err) = maybe_tls.set_send_buffer_bytes(send_buffer_bytes)
+        {
+            warn!(message = "Failed configuring send buffer size on TCP socket", %err);
         }
 
         Ok(maybe_tls)

@@ -220,38 +220,33 @@ async fn run(
                     ),
                 ));
 
-                if let Some(value) = parts.headers.get(CONTENT_LENGTH) {
-                    if let Ok(s) = value.to_str() {
-                        if let Ok(content_length) = s.parse::<u64>() {
-                            metrics.push(Metric::gauge_with_tags(
-                                "http_content_length",
-                                "Length of http content response",
-                                content_length,
-                                tags!(
-                                    "instance" => instance,
-                                ),
-                            ));
-                        }
-                    }
+                if let Some(value) = parts.headers.get(CONTENT_LENGTH)
+                    && let Ok(s) = value.to_str()
+                    && let Ok(content_length) = s.parse::<u64>()
+                {
+                    metrics.push(Metric::gauge_with_tags(
+                        "http_content_length",
+                        "Length of http content response",
+                        content_length,
+                        tags!(
+                            "instance" => instance,
+                        ),
+                    ));
                 }
 
-                if let Some(value) = parts.headers.get(LAST_MODIFIED) {
-                    if let Ok(value) = value.to_str() {
-                        if let Ok(date) = HttpDate::from_str(value) {
-                            if let Ok(ts) =
-                                SystemTime::from(date).duration_since(SystemTime::UNIX_EPOCH)
-                            {
-                                metrics.push(Metric::gauge_with_tags(
-                                    "http_last_modified_timestamp_seconds",
-                                    "Returns the Last-Modified HTTP response header in unixtime",
-                                    ts.as_secs_f64(),
-                                    tags!(
-                                        "instance" => instance,
-                                    ),
-                                ));
-                            }
-                        }
-                    }
+                if let Some(value) = parts.headers.get(LAST_MODIFIED)
+                    && let Ok(value) = value.to_str()
+                    && let Ok(date) = HttpDate::from_str(value)
+                    && let Ok(ts) = SystemTime::from(date).duration_since(SystemTime::UNIX_EPOCH)
+                {
+                    metrics.push(Metric::gauge_with_tags(
+                        "http_last_modified_timestamp_seconds",
+                        "Returns the Last-Modified HTTP response header in unixtime",
+                        ts.as_secs_f64(),
+                        tags!(
+                            "instance" => instance,
+                        ),
+                    ));
                 }
 
                 metrics.extend([

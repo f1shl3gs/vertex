@@ -6,7 +6,7 @@ edition = "2024"
 description = "A lightweight and ultra-fast tool for building observability pipelines"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
-rust-version = "1.86"
+rust-version = "1.89"
 exclude = [ "tests/node" ]
 
 # Optimized for binary size, and it will take alot time

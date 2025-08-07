@@ -233,9 +233,9 @@ impl Client {
             Err(Error::AlreadyRunning)
         } else {
             let data = incoming.collect().await?.to_bytes();
-
             let resp = serde_json::from_slice::<ErrResp>(&data)?;
-            return Err(Error::Api(parts.status, resp.message));
+
+            Err(Error::Api(parts.status, resp.message))
         }
     }
 

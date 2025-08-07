@@ -187,13 +187,12 @@ impl FunctionTransform for Geoip {
                                 }
                             }
                         } else if let Ok(data) = self.database.lookup::<maxminddb::City>(ip) {
-                            if let Some(city_names) = data.city.and_then(|c| c.names) {
-                                if let Some(city_name) = city_names
+                            if let Some(city_names) = data.city.and_then(|c| c.names)
+                                && let Some(city_name) = city_names
                                     .iter()
                                     .find_map(|(key, value)| (*key == "en").then_some(*value))
-                                {
-                                    city.city_name = city_name;
-                                }
+                            {
+                                city.city_name = city_name;
                             }
 
                             if let Some(continent_code) = data.continent.and_then(|c| c.code) {

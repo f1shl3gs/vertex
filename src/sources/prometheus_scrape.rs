@@ -136,11 +136,10 @@ impl SourceConfig for Config {
                             // Handle "instance" overwrite
                             let tags = metric.tags_mut();
 
-                            if let Some(value) = tags.remove("instance") {
-                                if honor_labels {
+                            if let Some(value) = tags.remove("instance")
+                                && honor_labels {
                                     tags.insert("instance", value)
                                 }
-                            }
 
                             metric.insert_tag("instance", instance.clone());
                         });

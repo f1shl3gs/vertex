@@ -266,8 +266,6 @@ impl Examplar {
                         self.visit_obj(buf, schema);
                     }
                     buf.decr_ident();
-
-                    return;
                 }
             } else if let Some(value) = &obj.const_value {
                 buf.push_value(value);

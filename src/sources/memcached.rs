@@ -621,61 +621,61 @@ async fn fetch_settings_metric(addr: SocketAddr) -> Result<Vec<Metric>, ParseErr
 
     match stats_settings(addr).await {
         Ok(stats) => {
-            if let Some(v) = stats.get("maxconns") {
-                if let Ok(v) = v.parse::<f64>() {
-                    metrics.push(Metric::gauge(
-                        "memcached_max_connections",
-                        "Maximum number of clients allowed",
-                        v,
-                    ));
-                }
+            if let Some(v) = stats.get("maxconns")
+                && let Ok(v) = v.parse::<f64>()
+            {
+                metrics.push(Metric::gauge(
+                    "memcached_max_connections",
+                    "Maximum number of clients allowed",
+                    v,
+                ));
             }
 
-            if let Some(value) = stats.get("lru_crawler") {
-                if value == "yes" {
-                    metrics.extend([
-                        Metric::gauge(
-                            "memcached_lru_crawler_enabled",
-                            "Whether the LRU crawler is enabled",
-                            get_bool_value!(stats, "lru_crawler"),
-                        ),
-                        Metric::gauge(
-                            "memcached_lru_crawler_sleep",
-                            "Microseconds to sleep between LRU crawls",
-                            get_value_from_string!(stats, "lru_crawler_sleep"),
-                        ),
-                        Metric::gauge(
-                            "memcached_lru_crawler_to_crawl",
-                            "Max items to crawl per slab per run",
-                            get_value_from_string!(stats, "lru_crawler_tocrawl"),
-                        ),
-                        Metric::gauge(
-                            "memcached_lru_crawler_maintainer_thread",
-                            "Split LRU mode and backgroud threads",
-                            get_bool_value!(stats, "lru_maintainer_thread"),
-                        ),
-                        Metric::gauge(
-                            "memcached_lru_crawler_hot_percent",
-                            "Percent of slab memory reserved for HOT LRU",
-                            get_value_from_string!(stats, "hot_lru_pct"),
-                        ),
-                        Metric::gauge(
-                            "memcached_lru_crawler_warm_percent",
-                            "Percent of slab memory reserved for WARM LRU",
-                            get_value_from_string!(stats, "warm_lru_pct"),
-                        ),
-                        Metric::gauge(
-                            "memcached_lru_crawler_hot_max_factor",
-                            "Set idle age of HOT LRU to COLD age * this",
-                            get_value_from_string!(stats, "hot_max_factor"),
-                        ),
-                        Metric::gauge(
-                            "memcached_lru_crawler_warm_max_factor",
-                            "Set idle age of WARM LRU to COLD age * this",
-                            get_value_from_string!(stats, "warm_max_factor"),
-                        ),
-                    ])
-                }
+            if let Some(value) = stats.get("lru_crawler")
+                && value == "yes"
+            {
+                metrics.extend([
+                    Metric::gauge(
+                        "memcached_lru_crawler_enabled",
+                        "Whether the LRU crawler is enabled",
+                        get_bool_value!(stats, "lru_crawler"),
+                    ),
+                    Metric::gauge(
+                        "memcached_lru_crawler_sleep",
+                        "Microseconds to sleep between LRU crawls",
+                        get_value_from_string!(stats, "lru_crawler_sleep"),
+                    ),
+                    Metric::gauge(
+                        "memcached_lru_crawler_to_crawl",
+                        "Max items to crawl per slab per run",
+                        get_value_from_string!(stats, "lru_crawler_tocrawl"),
+                    ),
+                    Metric::gauge(
+                        "memcached_lru_crawler_maintainer_thread",
+                        "Split LRU mode and backgroud threads",
+                        get_bool_value!(stats, "lru_maintainer_thread"),
+                    ),
+                    Metric::gauge(
+                        "memcached_lru_crawler_hot_percent",
+                        "Percent of slab memory reserved for HOT LRU",
+                        get_value_from_string!(stats, "hot_lru_pct"),
+                    ),
+                    Metric::gauge(
+                        "memcached_lru_crawler_warm_percent",
+                        "Percent of slab memory reserved for WARM LRU",
+                        get_value_from_string!(stats, "warm_lru_pct"),
+                    ),
+                    Metric::gauge(
+                        "memcached_lru_crawler_hot_max_factor",
+                        "Set idle age of HOT LRU to COLD age * this",
+                        get_value_from_string!(stats, "hot_max_factor"),
+                    ),
+                    Metric::gauge(
+                        "memcached_lru_crawler_warm_max_factor",
+                        "Set idle age of WARM LRU to COLD age * this",
+                        get_value_from_string!(stats, "warm_max_factor"),
+                    ),
+                ])
             }
 
             Ok(metrics)

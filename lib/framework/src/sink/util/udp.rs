@@ -131,10 +131,10 @@ impl UdpConnector {
             .await
             .map_err(UdpError::Bind)?;
 
-        if let Some(send_buffer_bytes) = self.send_buffer_bytes {
-            if let Err(err) = udp::set_send_buffer_size(&socket, send_buffer_bytes) {
-                warn!(message = "Failed configuring send buffer size on UDP socket", %err);
-            }
+        if let Some(send_buffer_bytes) = self.send_buffer_bytes
+            && let Err(err) = udp::set_send_buffer_size(&socket, send_buffer_bytes)
+        {
+            warn!(message = "Failed configuring send buffer size on UDP socket", %err);
         }
 
         socket.connect(addr).await.map_err(UdpError::Connect)?;

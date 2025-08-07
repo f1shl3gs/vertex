@@ -219,14 +219,13 @@ fn udp(
             .await
             .expect("Failed to bind to UDP listener socket");
 
-        if let Some(receive_buffer_bytes) = receive_buffer_bytes {
-            if let Err(err) = framework::udp::set_receive_buffer_size(&socket, receive_buffer_bytes)
-            {
-                warn!(
-                    message = "Failed configure receive buffer size on UDP socket",
-                    %err
-                );
-            }
+        if let Some(receive_buffer_bytes) = receive_buffer_bytes
+            && let Err(err) = framework::udp::set_receive_buffer_size(&socket, receive_buffer_bytes)
+        {
+            warn!(
+                message = "Failed configure receive buffer size on UDP socket",
+                %err
+            );
         }
 
         info!(

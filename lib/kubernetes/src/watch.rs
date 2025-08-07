@@ -236,23 +236,23 @@ async fn step<R: Resource + 'static>(
             }
 
             // check if we need to perform more pages
-            if continue_token.is_none() {
-                if let Some(resource_version) = last_bookmark {
-                    // we have drained the last page - move on to next state
-                    debug!(message = "list done, start watching");
+            if continue_token.is_none()
+                && let Some(resource_version) = last_bookmark
+            {
+                // we have drained the last page - move on to next state
+                debug!(message = "list done, start watching");
 
-                    let mut params = config.watch_params();
-                    params.send_initial_events = false;
+                let mut params = config.watch_params();
+                params.send_initial_events = false;
 
-                    return (
-                        Some(Ok(Event::InitDone)),
-                        State::InitialWatch {
-                            params,
-                            resource_version: Some(resource_version),
-                            initial_list_done: true,
-                        },
-                    );
-                }
+                return (
+                    Some(Ok(Event::InitDone)),
+                    State::InitialWatch {
+                        params,
+                        resource_version: Some(resource_version),
+                        initial_list_done: true,
+                    },
+                );
             }
 
             let params = config.list_params();

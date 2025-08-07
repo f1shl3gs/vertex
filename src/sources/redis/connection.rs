@@ -112,7 +112,7 @@ impl Frame<'_> {
     //
     // https://redis.io/docs/latest/develop/reference/protocol-spec/
     #[inline]
-    pub fn parse(buf: &[u8]) -> Result<Option<Frame>, Error> {
+    pub fn parse(buf: &[u8]) -> Result<Option<Frame<'_>>, Error> {
         Frame::parse_with_pos(buf, &mut 0)
     }
 
