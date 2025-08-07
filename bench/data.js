@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754481099278,
+  "lastUpdate": 1754571705617,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d31cf862e0468209bd2d8b49ec46e21299bc447e",
-          "message": "Merge pull request #2374 from f1shl3gs/revert-2373-lib/framework/tidy\n\nRevert \"lib/framework: reorganize sink/utils\"",
-          "timestamp": "2025-06-01T00:48:22+08:00",
-          "tree_id": "669af8dc6585a07f71fe2097d5122135a0801efb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d31cf862e0468209bd2d8b49ec46e21299bc447e"
-        },
-        "date": 1748710237206,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 538010,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 486960,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e840bde9dc448131a208318c79f33d4164a98ac",
+          "message": "Merge pull request #2486 from f1shl3gs/sources/exec/refactor\n\nsources/exec: refactor",
+          "timestamp": "2025-08-07T20:59:19+08:00",
+          "tree_id": "147bf677b87d3bb5a0c1a7dcef055ba3f8d79af7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e840bde9dc448131a208318c79f33d4164a98ac"
+        },
+        "date": 1754571684546,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 488480,
             "unit": "ns/op"
           }
         ]
