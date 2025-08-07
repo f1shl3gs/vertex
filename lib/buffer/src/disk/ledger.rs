@@ -124,7 +124,7 @@ impl Ledger {
     /// Create or load a ledger for the given path
     pub fn create_or_load(root: PathBuf) -> Result<Self, Error> {
         let path = root.join("ledger.lock");
-        let lockfile = File::open(&path).map_err(|err| Error::CreateLock(path, err))?;
+        let lockfile = File::create(&path).map_err(|err| Error::CreateLock(path, err))?;
 
         lockfile.try_lock()?;
 
