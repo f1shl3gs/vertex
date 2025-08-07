@@ -1,88 +1,93 @@
-use std::path::PathBuf;
-use std::process::ExitStatus;
-use std::time::{Duration, Instant};
+mod scheduled;
+mod streaming;
 
-use async_trait::async_trait;
+use std::collections::HashMap;
+use std::path::PathBuf;
+use std::process::Stdio;
+
+use bytes::Bytes;
 use chrono::Utc;
-use codecs::DecodingConfig;
-use codecs::decoding::StreamDecodingError;
-use codecs::decoding::{DeserializerConfig, FramingConfig};
+use codecs::decoding::{Decoder, DecodingConfig, DeserializerConfig, FramingConfig};
 use configurable::{Configurable, configurable_component};
-use event::log::path::TargetPath;
-use event::{Events, event_path};
-use framework::async_read::VecAsyncReadExt;
+use event::event_path;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures::{FutureExt, StreamExt};
-use log_schema::log_schema;
+use futures::StreamExt;
+use scheduled::ScheduledConfig;
 use serde::{Deserialize, Serialize};
-use thiserror::Error;
-use tokio::io::{AsyncRead, BufReader};
-use tokio::process::Command;
-use tokio::sync::mpsc::{Sender, channel};
+use streaming::StreamingConfig;
+use tokio::io::AsyncRead;
+use tokio::process::{Child, Command};
 use tokio_util::codec::FramedRead;
 
-const EXEC: &str = "exec";
-const STDOUT: &str = "stdout";
-const STDERR: &str = "stderr";
+const READ_BUFFER_SIZE: usize = 16 * 1024;
+
+const EXEC: &[u8] = b"exec";
 const STREAM_KEY: &str = "stream";
 const PID_KEY: &str = "pid";
 const COMMAND_KEY: &str = "command";
 
-const fn default_restart_delay() -> Duration {
-    Duration::from_secs(1)
-}
-
-#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
-enum RestartPolicy {
-    Always,
-
+enum Stream {
     #[default]
-    Never,
+    All,
+
+    Stdout,
+
+    Stderr,
+}
+
+struct ExecConfig {
+    command: Vec<String>,
+    environment: HashMap<String, String>,
+    working_directory: Option<PathBuf>,
+    stream: Stream,
+}
+
+impl ExecConfig {
+    fn execute(&self) -> std::io::Result<Child> {
+        let [program, args @ ..] = &self.command[..] else {
+            // command is checked already
+            unreachable!()
+        };
+
+        let mut cmd = Command::new(program);
+        if !args.is_empty() {
+            cmd.args(args);
+        }
+
+        for (key, value) in &self.environment {
+            cmd.env(key, value);
+        }
+
+        // Explicitly
+        if let Some(current) = &self.working_directory {
+            cmd.current_dir(current);
+        }
+
+        cmd.stdin(Stdio::null());
+        match self.stream {
+            Stream::All => {
+                cmd.stdout(Stdio::piped());
+                cmd.stderr(Stdio::piped());
+            }
+            Stream::Stdout => {
+                cmd.stdout(Stdio::piped());
+                cmd.stderr(Stdio::null());
+            }
+            Stream::Stderr => {
+                cmd.stdout(Stdio::null());
+                cmd.stderr(Stdio::piped());
+            }
+        }
+
+        cmd.spawn()
+    }
 }
 
 #[derive(Configurable, Debug, Deserialize, Serialize)]
-struct ScheduledConfig {
-    /// The interval, in seconds, between scheduled command runs.
-    ///
-    /// If the command takes longer than `exec_interval_secs` to run, it will be killed.
-    #[serde(with = "humanize::duration::serde")]
-    #[configurable(required, example = "1m")]
-    interval: Duration,
-}
-
-#[derive(Configurable, Debug, Deserialize, Serialize)]
-struct StreamingConfig {
-    /// Whether or not the command should be rerun if the command exits.
-    #[serde(default)]
-    restart_policy: RestartPolicy,
-
-    /// The amount of time, in seconds, that Vertex will wait before rerunning a
-    /// streaming command that exited.
-    #[serde(default = "default_restart_delay", with = "humanize::duration::serde")]
-    delay: Duration,
-}
-
-const fn default_include_stderr() -> bool {
-    true
-}
-
-const fn default_maximum_buffer_size() -> usize {
-    1024 * 1024 // 1MiB
-}
-
-#[derive(Debug, Error)]
-pub enum ExecConfigError {
-    #[error("A non-empty list for command must be provided")]
-    CommandEmpty,
-
-    #[error("The maximum buffer size must be greater than zero")]
-    ZeroBuffer,
-}
-
-#[derive(Configurable, Debug, Deserialize, Serialize)]
-#[serde(rename_all = "snake_case", tag = "type")]
+#[serde(rename_all = "lowercase")]
 enum Mode {
     Scheduled(ScheduledConfig),
     Streaming(StreamingConfig),
@@ -91,51 +96,34 @@ enum Mode {
 #[configurable_component(source, name = "exec")]
 #[serde(deny_unknown_fields)]
 pub struct Config {
-    #[configurable(required)]
-    mode: Mode,
-
     /// The command to be run, plus any arguments if needed.
-    #[configurable(required)]
     command: Vec<String>,
 
     /// The directory in which to run the command.
     #[serde(default)]
     working_directory: Option<PathBuf>,
 
-    /// Whether or not the output from stderr should be included when generating events.
-    #[serde(default = "default_include_stderr")]
-    include_stderr: bool,
+    #[serde(default)]
+    environment: HashMap<String, String>,
 
-    /// The maximum buffer size allowed before a log event will be generated.
-    #[serde(
-        default = "default_maximum_buffer_size",
-        with = "humanize::bytes::serde"
-    )]
-    maximum_buffer_size: usize,
+    /// Whether the output from stderr should be included when generating events.
+    #[serde(default)]
+    stream: Stream,
 
+    #[serde(flatten)]
+    mode: Mode,
+
+    #[serde(default)]
     framing: Option<FramingConfig>,
 
     #[serde(default)]
     decoding: DeserializerConfig,
 }
 
-impl Config {
-    fn validate(&self) -> Result<(), ExecConfigError> {
-        if self.command.is_empty() {
-            Err(ExecConfigError::CommandEmpty)
-        } else if self.maximum_buffer_size == 0 {
-            Err(ExecConfigError::ZeroBuffer)
-        } else {
-            Ok(())
-        }
-    }
-}
-
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "exec")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        self.validate()?;
         let hostname = hostname::get()?;
         let framing = self
             .framing
@@ -143,29 +131,31 @@ impl SourceConfig for Config {
             .unwrap_or_else(|| self.decoding.default_stream_framing());
         let decoder = DecodingConfig::new(framing, self.decoding.clone()).build()?;
 
-        match &self.mode {
-            Mode::Scheduled(config) => Ok(Box::pin(run_scheduled(
-                self.command.clone(),
-                self.working_directory.clone(),
-                self.include_stderr,
+        let exec = ExecConfig {
+            command: self.command.clone(),
+            environment: self.environment.clone(),
+            working_directory: self.working_directory.clone(),
+            stream: self.stream,
+        };
+
+        Ok(match &self.mode {
+            Mode::Scheduled(config) => Box::pin(scheduled::run(
+                config.clone(),
+                exec,
                 hostname,
-                config.interval,
                 decoder,
-                cx.shutdown,
                 cx.output,
-            ))),
-            Mode::Streaming(config) => Ok(Box::pin(run_streaming(
-                self.command.clone(),
-                self.working_directory.clone(),
-                self.include_stderr,
+                cx.shutdown,
+            )),
+            Mode::Streaming(config) => Box::pin(streaming::run(
+                config.clone(),
+                exec,
                 hostname,
-                config.restart_policy.clone(),
-                config.delay,
                 decoder,
-                cx.shutdown,
                 cx.output,
-            ))),
-        }
+                cx.shutdown,
+            )),
+        })
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -177,329 +167,63 @@ impl SourceConfig for Config {
     }
 }
 
-async fn run_scheduled(
+async fn pump<R: AsyncRead + Unpin>(
+    reader: R,
     command: Vec<String>,
-    working_directory: Option<PathBuf>,
-    include_stderr: bool,
-    hostname: String,
-    interval: Duration,
-    decoder: codecs::Decoder,
-    mut shutdown: ShutdownSignal,
-    output: Pipeline,
-) -> Result<(), ()> {
-    debug!(message = "Staring scheduled exec runs");
-
-    let mut ticker = tokio::time::interval(interval);
-
-    loop {
-        tokio::select! {
-            biased;
-
-            _ = &mut shutdown => break,
-            _ = ticker.tick() => {}
-        }
-
-        // Wait for out task to finish, wrapping it in a timeout
-        let timeout = tokio::time::timeout(
-            interval,
-            run_command(
-                command.clone(),
-                working_directory.clone(),
-                include_stderr,
-                &hostname,
-                shutdown.clone(),
-                decoder.clone(),
-                output.clone(),
-            ),
-        )
-        .await;
-
-        match timeout {
-            Ok(result) => {
-                if let Err(err) = result {
-                    error!(message = "Unable to exec", %err);
-                }
-            }
-            Err(err) => {
-                error!(
-                    message = "Timeout during exec",
-                    timeout_sec = interval.as_secs(),
-                    %err
-                );
-            }
-        }
-    }
-
-    Ok(())
-}
-
-async fn run_command(
-    command: Vec<String>,
-    working_dir: Option<PathBuf>,
-    include_stderr: bool,
-    hostname: &str,
-    shutdown: ShutdownSignal,
-    decoder: codecs::Decoder,
-    mut output: Pipeline,
-) -> Result<Option<ExitStatus>, std::io::Error> {
-    let mut cmd = build_command(command.clone(), working_dir, include_stderr);
-
-    // Mark the start time just before spawning the process as
-    // this seems to be the best approximation of exec duration.
-    let start = Instant::now();
-
-    let mut child = cmd.spawn()?;
-
-    // Set up communication channels
-    let (sender, mut receiver) = channel(1024);
-
-    // Optionally include stderr
-    if include_stderr {
-        let stderr = child
-            .stderr
-            .take()
-            .ok_or_else(|| std::io::Error::other("Unable to take stderr of spawned process"))?;
-
-        // Crate stderr async reader
-        let stderr = stderr.allow_read_until(shutdown.clone().map(|_| ()));
-        let stderr_reader = BufReader::new(stderr);
-
-        spawn_reader_thread(stderr_reader, decoder.clone(), STDERR, sender.clone());
-    }
-
-    let stdout = child
-        .stdout
-        .take()
-        .ok_or_else(|| std::io::Error::other("Unable to take stdout of spawned process"))?;
-
-    // Create stdout async reader
-    let stdout = stdout.allow_read_until(shutdown.clone().map(|_| ()));
-    let stdout_reader = BufReader::new(stdout);
-
-    let pid = child.id();
-
-    spawn_reader_thread(stdout_reader, decoder.clone(), STDOUT, sender);
-
-    'send: while let Some(((mut events, _byte_size), stream)) = receiver.recv().await {
-        // TODO: metric
-
-        let total_count = events.len();
-        let mut processed_count = 0;
-
-        handle_events(&command, hostname, &Some(stream), pid, &mut events);
-
-        // The variable `processed_count` is used in the Err branch
-        #[allow(unused_assignments)]
-        match output.send(events).await {
-            Ok(_) => {
-                processed_count += 1;
-            }
-            Err(err) => {
-                error!(
-                    message = "Failed to forward events, downstream is closed",
-                    count = total_count - processed_count,
-                    %err
-                );
-
-                break 'send;
-            }
-        }
-    }
-
-    debug!(
-        message = "Finished command run",
-        elapsed = ?start.elapsed()
-    );
-
-    match child.try_wait() {
-        Ok(Some(exit_status)) => Ok(Some(exit_status)),
-        Ok(None) => Ok(None),
-        Err(err) => {
-            error!(message = "Unable to obtain exit status", %err);
-
-            Ok(None)
-        }
-    }
-}
-
-fn build_command(
-    command: Vec<String>,
-    working_directory: Option<PathBuf>,
-    include_stderr: bool,
-) -> Command {
-    let mut cmd = Command::new(&command[0]);
-
-    if command.len() > 1 {
-        cmd.args(&command[1..]);
-    };
-
-    cmd.kill_on_drop(true);
-
-    // Explicitly set the current dir if needed
-    if let Some(current_dir) = &working_directory {
-        cmd.current_dir(current_dir);
-    }
-
-    // Pipe our stdout to the process
-    cmd.stdout(std::process::Stdio::piped());
-
-    // Pipe stderr to the process if needed
-    if include_stderr {
-        cmd.stderr(std::process::Stdio::piped());
-    } else {
-        cmd.stderr(std::process::Stdio::null());
-    }
-
-    // Stdin is not needed
-    cmd.stdin(std::process::Stdio::null());
-
-    cmd
-}
-
-fn handle_events(
-    command: &[String],
-    hostname: &str,
-    data_stream: &Option<&str>,
     pid: Option<u32>,
-    events: &mut Events,
-) {
-    events.for_each_log(|log| {
-        // Add timestamp and hostname
-        log.insert(log_schema().timestamp_key(), Utc::now());
-        log.insert(log_schema().host_key(), hostname);
-
-        // Add source type
-        log.insert_metadata(log_schema().source_type_key().value_path(), EXEC);
-
-        // Add data stream of stdin or stderr(if needed)
-        if let Some(data_stream) = data_stream {
-            log.try_insert(event_path!(STREAM_KEY), data_stream.to_string());
-        }
-
-        // Add pid (if needed)
-        if let Some(pid) = pid {
-            log.try_insert(event_path!(PID_KEY), pid);
-        }
-
-        // Add command
-        log.try_insert(event_path!(COMMAND_KEY), command.to_owned())
-    })
-}
-
-fn spawn_reader_thread<R: 'static + AsyncRead + Unpin + Send>(
-    reader: BufReader<R>,
-    decoder: codecs::Decoder,
-    origin: &'static str,
-    sender: Sender<((Events, usize), &'static str)>,
-) {
-    // Start collecting
-    tokio::spawn(async move {
-        debug!(message = "Start capturing command output", origin);
-
-        let mut stream = FramedRead::new(reader, decoder);
-        while let Some(result) = stream.next().await {
-            match result {
-                Ok(next) => {
-                    if sender.send((next, origin)).await.is_err() {
-                        // If the receive half of the channel is closed, either due to close
-                        // being called or the Receiver handle dropping, the function returns an
-                        // error.
-                        debug!(message = "Receive channel closed, unable to send");
-
-                        break;
-                    }
-                }
-
-                Err(err) => {
-                    // Error is logged by `Decoder`, no further handling is needed.
-                    if !err.can_continue() {
-                        break;
-                    }
-                }
-            }
-        }
-
-        debug!(message = "Finished capturing command output", origin);
-    });
-}
-
-async fn run_streaming(
-    command: Vec<String>,
-    working_dir: Option<PathBuf>,
-    include_stderr: bool,
+    stream: &'static str,
     hostname: String,
-    restart: RestartPolicy,
-    delay: Duration,
-    decoder: codecs::Decoder,
+    decoder: Decoder,
+    mut output: Pipeline,
     shutdown: ShutdownSignal,
-    output: Pipeline,
-) -> Result<(), ()> {
-    match restart {
-        RestartPolicy::Always => {
-            // Continue to loop while not shutdown
-            loop {
-                tokio::select! {
-                    // will break early if a shutdown is started
-                    _ = shutdown.clone() => break,
+) {
+    let mut framed =
+        FramedRead::with_capacity(reader, decoder, READ_BUFFER_SIZE).take_until(shutdown);
+    let hostname = Bytes::from(hostname);
+    let stream = Bytes::from_static(stream.as_bytes());
+    let exec = Bytes::from_static(EXEC);
 
-                    output = run_command(
-                        command.clone(),
-                        working_dir.clone(),
-                        include_stderr,
-                        &hostname,
-                        shutdown.clone(),
-                        decoder.clone(),
-                        output.clone()
-                    ) => {
-                        // handle command finished
-                        if let Err(err) = output {
-                            error!(
-                                message = "Unable to exec",
-                                %err
-                            );
-                        }
+    while let Some(result) = framed.next().await {
+        match result {
+            Ok((mut events, _size)) => {
+                events.for_each_log(|log| {
+                    // Add timestamp and hostname
+                    log.insert("timestamp", Utc::now());
+                    log.insert("host", hostname.clone());
+
+                    // Add source type
+                    log.insert_metadata("source_type", exec.clone());
+
+                    // Add data stream of stdin or stderr(if needed)
+                    log.try_insert(event_path!(STREAM_KEY), stream.clone());
+
+                    // Add pid (if needed)
+                    if let Some(pid) = pid {
+                        log.try_insert(event_path!(PID_KEY), pid);
                     }
-                }
 
-                let mut poll_shutdown = shutdown.clone();
-                if futures::poll!(&mut poll_shutdown).is_pending() {
-                    warn!(message = "Streaming process ended before shutdown");
-                }
+                    // Add command
+                    log.try_insert(event_path!(COMMAND_KEY), command.clone());
+                });
 
-                tokio::select! {
-                    // will break early if a shutdown is started
-                    _ = &mut poll_shutdown => break,
-                    _ = tokio::time::sleep(delay) => debug!(message = "Restarting streaming process")
+                if let Err(_err) = output.send(events).await {
+                    break;
                 }
             }
-        }
-
-        RestartPolicy::Never => {
-            if let Err(err) = run_command(
-                command,
-                working_dir,
-                include_stderr,
-                &hostname,
-                shutdown,
-                decoder,
-                output,
-            )
-            .await
-            {
-                error!(message = "Unable to exec", %err);
+            Err(err) => {
+                error!(message = "error reading framed stream", ?err);
             }
         }
     }
-
-    Ok(())
 }
 
 #[cfg(test)]
 mod tests {
-    use std::io::Cursor;
-    use std::task::Poll;
+    use std::path::PathBuf;
+    use std::time::Duration;
 
     use event::log::Value;
+    use framework::Pipeline;
 
     use super::*;
 
@@ -508,145 +232,41 @@ mod tests {
         crate::testing::generate_config::<Config>()
     }
 
-    #[test]
-    fn test_handle_event() {
-        let command = vec!["ls".to_string()];
-        let hostname = "localhost";
-        let data_stream = Some(STDOUT);
-        let pid = Some(123);
-
-        let mut events = Events::Logs(vec!["hello".into()]);
-        handle_events(&command, hostname, &data_stream, pid, &mut events);
-
-        let log = events.into_logs().unwrap().remove(0);
-
-        assert_eq!(
-            log.get(log_schema().host_key()).unwrap(),
-            &Value::from("localhost")
-        );
-        assert_eq!(log.get(STREAM_KEY).unwrap(), &Value::from(STDOUT));
-        assert_eq!(log.get(PID_KEY).unwrap(), &Value::from(123));
-        assert_eq!(log.get(COMMAND_KEY).unwrap(), &Value::from(vec!["ls"]));
-        assert_eq!(
-            log.get(log_schema().message_key()).unwrap(),
-            &Value::from("hello")
-        );
-        assert!(log.get(log_schema().timestamp_key()).is_some())
-    }
-
-    #[test]
-    fn test_build_command() {
-        let command = vec![
-            "./runner".to_string(),
-            "arg1".to_string(),
-            "arg2".to_string(),
-        ];
-
-        let command = build_command(
-            command,
-            Some(PathBuf::from("/tmp")),
-            default_include_stderr(),
-        );
-
-        let mut expected_command = Command::new("./runner");
-        expected_command.kill_on_drop(true);
-        expected_command.current_dir("/tmp");
-        expected_command.args(vec!["arg1".to_string(), "arg2".to_string()]);
-
-        // Unfortunately the current_dir is not included in the formatted string
-        let expected_command_string = format!("{expected_command:?}");
-        let command_string = format!("{command:?}");
-
-        assert_eq!(expected_command_string, command_string);
-    }
-
     #[tokio::test]
-    async fn test_spawn_reader_thread() {
-        let buf = Cursor::new("hello\nworld");
-        let reader = BufReader::new(buf);
-        let decoder = codecs::Decoder::default();
-        let (sender, mut receiver) = channel(1024);
+    async fn scheduled() {
+        let config = Config {
+            command: vec!["./scheduled.sh".to_string()],
+            environment: HashMap::new(),
+            working_directory: Some(PathBuf::from("tests/exec")),
+            mode: Mode::Scheduled(ScheduledConfig {
+                interval: Duration::from_secs(1),
+            }),
+            stream: Stream::All,
+            framing: None,
+            decoding: Default::default(),
+        };
 
-        spawn_reader_thread(reader, decoder, STDOUT, sender);
-
-        let mut counter = 0;
-        if let Some(((events, bytes), origin)) = receiver.recv().await {
-            assert_eq!(bytes, 5);
-            assert_eq!(events.len(), 1);
-
-            let log = events.into_logs().unwrap().remove(0);
-            assert_eq!(
-                log.get(log_schema().message_key()).unwrap(),
-                &Value::from("hello")
-            );
-            assert_eq!(origin, STDOUT);
-            counter += 1;
-        }
-
-        if let Some(((events, byte_size), origin)) = receiver.recv().await {
-            assert_eq!(byte_size, 5);
-            assert_eq!(events.len(), 1);
-
-            let log = events.into_logs().unwrap().remove(0);
-            assert_eq!(
-                log.get(log_schema().message_key()).unwrap(),
-                &Value::from("world"),
-            );
-            assert_eq!(origin, STDOUT);
-            counter += 1;
-        }
-
-        assert_eq!(counter, 2);
-    }
-
-    #[cfg(unix)]
-    #[tokio::test]
-    async fn exec_command() {
-        let command = vec!["echo".into(), "hello".into()];
-        let hostname = "localhost";
-        let decoder = Default::default();
-        let shutdown = ShutdownSignal::noop();
         let (tx, mut rx) = Pipeline::new_test();
+        let source = config.build(SourceContext::new_test(tx)).await.unwrap();
 
-        // Wait for our task to finish, wrapping it in a timeout
-        let timeout = tokio::time::timeout(
-            Duration::from_secs(3),
-            run_command(
-                command.clone(),
-                None,
-                default_include_stderr(),
-                hostname,
-                shutdown,
-                decoder,
-                tx,
-            ),
+        tokio::spawn(source);
+
+        tokio::time::sleep(Duration::from_secs(2)).await;
+
+        let stdout = rx.recv().await.unwrap();
+        let binding = stdout.into_logs().unwrap();
+        let log = binding.first().unwrap();
+        assert_eq!(
+            log.get("stream"),
+            Some(&Value::from(Bytes::from_static(b"stdout")))
         );
 
-        let timeout_result = timeout.await;
-        let exit_status = timeout_result
-            .expect("command timed out")
-            .expect("command error");
-
-        assert_eq!(0, exit_status.unwrap().code().unwrap());
-
-        if let Poll::Ready(Some(events)) = futures::poll!(rx.next()) {
-            let log = events.into_logs().unwrap().remove(0);
-
-            println!("{log:?}");
-
-            assert_eq!(log.get(COMMAND_KEY).unwrap(), &Value::from(command));
-            assert_eq!(log.get(STREAM_KEY).unwrap(), &Value::from(STDOUT));
-            assert_eq!(
-                log.get(log_schema().message_key()).unwrap(),
-                &Value::from("hello")
-            );
-            assert_eq!(
-                log.get(log_schema().host_key()).unwrap(),
-                &Value::from("localhost")
-            );
-            assert!(log.get(PID_KEY).is_some());
-            assert!(log.get(log_schema().timestamp_key()).is_some());
-            assert_eq!(7, log.all_fields().unwrap().count());
-        }
+        let stderr = rx.recv().await.unwrap();
+        let binding = stderr.into_logs().unwrap();
+        let log = binding.first().unwrap();
+        assert_eq!(
+            log.get("stream"),
+            Some(&Value::from(Bytes::from_static(b"stderr")))
+        );
     }
 }
