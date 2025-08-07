@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754580300103,
+  "lastUpdate": 1754580688153,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ebaa782698c4a5b656e91339519f8285e653be68",
-          "message": "Merge pull request #2373 from f1shl3gs/lib/framework/tidy\n\nlib/framework: reorganize sink/utils",
-          "timestamp": "2025-05-31T21:59:50+08:00",
-          "tree_id": "16ce767677d204e2a729a57600c92c0fdd38b7fb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ebaa782698c4a5b656e91339519f8285e653be68"
-        },
-        "date": 1748700574703,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22662000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 666390,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.128,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d31cf862e0468209bd2d8b49ec46e21299bc447e",
           "message": "Merge pull request #2374 from f1shl3gs/revert-2373-lib/framework/tidy\n\nRevert \"lib/framework: reorganize sink/utils\"",
           "timestamp": "2025-06-01T00:48:22+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.249,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4693252189d742ca0296f3f13a39b0eaf2871172",
+          "message": "Merge pull request #2487 from f1shl3gs/toolchain/1.89.0\n\ntoolchain: bump to 1.89.0",
+          "timestamp": "2025-08-07T23:21:08+08:00",
+          "tree_id": "2360703af9b47cfc6c280f7eb86ea902c64138ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4693252189d742ca0296f3f13a39b0eaf2871172"
+        },
+        "date": 1754580667260,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15597000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 655940,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.44,
             "unit": "ns/op"
           }
         ]
