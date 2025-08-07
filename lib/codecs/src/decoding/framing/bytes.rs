@@ -7,20 +7,20 @@ use super::FramingError;
 ///
 /// This is basically a no-op and is used to convert from `BytesMut` to `Bytes`
 #[derive(Clone, Debug)]
-pub struct BytesDeserializerDecoder {
+pub struct BytesDecoder {
     /// Whether the empty buffer has been flushed. This is important to
     /// propagate empty frames in message based transports.
     flushed: bool,
 }
 
-impl BytesDeserializerDecoder {
+impl BytesDecoder {
     /// Create a new `BytesDecoder`.
     pub const fn new() -> Self {
         Self { flushed: false }
     }
 }
 
-impl Decoder for BytesDeserializerDecoder {
+impl Decoder for BytesDecoder {
     type Item = Bytes;
     type Error = FramingError;
 
@@ -50,7 +50,7 @@ mod tests {
     #[test]
     fn decode() {
         let mut input = BytesMut::from("some bytes");
-        let mut decoder = BytesDeserializerDecoder::new();
+        let mut decoder = BytesDecoder::new();
 
         assert_eq!(decoder.decode(&mut input).unwrap(), None);
         assert_eq!(
@@ -63,7 +63,7 @@ mod tests {
     #[tokio::test]
     async fn decode_frame_reader() {
         let input: &[u8] = b"foo";
-        let decoder = BytesDeserializerDecoder::new();
+        let decoder = BytesDecoder::new();
 
         let mut reader = FramedRead::new(input, decoder);
 
@@ -74,7 +74,7 @@ mod tests {
     #[tokio::test]
     async fn decode_empty() {
         let input: &[u8] = b"";
-        let decoder = BytesDeserializerDecoder::new();
+        let decoder = BytesDecoder::new();
 
         let mut reader = FramedRead::new(input, decoder);
 
