@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754582984222,
+  "lastUpdate": 1754583001032,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e156b2135f18216b4d48058de7b2c96bab8c793a",
-          "message": "Merge pull request #2384 from f1shl3gs/sources/systemd/impl_watchdog\n\nsources/systemd: impl watchdog",
-          "timestamp": "2025-06-07T08:22:47+08:00",
-          "tree_id": "468c05347d2a6a75551077f40e515109b3c91993",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e156b2135f18216b4d48058de7b2c96bab8c793a"
-        },
-        "date": 1749256427387,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 513,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37530.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d959cecce1cfe91b292922642d0440825cbec7be",
           "message": "Merge pull request #2385 from f1shl3gs/sources/systemd/small_refactor\n\nsources/systemd: small refactor to reduce binary size",
           "timestamp": "2025-06-07T09:13:49+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 518,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37476.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "72b24672aa00463dd6202da3a07ca46d7bc0ff59",
+          "message": "Merge pull request #2488 from f1shl3gs/lib/framework/set_default_concurrency_to_adaptive\n\nlib/framework: set Concurrency::Adaptive as default value",
+          "timestamp": "2025-08-07T23:59:29+08:00",
+          "tree_id": "59a42e8c0387aa6f2ff8391aa7e4a3c71a49e0f4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/72b24672aa00463dd6202da3a07ca46d7bc0ff59"
+        },
+        "date": 1754582980537,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
             "unit": "s"
           },
           {
