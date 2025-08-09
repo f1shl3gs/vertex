@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754726499209,
+  "lastUpdate": 1754726511286,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fcf923a21f7a7cac3f3810ece47d0edc953c72bb",
-          "message": "Merge pull request #2378 from f1shl3gs/sources/redis/update_metrics_map\n\nsources/redis: update metric map",
-          "timestamp": "2025-06-02T20:52:46+08:00",
-          "tree_id": "b0bac88dde35e5cedac6a2284058f80ca8ac0d80",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fcf923a21f7a7cac3f3810ece47d0edc953c72bb"
-        },
-        "date": 1748868978745,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.225,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 166.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 313.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 668.72,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "473c4c20b2f87d9e4dae06074a8a8604f092f1e6",
           "message": "Merge pull request #2379 from f1shl3gs/dependabot/cargo/headers-0.4.1\n\nchore(deps): bump headers from 0.4.0 to 0.4.1",
           "timestamp": "2025-06-03T19:09:50+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 721.27,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce83ab7ca100f6249a2a55154375d1b407a0fcce",
+          "message": "Merge pull request #2490 from f1shl3gs/dependabot/cargo/tonic-c76af55c48\n\nchore(deps): bump the tonic group with 4 updates",
+          "timestamp": "2025-08-09T15:59:00+08:00",
+          "tree_id": "981ee522606363c3518aec98cfc16ae41ba10789",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ce83ab7ca100f6249a2a55154375d1b407a0fcce"
+        },
+        "date": 1754726490386,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.888,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 330.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 719.33,
             "unit": "ns/op"
           }
         ]
