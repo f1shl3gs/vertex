@@ -55,7 +55,7 @@ pub async fn run(
                     );
                 } else {
                     warn!(
-                        message = "command exited with error",
+                        message = "command exited with an error",
                         command = ?exec.command,
                         elapsed = ?elapsed,
                         code = status.code(),
@@ -64,7 +64,7 @@ pub async fn run(
             }
             Err(err) => {
                 warn!(
-                    message = "command execute failed",
+                    message = "cannot execute command",
                     command = ?exec.command,
                     elapsed = ?elapsed,
                     ?err,
