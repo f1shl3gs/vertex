@@ -3,15 +3,15 @@ use std::net::SocketAddr;
 use base64::Engine;
 use base64::prelude::BASE64_URL_SAFE;
 use bytes::Bytes;
-use chrono::{DateTime, Utc};
 use configurable::configurable_component;
-use event::{Bucket, Events, Metric, Quantile};
+use event::Events;
 use framework::Source;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::source::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
 use framework::tls::TlsConfig;
 use http::{HeaderMap, Method, StatusCode, Uri};
-use prometheus::{GroupKind, MetricGroup};
+
+use crate::common::prometheus::convert_metrics;
 
 /// Configuration for the `prometheus_pushgateway` source.
 #[configurable_component(source, name = "prometheus_pushgateway")]
@@ -73,112 +73,15 @@ impl HttpSource for PushgatewaySource {
         let data = String::from_utf8_lossy(&body);
         let metric_group = prometheus::parse_text(data.as_ref())
             .map_err(|err| ErrorMessage::new(StatusCode::UNPROCESSABLE_ENTITY, err.to_string()))?;
+        let mut metrics = convert_metrics(metric_group);
 
-        Ok(convert_metrics(metric_group, &extra_labels))
-    }
-}
-
-fn convert_metrics(groups: Vec<MetricGroup>, extra_labels: &[(String, String)]) -> Events {
-    let mut metrics = Vec::with_capacity(groups.len());
-    let start = Utc::now();
-
-    for MetricGroup {
-        name,
-        description,
-        metrics: group,
-    } in groups
-    {
-        match group {
-            GroupKind::Counter(map) => {
-                for (key, metric) in map {
-                    let mut counter = Metric::sum(&name, &description, metric.value)
-                        .with_timestamp(utc_timestamp(key.timestamp, start))
-                        .with_tags(key.labels.into());
-
-                    for (key, value) in extra_labels {
-                        counter.tags_mut().insert(key.clone(), value.clone());
-                    }
-
-                    metrics.push(counter);
-                }
+        metrics.iter_mut().for_each(|metric| {
+            for (key, value) in &extra_labels {
+                metric.insert_tag(key, value);
             }
-            GroupKind::Gauge(map) | GroupKind::Untyped(map) => {
-                for (key, metric) in map {
-                    let mut gauge = Metric::gauge(&name, &description, metric.value)
-                        .with_timestamp(utc_timestamp(key.timestamp, start))
-                        .with_tags(key.labels.into());
+        });
 
-                    for (key, value) in extra_labels {
-                        gauge.tags_mut().insert(key.clone(), value.clone());
-                    }
-
-                    metrics.push(gauge);
-                }
-            }
-            GroupKind::Summary(map) => {
-                for (key, metric) in map {
-                    let mut summary = Metric::summary(
-                        &name,
-                        &description,
-                        metric.count,
-                        metric.sum,
-                        metric
-                            .quantiles
-                            .iter()
-                            .map(|q| Quantile {
-                                quantile: q.quantile,
-                                value: q.value,
-                            })
-                            .collect::<Vec<_>>(),
-                    )
-                    .with_timestamp(utc_timestamp(key.timestamp, start))
-                    .with_tags(key.labels.into());
-
-                    for (key, value) in extra_labels {
-                        summary.tags_mut().insert(key.clone(), value.clone());
-                    }
-
-                    metrics.push(summary);
-                }
-            }
-            GroupKind::Histogram(map) => {
-                for (key, metric) in map {
-                    let mut histogram = Metric::histogram(
-                        &name,
-                        &description,
-                        metric.count,
-                        metric.sum,
-                        metric
-                            .buckets
-                            .iter()
-                            .map(|b| Bucket {
-                                upper: b.bucket,
-                                count: b.count,
-                            })
-                            .collect::<Vec<_>>(),
-                    )
-                    .with_timestamp(utc_timestamp(key.timestamp, start))
-                    .with_tags(key.labels.into());
-
-                    for (key, value) in extra_labels {
-                        histogram.tags_mut().insert(key.clone(), value.clone());
-                    }
-
-                    metrics.push(histogram);
-                }
-            }
-        }
-    }
-
-    metrics.into()
-}
-
-fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
-    match timestamp {
-        None => Some(default),
-        Some(timestamp) => {
-            DateTime::<Utc>::from_timestamp(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
-        }
+        Ok(metrics.into())
     }
 }
 
@@ -274,8 +177,8 @@ fn decode_label_pair(key: &str, value: &str) -> Result<(String, String), ErrorMe
 mod tests {
     use std::time::Duration;
 
-    use chrono::{TimeZone, Timelike};
-    use event::{EventStatus, tags};
+    use chrono::{TimeZone, Timelike, Utc};
+    use event::{Bucket, EventStatus, Metric, tags};
     use framework::Pipeline;
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;

@@ -202,6 +202,7 @@ sources-ping = ["dep:socket2", "dep:parking_lot"]
 sources-prometheus_pushgateway = ["dep:base64", "dep:prometheus"]
 sources-prometheus_scrape = ["dep:prometheus"]
 sources-prometheus_remote_write = ["dep:snap", "dep:prometheus"]
+sources-prometheus_textfile = ["dep:prometheus"]
 sources-redfish = []
 sources-redis = []
 sources-selfstat = []
@@ -257,6 +258,7 @@ sources = [
     "sources-prometheus_pushgateway",
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",
+    "sources-prometheus_textfile",
     "sources-redfish",
     "sources-redis",
     "sources-selfstat",
