@@ -1,10 +1,13 @@
-/target/
+# IDE
 /.idea/
-tmp.*
-tmp_.*
-
 .vscode
-
 .fleet
 
-tests/redfish/DSP2043_2024.3
+# build
+/target/
+
+# dev or test files
+dev.yaml
+temp
+temp.*
+temp_.*
