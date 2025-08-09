@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754726559441,
+  "lastUpdate": 1754726927764,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f0c1359d54e1cc7a340aa4dffee9a61efb842d25",
-          "message": "Merge pull request #2376 from f1shl3gs/sources/audit/optimize_syscall_lookup\n\nsources/audit: optimize syscall lookup, reduce binary size",
-          "timestamp": "2025-06-01T01:58:21+08:00",
-          "tree_id": "cd53a319d95c7be598f23f4678b9284e32f2434e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f0c1359d54e1cc7a340aa4dffee9a61efb842d25"
-        },
-        "date": 1748714884263,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 21965000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 656230,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.092,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b7c30f167e1233c74c80b57386c7dacb9fef79c9",
           "message": "Merge pull request #2377 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
           "timestamp": "2025-06-02T20:42:54+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.342,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce83ab7ca100f6249a2a55154375d1b407a0fcce",
+          "message": "Merge pull request #2490 from f1shl3gs/dependabot/cargo/tonic-c76af55c48\n\nchore(deps): bump the tonic group with 4 updates",
+          "timestamp": "2025-08-09T15:59:00+08:00",
+          "tree_id": "981ee522606363c3518aec98cfc16ae41ba10789",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ce83ab7ca100f6249a2a55154375d1b407a0fcce"
+        },
+        "date": 1754726906647,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14696000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 649490,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.82,
             "unit": "ns/op"
           }
         ]
