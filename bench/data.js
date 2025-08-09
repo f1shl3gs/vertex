@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754772794626,
+  "lastUpdate": 1754772855259,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c2787256ebc2ee425c41b711c8e81fd9764cb782",
-          "message": "Merge pull request #2389 from f1shl3gs/dependabot/cargo/proptest-1.7.0\n\nchore(deps): bump proptest from 1.6.0 to 1.7.0",
-          "timestamp": "2025-06-08T04:20:29+08:00",
-          "tree_id": "47287ac0b05ab45eb7fd7d5423dffd26b6476c23",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c2787256ebc2ee425c41b711c8e81fd9764cb782"
-        },
-        "date": 1749328249783,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 519,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37524.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3048e4f0a0177aec59f7555397f45c60a50e5359",
           "message": "Merge pull request #2390 from f1shl3gs/sources/node/rename\n\nsources/node: rename `node_metrics` to `node`",
           "timestamp": "2025-06-08T04:42:49+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37455.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "caa1368b595a696b76f9fda9003135914d8d2a97",
+          "message": "Merge pull request #2493 from f1shl3gs/sources/prometheus_textfile/add\n\nsources/prometheus_textfile: init",
+          "timestamp": "2025-08-10T04:43:33+08:00",
+          "tree_id": "98ddfbcde62d865080327cd41515c17411b42156",
+          "url": "https://github.com/f1shl3gs/vertex/commit/caa1368b595a696b76f9fda9003135914d8d2a97"
+        },
+        "date": 1754772834680,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 524,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37478,
             "unit": "KiB"
           }
         ]
