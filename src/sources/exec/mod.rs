@@ -3,29 +3,25 @@ mod streaming;
 
 use std::collections::HashMap;
 use std::path::PathBuf;
-use std::process::Stdio;
+use std::pin::Pin;
+use std::process::{ExitStatus, Stdio};
+use std::task::{Context, Poll};
 
 use bytes::Bytes;
 use chrono::Utc;
-use codecs::decoding::{Decoder, DecodingConfig, DeserializerConfig, FramingConfig};
+use codecs::decoding::{DecodeError, Decoder, DecodingConfig, DeserializerConfig, FramingConfig};
 use configurable::{Configurable, configurable_component};
-use event::event_path;
+use event::Events;
 use framework::config::{Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::StreamExt;
 use scheduled::ScheduledConfig;
 use serde::{Deserialize, Serialize};
 use streaming::StreamingConfig;
-use tokio::io::AsyncRead;
-use tokio::process::{Child, Command};
+use tokio::process::{Child, ChildStderr, ChildStdout, Command};
 use tokio_util::codec::FramedRead;
 
 const READ_BUFFER_SIZE: usize = 16 * 1024;
-
-const EXEC: &[u8] = b"exec";
-const STREAM_KEY: &str = "stream";
-const PID_KEY: &str = "pid";
-const COMMAND_KEY: &str = "command";
 
 #[derive(Configurable, Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -56,6 +52,8 @@ impl ExecConfig {
         if !args.is_empty() {
             cmd.args(args);
         }
+
+        cmd.kill_on_drop(true);
 
         for (key, value) in &self.environment {
             cmd.env(key, value);
@@ -167,54 +165,153 @@ impl SourceConfig for Config {
     }
 }
 
-async fn pump<R: AsyncRead + Unpin>(
-    reader: R,
+struct Combined {
+    stdout: Option<Pin<Box<FramedRead<ChildStdout, Decoder>>>>,
+    stderr: Option<Pin<Box<FramedRead<ChildStderr, Decoder>>>>,
+
     command: Vec<String>,
+    hostname: String,
     pid: Option<u32>,
-    stream: &'static str,
+}
+
+impl Combined {
+    fn new(
+        stdout: Option<ChildStdout>,
+        stderr: Option<ChildStderr>,
+        command: Vec<String>,
+        hostname: String,
+        pid: Option<u32>,
+        decoder: Decoder,
+    ) -> Self {
+        let stdout = stdout.map(|inner| {
+            Box::pin(FramedRead::with_capacity(
+                inner,
+                decoder.clone(),
+                READ_BUFFER_SIZE,
+            ))
+        });
+        let stderr = stderr
+            .map(|inner| Box::pin(FramedRead::with_capacity(inner, decoder, READ_BUFFER_SIZE)));
+
+        Combined {
+            stdout,
+            stderr,
+            command,
+            hostname,
+            pid,
+        }
+    }
+
+    fn enrich(self: Pin<&mut Self>, events: &mut Events, stream: &'static str) {
+        events.for_each_log(|log| {
+            // Add timestamp and hostname
+            log.insert("timestamp", Utc::now());
+            log.insert("host", self.hostname.clone());
+
+            // Add source type
+            log.insert_metadata("source_type", Bytes::from_static(b"exec"));
+
+            // Add data stream of stdin or stderr(if needed)
+            log.try_insert("stream", Bytes::from_static(stream.as_bytes()));
+
+            // Add pid (if needed)
+            if let Some(pid) = self.pid {
+                log.try_insert("pid", pid);
+            }
+
+            // Add command
+            log.try_insert("command", self.command.clone());
+        });
+    }
+}
+
+impl futures::Stream for Combined {
+    type Item = Result<Events, DecodeError>;
+
+    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        let mut done = false;
+        if let Some(stdout) = &mut self.stdout {
+            match stdout.poll_next_unpin(cx) {
+                Poll::Ready(Some(Ok((mut events, _size)))) => {
+                    self.enrich(&mut events, "stdout");
+                    return Poll::Ready(Some(Ok(events)));
+                }
+                Poll::Ready(Some(Err(err))) => {
+                    return Poll::Ready(Some(Err(err)));
+                }
+                Poll::Pending => {}
+                Poll::Ready(None) => {
+                    done = true;
+                }
+            }
+        }
+
+        if let Some(stderr) = &mut self.stderr {
+            return match stderr.poll_next_unpin(cx) {
+                Poll::Pending => Poll::Pending,
+                Poll::Ready(None) => {
+                    if done {
+                        Poll::Ready(None)
+                    } else {
+                        Poll::Pending
+                    }
+                }
+                Poll::Ready(Some(Ok((mut events, _size)))) => {
+                    self.enrich(&mut events, "stderr");
+                    Poll::Ready(Some(Ok(events)))
+                }
+                Poll::Ready(Some(Err(err))) => Poll::Ready(Some(Err(err))),
+            };
+        }
+
+        Poll::Pending
+    }
+}
+
+async fn run_and_send(
+    exec: &ExecConfig,
     hostname: String,
     decoder: Decoder,
-    mut output: Pipeline,
-    shutdown: ShutdownSignal,
-) {
-    let mut framed =
-        FramedRead::with_capacity(reader, decoder, READ_BUFFER_SIZE).take_until(shutdown);
-    let hostname = Bytes::from(hostname);
-    let stream = Bytes::from_static(stream.as_bytes());
-    let exec = Bytes::from_static(EXEC);
+    output: &mut Pipeline,
+    mut shutdown: ShutdownSignal,
+) -> std::io::Result<ExitStatus> {
+    let mut child = exec.execute()?;
+    let mut combined = Combined::new(
+        child.stdout.take(),
+        child.stderr.take(),
+        exec.command.clone(),
+        hostname,
+        child.id(),
+        decoder,
+    );
 
-    while let Some(result) = framed.next().await {
-        match result {
-            Ok((mut events, _size)) => {
-                events.for_each_log(|log| {
-                    // Add timestamp and hostname
-                    log.insert("timestamp", Utc::now());
-                    log.insert("host", hostname.clone());
-
-                    // Add source type
-                    log.insert_metadata("source_type", exec.clone());
-
-                    // Add data stream of stdin or stderr(if needed)
-                    log.try_insert(event_path!(STREAM_KEY), stream.clone());
-
-                    // Add pid (if needed)
-                    if let Some(pid) = pid {
-                        log.try_insert(event_path!(PID_KEY), pid);
+    loop {
+        tokio::select! {
+            _ = &mut shutdown => break,
+            result = child.wait() => return result,
+            result = combined.next() => match result {
+                Some(Ok(events)) => {
+                    if let Err(_err) = output.send(events).await {
+                        break;
                     }
-
-                    // Add command
-                    log.try_insert(event_path!(COMMAND_KEY), command.clone());
-                });
-
-                if let Err(_err) = output.send(events).await {
+                },
+                Some(Err(err)) => {
+                    error!(
+                        message = "decode command output failed",
+                        command = ?exec.command,
+                        ?err,
+                    );
+                },
+                None => {
+                    // this shall not happen
                     break;
                 }
             }
-            Err(err) => {
-                error!(message = "error reading framed stream", ?err);
-            }
         }
     }
+
+    child.kill().await?;
+    child.wait().await
 }
 
 #[cfg(test)]
@@ -242,7 +339,7 @@ mod tests {
                 interval: Duration::from_secs(1),
             }),
             stream: Stream::All,
-            framing: None,
+            framing: Default::default(),
             decoding: Default::default(),
         };
 

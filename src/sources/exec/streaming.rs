@@ -5,7 +5,7 @@ use configurable::Configurable;
 use framework::{Pipeline, ShutdownSignal};
 use serde::{Deserialize, Serialize};
 
-use super::{ExecConfig, pump};
+use super::{ExecConfig, run_and_send};
 
 const fn default_restart_delay() -> Duration {
     Duration::from_secs(5)
@@ -26,6 +26,7 @@ enum RestartPolicy {
 }
 
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct StreamingConfig {
     /// Whether the command should be rerun if the command exits.
     #[serde(default)]
@@ -42,92 +43,53 @@ pub async fn run(
     exec: ExecConfig,
     hostname: String,
     decoder: Decoder,
-    output: Pipeline,
+    mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     loop {
         let start = Instant::now();
-        match exec.execute() {
-            Ok(mut child) => {
-                let pid = child.id();
+        let result = run_and_send(
+            &exec,
+            hostname.clone(),
+            decoder.clone(),
+            &mut output,
+            shutdown.clone(),
+        )
+        .await;
+        let elapsed = start.elapsed();
 
-                if let Some(stdout) = child.stdout.take() {
-                    tokio::spawn(pump(
-                        stdout,
-                        exec.command.clone(),
-                        pid,
-                        "stdout",
-                        hostname.clone(),
-                        decoder.clone(),
-                        output.clone(),
-                        shutdown.clone(),
-                    ));
+        match config.restart {
+            RestartPolicy::Always => {}
+            RestartPolicy::Never => break,
+            RestartPolicy::OnFailure => match result {
+                Ok(status) => {
+                    if status.success() {
+                        return Ok(());
+                    }
+
+                    warn!(
+                        message = "command exit",
+                        command = ?exec.command,
+                        ?elapsed,
+                        code = status.code(),
+                    );
                 }
-                if let Some(stderr) = child.stderr.take() {
-                    tokio::spawn(pump(
-                        stderr,
-                        exec.command.clone(),
-                        pid,
-                        "stderr",
-                        hostname.clone(),
-                        decoder.clone(),
-                        output.clone(),
-                        shutdown.clone(),
-                    ));
+                Err(err) => {
+                    error!(
+                        message = "command exit failed",
+                        comand = ?exec.command,
+                        ?elapsed,
+                        ?err,
+                    );
                 }
-
-                tokio::select! {
-                    _ = &mut shutdown => {
-                        if let Err(err) = child.kill().await {
-                            error!(
-                                message = "failed to kill child process",
-                                command = ?exec.command,
-                                ?err,
-                            );
-                        }
-
-                        break;
-                    },
-                    result = child.wait() => {
-                        match result {
-                            Ok(status) => {
-                                let elapsed = start.elapsed();
-                                debug!(
-                                    message = "command exit",
-                                    command = ?exec.command,
-                                    ?elapsed,
-                                    code = status.code(),
-                                );
-
-                                match config.restart {
-                                    RestartPolicy::Always => {},
-                                    RestartPolicy::Never => break,
-                                    RestartPolicy::OnFailure => {
-                                        if status.success() {
-                                            break;
-                                        }
-                                    }
-                                }
-                            },
-                            Err(err) => {
-                                error!(
-                                    message = "wait child process exit failed",
-                                    command = ?exec.command,
-                                    %err,
-                                );
-                            }
-                        }
-                    },
-                }
-            }
-            Err(err) => {
-                error!(message = "failed to run command", command = ?exec.command, %err);
-            }
+            },
         }
 
         tokio::select! {
+            biased;
+
+            _ = &mut shutdown => break,
             _ = tokio::time::sleep(config.delay) => {},
-            _ = &mut shutdown => {},
         }
     }
 
