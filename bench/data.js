@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754772364846,
+  "lastUpdate": 1754772381852,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "50c362a280e510f90dbb5a70b30721d59763ded4",
-          "message": "Merge pull request #2380 from f1shl3gs/dependabot/cargo/hyper-util-0.1.14\n\nchore(deps): bump hyper-util from 0.1.13 to 0.1.14",
-          "timestamp": "2025-06-05T04:33:06+08:00",
-          "tree_id": "dfcf8224b8b22833ed81cb98e9e838eab80cefb8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/50c362a280e510f90dbb5a70b30721d59763ded4"
-        },
-        "date": 1749069357683,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.323,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.41,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 334.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 670.57,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "076c0919df8aa3ff580365587f7dc0ed6d972595",
           "message": "Merge pull request #2381 from f1shl3gs/sources/redis/refactor_and_add_more_details\n\nsources/redis: refactor and add more details",
           "timestamp": "2025-06-06T23:27:56+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 690.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "caa1368b595a696b76f9fda9003135914d8d2a97",
+          "message": "Merge pull request #2493 from f1shl3gs/sources/prometheus_textfile/add\n\nsources/prometheus_textfile: init",
+          "timestamp": "2025-08-10T04:43:33+08:00",
+          "tree_id": "98ddfbcde62d865080327cd41515c17411b42156",
+          "url": "https://github.com/f1shl3gs/vertex/commit/caa1368b595a696b76f9fda9003135914d8d2a97"
+        },
+        "date": 1754772361128,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.28,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 152.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 313.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 702.09,
             "unit": "ns/op"
           }
         ]
