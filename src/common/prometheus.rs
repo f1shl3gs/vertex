@@ -1,8 +1,8 @@
-use chrono::Utc;
+use chrono::{DateTime, Utc};
 use event::tags::Tags;
-use event::{Metric, MetricValue};
+use event::{Bucket, Metric, MetricValue, Quantile};
 use indexmap::IndexMap;
-use prometheus::{METRIC_NAME_LABEL, proto};
+use prometheus::{GroupKind, METRIC_NAME_LABEL, MetricGroup, proto};
 
 type Labels = Vec<proto::Label>;
 
@@ -171,4 +171,96 @@ const fn prometheus_metric_type(value: &MetricValue) -> proto::MetricType {
         MetricValue::Histogram { .. } => proto::MetricType::Histogram,
         MetricValue::Summary { .. } => proto::MetricType::Summary,
     }
+}
+
+#[cfg(any(
+    feature = "sources-prometheus_pushgateway",
+    feature = "sources-prometheus_scrape",
+    feature = "sources-prometheus_textfile",
+))]
+pub fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
+    fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
+        match timestamp {
+            None => Some(default),
+            Some(timestamp) => DateTime::<Utc>::from_timestamp_millis(timestamp),
+        }
+    }
+
+    let start = Utc::now();
+    let mut metrics = Vec::with_capacity(groups.len());
+
+    for group in groups {
+        let MetricGroup {
+            name,
+            description,
+            metrics: grouped,
+        } = group;
+
+        match grouped {
+            GroupKind::Counter(set) => {
+                for (key, metric) in set {
+                    let metric = Metric::sum(&name, &description, metric.value)
+                        .with_tags(key.labels.into())
+                        .with_timestamp(utc_timestamp(key.timestamp, start));
+
+                    metrics.push(metric);
+                }
+            }
+            GroupKind::Gauge(set) | GroupKind::Untyped(set) => {
+                for (key, metric) in set {
+                    let metric = Metric::gauge(&name, &description, metric.value)
+                        .with_tags(key.labels.into())
+                        .with_timestamp(utc_timestamp(key.timestamp, start));
+
+                    metrics.push(metric);
+                }
+            }
+            GroupKind::Summary(set) => {
+                for (key, metric) in set {
+                    let metric = Metric::summary(
+                        &name,
+                        &description,
+                        metric.count,
+                        metric.sum,
+                        metric
+                            .quantiles
+                            .iter()
+                            .map(|q| Quantile {
+                                quantile: q.quantile,
+                                value: q.value,
+                            })
+                            .collect::<Vec<_>>(),
+                    )
+                    .with_tags(key.labels.into())
+                    .with_timestamp(utc_timestamp(key.timestamp, start));
+
+                    metrics.push(metric);
+                }
+            }
+            GroupKind::Histogram(set) => {
+                for (key, metric) in set {
+                    let metric = Metric::histogram(
+                        &name,
+                        &description,
+                        metric.count,
+                        metric.sum,
+                        metric
+                            .buckets
+                            .iter()
+                            .map(|b| Bucket {
+                                upper: b.bucket,
+                                count: b.count,
+                            })
+                            .collect::<Vec<_>>(),
+                    )
+                    .with_tags(key.labels.into())
+                    .with_timestamp(utc_timestamp(key.timestamp, start));
+
+                    metrics.push(metric);
+                }
+            }
+        }
+    }
+
+    metrics
 }

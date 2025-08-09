@@ -1,20 +1,20 @@
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use configurable::configurable_component;
-use event::{Bucket, Metric, Quantile};
+use event::Metric;
 use framework::Source;
 use framework::config::{Output, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use http::{StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
-use prometheus::{GroupKind, MetricGroup};
 use thiserror::Error;
 use tokio::task::JoinSet;
 
 use crate::common::offset::offset;
+use crate::common::prometheus::convert_metrics;
 
 /// Collect metrics from prometheus clients.
 #[configurable_component(source, name = "prometheus_scrape")]
@@ -212,93 +212,6 @@ async fn scrape_one(
     let metrics = prometheus::parse_text(&body).map_err(ScrapeError::Parse)?;
 
     Ok(convert_metrics(metrics))
-}
-
-fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
-    let mut events = Vec::with_capacity(groups.len());
-    let start = Utc::now();
-
-    for group in groups {
-        let MetricGroup {
-            name,
-            description,
-            metrics,
-        } = group;
-
-        match metrics {
-            GroupKind::Counter(metrics) => {
-                for (key, metric) in metrics {
-                    let metric = Metric::sum(&name, &description, metric.value)
-                        .with_tags(key.labels.into())
-                        .with_timestamp(utc_timestamp(key.timestamp, start));
-
-                    events.push(metric);
-                }
-            }
-            GroupKind::Gauge(metrics) | GroupKind::Untyped(metrics) => {
-                for (key, metric) in metrics {
-                    let metric = Metric::gauge(&name, &description, metric.value)
-                        .with_tags(key.labels.into())
-                        .with_timestamp(utc_timestamp(key.timestamp, start));
-
-                    events.push(metric);
-                }
-            }
-            GroupKind::Summary(metrics) => {
-                for (key, metric) in metrics {
-                    let metric = Metric::summary(
-                        &name,
-                        &description,
-                        metric.count,
-                        metric.sum,
-                        metric
-                            .quantiles
-                            .iter()
-                            .map(|q| Quantile {
-                                quantile: q.quantile,
-                                value: q.value,
-                            })
-                            .collect::<Vec<_>>(),
-                    )
-                    .with_tags(key.labels.into())
-                    .with_timestamp(utc_timestamp(key.timestamp, start));
-
-                    events.push(metric);
-                }
-            }
-            GroupKind::Histogram(metrics) => {
-                for (key, metric) in metrics {
-                    let metric = Metric::histogram(
-                        &name,
-                        &description,
-                        metric.count,
-                        metric.sum,
-                        metric
-                            .buckets
-                            .iter()
-                            .map(|b| Bucket {
-                                upper: b.bucket,
-                                count: b.count,
-                            })
-                            .collect::<Vec<_>>(),
-                    )
-                    .with_tags(key.labels.into())
-                    .with_timestamp(utc_timestamp(key.timestamp, start));
-
-                    events.push(metric);
-                }
-            }
-        }
-    }
-
-    events
-}
-
-fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
-    match timestamp {
-        None => Some(default),
-        Some(timestamp) => DateTime::<Utc>::from_timestamp_millis(timestamp),
-    }
 }
 
 #[cfg(test)]
