@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754756876485,
+  "lastUpdate": 1754758500490,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff73b9e9d96215a4c9e16ebf7ab1d20e96453518",
-          "message": "Merge pull request #2388 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2025-06-07T21:42:09+08:00",
-          "tree_id": "e5e406668e821f96cc350b7fead179d98ebd9514",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff73b9e9d96215a4c9e16ebf7ab1d20e96453518"
-        },
-        "date": 1749304400765,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 531,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37524.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c2787256ebc2ee425c41b711c8e81fd9764cb782",
           "message": "Merge pull request #2389 from f1shl3gs/dependabot/cargo/proptest-1.7.0\n\nchore(deps): bump proptest from 1.6.0 to 1.7.0",
           "timestamp": "2025-06-08T04:20:29+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 507,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37455.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c34e885d0537690d1b8bcca6bce463845342ce8d",
+          "message": "Merge pull request #2492 from f1shl3gs/re-organize-ignored-files\n\nre-organize ignored files",
+          "timestamp": "2025-08-10T00:44:50+08:00",
+          "tree_id": "6ff73948b915dd1b522ea7a30d1ff8ea6713296d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c34e885d0537690d1b8bcca6bce463845342ce8d"
+        },
+        "date": 1754758480152,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 506,
             "unit": "s"
           },
           {
