@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754756427155,
+  "lastUpdate": 1754756443443,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "473c4c20b2f87d9e4dae06074a8a8604f092f1e6",
-          "message": "Merge pull request #2379 from f1shl3gs/dependabot/cargo/headers-0.4.1\n\nchore(deps): bump headers from 0.4.0 to 0.4.1",
-          "timestamp": "2025-06-03T19:09:50+08:00",
-          "tree_id": "44e0e5e09df4b64e01eed5f499242bc9e912c29f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/473c4c20b2f87d9e4dae06074a8a8604f092f1e6"
-        },
-        "date": 1748949203589,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.741,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 170.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 312.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 683.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "50c362a280e510f90dbb5a70b30721d59763ded4",
           "message": "Merge pull request #2380 from f1shl3gs/dependabot/cargo/hyper-util-0.1.14\n\nchore(deps): bump hyper-util from 0.1.13 to 0.1.14",
           "timestamp": "2025-06-05T04:33:06+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 719.33,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8056922dd6db998e02869f7fb3331f3595521b3",
+          "message": "Merge pull request #2491 from f1shl3gs/sources/exec/reduce_task\n\nsources/exec: refactor & reduce tasks",
+          "timestamp": "2025-08-10T00:17:45+08:00",
+          "tree_id": "d7a354f38a7f80863e6f917911a246725cc61c19",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8056922dd6db998e02869f7fb3331f3595521b3"
+        },
+        "date": 1754756422359,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.338,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 170.18,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 324.08,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.34,
             "unit": "ns/op"
           }
         ]
