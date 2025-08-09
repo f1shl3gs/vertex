@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754756848298,
+  "lastUpdate": 1754756876485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "183b4c31f227b47fba227f95070edeb8d201d2b7",
-          "message": "Merge pull request #2387 from f1shl3gs/cargo/add_necessary_features_for_each_component\n\ncargo: add necessary dep features for each component",
-          "timestamp": "2025-06-07T21:38:09+08:00",
-          "tree_id": "c28f418a0ef0abe7888e4be8abbfc88818a8d4cf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/183b4c31f227b47fba227f95070edeb8d201d2b7"
-        },
-        "date": 1749304104622,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 512,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37525.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ff73b9e9d96215a4c9e16ebf7ab1d20e96453518",
           "message": "Merge pull request #2388 from f1shl3gs/cargo/update\n\ncargo: update",
           "timestamp": "2025-06-07T21:42:09+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37487.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8056922dd6db998e02869f7fb3331f3595521b3",
+          "message": "Merge pull request #2491 from f1shl3gs/sources/exec/reduce_task\n\nsources/exec: refactor & reduce tasks",
+          "timestamp": "2025-08-10T00:17:45+08:00",
+          "tree_id": "d7a354f38a7f80863e6f917911a246725cc61c19",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8056922dd6db998e02869f7fb3331f3595521b3"
+        },
+        "date": 1754756856039,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 507,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37455.8,
             "unit": "KiB"
           }
         ]
