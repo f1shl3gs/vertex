@@ -1,11 +1,11 @@
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use codecs::Decoder;
 use configurable::Configurable;
 use framework::{Pipeline, ShutdownSignal};
 use serde::{Deserialize, Serialize};
 
-use super::{ExecConfig, pump};
+use super::{ExecConfig, run_and_send};
 
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct ScheduledConfig {
@@ -22,7 +22,7 @@ pub async fn run(
     exec: ExecConfig,
     hostname: String,
     decoder: Decoder,
-    output: Pipeline,
+    mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     let mut ticker = tokio::time::interval(config.interval);
@@ -33,63 +33,41 @@ pub async fn run(
             _ = &mut shutdown => break,
         }
 
-        match exec.execute() {
-            Ok(mut child) => {
-                let pid = child.id();
+        let start = Instant::now();
+        let result = run_and_send(
+            &exec,
+            hostname.clone(),
+            decoder.clone(),
+            &mut output,
+            shutdown.clone(),
+        )
+        .await;
+        let elapsed = start.elapsed();
 
-                if let Some(stdout) = child.stdout.take() {
-                    tokio::spawn(pump(
-                        stdout,
-                        exec.command.clone(),
-                        pid,
-                        "stdout",
-                        hostname.clone(),
-                        decoder.clone(),
-                        output.clone(),
-                        shutdown.clone(),
-                    ));
-                }
-
-                if let Some(stderr) = child.stderr.take() {
-                    tokio::spawn(pump(
-                        stderr,
-                        exec.command.clone(),
-                        pid,
-                        "stderr",
-                        hostname.clone(),
-                        decoder.clone(),
-                        output.clone(),
-                        shutdown.clone(),
-                    ));
-                }
-
-                tokio::select! {
-                    _ = &mut shutdown => break,
-                    result = child.wait() => match result {
-                        Ok(status) => {
-                            if !status.success() {
-                                error!(
-                                    message = "command exited with non-zero status",
-                                    command = ?exec.command,
-                                    code = status.code()
-                                );
-                            }
-                        },
-                        Err(err) => {
-                            error!(
-                                message = "wait for child process failed",
-                                command = ?exec.command,
-                                ?err,
-                            );
-                        }
-                    }
+        match result {
+            Ok(status) => {
+                if status.success() {
+                    debug!(
+                        message = "command exited successfully",
+                        command = ?exec.command,
+                        elapsed = ?elapsed,
+                        code = status.code(),
+                    );
+                } else {
+                    warn!(
+                        message = "command exited with error",
+                        command = ?exec.command,
+                        elapsed = ?elapsed,
+                        code = status.code(),
+                    );
                 }
             }
             Err(err) => {
-                error!(
-                    message = "failed to build and run command",
+                warn!(
+                    message = "command execute failed",
                     command = ?exec.command,
-                    ?err
+                    elapsed = ?elapsed,
+                    ?err,
                 );
             }
         }
