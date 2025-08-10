@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754839310745,
+  "lastUpdate": 1754865411711,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "076c0919df8aa3ff580365587f7dc0ed6d972595",
-          "message": "Merge pull request #2381 from f1shl3gs/sources/redis/refactor_and_add_more_details\n\nsources/redis: refactor and add more details",
-          "timestamp": "2025-06-06T23:27:56+08:00",
-          "tree_id": "5e7463e5b5089bd31180f54d83af62ce6b15f601",
-          "url": "https://github.com/f1shl3gs/vertex/commit/076c0919df8aa3ff580365587f7dc0ed6d972595"
-        },
-        "date": 1749223809913,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 538620,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 501310,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1e6b77f943ccb6fc72ced5ca26099b8c56ac3254",
+          "message": "Merge pull request #2495 from f1shl3gs/sources/tail/add_multiline_support\n\nsources/tail: add multiline support",
+          "timestamp": "2025-08-11T06:34:23+08:00",
+          "tree_id": "10f0ec2529a030f37790709bcc5f8f4d033b458a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1e6b77f943ccb6fc72ced5ca26099b8c56ac3254"
+        },
+        "date": 1754865390851,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 498030,
             "unit": "ns/op"
           }
         ]
