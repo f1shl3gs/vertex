@@ -56,6 +56,7 @@ has already been ported.
 | prometheus_pushgateway  | Receive prometheus metrics                                        | &check; | &cross; | &cross; |
 | prometheus_remote_write | Start a HTTP server to receive prometheus metrics                 | &check; | &cross; | &cross; |
 | prometheus_scrape       | Scrape prometheus metrics from exporters                          | &check; | &cross; | &cross; |
+| prometheus_textfile     | Read files periodically, and parse to metrics                     | &check; | &cross; | &cross; |
 | redfish                 | Gathers metrics and status information of bare metal              | &check; | &cross; | &cross; |
 | redis                   | Scrape metrics from Redis                                         | &check; | &cross; | &cross; |
 | selfstat                | Collect metrics of Vertex itself, e.g. cpu, memory usage and etc. | &check; | &cross; | &cross; |
