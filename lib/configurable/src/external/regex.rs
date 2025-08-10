@@ -10,3 +10,13 @@ impl Configurable for regex::Regex {
         }
     }
 }
+
+impl Configurable for regex::bytes::Regex {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> SchemaObject {
+        SchemaObject {
+            instance_type: Some(InstanceType::String.into()),
+            format: Some("regex"),
+            ..Default::default()
+        }
+    }
+}

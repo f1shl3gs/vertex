@@ -1,3 +1,4 @@
+mod multiline;
 mod provider;
 mod transcode;
 
@@ -13,21 +14,14 @@ use event::LogRecord;
 use framework::config::{Output, Resource, SourceConfig, SourceContext};
 use framework::{Pipeline, Source};
 use futures::{FutureExt, StreamExt};
+use multiline::MergeLogic;
 use provider::{GlobProvider, Ordering};
 use serde::{Deserialize, Deserializer, Serialize};
 use tail::decode::BytesDelimitDecoder;
+use tail::multiline::Multiline;
 use tail::{Checkpointer, Conveyor, FileReader, ReadyFrames, Shutdown, harvest};
 use tokio_util::codec::FramedRead;
 use transcode::{Decoder, Encoder};
-
-// TODO: add metrics:
-// - files_opened_total
-// - files_closed_total
-// - files_active
-// - read_lines_total
-// - read_bytes_total
-// - process_errors_total
-// - process_event_total
 
 /// Where to start reader for a file which is never read
 #[derive(Configurable, Debug, Default, Deserialize, Serialize)]
@@ -118,15 +112,16 @@ struct Config {
     #[serde(default)]
     scan: ScanConfig,
 
+    /// Multiline aggregation configuration. If not specified, multiline aggregation is disabled.
+    #[serde(default)]
+    multiline: Option<multiline::Config>,
+
+    #[serde(default, deserialize_with = "deserialize_ordering")]
+    ordering: Option<Ordering>,
+
     /// Encoding of the file
     #[serde(default)]
     charset: Option<&'static Encoding>,
-    // /// Multiline aggregation configuration. If not specified, multiline aggregation is disabled.
-    // #[serde(default)]
-    // multiline: Option<MultilineConfig>,
-    #[serde(default, deserialize_with = "deserialize_ordering")]
-    ordering: Option<Ordering>,
-    // post process
 }
 
 #[async_trait::async_trait]
@@ -162,13 +157,19 @@ impl SourceConfig for Config {
             None => b"\n".to_vec(),
         };
 
+        let (logic, timeout) = match &self.multiline {
+            None => (MergeLogic::None, Duration::from_millis(200)),
+            Some(config) => (config.mode.build()?, config.timeout),
+        };
         let output = OutputSender {
             delimiter,
             encoding: self.charset,
             output: cx.output,
+            logic,
+            timeout,
         };
-        let shutdown = cx.shutdown.map(|_| ());
 
+        let shutdown = cx.shutdown.map(|_| ());
         Ok(Box::pin(async move {
             if let Err(err) = harvest(provider, read_from, checkpointer, output, shutdown).await {
                 error!(message = "harvest log files failed", ?err);
@@ -195,6 +196,8 @@ impl SourceConfig for Config {
 struct OutputSender {
     delimiter: Vec<u8>,
     encoding: Option<&'static Encoding>,
+    logic: MergeLogic,
+    timeout: Duration,
 
     output: Pipeline,
 }
@@ -209,14 +212,25 @@ impl Conveyor for OutputSender {
         offset: Arc<AtomicU64>,
         mut shutdown: Shutdown,
     ) -> impl Future<Output = Result<(), ()>> + Send + 'static {
+        // TODO: add metrics:
+        // - files_opened_total
+        // - files_closed_total
+        // - files_active
+        // - read_lines_total
+        // - read_bytes_total
+        // - process_errors_total
+        // - process_event_total
+
         let mut decoder = self.encoding.map(Decoder::new);
-        let reader = FramedRead::new(reader, BytesDelimitDecoder::new(&self.delimiter, 4 * 1024))
+        let framed = FramedRead::new(reader, BytesDelimitDecoder::new(&self.delimiter, 4 * 1024))
             .map(move |result| match &mut decoder {
                 Some(d) => result.map(|(data, size)| (d.decode(data), size)),
                 None => result,
             });
 
-        let mut stream = ReadyFrames::new(reader, 128, 4 * 1024 * 1024);
+        let merged = Multiline::new(framed, self.logic.clone(), self.timeout);
+
+        let mut stream = ReadyFrames::new(merged, 128, 4 * 1024 * 1024);
         let mut output = self.output.clone();
 
         Box::pin(async move {

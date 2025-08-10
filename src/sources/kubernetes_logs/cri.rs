@@ -1,5 +1,3 @@
-use std::time::Duration;
-
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use chrono::{DateTime, Utc};
 use configurable::Configurable;
@@ -63,11 +61,6 @@ impl Default for Cri {
 }
 
 impl Logic for Cri {
-    #[inline]
-    fn timeout(&self) -> Duration {
-        Duration::from_millis(100)
-    }
-
     fn is_start(&mut self, line: &[u8]) -> bool {
         let mut parts = line.splitn(4, |&b| b == b' ');
 
@@ -133,6 +126,8 @@ pub fn parse(line: Bytes, filter: &Stream) -> Result<(DateTime<Utc>, Bytes, Byte
 
 #[cfg(test)]
 mod tests {
+    use std::time::Duration;
+
     use bytes::Bytes;
     use futures::StreamExt;
     use tail::multiline::Multiline;
@@ -173,7 +168,7 @@ mod tests {
         let reader = futures::stream::iter(input)
             .map(|line| Ok::<_, ()>((Bytes::from_static(line.as_bytes()), 1)));
 
-        let multiline = Multiline::new(reader, Cri::default());
+        let multiline = Multiline::new(reader, Cri::default(), Duration::from_millis(200));
 
         let array = multiline.collect::<Vec<_>>().await;
         assert_eq!(array.len(), 8);

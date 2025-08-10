@@ -5,6 +5,7 @@ use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 use std::sync::atomic::AtomicU64;
+use std::time::Duration;
 
 use configurable::{Configurable, configurable_component};
 use cri::{Cri, Error as ParseError, Stream};
@@ -216,23 +217,25 @@ impl Conveyor for SendOutput {
         let stream = self.stream.clone();
         let base = self.fields.build(&metadata);
 
-        let path = reader.path().to_path_buf();
-        let path = path.to_string_lossy().to_string();
+        let path = reader.path().to_string_lossy().to_string();
 
         let framed = FramedRead::new(reader, NewlineDecoder::new(4 * 1024));
-        let merged = Multiline::new(framed, Cri::default()).map(move |result| match result {
-            Ok((data, size)) => {
-                let (timestamp, stream, msg) = cri::parse(data, &stream)?;
+        let merged =
+            Multiline::new(framed, Cri::default(), Duration::from_millis(200)).map(move |result| {
+                match result {
+                    Ok((data, size)) => {
+                        let (timestamp, stream, msg) = cri::parse(data, &stream)?;
 
-                let mut value = base.clone();
-                value.insert("timestamp", timestamp);
-                value.insert("stream", stream);
-                value.insert("message", msg);
+                        let mut value = base.clone();
+                        value.insert("timestamp", timestamp);
+                        value.insert("stream", stream);
+                        value.insert("message", msg);
 
-                Ok((LogRecord::from(value), size))
-            }
-            Err(err) => Err(ParseError::Frame(err)),
-        });
+                        Ok((LogRecord::from(value), size))
+                    }
+                    Err(err) => Err(ParseError::Frame(err)),
+                }
+            });
 
         let mut stream = ReadyFrames::new(merged, 128, 4 * 1024 * 1024);
 

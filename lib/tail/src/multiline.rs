@@ -8,11 +8,10 @@ use pin_project_lite::pin_project;
 use tokio::time::{Sleep, sleep};
 
 pub trait Logic: Clone {
-    fn timeout(&self) -> Duration;
-
     fn is_start(&mut self, line: &[u8]) -> bool;
 
     fn merge(&self, stashed: &mut BytesMut, data: Bytes) {
+        stashed.put_u8(b'\n');
         stashed.put(data);
     }
 }
@@ -24,6 +23,8 @@ pin_project! {
 
         logic: L,
 
+        timeout: Duration,
+
         deadline: Option<Pin<Box<Sleep>>>,
 
         stashed: Option<(BytesMut, usize)>,
@@ -33,10 +34,11 @@ pin_project! {
 }
 
 impl<S, L, E> Multiline<S, L, E> {
-    pub fn new(inner: S, logic: L) -> Self {
+    pub fn new(inner: S, logic: L, timeout: Duration) -> Self {
         Self {
             inner,
             logic,
+            timeout,
             deadline: None,
             stashed: None,
             error: None,
@@ -129,7 +131,7 @@ where
                             };
                         }
                         None => {
-                            *this.deadline = Some(Box::pin(sleep(this.logic.timeout())));
+                            *this.deadline = Some(Box::pin(sleep(*this.timeout)));
                             continue;
                         }
                     };
@@ -149,10 +151,6 @@ mod tests {
     pub struct NoIndent;
 
     impl Logic for NoIndent {
-        fn timeout(&self) -> Duration {
-            Duration::from_millis(200)
-        }
-
         fn is_start(&mut self, line: &[u8]) -> bool {
             if let [first, ..] = line {
                 !first.is_ascii_whitespace()
@@ -210,7 +208,7 @@ mod tests {
         let inner = futures::stream::iter(vec!["foo", "  bar", "foo", "foo", "  bar"])
             .map(|line| Ok((Bytes::from(line), 1)));
 
-        let stream = Multiline::new(inner, NoIndent);
+        let stream = Multiline::new(inner, NoIndent, Duration::from_millis(200));
 
         let logs = stream.collect::<Vec<_>>().await;
 
@@ -222,7 +220,7 @@ mod tests {
         let inner = futures::stream::iter(vec!["  bar", "  bar", "foo"])
             .map(|line| Ok((Bytes::from(line), 1)));
 
-        let stream = Multiline::new(inner, NoIndent);
+        let stream = Multiline::new(inner, NoIndent, Duration::from_millis(200));
 
         let logs: Vec<Result<(Bytes, usize), ()>> = stream.collect::<Vec<_>>().await;
         // assert_eq!(logs.len(), 2);
@@ -236,7 +234,7 @@ mod tests {
     #[tokio::test]
     async fn non_start_line_and_timeout() {
         let (tx, inner) = LogReceiver::new();
-        let mut stream = Multiline::new(inner, NoIndent);
+        let mut stream = Multiline::new(inner, NoIndent, Duration::from_millis(200));
 
         let handle = tokio::spawn(async move {
             tx.send("  bar").unwrap();
@@ -265,4 +263,7 @@ mod tests {
 
         handle.await.unwrap();
     }
+
+    #[tokio::test]
+    async fn file_without_ending_newline() {}
 }
