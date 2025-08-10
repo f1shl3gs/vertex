@@ -212,7 +212,7 @@ mod tests {
 
         let logs = stream.collect::<Vec<_>>().await;
 
-        assert_output(logs, vec![("foo  bar", 2), ("foo", 1), ("foo  bar", 2)])
+        assert_output(logs, vec![("foo\n  bar", 2), ("foo", 1), ("foo\n  bar", 2)])
     }
 
     #[tokio::test]
@@ -254,7 +254,7 @@ mod tests {
 
         assert_eq!(
             stream.next().await,
-            Some(Ok((Bytes::from_static(b"  bar  bar"), 2)))
+            Some(Ok((Bytes::from_static(b"  bar\n  bar"), 2)))
         );
         assert_eq!(
             stream.next().await,
