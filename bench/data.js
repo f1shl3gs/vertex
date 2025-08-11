@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754865890963,
+  "lastUpdate": 1754904734070,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5ae498377c7e7b59dd46eb9883c05b05d37591c3",
-          "message": "Merge pull request #2383 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.7\n\nchore(deps): bump hyper-rustls from 0.27.6 to 0.27.7",
-          "timestamp": "2025-06-07T00:24:41+08:00",
-          "tree_id": "1d8a6114ebd8eae0b651960fe48f2cce0f603bac",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5ae498377c7e7b59dd46eb9883c05b05d37591c3"
-        },
-        "date": 1749227223175,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540540,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 498030,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fc301837664e738bc24f53cc4306644d421f4b63",
+          "message": "Merge pull request #2496 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.96\n\nchore(deps): bump proc-macro2 from 1.0.95 to 1.0.96",
+          "timestamp": "2025-08-11T17:29:45+08:00",
+          "tree_id": "7eb2b565a60fe936d99a7d0d42389396ec6ff5b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fc301837664e738bc24f53cc4306644d421f4b63"
+        },
+        "date": 1754904713293,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 488570,
             "unit": "ns/op"
           }
         ]
