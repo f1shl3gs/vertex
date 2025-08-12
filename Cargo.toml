@@ -108,6 +108,7 @@ ntp-integration-tests = []
 prometheus_exporter_integration-tests = []
 prometheus_remote_write_integration-tests = []
 prometheus_scrape_integration-tests = []
+pulsar_integration-tests = []
 redfish-integration-tests = []
 redis-integration-tests = []
 zookeeper-integration-tests = []
@@ -124,6 +125,7 @@ all-integration-tests = [
     "prometheus_exporter_integration-tests",
     "prometheus_remote_write_integration-tests",
     "prometheus_scrape_integration-tests",
+    "pulsar_integration-tests",
     "dnstap-integration-tests",
     "loki-integration-tests",
     "redis-integration-tests",
@@ -203,6 +205,7 @@ sources-prometheus_pushgateway = ["dep:base64", "dep:prometheus"]
 sources-prometheus_scrape = ["dep:prometheus"]
 sources-prometheus_remote_write = ["dep:snap", "dep:prometheus"]
 sources-prometheus_textfile = ["dep:prometheus"]
+sources-pulsar = ["dep:finalize", "dep:pulsar"]
 sources-redfish = []
 sources-redis = []
 sources-selfstat = []
@@ -259,6 +262,7 @@ sources = [
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",
     "sources-prometheus_textfile",
+    "sources-pulsar",
     "sources-redfish",
     "sources-redis",
     "sources-selfstat",
@@ -474,6 +478,7 @@ maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d18
 md-5 = { version = "0.10.6", default-features = false, optional = true }
 parking_lot = { version = "0.12.4", default-features = false, optional = true }
 percent-encoding = { version = "2.3.1", default-features = false }
+pulsar = { git = "https://github.com/f1shl3gs/pulsar-rs", rev = "bab5d791bb64f9e19d53eef242b8b33c96e836d0", default-features = false, optional = true, features = ["auth-oauth2", "compression", "tokio-rustls-runtime"] }
 quick-xml = { version = "0.38.1", default-features = false, features = ["serialize"], optional = true }
 rand = { version = "0.9.2", default-features = false }
 regex = { version = "1.11.1", default-features = false }

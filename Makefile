@@ -65,6 +65,10 @@ consul-integration-tests:
 prometheus_remote_write-integration-tests:
 	cargo test -p vertex --lib sinks::prometheus_remote_write::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: pulsar_integration-tests
+pulsar_integration-tests:
+	cargo test -p vertex --lib sources::pulsar::integration_tests --features all-integration-tests --no-fail-fast
+
 .PHONY: loki-integration-tests
 loki-integration-tests:
 	cargo test -p vertex --lib sinks::loki::integration_tests --features all-integration-tests --no-fail-fast
@@ -116,6 +120,7 @@ integration-tests: loki-integration-tests prometheus_remote_write-integration-te
 integration-tests: elasticsearch-integration-tests dnstap-integration-tests memcached-integration-tests
 integration-tests: mysql-integration-tests nginx_stub-integration-tests redfish-integration-tests
 integration-tests: clickhouse-integration-tests fluent-integration-tests zookeeper-integration-tests
+integration-tests: pulsar_integration-tests
 
 .PHONY: udeps
 udeps:
