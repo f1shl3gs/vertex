@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754975618588,
+  "lastUpdate": 1754975988096,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d959cecce1cfe91b292922642d0440825cbec7be",
-          "message": "Merge pull request #2385 from f1shl3gs/sources/systemd/small_refactor\n\nsources/systemd: small refactor to reduce binary size",
-          "timestamp": "2025-06-07T09:13:49+08:00",
-          "tree_id": "a0f52622eb097b29f865bc97df5c69d03a185edb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d959cecce1cfe91b292922642d0440825cbec7be"
-        },
-        "date": 1749259475809,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 21907000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 609740,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.366,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "851a1cbd0997abf0adb6c8ce501f1e9b29a083fb",
           "message": "Merge pull request #2386 from f1shl3gs/dependabot/cargo/flate2-1.1.2\n\nchore(deps): bump flate2 from 1.1.1 to 1.1.2",
           "timestamp": "2025-06-07T20:25:12+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.029,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10890cb5c20721f76f308149811f00daf3f2155e",
+          "message": "Merge pull request #2501 from f1shl3gs/deps/glob/bump_to_0.3.3\n\ndeps: bump glob to 0.3.3",
+          "timestamp": "2025-08-12T13:09:48+08:00",
+          "tree_id": "cc2773913737fb7a19af53f1b2202b841f3b65ba",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10890cb5c20721f76f308149811f00daf3f2155e"
+        },
+        "date": 1754975966204,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14931000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 651960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.364,
             "unit": "ns/op"
           }
         ]
