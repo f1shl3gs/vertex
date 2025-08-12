@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754959277286,
+  "lastUpdate": 1754959282170,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e156b2135f18216b4d48058de7b2c96bab8c793a",
-          "message": "Merge pull request #2384 from f1shl3gs/sources/systemd/impl_watchdog\n\nsources/systemd: impl watchdog",
-          "timestamp": "2025-06-07T08:22:47+08:00",
-          "tree_id": "468c05347d2a6a75551077f40e515109b3c91993",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e156b2135f18216b4d48058de7b2c96bab8c793a"
-        },
-        "date": 1749256344151,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 21492000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 656700,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.661,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d959cecce1cfe91b292922642d0440825cbec7be",
           "message": "Merge pull request #2385 from f1shl3gs/sources/systemd/small_refactor\n\nsources/systemd: small refactor to reduce binary size",
           "timestamp": "2025-06-07T09:13:49+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.765,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9d3641ccdc2037e489bc8ae3897fea738aaff362",
+          "message": "Merge pull request #2500 from f1shl3gs/dependabot/cargo/thiserror-2.0.14\n\nchore(deps): bump thiserror from 2.0.12 to 2.0.14",
+          "timestamp": "2025-08-12T08:31:07+08:00",
+          "tree_id": "dcd7f260aad55e330bb7637e1f5ed23bf5309124",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9d3641ccdc2037e489bc8ae3897fea738aaff362"
+        },
+        "date": 1754959260723,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14546000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 664630,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.029,
             "unit": "ns/op"
           }
         ]
