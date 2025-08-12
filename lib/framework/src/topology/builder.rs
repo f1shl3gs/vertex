@@ -419,7 +419,7 @@ pub async fn build_pieces(
 
                 debug!(message = "source pump finished");
 
-                Ok(TaskOutput::Source)
+                TaskOutput::Source
             };
 
             pumps.push(pump.instrument(span.clone()));
@@ -439,7 +439,7 @@ pub async fn build_pieces(
             }
 
             for handle in handles {
-                handle.await.expect("join error")?;
+                handle.await.expect("join error");
             }
 
             Ok(TaskOutput::Source)
