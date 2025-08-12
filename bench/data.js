@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755016801214,
+  "lastUpdate": 1755017128362,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "851a1cbd0997abf0adb6c8ce501f1e9b29a083fb",
-          "message": "Merge pull request #2386 from f1shl3gs/dependabot/cargo/flate2-1.1.2\n\nchore(deps): bump flate2 from 1.1.1 to 1.1.2",
-          "timestamp": "2025-06-07T20:25:12+08:00",
-          "tree_id": "489e3df4e0f1d3f23b4b66a73dd6ac1d9efc478d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/851a1cbd0997abf0adb6c8ce501f1e9b29a083fb"
-        },
-        "date": 1749299745947,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22106000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 579440,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.258,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "183b4c31f227b47fba227f95070edeb8d201d2b7",
           "message": "Merge pull request #2387 from f1shl3gs/cargo/add_necessary_features_for_each_component\n\ncargo: add necessary dep features for each component",
           "timestamp": "2025-06-07T21:38:09+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.364,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d985bd3d87d7f67c10188f54182b3b37a7bad3c0",
+          "message": "Merge pull request #2503 from f1shl3gs/sources/pulsar/init\n\nsources/pulsar: init",
+          "timestamp": "2025-08-13T00:35:42+08:00",
+          "tree_id": "c4ba529a9527289cda747b89f542c84137966127",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d985bd3d87d7f67c10188f54182b3b37a7bad3c0"
+        },
+        "date": 1755017106712,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15139000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 628600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.702,
             "unit": "ns/op"
           }
         ]
