@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755016718760,
+  "lastUpdate": 1755016724452,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff73b9e9d96215a4c9e16ebf7ab1d20e96453518",
-          "message": "Merge pull request #2388 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2025-06-07T21:42:09+08:00",
-          "tree_id": "e5e406668e821f96cc350b7fead179d98ebd9514",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff73b9e9d96215a4c9e16ebf7ab1d20e96453518"
-        },
-        "date": 1749303902947,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.144,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.7,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 342.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 687.93,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c2787256ebc2ee425c41b711c8e81fd9764cb782",
           "message": "Merge pull request #2389 from f1shl3gs/dependabot/cargo/proptest-1.7.0\n\nchore(deps): bump proptest from 1.6.0 to 1.7.0",
           "timestamp": "2025-06-08T04:20:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 643.08,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d985bd3d87d7f67c10188f54182b3b37a7bad3c0",
+          "message": "Merge pull request #2503 from f1shl3gs/sources/pulsar/init\n\nsources/pulsar: init",
+          "timestamp": "2025-08-13T00:35:42+08:00",
+          "tree_id": "c4ba529a9527289cda747b89f542c84137966127",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d985bd3d87d7f67c10188f54182b3b37a7bad3c0"
+        },
+        "date": 1755016703801,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.281,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 159.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 315.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 677.84,
             "unit": "ns/op"
           }
         ]
