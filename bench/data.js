@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754959282170,
+  "lastUpdate": 1754959289755,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1d36140e84a6c5c95964a07b61182f2246557a54",
-          "message": "Merge pull request #2396 from f1shl3gs/dependabot/cargo/twox-hash-2.1.1\n\nchore(deps): bump twox-hash from 2.1.0 to 2.1.1",
-          "timestamp": "2025-06-10T05:10:20+08:00",
-          "tree_id": "adb4a87a7c177a45f5aa9b93f9489c257f605927",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d36140e84a6c5c95964a07b61182f2246557a54"
-        },
-        "date": 1749504084871,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 508,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37531.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "edcd802c936d6ab80d69c4fb6033fcc971efa0f3",
           "message": "Merge pull request #2397 from f1shl3gs/lib/vtl/xxhash64\n\nlib/vtl: switch `xxhash3_64` to `xxhash64`",
           "timestamp": "2025-06-10T05:31:02+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 37516.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2816c661164693466d775542c484ccaebd14d3b1",
+          "message": "Merge pull request #2499 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.97\n\nchore(deps): bump proc-macro2 from 1.0.96 to 1.0.97",
+          "timestamp": "2025-08-12T08:31:18+08:00",
+          "tree_id": "aad75aedcfc2cabc7a4311d400dfc55b3b015384",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2816c661164693466d775542c484ccaebd14d3b1"
+        },
+        "date": 1754959269140,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 506,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 37517.2,
             "unit": "KiB"
           }
         ]
