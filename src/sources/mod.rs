@@ -84,6 +84,8 @@ mod prometheus_remote_write;
 mod prometheus_scrape;
 #[cfg(feature = "sources-prometheus_textfile")]
 mod prometheus_textfile;
+#[cfg(feature = "sources-pulsar")]
+mod pulsar;
 #[cfg(feature = "sources-redfish")]
 mod redfish;
 #[cfg(feature = "sources-redis")]
