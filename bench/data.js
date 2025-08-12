@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755016761561,
+  "lastUpdate": 1755016767804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c2787256ebc2ee425c41b711c8e81fd9764cb782",
-          "message": "Merge pull request #2389 from f1shl3gs/dependabot/cargo/proptest-1.7.0\n\nchore(deps): bump proptest from 1.6.0 to 1.7.0",
-          "timestamp": "2025-06-08T04:20:29+08:00",
-          "tree_id": "47287ac0b05ab45eb7fd7d5423dffd26b6476c23",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c2787256ebc2ee425c41b711c8e81fd9764cb782"
-        },
-        "date": 1749327790714,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 24.233,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 197.97,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 351.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 712.78,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3048e4f0a0177aec59f7555397f45c60a50e5359",
           "message": "Merge pull request #2390 from f1shl3gs/sources/node/rename\n\nsources/node: rename `node_metrics` to `node`",
           "timestamp": "2025-06-08T04:42:49+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 677.84,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8262ca41ad136965cef2601f6f4ec7fd472be10b",
+          "message": "Merge pull request #2502 from f1shl3gs/dependabot/github_actions/actions/checkout-5\n\nchore(ci): bump actions/checkout from 4 to 5",
+          "timestamp": "2025-08-13T00:36:23+08:00",
+          "tree_id": "8609cdea59e95a47d2be95e79dd3e8a204414c40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8262ca41ad136965cef2601f6f4ec7fd472be10b"
+        },
+        "date": 1755016741731,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.326,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 162.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 334.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 669.59,
             "unit": "ns/op"
           }
         ]
