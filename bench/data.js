@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755017128362,
+  "lastUpdate": 1755017190141,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "183b4c31f227b47fba227f95070edeb8d201d2b7",
-          "message": "Merge pull request #2387 from f1shl3gs/cargo/add_necessary_features_for_each_component\n\ncargo: add necessary dep features for each component",
-          "timestamp": "2025-06-07T21:38:09+08:00",
-          "tree_id": "c28f418a0ef0abe7888e4be8abbfc88818a8d4cf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/183b4c31f227b47fba227f95070edeb8d201d2b7"
-        },
-        "date": 1749304061696,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22111000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 580930,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.542,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ff73b9e9d96215a4c9e16ebf7ab1d20e96453518",
           "message": "Merge pull request #2388 from f1shl3gs/cargo/update\n\ncargo: update",
           "timestamp": "2025-06-07T21:42:09+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.702,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8262ca41ad136965cef2601f6f4ec7fd472be10b",
+          "message": "Merge pull request #2502 from f1shl3gs/dependabot/github_actions/actions/checkout-5\n\nchore(ci): bump actions/checkout from 4 to 5",
+          "timestamp": "2025-08-13T00:36:23+08:00",
+          "tree_id": "8609cdea59e95a47d2be95e79dd3e8a204414c40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8262ca41ad136965cef2601f6f4ec7fd472be10b"
+        },
+        "date": 1755017168538,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15593000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 578640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.017,
             "unit": "ns/op"
           }
         ]
