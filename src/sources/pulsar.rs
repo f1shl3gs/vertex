@@ -129,6 +129,7 @@ struct Config {
     #[serde(default = "default_framing_message_based")]
     framing: FramingConfig,
 
+    #[serde(default)]
     decoding: DeserializerConfig,
 
     tls: Option<TlsConfig>,
