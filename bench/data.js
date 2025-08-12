@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1754910350024,
+  "lastUpdate": 1754958809459,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d959cecce1cfe91b292922642d0440825cbec7be",
-          "message": "Merge pull request #2385 from f1shl3gs/sources/systemd/small_refactor\n\nsources/systemd: small refactor to reduce binary size",
-          "timestamp": "2025-06-07T09:13:49+08:00",
-          "tree_id": "a0f52622eb097b29f865bc97df5c69d03a185edb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d959cecce1cfe91b292922642d0440825cbec7be"
-        },
-        "date": 1749259024331,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539480,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 508130,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9d3641ccdc2037e489bc8ae3897fea738aaff362",
+          "message": "Merge pull request #2500 from f1shl3gs/dependabot/cargo/thiserror-2.0.14\n\nchore(deps): bump thiserror from 2.0.12 to 2.0.14",
+          "timestamp": "2025-08-12T08:31:07+08:00",
+          "tree_id": "dcd7f260aad55e330bb7637e1f5ed23bf5309124",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9d3641ccdc2037e489bc8ae3897fea738aaff362"
+        },
+        "date": 1754958788663,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 505490,
             "unit": "ns/op"
           }
         ]
