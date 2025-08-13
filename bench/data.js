@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755017272800,
+  "lastUpdate": 1755119290564,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3048e4f0a0177aec59f7555397f45c60a50e5359",
-          "message": "Merge pull request #2390 from f1shl3gs/sources/node/rename\n\nsources/node: rename `node_metrics` to `node`",
-          "timestamp": "2025-06-08T04:42:49+08:00",
-          "tree_id": "8869e43485cbd66edd5d5cbcf26366b4109b06f8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3048e4f0a0177aec59f7555397f45c60a50e5359"
-        },
-        "date": 1749329103560,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 558440,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 499870,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c3e7802c4a879cd52dfa45139928e3c577466a2",
+          "message": "Merge pull request #2505 from f1shl3gs/dependabot/cargo/syslog_loose-0.23.0\n\nchore(deps): bump syslog_loose from 0.22.0 to 0.23.0",
+          "timestamp": "2025-08-14T05:05:55+08:00",
+          "tree_id": "8437ed7c365b7c7dfb75e24f0bbbd137fd9bc281",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c3e7802c4a879cd52dfa45139928e3c577466a2"
+        },
+        "date": 1755119270096,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 500330,
             "unit": "ns/op"
           }
         ]
