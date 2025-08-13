@@ -31,4 +31,4 @@ tracing = { version = "0.1.41", default-features = false }
 vtl = { path = "../vtl" }
 
 # Optional
-syslog_loose = { version = "0.22.0", default-features = false, optional = true }
+syslog_loose = { version = "0.23.0", default-features = false, optional = true }
