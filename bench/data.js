@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755119383371,
+  "lastUpdate": 1755119771050,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff73b9e9d96215a4c9e16ebf7ab1d20e96453518",
-          "message": "Merge pull request #2388 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2025-06-07T21:42:09+08:00",
-          "tree_id": "e5e406668e821f96cc350b7fead179d98ebd9514",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff73b9e9d96215a4c9e16ebf7ab1d20e96453518"
-        },
-        "date": 1749304300595,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 21869000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 618680,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.146,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c2787256ebc2ee425c41b711c8e81fd9764cb782",
           "message": "Merge pull request #2389 from f1shl3gs/dependabot/cargo/proptest-1.7.0\n\nchore(deps): bump proptest from 1.6.0 to 1.7.0",
           "timestamp": "2025-06-08T04:20:29+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.017,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c3e7802c4a879cd52dfa45139928e3c577466a2",
+          "message": "Merge pull request #2505 from f1shl3gs/dependabot/cargo/syslog_loose-0.23.0\n\nchore(deps): bump syslog_loose from 0.22.0 to 0.23.0",
+          "timestamp": "2025-08-14T05:05:55+08:00",
+          "tree_id": "8437ed7c365b7c7dfb75e24f0bbbd137fd9bc281",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c3e7802c4a879cd52dfa45139928e3c577466a2"
+        },
+        "date": 1755119749104,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14705000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 569150,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.243,
             "unit": "ns/op"
           }
         ]
