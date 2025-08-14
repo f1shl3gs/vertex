@@ -296,12 +296,12 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::InvalidFunctionArgumentType {
                 want, got, span, ..
             } => {
-                vec![Label::new(format!("want: {want}, got {got}"), span)]
+                vec![Label::new(format!("want {want}, but got {got}"), span)]
             }
             SyntaxError::InvalidValue {
                 want, got, span, ..
             } => {
-                vec![Label::new(format!("want: {want}, got: {got}"), span)]
+                vec![Label::new(format!("want {want}, but got: {got}"), span)]
             }
 
             SyntaxError::FalliblePrediction { span } => {
@@ -315,7 +315,7 @@ impl DiagnosticMessage for SyntaxError {
             SyntaxError::Binary { err, .. } => err.labels(),
 
             SyntaxError::InvalidType { want, got, span } => {
-                vec![Label::new(format!("want: {want}, got: {got}"), span)]
+                vec![Label::new(format!("want {want}, but got {got}"), span)]
             }
             SyntaxError::FallibleIterator { span } => {
                 vec![Label::new("fallible iterator is not allowed", span)]

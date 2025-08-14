@@ -143,7 +143,7 @@ impl DiagnosticMessage for ExpressionError {
                 vec![Label::new(err.to_string(), span)]
             }
             ExpressionError::UnexpectedType { want, got, span } => {
-                vec![Label::new(format!("got {got}, want: {want}"), span)]
+                vec![Label::new(format!("want {want}, but got {got}"), span)]
             }
             ExpressionError::UnexpectedValue { msg, span } => {
                 vec![Label::new(msg, span)]
