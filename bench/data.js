@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755139111321,
+  "lastUpdate": 1755139499242,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3048e4f0a0177aec59f7555397f45c60a50e5359",
-          "message": "Merge pull request #2390 from f1shl3gs/sources/node/rename\n\nsources/node: rename `node_metrics` to `node`",
-          "timestamp": "2025-06-08T04:42:49+08:00",
-          "tree_id": "8869e43485cbd66edd5d5cbcf26366b4109b06f8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3048e4f0a0177aec59f7555397f45c60a50e5359"
-        },
-        "date": 1749329560025,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 21762000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 635780,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b3b882906f3fc44f8696c7679c7e4103d07faba1",
           "message": "Merge pull request #2391 from f1shl3gs/dependabot/cargo/proptest-derive-0.6.0\n\nchore(deps): bump proptest-derive from 0.5.1 to 0.6.0",
           "timestamp": "2025-06-08T20:11:50+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.54,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d846c42daf08cc1741252ac5ff4bd8a96d65e1e2",
+          "message": "Merge pull request #2506 from f1shl3gs/lib/vtl/unify_type_check_error_msg\n\nlib/vtl: unify type check error",
+          "timestamp": "2025-08-14T10:31:03+08:00",
+          "tree_id": "85b1f1de00eeddb3780f05362879b549391e8dd0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d846c42daf08cc1741252ac5ff4bd8a96d65e1e2"
+        },
+        "date": 1755139477945,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 16550000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 669720,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.802,
             "unit": "ns/op"
           }
         ]
