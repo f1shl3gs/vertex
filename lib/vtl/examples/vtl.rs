@@ -4,9 +4,22 @@ use value::value;
 use vtl::{Diagnostic, TargetValue, compile};
 
 fn main() {
-    let Some(path) = std::env::args().nth(1) else {
-        println!("Usage: vtl <file>");
+    let mut args = std::env::args();
+    let Some(path) = args.nth(1) else {
+        println!("Usage: vtl <file> [input]");
         exit(1);
+    };
+
+    let value = match args.next() {
+        Some(path) => {
+            let content = std::fs::read(path).unwrap();
+            serde_json::from_slice(&content).unwrap()
+        }
+        None => value!({}),
+    };
+    let mut target = TargetValue {
+        metadata: value!({}),
+        value,
     };
 
     let script = std::fs::read_to_string(path).unwrap();
@@ -19,12 +32,6 @@ fn main() {
             println!("{output}");
             exit(1);
         }
-    };
-
-    // build your own target
-    let mut target = TargetValue {
-        metadata: value!({}),
-        value: value!({}),
     };
 
     if let Err(err) = program.run(&mut target) {
