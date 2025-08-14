@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755203232950,
+  "lastUpdate": 1755203621702,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b3b882906f3fc44f8696c7679c7e4103d07faba1",
-          "message": "Merge pull request #2391 from f1shl3gs/dependabot/cargo/proptest-derive-0.6.0\n\nchore(deps): bump proptest-derive from 0.5.1 to 0.6.0",
-          "timestamp": "2025-06-08T20:11:50+08:00",
-          "tree_id": "b4622c9fc550beb8b558bef75e22bfac74c946bb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b3b882906f3fc44f8696c7679c7e4103d07faba1"
-        },
-        "date": 1749385278149,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22611000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 596930,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.702,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3845faf0b5595d7c4699960cef05243bf284ccfc",
           "message": "Merge pull request #2392 from f1shl3gs/lib/vtl/small_refactor_to_reduce_codebase\n\nlib/vtl: remove `FunctionCompileContext`",
           "timestamp": "2025-06-08T22:32:16+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.802,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c17c8acac11678d998059e4eabfbf6df1f9936c2",
+          "message": "Merge pull request #2507 from f1shl3gs/dependabot/cargo/async-trait-0.1.89\n\nchore(deps): bump async-trait from 0.1.88 to 0.1.89",
+          "timestamp": "2025-08-15T04:23:21+08:00",
+          "tree_id": "6f559a53a3f2a1d6665f32835e9de180f288447a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c17c8acac11678d998059e4eabfbf6df1f9936c2"
+        },
+        "date": 1755203600092,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15364000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 574230,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.08,
             "unit": "ns/op"
           }
         ]
