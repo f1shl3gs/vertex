@@ -4,7 +4,7 @@ use value::value;
 use vtl::{Diagnostic, TargetValue, compile};
 
 fn main() {
-    let Some(path) = std::env::args().skip(1).next() else {
+    let Some(path) = std::env::args().nth(1) else {
         println!("Usage: vtl <file>");
         exit(1);
     };
