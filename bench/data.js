@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755203145502,
+  "lastUpdate": 1755203153380,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33ac0c442ebd21aafd4534cbebed7c5885111fbe",
-          "message": "Merge pull request #2393 from f1shl3gs/misc/small_optimize\n\nmisc: small optimize",
-          "timestamp": "2025-06-09T01:17:51+08:00",
-          "tree_id": "16ae7f522fd9298402d1f2d95ba20c5bf6dd04a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33ac0c442ebd21aafd4534cbebed7c5885111fbe"
-        },
-        "date": 1749403278328,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.624,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.356,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c17c8acac11678d998059e4eabfbf6df1f9936c2",
+          "message": "Merge pull request #2507 from f1shl3gs/dependabot/cargo/async-trait-0.1.89\n\nchore(deps): bump async-trait from 0.1.88 to 0.1.89",
+          "timestamp": "2025-08-15T04:23:21+08:00",
+          "tree_id": "6f559a53a3f2a1d6665f32835e9de180f288447a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c17c8acac11678d998059e4eabfbf6df1f9936c2"
+        },
+        "date": 1755203132703,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.236,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.243,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 178.14,
             "unit": "ns/op"
           }
         ]
