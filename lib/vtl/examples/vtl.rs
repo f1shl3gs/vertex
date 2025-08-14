@@ -1,7 +1,7 @@
 use std::process::exit;
 
 use value::value;
-use vtl::{compile, Diagnostic, TargetValue};
+use vtl::{Diagnostic, TargetValue, compile};
 
 fn main() {
     let Some(path) = std::env::args().skip(1).next() else {
