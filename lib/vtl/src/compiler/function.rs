@@ -326,7 +326,7 @@ pub fn compile_and_run<F: Function>(
     assert_eq!(
         call.type_def(&state),
         td,
-        "type_def want: {}, got: {}",
+        "type_def want {}, but got: {}",
         td.kind,
         call.type_def(&state).kind
     );
