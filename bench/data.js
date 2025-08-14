@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755139499242,
+  "lastUpdate": 1755139567537,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "aa4f5032f67c08e70f1da776a4c4e951b1630528",
-          "message": "Merge pull request #2402 from f1shl3gs/dependabot/cargo/memchr-2.7.5\n\nchore(deps): bump memchr from 2.7.4 to 2.7.5",
-          "timestamp": "2025-06-12T18:03:46+08:00",
-          "tree_id": "10b3c6fad3476dfa19f9eecb4df54a209d34d8a9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aa4f5032f67c08e70f1da776a4c4e951b1630528"
-        },
-        "date": 1749723227830,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 512,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37543.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9f28e51b57c3a1afdf5c8677dfb9727efddd27fa",
           "message": "Merge pull request #2404 from f1shl3gs/dependabot/cargo/syn-2.0.103\n\nchore(deps): bump syn from 2.0.102 to 2.0.103",
           "timestamp": "2025-06-13T15:42:39+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40363.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d846c42daf08cc1741252ac5ff4bd8a96d65e1e2",
+          "message": "Merge pull request #2506 from f1shl3gs/lib/vtl/unify_type_check_error_msg\n\nlib/vtl: unify type check error",
+          "timestamp": "2025-08-14T10:31:03+08:00",
+          "tree_id": "85b1f1de00eeddb3780f05362879b549391e8dd0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d846c42daf08cc1741252ac5ff4bd8a96d65e1e2"
+        },
+        "date": 1755139546928,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 562,
             "unit": "s"
           },
           {
