@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755306735435,
+  "lastUpdate": 1755306755704,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33d688e4f7198469564aa0f1f67102c203ee8a4c",
-          "message": "Merge pull request #2394 from f1shl3gs/sources/node/add_xfrm\n\nsources/node: add xfrm",
-          "timestamp": "2025-06-10T03:35:17+08:00",
-          "tree_id": "83d605afa81057922bfecd8d1a2738d55d753d3d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33d688e4f7198469564aa0f1f67102c203ee8a4c"
-        },
-        "date": 1749497864785,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.377,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.236,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 176.46,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.14,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9e3ba0b3a10d02686dca0fd23090932524045e10",
+          "message": "Merge pull request #2508 from f1shl3gs/dependabot/cargo/syn-2.0.106\n\nchore(deps): bump syn from 2.0.105 to 2.0.106",
+          "timestamp": "2025-08-16T09:09:17+08:00",
+          "tree_id": "14d3fcd9ec0d442fee4d49784fa2ff48e94564cc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9e3ba0b3a10d02686dca0fd23090932524045e10"
+        },
+        "date": 1755306734696,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.895,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.71,
             "unit": "ns/op"
           }
         ]
