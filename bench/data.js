@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755400685522,
+  "lastUpdate": 1755400880595,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1d36140e84a6c5c95964a07b61182f2246557a54",
-          "message": "Merge pull request #2396 from f1shl3gs/dependabot/cargo/twox-hash-2.1.1\n\nchore(deps): bump twox-hash from 2.1.0 to 2.1.1",
-          "timestamp": "2025-06-10T05:10:20+08:00",
-          "tree_id": "adb4a87a7c177a45f5aa9b93f9489c257f605927",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d36140e84a6c5c95964a07b61182f2246557a54"
-        },
-        "date": 1749503606869,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 556540,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 487080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8fd182d4d8319b3f20666819953ce3c45f40e9c2",
+          "message": "Merge pull request #2510 from f1shl3gs/dependabot/cargo/thiserror-2.0.15\n\nchore(deps): bump thiserror from 2.0.14 to 2.0.15",
+          "timestamp": "2025-08-17T11:18:56+08:00",
+          "tree_id": "26f48cd4d68ba0d3b8be387bbaad14634b4786ce",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8fd182d4d8319b3f20666819953ce3c45f40e9c2"
+        },
+        "date": 1755400859811,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 487860,
             "unit": "ns/op"
           }
         ]
