@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755400952068,
+  "lastUpdate": 1755401100439,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "33ac0c442ebd21aafd4534cbebed7c5885111fbe",
-          "message": "Merge pull request #2393 from f1shl3gs/misc/small_optimize\n\nmisc: small optimize",
-          "timestamp": "2025-06-09T01:17:51+08:00",
-          "tree_id": "16ae7f522fd9298402d1f2d95ba20c5bf6dd04a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33ac0c442ebd21aafd4534cbebed7c5885111fbe"
-        },
-        "date": 1749403637703,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 23035000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 658870,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.14,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "33d688e4f7198469564aa0f1f67102c203ee8a4c",
           "message": "Merge pull request #2394 from f1shl3gs/sources/node/add_xfrm\n\nsources/node: add xfrm",
           "timestamp": "2025-06-10T03:35:17+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.406,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3ff0ab8d514f1a962b75823e50ad6ae261f55ef1",
+          "message": "Merge pull request #2509 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.101\n\nchore(deps): bump proc-macro2 from 1.0.97 to 1.0.101",
+          "timestamp": "2025-08-17T11:14:30+08:00",
+          "tree_id": "a76b11ea8e1e157fb145c33bd439605bc81ef787",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3ff0ab8d514f1a962b75823e50ad6ae261f55ef1"
+        },
+        "date": 1755401079216,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17297000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 596640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.067,
             "unit": "ns/op"
           }
         ]
