@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755492112700,
+  "lastUpdate": 1755492133992,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "edcd802c936d6ab80d69c4fb6033fcc971efa0f3",
-          "message": "Merge pull request #2397 from f1shl3gs/lib/vtl/xxhash64\n\nlib/vtl: switch `xxhash3_64` to `xxhash64`",
-          "timestamp": "2025-06-10T05:31:02+08:00",
-          "tree_id": "5b1a20d27f6f91ee82f5f743409a64661d3bc2d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/edcd802c936d6ab80d69c4fb6033fcc971efa0f3"
-        },
-        "date": 1749504822888,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.078,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 328.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 647.56,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bef9afec017053ccd7583e6202d91f8b8d70a101",
           "message": "Merge pull request #2398 from f1shl3gs/cargo/disable_opt-level\n\ncargo: disable `opt-level = \"z\"` for minimal",
           "timestamp": "2025-06-10T06:26:56+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 662.07,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f2e7e6a39da5c7ca94ce67386a15c892d8896ad",
+          "message": "Merge pull request #2511 from f1shl3gs/codecs/rename_framing_config_variant\n\nlib/codecs: unify framing config names",
+          "timestamp": "2025-08-18T12:39:28+08:00",
+          "tree_id": "c8583886b9944e196008bf803170c230857ca895",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f2e7e6a39da5c7ca94ce67386a15c892d8896ad"
+        },
+        "date": 1755492113384,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.198,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 326,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 658.53,
             "unit": "ns/op"
           }
         ]
