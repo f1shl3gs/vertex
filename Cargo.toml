@@ -54,7 +54,6 @@ members = [
     "lib/ntp",
     "lib/prometheus",
     "lib/resolver",
-    "lib/sysinfo",
     "lib/tail",
     "lib/testify",
     "lib/tracing-internal",
@@ -402,7 +401,6 @@ bytesize = { path = "lib/bytesize" }
 ntp = { path = "lib/ntp", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 resolver = { path = "lib/resolver", optional = true }
-sysinfo = { path = "lib/sysinfo", optional = true }
 tail = { path = "lib/tail", optional = true }
 tripwire = { path = "lib/tripwire" }
 value = { path = "lib/value" }
