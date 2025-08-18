@@ -68,7 +68,7 @@ impl SinkConfig for Config {
     }
 
     fn input_type(&self) -> InputType {
-        InputType::log()
+        InputType::all()
     }
 
     fn acknowledgements(&self) -> bool {
