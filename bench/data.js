@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755508983344,
+  "lastUpdate": 1755508989709,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bef9afec017053ccd7583e6202d91f8b8d70a101",
-          "message": "Merge pull request #2398 from f1shl3gs/cargo/disable_opt-level\n\ncargo: disable `opt-level = \"z\"` for minimal",
-          "timestamp": "2025-06-10T06:26:56+08:00",
-          "tree_id": "993998486832856de920f8a3e3f02b0ab36a836b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bef9afec017053ccd7583e6202d91f8b8d70a101"
-        },
-        "date": 1749508153947,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 553560,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 494250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b1cf41d9d61229ee478531f1f989ae830667e16b",
+          "message": "Merge pull request #2512 from f1shl3gs/misc/re-organize-directories\n\nmisc: re-organize directories & cleanup",
+          "timestamp": "2025-08-18T17:20:12+08:00",
+          "tree_id": "4df049be9ac26103dd473aa3e8da11baa8b9135c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b1cf41d9d61229ee478531f1f989ae830667e16b"
+        },
+        "date": 1755508969108,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 486450,
             "unit": "ns/op"
           }
         ]
