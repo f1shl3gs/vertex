@@ -5,15 +5,13 @@ use bytes::{Bytes, BytesMut};
 use configurable::configurable_component;
 use event::{Event, Metric};
 use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext, serde_uri};
+use framework::config::{InputType, SinkConfig, SinkContext, serde_uri};
 use framework::http::{Auth, HttpClient};
-use framework::sink::util::http::HttpRetryLogic;
-use framework::sink::util::service::RequestConfig;
-use framework::sink::util::sink::PartitionBatchSink;
-use framework::sink::util::{
-    MetricNormalize, MetricNormalizer, MetricSet, MetricsBuffer, PartitionBuffer,
-    PartitionInnerBuffer,
-};
+use framework::sink::batch::PartitionBatchSink;
+use framework::sink::buffer::partition::{PartitionBuffer, PartitionInnerBuffer};
+use framework::sink::http::HttpRetryLogic;
+use framework::sink::metrics::{MetricNormalize, MetricNormalizer, MetricSet, MetricsBuffer};
+use framework::sink::service::RequestConfig;
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
@@ -62,7 +60,7 @@ struct Config {
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let batch = self.batch.into_batch_settings()?;
-        let request = self.request.into_settings();
+        let request = self.request.settings();
 
         let client = HttpClient::new(self.tls.as_ref(), cx.proxy())?;
         let tenant_id = self.tenant_id.clone();
@@ -114,8 +112,8 @@ impl SinkConfig for Config {
         Ok((Sink::from_event_sink(sink), healthcheck))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Metric
+    fn input_type(&self) -> InputType {
+        InputType::metric()
     }
 }
 
@@ -222,7 +220,7 @@ mod tests {
     use chrono::Utc;
     use event::tags::Tags;
     use event::{Metric, tags};
-    use framework::sink::util::testing::build_test_server;
+    use framework::sink::testing::build_test_server;
     use http::HeaderMap;
     use prometheus::proto;
     use testify::next_addr;

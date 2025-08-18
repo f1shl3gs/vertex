@@ -1,14 +1,13 @@
 use std::fmt::Debug;
 use std::num::NonZeroUsize;
 
-use async_trait::async_trait;
 use bytesize::ByteSizeOf;
 use codecs::encoding::Transformer;
 use event::log::path::PathPrefix;
 use event::log::{OwnedValuePath, Value};
 use event::{Event, EventContainer, Events, LogRecord};
 use framework::StreamSink;
-use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::builder::SinkBuilderExt;
 use framework::stream::{BatcherSettings, DriverResponse};
 use futures::{StreamExt, stream::BoxStream};
 use tower::Service;
@@ -119,7 +118,7 @@ pub fn process_log(
     })
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl<S> StreamSink for ElasticsearchSink<S>
 where
     S: Service<ElasticsearchRequest> + Send + 'static,

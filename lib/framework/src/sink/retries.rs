@@ -1,15 +1,14 @@
-use std::{
-    borrow::Cow,
-    cmp,
-    future::Future,
-    pin::Pin,
-    task::{Context, Poll},
-    time::Duration,
-};
+use std::borrow::Cow;
+use std::cmp;
+use std::future::Future;
+use std::pin::Pin;
+use std::task::{Context, Poll};
+use std::time::Duration;
 
 use futures::FutureExt;
 use tokio::time::{Sleep, sleep};
-use tower::{retry::Policy, timeout::error::Elapsed};
+use tower::retry::Policy;
+use tower::timeout::error::Elapsed;
 
 use crate::Error;
 

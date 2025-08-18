@@ -7,7 +7,7 @@ use serde::ser::SerializeMap;
 use serde::{Deserializer, Serialize};
 use serde::{Serializer, de, ser};
 
-use crate::sink::util::zstd::ZstdCompressionLevel;
+use crate::sink::zstd::ZstdCompressionLevel;
 
 /// Compression Level
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]

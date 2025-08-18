@@ -9,7 +9,7 @@ use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Event, event_path, log::Value};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext, default_true};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_true};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use futures::{StreamExt, stream::BoxStream};
@@ -126,8 +126,8 @@ impl SourceConfig for Config {
         Ok(Box::pin(src.run_shutdown(checkpointer, cx.shutdown, start)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

@@ -1,5 +1,5 @@
 use framework::http::HttpError;
-use framework::sink::util::retries::{RetryAction, RetryLogic};
+use framework::sink::retries::{RetryAction, RetryLogic};
 use http::StatusCode;
 use serde::Deserialize;
 

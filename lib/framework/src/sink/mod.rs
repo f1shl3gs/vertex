@@ -1,14 +1,32 @@
-pub mod util;
+mod adaptive_concurrency;
+pub mod batch;
+pub mod buffer;
+pub mod builder;
+mod compressor;
+pub mod encoding;
+pub mod http;
+pub mod net;
+pub mod partitioner;
+pub mod request_builder;
+pub mod retries;
+pub mod service;
+mod snappy;
 mod vec;
+mod zstd;
+
+#[cfg(any(test, feature = "test-util"))]
+pub mod testing;
 
 // Re-export
+pub use buffer::metrics;
+pub use buffer::{Buffer, Compression};
+pub use partitioner::KeyPartitioner;
 pub use vec::{SendAll, VecSinkExt};
 
 use std::fmt::{Debug, Formatter};
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use async_trait::async_trait;
 use event::{Event, EventContainer, Events};
 use futures::future::BoxFuture;
 use futures::stream::BoxStream;
@@ -21,10 +39,10 @@ pub type Healthcheck = BoxFuture<'static, crate::Result<()>>;
 #[derive(Debug, Error)]
 pub enum HealthcheckError {
     #[error("Unexpected status: {0}, {1}")]
-    UnexpectedStatus(http::StatusCode, String),
+    UnexpectedStatus(::http::StatusCode, String),
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 pub trait StreamSink {
     async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()>;
 }
@@ -83,7 +101,7 @@ impl Sink {
     ///
     /// # Panics
     ///
-    /// This function will panic if the self instance is not `Sink`.
+    /// This function will panic if the self-instance is not `Sink`.
     pub fn into_stream(self) -> Box<dyn StreamSink + Send> {
         match self {
             Self::Stream(stream) => stream,

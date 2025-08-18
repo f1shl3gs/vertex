@@ -3,7 +3,7 @@ use std::io::Write;
 use bytes::Bytes;
 use bytesize::ByteSizeOf;
 use event::{EventFinalizers, Finalizable};
-use framework::sink::util::encoding::Encoder;
+use framework::sink::encoding::Encoder;
 use prost::Message;
 use serde::{Serialize, Serializer, ser::SerializeSeq};
 

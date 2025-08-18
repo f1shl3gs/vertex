@@ -2,7 +2,9 @@ use std::io;
 
 use bytes::Bytes;
 
-use super::{Compression, Compressor, Encoder};
+use super::buffer::Compression;
+use super::compressor::Compressor;
+use super::encoding::Encoder;
 
 /// Metadata for batch requests.
 pub struct RequestMetadata {

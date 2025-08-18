@@ -16,9 +16,9 @@ use tower::Service;
 
 use crate::batch::{Batch, EncodedEvent};
 use crate::http::{HttpClient, HttpError};
-use crate::sink::util::retries::{RetryAction, RetryLogic};
-use crate::sink::util::service::BatchedSink;
-use crate::sink::util::{service::RequestSettings, sink};
+use crate::sink::retries::{RetryAction, RetryLogic};
+use crate::sink::service::BatchedSink;
+use crate::sink::{batch, service::RequestSettings};
 use crate::stream::DriverResponse;
 
 #[derive(Clone, Debug, Default)]
@@ -47,7 +47,7 @@ impl RetryLogic for HttpRetryLogic {
     }
 }
 
-impl<T: fmt::Debug> sink::Response for Response<T> {
+impl<T: fmt::Debug> batch::Response for Response<T> {
     fn is_successful(&self) -> bool {
         self.status().is_success()
     }

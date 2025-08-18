@@ -2,10 +2,9 @@ mod grpc;
 mod http;
 mod udp;
 
-use async_trait::async_trait;
 use configurable::configurable_component;
 use framework::Source;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use futures::stream::{FuturesUnordered, StreamExt};
 
 /// Jaeger components implement various APIs for saving or retrieving trace data.
@@ -19,7 +18,7 @@ struct Config {
     grpc: Option<grpc::GrpcServerConfig>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "jaeger")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -100,8 +99,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::traces()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::trace()]
     }
 
     fn resources(&self) -> Vec<Resource> {

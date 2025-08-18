@@ -14,7 +14,7 @@ use configurable::configurable_component;
 use connection::{Connection, Error as ClientError};
 use event::Metric;
 use framework::Source;
-use framework::config::{Output, SecretString, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SecretString, SourceConfig, SourceContext, default_interval};
 
 #[derive(Debug, thiserror::Error)]
 enum Error {
@@ -151,8 +151,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

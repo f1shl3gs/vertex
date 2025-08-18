@@ -1,13 +1,12 @@
 use std::num::NonZeroUsize;
 use std::sync::Arc;
 
-use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::{Configurable, configurable_component};
 use event::log::path::parse_target_path;
 use event::log::{OwnedTargetPath, Value};
 use event::{Events, LogRecord};
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{InputType, OutputType, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use log_schema::log_schema;
 use lru::LruCache;
@@ -56,7 +55,7 @@ fn default_cache_config() -> NonZeroUsize {
     NonZeroUsize::new(4 * 1024).expect("static non-zero number")
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "dedup")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
@@ -70,12 +69,12 @@ impl TransformConfig for Config {
         Ok(Transform::function(dedup))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input(&self) -> InputType {
+        InputType::log()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn enable_concurrency(&self) -> bool {

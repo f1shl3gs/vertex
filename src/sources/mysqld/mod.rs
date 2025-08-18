@@ -11,7 +11,7 @@ use std::time::{Duration, Instant};
 
 use configurable::{Configurable, configurable_component};
 use event::Metric;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval, default_true};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval, default_true};
 use framework::{Source, tls::TlsConfig};
 use serde::{Deserialize, Serialize};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
@@ -201,8 +201,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

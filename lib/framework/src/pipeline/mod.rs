@@ -32,7 +32,7 @@ impl Builder {
         &mut self,
         component: impl Into<String>,
         component_type: &'static str,
-        output: crate::config::Output,
+        output: crate::config::OutputType,
     ) -> LimitedReceiver<Events> {
         match output.port {
             None => {

@@ -5,13 +5,12 @@ mod tests;
 use std::num::ParseFloatError;
 use std::time::{Duration, Instant};
 
-use async_trait::async_trait;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Key, Value};
 use event::{Bucket, Metric, tags};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::http::HttpClient;
 
 /// Make sure BIND was built with libxml2 support. You can check with the following command:
@@ -40,7 +39,7 @@ struct Config {
     interval: Duration,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "bind")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -95,8 +94,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

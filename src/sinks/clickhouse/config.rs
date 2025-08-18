@@ -1,12 +1,11 @@
-use async_trait::async_trait;
 use codecs::encoding::Transformer;
 use configurable::configurable_component;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::http::{Auth, HttpClient};
-use framework::sink::util::http::BatchedHttpSink;
-use framework::sink::util::service::RequestConfig;
-use framework::sink::util::{Buffer, Compression};
+use framework::sink::http::BatchedHttpSink;
+use framework::sink::service::RequestConfig;
+use framework::sink::{Buffer, Compression};
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
 use futures::{FutureExt, SinkExt};
@@ -59,12 +58,12 @@ pub struct Config {
     pub acknowledgements: bool,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "clickhouse")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let batch = self.batch.into_batch_settings()?;
-        let request = self.request.into_settings();
+        let request = self.request.settings();
         let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
 
         let sink = BatchedHttpSink::with_logic(
@@ -84,8 +83,8 @@ impl SinkConfig for Config {
         Ok((Sink::from_event_sink(sink), healthcheck))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input_type(&self) -> InputType {
+        InputType::log()
     }
 
     fn acknowledgements(&self) -> bool {

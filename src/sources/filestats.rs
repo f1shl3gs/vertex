@@ -4,7 +4,7 @@ use std::time::{Duration, SystemTime};
 
 use configurable::configurable_component;
 use event::{Metric, tags};
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 use glob::glob;
 
@@ -34,8 +34,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

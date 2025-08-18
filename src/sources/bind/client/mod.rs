@@ -1,7 +1,6 @@
 use bytes::Buf;
 use chrono::{DateTime, Utc};
 use framework::http::{HttpClient, HttpError};
-use framework::sink::util::sink::Response;
 use http::StatusCode;
 use http_body_util::{BodyExt, Full};
 use serde::Deserialize;
@@ -167,7 +166,7 @@ impl Client {
         let req = http::Request::get(url).body(Full::default())?;
         let resp = self.http_client.send(req).await?;
 
-        if resp.is_successful() {
+        if resp.status().is_success() {
             Ok(Version::V3)
         } else {
             Ok(Version::V2)

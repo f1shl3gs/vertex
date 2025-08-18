@@ -4,9 +4,9 @@ use event::Event;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
-use framework::sink::util::http::{BatchedHttpSink, HttpEventEncoder, HttpRetryLogic, HttpSink};
-use framework::sink::util::service::RequestConfig;
-use framework::sink::util::{Buffer, Compression};
+use framework::sink::http::{BatchedHttpSink, HttpEventEncoder, HttpRetryLogic, HttpSink};
+use framework::sink::service::RequestConfig;
+use framework::sink::{Buffer, Compression};
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{FutureExt, SinkExt};
@@ -36,7 +36,7 @@ pub struct HttpSinkConfig {
 
 impl HttpSinkConfig {
     pub fn build(&self, proxy: ProxyConfig) -> framework::Result<(Sink, Healthcheck)> {
-        let request_settings = self.request.into_settings();
+        let request_settings = self.request.settings();
         let client = HttpClient::new(self.tls.as_ref(), &proxy)?;
         let batch = self.batch.into_batch_settings()?;
 

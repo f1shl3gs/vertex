@@ -11,7 +11,7 @@ use std::time::Duration;
 use configurable::{Configurable, configurable_component};
 use encoding_rs::Encoding;
 use event::LogRecord;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::{Pipeline, Source};
 use futures::{FutureExt, StreamExt};
 use multiline::MergeLogic;
@@ -179,8 +179,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn resources(&self) -> Vec<Resource> {

@@ -1,11 +1,10 @@
-use async_trait::async_trait;
 use buffer::LimitedReceiver;
 use configurable::configurable_component;
 use event::{Events, Finalizable, MetricValue, log::Value};
 use framework::OutputBuffer;
 use framework::config::{
-    DataType, Output, SinkConfig, SinkContext, SourceConfig, SourceContext, TransformConfig,
-    TransformContext,
+    DataType, InputType, OutputType, SinkConfig, SinkContext, SourceConfig, SourceContext,
+    TransformConfig, TransformContext,
 };
 use framework::pipeline::Pipeline;
 use framework::{FunctionTransform, Healthcheck, Sink, Source, StreamSink, Transform};
@@ -115,8 +114,8 @@ impl SourceConfig for MockSourceConfig {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::new(self.data_type.unwrap_or(DataType::Metric))]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::new(self.data_type.unwrap_or(DataType::Metric))]
     }
 
     fn can_acknowledge(&self) -> bool {
@@ -140,7 +139,7 @@ impl MockTransformConfig {
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "mock")]
 impl TransformConfig for MockTransformConfig {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
@@ -150,12 +149,12 @@ impl TransformConfig for MockTransformConfig {
         }))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::All
+    fn input(&self) -> InputType {
+        InputType::all()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::new(DataType::All)]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::new(DataType::All)]
     }
 }
 
@@ -258,7 +257,7 @@ enum HealthcheckError {
     Unhealthy,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "mock")]
 impl SinkConfig for MockSinkConfig {
     async fn build(&self, _cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
@@ -284,8 +283,8 @@ impl SinkConfig for MockSinkConfig {
         Ok((Sink::Stream(Box::new(sink)), healthcheck.boxed()))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::All
+    fn input_type(&self) -> InputType {
+        InputType::all()
     }
 }
 
@@ -294,7 +293,7 @@ struct MockSink {
     health_tx: Option<oneshot::Sender<framework::Result<()>>>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl StreamSink for MockSink {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
         match self.sink {

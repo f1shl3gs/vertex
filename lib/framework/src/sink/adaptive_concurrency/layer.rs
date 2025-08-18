@@ -1,7 +1,7 @@
 use tower::Layer;
 
 use super::{AdaptiveConcurrencySettings, service::AdaptiveConcurrencyLimit};
-use crate::sink::util::retries::RetryLogic;
+use crate::sink::retries::RetryLogic;
 
 /// Enforces a limit on the concurrent number of requests the underlying service
 /// can handle

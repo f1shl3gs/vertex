@@ -8,7 +8,7 @@ use configurable::configurable_component;
 use event::tags::Tags;
 use event::{Metric, tags};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use http_body_util::{BodyExt, Full};
@@ -89,8 +89,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

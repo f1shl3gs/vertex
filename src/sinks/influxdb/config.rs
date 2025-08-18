@@ -2,11 +2,11 @@ use std::time::Duration;
 
 use configurable::configurable_component;
 use framework::batch::{BatchConfig, SinkBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::http::HttpClient;
-use framework::sink::util::Compression;
-use framework::sink::util::http::{HttpService, http_response_retry_logic};
-use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
+use framework::sink::Compression;
+use framework::sink::http::{HttpService, http_response_retry_logic};
+use framework::sink::service::{RequestConfig, ServiceBuilderExt};
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
@@ -83,7 +83,7 @@ impl SinkConfig for Config {
         );
         let http_service = HttpService::new(client.clone(), http_request_builder);
         let service = ServiceBuilder::new()
-            .settings(self.request.into_settings(), http_response_retry_logic())
+            .settings(self.request.settings(), http_response_retry_logic())
             .service(http_service);
 
         let sink = InfluxdbSink::new(self.bucket.clone(), batch, self.compression, service);
@@ -92,7 +92,7 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), Box::pin(healthcheck)))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Metric
+    fn input_type(&self) -> InputType {
+        InputType::metric()
     }
 }

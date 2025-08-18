@@ -3,7 +3,7 @@ use std::io::Write;
 use bytes::BytesMut;
 use codecs::encoding::{Framer, Transformer};
 use event::Event;
-use framework::sink::util::Encoder;
+use framework::sink::encoding::Encoder;
 use tokio_util::codec::Encoder as _;
 
 pub struct HttpEncoder {

@@ -22,11 +22,11 @@ use tokio::sync::oneshot;
 use tower::Service;
 
 use crate::batch::{BatchSettings, EncodedEvent};
-use crate::config::{DataType, SinkConfig, SinkContext};
-use crate::sink::util::adaptive_concurrency::controller::ControllerStatistics;
-use crate::sink::util::retries::RetryLogic;
-use crate::sink::util::service::{Concurrency, RequestConfig};
-use crate::sink::util::{EncodedLength, VecBuffer};
+use crate::config::{InputType, SinkConfig, SinkContext};
+use crate::sink::adaptive_concurrency::controller::ControllerStatistics;
+use crate::sink::buffer::vec::{EncodedLength, VecBuffer};
+use crate::sink::retries::RetryLogic;
+use crate::sink::service::{Concurrency, RequestConfig};
 use crate::{Healthcheck, Sink};
 
 #[derive(Configurable, Copy, Clone, Debug, Deserialize, Serialize, Default)]
@@ -150,7 +150,7 @@ impl SinkConfig for TestConfig {
         batch_settings.size.events = 1;
         batch_settings.timeout = Duration::from_secs(9999);
 
-        let request = self.request.into_settings();
+        let request = self.request.settings();
         let sink = request
             .batch_sink(
                 TestRetryLogic,
@@ -175,8 +175,8 @@ impl SinkConfig for TestConfig {
         Ok((Sink::from_event_sink(sink), healthcheck))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::All
+    fn input_type(&self) -> InputType {
+        InputType::log()
     }
 }
 
@@ -209,7 +209,7 @@ enum Response {
     Ok,
 }
 
-impl crate::sink::util::sink::Response for Response {}
+impl crate::sink::batch::Response for Response {}
 
 // The TestSink service doesn't actually do anything with the data, it
 // just delays a while depending on the configured parameters and the
@@ -473,7 +473,7 @@ mod mock {
     use event::LogRecord;
     use log_schema::log_schema;
 
-    use crate::config::{Output, SourceConfig, SourceContext};
+    use crate::config::{OutputType, SourceConfig, SourceContext};
     use crate::{Pipeline, ShutdownSignal, Source};
 
     #[configurable_component(source, name = "mock_logs")]
@@ -496,8 +496,8 @@ mod mock {
             )))
         }
 
-        fn outputs(&self) -> Vec<Output> {
-            vec![Output::logs()]
+        fn outputs(&self) -> Vec<OutputType> {
+            vec![OutputType::log()]
         }
 
         fn can_acknowledge(&self) -> bool {

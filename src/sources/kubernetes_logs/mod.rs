@@ -10,7 +10,7 @@ use std::time::Duration;
 use configurable::{Configurable, configurable_component};
 use cri::{Cri, Error as ParseError, Stream};
 use event::LogRecord;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::{Pipeline, Source};
 use futures::{FutureExt, StreamExt};
 use metrics::register_counter;
@@ -187,8 +187,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

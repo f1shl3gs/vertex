@@ -2,7 +2,7 @@ use chrono::{TimeZone, Utc};
 use codecs::encoding::Transformer;
 use event::LogRecord;
 use event::log::{Value, parse_value_path};
-use framework::sink::util::Encoder;
+use framework::sink::encoding::Encoder;
 use framework::template::Template;
 use value::value;
 

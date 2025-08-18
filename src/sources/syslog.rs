@@ -10,7 +10,7 @@ use event::log::OwnedValuePath;
 use event::log::path::PathPrefix;
 use event::{Events, LogRecord, event_path};
 use framework::Source;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::source::tcp::{SocketListenAddr, TcpNullAcker, TcpSource};
@@ -154,8 +154,8 @@ impl SourceConfig for Config {
         }
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn resources(&self) -> Vec<Resource> {

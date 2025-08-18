@@ -6,7 +6,7 @@ use codecs::{Decoder, DecodingConfig};
 use configurable::{Configurable, configurable_component};
 use event::Events;
 use finalize::{AddBatchNotifier, BatchNotifier, BatchStatus, OrderedFinalizer};
-use framework::config::{Output, SecretString, SourceConfig, SourceContext};
+use framework::config::{OutputType, SecretString, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::StreamExt;
 use pulsar::authentication::oauth2::{OAuth2Authentication, OAuth2Params};
@@ -152,8 +152,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

@@ -4,7 +4,7 @@ use std::io::Write;
 use bytesize::ByteSizeOf;
 use codecs::encoding::Transformer;
 use event::{Event, EventFinalizers, Finalizable, LogRecord};
-use framework::sink::util::{Encoder, as_tracked_write};
+use framework::sink::encoding::{Encoder, as_tracked_write};
 
 use super::BulkAction;
 

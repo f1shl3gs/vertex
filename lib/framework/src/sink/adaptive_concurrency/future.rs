@@ -8,7 +8,7 @@ use pin_project_lite::pin_project;
 use tokio::sync::OwnedSemaphorePermit;
 
 use super::controller::{Controller, instant_now};
-use crate::sink::util::retries::RetryLogic;
+use crate::sink::retries::RetryLogic;
 
 pin_project! {
     /// Future for the `AdaptiveConcurrencyLimit` service.

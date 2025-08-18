@@ -1,7 +1,6 @@
 use bytesize::ByteSizeOf;
 
 use crate::batch::{Batch, BatchConfig, BatchError, Merged, PushResult, SinkBatchSettings};
-use crate::sink::util::ElementCount;
 
 pub trait Partition<K> {
     fn partition(&self) -> K;
@@ -98,11 +97,5 @@ impl<T: ByteSizeOf, K> ByteSizeOf for PartitionInnerBuffer<T, K> {
 
     fn allocated_bytes(&self) -> usize {
         self.inner.allocated_bytes()
-    }
-}
-
-impl<T: ElementCount, K> ElementCount for PartitionInnerBuffer<T, K> {
-    fn element_count(&self) -> usize {
-        self.inner.element_count()
     }
 }

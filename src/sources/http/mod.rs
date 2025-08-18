@@ -8,7 +8,7 @@ use codecs::{Decoder, DecodingConfig};
 use configurable::configurable_component;
 use event::Events;
 use framework::Source;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::source::http::{ErrorMessage, HttpSource, HttpSourceAuthConfig};
 use framework::tls::TlsConfig;
 use glob::MatchOptions;
@@ -67,8 +67,8 @@ impl SourceConfig for Config {
         )
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn resources(&self) -> Vec<Resource> {

@@ -16,8 +16,8 @@ use super::BuiltBuffer;
 use super::fanout::{ControlChannel, Fanout};
 use super::task::{Task, TaskOutput};
 use crate::config::{
-    ComponentKey, Config, ConfigDiff, DataType, ExtensionContext, Output, OutputId, ProxyConfig,
-    SinkContext, SourceContext, TransformContext,
+    ComponentKey, Config, ConfigDiff, DataType, ExtensionContext, OutputId, OutputType,
+    ProxyConfig, SinkContext, SourceContext, TransformContext,
 };
 use crate::metrics::MetricStreamExt;
 use crate::observe::{available_observers, receiver_count};
@@ -43,7 +43,7 @@ struct TransformNode {
     typetag: &'static str,
     inputs: Vec<OutputId>,
     input_type: DataType,
-    outputs: Vec<Output>,
+    outputs: Vec<OutputType>,
     concurrency: bool,
 }
 
@@ -55,8 +55,8 @@ fn build_transform(
     match transform {
         Transform::Function(f) => build_sync_transform(Box::new(f), node, input_rx),
         Transform::Synchronous(s) => build_sync_transform(s, node, input_rx),
-        Transform::Task(t) => {
-            build_task_transform(t, input_rx, node.input_type, node.typetag, &node.key)
+        Transform::Task(task) => {
+            build_task_transform(task, input_rx, node.input_type, node.typetag, &node.key)
         }
     }
 }
@@ -511,7 +511,7 @@ pub async fn build_pieces(
             key: key.clone(),
             typetag: transform.inner.component_name(),
             inputs: transform.inputs.clone(),
-            input_type: transform.inner.input_type(),
+            input_type: transform.inner.input().data_type(),
             outputs: transform.inner.outputs(),
             concurrency: transform.inner.enable_concurrency(),
         };
@@ -604,7 +604,7 @@ pub async fn build_pieces(
 
             sink.run(
                 rx.by_ref()
-                    .filter(|events| ready(filter_events_type(events, input_type)))
+                    .filter(|events| ready(filter_events_type(events, input_type.data_type())))
                     .take_until(tripwire)
                     .metric_record(attrs),
             )

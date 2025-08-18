@@ -16,10 +16,9 @@ use tokio::time::{Sleep, sleep};
 use tower::{Service, ServiceBuilder};
 use tracing_futures::Instrument;
 
-use super::buffer::partition::Partition;
+use super::buffer::partition::{Partition, PartitionBuffer, PartitionInnerBuffer};
 use crate::batch::{Batch, EncodedBatch, EncodedEvent, FinalizersBatch, PushResult, StatefulBatch};
-use crate::sink::util::service::{Map, ServiceBuilderExt};
-use crate::sink::util::{PartitionBuffer, PartitionInnerBuffer};
+use crate::sink::service::{Map, ServiceBuilderExt};
 
 pin_project! {
     /// A Partition based batcher, given some `Service` and `Batch` where the
@@ -522,12 +521,10 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::convert::Infallible;
     use std::io::Error;
-    use std::sync::atomic::AtomicUsize;
-    use std::{
-        convert::Infallible,
-        sync::{Arc, Mutex, atomic::Ordering::Relaxed},
-    };
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::{Arc, Mutex};
 
     use bytes::Bytes;
     use event::{BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers};
@@ -536,8 +533,7 @@ mod tests {
 
     use super::*;
     use crate::batch::BatchSettings;
-    use crate::sink::util::VecBuffer;
-    use crate::sink::util::buffer::vec::EncodedLength;
+    use crate::sink::buffer::vec::{EncodedLength, VecBuffer};
 
     const TIMEOUT: Duration = Duration::from_secs(10);
 
@@ -558,7 +554,7 @@ mod tests {
 
             tokio::spawn(async move {
                 if receiver.await == BatchStatus::Delivered {
-                    counter.fetch_add(value, Relaxed);
+                    counter.fetch_add(value, Ordering::Relaxed);
                 }
             });
 
@@ -608,7 +604,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(ack_counter.load(Relaxed), 22 * 23 / 2);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 22 * 23 / 2);
     }
 
     #[tokio::test]
@@ -654,7 +650,7 @@ mod tests {
 
         // Clear internal buffer
         assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
-        assert_eq!(ack_counter.load(Relaxed), 0);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 0);
 
         yield_now().await;
         advance_time(Duration::from_secs(3)).await;
@@ -668,7 +664,7 @@ mod tests {
         }
 
         // Events 1,2,3 should have been acked at this point.
-        assert_eq!(ack_counter.load(Relaxed), 6);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 6);
 
         for item in 4..=6 {
             assert!(matches!(
@@ -683,7 +679,7 @@ mod tests {
 
         // Clear internal buffer
         assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
-        assert_eq!(ack_counter.load(Relaxed), 6);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 6);
 
         yield_now().await;
         advance_time(Duration::from_secs(2)).await;
@@ -692,7 +688,7 @@ mod tests {
         assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
 
         // Check that events 1-3,5,6 have been acked
-        assert_eq!(ack_counter.load(Relaxed), 17);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 17);
 
         yield_now().await;
         advance_time(Duration::from_secs(5)).await;
@@ -705,7 +701,7 @@ mod tests {
             ));
         }
 
-        assert_eq!(ack_counter.load(Relaxed), 21);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 21);
     }
 
     #[tokio::test]
@@ -988,7 +984,7 @@ mod tests {
         let mut fut1 = sink.call(req(1));
         let mut fut2 = sink.call(req(2));
 
-        assert_eq!(ack_counter.load(Relaxed), 0);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 0);
 
         let mut cx = Context::from_waker(noop_waker_ref());
         assert!(matches!(fut1.poll_unpin(&mut cx), Poll::Ready(())));
@@ -996,7 +992,7 @@ mod tests {
         assert!(matches!(sink.poll_complete(&mut cx), Poll::Ready(())));
 
         yield_now().await;
-        assert_eq!(ack_counter.load(Relaxed), 3);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 3);
 
         // send one request that will error and one normal
         let mut fut3 = sink.call(req(3)); // I will error
@@ -1008,7 +1004,7 @@ mod tests {
         assert!(matches!(sink.poll_complete(&mut cx), Poll::Ready(())));
 
         yield_now().await;
-        assert_eq!(ack_counter.load(Relaxed), 7);
+        assert_eq!(ack_counter.load(Ordering::Relaxed), 7);
     }
 
     #[tokio::test]

@@ -1,7 +1,7 @@
 use event::Event;
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
-use framework::sink::util::testing::{build_test_server, load_sink};
+use framework::sink::testing::{build_test_server, load_sink};
 use http::header::AUTHORIZATION;
 use url::Url;
 use value::value;

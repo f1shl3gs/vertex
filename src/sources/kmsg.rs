@@ -12,7 +12,7 @@ use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::LogRecord;
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use tokio::io::AsyncBufReadExt;
 use value::value;
 
@@ -93,8 +93,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

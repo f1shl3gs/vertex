@@ -12,7 +12,7 @@ use chrono::Utc;
 use codecs::decoding::{DecodeError, Decoder, DecodingConfig, DeserializerConfig, FramingConfig};
 use configurable::{Configurable, configurable_component};
 use event::Events;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::StreamExt;
 use scheduled::ScheduledConfig;
@@ -156,8 +156,8 @@ impl SourceConfig for Config {
         })
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

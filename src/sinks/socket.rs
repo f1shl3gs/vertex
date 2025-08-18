@@ -1,10 +1,10 @@
 use codecs::encoding::{Framer, FramingConfig, SerializerConfig, SinkType};
 use codecs::{Encoder, EncodingConfig, EncodingConfigWithFraming};
 use configurable::{Configurable, configurable_component};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{InputType, SinkConfig, SinkContext};
 #[cfg(unix)]
-use framework::sink::util::unix::UnixSinkConfig;
-use framework::sink::util::{tcp::TcpSinkConfig, udp::UdpSinkConfig};
+use framework::sink::net::UnixSinkConfig;
+use framework::sink::net::{TcpSinkConfig, UdpSinkConfig};
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 
@@ -94,8 +94,8 @@ impl SinkConfig for Config {
         }
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input_type(&self) -> InputType {
+        InputType::log()
     }
 
     fn acknowledgements(&self) -> bool {

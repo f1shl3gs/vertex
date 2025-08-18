@@ -10,7 +10,7 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::Tags;
 use event::{Bucket, EventStatus, Events, MetricValue, Quantile};
-use framework::config::{DataType, Resource, SinkConfig, SinkContext};
+use framework::config::{InputType, Resource, SinkConfig, SinkContext};
 use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, ShutdownSignal, Sink, StreamSink};
 use futures::stream::BoxStream;
@@ -69,8 +69,8 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), health_check))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Metric
+    fn input_type(&self) -> InputType {
+        InputType::metric()
     }
 
     fn resources(&self) -> Vec<Resource> {

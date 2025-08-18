@@ -4,7 +4,7 @@ use codecs::encoding::EncodingConfig;
 use configurable::configurable_component;
 use event::log::OwnedTargetPath;
 use framework::batch::{BatchConfig, SinkBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::template::Template;
 use framework::{Healthcheck, Sink};
 use futures::FutureExt;
@@ -111,8 +111,8 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), hc))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::All
+    fn input_type(&self) -> InputType {
+        InputType::all()
     }
 }
 

@@ -2,11 +2,10 @@ use std::num::ParseFloatError;
 use std::sync::Arc;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::configurable_component;
 use event::{Metric, tags};
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -31,7 +30,7 @@ struct Config {
     interval: Duration,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "clickhouse_metrics")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -47,8 +46,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

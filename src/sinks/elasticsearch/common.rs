@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use framework::HealthcheckError;
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient, MaybeAuth};
-use framework::sink::util::service::RequestConfig;
+use framework::sink::service::RequestConfig;
 use framework::tls::TlsConfig;
 use http::{Method, Request, StatusCode, Uri};
 use http_body_util::{BodyExt, Full};
@@ -60,7 +60,7 @@ impl ElasticsearchCommon {
             },
         };
 
-        let request_settings = config.request.into_settings();
+        let request_settings = config.request.settings();
         let mut query_params = config.query.clone().unwrap_or_default();
         query_params.insert(
             "timeout".into(),

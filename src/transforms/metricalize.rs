@@ -4,15 +4,14 @@ use std::pin::Pin;
 use std::time::Duration;
 
 use async_stream::stream;
-use async_trait::async_trait;
 use chrono::Utc;
 use configurable::{Configurable, configurable_component};
-use event::log::OwnedTargetPath;
+use event::log::{LogRecord, OwnedTargetPath, Value};
 use event::tags::{Key, Tags};
-use event::{
-    Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue, log::Value,
+use event::{Bucket, EventMetadata, Events, Metric, MetricSeries, MetricValue};
+use framework::config::{
+    InputType, OutputType, TransformConfig, TransformContext, default_interval,
 };
-use framework::config::{DataType, Output, TransformConfig, TransformContext, default_interval};
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
 use metrics::Counter;
@@ -138,7 +137,7 @@ struct Config {
     metrics: Vec<MetricConfig>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "metricalize")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
@@ -146,12 +145,12 @@ impl TransformConfig for Config {
         Ok(Transform::event_task(agg))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input(&self) -> InputType {
+        InputType::log()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 }
 

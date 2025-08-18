@@ -2,7 +2,7 @@ use std::fmt;
 use std::io::Write;
 
 use event::{Metric, MetricValue};
-use framework::sink::util::{Encoder, TrackWriter};
+use framework::sink::encoding::{Encoder, TrackWriter};
 
 // https://docs.influxdata.com/influxdb/cloud/reference/syntax/line-protocol/#special-characters
 const COMMA_EQ_SPACE: [char; 3] = [',', '=', ' '];

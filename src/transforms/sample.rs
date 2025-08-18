@@ -4,7 +4,7 @@ use configurable::configurable_component;
 use event::log::OwnedTargetPath;
 use event::log::path::TargetPath;
 use event::{Event, EventContainer, Events};
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{InputType, OutputType, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
 
@@ -36,12 +36,12 @@ impl TransformConfig for Config {
         )))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input(&self) -> InputType {
+        InputType::log()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn enable_concurrency(&self) -> bool {

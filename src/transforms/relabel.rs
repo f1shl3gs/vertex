@@ -1,10 +1,10 @@
-use async_trait::async_trait;
 use configurable::{Configurable, configurable_component};
 use event::Events;
 use event::array::EventMutRef;
 use event::tags::{Key, Tags, Value};
-use framework::config::serde_regex;
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{
+    DataType, InputType, OutputType, TransformConfig, TransformContext, serde_regex,
+};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use md5::{Digest, Md5};
 use regex::Regex;
@@ -111,7 +111,7 @@ struct Config {
     operations: Vec<Operation>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "relabel")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
@@ -124,12 +124,12 @@ impl TransformConfig for Config {
         }))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Metric | DataType::Trace
+    fn input(&self) -> InputType {
+        InputType::new(DataType::Metric | DataType::Trace)
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics(), Output::traces()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric(), OutputType::trace()]
     }
 
     fn enable_concurrency(&self) -> bool {

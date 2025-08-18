@@ -1,11 +1,10 @@
 use std::collections::HashSet;
 use std::fmt::Debug;
 
-use async_trait::async_trait;
 use configurable::NamedComponent;
 use serde::{Deserialize, Serialize};
 
-use super::{ComponentKey, DataType, GlobalOptions, Output, OutputId};
+use super::{ComponentKey, GlobalOptions, InputType, OutputId, OutputType};
 
 #[derive(Default)]
 pub struct TransformContext {
@@ -23,17 +22,17 @@ impl TransformContext {
 }
 
 /// Generalized interface for describing and building transform components.
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(tag = "type")]
 pub trait TransformConfig: NamedComponent + Debug + Send + Sync {
     /// Builds the transform with the given context.
     async fn build(&self, cx: &TransformContext) -> crate::Result<crate::Transform>;
 
     /// Gets the input configuration for this transform.
-    fn input_type(&self) -> DataType;
+    fn input(&self) -> InputType;
 
     /// Gets the list of outputs exposed by this transform.
-    fn outputs(&self) -> Vec<Output>;
+    fn outputs(&self) -> Vec<OutputType>;
 
     /// Whether concurrency should be enabled for this transform.
     ///

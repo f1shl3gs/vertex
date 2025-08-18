@@ -4,10 +4,10 @@ use bytes::Bytes;
 use configurable::configurable_component;
 use event::{EventStatus, Events, Finalizable};
 use framework::batch::{BatchConfig, SinkBatchSettings};
-use framework::config::{DataType, ProxyConfig, SinkConfig, SinkContext};
+use framework::config::{InputType, ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
-use framework::sink::util::Compression;
-use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::Compression;
+use framework::sink::builder::SinkBuilderExt;
 use framework::stream::BatcherSettings;
 use framework::{HealthcheckError, Sink, StreamSink};
 use futures::{FutureExt, StreamExt, stream::BoxStream};
@@ -70,8 +70,8 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), healthcheck))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input_type(&self) -> InputType {
+        InputType::log()
     }
 }
 

@@ -4,12 +4,11 @@ use std::hash::{Hash, Hasher};
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-use async_trait::async_trait;
 use configurable::{Configurable, configurable_component};
 use dashmap::DashMap;
 use event::Events;
 use event::tags::{Key, Value as TagValue};
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{InputType, OutputType, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
@@ -103,7 +102,7 @@ struct Config {
     mode: Mode,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "cardinality")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
@@ -114,12 +113,12 @@ impl TransformConfig for Config {
         )))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Metric
+    fn input(&self) -> InputType {
+        InputType::metric()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn enable_concurrency(&self) -> bool {

@@ -20,18 +20,6 @@ enum Writer {
     Snappy(SnappyEncoder<bytes::buf::Writer<BytesMut>>),
 }
 
-impl Writer {
-    pub fn get_ref(&self) -> &BytesMut {
-        match self {
-            Writer::Plain(inner) => inner.get_ref(),
-            Writer::Gzip(inner) => inner.get_ref().get_ref().get_ref(),
-            Writer::Zlib(inner) => inner.get_ref().get_ref().get_ref(),
-            Writer::Zstd(inner) => inner.get_ref().get_ref(),
-            Writer::Snappy(inner) => inner.get_ref().get_ref(),
-        }
-    }
-}
-
 impl From<Compression> for Writer {
     fn from(compression: Compression) -> Self {
         let writer = BytesMut::with_capacity(BUFFER_SIZE).writer();
@@ -95,11 +83,6 @@ pub struct Compressor {
 }
 
 impl Compressor {
-    /// Gets a mutable reference to the underlying buffer.
-    pub fn get_ref(&self) -> &BytesMut {
-        self.inner.get_ref()
-    }
-
     /// Gets whether or not this compressor will actually compress the input.
     ///
     /// While it may be counterintuitive for "compression" ot not compress, this is simply a
@@ -110,24 +93,6 @@ impl Compressor {
     /// place, as different size limitations may come into paly.
     pub const fn is_compressed(&self) -> bool {
         self.compression.is_compressed()
-    }
-
-    /// Consumes the compressor, returning the internal buffer used by the compressor.
-    ///
-    /// # Errors
-    ///
-    /// If the compressor encounters an I/O error while finalizing the payload, an error
-    /// variant will be returned.
-    pub fn finish(self) -> std::io::Result<BytesMut> {
-        let buf = match self.inner {
-            Writer::Plain(writer) => writer,
-            Writer::Gzip(writer) => writer.into_inner()?.finish()?,
-            Writer::Zlib(writer) => writer.into_inner()?.finish()?,
-            Writer::Zstd(writer) => writer.finish()?,
-            Writer::Snappy(writer) => writer.finish()?,
-        };
-
-        Ok(buf.into_inner())
     }
 
     /// Consumes the compressor, returning the internal buffer used by the compressor.
