@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755401459509,
+  "lastUpdate": 1755492112700,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "edcd802c936d6ab80d69c4fb6033fcc971efa0f3",
-          "message": "Merge pull request #2397 from f1shl3gs/lib/vtl/xxhash64\n\nlib/vtl: switch `xxhash3_64` to `xxhash64`",
-          "timestamp": "2025-06-10T05:31:02+08:00",
-          "tree_id": "5b1a20d27f6f91ee82f5f743409a64661d3bc2d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/edcd802c936d6ab80d69c4fb6033fcc971efa0f3"
-        },
-        "date": 1749504798737,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 555220,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 487860,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f2e7e6a39da5c7ca94ce67386a15c892d8896ad",
+          "message": "Merge pull request #2511 from f1shl3gs/codecs/rename_framing_config_variant\n\nlib/codecs: unify framing config names",
+          "timestamp": "2025-08-18T12:39:28+08:00",
+          "tree_id": "c8583886b9944e196008bf803170c230857ca895",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f2e7e6a39da5c7ca94ce67386a15c892d8896ad"
+        },
+        "date": 1755492091983,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 494250,
             "unit": "ns/op"
           }
         ]
