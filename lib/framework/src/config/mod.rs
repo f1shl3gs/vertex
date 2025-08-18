@@ -212,37 +212,37 @@ pub struct InputType {
 
 impl InputType {
     #[inline]
-    pub fn new(typ: DataType) -> Self {
+    pub const fn new(typ: DataType) -> Self {
         Self { typ }
     }
 
     #[inline]
-    pub fn data_type(&self) -> DataType {
-        self.typ
-    }
-
-    #[inline]
-    pub fn log() -> Self {
+    pub const fn log() -> Self {
         Self { typ: DataType::Log }
     }
 
     #[inline]
-    pub fn metric() -> Self {
+    pub const fn metric() -> Self {
         Self {
             typ: DataType::Metric,
         }
     }
 
     #[inline]
-    pub fn trace() -> Self {
+    pub const fn trace() -> Self {
         Self {
             typ: DataType::Trace,
         }
     }
 
     #[inline]
-    pub fn all() -> Self {
+    pub const fn all() -> Self {
         Self { typ: DataType::All }
+    }
+
+    #[inline]
+    pub fn data_type(&self) -> DataType {
+        self.typ
     }
 }
 
