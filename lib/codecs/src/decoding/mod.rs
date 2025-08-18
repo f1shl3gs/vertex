@@ -10,7 +10,6 @@ use std::fmt::Debug;
 
 use bytes::{Bytes, BytesMut};
 use event::Events;
-use format::{DeserializeError, Deserializer as _};
 use tracing::{error, warn};
 
 use super::FramingError;
@@ -19,6 +18,7 @@ pub use error::{DecodeError, StreamDecodingError};
 #[cfg(feature = "syslog")]
 pub use format::SyslogDeserializer;
 use format::{BytesDeserializer, JsonDeserializer, LogfmtDeserializer, VtlDeserializer};
+use format::{DeserializeError, Deserializer as _};
 pub use framing::{
     BytesDecoder, CharacterDelimitedDecoder, NewlineDelimitedDecoder, OctetCountingDecoder,
 };
@@ -32,7 +32,7 @@ pub enum Framer {
     CharacterDelimited(CharacterDelimitedDecoder),
     /// Uses a `NewlineDelimitedDecoder` for framing.
     NewlineDelimited(NewlineDelimitedDecoder),
-    /// Uses a `OctetCountingDecoder` for framing
+    /// Uses an `OctetCountingDecoder` for framing
     OctetCounting(OctetCountingDecoder),
 }
 
@@ -77,8 +77,10 @@ impl tokio_util::codec::Decoder for Framer {
 pub enum Deserializer {
     /// Uses a `BytesDeserializer` for deserialization.
     Bytes(BytesDeserializer),
+
     /// Uses a `JsonDeserializer` for deserialization.
     Json(JsonDeserializer),
+
     /// Uses a `LogfmtDeserializer` for deserialization.
     Logfmt(LogfmtDeserializer),
 

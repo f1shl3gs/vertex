@@ -342,7 +342,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &[],
             &[],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Bytes,
         )
         .await;
@@ -369,7 +369,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &[],
             &[],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Bytes,
         )
         .await;
@@ -402,7 +402,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &[],
             &[],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Bytes,
         )
         .await;
@@ -434,7 +434,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &[],
             &[],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Json(JsonDeserializerConfig::default()),
         )
         .await;
@@ -468,7 +468,7 @@ mod tests {
                 "AbsentHeader",
             ],
             &[],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Json(JsonDeserializerConfig::default()),
         )
         .await;
@@ -521,7 +521,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &["*"],
             &[],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Json(JsonDeserializerConfig::default()),
         )
         .await;
@@ -560,7 +560,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &[],
             &["source", "reg*"],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Json(JsonDeserializerConfig::default()),
         )
         .await;
@@ -607,7 +607,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &[],
             &["source", "reg*"],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Bytes,
         )
         .await;
@@ -644,7 +644,7 @@ mod tests {
         let (addr, receiver) = spawn_source(
             &[],
             &[],
-            FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default()),
+            FramingConfig::Newline(NewlineDelimitedDecoderConfig::default()),
             DeserializerConfig::Bytes,
         )
         .await;

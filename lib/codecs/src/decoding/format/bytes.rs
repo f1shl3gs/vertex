@@ -1,6 +1,5 @@
 use bytes::Bytes;
 use event::{Events, LogRecord};
-use log_schema::log_schema;
 
 use super::{DeserializeError, Deserializer};
 
@@ -14,7 +13,7 @@ pub struct BytesDeserializer;
 impl Deserializer for BytesDeserializer {
     fn parse(&self, buf: Bytes) -> Result<Events, DeserializeError> {
         let mut log = LogRecord::default();
-        log.insert(log_schema().message_key(), buf);
+        log.insert("message", buf);
 
         Ok(Events::Logs(vec![log]))
     }

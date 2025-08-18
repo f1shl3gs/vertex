@@ -21,10 +21,10 @@ pub enum FramingConfig {
     Bytes,
 
     /// Configures the `NewlineDelimitedFramer`
-    NewlineDelimited(NewlineDelimitedDecoderConfig),
+    Newline(NewlineDelimitedDecoderConfig),
 
     /// Configures the `CharacterDelimitedFramer`.
-    CharacterDelimited(CharacterDelimitedDecoderConfig),
+    Character(CharacterDelimitedDecoderConfig),
 
     /// Configures the `OctetCountingFramer`.
     OctetCounting(OctetCountingDecoderConfig),
@@ -35,8 +35,8 @@ impl FramingConfig {
     pub fn build(&self) -> Framer {
         match self {
             FramingConfig::Bytes => Framer::Bytes(BytesDecoder::new()),
-            FramingConfig::CharacterDelimited(config) => Framer::CharacterDelimited(config.build()),
-            FramingConfig::NewlineDelimited(config) => Framer::NewlineDelimited(config.build()),
+            FramingConfig::Newline(config) => Framer::NewlineDelimited(config.build()),
+            FramingConfig::Character(config) => Framer::CharacterDelimited(config.build()),
             FramingConfig::OctetCounting(config) => Framer::OctetCounting(config.build()),
         }
     }
@@ -85,12 +85,12 @@ impl DeserializerConfig {
             DeserializerConfig::Bytes
             | DeserializerConfig::Json(_)
             | DeserializerConfig::Logfmt => {
-                FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default())
+                FramingConfig::Newline(NewlineDelimitedDecoderConfig::default())
             }
 
             #[cfg(feature = "syslog")]
             DeserializerConfig::Syslog(_) => {
-                FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default())
+                FramingConfig::Newline(NewlineDelimitedDecoderConfig::default())
             }
             DeserializerConfig::VTL(_) => FramingConfig::Bytes,
         }
