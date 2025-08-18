@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755511756271,
+  "lastUpdate": 1755511790274,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1d7bf8f1b5d97310baf52956964bc6b7ef2aff2e",
-          "message": "Merge pull request #2410 from f1shl3gs/dependabot/cargo/libc-0.2.173\n\nchore(deps): bump libc from 0.2.172 to 0.2.173",
-          "timestamp": "2025-06-14T10:26:43+08:00",
-          "tree_id": "9418c091fb8b7ec330c8ffa6fee2924d2a651111",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d7bf8f1b5d97310baf52956964bc6b7ef2aff2e"
-        },
-        "date": 1749868603975,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 511,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37568.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0b129ae61da9ea815699a6673ad4f1992f48670e",
           "message": "Merge pull request #2411 from f1shl3gs/sources/haproxy/optimize_parse\n\nsources/haproxy: optimize CSV parse",
           "timestamp": "2025-06-14T11:53:09+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40348.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "16e08a6cb039568903d0fbafd3a31053dd16ef5a",
+          "message": "Merge pull request #2513 from f1shl3gs/lib/sysinfo/remove\n\nlib/sysinfo: remove",
+          "timestamp": "2025-08-18T17:58:46+08:00",
+          "tree_id": "0bc995b9e9ed3a5bd441ba460712f08c7f5d66b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/16e08a6cb039568903d0fbafd3a31053dd16ef5a"
+        },
+        "date": 1755511769643,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 553,
             "unit": "s"
           },
           {
