@@ -53,8 +53,8 @@ impl Config {
 
     pub fn run_datagram(&self, decoder: Decoder, cx: SourceContext) -> crate::Result<Source> {
         let max_length = self.framing.as_ref().and_then(|framing| match framing {
-            FramingConfig::NewlineDelimited(config) => config.max_length,
-            FramingConfig::CharacterDelimited(config) => config.max_length,
+            FramingConfig::Newline(config) => config.max_length,
+            FramingConfig::Character(config) => config.max_length,
             FramingConfig::OctetCounting(config) => config.max_length,
             _ => None,
         });
