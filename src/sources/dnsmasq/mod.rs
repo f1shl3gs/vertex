@@ -6,7 +6,7 @@ use std::time::{Duration, Instant};
 use configurable::configurable_component;
 use event::{Metric, tags};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use futures::StreamExt;
 use futures::stream::FuturesUnordered;
 use resolver::{Hosts, RecordClass, RecordData, RecordType, Resolver};
@@ -95,8 +95,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

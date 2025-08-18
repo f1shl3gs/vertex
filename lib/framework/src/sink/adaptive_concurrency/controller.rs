@@ -12,7 +12,7 @@ use crate::stats::{EwmaVar, Mean, MeanVariance};
 use super::AdaptiveConcurrencySettings;
 use super::MAX_CONCURRENCY;
 use super::semaphore::ShrinkableSemaphore;
-use crate::sink::util::retries::{RetryAction, RetryLogic};
+use crate::sink::retries::{RetryAction, RetryLogic};
 
 /// Shared class for `tokio::sync::Semaphore` that manages adjusting the
 /// semaphore size and other associated data.

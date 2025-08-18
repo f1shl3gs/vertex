@@ -1,7 +1,6 @@
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::Events;
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{InputType, OutputType, TransformConfig, TransformContext};
 use framework::{SyncTransform, Transform, TransformOutputsBuf};
 use indexmap::IndexMap;
 use value::Value;
@@ -23,7 +22,7 @@ struct Config {
     route: IndexMap<String, String>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "route")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
@@ -48,17 +47,17 @@ impl TransformConfig for Config {
         Ok(Transform::synchronous(Route { routes }))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input(&self) -> InputType {
+        InputType::log()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        let mut result: Vec<Output> = self
+    fn outputs(&self) -> Vec<OutputType> {
+        let mut result: Vec<OutputType> = self
             .route
             .keys()
-            .map(|name| Output::logs().with_port(name))
+            .map(|name| OutputType::log().with_port(name))
             .collect();
-        result.push(Output::logs().with_port(UNMATCHED_ROUTE));
+        result.push(OutputType::log().with_port(UNMATCHED_ROUTE));
 
         result
     }
@@ -204,7 +203,7 @@ route:
             let mut buf = TransformOutputsBuf::new_with_capacity(
                 outputs
                     .iter()
-                    .map(|name| Output::logs().with_port(*name))
+                    .map(|name| OutputType::log().with_port(*name))
                     .collect(),
                 1,
             );

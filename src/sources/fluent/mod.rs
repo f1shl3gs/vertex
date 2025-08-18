@@ -12,7 +12,7 @@ use configurable::configurable_component;
 use event::{Events, LogRecord};
 use flate2::read::MultiGzDecoder;
 use framework::Source;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::source::tcp::{SocketListenAddr, TcpSource, TcpSourceAck, TcpSourceAcker};
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::TlsConfig;
@@ -59,8 +59,8 @@ impl SourceConfig for Config {
         )
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn resources(&self) -> Vec<Resource> {

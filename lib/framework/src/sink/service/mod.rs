@@ -21,9 +21,9 @@ use tower::{Layer, Service, ServiceBuilder};
 use super::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
 use super::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
+use super::batch::{BatchSink, PartitionBatchSink, Response};
 use super::retries::{FixedRetryPolicy, RetryLogic};
 use super::service::map::MapLayer;
-use super::sink::{BatchSink, PartitionBatchSink, Response};
 use crate::batch::Batch;
 
 pub const CONCURRENCY_DEFAULT: Concurrency = Concurrency::None;
@@ -143,7 +143,7 @@ impl RequestConfig {
         }
     }
 
-    pub fn into_settings(&self) -> RequestSettings {
+    pub fn settings(&self) -> RequestSettings {
         RequestSettings {
             concurrency: self.concurrency.parse_concurrency(),
             timeout: self.timeout,

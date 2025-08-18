@@ -9,7 +9,7 @@ use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
     Source,
-    config::{Output, SourceConfig, SourceContext, default_interval},
+    config::{OutputType, SourceConfig, SourceContext, default_interval},
 };
 use ntp::Client;
 
@@ -77,8 +77,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

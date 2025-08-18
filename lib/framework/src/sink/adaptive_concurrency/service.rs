@@ -10,7 +10,7 @@ use tower::Service;
 use super::AdaptiveConcurrencySettings;
 use super::controller::Controller;
 use super::future::ResponseFuture;
-use crate::sink::util::retries::RetryLogic;
+use crate::sink::retries::RetryLogic;
 
 enum State {
     Waiting(BoxFuture<'static, OwnedSemaphorePermit>),
@@ -115,8 +115,8 @@ impl Debug for State {
 mod tests {
     use super::super::controller::Inner;
     use super::*;
-    use crate::sink::util::adaptive_concurrency::controller::ControllerStatistics;
-    use crate::sink::util::adaptive_concurrency::layer::AdaptiveConcurrencyLimitLayer;
+    use crate::sink::adaptive_concurrency::controller::ControllerStatistics;
+    use crate::sink::adaptive_concurrency::layer::AdaptiveConcurrencyLimitLayer;
     use std::sync::{Mutex, MutexGuard};
     use std::time::Duration;
     use tokio::time::advance;

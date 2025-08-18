@@ -4,7 +4,7 @@ use configurable::NamedComponent;
 use serde::{Deserialize, Serialize};
 
 use super::{
-    ComponentKey, GlobalOptions, Output, ProxyConfig, Resource, skip_serializing_if_default,
+    ComponentKey, GlobalOptions, OutputType, ProxyConfig, Resource, skip_serializing_if_default,
 };
 use crate::{Pipeline, ShutdownSignal};
 
@@ -67,7 +67,7 @@ pub trait SourceConfig: NamedComponent + Debug + Send + Sync {
     async fn build(&self, cx: SourceContext) -> crate::Result<crate::Source>;
 
     /// Gets the list of outputs exposed by this source.
-    fn outputs(&self) -> Vec<Output>;
+    fn outputs(&self) -> Vec<OutputType>;
 
     /// Gets the list of resources, if any, used by this source.
     ///

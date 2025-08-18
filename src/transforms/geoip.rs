@@ -3,12 +3,11 @@ use std::path::PathBuf;
 use std::str::FromStr;
 use std::sync::Arc;
 
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::Events;
 use event::log::OwnedTargetPath;
 use event::log::path::parse_target_path;
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{InputType, OutputType, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use value::{Value, path};
 
@@ -48,7 +47,7 @@ struct Config {
     locale: String,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "geoip")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
@@ -65,12 +64,12 @@ impl TransformConfig for Config {
         }))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input(&self) -> InputType {
+        InputType::log()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn enable_concurrency(&self) -> bool {

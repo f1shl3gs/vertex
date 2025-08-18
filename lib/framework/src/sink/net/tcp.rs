@@ -4,7 +4,6 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
-use async_trait::async_trait;
 use backoff::ExponentialBackoff;
 use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
@@ -22,7 +21,7 @@ use super::{SinkBuildError, SocketMode};
 use crate::batch::EncodedEvent;
 use crate::dns::Resolver;
 use crate::sink::VecSinkExt;
-use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
+use crate::sink::net::{BytesSink, ShutdownCheck};
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsStream, TlsConfig, TlsError};
 use crate::{Healthcheck, Sink, StreamSink, dns};
@@ -277,7 +276,7 @@ where
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl<E> StreamSink for TcpSink<E>
 where
     E: Clone + Send + Sync + Encoder<Event, Error = codecs::encoding::EncodingError> + 'static,

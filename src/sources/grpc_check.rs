@@ -1,9 +1,8 @@
 use std::time::{Duration, Instant};
 
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{Metric, tags};
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::{StreamExt, stream::FuturesUnordered};
 use tonic::Code;
@@ -37,7 +36,7 @@ struct Config {
     timeout: Duration,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "grpc_check")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -51,8 +50,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

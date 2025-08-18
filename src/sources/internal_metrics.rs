@@ -5,7 +5,7 @@ use configurable::configurable_component;
 use event::Bucket;
 use event::tags::Tags;
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use metrics::{Attributes, Observation};
@@ -27,8 +27,8 @@ impl SourceConfig for Config {
         Ok(Box::pin(run(self.interval, cx.shutdown, cx.output)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

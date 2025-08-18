@@ -4,7 +4,7 @@ use std::str::FromStr;
 
 use codecs::EncodingConfigWithFraming;
 use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
-use framework::sink::util::tcp::TcpSinkConfig;
+use framework::sink::net::TcpSinkConfig;
 use framework::testing::CountReceiver;
 use testify::wait::wait_for_tcp;
 use testify::{next_addr, send_lines};

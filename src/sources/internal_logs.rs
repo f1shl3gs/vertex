@@ -3,7 +3,7 @@ use configurable::configurable_component;
 use event::log::OwnedTargetPath;
 use event::log::path::parse_target_path;
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::trace::TraceSubscription;
@@ -42,8 +42,8 @@ impl SourceConfig for Config {
         Ok(Box::pin(run(host_key, pid_key, cx.output, cx.shutdown)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

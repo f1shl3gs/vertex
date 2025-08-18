@@ -1,19 +1,18 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 
-use indexmap::{IndexMap, set::IndexSet};
+use indexmap::{IndexMap, IndexSet};
 
-use super::{
-    ComponentKey, DataType, Output, OutputId, SourceOuter, TransformOuter, sink::SinkOuter,
-};
+use super::sink::SinkOuter;
+use super::{ComponentKey, DataType, OutputId, OutputType, SourceOuter, TransformOuter};
 
 #[derive(Debug, Clone)]
 pub enum Node {
     Source {
-        outputs: Vec<Output>,
+        outputs: Vec<OutputType>,
     },
     Transform {
-        in_ty: DataType,
-        outputs: Vec<Output>,
+        input: DataType,
+        outputs: Vec<OutputType>,
     },
     Sink {
         ty: DataType,
@@ -64,7 +63,7 @@ impl Graph {
             graph.nodes.insert(
                 id.clone(),
                 Node::Transform {
-                    in_ty: config.inner.input_type(),
+                    input: config.inner.input().data_type(),
                     outputs: config.inner.outputs(),
                 },
             );
@@ -74,7 +73,7 @@ impl Graph {
             graph.nodes.insert(
                 id.clone(),
                 Node::Sink {
-                    ty: config.inner.input_type(),
+                    ty: config.inner.input_type().data_type(),
                 },
             );
         }
@@ -139,7 +138,7 @@ impl Graph {
     fn get_input_type(&self, key: &ComponentKey) -> DataType {
         match self.nodes[key] {
             Node::Source { .. } => panic!("no inputs on sources"),
-            Node::Transform { in_ty, .. } => in_ty,
+            Node::Transform { input, .. } => input,
             Node::Sink { ty } => ty,
         }
     }
@@ -346,7 +345,7 @@ mod test {
             self.nodes.insert(
                 id.into(),
                 Node::Source {
-                    outputs: vec![Output::new(ty)],
+                    outputs: vec![OutputType::new(ty)],
                 },
             );
         }
@@ -354,8 +353,8 @@ mod test {
         fn add_transform(
             &mut self,
             id: &str,
-            in_ty: DataType,
-            out_ty: DataType,
+            input: DataType,
+            output: DataType,
             inputs: Vec<&str>,
         ) {
             let id = ComponentKey::from(id);
@@ -363,8 +362,8 @@ mod test {
             self.nodes.insert(
                 id.clone(),
                 Node::Transform {
-                    in_ty,
-                    outputs: vec![Output::new(out_ty)],
+                    input,
+                    outputs: vec![OutputType::new(output)],
                 },
             );
             for from in inputs {
@@ -378,7 +377,7 @@ mod test {
         fn add_transform_output(&mut self, id: &str, name: &str, ty: DataType) {
             let id = id.into();
             match self.nodes.get_mut(&id) {
-                Some(Node::Transform { outputs, .. }) => outputs.push(Output::from((name, ty))),
+                Some(Node::Transform { outputs, .. }) => outputs.push(OutputType::from((name, ty))),
                 _ => panic!("invalid transform"),
             }
         }
@@ -596,22 +595,22 @@ mod test {
         graph.nodes.insert(
             ComponentKey::from("foo.bar"),
             Node::Source {
-                outputs: vec![Output::new(DataType::All)],
+                outputs: vec![OutputType::new(DataType::All)],
             },
         );
         graph.nodes.insert(
             ComponentKey::from("foo.bar"),
             Node::Source {
-                outputs: vec![Output::new(DataType::All)],
+                outputs: vec![OutputType::new(DataType::All)],
             },
         );
         graph.nodes.insert(
             ComponentKey::from("foo"),
             Node::Transform {
-                in_ty: DataType::All,
+                input: DataType::All,
                 outputs: vec![
-                    Output::new(DataType::All),
-                    Output::from(("bar", DataType::All)),
+                    OutputType::new(DataType::All),
+                    OutputType::from(("bar", DataType::All)),
                 ],
             },
         );
@@ -620,16 +619,16 @@ mod test {
         graph.nodes.insert(
             ComponentKey::from("baz.errors"),
             Node::Source {
-                outputs: vec![Output::new(DataType::All)],
+                outputs: vec![OutputType::new(DataType::All)],
             },
         );
         graph.nodes.insert(
             ComponentKey::from("baz"),
             Node::Transform {
-                in_ty: DataType::All,
+                input: DataType::All,
                 outputs: vec![
-                    Output::new(DataType::All),
-                    Output::from(("errors", DataType::All)),
+                    OutputType::new(DataType::All),
+                    OutputType::from(("errors", DataType::All)),
                 ],
             },
         );

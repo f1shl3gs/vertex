@@ -3,7 +3,7 @@ mod broker;
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 
 use configurable::configurable_component;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -35,8 +35,8 @@ impl SourceConfig for Config {
         Ok(Box::pin(run(listener, self.keepalive, output, shutdown)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn resources(&self) -> Vec<Resource> {

@@ -1,12 +1,11 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use chrono::{Local, SecondsFormat};
 use codecs::DecodingConfig;
 use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use configurable::{Configurable, configurable_component};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use futures::StreamExt;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
@@ -401,7 +400,7 @@ struct Config {
     format: OutputFormat,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "generate")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -446,8 +445,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

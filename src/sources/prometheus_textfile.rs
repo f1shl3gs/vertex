@@ -2,7 +2,7 @@ use std::io::Read;
 use std::time::Duration;
 
 use configurable::configurable_component;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 
 use crate::common::prometheus::convert_metrics;
@@ -30,8 +30,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

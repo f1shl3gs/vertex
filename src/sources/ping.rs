@@ -8,7 +8,7 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::{Metric, tags};
 use framework::config::default_interval;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use parking_lot::Mutex;
 use rand::{Rng, rng};
@@ -98,8 +98,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

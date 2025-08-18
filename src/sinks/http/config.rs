@@ -1,13 +1,12 @@
-use async_trait::async_trait;
 use codecs::encoding::{CharacterDelimitedEncoder, Framer, SinkType};
 use codecs::{Encoder, EncodingConfigWithFraming};
 use configurable::configurable_component;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext, serde_http_method, serde_uri};
+use framework::config::{InputType, SinkConfig, SinkContext, serde_http_method, serde_uri};
 use framework::http::{Auth, HttpClient};
-use framework::sink::util::Compression;
-use framework::sink::util::http::{HttpService, http_response_retry_logic};
-use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
+use framework::sink::Compression;
+use framework::sink::http::{HttpService, http_response_retry_logic};
+use framework::sink::service::{RequestConfig, ServiceBuilderExt};
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{FutureExt, future};
@@ -55,7 +54,7 @@ pub struct Config {
     pub acknowledgements: bool,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "http")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
@@ -94,7 +93,7 @@ impl SinkConfig for Config {
 
         let http_service = HttpService::new(client.clone(), sink_request_builder);
         let service = ServiceBuilder::new()
-            .settings(self.request.into_settings(), http_response_retry_logic())
+            .settings(self.request.settings(), http_response_retry_logic())
             .service(http_service);
         let sink = HttpSink::new(service, batch_settings, request_builder);
         let healthcheck = match &cx.healthcheck.uri {
@@ -105,8 +104,8 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), healthcheck))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input_type(&self) -> InputType {
+        InputType::log()
     }
 
     fn acknowledgements(&self) -> bool {

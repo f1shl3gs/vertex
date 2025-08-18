@@ -12,7 +12,7 @@ use std::sync::Arc;
 use configurable::configurable_component;
 use decode::DataField;
 use event::{Events, LogRecord};
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::source::udp::UdpSource;
 use framework::{Error, Source};
 use ipfix::{DataRecord, FlowSet, IpFix, OptionsDataRecord};
@@ -45,8 +45,8 @@ impl SourceConfig for Config {
         source.run(self.listen, self.receive_buffer_size, cx)
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn resources(&self) -> Vec<Resource> {

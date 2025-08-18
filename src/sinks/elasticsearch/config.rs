@@ -1,15 +1,14 @@
 use std::collections::{BTreeMap, HashMap};
 
-use async_trait::async_trait;
 use codecs::encoding::Transformer;
 use configurable::{Configurable, configurable_component};
 use event::log::{OwnedValuePath, Value};
 use event::{EventRef, LogRecord, event_path};
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext, skip_serializing_if_default};
+use framework::config::{InputType, SinkConfig, SinkContext, skip_serializing_if_default};
 use framework::http::HttpClient;
-use framework::sink::util::Compression;
-use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
+use framework::sink::Compression;
+use framework::sink::service::{RequestConfig, ServiceBuilderExt};
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
@@ -330,14 +329,14 @@ impl Config {
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "elasticsearch")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let common = ElasticsearchCommon::parse_config(self).await?;
         let http_client = HttpClient::new(self.tls.as_ref(), cx.proxy())?;
         let batch_settings = self.batch.into_batcher_settings()?;
-        let request_limits = self.request.into_settings();
+        let request_limits = self.request.settings();
         let http_request_builder = HttpRequestBuilder {
             bulk_uri: common.bulk_uri.clone(),
             request_config: self.request.clone(),
@@ -365,8 +364,8 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), healthcheck))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input_type(&self) -> InputType {
+        InputType::log()
     }
 }
 

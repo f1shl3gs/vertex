@@ -1,12 +1,11 @@
 use std::fmt::Debug;
 
-use async_trait::async_trait;
 use bytes::BytesMut;
 use codecs::encoding::{Framer, SinkType, Transformer};
 use codecs::{Encoder, EncodingConfigWithFraming};
 use configurable::{Configurable, configurable_component};
 use event::{EventContainer, EventStatus, Events, Finalizable};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::{FutureExt, StreamExt, stream::BoxStream};
 use serde::{Deserialize, Serialize};
@@ -44,7 +43,7 @@ struct Config {
     acknowledgements: bool,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "console")]
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
@@ -68,8 +67,8 @@ impl SinkConfig for Config {
         Ok((sink, futures::future::ok(()).boxed()))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::All
+    fn input_type(&self) -> InputType {
+        InputType::all()
     }
 
     fn acknowledgements(&self) -> bool {
@@ -83,7 +82,7 @@ struct WriteSink<T> {
     encoder: Encoder<Framer>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl<T> StreamSink for WriteSink<T>
 where
     T: tokio::io::AsyncWrite + Send + Sync + Unpin,

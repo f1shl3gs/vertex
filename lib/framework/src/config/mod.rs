@@ -137,56 +137,56 @@ impl DataType {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct Output {
+pub struct OutputType {
     pub port: Option<String>,
     pub typ: DataType,
 }
 
-impl Output {
-    /// Create an `Output` of the given data type that contains no output `Definition`s.
+impl OutputType {
+    /// Create a default `OutputType` of the given data type
+    ///
+    /// A default output is one without a port identifier (i.e., not a named output)
+    /// and the default output consumers will receive if they declare the component
+    /// itself as an input
+    #[must_use]
+    pub const fn new(typ: DataType) -> Self {
+        Self { port: None, typ }
+    }
+
+    /// Create an `OutputType` of the given data type that contains no output `Definition`s.
     /// Designed for use in metrics sources
     ///
     /// Sets the datatype to be [`DataType::Metric`]
     #[must_use]
-    pub fn metrics() -> Self {
+    pub fn metric() -> Self {
         Self {
             port: None,
             typ: DataType::Metric,
         }
     }
 
-    /// Create an `Output` of the given data type that contains a single output `Definition`s.
+    /// Create an `OutputType` of the given data type that contains a single output `Definition`s.
     /// Designed for use in log sources.
     ///
     /// Sets the datatype to be [`DataType::Log`]
     #[must_use]
-    pub fn logs() -> Self {
+    pub fn log() -> Self {
         Self {
             port: None,
             typ: DataType::Log,
         }
     }
 
-    /// Create an `Output` of the given data type that contains no output `Definition`s.
+    /// Create an `OutputType` of the given data type that contains no output `Definition`s.
     /// Designed for use in trace sources.
     ///
     /// Sets the datatype to be [`DataType::Trace`]
     #[must_use]
-    pub fn traces() -> Self {
+    pub fn trace() -> Self {
         Self {
             port: None,
             typ: DataType::Trace,
         }
-    }
-
-    /// Create a default `Output` of the given data type
-    ///
-    /// A default output is one without a port identifier (i.e. not a named output)
-    /// and the default output consumers will receive if they declare the component
-    /// itself as an input
-    #[must_use]
-    pub const fn new(typ: DataType) -> Self {
-        Self { port: None, typ }
     }
 
     /// Set the port name for this `Output`
@@ -196,12 +196,53 @@ impl Output {
     }
 }
 
-impl<T: Into<String>> From<(T, DataType)> for Output {
+impl<T: Into<String>> From<(T, DataType)> for OutputType {
     fn from((name, typ): (T, DataType)) -> Self {
         Self {
             port: Some(name.into()),
             typ,
         }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct InputType {
+    typ: DataType,
+}
+
+impl InputType {
+    #[inline]
+    pub const fn new(typ: DataType) -> Self {
+        Self { typ }
+    }
+
+    #[inline]
+    pub const fn log() -> Self {
+        Self { typ: DataType::Log }
+    }
+
+    #[inline]
+    pub const fn metric() -> Self {
+        Self {
+            typ: DataType::Metric,
+        }
+    }
+
+    #[inline]
+    pub const fn trace() -> Self {
+        Self {
+            typ: DataType::Trace,
+        }
+    }
+
+    #[inline]
+    pub const fn all() -> Self {
+        Self { typ: DataType::All }
+    }
+
+    #[inline]
+    pub fn data_type(&self) -> DataType {
+        self.typ
     }
 }
 

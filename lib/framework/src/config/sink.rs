@@ -9,7 +9,7 @@ use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use super::{
-    ComponentKey, DataType, GlobalOptions, ProxyConfig, Resource, skip_serializing_if_default,
+    ComponentKey, GlobalOptions, InputType, ProxyConfig, Resource, skip_serializing_if_default,
 };
 
 const fn default_timeout() -> Duration {
@@ -18,7 +18,7 @@ const fn default_timeout() -> Duration {
 
 #[derive(Clone, Debug)]
 pub struct HealthcheckConfig {
-    /// Whether or not to check the health of the sink when Vertex starts up.
+    /// Whether to check the health of the sink when Vertex starts up.
     pub enabled: bool,
 
     /// The full URI to make HTTP healthcheck requests to.
@@ -167,7 +167,7 @@ pub trait SinkConfig: NamedComponent + Debug + Send + Sync {
     async fn build(&self, cx: SinkContext) -> crate::Result<(crate::Sink, crate::Healthcheck)>;
 
     /// Gets the input configuration for this sink
-    fn input_type(&self) -> DataType;
+    fn input_type(&self) -> InputType;
 
     /// Gets the list of resources, if any, used by this sink.
     ///

@@ -1,11 +1,10 @@
 use std::time::Duration;
 
-use async_trait::async_trait;
 use chrono::Utc;
 use configurable::{Configurable, configurable_component};
 use event::tags::Tags;
 use event::{Metric, MetricValue};
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 use serde::{Deserialize, Serialize};
 
@@ -40,7 +39,7 @@ struct Config {
     metrics: Vec<StaticMetricConfig>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "static_metrics")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
@@ -52,8 +51,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

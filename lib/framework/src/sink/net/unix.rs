@@ -13,14 +13,9 @@ use tokio::net::UnixStream;
 use tokio_util::codec::Encoder;
 
 use crate::batch::EncodedEvent;
+use crate::sink::VecSinkExt;
+use crate::sink::net::{BytesSink, ShutdownCheck, SocketMode};
 use crate::{Healthcheck, Sink, StreamSink};
-use crate::{
-    sink::VecSinkExt,
-    sink::util::{
-        SocketMode,
-        socket_bytes_sink::{BytesSink, ShutdownCheck},
-    },
-};
 
 #[derive(Debug, Error)]
 pub enum UnixError {

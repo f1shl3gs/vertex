@@ -5,7 +5,7 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::Metric;
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use http::{StatusCode, Uri};
@@ -162,8 +162,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

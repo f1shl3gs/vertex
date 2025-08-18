@@ -3,11 +3,10 @@ mod grpc;
 mod http;
 mod udp;
 
-use async_trait::async_trait;
 use codecs::encoding::Transformer;
 use configurable::configurable_component;
-use framework::config::{DataType, SinkConfig, SinkContext};
-use framework::sink::util::udp::UdpSinkConfig;
+use framework::config::{InputType, SinkConfig, SinkContext};
+use framework::sink::net::UdpSinkConfig;
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 
@@ -26,7 +25,7 @@ enum Config {
     Http(HttpSinkConfig),
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "jaeger")]
 impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
@@ -39,8 +38,8 @@ impl SinkConfig for Config {
         }
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Trace
+    fn input_type(&self) -> InputType {
+        InputType::trace()
     }
 }
 

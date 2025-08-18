@@ -6,7 +6,7 @@ mod unix;
 use codecs::DecodingConfig;
 use configurable::{Configurable, configurable_component};
 use framework::Source;
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
@@ -69,8 +69,8 @@ impl SourceConfig for Config {
         }
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn resources(&self) -> Vec<Resource> {

@@ -5,10 +5,9 @@ use std::pin::Pin;
 use std::time::Duration;
 
 use async_stream::stream;
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{EventContainer, Events};
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{InputType, OutputType, TransformConfig, TransformContext};
 use framework::template::Template;
 use framework::{OutputBuffer, TaskTransform, Transform};
 use futures::{Stream, StreamExt};
@@ -39,7 +38,7 @@ struct Config {
     window: Duration,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "throttle")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
@@ -48,12 +47,12 @@ impl TransformConfig for Config {
         Ok(Transform::event_task(throttle))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input(&self) -> InputType {
+        InputType::log()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 }
 

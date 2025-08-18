@@ -1,9 +1,8 @@
 use std::time::{Duration, Instant};
 
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::Events;
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::{FutureExt, StreamExt, stream::BoxStream};
 use tokio::time::sleep_until;
@@ -20,7 +19,7 @@ struct Config {
     acknowledgements: bool,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "blackhole")]
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
@@ -30,8 +29,8 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), health_check))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::All
+    fn input_type(&self) -> InputType {
+        InputType::all()
     }
 
     fn acknowledgements(&self) -> bool {
@@ -50,7 +49,7 @@ impl BlackholeSink {
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl StreamSink for BlackholeSink {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
         while let Some(events) = input.next().await {

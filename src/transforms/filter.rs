@@ -1,7 +1,6 @@
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::Events;
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{InputType, OutputType, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
 use value::Value;
@@ -19,7 +18,7 @@ struct Config {
     condition: String,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "filter")]
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
@@ -33,12 +32,12 @@ impl TransformConfig for Config {
         Ok(Transform::function(Filter::new(program)))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input(&self) -> InputType {
+        InputType::log()
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn enable_concurrency(&self) -> bool {

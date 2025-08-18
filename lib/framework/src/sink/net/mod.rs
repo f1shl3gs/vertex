@@ -1,3 +1,13 @@
+mod tcp;
+mod udp;
+#[cfg(unix)]
+mod unix;
+
+pub use tcp::TcpSinkConfig;
+pub use udp::UdpSinkConfig;
+#[cfg(unix)]
+pub use unix::UnixSinkConfig;
+
 use std::marker::Unpin;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -7,13 +17,38 @@ use codec::BytesCodec;
 use event::{EventFinalizers, EventStatus};
 use futures::{Sink, ready};
 use pin_project_lite::pin_project;
+use thiserror::Error;
 use tokio::io::AsyncWrite;
 use tokio_util::codec::FramedWrite;
 
-use super::SocketMode;
 use crate::batch::EncodedEvent;
 
 const MAX_PENDING_ITEMS: usize = 1024;
+
+#[derive(Debug, Error)]
+enum SinkBuildError {
+    #[error("Missing host in the address field")]
+    MissingHost,
+    #[error("Missing port in the address field")]
+    MissingPort,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum SocketMode {
+    Tcp,
+    Udp,
+    Unix,
+}
+
+impl SocketMode {
+    const fn as_str(self) -> &'static str {
+        match self {
+            Self::Tcp => "tcp",
+            Self::Udp => "udp",
+            Self::Unix => "unix",
+        }
+    }
+}
 
 pub enum ShutdownCheck {
     Error(std::io::Error),

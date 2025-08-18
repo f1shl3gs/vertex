@@ -10,7 +10,7 @@ use configurable::schema::{SchemaGenerator, SchemaObject};
 use configurable::{Configurable, configurable_component};
 use event::{Metric, tags};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use futures::StreamExt;
 use futures::stream::FuturesUnordered;
 use glob::Pattern;
@@ -161,8 +161,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

@@ -3,7 +3,7 @@ mod protocol;
 use bytes::Buf;
 use configurable::{Configurable, configurable_component};
 use event::{Metric, tags};
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::config::{default_interval, default_true};
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -88,8 +88,8 @@ impl SourceConfig for Config {
         )))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

@@ -6,7 +6,7 @@ use std::str::FromStr;
 
 use codecs::EncodingConfigWithFraming;
 use codecs::encoding::{FramingConfig, JsonSerializerConfig, SerializerConfig};
-use framework::sink::util::tcp::TcpSinkConfig;
+use framework::sink::net::TcpSinkConfig;
 use framework::testing::CountReceiver;
 use rand::Rng;
 use serde::Deserialize;

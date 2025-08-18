@@ -6,13 +6,11 @@ mod snapshot;
 
 use std::time::Duration;
 
-use async_trait::async_trait;
 use bytes::Bytes;
 use configurable::configurable_component;
 use event::Metric;
-use framework::config::{Output, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient};
-use framework::sink::util::sink::Response;
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
 use http_body_util::{BodyExt, Full};
@@ -43,7 +41,7 @@ struct Config {
     tls: Option<TlsConfig>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "elasticsearch")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -60,8 +58,8 @@ impl SourceConfig for Config {
         Ok(Box::pin(es.run(interval, cx.output, cx.shutdown)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {
@@ -140,7 +138,7 @@ impl Elasticsearch {
             .http_client
             .send(builder.body(Full::<Bytes>::default())?)
             .await?;
-        if !resp.is_successful() {
+        if !resp.status().is_success() {
             return Err("Unexpected status code".into());
         }
 

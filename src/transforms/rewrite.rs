@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use configurable::{Configurable, configurable_component};
 use event::Events;
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::config::{DataType, InputType, OutputType, TransformConfig, TransformContext};
 use framework::{SyncTransform, Transform, TransformOutputsBuf};
 use serde::{Deserialize, Serialize};
 use vtl::{Diagnostic, Program};
@@ -56,12 +56,12 @@ impl TransformConfig for Config {
         }
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log | DataType::Metric
+    fn input(&self) -> InputType {
+        InputType::new(DataType::Log | DataType::Metric)
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::new(DataType::Log | DataType::Metric)]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::new(DataType::Log | DataType::Metric)]
     }
 
     fn enable_concurrency(&self) -> bool {

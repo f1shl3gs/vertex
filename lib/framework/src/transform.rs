@@ -5,7 +5,7 @@ use bytesize::ByteSizeOf;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::{Stream, StreamExt, stream};
 
-use crate::config::Output;
+use crate::config::OutputType;
 use crate::topology::{ControlChannel, Fanout};
 
 /// Transforms that are simple, and don't require attention to coordination.
@@ -156,7 +156,7 @@ pub struct TransformOutputsBuf {
 }
 
 impl TransformOutputsBuf {
-    pub fn new_with_capacity(outputs: Vec<Output>, capacity: usize) -> Self {
+    pub fn new_with_capacity(outputs: Vec<OutputType>, capacity: usize) -> Self {
         let mut primary_buffer = None;
         let mut named_buffers = HashMap::new();
 
@@ -239,13 +239,13 @@ impl ByteSizeOf for TransformOutputsBuf {
 }
 
 pub struct TransformOutputs {
-    outputs_spec: Vec<Output>,
+    outputs_spec: Vec<OutputType>,
     primary_output: Option<Fanout>,
     named_outputs: HashMap<String, Fanout>,
 }
 
 impl TransformOutputs {
-    pub fn new(outputs: Vec<Output>) -> (Self, HashMap<Option<String>, ControlChannel>) {
+    pub fn new(outputs: Vec<OutputType>) -> (Self, HashMap<Option<String>, ControlChannel>) {
         let outputs_spec = outputs.clone();
         let mut primary_output = None;
         let mut named_outputs = HashMap::new();

@@ -10,7 +10,7 @@ use bytes::Bytes;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::{Metric, tags};
-use framework::config::{Output, ProxyConfig, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, ProxyConfig, SourceConfig, SourceContext, default_interval};
 use framework::dns::{DnsError, Resolver};
 use framework::http::Auth;
 use framework::tls::{TlsConfig, TlsError};
@@ -105,8 +105,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::metrics()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::metric()]
     }
 
     fn can_acknowledge(&self) -> bool {

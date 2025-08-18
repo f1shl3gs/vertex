@@ -3,10 +3,9 @@ mod event;
 use std::path::PathBuf;
 use std::time::Duration;
 
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::ObjectReference;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::StreamExt;
 use kubernetes::{Client, WatchEvent, WatchParams};
@@ -25,7 +24,7 @@ struct Config {
     namespaces: Vec<String>,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "kubernetes_events")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -73,8 +72,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

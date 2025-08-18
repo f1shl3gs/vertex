@@ -6,7 +6,7 @@ use chrono::Utc;
 use configurable::configurable_component;
 use datagram::{CounterRecord, CounterRecordData, Datagram, FlowRecord, Lane, Sample, SampleData};
 use event::{LogRecord, Metric, tags};
-use framework::config::{Output, Resource, SourceConfig, SourceContext};
+use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::{Error, Source};
 use value::{Value, value};
 
@@ -31,10 +31,10 @@ impl SourceConfig for Config {
         Ok(Box::pin(run(self.listen, self.receive_buffer_bytes, cx)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
+    fn outputs(&self) -> Vec<OutputType> {
         vec![
-            Output::logs().with_port("logs"),
-            Output::metrics().with_port("metrics"),
+            OutputType::log().with_port("logs"),
+            OutputType::metric().with_port("metrics"),
         ]
     }
 

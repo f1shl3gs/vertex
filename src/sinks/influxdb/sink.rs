@@ -1,14 +1,13 @@
 use std::fmt::Debug;
 
-use async_trait::async_trait;
 use event::Events;
 use framework::StreamSink;
-use framework::sink::util::Compression;
-use framework::sink::util::builder::SinkBuilderExt;
-use framework::sink::util::http::HttpRequest;
+use framework::sink::Compression;
+use framework::sink::builder::SinkBuilderExt;
+use framework::sink::http::HttpRequest;
 use framework::stream::{BatcherSettings, DriverResponse};
 use framework::template::Template;
-use futures::{StreamExt, stream::BoxStream};
+use futures::stream::{BoxStream, StreamExt};
 use tower::Service;
 
 use super::request_builder::{InfluxdbRequestBuilder, KeyPartitioner, PartitionKey};
@@ -68,7 +67,7 @@ where
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl<S> StreamSink for InfluxdbSink<S>
 where
     S: Service<HttpRequest<PartitionKey>> + Send + 'static,

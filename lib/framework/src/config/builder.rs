@@ -349,7 +349,9 @@ fn expand_globs_inner(inputs: &mut Vec<String>, id: &str, candidates: &IndexSet<
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::{DataType, Output, SinkContext, SourceContext, TransformContext};
+    use crate::config::{
+        DataType, InputType, OutputType, SinkContext, SourceContext, TransformContext,
+    };
     use async_trait::async_trait;
     use configurable::configurable_component;
 
@@ -370,8 +372,8 @@ mod tests {
             unimplemented!()
         }
 
-        fn outputs(&self) -> Vec<Output> {
-            vec![Output::logs()]
+        fn outputs(&self) -> Vec<OutputType> {
+            vec![OutputType::log()]
         }
 
         fn can_acknowledge(&self) -> bool {
@@ -386,12 +388,12 @@ mod tests {
             todo!()
         }
 
-        fn input_type(&self) -> DataType {
-            DataType::All
+        fn input(&self) -> InputType {
+            InputType::all()
         }
 
-        fn outputs(&self) -> Vec<Output> {
-            vec![Output::new(DataType::All)]
+        fn outputs(&self) -> Vec<OutputType> {
+            vec![OutputType::new(DataType::All)]
         }
     }
 
@@ -405,8 +407,8 @@ mod tests {
             unimplemented!()
         }
 
-        fn input_type(&self) -> DataType {
-            DataType::All
+        fn input_type(&self) -> InputType {
+            InputType::log()
         }
     }
 

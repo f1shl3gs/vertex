@@ -1,11 +1,10 @@
 use std::borrow::Cow;
 use std::fmt::Debug;
 
-use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{Trace, tags};
 use framework::Source;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::trace::SpanSubscription;
 use futures::StreamExt;
 use log_schema::log_schema;
@@ -25,7 +24,7 @@ struct Config {
     service: String,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "internal_traces")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
@@ -63,8 +62,8 @@ impl SourceConfig for Config {
         }))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::traces()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::trace()]
     }
 
     fn can_acknowledge(&self) -> bool {

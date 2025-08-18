@@ -6,7 +6,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use configurable::{Configurable, configurable_component};
 use framework::config::{
-    ComponentKey, DataType, GlobalOptions, Output, ProxyConfig, Resource, SourceConfig,
+    ComponentKey, DataType, GlobalOptions, OutputType, ProxyConfig, Resource, SourceConfig,
     SourceContext,
 };
 use framework::observe::{Change, Endpoint, Notifier, available_observers};
@@ -80,8 +80,8 @@ impl SourceConfig for Config {
         Ok(Box::pin(run(templates, cx, notifier)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::new(DataType::All)]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::new(DataType::All)]
     }
 
     fn resources(&self) -> Vec<Resource> {

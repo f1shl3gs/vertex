@@ -1,10 +1,9 @@
-use codecs::Encoder;
-use codecs::encoding::Transformer;
+use codecs::encoding::{Encoder, Transformer};
 use event::log::OwnedTargetPath;
 use event::{Event, EventContainer, Events};
 use framework::StreamSink;
-use framework::sink::util::KeyPartitioner;
-use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::builder::SinkBuilderExt;
+use framework::sink::partitioner::KeyPartitioner;
 use framework::stream::BatcherSettings;
 use framework::template::Template;
 use futures::{StreamExt, stream::BoxStream};

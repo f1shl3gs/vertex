@@ -6,7 +6,7 @@ use std::time::Duration;
 
 use configurable::configurable_component;
 use event::LogRecord;
-use framework::config::{Output, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::StreamExt;
 use tokio_util::codec::LengthDelimitedCodec;
@@ -24,8 +24,8 @@ impl SourceConfig for Config {
         Ok(Box::pin(run(cx.shutdown, cx.output)))
     }
 
-    fn outputs(&self) -> Vec<Output> {
-        vec![Output::logs()]
+    fn outputs(&self) -> Vec<OutputType> {
+        vec![OutputType::log()]
     }
 
     fn can_acknowledge(&self) -> bool {

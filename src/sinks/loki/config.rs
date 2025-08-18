@@ -5,10 +5,10 @@ use codecs::EncodingConfig;
 use configurable::{Configurable, configurable_component};
 use framework::Sink;
 use framework::batch::{BatchConfig, SinkBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::http::{Auth, HttpClient};
-use framework::sink::util::Compression;
-use framework::sink::util::service::RequestConfig;
+use framework::sink::Compression;
+use framework::sink::service::RequestConfig;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, template::Template};
 use futures::FutureExt;
@@ -135,8 +135,8 @@ impl SinkConfig for Config {
         Ok((Sink::Stream(Box::new(sink)), healthcheck))
     }
 
-    fn input_type(&self) -> DataType {
-        DataType::Log
+    fn input_type(&self) -> InputType {
+        InputType::log()
     }
 }
 

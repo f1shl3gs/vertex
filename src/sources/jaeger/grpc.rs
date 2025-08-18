@@ -1,6 +1,5 @@
 use std::net::SocketAddr;
 
-use async_trait::async_trait;
 use configurable::Configurable;
 use event::{AddBatchNotifier, BatchNotifier, BatchStatus, Events};
 use framework::{Pipeline, ShutdownSignal};
@@ -31,7 +30,7 @@ struct JaegerCollector {
     acknowledgements: bool,
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl CollectorService for JaegerCollector {
     async fn post_spans(
         &self,
