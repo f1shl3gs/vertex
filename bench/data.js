@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755509455595,
+  "lastUpdate": 1755509487777,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8dfb0bf4ce632ed7b4ca15da094e6e5e87c6cb2c",
-          "message": "Merge pull request #2409 from f1shl3gs/sources/zookeeper/add_ruok\n\nsources/zookeeper: add ruok",
-          "timestamp": "2025-06-13T22:02:01+08:00",
-          "tree_id": "e155bb484893fa3075816cadbe9d2aba96c1a20d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8dfb0bf4ce632ed7b4ca15da094e6e5e87c6cb2c"
-        },
-        "date": 1749823912909,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 509,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37561.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1d7bf8f1b5d97310baf52956964bc6b7ef2aff2e",
           "message": "Merge pull request #2410 from f1shl3gs/dependabot/cargo/libc-0.2.173\n\nchore(deps): bump libc from 0.2.172 to 0.2.173",
           "timestamp": "2025-06-14T10:26:43+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40362.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b1cf41d9d61229ee478531f1f989ae830667e16b",
+          "message": "Merge pull request #2512 from f1shl3gs/misc/re-organize-directories\n\nmisc: re-organize directories & cleanup",
+          "timestamp": "2025-08-18T17:20:12+08:00",
+          "tree_id": "4df049be9ac26103dd473aa3e8da11baa8b9135c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b1cf41d9d61229ee478531f1f989ae830667e16b"
+        },
+        "date": 1755509467097,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40348.4,
             "unit": "KiB"
           }
         ]
