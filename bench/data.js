@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755588743484,
+  "lastUpdate": 1755588806755,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "330d8b936fd7a15d20ca55bc4d7e6b012c74222c",
-          "message": "Merge pull request #2413 from f1shl3gs/sinks/prometheus_exporter/add_const_labels\n\nsinks/prometheus: add `const_labels`",
-          "timestamp": "2025-06-14T20:11:31+08:00",
-          "tree_id": "854b24d7bbc4528241a99357cd4e7d0790aa98f7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/330d8b936fd7a15d20ca55bc4d7e6b012c74222c"
-        },
-        "date": 1749903693213,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 505,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37578,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "05572943273d061910ba0d893f6bc550747ad850",
           "message": "Merge pull request #2414 from f1shl3gs/lib/prometheus/simplify\n\nlib/prometheus: simplify",
           "timestamp": "2025-06-15T22:54:56+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 551,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40352.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56c6d425baa1488c5237272c3268182d5b368d53",
+          "message": "Merge pull request #2516 from f1shl3gs/sources/kubernetes_logs/fix_cri_merge_logic\n\nsources/kubernetes_logs: fix cri merge logic",
+          "timestamp": "2025-08-19T15:22:08+08:00",
+          "tree_id": "103b943fdc71c0eeb76a75dffc1d91a793e03635",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56c6d425baa1488c5237272c3268182d5b368d53"
+        },
+        "date": 1755588785489,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 559,
             "unit": "s"
           },
           {
