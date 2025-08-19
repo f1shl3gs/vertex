@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755580533385,
+  "lastUpdate": 1755588282977,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "aa4f5032f67c08e70f1da776a4c4e951b1630528",
-          "message": "Merge pull request #2402 from f1shl3gs/dependabot/cargo/memchr-2.7.5\n\nchore(deps): bump memchr from 2.7.4 to 2.7.5",
-          "timestamp": "2025-06-12T18:03:46+08:00",
-          "tree_id": "10b3c6fad3476dfa19f9eecb4df54a209d34d8a9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aa4f5032f67c08e70f1da776a4c4e951b1630528"
-        },
-        "date": 1749722751201,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.286,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.117,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 178.05,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 165.16,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56c6d425baa1488c5237272c3268182d5b368d53",
+          "message": "Merge pull request #2516 from f1shl3gs/sources/kubernetes_logs/fix_cri_merge_logic\n\nsources/kubernetes_logs: fix cri merge logic",
+          "timestamp": "2025-08-19T15:22:08+08:00",
+          "tree_id": "103b943fdc71c0eeb76a75dffc1d91a793e03635",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56c6d425baa1488c5237272c3268182d5b368d53"
+        },
+        "date": 1755588262163,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.417,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.112,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 164.14,
             "unit": "ns/op"
           }
         ]
