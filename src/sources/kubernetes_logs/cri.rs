@@ -85,7 +85,14 @@ impl Logic for Cri {
     }
 
     fn merge(&self, stashed: &mut BytesMut, mut data: Bytes) {
-        data.advance(45);
+        // strip timestamp, stream and tag
+        // 2019-05-07T18:57:50.904275087+00:00 stdout P message
+        if let Some(index) = data.iter().position(|c| *c == b'P' || *c == b'F') {
+            // 1 for tag, 1 for space
+            let cnt = (index + 1 + 1).min(data.len());
+            data.advance(cnt);
+        };
+
         stashed.put(data);
     }
 }
