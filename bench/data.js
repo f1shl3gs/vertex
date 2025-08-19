@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755579887034,
+  "lastUpdate": 1755579915289,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "371aa85edbeafa06111ccc1d6ecb9625c9723fce",
-          "message": "Merge pull request #2400 from f1shl3gs/lib/vtl/fix_some_compiler_errors\n\nlib/vtl: fix some compiler error",
-          "timestamp": "2025-06-10T10:41:22+08:00",
-          "tree_id": "2d9462b10d67dccd22283274af3c0c9d41b1ef39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/371aa85edbeafa06111ccc1d6ecb9625c9723fce"
-        },
-        "date": 1749523448965,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.078,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 180.17,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 351.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 712.81,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ab7b55f2491b8e370b6606fcecdf3e8b216d358a",
           "message": "Merge pull request #2401 from f1shl3gs/dependabot/cargo/syn-2.0.102\n\nchore(deps): bump syn from 2.0.101 to 2.0.102",
           "timestamp": "2025-06-11T10:50:06+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 720.14,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d88063e8aeef6b2d91971793d28efb37189c87c",
+          "message": "Merge pull request #2515 from f1shl3gs/dependabot/cargo/hyper-1.7.0\n\nchore(deps): bump hyper from 1.6.0 to 1.7.0",
+          "timestamp": "2025-08-19T13:02:21+08:00",
+          "tree_id": "930f02519a604ea01370efc13ababce9cd839770",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0d88063e8aeef6b2d91971793d28efb37189c87c"
+        },
+        "date": 1755579893917,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.271,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 163.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 306.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 644.2,
             "unit": "ns/op"
           }
         ]
