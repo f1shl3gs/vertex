@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755588354986,
+  "lastUpdate": 1755588743484,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "371aa85edbeafa06111ccc1d6ecb9625c9723fce",
-          "message": "Merge pull request #2400 from f1shl3gs/lib/vtl/fix_some_compiler_errors\n\nlib/vtl: fix some compiler error",
-          "timestamp": "2025-06-10T10:41:22+08:00",
-          "tree_id": "2d9462b10d67dccd22283274af3c0c9d41b1ef39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/371aa85edbeafa06111ccc1d6ecb9625c9723fce"
-        },
-        "date": 1749523846881,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 21406000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 654040,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.759,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ab7b55f2491b8e370b6606fcecdf3e8b216d358a",
           "message": "Merge pull request #2401 from f1shl3gs/dependabot/cargo/syn-2.0.102\n\nchore(deps): bump syn from 2.0.101 to 2.0.102",
           "timestamp": "2025-06-11T10:50:06+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56c6d425baa1488c5237272c3268182d5b368d53",
+          "message": "Merge pull request #2516 from f1shl3gs/sources/kubernetes_logs/fix_cri_merge_logic\n\nsources/kubernetes_logs: fix cri merge logic",
+          "timestamp": "2025-08-19T15:22:08+08:00",
+          "tree_id": "103b943fdc71c0eeb76a75dffc1d91a793e03635",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56c6d425baa1488c5237272c3268182d5b368d53"
+        },
+        "date": 1755588721647,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14587000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 672830,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.379,
             "unit": "ns/op"
           }
         ]
