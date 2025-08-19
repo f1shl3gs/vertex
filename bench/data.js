@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755580087110,
+  "lastUpdate": 1755580314258,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bef9afec017053ccd7583e6202d91f8b8d70a101",
-          "message": "Merge pull request #2398 from f1shl3gs/cargo/disable_opt-level\n\ncargo: disable `opt-level = \"z\"` for minimal",
-          "timestamp": "2025-06-10T06:26:56+08:00",
-          "tree_id": "993998486832856de920f8a3e3f02b0ab36a836b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bef9afec017053ccd7583e6202d91f8b8d70a101"
-        },
-        "date": 1749508636086,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22622000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 691570,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.158,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d119db057395d87c05ed6cdcd8ecc45a4da4f377",
           "message": "Merge pull request #2399 from f1shl3gs/sources/selfstat/cache_btime\n\nsources/selfstat: cache `btime`",
           "timestamp": "2025-06-10T07:08:15+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.507,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d88063e8aeef6b2d91971793d28efb37189c87c",
+          "message": "Merge pull request #2515 from f1shl3gs/dependabot/cargo/hyper-1.7.0\n\nchore(deps): bump hyper from 1.6.0 to 1.7.0",
+          "timestamp": "2025-08-19T13:02:21+08:00",
+          "tree_id": "930f02519a604ea01370efc13ababce9cd839770",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0d88063e8aeef6b2d91971793d28efb37189c87c"
+        },
+        "date": 1755580293214,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14416000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 656590,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.227,
             "unit": "ns/op"
           }
         ]
