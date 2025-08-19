@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755580314258,
+  "lastUpdate": 1755580411026,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d119db057395d87c05ed6cdcd8ecc45a4da4f377",
-          "message": "Merge pull request #2399 from f1shl3gs/sources/selfstat/cache_btime\n\nsources/selfstat: cache `btime`",
-          "timestamp": "2025-06-10T07:08:15+08:00",
-          "tree_id": "badfc6e5f122ae4e023207114354a329e0e1b494",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d119db057395d87c05ed6cdcd8ecc45a4da4f377"
-        },
-        "date": 1749511050383,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22585000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 606280,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "371aa85edbeafa06111ccc1d6ecb9625c9723fce",
           "message": "Merge pull request #2400 from f1shl3gs/lib/vtl/fix_some_compiler_errors\n\nlib/vtl: fix some compiler error",
           "timestamp": "2025-06-10T10:41:22+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.227,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "553e741b374497af1eea7813bb3f291ddcd71e88",
+          "message": "Merge pull request #2514 from f1shl3gs/dependabot/cargo/serde_json-1.0.143\n\nchore(deps): bump serde_json from 1.0.142 to 1.0.143",
+          "timestamp": "2025-08-19T13:04:04+08:00",
+          "tree_id": "4079ef5587e4773e9b08a2b67498d521633a005c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/553e741b374497af1eea7813bb3f291ddcd71e88"
+        },
+        "date": 1755580389902,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14709000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 599520,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.4,
             "unit": "ns/op"
           }
         ]
