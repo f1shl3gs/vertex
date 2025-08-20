@@ -47,7 +47,7 @@ hyper = { version = "1.7.0", default-features = false, features = ["full"] }
 hyper-rustls = { version = "0.27.7", default-features = false, features = ["rustls-native-certs"] }
 hyper-util = { version = "0.1.16", default-features = false, features = ["client", "http1", "http2", "server"] }
 indexmap = { version = "2.10.0", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.20", default-features = false }
+inventory = { version = "0.3.21", default-features = false }
 ipnet = { version = "2.11.0", default-features = false }
 listenfd = { version = "1.0.2", default-features = false }
 libc = { version = "0.2.175", default-features = false }
