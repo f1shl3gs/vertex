@@ -27,7 +27,7 @@ build-timing: clean
 	cargo build --release --timings
 
 bloat:
-	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 200
+	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 200 | tee bloat.txt
 
 lines:
 	@./scripts/lines.sh
