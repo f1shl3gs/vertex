@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755761042892,
+  "lastUpdate": 1755761052386,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c4e40bf8f18a382d1ae7174769f329c9e833a000",
-          "message": "Merge pull request #2407 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: implement tapestats",
-          "timestamp": "2025-06-13T19:45:39+08:00",
-          "tree_id": "32ffa43a8299f53076da8c8567d43ea5268ca7ba",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c4e40bf8f18a382d1ae7174769f329c9e833a000"
-        },
-        "date": 1749815281779,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.616,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 170.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 330.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 700.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bb0a601a3ea8b0f1d699d814cc1907ee1921a31f",
           "message": "Merge pull request #2408 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: fix `node_tape_write_time_seconds_total` value",
           "timestamp": "2025-06-13T20:01:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 685.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7261849d7f2852114b129fe23f2c15fbfe1cb582",
+          "message": "Merge pull request #2521 from f1shl3gs/lib/framework/remove_tracing-futures\n\nlib/framework: remove tracing-futures",
+          "timestamp": "2025-08-21T15:20:17+08:00",
+          "tree_id": "14fee03fec5822d737d85edd4f012c17a723b6bc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7261849d7f2852114b129fe23f2c15fbfe1cb582"
+        },
+        "date": 1755761031218,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.356,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 175.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 335.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 680.48,
             "unit": "ns/op"
           }
         ]
