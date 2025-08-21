@@ -14,11 +14,11 @@ use pin_project_lite::pin_project;
 use tokio::sync::oneshot;
 use tokio::time::{Sleep, sleep};
 use tower::{Service, ServiceBuilder};
-use tracing_futures::Instrument;
+use tracing::Instrument;
 
 use super::buffer::partition::{Partition, PartitionBuffer, PartitionInnerBuffer};
+use super::service::{Map, ServiceBuilderExt};
 use crate::batch::{Batch, EncodedBatch, EncodedEvent, FinalizersBatch, PushResult, StatefulBatch};
-use crate::sink::service::{Map, ServiceBuilderExt};
 
 pin_project! {
     /// A Partition based batcher, given some `Service` and `Batch` where the
