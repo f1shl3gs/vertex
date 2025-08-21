@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755747414010,
+  "lastUpdate": 1755747430967,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "38588a3f78eb8553aa593ddf1f7316857eb66f86",
-          "message": "Merge pull request #2406 from f1shl3gs/revert-2405-misc/optimize\n\nRevert \"misc/clean: remove unused\"",
-          "timestamp": "2025-06-13T18:21:38+08:00",
-          "tree_id": "3b1b17b12b56bb56169234acc444c25a3830216c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/38588a3f78eb8553aa593ddf1f7316857eb66f86"
-        },
-        "date": 1749810267227,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.708,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 349.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 716.36,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4e40bf8f18a382d1ae7174769f329c9e833a000",
           "message": "Merge pull request #2407 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: implement tapestats",
           "timestamp": "2025-06-13T19:45:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 675.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d31f9e488ff4760f69831ee266c5266bf61df08",
+          "message": "Merge pull request #2519 from f1shl3gs/dependabot/cargo/inventory-0.3.21\n\nchore(deps): bump inventory from 0.3.20 to 0.3.21",
+          "timestamp": "2025-08-21T11:33:16+08:00",
+          "tree_id": "a582237dabd46e22dbc3108c2e6135b30503b0f1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d31f9e488ff4760f69831ee266c5266bf61df08"
+        },
+        "date": 1755747409627,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.187,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 685.63,
             "unit": "ns/op"
           }
         ]
