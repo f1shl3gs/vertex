@@ -25,7 +25,7 @@ use proxy::ProxyConnector;
 use rustls::ClientConfig;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tracing_futures::Instrument;
+use tracing::Instrument;
 use tracing_internal::SpanExt;
 
 use crate::config::{ProxyConfig, SecretString};
