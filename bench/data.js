@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755760960889,
+  "lastUpdate": 1755761042892,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c4e40bf8f18a382d1ae7174769f329c9e833a000",
-          "message": "Merge pull request #2407 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: implement tapestats",
-          "timestamp": "2025-06-13T19:45:39+08:00",
-          "tree_id": "32ffa43a8299f53076da8c8567d43ea5268ca7ba",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c4e40bf8f18a382d1ae7174769f329c9e833a000"
-        },
-        "date": 1749815265588,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.522,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 166.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.32,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7261849d7f2852114b129fe23f2c15fbfe1cb582",
+          "message": "Merge pull request #2521 from f1shl3gs/lib/framework/remove_tracing-futures\n\nlib/framework: remove tracing-futures",
+          "timestamp": "2025-08-21T15:20:17+08:00",
+          "tree_id": "14fee03fec5822d737d85edd4f012c17a723b6bc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7261849d7f2852114b129fe23f2c15fbfe1cb582"
+        },
+        "date": 1755761021766,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.357,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.474,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.16,
             "unit": "ns/op"
           }
         ]
