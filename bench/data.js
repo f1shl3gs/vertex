@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755747346085,
+  "lastUpdate": 1755747405350,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "38588a3f78eb8553aa593ddf1f7316857eb66f86",
-          "message": "Merge pull request #2406 from f1shl3gs/revert-2405-misc/optimize\n\nRevert \"misc/clean: remove unused\"",
-          "timestamp": "2025-06-13T18:21:38+08:00",
-          "tree_id": "3b1b17b12b56bb56169234acc444c25a3830216c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/38588a3f78eb8553aa593ddf1f7316857eb66f86"
-        },
-        "date": 1749810219880,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.469,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.104,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.41,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 168,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d31f9e488ff4760f69831ee266c5266bf61df08",
+          "message": "Merge pull request #2519 from f1shl3gs/dependabot/cargo/inventory-0.3.21\n\nchore(deps): bump inventory from 0.3.20 to 0.3.21",
+          "timestamp": "2025-08-21T11:33:16+08:00",
+          "tree_id": "a582237dabd46e22dbc3108c2e6135b30503b0f1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d31f9e488ff4760f69831ee266c5266bf61df08"
+        },
+        "date": 1755747384475,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.321,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.244,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 166.32,
             "unit": "ns/op"
           }
         ]
