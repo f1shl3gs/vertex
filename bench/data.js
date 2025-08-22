@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755842398765,
+  "lastUpdate": 1755842422821,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ac652cbc9643ed54c437a5094841cbb161b542ab",
-          "message": "Merge pull request #2421 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2025-06-19T16:13:41+08:00",
-          "tree_id": "689a9e18074b9609791e346cc19c2c91e3c046ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ac652cbc9643ed54c437a5094841cbb161b542ab"
-        },
-        "date": 1750321429122,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 524,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37570.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cbfd2798e180e7d19bc04accfbc06a0629db3f54",
           "message": "Merge pull request #2422 from f1shl3gs/sources/journald/fix_checkpoint\n\nsources/journald: fix checkpoint",
           "timestamp": "2025-06-19T19:56:52+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40352.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "47e12d13514a876fc6b712bd4b6429b656e1c4ea",
+          "message": "Merge pull request #2524 from f1shl3gs/dependabot/cargo/form_urlencoded-1.2.2\n\nchore(deps): bump form_urlencoded from 1.2.1 to 1.2.2",
+          "timestamp": "2025-08-22T13:49:21+08:00",
+          "tree_id": "69626a06a70f6b213191cf9fa8ae47b18fdf9bff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/47e12d13514a876fc6b712bd4b6429b656e1c4ea"
+        },
+        "date": 1755842401766,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 558,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40353,
             "unit": "KiB"
           }
         ]
