@@ -475,7 +475,7 @@ lru = { version = "0.16.0", default-features = false, optional = true }
 maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d1861cfe7313589c0e0281ddbb660a88962", optional = true, features = ["mmap", "unsafe-str"] }
 md-5 = { version = "0.10.6", default-features = false, optional = true }
 parking_lot = { version = "0.12.4", default-features = false, optional = true }
-percent-encoding = { version = "2.3.1", default-features = false }
+percent-encoding = { version = "2.3.2", default-features = false }
 pulsar = { git = "https://github.com/f1shl3gs/pulsar-rs", rev = "bab5d791bb64f9e19d53eef242b8b33c96e836d0", default-features = false, optional = true, features = ["auth-oauth2", "compression", "tokio-rustls-runtime"] }
 quick-xml = { version = "0.38.2", default-features = false, features = ["serialize"], optional = true }
 rand = { version = "0.9.2", default-features = false }
