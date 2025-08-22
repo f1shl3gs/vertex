@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755841979316,
+  "lastUpdate": 1755841991353,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1d7bf8f1b5d97310baf52956964bc6b7ef2aff2e",
-          "message": "Merge pull request #2410 from f1shl3gs/dependabot/cargo/libc-0.2.173\n\nchore(deps): bump libc from 0.2.172 to 0.2.173",
-          "timestamp": "2025-06-14T10:26:43+08:00",
-          "tree_id": "9418c091fb8b7ec330c8ffa6fee2924d2a651111",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d7bf8f1b5d97310baf52956964bc6b7ef2aff2e"
-        },
-        "date": 1749868119163,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 545050,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 496440,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4791c224ceac822dd8e043b95d6ab0c22e4c13c6",
+          "message": "Merge pull request #2522 from f1shl3gs/dependabot/cargo/percent-encoding-2.3.2\n\nchore(deps): bump percent-encoding from 2.3.1 to 2.3.2",
+          "timestamp": "2025-08-22T13:49:54+08:00",
+          "tree_id": "45df751125eb9040a928067640df1e44ef7fcc16",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4791c224ceac822dd8e043b95d6ab0c22e4c13c6"
+        },
+        "date": 1755841970016,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 492590,
             "unit": "ns/op"
           }
         ]
