@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755841922147,
+  "lastUpdate": 1755841934957,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bb0a601a3ea8b0f1d699d814cc1907ee1921a31f",
-          "message": "Merge pull request #2408 from f1shl3gs/sources/node/implement_tapestats\n\nsources/node: fix `node_tape_write_time_seconds_total` value",
-          "timestamp": "2025-06-13T20:01:30+08:00",
-          "tree_id": "b289d4f6b8985a84136bf89e4a63e3c43c8551b9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bb0a601a3ea8b0f1d699d814cc1907ee1921a31f"
-        },
-        "date": 1749816232926,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.23,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 687.34,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8dfb0bf4ce632ed7b4ca15da094e6e5e87c6cb2c",
           "message": "Merge pull request #2409 from f1shl3gs/sources/zookeeper/add_ruok\n\nsources/zookeeper: add ruok",
           "timestamp": "2025-06-13T22:02:01+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 680.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "47e12d13514a876fc6b712bd4b6429b656e1c4ea",
+          "message": "Merge pull request #2524 from f1shl3gs/dependabot/cargo/form_urlencoded-1.2.2\n\nchore(deps): bump form_urlencoded from 1.2.1 to 1.2.2",
+          "timestamp": "2025-08-22T13:49:21+08:00",
+          "tree_id": "69626a06a70f6b213191cf9fa8ae47b18fdf9bff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/47e12d13514a876fc6b712bd4b6429b656e1c4ea"
+        },
+        "date": 1755841913733,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.006,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.97,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.72,
             "unit": "ns/op"
           }
         ]
