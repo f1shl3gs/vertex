@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755842449548,
+  "lastUpdate": 1755842462789,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0a0ca8b6194eeade9e2898b6d6173753edce0d5b",
-          "message": "Merge pull request #2423 from f1shl3gs/sources/dpdk/avoid_overflow_when_read\n\nsources/dpdk: avoid buffer overflow",
-          "timestamp": "2025-06-19T20:36:38+08:00",
-          "tree_id": "4c1c4029b396bb129c4be0f967e136be0c5173db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0a0ca8b6194eeade9e2898b6d6173753edce0d5b"
-        },
-        "date": 1750337188406,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 509,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37570.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "61d98aaac7682fee692c8b83929b0307e75f837e",
           "message": "Merge pull request #2424 from f1shl3gs/sources/dpdk/fix_seq_packet_read\n\nsources/dpdk: fix packet read",
           "timestamp": "2025-06-20T21:22:10+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 553,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40352.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4791c224ceac822dd8e043b95d6ab0c22e4c13c6",
+          "message": "Merge pull request #2522 from f1shl3gs/dependabot/cargo/percent-encoding-2.3.2\n\nchore(deps): bump percent-encoding from 2.3.1 to 2.3.2",
+          "timestamp": "2025-08-22T13:49:54+08:00",
+          "tree_id": "45df751125eb9040a928067640df1e44ef7fcc16",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4791c224ceac822dd8e043b95d6ab0c22e4c13c6"
+        },
+        "date": 1755842441029,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 551,
             "unit": "s"
           },
           {
