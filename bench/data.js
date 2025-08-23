@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1755921522911,
+  "lastUpdate": 1755921617740,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1d7bf8f1b5d97310baf52956964bc6b7ef2aff2e",
-          "message": "Merge pull request #2410 from f1shl3gs/dependabot/cargo/libc-0.2.173\n\nchore(deps): bump libc from 0.2.172 to 0.2.173",
-          "timestamp": "2025-06-14T10:26:43+08:00",
-          "tree_id": "9418c091fb8b7ec330c8ffa6fee2924d2a651111",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d7bf8f1b5d97310baf52956964bc6b7ef2aff2e"
-        },
-        "date": 1749868548530,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 22594000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 648940,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.196,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0b129ae61da9ea815699a6673ad4f1992f48670e",
           "message": "Merge pull request #2411 from f1shl3gs/sources/haproxy/optimize_parse\n\nsources/haproxy: optimize CSV parse",
           "timestamp": "2025-06-14T11:53:09+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.631,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "edb5278aad7332b27699aabc1b15c03a225946ba",
+          "message": "Merge pull request #2525 from f1shl3gs/dependabot/cargo/memmap2-0.9.8\n\nchore(deps): bump memmap2 from 0.9.7 to 0.9.8",
+          "timestamp": "2025-08-23T11:49:30+08:00",
+          "tree_id": "5c6af45bf3008ee5f687880ef549205d73361292",
+          "url": "https://github.com/f1shl3gs/vertex/commit/edb5278aad7332b27699aabc1b15c03a225946ba"
+        },
+        "date": 1755921595946,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14583000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 578080,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.653,
             "unit": "ns/op"
           }
         ]
