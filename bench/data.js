@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756010334062,
+  "lastUpdate": 1756032785565,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "82532a0c72e57d6d2d30392249b6b2a5ba4722e2",
-          "message": "Merge pull request #2415 from f1shl3gs/dependabot/cargo/rustls-0.23.28\n\nchore(deps): bump rustls from 0.23.27 to 0.23.28",
-          "timestamp": "2025-06-16T22:35:27+08:00",
-          "tree_id": "1001db2faced204ff548bd4c02698bc4b69e6c0d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/82532a0c72e57d6d2d30392249b6b2a5ba4722e2"
-        },
-        "date": 1750084647454,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.421,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.751,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.16,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 187.02,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c8c0e3299e30d89aef6ead73b693a2df9319370c",
+          "message": "Merge pull request #2529 from f1shl3gs/dependabot/cargo/quick-xml-0.38.3\n\nchore(deps): bump quick-xml from 0.38.2 to 0.38.3",
+          "timestamp": "2025-08-24T18:49:43+08:00",
+          "tree_id": "b7bb9163cd2b5ba9e2c57e78587ca430a39b7aff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c8c0e3299e30d89aef6ead73b693a2df9319370c"
+        },
+        "date": 1756032763807,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.476,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.987,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 181.27,
             "unit": "ns/op"
           }
         ]
