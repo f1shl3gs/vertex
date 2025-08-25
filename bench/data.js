@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756099383216,
+  "lastUpdate": 1756099400736,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f3385a8823d2a409081f901f243359c66263a514",
-          "message": "Merge pull request #2429 from f1shl3gs/sources/journal/add_more_feature\n\nsources/journald: add since_now and fix re-start",
-          "timestamp": "2025-06-23T12:51:39+08:00",
-          "tree_id": "d7b6a57d518fa92f3790f830795ad93148bbccd9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f3385a8823d2a409081f901f243359c66263a514"
-        },
-        "date": 1750654879375,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 509,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37576.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ceb8e878f2c2684f9e56c30b302f4cd092e6a14c",
           "message": "Merge pull request #2430 from f1shl3gs/lib/framework/remove_unsed\n\nlib/framework: remove unused",
           "timestamp": "2025-06-23T13:44:49+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 555,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40352.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "33b49b719ddae27391819d0833fb20dbea094458",
+          "message": "Merge pull request #2530 from f1shl3gs/dependabot/cargo/regex-1.11.2\n\nchore(deps): bump regex from 1.11.1 to 1.11.2",
+          "timestamp": "2025-08-25T13:10:59+08:00",
+          "tree_id": "4af0ccadd232ed57851f0a7f8a3e356aeeb0e792",
+          "url": "https://github.com/f1shl3gs/vertex/commit/33b49b719ddae27391819d0833fb20dbea094458"
+        },
+        "date": 1756099379512,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
             "unit": "s"
           },
           {
