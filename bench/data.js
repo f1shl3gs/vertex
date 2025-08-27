@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756273674503,
+  "lastUpdate": 1756273690121,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e98255c8212c1c3ff4ceafe82f26c8da3f411fac",
-          "message": "Merge pull request #2418 from f1shl3gs/dependabot/cargo/libc-0.2.174\n\nchore(deps): bump libc from 0.2.173 to 0.2.174",
-          "timestamp": "2025-06-18T10:42:02+08:00",
-          "tree_id": "2c7e3b39aa7a4ab2a138503ec5ab29947a4531b2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e98255c8212c1c3ff4ceafe82f26c8da3f411fac"
-        },
-        "date": 1750214672855,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.761,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 650.47,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ac652cbc9643ed54c437a5094841cbb161b542ab",
           "message": "Merge pull request #2421 from f1shl3gs/cargo/update\n\ncargo: update",
           "timestamp": "2025-06-19T16:13:41+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 700.57,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c773225c2b2e93fd05e197de0b95c77ad8205b4e",
+          "message": "Merge pull request #2532 from f1shl3gs/sinks/clickhouse/refine_sink\n\nsinks/clickhouse: refactor clickhouse's http sink",
+          "timestamp": "2025-08-27T13:45:18+08:00",
+          "tree_id": "9249eabbcd358c46f7df6b1875aaa789b1204c5f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c773225c2b2e93fd05e197de0b95c77ad8205b4e"
+        },
+        "date": 1756273668626,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.171,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 336.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.13,
             "unit": "ns/op"
           }
         ]
