@@ -11,14 +11,13 @@ use framework::{Healthcheck, Sink};
 use futures::{FutureExt, SinkExt};
 use url::Url;
 
-use super::sink::{ClickhouseRetryLogic, healthcheck};
+use super::sink::{ClickhouseRetryLogic, ClickhouseSink, healthcheck};
 
 fn default_database() -> String {
     "default".to_string()
 }
 
 #[configurable_component(sink, name = "clickhouse")]
-#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// The endpoint of the ClickHouse server.
@@ -67,7 +66,7 @@ impl SinkConfig for Config {
         let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
 
         let sink = BatchedHttpSink::with_logic(
-            self.clone(),
+            ClickhouseSink::new(self)?,
             Buffer::new(batch.size, self.compression),
             ClickhouseRetryLogic::default(),
             request,
@@ -78,7 +77,7 @@ impl SinkConfig for Config {
             error!(message = "Fatal clickhouse sink error", %err);
         });
 
-        let healthcheck = healthcheck(client, self.clone()).boxed();
+        let healthcheck = healthcheck(client, self.endpoint.to_string(), self.auth.clone()).boxed();
 
         Ok((Sink::from_event_sink(sink), healthcheck))
     }
