@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756273747552,
+  "lastUpdate": 1756274072483,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "82532a0c72e57d6d2d30392249b6b2a5ba4722e2",
-          "message": "Merge pull request #2415 from f1shl3gs/dependabot/cargo/rustls-0.23.28\n\nchore(deps): bump rustls from 0.23.27 to 0.23.28",
-          "timestamp": "2025-06-16T22:35:27+08:00",
-          "tree_id": "1001db2faced204ff548bd4c02698bc4b69e6c0d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/82532a0c72e57d6d2d30392249b6b2a5ba4722e2"
-        },
-        "date": 1750085093136,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14994000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 633730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.668,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bf6bc38e8d6ab372b672a317ebba2608205309c8",
           "message": "Merge pull request #2416 from f1shl3gs/dependabot/cargo/mimalloc-0.1.47\n\nchore(deps): bump mimalloc from 0.1.46 to 0.1.47",
           "timestamp": "2025-06-16T22:35:52+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.392,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b48dc6625b14d59cbf0f77656109c587ce0e1522",
+          "message": "Merge pull request #2531 from f1shl3gs/dependabot/cargo/mimalloc-0.1.48\n\nchore(deps): bump mimalloc from 0.1.47 to 0.1.48",
+          "timestamp": "2025-08-27T13:44:49+08:00",
+          "tree_id": "3cdcad2f1de75669cd52dee373c9ce2cbad80abc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b48dc6625b14d59cbf0f77656109c587ce0e1522"
+        },
+        "date": 1756274050861,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14540000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 657130,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.347,
             "unit": "ns/op"
           }
         ]
