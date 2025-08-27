@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756099400736,
+  "lastUpdate": 1756273660587,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7e60da378619f363c886deb05c7075b3804dfdc5",
-          "message": "Merge pull request #2417 from f1shl3gs/dependabot/cargo/syslog_loose-0.22.0\n\nchore(deps): bump syslog_loose from 0.21.0 to 0.22.0",
-          "timestamp": "2025-06-17T10:02:38+08:00",
-          "tree_id": "5519561965eef80bee5c42b9b2d6a0a866d20dec",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7e60da378619f363c886deb05c7075b3804dfdc5"
-        },
-        "date": 1750125895204,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.236,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 161.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.17,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 661.98,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e98255c8212c1c3ff4ceafe82f26c8da3f411fac",
           "message": "Merge pull request #2418 from f1shl3gs/dependabot/cargo/libc-0.2.174\n\nchore(deps): bump libc from 0.2.173 to 0.2.174",
           "timestamp": "2025-06-18T10:42:02+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 663.99,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b48dc6625b14d59cbf0f77656109c587ce0e1522",
+          "message": "Merge pull request #2531 from f1shl3gs/dependabot/cargo/mimalloc-0.1.48\n\nchore(deps): bump mimalloc from 0.1.47 to 0.1.48",
+          "timestamp": "2025-08-27T13:44:49+08:00",
+          "tree_id": "3cdcad2f1de75669cd52dee373c9ce2cbad80abc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b48dc6625b14d59cbf0f77656109c587ce0e1522"
+        },
+        "date": 1756273637089,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.318,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 178.35,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 330.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 700.57,
             "unit": "ns/op"
           }
         ]
