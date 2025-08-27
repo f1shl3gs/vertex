@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756273702843,
+  "lastUpdate": 1756273705326,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e98255c8212c1c3ff4ceafe82f26c8da3f411fac",
-          "message": "Merge pull request #2418 from f1shl3gs/dependabot/cargo/libc-0.2.174\n\nchore(deps): bump libc from 0.2.173 to 0.2.174",
-          "timestamp": "2025-06-18T10:42:02+08:00",
-          "tree_id": "2c7e3b39aa7a4ab2a138503ec5ab29947a4531b2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e98255c8212c1c3ff4ceafe82f26c8da3f411fac"
-        },
-        "date": 1750214635913,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 492770,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 497900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c773225c2b2e93fd05e197de0b95c77ad8205b4e",
+          "message": "Merge pull request #2532 from f1shl3gs/sinks/clickhouse/refine_sink\n\nsinks/clickhouse: refactor clickhouse's http sink",
+          "timestamp": "2025-08-27T13:45:18+08:00",
+          "tree_id": "9249eabbcd358c46f7df6b1875aaa789b1204c5f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c773225c2b2e93fd05e197de0b95c77ad8205b4e"
+        },
+        "date": 1756273682105,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 495690,
             "unit": "ns/op"
           }
         ]
