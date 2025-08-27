@@ -2,7 +2,8 @@ use bytes::{BufMut, Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use event::Event;
 use framework::HealthcheckError;
-use framework::http::{HttpClient, HttpError};
+use framework::http::{Auth, HttpClient, HttpError};
+use framework::sink::Compression;
 use framework::sink::http::{HttpEventEncoder, HttpRetryLogic, HttpSink};
 use framework::sink::retries::{RetryAction, RetryLogic};
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
@@ -25,6 +26,59 @@ impl HttpEventEncoder<BytesMut> for ClickhouseEventEncoder {
         body.put_u8(b'\n');
 
         Some(BytesMut::from(body.as_slice()))
+    }
+}
+
+pub struct ClickhouseSink {
+    uri: Uri,
+    auth: Option<Auth>,
+    encoding: Transformer,
+    compression: Compression,
+}
+
+impl HttpSink for ClickhouseSink {
+    type Input = BytesMut;
+    type Output = BytesMut;
+    type Encoder = ClickhouseEventEncoder;
+
+    fn build_encoder(&self) -> Self::Encoder {
+        ClickhouseEventEncoder {
+            transformer: self.encoding.clone(),
+        }
+    }
+
+    async fn build_request(&self, events: Self::Output) -> framework::Result<Request<Bytes>> {
+        let mut builder = Request::post(&self.uri).header(CONTENT_TYPE, "application/x-ndjson");
+
+        if let Some(ce) = self.compression.content_encoding() {
+            builder = builder.header(CONTENT_ENCODING, ce);
+        }
+
+        let mut request = builder.body(events.freeze())?;
+        if let Some(auth) = &self.auth {
+            auth.apply(&mut request);
+        }
+
+        Ok(request)
+    }
+}
+
+impl ClickhouseSink {
+    pub fn new(config: &Config) -> framework::Result<Self> {
+        let uri = set_uri_query(
+            config.endpoint.as_str(),
+            &config.database,
+            &config.table,
+            config.skip_unknown_fields,
+            config.date_time_best_effort,
+        )?;
+
+        Ok(ClickhouseSink {
+            uri,
+            auth: config.auth.clone(),
+            compression: config.compression,
+            encoding: config.encoding.clone(),
+        })
     }
 }
 
@@ -64,11 +118,15 @@ impl HttpSink for Config {
     }
 }
 
-pub async fn healthcheck(client: HttpClient, config: Config) -> crate::Result<()> {
-    let uri = format!("{}/?query=SELECT%201", config.endpoint);
+pub async fn healthcheck(
+    client: HttpClient,
+    endpoint: String,
+    auth: Option<Auth>,
+) -> crate::Result<()> {
+    let uri = format!("{}/?query=SELECT%201", endpoint);
     let mut request = Request::get(uri).body(Full::<Bytes>::default())?;
 
-    if let Some(auth) = &config.auth {
+    if let Some(auth) = &auth {
         auth.apply(&mut request);
     }
 
