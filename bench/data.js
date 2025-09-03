@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756530944789,
+  "lastUpdate": 1756922613173,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0a0ca8b6194eeade9e2898b6d6173753edce0d5b",
-          "message": "Merge pull request #2423 from f1shl3gs/sources/dpdk/avoid_overflow_when_read\n\nsources/dpdk: avoid buffer overflow",
-          "timestamp": "2025-06-19T20:36:38+08:00",
-          "tree_id": "4c1c4029b396bb129c4be0f967e136be0c5173db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0a0ca8b6194eeade9e2898b6d6173753edce0d5b"
-        },
-        "date": 1750336710951,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 499080,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 492800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4cd6c1425ec5550949b722c1248ee03b1aa656cb",
+          "message": "Merge pull request #2535 from f1shl3gs/dependabot/cargo/tonic-b048c00cd4\n\nchore(deps): bump the tonic group with 4 updates",
+          "timestamp": "2025-09-04T02:01:02+08:00",
+          "tree_id": "0c3854e75939370ac567fbe8d1218d57ac081a90",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4cd6c1425ec5550949b722c1248ee03b1aa656cb"
+        },
+        "date": 1756922591605,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 498800,
             "unit": "ns/op"
           }
         ]
