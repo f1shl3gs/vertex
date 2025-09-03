@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756922617127,
+  "lastUpdate": 1756922628877,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0a0ca8b6194eeade9e2898b6d6173753edce0d5b",
-          "message": "Merge pull request #2423 from f1shl3gs/sources/dpdk/avoid_overflow_when_read\n\nsources/dpdk: avoid buffer overflow",
-          "timestamp": "2025-06-19T20:36:38+08:00",
-          "tree_id": "4c1c4029b396bb129c4be0f967e136be0c5173db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0a0ca8b6194eeade9e2898b6d6173753edce0d5b"
-        },
-        "date": 1750336740496,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.669,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 170.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.52,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 676.57,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "61d98aaac7682fee692c8b83929b0307e75f837e",
           "message": "Merge pull request #2424 from f1shl3gs/sources/dpdk/fix_seq_packet_read\n\nsources/dpdk: fix packet read",
           "timestamp": "2025-06-20T21:22:10+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 655.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4cd6c1425ec5550949b722c1248ee03b1aa656cb",
+          "message": "Merge pull request #2535 from f1shl3gs/dependabot/cargo/tonic-b048c00cd4\n\nchore(deps): bump the tonic group with 4 updates",
+          "timestamp": "2025-09-04T02:01:02+08:00",
+          "tree_id": "0c3854e75939370ac567fbe8d1218d57ac081a90",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4cd6c1425ec5550949b722c1248ee03b1aa656cb"
+        },
+        "date": 1756922607657,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.022,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 641.55,
             "unit": "ns/op"
           }
         ]
