@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1756923117096,
+  "lastUpdate": 1757060001256,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "61d98aaac7682fee692c8b83929b0307e75f837e",
-          "message": "Merge pull request #2424 from f1shl3gs/sources/dpdk/fix_seq_packet_read\n\nsources/dpdk: fix packet read",
-          "timestamp": "2025-06-20T21:22:10+08:00",
-          "tree_id": "b4d0ebfc05ee1c985ca14c32e9a90b976cc16360",
-          "url": "https://github.com/f1shl3gs/vertex/commit/61d98aaac7682fee692c8b83929b0307e75f837e"
-        },
-        "date": 1750425850433,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.401,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.031,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 168.46,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 169.37,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8e2d4f94e00a2569ddac1ef8e4020985970e86b",
+          "message": "Merge pull request #2536 from f1shl3gs/dependabot/cargo/twox-hash-2.1.2\n\nchore(deps): bump twox-hash from 2.1.1 to 2.1.2",
+          "timestamp": "2025-09-05T16:10:55+08:00",
+          "tree_id": "59dc8b99ae393acefa25016aad1327e4623b9e7c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8e2d4f94e00a2569ddac1ef8e4020985970e86b"
+        },
+        "date": 1757059980088,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.569,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.28,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.92,
             "unit": "ns/op"
           }
         ]
