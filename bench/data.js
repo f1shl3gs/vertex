@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757060075230,
+  "lastUpdate": 1757060418547,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cbfd2798e180e7d19bc04accfbc06a0629db3f54",
-          "message": "Merge pull request #2422 from f1shl3gs/sources/journald/fix_checkpoint\n\nsources/journald: fix checkpoint",
-          "timestamp": "2025-06-19T19:56:52+08:00",
-          "tree_id": "70e74bafa1fe018f3427ae2693735b44552def17",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cbfd2798e180e7d19bc04accfbc06a0629db3f54"
-        },
-        "date": 1750334778801,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14517000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 576010,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.995,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0a0ca8b6194eeade9e2898b6d6173753edce0d5b",
           "message": "Merge pull request #2423 from f1shl3gs/sources/dpdk/avoid_overflow_when_read\n\nsources/dpdk: avoid buffer overflow",
           "timestamp": "2025-06-19T20:36:38+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.32,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8e2d4f94e00a2569ddac1ef8e4020985970e86b",
+          "message": "Merge pull request #2536 from f1shl3gs/dependabot/cargo/twox-hash-2.1.2\n\nchore(deps): bump twox-hash from 2.1.1 to 2.1.2",
+          "timestamp": "2025-09-05T16:10:55+08:00",
+          "tree_id": "59dc8b99ae393acefa25016aad1327e4623b9e7c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8e2d4f94e00a2569ddac1ef8e4020985970e86b"
+        },
+        "date": 1757060397221,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14227000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 676920,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 50.859,
             "unit": "ns/op"
           }
         ]
