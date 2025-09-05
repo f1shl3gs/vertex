@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757060526582,
+  "lastUpdate": 1757060605189,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d8c21d5e89534bd144a44b5ca48f9edc9e9551a0",
-          "message": "Merge pull request #2436 from f1shl3gs/misc/clean_up\n\nmisc: a little cleanup & simplify",
-          "timestamp": "2025-06-27T20:10:06+08:00",
-          "tree_id": "f4e359f8c703f71f23fbb48523d6b1aa7311c118",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d8c21d5e89534bd144a44b5ca48f9edc9e9551a0"
-        },
-        "date": 1751026826022,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 530,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37577.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9ad0217a003e2173ca1734e6f3accf9fce8db669",
           "message": "Merge pull request #2437 from f1shl3gs/extensions/heartbeat/remove\n\nextensions/heartbeat: remove",
           "timestamp": "2025-06-28T20:29:41+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 560,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39873.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "85e84921ed3ad99e25dcb50f43714d5e991bb537",
+          "message": "Merge pull request #2537 from f1shl3gs/dependabot/github_actions/actions/labeler-6\n\nchore(ci): bump actions/labeler from 5 to 6",
+          "timestamp": "2025-09-05T16:11:33+08:00",
+          "tree_id": "47734b58d4ff7efdcd9c38a1d087522730a50805",
+          "url": "https://github.com/f1shl3gs/vertex/commit/85e84921ed3ad99e25dcb50f43714d5e991bb537"
+        },
+        "date": 1757060583293,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 593,
             "unit": "s"
           },
           {
