@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757399427196,
+  "lastUpdate": 1757399793818,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0a0ca8b6194eeade9e2898b6d6173753edce0d5b",
-          "message": "Merge pull request #2423 from f1shl3gs/sources/dpdk/avoid_overflow_when_read\n\nsources/dpdk: avoid buffer overflow",
-          "timestamp": "2025-06-19T20:36:38+08:00",
-          "tree_id": "4c1c4029b396bb129c4be0f967e136be0c5173db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0a0ca8b6194eeade9e2898b6d6173753edce0d5b"
-        },
-        "date": 1750337130320,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14729000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 659570,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.728,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "61d98aaac7682fee692c8b83929b0307e75f837e",
           "message": "Merge pull request #2424 from f1shl3gs/sources/dpdk/fix_seq_packet_read\n\nsources/dpdk: fix packet read",
           "timestamp": "2025-06-20T21:22:10+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 50.859,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "29493a945500ccc5d1cf7ec202a4b8d925d5235d",
+          "message": "Merge pull request #2538 from f1shl3gs/dependabot/cargo/chrono-0.4.42\n\nchore(deps): bump chrono from 0.4.41 to 0.4.42",
+          "timestamp": "2025-09-09T14:26:45+08:00",
+          "tree_id": "00ee79fef14f7e5b17706a6de0dda86d67cd259e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/29493a945500ccc5d1cf7ec202a4b8d925d5235d"
+        },
+        "date": 1757399772138,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14625000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 636360,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.13,
             "unit": "ns/op"
           }
         ]
