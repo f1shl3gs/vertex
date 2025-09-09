@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757456036503,
+  "lastUpdate": 1757456413099,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "61d98aaac7682fee692c8b83929b0307e75f837e",
-          "message": "Merge pull request #2424 from f1shl3gs/sources/dpdk/fix_seq_packet_read\n\nsources/dpdk: fix packet read",
-          "timestamp": "2025-06-20T21:22:10+08:00",
-          "tree_id": "b4d0ebfc05ee1c985ca14c32e9a90b976cc16360",
-          "url": "https://github.com/f1shl3gs/vertex/commit/61d98aaac7682fee692c8b83929b0307e75f837e"
-        },
-        "date": 1750426287460,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15679000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 582330,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.194,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "dae27f3bf959ea110106ccbc1fe050f440c347f5",
           "message": "Merge pull request #2425 from f1shl3gs/sources/dpdk/add_comment_about_recv_buf\n\nsources/dpdk: add comment for recv buf",
           "timestamp": "2025-06-21T10:38:20+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.13,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "310fa925219700cfd523fd1c7d10d238823f7515",
+          "message": "Merge pull request #2540 from f1shl3gs/dependabot/cargo/indexmap-2.11.1\n\nchore(deps): bump indexmap from 2.11.0 to 2.11.1",
+          "timestamp": "2025-09-10T06:09:57+08:00",
+          "tree_id": "bf22ad99b69958a0c5e092f61a7823b73836e2f4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/310fa925219700cfd523fd1c7d10d238823f7515"
+        },
+        "date": 1757456390574,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15330000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 604350,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 55.75,
             "unit": "ns/op"
           }
         ]
