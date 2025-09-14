@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757456494310,
+  "lastUpdate": 1757835967445,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2859ba4b661e9a9dc3a9323d631d9a1ff1b34add",
-          "message": "Merge pull request #2428 from f1shl3gs/sources/dpdk/fix_field_type\n\nsources/dpdk: fix field type",
-          "timestamp": "2025-06-23T12:51:24+08:00",
-          "tree_id": "1ade331bbc92e69efd3fcfe34192b95a8b8a5e5d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2859ba4b661e9a9dc3a9323d631d9a1ff1b34add"
-        },
-        "date": 1750654413386,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.403,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.611,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b60b6ca061468d55c58dc4491ffaee54a9fe38eb",
+          "message": "Merge pull request #2541 from f1shl3gs/dependabot/cargo/serde_json-1.0.144\n\nchore(deps): bump serde_json from 1.0.143 to 1.0.144",
+          "timestamp": "2025-09-14T15:43:30+08:00",
+          "tree_id": "4b2f79240479765f934826c7d72f2aed733d01bb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b60b6ca061468d55c58dc4491ffaee54a9fe38eb"
+        },
+        "date": 1757835946397,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.968,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 92.815,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.72,
             "unit": "ns/op"
           }
         ]
