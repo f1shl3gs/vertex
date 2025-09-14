@@ -12,7 +12,7 @@ serde_yaml = { version = "0.9.34", default-features = false }
 configurable-derive = { path = "../configurable-derive" }
 inventory = { version = "0.3.21", default-features = false }
 indexmap = { version = "2.11.1", default-features = false, features = ["serde", "std"] }
-serde = { version = "1.0.219", default-features = false }
+serde = { version = "1.0.221", default-features = false }
 serde_json = { version = "1.0.143", default-features = false }
 
 # externals
