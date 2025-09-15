@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757967487623,
+  "lastUpdate": 1757967847677,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b03bc1db0c0818b0e9f951ac8c31f05132dba96c",
-          "message": "Merge pull request #2427 from f1shl3gs/sources/dpdk/add_more_detail\n\nsources/dpdk: add more detail for dpdk metrics",
-          "timestamp": "2025-06-22T13:06:37+08:00",
-          "tree_id": "e4681c6fa361c034479f30f6d7a1ca10f80d14cc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b03bc1db0c0818b0e9f951ac8c31f05132dba96c"
-        },
-        "date": 1750569330019,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14645000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 664050,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.536,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f3385a8823d2a409081f901f243359c66263a514",
           "message": "Merge pull request #2429 from f1shl3gs/sources/journal/add_more_feature\n\nsources/journald: add since_now and fix re-start",
           "timestamp": "2025-06-23T12:51:39+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.361,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0494fa1c55087b3cc00fe89e668ebff2ab660133",
+          "message": "Merge pull request #2543 from f1shl3gs/dependabot/cargo/serde_path_to_error-0.1.20\n\nchore(deps): bump serde_path_to_error from 0.1.17 to 0.1.20",
+          "timestamp": "2025-09-16T04:14:14+08:00",
+          "tree_id": "fc0c6f2cb2dd8340b0e259851466f455b0d7c17a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0494fa1c55087b3cc00fe89e668ebff2ab660133"
+        },
+        "date": 1757967825368,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15156000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 613270,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.177,
             "unit": "ns/op"
           }
         ]
