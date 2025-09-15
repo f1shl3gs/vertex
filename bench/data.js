@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757968152736,
+  "lastUpdate": 1757968162312,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8fa37f0e802efce8975cb0450cc4e597af9e1667",
-          "message": "Merge pull request #2432 from f1shl3gs/deps/sbbf/update\n\ndeps/sbbf: update sbbf to support aarch64",
-          "timestamp": "2025-06-26T14:36:30+08:00",
-          "tree_id": "91fcf9d16d6edfea2e6efab111159624f82e0009",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8fa37f0e802efce8975cb0450cc4e597af9e1667"
-        },
-        "date": 1750919903548,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 496910,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 501180,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "af95e36084220dc00d6508566ac4b157134ead4c",
+          "message": "Merge pull request #2546 from f1shl3gs/dependabot/cargo/serde-1.0.224\n\nchore(deps): bump serde from 1.0.221 to 1.0.224",
+          "timestamp": "2025-09-16T04:26:36+08:00",
+          "tree_id": "415608ccc737ea3f2fb7fbc8cbc0ee08748a9c13",
+          "url": "https://github.com/f1shl3gs/vertex/commit/af95e36084220dc00d6508566ac4b157134ead4c"
+        },
+        "date": 1757968138583,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 497120,
             "unit": "ns/op"
           }
         ]
