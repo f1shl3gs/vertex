@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757967408370,
+  "lastUpdate": 1757967421996,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d12ea94046854fd142506ceb2e7731678b11d5b2",
-          "message": "Merge pull request #2431 from f1shl3gs/sources/journald/simplify_config\n\nsources/journald: simplify `current_boot_only`",
-          "timestamp": "2025-06-24T03:35:10+08:00",
-          "tree_id": "044b5c000f8257d100448812f51e7efc82de19ce",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d12ea94046854fd142506ceb2e7731678b11d5b2"
-        },
-        "date": 1750707422079,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 490640,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 493810,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c0dd0095e0c3ba337afca000df25699375a03baa",
+          "message": "Merge pull request #2545 from f1shl3gs/dependabot/cargo/serde_json-1.0.145\n\nchore(deps): bump serde_json from 1.0.144 to 1.0.145",
+          "timestamp": "2025-09-16T04:14:35+08:00",
+          "tree_id": "e8c3d2efa416c0d9c433da01a89ad2ce6336f0b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c0dd0095e0c3ba337afca000df25699375a03baa"
+        },
+        "date": 1757967399954,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 501180,
             "unit": "ns/op"
           }
         ]
