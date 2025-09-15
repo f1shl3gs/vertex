@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1757967866634,
+  "lastUpdate": 1757967869400,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2859ba4b661e9a9dc3a9323d631d9a1ff1b34add",
-          "message": "Merge pull request #2428 from f1shl3gs/sources/dpdk/fix_field_type\n\nsources/dpdk: fix field type",
-          "timestamp": "2025-06-23T12:51:24+08:00",
-          "tree_id": "1ade331bbc92e69efd3fcfe34192b95a8b8a5e5d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2859ba4b661e9a9dc3a9323d631d9a1ff1b34add"
-        },
-        "date": 1750654847699,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14708000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 612290,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.162,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ceb8e878f2c2684f9e56c30b302f4cd092e6a14c",
           "message": "Merge pull request #2430 from f1shl3gs/lib/framework/remove_unsed\n\nlib/framework: remove unused",
           "timestamp": "2025-06-23T13:44:49+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.753,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aeeed04cb37f0f205dbf82399c39969b7a704c2f",
+          "message": "Merge pull request #2544 from f1shl3gs/dependabot/cargo/hyper-util-0.1.17\n\nchore(deps): bump hyper-util from 0.1.16 to 0.1.17",
+          "timestamp": "2025-09-16T04:14:26+08:00",
+          "tree_id": "dd98a492bfcb95163b7bf2b6ebadc2f28f49c91a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aeeed04cb37f0f205dbf82399c39969b7a704c2f"
+        },
+        "date": 1757967847567,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 16482000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 676830,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.507,
             "unit": "ns/op"
           }
         ]
