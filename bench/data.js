@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758097302483,
+  "lastUpdate": 1758097691661,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d12ea94046854fd142506ceb2e7731678b11d5b2",
-          "message": "Merge pull request #2431 from f1shl3gs/sources/journald/simplify_config\n\nsources/journald: simplify `current_boot_only`",
-          "timestamp": "2025-06-24T03:35:10+08:00",
-          "tree_id": "044b5c000f8257d100448812f51e7efc82de19ce",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d12ea94046854fd142506ceb2e7731678b11d5b2"
-        },
-        "date": 1750707891197,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14941000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 667240,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.301,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8fa37f0e802efce8975cb0450cc4e597af9e1667",
           "message": "Merge pull request #2432 from f1shl3gs/deps/sbbf/update\n\ndeps/sbbf: update sbbf to support aarch64",
           "timestamp": "2025-06-26T14:36:30+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.327,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "359805b269a5a462f371c07ca0ebd62db55184d3",
+          "message": "Merge pull request #2547 from f1shl3gs/dependabot/cargo/indexmap-2.11.3\n\nchore(deps): bump indexmap from 2.11.1 to 2.11.3",
+          "timestamp": "2025-09-17T16:18:03+08:00",
+          "tree_id": "d5c9a132dfd5919a7580b092707d0bd37892f706",
+          "url": "https://github.com/f1shl3gs/vertex/commit/359805b269a5a462f371c07ca0ebd62db55184d3"
+        },
+        "date": 1758097669182,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14868000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 610400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.564,
             "unit": "ns/op"
           }
         ]
