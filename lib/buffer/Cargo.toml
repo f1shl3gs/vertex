@@ -17,10 +17,10 @@ bytes = { version = "1.10.1", default-features = false }
 crc32fast = { version = "1.5.0", default-features = false, features = ["std"] }
 finalize = { path = "../finalize" }
 futures = { version = "0.3.31", default-features = false }
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "3ce391414e9417c36ca386b50ef82e6d2e1882dd" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "fe127b4fe476d3840b1f25a03f44988faf05a570" }
 memmap2 = { version = "0.9.8", default-features = false }
 pin-project-lite = { version = "0.2.16", default-features = false }
-serde = { version = "1.0.224", default-features = false }
+serde = { version = "1.0.225", default-features = false }
 thiserror = { version = "2.0.16", default-features = false }
 tokio = { version = "1.47.1", default-features = false, features = ["rt", "time"] }
 tracing = { version = "0.1.41", default-features = false }
