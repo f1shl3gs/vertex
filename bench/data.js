@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758097740473,
+  "lastUpdate": 1758107999725,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "156292201c295e30f8b00c4c3bc0de2aaadc5ee1",
-          "message": "Merge pull request #2434 from f1shl3gs/dependabot/cargo/lru-0.15.0\n\nchore(deps): bump lru from 0.14.0 to 0.15.0",
-          "timestamp": "2025-06-27T18:36:36+08:00",
-          "tree_id": "efaaae0421d8cc5e15ef47c99b051d9e81b79554",
-          "url": "https://github.com/f1shl3gs/vertex/commit/156292201c295e30f8b00c4c3bc0de2aaadc5ee1"
-        },
-        "date": 1751020717853,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 506500,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 497200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66499c17ea6e18af1abb6882ea5308cca9dc2b19",
+          "message": "Merge pull request #2548 from f1shl3gs/dependabot/cargo/serde-1.0.225\n\nchore(deps): bump serde from 1.0.224 to 1.0.225",
+          "timestamp": "2025-09-17T19:17:42+08:00",
+          "tree_id": "3fbd234ea078e2fb67c8e69939e58861fa652938",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66499c17ea6e18af1abb6882ea5308cca9dc2b19"
+        },
+        "date": 1758107978289,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 486240,
             "unit": "ns/op"
           }
         ]
