@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758107999725,
+  "lastUpdate": 1758108017491,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "156292201c295e30f8b00c4c3bc0de2aaadc5ee1",
-          "message": "Merge pull request #2434 from f1shl3gs/dependabot/cargo/lru-0.15.0\n\nchore(deps): bump lru from 0.14.0 to 0.15.0",
-          "timestamp": "2025-06-27T18:36:36+08:00",
-          "tree_id": "efaaae0421d8cc5e15ef47c99b051d9e81b79554",
-          "url": "https://github.com/f1shl3gs/vertex/commit/156292201c295e30f8b00c4c3bc0de2aaadc5ee1"
-        },
-        "date": 1751020746218,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.437,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 107.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 179.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66499c17ea6e18af1abb6882ea5308cca9dc2b19",
+          "message": "Merge pull request #2548 from f1shl3gs/dependabot/cargo/serde-1.0.225\n\nchore(deps): bump serde from 1.0.224 to 1.0.225",
+          "timestamp": "2025-09-17T19:17:42+08:00",
+          "tree_id": "3fbd234ea078e2fb67c8e69939e58861fa652938",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66499c17ea6e18af1abb6882ea5308cca9dc2b19"
+        },
+        "date": 1758107996118,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.473,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.988,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.66,
             "unit": "ns/op"
           }
         ]
