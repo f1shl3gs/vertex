@@ -23,7 +23,8 @@ mod compression_serde {
     pub fn deserialize<'de, D: Deserializer<'de>>(
         deserializer: D,
     ) -> Result<Compression, D::Error> {
-        let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
+        let s: Cow<str> = serde::Deserialize::deserialize(deserializer)?;
+
         let compression = match s.deref() {
             "no" | "none" => Compression::NoCompression,
             "gzip" => Compression::Gzip,
