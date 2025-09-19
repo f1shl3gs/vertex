@@ -8,13 +8,9 @@ use configurable::configurable_component;
 use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::sink::net::UdpSinkConfig;
 use framework::{Healthcheck, Sink};
-use serde::{Deserialize, Serialize};
 
 use self::encoder::ThriftEncoder;
 use self::http::HttpSinkConfig;
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct CollectorConfig {}
 
 #[allow(clippy::large_enum_variant)]
 #[configurable_component(sink, name = "jaeger")]
