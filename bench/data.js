@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758282101402,
+  "lastUpdate": 1758282109232,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d8c21d5e89534bd144a44b5ca48f9edc9e9551a0",
-          "message": "Merge pull request #2436 from f1shl3gs/misc/clean_up\n\nmisc: a little cleanup & simplify",
-          "timestamp": "2025-06-27T20:10:06+08:00",
-          "tree_id": "f4e359f8c703f71f23fbb48523d6b1aa7311c118",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d8c21d5e89534bd144a44b5ca48f9edc9e9551a0"
-        },
-        "date": 1751026355491,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.012,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 328.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 688.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9ad0217a003e2173ca1734e6f3accf9fce8db669",
           "message": "Merge pull request #2437 from f1shl3gs/extensions/heartbeat/remove\n\nextensions/heartbeat: remove",
           "timestamp": "2025-06-28T20:29:41+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 679.68,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5669be4b8949111091024069e316fcc03cdb072",
+          "message": "Merge pull request #2550 from f1shl3gs/dependabot/cargo/indexmap-2.11.4\n\nchore(deps): bump indexmap from 2.11.3 to 2.11.4",
+          "timestamp": "2025-09-19T19:38:50+08:00",
+          "tree_id": "2569c8e6bbbf24d9391447ad588bcd410e4305b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b5669be4b8949111091024069e316fcc03cdb072"
+        },
+        "date": 1758282087854,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.324,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 170.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 320.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 667.59,
             "unit": "ns/op"
           }
         ]
