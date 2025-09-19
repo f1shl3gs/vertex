@@ -326,9 +326,9 @@ fn build_message(
 
 #[inline]
 pub fn padding(offset: usize, align: usize) -> usize {
-    if offset % align != 0 {
-        ((offset + align - 1) & (!(align - 1))) - offset
-    } else {
+    if offset.is_multiple_of(align) {
         0
+    } else {
+        ((offset + align - 1) & (!(align - 1))) - offset
     }
 }

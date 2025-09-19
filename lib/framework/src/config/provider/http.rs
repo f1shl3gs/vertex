@@ -7,14 +7,13 @@ use async_stream::stream;
 use backoff::ExponentialBackoff;
 use bytes::Bytes;
 use chunk::ChunkedDecoder;
-use configurable::{Configurable, configurable_component};
+use configurable::configurable_component;
 use futures::{Stream, StreamExt, TryStreamExt};
 use http::header::{ACCEPT, TRANSFER_ENCODING};
 use http::{Request, Response, Uri};
 use http_body_util::{BodyExt, BodyStream, Empty};
 use hyper::body::Incoming;
 use indexmap::IndexMap;
-use serde::{Deserialize, Serialize};
 use tokio::time::timeout;
 use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
@@ -27,12 +26,6 @@ use crate::{config, signal};
 
 const fn default_interval() -> Duration {
     Duration::from_secs(60)
-}
-
-#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
-pub struct RequestConfig {
-    #[serde(default)]
-    pub headers: IndexMap<String, String>,
 }
 
 #[configurable_component(provider, name = "http")]
