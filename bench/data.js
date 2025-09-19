@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758291954087,
+  "lastUpdate": 1758291990125,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "429404e3045a1cd168addce168fd8b8e49701bfc",
-          "message": "Merge pull request #2438 from f1shl3gs/sources/kmsg/add_checkpoint\n\nsources/kmsg: add checkpoint support",
-          "timestamp": "2025-06-28T21:58:50+08:00",
-          "tree_id": "bde300756b0cc26bea0b12f8f86ca31bb9755ee9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/429404e3045a1cd168addce168fd8b8e49701bfc"
-        },
-        "date": 1751119271186,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.005,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 335.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 709.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a696d877f1c13e86069da06dcba66eb56888f77e",
           "message": "Merge pull request #2439 from f1shl3gs/dependabot/cargo/quick-xml-0.38.0\n\nchore(deps): bump quick-xml from 0.37.5 to 0.38.0",
           "timestamp": "2025-06-29T16:00:33+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 687.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe916bb29d593111341be59b2b7b26ca5e5ced18",
+          "message": "Merge pull request #2552 from f1shl3gs/dependabot/cargo/rustls-0.23.32\n\nchore(deps): bump rustls from 0.23.31 to 0.23.32",
+          "timestamp": "2025-09-19T22:23:14+08:00",
+          "tree_id": "79386fc803486c9aaab8e51b0a6b2a434930a44d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe916bb29d593111341be59b2b7b26ca5e5ced18"
+        },
+        "date": 1758291957079,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.211,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 332.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 670.38,
             "unit": "ns/op"
           }
         ]
