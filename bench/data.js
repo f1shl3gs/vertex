@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758291944789,
+  "lastUpdate": 1758291954087,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "429404e3045a1cd168addce168fd8b8e49701bfc",
-          "message": "Merge pull request #2438 from f1shl3gs/sources/kmsg/add_checkpoint\n\nsources/kmsg: add checkpoint support",
-          "timestamp": "2025-06-28T21:58:50+08:00",
-          "tree_id": "bde300756b0cc26bea0b12f8f86ca31bb9755ee9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/429404e3045a1cd168addce168fd8b8e49701bfc"
-        },
-        "date": 1751119268946,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.581,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.496,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 168.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.81,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe916bb29d593111341be59b2b7b26ca5e5ced18",
+          "message": "Merge pull request #2552 from f1shl3gs/dependabot/cargo/rustls-0.23.32\n\nchore(deps): bump rustls from 0.23.31 to 0.23.32",
+          "timestamp": "2025-09-19T22:23:14+08:00",
+          "tree_id": "79386fc803486c9aaab8e51b0a6b2a434930a44d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe916bb29d593111341be59b2b7b26ca5e5ced18"
+        },
+        "date": 1758291932933,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.381,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.88,
             "unit": "ns/op"
           }
         ]
