@@ -5,5 +5,5 @@ edition = "2024"
 publish = false
 
 [dependencies]
-serde = { version = "1.0.225", default-features = false }
+serde = { version = "1.0.226", default-features = false }
 value = { path = "../value" }
