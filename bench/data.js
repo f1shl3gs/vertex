@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758457533300,
+  "lastUpdate": 1758457565994,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3a8a5f55c31e53bf53bbdcf5d380289cf8585550",
-          "message": "Merge pull request #2451 from f1shl3gs/dependabot/cargo/tokio-1.46.1\n\nchore(deps): bump tokio from 1.46.0 to 1.46.1",
-          "timestamp": "2025-07-05T16:11:31+08:00",
-          "tree_id": "222fc1672fd80088d443639da69e9140ab879c59",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3a8a5f55c31e53bf53bbdcf5d380289cf8585550"
-        },
-        "date": 1751703696774,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 513,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37729.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "72a626d78b2926b8e546e6d7556113716c7faf77",
           "message": "Merge pull request #2452 from f1shl3gs/ci/distroless\n\nci: use distroless to reduce docker image size",
           "timestamp": "2025-07-05T21:30:19+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39488.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e12697583e7eca72a9a93e2d610f4bf033e7b1fb",
+          "message": "Merge pull request #2554 from f1shl3gs/dependabot/cargo/serde-1.0.226\n\nchore(deps): bump serde from 1.0.225 to 1.0.226",
+          "timestamp": "2025-09-21T20:14:55+08:00",
+          "tree_id": "6a28fc24c44df0212e75423f71e3dae3a0df0c77",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e12697583e7eca72a9a93e2d610f4bf033e7b1fb"
+        },
+        "date": 1758457543899,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 552,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39489.9,
             "unit": "KiB"
           }
         ]
