@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758457119535,
+  "lastUpdate": 1758457452899,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9ad0217a003e2173ca1734e6f3accf9fce8db669",
-          "message": "Merge pull request #2437 from f1shl3gs/extensions/heartbeat/remove\n\nextensions/heartbeat: remove",
-          "timestamp": "2025-06-28T20:29:41+08:00",
-          "tree_id": "8a72c8fba908a479a3f7d22a6f90b26fe4e8c541",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9ad0217a003e2173ca1734e6f3accf9fce8db669"
-        },
-        "date": 1751114354164,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14489000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 581950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.219,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "429404e3045a1cd168addce168fd8b8e49701bfc",
           "message": "Merge pull request #2438 from f1shl3gs/sources/kmsg/add_checkpoint\n\nsources/kmsg: add checkpoint support",
           "timestamp": "2025-06-28T21:58:50+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.168,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "689120be00e377b66003066ff4d4f52dd23c1536",
+          "message": "Merge pull request #2553 from f1shl3gs/dependabot/cargo/proptest-1.8.0\n\nchore(deps): bump proptest from 1.7.0 to 1.8.0",
+          "timestamp": "2025-09-21T20:14:23+08:00",
+          "tree_id": "5a1cc24fcbb8af0382bbe07fedb78d45ee374f5e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/689120be00e377b66003066ff4d4f52dd23c1536"
+        },
+        "date": 1758457430659,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 16255000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 596020,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.622,
             "unit": "ns/op"
           }
         ]
