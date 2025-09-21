@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758292475610,
+  "lastUpdate": 1758457022513,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a696d877f1c13e86069da06dcba66eb56888f77e",
-          "message": "Merge pull request #2439 from f1shl3gs/dependabot/cargo/quick-xml-0.38.0\n\nchore(deps): bump quick-xml from 0.37.5 to 0.38.0",
-          "timestamp": "2025-06-29T16:00:33+08:00",
-          "tree_id": "e7ae93d9ad99caf0854a9bf05d66e99bfcf7aba3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a696d877f1c13e86069da06dcba66eb56888f77e"
-        },
-        "date": 1751184161820,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 500950,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 498800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "689120be00e377b66003066ff4d4f52dd23c1536",
+          "message": "Merge pull request #2553 from f1shl3gs/dependabot/cargo/proptest-1.8.0\n\nchore(deps): bump proptest from 1.7.0 to 1.8.0",
+          "timestamp": "2025-09-21T20:14:23+08:00",
+          "tree_id": "5a1cc24fcbb8af0382bbe07fedb78d45ee374f5e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/689120be00e377b66003066ff4d4f52dd23c1536"
+        },
+        "date": 1758457000583,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 496050,
             "unit": "ns/op"
           }
         ]
