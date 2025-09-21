@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758457038496,
+  "lastUpdate": 1758457046849,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7d41e576d5e9f6beff0ebaaca78ad9a581915481",
-          "message": "Merge pull request #2440 from f1shl3gs/extensions/http_observer/fix_feature_name\n\nextensions/http_observer: fix feature name",
-          "timestamp": "2025-06-29T18:23:23+08:00",
-          "tree_id": "8f274e1aef131f764da491cf980f828080fb557a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7d41e576d5e9f6beff0ebaaca78ad9a581915481"
-        },
-        "date": 1751192723891,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 490260,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 496050,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e12697583e7eca72a9a93e2d610f4bf033e7b1fb",
+          "message": "Merge pull request #2554 from f1shl3gs/dependabot/cargo/serde-1.0.226\n\nchore(deps): bump serde from 1.0.225 to 1.0.226",
+          "timestamp": "2025-09-21T20:14:55+08:00",
+          "tree_id": "6a28fc24c44df0212e75423f71e3dae3a0df0c77",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e12697583e7eca72a9a93e2d610f4bf033e7b1fb"
+        },
+        "date": 1758457025609,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 498900,
             "unit": "ns/op"
           }
         ]
