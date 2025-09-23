@@ -1,16 +1,15 @@
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use crate::config::{Config, Hosts};
+use crate::config::Config;
+#[cfg(target_family = "unix")]
+use crate::hosts::Hosts;
 use crate::proto::{
     Error as DecodeError, HEADER_SIZE, MAX_TTL, Message, Record, RecordClass, RecordData,
     RecordType, decode_message,
 };
 use crate::singleflight::SingleFlight;
-
-const RESOLVE_FILE_PATH: &str = "/etc/resolv.conf";
-const HOSTS_FILE_PATH: &str = "/etc/hosts";
 
 #[derive(Clone, Debug)]
 pub enum Error {
@@ -24,6 +23,7 @@ pub enum Error {
 #[derive(Debug)]
 pub struct Resolver {
     config: Config,
+    #[cfg(target_family = "unix")]
     hosts: Hosts,
 
     server_offset: AtomicUsize,
@@ -31,23 +31,35 @@ pub struct Resolver {
 }
 
 impl Resolver {
-    #[inline]
-    pub fn new(config: Config, hosts: Hosts) -> Resolver {
+    pub fn new(config: Config) -> Resolver {
         Self {
             config,
-            hosts,
+            #[cfg(target_family = "unix")]
+            hosts: Hosts::default(),
             server_offset: Default::default(),
             inflight: SingleFlight::new(),
         }
     }
 
+    #[cfg(target_family = "unix")]
     pub fn with_defaults() -> std::io::Result<Resolver> {
-        let config = Config::load(RESOLVE_FILE_PATH)?;
-        let hosts = Hosts::load(HOSTS_FILE_PATH)?;
+        let config = Config::load("/etc/resolv.conf")?;
+        let hosts = Hosts::load("/etc/hosts")?;
 
         Ok(Self {
             config,
             hosts,
+            server_offset: Default::default(),
+            inflight: SingleFlight::new(),
+        })
+    }
+
+    #[cfg(target_family = "windows")]
+    pub fn with_defaults() -> std::io::Result<Resolver> {
+        let config = Config::load()?;
+
+        Ok(Self {
+            config,
             server_offset: Default::default(),
             inflight: SingleFlight::new(),
         })
@@ -69,6 +81,7 @@ impl Resolver {
             });
         }
 
+        #[cfg(target_family = "unix")]
         if let Some(records) = self.hosts.lookup_ipv4(name) {
             return Ok(Lookup {
                 name: name.as_bytes().to_vec(),
@@ -105,24 +118,60 @@ impl Resolver {
             .await
     }
 
-    /*
-        pub async fn lookup_ipv6(&self, name: &str) -> Result<Lookup, Error> {
-            if let Some(records) = self.hosts.lookup_ipv6(name) {
-                return Ok(Lookup {
-                    name: name.as_bytes().to_vec(),
+    pub async fn lookup_ipv6(&self, name: &str) -> Result<Lookup, Error> {
+        if let Ok(addr) = name.parse::<Ipv6Addr>() {
+            return Ok(Lookup {
+                name: Vec::from(name.as_bytes()),
+                typ: RecordType::A,
+                class: RecordClass::INET,
+                records: Arc::from([Record {
+                    name: Vec::from(name.as_bytes()),
                     typ: RecordType::AAAA,
                     class: RecordClass::INET,
-                    records: Arc::from(records),
-                });
-            }
-
-            self.inflight
-                .call((false, name.to_owned()), async {
-                    self.lookup(name, RecordType::AAAA, RecordClass::INET).await
-                })
-                .await
+                    ttl: MAX_TTL,
+                    data: RecordData::AAAA(addr),
+                }]),
+            });
         }
-    */
+
+        #[cfg(target_family = "unix")]
+        if let Some(records) = self.hosts.lookup_ipv6(name) {
+            return Ok(Lookup {
+                name: name.as_bytes().to_vec(),
+                typ: RecordType::A,
+                class: RecordClass::INET,
+                records: Arc::from(records),
+            });
+        }
+
+        self.inflight
+            .call((false, name.to_owned()), async {
+                let mut msg = self
+                    .lookup(name, RecordType::AAAA, RecordClass::INET)
+                    .await?;
+
+                let question = msg.questions.remove(0);
+                let records = msg
+                    .answers
+                    .into_iter()
+                    .filter_map(|record| {
+                        if record.class != RecordClass::INET {
+                            return None;
+                        }
+
+                        Some(record)
+                    })
+                    .collect::<Vec<_>>();
+
+                Ok(Lookup {
+                    name: question.name,
+                    typ: question.typ,
+                    class: question.class,
+                    records: Arc::from(records),
+                })
+            })
+            .await
+    }
 
     /// Lookup records by name, type and class, `/etc/hosts` are ignored
     pub async fn lookup(
@@ -135,7 +184,7 @@ impl Resolver {
 
         let mut buf = [0u8; 512];
 
-        let id = random_id();
+        let id = rand::random();
         buf[0] = (id >> 8) as u8;
         buf[1] = id as u8;
 
@@ -290,17 +339,6 @@ impl Resolver {
 
         Err(std::io::Error::other("invalid tcp response"))
     }
-}
-
-fn random_id() -> u16 {
-    let mut buf = [0u8; 2];
-    let ret = unsafe { libc::getrandom(buf.as_mut_ptr().cast(), 2, 0) };
-    if ret == -1 {
-        panic!("getrandom failed");
-    }
-
-    // the endian does not matter here
-    u16::from_be_bytes(buf)
 }
 
 /// Result of a DNS query when querying for any record type
