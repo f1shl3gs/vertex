@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758628186872,
+  "lastUpdate": 1758628252693,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "72a626d78b2926b8e546e6d7556113716c7faf77",
-          "message": "Merge pull request #2452 from f1shl3gs/ci/distroless\n\nci: use distroless to reduce docker image size",
-          "timestamp": "2025-07-05T21:30:19+08:00",
-          "tree_id": "f071463225c34ccccf8b905f2e6d24980016e105",
-          "url": "https://github.com/f1shl3gs/vertex/commit/72a626d78b2926b8e546e6d7556113716c7faf77"
-        },
-        "date": 1751722816278,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 511,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37729.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a85209ac700ef043295532b3ed9409c817c0dfc6",
           "message": "Merge pull request #2453 from f1shl3gs/lib/kubernetes/fix_list\n\nlib/kubernetes: fix API `list`",
           "timestamp": "2025-07-05T21:30:38+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39489.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3653a7977185cfff1492cabb4a35ba0eac52f8ed",
+          "message": "Merge pull request #2556 from f1shl3gs/lib/resolver/support_windows\n\nlib/resolver: support windows",
+          "timestamp": "2025-09-23T19:39:16+08:00",
+          "tree_id": "e24440698b27d6e4138df6df25ea85e35db91d95",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3653a7977185cfff1492cabb4a35ba0eac52f8ed"
+        },
+        "date": 1758628230299,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 559,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39490.1,
             "unit": "KiB"
           }
         ]
