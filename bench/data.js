@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758627797841,
+  "lastUpdate": 1758627804186,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2bebdd969d57622f9d731f175e744800d74c5b53",
-          "message": "Merge pull request #2441 from f1shl3gs/misc/rename_owned_event_path\n\nlib/value: fix owned_target_path",
-          "timestamp": "2025-06-30T21:39:30+08:00",
-          "tree_id": "afcf277a84f62f31f98ba2fb5e07fb02028883f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2bebdd969d57622f9d731f175e744800d74c5b53"
-        },
-        "date": 1751290899081,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.412,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.405,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 167.87,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 179.36,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3653a7977185cfff1492cabb4a35ba0eac52f8ed",
+          "message": "Merge pull request #2556 from f1shl3gs/lib/resolver/support_windows\n\nlib/resolver: support windows",
+          "timestamp": "2025-09-23T19:39:16+08:00",
+          "tree_id": "e24440698b27d6e4138df6df25ea85e35db91d95",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3653a7977185cfff1492cabb4a35ba0eac52f8ed"
+        },
+        "date": 1758627781334,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.364,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.658,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.09,
             "unit": "ns/op"
           }
         ]
