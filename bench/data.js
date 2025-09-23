@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758627836528,
+  "lastUpdate": 1758628186872,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a696d877f1c13e86069da06dcba66eb56888f77e",
-          "message": "Merge pull request #2439 from f1shl3gs/dependabot/cargo/quick-xml-0.38.0\n\nchore(deps): bump quick-xml from 0.37.5 to 0.38.0",
-          "timestamp": "2025-06-29T16:00:33+08:00",
-          "tree_id": "e7ae93d9ad99caf0854a9bf05d66e99bfcf7aba3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a696d877f1c13e86069da06dcba66eb56888f77e"
-        },
-        "date": 1751184594773,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14840000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 605940,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.577,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7d41e576d5e9f6beff0ebaaca78ad9a581915481",
           "message": "Merge pull request #2440 from f1shl3gs/extensions/http_observer/fix_feature_name\n\nextensions/http_observer: fix feature name",
           "timestamp": "2025-06-29T18:23:23+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.492,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3653a7977185cfff1492cabb4a35ba0eac52f8ed",
+          "message": "Merge pull request #2556 from f1shl3gs/lib/resolver/support_windows\n\nlib/resolver: support windows",
+          "timestamp": "2025-09-23T19:39:16+08:00",
+          "tree_id": "e24440698b27d6e4138df6df25ea85e35db91d95",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3653a7977185cfff1492cabb4a35ba0eac52f8ed"
+        },
+        "date": 1758628164957,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15479000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 596070,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.857,
             "unit": "ns/op"
           }
         ]
