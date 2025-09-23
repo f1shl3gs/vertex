@@ -9,7 +9,7 @@ use framework::Source;
 use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use futures::StreamExt;
 use futures::stream::FuturesUnordered;
-use resolver::{Hosts, RecordClass, RecordData, RecordType, Resolver};
+use resolver::{RecordClass, RecordData, RecordType, Resolver};
 
 const fn default_timeout() -> Duration {
     Duration::from_secs(2)
@@ -54,7 +54,7 @@ impl SourceConfig for Config {
             config.servers = self.name_servers.clone();
         }
 
-        let resolver = Resolver::new(config, Hosts::default());
+        let resolver = Resolver::new(config);
 
         let interval = self.interval;
         let leases_path = self.leases_path.clone();

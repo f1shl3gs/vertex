@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::io::{BufRead, BufReader};
 use std::net::IpAddr;
@@ -82,11 +83,11 @@ impl Hosts {
     #[inline]
     pub fn lookup_ipv4(&self, name: &str) -> Option<Vec<Record>> {
         match to_ascii_lowercase(name) {
-            Ok(name) => self
+            Cow::Borrowed(name) => self
                 .items
                 .get(name.trim_end_matches('.'))
                 .map(|records| records.v4.clone()),
-            Err(name) => self
+            Cow::Owned(name) => self
                 .items
                 .get(name.trim_end_matches('.'))
                 .map(|records| records.v4.clone()),
@@ -96,11 +97,11 @@ impl Hosts {
     #[inline]
     pub fn lookup_ipv6(&self, name: &str) -> Option<Vec<Record>> {
         match to_ascii_lowercase(name) {
-            Ok(name) => self
+            Cow::Borrowed(name) => self
                 .items
                 .get(name.trim_end_matches('.'))
                 .map(|records| records.v6.clone()),
-            Err(name) => self
+            Cow::Owned(name) => self
                 .items
                 .get(name.trim_end_matches('.'))
                 .map(|records| records.v6.clone()),
@@ -108,12 +109,12 @@ impl Hosts {
     }
 }
 
-fn to_ascii_lowercase(name: &str) -> Result<&str, String> {
+fn to_ascii_lowercase(name: &str) -> Cow<'_, str> {
     if name.as_bytes().iter().any(|c| c.is_ascii_uppercase()) {
-        return Err(name.to_lowercase());
+        return Cow::Owned(name.to_lowercase());
     }
 
-    Ok(name)
+    Cow::Borrowed(name)
 }
 
 fn encode_name(name: &str) -> Vec<u8> {
