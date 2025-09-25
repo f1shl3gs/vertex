@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758829753428,
+  "lastUpdate": 1758829787978,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ef86afff44554dc3626c13139bbe070a080f65cc",
-          "message": "Merge pull request #2450 from f1shl3gs/dependabot/cargo/lru-0.16.0\n\nchore(deps): bump lru from 0.15.0 to 0.16.0",
-          "timestamp": "2025-07-03T14:27:34+08:00",
-          "tree_id": "d1e883b74d2b496f43836d83a042ecba2c3c6135",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ef86afff44554dc3626c13139bbe070a080f65cc"
-        },
-        "date": 1751524653767,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14858000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 637400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.178,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3a8a5f55c31e53bf53bbdcf5d380289cf8585550",
           "message": "Merge pull request #2451 from f1shl3gs/dependabot/cargo/tokio-1.46.1\n\nchore(deps): bump tokio from 1.46.0 to 1.46.1",
           "timestamp": "2025-07-05T16:11:31+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.111,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8fd1fbd9c7b302b460b3595ff0beeadfbd81f782",
+          "message": "Merge pull request #2557 from f1shl3gs/dependabot/cargo/memchr-2.7.6\n\nchore(deps): bump memchr from 2.7.5 to 2.7.6",
+          "timestamp": "2025-09-26T03:39:39+08:00",
+          "tree_id": "32267046558d6aae71f98ea7248c0f5b23c16c75",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8fd1fbd9c7b302b460b3595ff0beeadfbd81f782"
+        },
+        "date": 1758829760895,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14845000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 466000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 47.893,
             "unit": "ns/op"
           }
         ]
