@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758829403815,
+  "lastUpdate": 1758829745531,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2bebdd969d57622f9d731f175e744800d74c5b53",
-          "message": "Merge pull request #2441 from f1shl3gs/misc/rename_owned_event_path\n\nlib/value: fix owned_target_path",
-          "timestamp": "2025-06-30T21:39:30+08:00",
-          "tree_id": "afcf277a84f62f31f98ba2fb5e07fb02028883f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2bebdd969d57622f9d731f175e744800d74c5b53"
-        },
-        "date": 1751291347687,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14405000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 565220,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.56,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "957e242564bf00a014c043f5527e4cc022c0931e",
           "message": "Merge pull request #2442 from f1shl3gs/deps/remove_uuid\n\ndeps: remove uuid since we don't need it",
           "timestamp": "2025-06-30T22:50:19+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.85,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18d4a56d82413a827bc1273dcec78a2893a54836",
+          "message": "Merge pull request #2558 from f1shl3gs/dependabot/cargo/windows-0.62.1\n\nchore(deps): bump windows from 0.62.0 to 0.62.1",
+          "timestamp": "2025-09-26T03:39:30+08:00",
+          "tree_id": "312e40e50878bfdae45e89d6913eae378e4aa39d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18d4a56d82413a827bc1273dcec78a2893a54836"
+        },
+        "date": 1758829723919,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14592000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 627720,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.803,
             "unit": "ns/op"
           }
         ]
