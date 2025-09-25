@@ -20,6 +20,6 @@ chrono-tz = { version = "0.10.4", default-features = false }
 encoding_rs = { version = "0.8.35", default-features = false }
 event = { path = "../event" }
 http = { version = "1.3.1", default-features = false, features = ["std"] }
-regex = { version = "1.11.2", default-features = false }
+regex = { version = "1.11.3", default-features = false }
 url = { version = "2.5.7", default-features = false }
 value = { path = "../value" }
