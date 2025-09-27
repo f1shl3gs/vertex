@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758948308890,
+  "lastUpdate": 1758948310403,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a85209ac700ef043295532b3ed9409c817c0dfc6",
-          "message": "Merge pull request #2453 from f1shl3gs/lib/kubernetes/fix_list\n\nlib/kubernetes: fix API `list`",
-          "timestamp": "2025-07-05T21:30:38+08:00",
-          "tree_id": "99b82246d4f80b462134b81287b666924a6ee5ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a85209ac700ef043295532b3ed9409c817c0dfc6"
-        },
-        "date": 1751722365444,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 493060,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 494430,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "62753f14f0a7d6dbac6dbcddcc860ba7156f609a",
+          "message": "Merge pull request #2560 from f1shl3gs/dependabot/cargo/tokio-rustls-0.26.4\n\nchore(deps): bump tokio-rustls from 0.26.3 to 0.26.4",
+          "timestamp": "2025-09-27T12:42:37+08:00",
+          "tree_id": "eed402ba474a70f87c1264571a714194de55caaf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/62753f14f0a7d6dbac6dbcddcc860ba7156f609a"
+        },
+        "date": 1758948287264,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 495090,
             "unit": "ns/op"
           }
         ]
