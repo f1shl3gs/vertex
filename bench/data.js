@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758948318171,
+  "lastUpdate": 1758948329487,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a85209ac700ef043295532b3ed9409c817c0dfc6",
-          "message": "Merge pull request #2453 from f1shl3gs/lib/kubernetes/fix_list\n\nlib/kubernetes: fix API `list`",
-          "timestamp": "2025-07-05T21:30:38+08:00",
-          "tree_id": "99b82246d4f80b462134b81287b666924a6ee5ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a85209ac700ef043295532b3ed9409c817c0dfc6"
-        },
-        "date": 1751722393008,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.271,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 168.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 317.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 678.63,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ae74930b49700a125baec45bb5ef25ba33f8f12c",
           "message": "Merge pull request #2455 from f1shl3gs/lib/prometheus/remove_unused_types\n\nlib/prometheus: remove unused types",
           "timestamp": "2025-07-05T22:19:56+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 685.82,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "62753f14f0a7d6dbac6dbcddcc860ba7156f609a",
+          "message": "Merge pull request #2560 from f1shl3gs/dependabot/cargo/tokio-rustls-0.26.4\n\nchore(deps): bump tokio-rustls from 0.26.3 to 0.26.4",
+          "timestamp": "2025-09-27T12:42:37+08:00",
+          "tree_id": "eed402ba474a70f87c1264571a714194de55caaf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/62753f14f0a7d6dbac6dbcddcc860ba7156f609a"
+        },
+        "date": 1758948308254,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.997,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 326.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 668.43,
             "unit": "ns/op"
           }
         ]
