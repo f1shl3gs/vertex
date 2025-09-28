@@ -2,12 +2,12 @@
 
 set -e -o verbose
 
-rustup show # causes installation of version from rust-toolchain.toml
-rustup default "$(rustup show active-toolchain | awk '{print $1;}')"
+rustup show active-toolchain || rustup toolchain install stable
+rustup show
 
 # Setup cargo-cross
-if [[ "$(cross --version | grep cross)" != "cross 0.2.5" ]]; then
-  rustup run stable cargo install cross --version 0.2.5 --force
+if ! cross --version 2>/dev/null | grep -q '^cross 0.2.5'; then
+  rustup run stable cargo install cross --version 0.2.5 --force --locked
 fi
 
 # Make sure our release build settings are present.
