@@ -23,7 +23,7 @@ dyn-clone = { version = "1.0.20", default-features = false }
 hostname = { path = "../hostname" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "duration"], rev = "fe127b4fe476d3840b1f25a03f44988faf05a570" }
 regex = { version = "1.11.3", default-features = false, features = ["unicode"] }
-serde = { version = "1.0.227", default-features = false }
+serde = { version = "1.0.228", default-features = false }
 serde_json = { version = "1.0.145", default-features = false }
 twox-hash = { version = "2.1.2", default-features = false, features = ["xxhash64"] }
 url = { version = "2.5.7", default-features = false }
