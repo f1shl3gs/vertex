@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759074374089,
+  "lastUpdate": 1759074387202,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ae74930b49700a125baec45bb5ef25ba33f8f12c",
-          "message": "Merge pull request #2455 from f1shl3gs/lib/prometheus/remove_unused_types\n\nlib/prometheus: remove unused types",
-          "timestamp": "2025-07-05T22:19:56+08:00",
-          "tree_id": "abc0310ab10034a47a0be10e4b392e0726d018b8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ae74930b49700a125baec45bb5ef25ba33f8f12c"
-        },
-        "date": 1751725328999,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.463,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.205,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 167.82,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 169.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "811514a588c0af4d01d3924f14ac1110cf514443",
+          "message": "Merge pull request #2562 from f1shl3gs/dependabot/cargo/serde-1.0.228\n\nchore(deps): bump serde from 1.0.227 to 1.0.228",
+          "timestamp": "2025-09-28T23:43:51+08:00",
+          "tree_id": "a477cb046c18f6d1d78520e05c000bc8ab65fb68",
+          "url": "https://github.com/f1shl3gs/vertex/commit/811514a588c0af4d01d3924f14ac1110cf514443"
+        },
+        "date": 1759074365489,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.596,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.685,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.08,
             "unit": "ns/op"
           }
         ]
