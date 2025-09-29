@@ -81,6 +81,6 @@ tracing-limit = { path = "../tracing-limit" }
 tracing-subscriber = { version = "0.3.20", default-features = false, features = ["env-filter", "json", "fmt", "ansi"] }
 tripwire = { path = "../tripwire" }
 twox-hash = { version = "2.1.2", default-features = false, features = ["xxhash64"] }
-typetag = { version = "0.2.20" }
+typetag = { version = "0.2.21" }
 value = { path = "../value" }
 zstd = { version = "0.13.3", default-features = false }
