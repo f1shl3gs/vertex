@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759158046442,
+  "lastUpdate": 1759158050148,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1b4b0a3d52dbc5fa69ae9513d5f18be0ca48021d",
-          "message": "Merge pull request #2458 from f1shl3gs/misc/add_dockerfiles_for_k8s_tests\n\nmisc: add Dockerfiles for k8s tests",
-          "timestamp": "2025-07-06T19:52:41+08:00",
-          "tree_id": "34212d628f519d27a33b471b1035b183a45815cf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1b4b0a3d52dbc5fa69ae9513d5f18be0ca48021d"
-        },
-        "date": 1751803361370,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 510,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37729.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "193397ec2f81c72bdbd12b8fb8de4d5798b7e875",
           "message": "Merge pull request #2459 from f1shl3gs/dependabot/cargo/hyper-util-0.1.15\n\nchore(deps): bump hyper-util from 0.1.14 to 0.1.15",
           "timestamp": "2025-07-08T19:44:31+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39490.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b39e488a490aeaa11fd0e256d31e318fb653f67",
+          "message": "Merge pull request #2565 from f1shl3gs/dependabot/cargo/typetag-0.2.21\n\nchore(deps): bump typetag from 0.2.20 to 0.2.21",
+          "timestamp": "2025-09-29T22:49:37+08:00",
+          "tree_id": "a4b0278758e220159d259f4f7f51db188658373b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b39e488a490aeaa11fd0e256d31e318fb653f67"
+        },
+        "date": 1759158028326,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 569,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39491.6,
             "unit": "KiB"
           }
         ]
