@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759158010137,
+  "lastUpdate": 1759158028497,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9f54073a5a4e990450c15329351bcce4cc8cabbe",
-          "message": "Merge pull request #2460 from f1shl3gs/dependabot/cargo/rustls-0.23.29\n\nchore(deps): bump rustls from 0.23.28 to 0.23.29",
-          "timestamp": "2025-07-11T00:02:11+08:00",
-          "tree_id": "8ef91b7afb72f3e5f26c9bc22cbe0b99a10bd033",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9f54073a5a4e990450c15329351bcce4cc8cabbe"
-        },
-        "date": 1752163458737,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 501610,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 502890,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56e9191ed9362438836cb1c97d93e9ed32cf5143",
+          "message": "Merge pull request #2564 from f1shl3gs/dependabot/cargo/thiserror-2.0.17\n\nchore(deps): bump thiserror from 2.0.16 to 2.0.17",
+          "timestamp": "2025-09-29T22:58:09+08:00",
+          "tree_id": "6fe62e98b63ebb0ee286df5c55838d8a5c369c62",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56e9191ed9362438836cb1c97d93e9ed32cf5143"
+        },
+        "date": 1759158005976,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 506590,
             "unit": "ns/op"
           }
         ]
