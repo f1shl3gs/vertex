@@ -2,12 +2,26 @@
 
 set -e -o verbose
 
-rustup show active-toolchain || rustup toolchain install stable
+# ensure active toolchain is installed
+if ! command -v rustup >/dev/null 2>&1; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+fi
+
+# Determine desired toolchain and ensure it's installed.
+ACTIVE_TOOLCHAIN="$(rustup show active-toolchain 2>/dev/null || true)"
+ACTIVE_TOOLCHAIN="${ACTIVE_TOOLCHAIN%% *}"  # keep only the first token
+if [ -z "${ACTIVE_TOOLCHAIN}" ]; then
+  # No active toolchain yet: fall back to env override or ultimately to stable.
+  ACTIVE_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-stable}"
+  rustup default "${ACTIVE_TOOLCHAIN}"
+fi
+
+rustup toolchain install "${ACTIVE_TOOLCHAIN}"
 rustup show
 
 # Setup cargo-cross
 if ! cross --version 2>/dev/null | grep -q '^cross 0.2.5'; then
-  rustup run stable cargo install cross --version 0.2.5 --force --locked
+  cargo install cross --version 0.2.5 --force --locked
 fi
 
 # Make sure our release build settings are present.
