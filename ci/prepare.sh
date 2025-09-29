@@ -21,7 +21,7 @@ rustup show
 
 # Setup cargo-cross
 if ! cross --version 2>/dev/null | grep -q '^cross 0.2.5'; then
-  rustup run stable cargo install cross --version 0.2.5 --force --locked
+  cargo install cross --version 0.2.5 --force --locked
 fi
 
 # Make sure our release build settings are present.
