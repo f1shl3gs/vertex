@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759074800243,
+  "lastUpdate": 1759157099101,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ae74930b49700a125baec45bb5ef25ba33f8f12c",
-          "message": "Merge pull request #2455 from f1shl3gs/lib/prometheus/remove_unused_types\n\nlib/prometheus: remove unused types",
-          "timestamp": "2025-07-05T22:19:56+08:00",
-          "tree_id": "abc0310ab10034a47a0be10e4b392e0726d018b8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ae74930b49700a125baec45bb5ef25ba33f8f12c"
-        },
-        "date": 1751725802882,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 524,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37733.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4e944c9aaa87c044a702748a95b884bffd616cb",
           "message": "Merge pull request #2457 from f1shl3gs/sources/node/fix_some_error\n\nsources/node: align to node_exporter",
           "timestamp": "2025-07-06T16:28:30+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39484,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bc0ed79a5ef48e072de87d4da3344a5b22fc2671",
+          "message": "Merge pull request #2567 from f1shl3gs/ci/fix_baseline_failure\n\nci: ensure active toolchain is installed",
+          "timestamp": "2025-09-29T22:34:00+08:00",
+          "tree_id": "6c288c9adb0982a245f43e004ae762b0679085c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bc0ed79a5ef48e072de87d4da3344a5b22fc2671"
+        },
+        "date": 1759157077385,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 550,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39489,
             "unit": "KiB"
           }
         ]
