@@ -21,6 +21,6 @@ humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = fa
 memmap2 = { version = "0.9.8", default-features = false }
 pin-project-lite = { version = "0.2.16", default-features = false }
 serde = { version = "1.0.228", default-features = false }
-thiserror = { version = "2.0.16", default-features = false }
+thiserror = { version = "2.0.17", default-features = false }
 tokio = { version = "1.47.1", default-features = false, features = ["rt", "time"] }
 tracing = { version = "0.1.41", default-features = false }
