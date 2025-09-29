@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759157975736,
+  "lastUpdate": 1759158010137,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "193397ec2f81c72bdbd12b8fb8de4d5798b7e875",
-          "message": "Merge pull request #2459 from f1shl3gs/dependabot/cargo/hyper-util-0.1.15\n\nchore(deps): bump hyper-util from 0.1.14 to 0.1.15",
-          "timestamp": "2025-07-08T19:44:31+08:00",
-          "tree_id": "2d63e040d9b83b39152842feced4907a1df54197",
-          "url": "https://github.com/f1shl3gs/vertex/commit/193397ec2f81c72bdbd12b8fb8de4d5798b7e875"
-        },
-        "date": 1751975661925,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15247000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 611850,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.98,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9f54073a5a4e990450c15329351bcce4cc8cabbe",
           "message": "Merge pull request #2460 from f1shl3gs/dependabot/cargo/rustls-0.23.29\n\nchore(deps): bump rustls from 0.23.28 to 0.23.29",
           "timestamp": "2025-07-11T00:02:11+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.14,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b39e488a490aeaa11fd0e256d31e318fb653f67",
+          "message": "Merge pull request #2565 from f1shl3gs/dependabot/cargo/typetag-0.2.21\n\nchore(deps): bump typetag from 0.2.20 to 0.2.21",
+          "timestamp": "2025-09-29T22:49:37+08:00",
+          "tree_id": "a4b0278758e220159d259f4f7f51db188658373b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b39e488a490aeaa11fd0e256d31e318fb653f67"
+        },
+        "date": 1759157988112,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14812000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 631860,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.96,
             "unit": "ns/op"
           }
         ]
