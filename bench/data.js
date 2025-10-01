@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759344902619,
+  "lastUpdate": 1759345297714,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3f8a437dcc8884517b8e86164b76744acada7769",
-          "message": "Merge pull request #2462 from f1shl3gs/sources/kubernetes_logs/fix_default_nodename_env\n\nsources/kubernetes_logs: fix default node_name environment",
-          "timestamp": "2025-07-11T20:13:02+08:00",
-          "tree_id": "62a0a0012c7de957e7a551a35af394d31be82e5c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f8a437dcc8884517b8e86164b76744acada7769"
-        },
-        "date": 1752236545684,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14496000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 647780,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.815,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bf0d8c81d85be59a9ec255aa3e78b18705f2372a",
           "message": "Merge pull request #2463 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.4\n\nchore(deps): bump chrono-tz from 0.10.3 to 0.10.4",
           "timestamp": "2025-07-12T19:08:54+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.286,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8616728c027e0493db1e3295dca4f6c3e90b65a2",
+          "message": "Merge pull request #2569 from f1shl3gs/lib/resolver/fix_record_type_of_ipv6_lookup\n\nlib/resolver: fix ipv6 lookup's RecordType",
+          "timestamp": "2025-10-02T02:51:23+08:00",
+          "tree_id": "722a35137e705e935e2778f9c3d84d115501e748",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8616728c027e0493db1e3295dca4f6c3e90b65a2"
+        },
+        "date": 1759345274918,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 16360000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 624960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.509,
             "unit": "ns/op"
           }
         ]
