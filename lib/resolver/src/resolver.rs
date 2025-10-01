@@ -27,7 +27,7 @@ pub struct Resolver {
     hosts: Hosts,
 
     server_offset: AtomicUsize,
-    inflight: SingleFlight<(bool, String), Result<Lookup, Error>>,
+    inflight: SingleFlight<String, Result<Lookup, Error>>,
 }
 
 impl Resolver {
@@ -92,7 +92,7 @@ impl Resolver {
         }
 
         self.inflight
-            .call((false, name.to_owned()), async {
+            .call(name.to_owned(), async {
                 let mut msg = self.lookup(name, RecordType::A, RecordClass::INET).await?;
 
                 let question = msg.questions.remove(0);
@@ -145,7 +145,7 @@ impl Resolver {
         }
 
         self.inflight
-            .call((false, name.to_owned()), async {
+            .call(name.to_owned(), async {
                 let mut msg = self
                     .lookup(name, RecordType::AAAA, RecordClass::INET)
                     .await?;
