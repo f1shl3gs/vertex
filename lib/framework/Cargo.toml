@@ -52,7 +52,6 @@ ipnet = { version = "2.11.0", default-features = false }
 listenfd = { version = "1.0.2", default-features = false }
 libc = { version = "0.2.176", default-features = false }
 log_schema = { path = "../log_schema" }
-bytesize = { path = "../bytesize" }
 memchr = { version = "2.7.6", default-features = false }
 metrics = { path = "../metrics" }
 pem = { version = "3.0.5", default-features = false, features = ["std"] }
@@ -81,6 +80,7 @@ tracing-limit = { path = "../tracing-limit" }
 tracing-subscriber = { version = "0.3.20", default-features = false, features = ["env-filter", "json", "fmt", "ansi"] }
 tripwire = { path = "../tripwire" }
 twox-hash = { version = "2.1.2", default-features = false, features = ["xxhash64"] }
+typesize = { path = "../typesize" }
 typetag = { version = "0.2.21" }
 value = { path = "../value" }
 zstd = { version = "0.13.3", default-features = false }

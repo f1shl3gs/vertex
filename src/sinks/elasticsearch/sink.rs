@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 use std::num::NonZeroUsize;
 
-use bytesize::ByteSizeOf;
 use codecs::encoding::Transformer;
 use event::log::path::PathPrefix;
 use event::log::{OwnedValuePath, Value};
@@ -11,6 +10,7 @@ use framework::sink::builder::SinkBuilderExt;
 use framework::stream::{BatcherSettings, DriverResponse};
 use futures::{StreamExt, stream::BoxStream};
 use tower::Service;
+use typesize::TypeSize;
 
 use super::encoder::ProcessedEvent;
 use super::request_builder::ElasticsearchRequestBuilder;
@@ -28,7 +28,7 @@ pub struct BatchedEvents {
     pub events: Vec<ProcessedEvent>,
 }
 
-impl ByteSizeOf for BatchedEvents {
+impl TypeSize for BatchedEvents {
     fn allocated_bytes(&self) -> usize {
         self.events.size_of()
     }

@@ -6,11 +6,11 @@ use std::collections::BTreeMap;
 use std::fmt::Debug;
 
 use bytes::Bytes;
-use bytesize::ByteSizeOf;
 use chrono::Utc;
 use finalize::AddBatchNotifier;
 use log_schema::log_schema;
 use serde::{Serialize, Serializer};
+use typesize::TypeSize;
 use value::path::{PathPrefix, ValuePath};
 pub use value::{
     OwnedTargetPath, OwnedValuePath, Value, event_path, metadata_path, owned_value_path,
@@ -60,7 +60,7 @@ impl MaybeAsLogMut for LogRecord {
     }
 }
 
-impl ByteSizeOf for LogRecord {
+impl TypeSize for LogRecord {
     fn allocated_bytes(&self) -> usize {
         self.metadata.allocated_bytes() + self.fields.allocated_bytes()
     }

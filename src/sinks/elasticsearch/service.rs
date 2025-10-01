@@ -3,7 +3,6 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use bytes::Bytes;
-use bytesize::ByteSizeOf;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::http::{Auth, HttpClient};
 use framework::sink::Compression;
@@ -14,6 +13,7 @@ use futures::future::BoxFuture;
 use http::header::{CONTENT_ENCODING, CONTENT_TYPE};
 use http::{Request, Response, Uri};
 use tower::{Service, ServiceExt};
+use typesize::TypeSize;
 
 #[derive(Clone)]
 pub struct ElasticsearchRequest {
@@ -23,9 +23,9 @@ pub struct ElasticsearchRequest {
     pub events_byte_size: usize,
 }
 
-impl ByteSizeOf for ElasticsearchRequest {
+impl TypeSize for ElasticsearchRequest {
     fn allocated_bytes(&self) -> usize {
-        self.payload.allocated_bytes() + self.finalizers.allocated_bytes()
+        self.payload.allocated_bytes()
     }
 }
 

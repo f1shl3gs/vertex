@@ -4,10 +4,10 @@ use std::num::NonZeroUsize;
 use std::pin::Pin;
 use std::sync::Arc;
 
-use bytesize::ByteSizeOf;
 use event::Finalizable;
 use futures::{Stream, StreamExt, stream::Map};
 use tower::Service;
+use typesize::TypeSize;
 
 use super::request_builder::{IncrementalRequestBuilder, RequestBuilder};
 use crate::partition::Partitioner;
@@ -31,7 +31,7 @@ pub trait SinkBuilderExt: Stream {
         Self: Stream<Item = P::Item> + Sized,
         P: Partitioner + Unpin,
         P::Key: Eq + Hash + Clone,
-        P::Item: ByteSizeOf,
+        P::Item: TypeSize,
     {
         PartitionedBatcher::new(self, partitioner, settings)
     }

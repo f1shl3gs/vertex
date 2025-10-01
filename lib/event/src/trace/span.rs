@@ -1,9 +1,9 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
-use bytesize::ByteSizeOf;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
+use typesize::TypeSize;
 
 use super::{EvictedHashMap, EvictedQueue, KeyValue, SpanId, TraceFlags, TraceId, TraceState};
 
@@ -18,7 +18,7 @@ pub struct Event {
     pub attributes: EvictedHashMap,
 }
 
-impl ByteSizeOf for Event {
+impl TypeSize for Event {
     fn allocated_bytes(&self) -> usize {
         self.name.len() + self.attributes.allocated_bytes()
     }
@@ -391,7 +391,7 @@ impl Span {
     }
 }
 
-impl ByteSizeOf for Span {
+impl TypeSize for Span {
     fn allocated_bytes(&self) -> usize {
         self.name.allocated_bytes() + self.tags.allocated_bytes() + self.events.allocated_bytes()
     }

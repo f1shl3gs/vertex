@@ -3,7 +3,6 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::task::Poll;
 
-use bytesize::ByteSizeOf;
 use crossbeam_utils::atomic::AtomicCell;
 use futures::FutureExt;
 use pin_project_lite::pin_project;
@@ -109,12 +108,6 @@ impl PartialOrd for EventFinalizers {
         // Partial ordering of `EventFinalizers` is defined only on the
         // length of the finalizers.
         self.0.len().partial_cmp(&other.0.len())
-    }
-}
-
-impl ByteSizeOf for EventFinalizers {
-    fn allocated_bytes(&self) -> usize {
-        self.0.iter().fold(0, |acc, arc| acc + arc.size_of())
     }
 }
 
@@ -289,12 +282,6 @@ impl BatchNotifier {
 pub struct EventFinalizer {
     status: AtomicCell<EventStatus>,
     batch: BatchNotifier,
-}
-
-impl ByteSizeOf for EventFinalizer {
-    fn allocated_bytes(&self) -> usize {
-        0
-    }
 }
 
 impl EventFinalizer {

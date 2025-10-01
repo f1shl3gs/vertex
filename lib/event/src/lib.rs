@@ -32,10 +32,10 @@ pub use trace::Trace;
 use std::collections::BTreeMap;
 
 use bytes::Bytes;
-use bytesize::ByteSizeOf;
 use chrono::Utc;
 use log_schema::log_schema;
 use serde::Serialize;
+use typesize::TypeSize;
 
 #[derive(PartialEq, Debug, Clone, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -57,7 +57,7 @@ impl AddBatchNotifier for Event {
     }
 }
 
-impl ByteSizeOf for Event {
+impl TypeSize for Event {
     fn allocated_bytes(&self) -> usize {
         match self {
             Event::Log(log) => log.allocated_bytes(),

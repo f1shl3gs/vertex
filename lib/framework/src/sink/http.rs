@@ -6,13 +6,13 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytes::Bytes;
-use bytesize::ByteSizeOf;
 use event::{Event, EventFinalizers, EventStatus, Finalizable};
 use futures::{future::BoxFuture, ready};
 use http::{Request, Response, StatusCode};
 use http_body_util::{BodyExt, Full};
 use pin_project_lite::pin_project;
 use tower::Service;
+use typesize::TypeSize;
 
 use crate::batch::{Batch, EncodedEvent};
 use crate::http::{HttpClient, HttpError};
@@ -91,7 +91,7 @@ pin_project! {
     pub struct BatchedHttpSink<T, B, RL = HttpRetryLogic>
     where
         B: Batch,
-        B::Output: ByteSizeOf,
+        B::Output: TypeSize,
         B::Output: Clone,
         B::Output: Send,
         B::Output: 'static,
@@ -122,7 +122,7 @@ pin_project! {
 impl<T, B> BatchedHttpSink<T, B>
 where
     B: Batch,
-    B::Output: ByteSizeOf + Clone + Send + 'static,
+    B::Output: TypeSize + Clone + Send + 'static,
     T: HttpSink<Input = B::Input, Output = B::Output>,
 {
     pub fn new(
@@ -146,7 +146,7 @@ where
 impl<T, B, RL> BatchedHttpSink<T, B, RL>
 where
     B: Batch,
-    B::Output: ByteSizeOf + Clone + Send + 'static,
+    B::Output: TypeSize + Clone + Send + 'static,
     RL: RetryLogic<Response = Response<Bytes>, Error = HttpError> + Send + 'static,
     T: HttpSink<Input = B::Input, Output = B::Output>,
 {
@@ -181,7 +181,7 @@ where
 impl<T, B, RL> futures::Sink<Event> for BatchedHttpSink<T, B, RL>
 where
     B: Batch,
-    B::Output: ByteSizeOf + Clone + Send + 'static,
+    B::Output: TypeSize + Clone + Send + 'static,
     T: HttpSink<Input = B::Input, Output = B::Output>,
     RL: RetryLogic<Response = http::Response<Bytes>> + Send + 'static,
 {
@@ -253,7 +253,7 @@ impl<F, B> HttpBatchService<F, B> {
 impl<F, B> Service<B> for HttpBatchService<F, B>
 where
     F: Future<Output = crate::Result<Request<Bytes>>> + Send + 'static,
-    B: ByteSizeOf + Send + 'static,
+    B: TypeSize + Send + 'static,
 {
     type Response = Response<Bytes>;
     type Error = crate::Error;

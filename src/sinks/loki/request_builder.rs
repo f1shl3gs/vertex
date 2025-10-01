@@ -1,11 +1,11 @@
 use std::io::Write;
 
 use bytes::Bytes;
-use bytesize::ByteSizeOf;
 use event::{EventFinalizers, Finalizable};
 use framework::sink::encoding::Encoder;
 use prost::Message;
 use serde::{Serialize, Serializer, ser::SerializeSeq};
+use typesize::TypeSize;
 
 use super::sanitize::{sanitize_label_key, sanitize_label_value};
 
@@ -23,7 +23,7 @@ pub struct LokiRecord {
     pub finalizers: EventFinalizers,
 }
 
-impl ByteSizeOf for LokiRecord {
+impl TypeSize for LokiRecord {
     fn allocated_bytes(&self) -> usize {
         self.partition.allocated_bytes()
             + self.labels.iter().fold(0, |acc, (k, v)| {
@@ -45,7 +45,7 @@ pub struct PartitionKey {
     labels: String,
 }
 
-impl ByteSizeOf for PartitionKey {
+impl TypeSize for PartitionKey {
     fn allocated_bytes(&self) -> usize {
         self.tenant
             .as_ref()
@@ -74,7 +74,7 @@ pub struct LokiEvent {
     pub event: Bytes,
 }
 
-impl ByteSizeOf for LokiEvent {
+impl TypeSize for LokiEvent {
     fn allocated_bytes(&self) -> usize {
         self.timestamp.allocated_bytes() + self.event.allocated_bytes()
     }

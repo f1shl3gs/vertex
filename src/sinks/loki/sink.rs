@@ -3,7 +3,6 @@ use std::io::Error;
 use std::num::NonZeroUsize;
 
 use bytes::{Bytes, BytesMut};
-use bytesize::ByteSizeOf;
 use codecs::Encoder;
 use codecs::encoding::Transformer;
 use event::log::Value;
@@ -20,6 +19,7 @@ use framework::template::Template;
 use futures::{StreamExt, stream::BoxStream};
 use thiserror::Error;
 use tokio_util::codec::Encoder as _;
+use typesize::TypeSize;
 
 use super::config::{Config, OutOfOrderAction};
 use super::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};

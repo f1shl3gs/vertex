@@ -4,13 +4,13 @@ use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 use buffer::{BufferReceiver, BufferSender, WhenFull};
-use bytesize::ByteSizeOf;
 use event::Events;
 use futures::{FutureExt, StreamExt, stream::FuturesOrdered};
 use metrics::{Attributes, Counter};
 use tokio::time::timeout;
 use tracing::Instrument;
 use tripwire::{Trigger, Tripwire};
+use typesize::TypeSize;
 
 use super::BuiltBuffer;
 use super::fanout::{ControlChannel, Fanout};

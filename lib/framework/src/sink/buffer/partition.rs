@@ -1,4 +1,4 @@
-use bytesize::ByteSizeOf;
+use typesize::TypeSize;
 
 use crate::batch::{Batch, BatchConfig, BatchError, Merged, PushResult, SinkBatchSettings};
 
@@ -88,7 +88,7 @@ where
     }
 }
 
-impl<T: ByteSizeOf, K> ByteSizeOf for PartitionInnerBuffer<T, K> {
+impl<T: TypeSize, K> TypeSize for PartitionInnerBuffer<T, K> {
     // This ignores the size of the key, as it does not represent actual
     // data size
     fn size_of(&self) -> usize {
