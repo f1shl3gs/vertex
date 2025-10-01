@@ -100,7 +100,7 @@ mod tests {
 
             tasks.spawn(async move {
                 group
-                    .call("foo".to_string(), async {
+                    .call("foo", async {
                         tokio::time::sleep(Duration::from_millis(500)).await;
                         HITS.fetch_add(1, Ordering::SeqCst);
                         i
