@@ -5,11 +5,11 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
-use bytesize::ByteSizeOf;
 use futures::{Stream, ready};
 use pin_project_lite::pin_project;
 use tokio_util::time::DelayQueue;
 use tokio_util::time::delay_queue::Key;
+use typesize::TypeSize;
 
 use super::batcher::{
     config::BatchConfigParts,
@@ -105,7 +105,7 @@ struct Batch<I> {
     elementes: Vec<I>,
 }
 
-impl<I> ByteSizeOf for Batch<I> {
+impl<I> TypeSize for Batch<I> {
     fn allocated_bytes(&self) -> usize {
         self.allocated_bytes
     }
@@ -113,7 +113,7 @@ impl<I> ByteSizeOf for Batch<I> {
 
 impl<I> Batch<I>
 where
-    I: ByteSizeOf,
+    I: TypeSize,
 {
     /// Create a new Batch instance
     ///
@@ -222,7 +222,7 @@ impl BatcherSettings {
 
     /// A Batcher config using the `ByteSizeOf` trait to determine batch sizes. The output is a
     /// Vec<T>
-    pub fn into_byte_size_config<T: ByteSizeOf>(
+    pub fn into_byte_size_config<T: TypeSize>(
         self,
     ) -> BatchConfigParts<SizeLimit<ByteSizeOfItemSize>, Vec<T>> {
         self.into_item_size_config(ByteSizeOfItemSize)
@@ -301,7 +301,7 @@ where
     S: Stream<Item = P::Item>,
     P: Partitioner + Unpin,
     P::Key: Eq + Hash + Clone,
-    P::Item: ByteSizeOf,
+    P::Item: TypeSize,
 {
     pub fn new(stream: S, partitioner: P, settings: BatcherSettings) -> Self {
         Self {
@@ -321,7 +321,7 @@ where
     S: Stream<Item = P::Item>,
     P: Partitioner + Unpin,
     P::Key: Eq + Hash + Clone,
-    P::Item: ByteSizeOf,
+    P::Item: TypeSize,
 {
     pub fn with_timer(
         stream: S,
@@ -347,7 +347,7 @@ where
     S: Stream<Item = P::Item>,
     P: Partitioner + Unpin,
     P::Key: Eq + Hash + Clone,
-    P::Item: ByteSizeOf,
+    P::Item: TypeSize,
     T: KeyedTimer<P::Key>,
 {
     type Item = (P::Key, Vec<P::Item>);

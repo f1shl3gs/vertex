@@ -4,8 +4,8 @@ use std::fmt::{Debug, Display, Formatter};
 
 use buffer::Encodable;
 use bytes::{Buf, BufMut};
-use bytesize::ByteSizeOf;
 use chrono::{DateTime, TimeZone, Utc};
+use typesize::TypeSize;
 use value::Value;
 
 use super::metric::{Bucket, Metric, MetricValue};

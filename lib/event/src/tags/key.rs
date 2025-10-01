@@ -7,6 +7,8 @@ use std::ops::Deref;
 use std::ptr::{NonNull, copy_nonoverlapping};
 use std::slice::from_raw_parts;
 
+use typesize::TypeSize;
+
 const TYPE_MASK: u8 = 0b1000_0000;
 const KEY_SIZE: usize = 24; // 24 is the size_of::<String>()
 const MAX_LENGTH: usize = 128;
@@ -238,6 +240,13 @@ impl PartialOrd for Key {
 
 unsafe impl Send for Key {}
 unsafe impl Sync for Key {}
+
+impl TypeSize for Key {
+    #[inline]
+    fn allocated_bytes(&self) -> usize {
+        if self.last == 0 { self.cap } else { 0 }
+    }
+}
 
 mod serde {
     use std::fmt::Formatter;

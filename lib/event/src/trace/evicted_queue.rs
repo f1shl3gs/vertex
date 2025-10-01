@@ -1,7 +1,7 @@
 use std::collections::VecDeque;
 
-use bytesize::ByteSizeOf;
 use serde::{Deserialize, Serialize};
+use typesize::TypeSize;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct EvictedQueue<T> {
@@ -20,9 +20,9 @@ impl FromIterator<crate::trace::Event> for EvictedQueue<crate::trace::Event> {
     }
 }
 
-impl<T> ByteSizeOf for EvictedQueue<T>
+impl<T> TypeSize for EvictedQueue<T>
 where
-    T: ByteSizeOf,
+    T: TypeSize,
 {
     fn allocated_bytes(&self) -> usize {
         if self.queue.is_none() {

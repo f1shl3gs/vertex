@@ -1,4 +1,4 @@
-use bytesize::ByteSizeOf;
+use typesize::TypeSize;
 
 use super::data::BatchData;
 
@@ -78,7 +78,7 @@ pub trait ItemBatchSize<T> {
 
 pub struct ByteSizeOfItemSize;
 
-impl<T: ByteSizeOf> ItemBatchSize<T> for ByteSizeOfItemSize {
+impl<T: TypeSize> ItemBatchSize<T> for ByteSizeOfItemSize {
     fn size(&self, item: &T) -> usize {
         item.size_of()
     }

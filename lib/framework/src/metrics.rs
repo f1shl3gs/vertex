@@ -1,11 +1,11 @@
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use bytesize::ByteSizeOf;
 use event::EventContainer;
 use futures::Stream;
 use metrics::{Attributes, Counter};
 use pin_project_lite::pin_project;
+use typesize::TypeSize;
 
 pin_project! {
     #[derive(Clone, Debug)]

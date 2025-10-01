@@ -1,10 +1,10 @@
 use std::io;
 use std::io::Write;
 
-use bytesize::ByteSizeOf;
 use codecs::encoding::Transformer;
 use event::{Event, EventFinalizers, Finalizable, LogRecord};
 use framework::sink::encoding::{Encoder, as_tracked_write};
+use typesize::TypeSize;
 
 use super::BulkAction;
 
@@ -28,7 +28,7 @@ impl Finalizable for ProcessedEvent {
     }
 }
 
-impl ByteSizeOf for ProcessedEvent {
+impl TypeSize for ProcessedEvent {
     fn allocated_bytes(&self) -> usize {
         self.index.allocated_bytes() + self.log.allocated_bytes() + self.id.allocated_bytes()
     }

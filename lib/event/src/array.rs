@@ -1,7 +1,7 @@
 use std::{iter, slice, vec};
 
-use bytesize::ByteSizeOf;
 use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
+use typesize::TypeSize;
 
 use crate::{Event, EventMetadata, EventRef, LogRecord, Metric, Trace};
 
@@ -72,7 +72,7 @@ impl AddBatchNotifier for Events {
     }
 }
 
-impl ByteSizeOf for Events {
+impl TypeSize for Events {
     fn allocated_bytes(&self) -> usize {
         match self {
             Self::Logs(logs) => logs.allocated_bytes(),
@@ -97,7 +97,7 @@ impl Finalizable for Events {
 /// `IntoIterator<Item = Event>` implementations, but that would
 /// conflict with the base implementation for the type aliases
 /// below.
-pub trait EventContainer: ByteSizeOf {
+pub trait EventContainer: TypeSize {
     /// The type of `Iterator` used to turn this container into events.
     type IntoIter: Iterator<Item = Event>;
 

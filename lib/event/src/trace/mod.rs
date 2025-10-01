@@ -10,12 +10,12 @@ use std::num::ParseIntError;
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 
-use bytesize::ByteSizeOf;
 pub use evicted_hash_map::EvictedHashMap;
 pub use evicted_queue::EvictedQueue;
 pub use generator::RngGenerator;
 use serde::{Deserialize, Serialize};
 pub use span::{Event, Link, Span, SpanContext, SpanKind, Status, StatusCode};
+use typesize::TypeSize;
 
 pub use super::tags::Key;
 use super::tags::Tags;
@@ -81,6 +81,15 @@ impl Display for AnyValue {
     }
 }
 
+impl TypeSize for AnyValue {
+    fn allocated_bytes(&self) -> usize {
+        match self {
+            AnyValue::String(s) => s.allocated_bytes(),
+            _ => 0,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub struct KeyValue {
     pub key: Key,
@@ -101,11 +110,11 @@ impl KeyValue {
     }
 }
 
-impl ByteSizeOf for KeyValue {
+impl TypeSize for KeyValue {
     fn allocated_bytes(&self) -> usize {
         let key = 0;
         let value = match &self.value {
-            AnyValue::String(s) => s.as_bytes().allocated_bytes(),
+            AnyValue::String(s) => s.allocated_bytes(),
             _ => 0,
         };
 
@@ -527,7 +536,7 @@ pub struct Trace {
     metadata: EventMetadata,
 }
 
-impl ByteSizeOf for Trace {
+impl TypeSize for Trace {
     fn allocated_bytes(&self) -> usize {
         self.tags.allocated_bytes() + self.spans.allocated_bytes()
     }

@@ -3,11 +3,11 @@ mod errors;
 use std::collections::HashMap;
 
 use buffer::{self, LimitedReceiver, LimitedSender};
-use bytesize::ByteSizeOf;
 use errors::ClosedError;
 use event::Events;
 use futures::{Stream, StreamExt};
 use metrics::{Attributes, Counter};
+use typesize::TypeSize;
 
 const CHUNK_SIZE: usize = 1024;
 pub const DEFAULT_OUTPUT: &str = "_default";
@@ -97,7 +97,7 @@ impl Pipeline {
 
     pub async fn send_batch<E, I>(&mut self, events: I) -> Result<(), ClosedError>
     where
-        E: Into<Events> + ByteSizeOf,
+        E: Into<Events> + TypeSize,
         I: IntoIterator<Item = E>,
     {
         self.default.send_batch(events).await
@@ -106,7 +106,7 @@ impl Pipeline {
     pub async fn send_stream<S, E>(&mut self, stream: S) -> Result<(), ClosedError>
     where
         S: Stream<Item = E> + Unpin,
-        E: Into<Events> + ByteSizeOf,
+        E: Into<Events> + TypeSize,
     {
         self.default.send_stream(stream).await
     }
@@ -234,7 +234,7 @@ impl Output {
 
     async fn send_batch<E, B>(&mut self, batch: B) -> Result<(), ClosedError>
     where
-        E: Into<Events> + ByteSizeOf,
+        E: Into<Events> + TypeSize,
         B: IntoIterator<Item = E>,
     {
         let mut count = 0;
@@ -280,7 +280,7 @@ impl Output {
     async fn send_stream<S, E>(&mut self, mut stream: S) -> Result<(), ClosedError>
     where
         S: Stream<Item = E> + Unpin,
-        E: Into<Events> + ByteSizeOf,
+        E: Into<Events> + TypeSize,
     {
         while let Some(events) = stream.next().await {
             self.send(events.into()).await?;

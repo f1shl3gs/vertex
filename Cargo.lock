@@ -409,14 +409,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d71b6127be86fdcfddb610f7182ac57211d4b18a3e9c82eb2d17662f2227ad6a"
 
 [[package]]
-name = "bytesize"
-version = "0.1.0"
-dependencies = [
- "bytes",
- "value",
-]
-
-[[package]]
 name = "cast"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1075,7 +1067,6 @@ version = "0.1.0"
 dependencies = [
  "buffer",
  "bytes",
- "bytesize",
  "chrono",
  "criterion",
  "finalize",
@@ -1085,6 +1076,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tracing",
+ "typesize",
  "value",
 ]
 
@@ -1142,7 +1134,6 @@ name = "finalize"
 version = "0.1.0"
 dependencies = [
  "async-stream",
- "bytesize",
  "crossbeam-utils",
  "futures",
  "pin-project-lite",
@@ -1220,7 +1211,6 @@ dependencies = [
  "backoff",
  "buffer",
  "bytes",
- "bytesize",
  "chrono",
  "chrono-tz",
  "codecs",
@@ -1280,6 +1270,7 @@ dependencies = [
  "tracing-subscriber",
  "tripwire",
  "twox-hash",
+ "typesize",
  "typetag",
  "value",
  "zstd",
@@ -4770,6 +4761,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
 
 [[package]]
+name = "typesize"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "value",
+]
+
+[[package]]
 name = "typetag"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4903,7 +4902,6 @@ dependencies = [
  "base64 0.22.1",
  "buffer",
  "bytes",
- "bytesize",
  "chrono",
  "codecs",
  "configurable",
@@ -4978,6 +4976,7 @@ dependencies = [
  "tower 0.5.2",
  "tracing",
  "tripwire",
+ "typesize",
  "typetag",
  "url",
  "value",

@@ -1,9 +1,9 @@
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 
-use bytesize::ByteSizeOf;
 use finalize::{EventFinalizers, EventStatus};
 use serde::{Deserialize, Serialize};
+use typesize::TypeSize;
 use value::Value;
 
 use crate::{BatchNotifier, EventFinalizer};
@@ -50,12 +50,10 @@ impl From<EventFinalizers> for EventMetadata {
     }
 }
 
-impl ByteSizeOf for EventMetadata {
+impl TypeSize for EventMetadata {
+    #[inline]
     fn allocated_bytes(&self) -> usize {
-        // Note we don't count the `str` here because it's allocated
-        // somewhere else. We're just moving around the pointer, which
-        // is already captured by `ByteSizeOf::size_of`
-        self.finalizers.allocated_bytes()
+        0
     }
 }
 

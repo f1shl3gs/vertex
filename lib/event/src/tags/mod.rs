@@ -14,10 +14,10 @@ use std::marker::PhantomData;
 use std::mem::ManuallyDrop;
 use std::ptr::{NonNull, drop_in_place, slice_from_raw_parts_mut};
 
-use bytesize::ByteSizeOf;
 use serde::de::{MapAccess, Visitor};
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use typesize::TypeSize;
 
 const GROWTH_ALIGNMENT: isize = 4;
 
@@ -47,7 +47,7 @@ pub struct Tags {
 unsafe impl Send for Tags {}
 unsafe impl Sync for Tags {}
 
-impl ByteSizeOf for Tags {
+impl TypeSize for Tags {
     fn allocated_bytes(&self) -> usize {
         self.iter()
             .map(|(key, value)| {

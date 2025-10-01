@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::pin::Pin;
 
-use bytesize::ByteSizeOf;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::{Stream, StreamExt, stream};
+use typesize::TypeSize;
 
 use crate::config::OutputType;
 use crate::topology::{ControlChannel, Fanout};
@@ -227,7 +227,7 @@ impl TransformOutputsBuf {
     }
 }
 
-impl ByteSizeOf for TransformOutputsBuf {
+impl TypeSize for TransformOutputsBuf {
     fn allocated_bytes(&self) -> usize {
         self.primary_buffer.size_of()
             + self
@@ -373,9 +373,9 @@ impl OutputBuffer {
     }
 }
 
-impl ByteSizeOf for OutputBuffer {
+impl TypeSize for OutputBuffer {
     fn allocated_bytes(&self) -> usize {
-        self.0.iter().map(ByteSizeOf::size_of).sum()
+        self.0.iter().map(TypeSize::size_of).sum()
     }
 }
 

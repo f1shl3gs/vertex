@@ -2,8 +2,8 @@ use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
 use std::collections::{HashMap, VecDeque};
 
-use bytesize::ByteSizeOf;
 use serde::Serialize;
+use typesize::TypeSize;
 
 use super::{AnyValue, Key, KeyValue};
 
@@ -61,10 +61,15 @@ impl PartialOrd for EvictedHashMap {
     }
 }
 
-impl ByteSizeOf for EvictedHashMap {
+impl TypeSize for EvictedHashMap {
     fn allocated_bytes(&self) -> usize {
-        // TODO
-        0
+        self.map
+            .iter()
+            .fold(0, |acc, (key, value)| acc + key.size_of() + value.size_of())
+            + self
+                .evict_list
+                .iter()
+                .fold(0, |acc, item| acc + item.size_of())
     }
 }
 

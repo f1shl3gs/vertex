@@ -1,8 +1,8 @@
 use std::fmt::{Display, Formatter, Write};
 
-use bytesize::ByteSizeOf;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use typesize::TypeSize;
 
 use super::metadata::EventMetadata;
 use super::tags::{Key, Tags, Value};
@@ -77,7 +77,7 @@ pub struct MetricSeries {
     pub tags: Tags,
 }
 
-impl ByteSizeOf for MetricSeries {
+impl TypeSize for MetricSeries {
     fn allocated_bytes(&self) -> usize {
         self.name.allocated_bytes() + self.tags.allocated_bytes()
     }
@@ -89,10 +89,13 @@ impl MetricSeries {
     }
 }
 
-impl ByteSizeOf for MetricValue {
+impl TypeSize for MetricValue {
     fn allocated_bytes(&self) -> usize {
-        // TODO: implement
-        0
+        match self {
+            MetricValue::Sum(_) | MetricValue::Gauge(_) => 0,
+            MetricValue::Histogram { buckets, .. } => buckets.len() * size_of::<Bucket>(),
+            MetricValue::Summary { quantiles, .. } => quantiles.len() * size_of::<Quantile>(),
+        }
     }
 }
 
@@ -117,7 +120,7 @@ pub struct Metric {
     metadata: EventMetadata,
 }
 
-impl ByteSizeOf for Metric {
+impl TypeSize for Metric {
     fn allocated_bytes(&self) -> usize {
         self.series.allocated_bytes()
             + self.description.allocated_bytes()
