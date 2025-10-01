@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759355874343,
+  "lastUpdate": 1759355919932,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bf0d8c81d85be59a9ec255aa3e78b18705f2372a",
-          "message": "Merge pull request #2463 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.4\n\nchore(deps): bump chrono-tz from 0.10.3 to 0.10.4",
-          "timestamp": "2025-07-12T19:08:54+08:00",
-          "tree_id": "f99787774553e8ebeba6a4dc866561ddf06834ef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bf0d8c81d85be59a9ec255aa3e78b18705f2372a"
-        },
-        "date": 1752319151927,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 522,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37768.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4",
           "message": "Merge pull request #2464 from f1shl3gs/deps/chrono-tz/remove_serde_feature\n\ndeps: remove serde feature of chrono-tz",
           "timestamp": "2025-07-12T19:34:37+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39498.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99f71baf49c7a7f6f803e308bfada46f551b63c6",
+          "message": "Merge pull request #2571 from f1shl3gs/lib/typesize/init\n\nlib/typesize: init",
+          "timestamp": "2025-10-02T05:48:04+08:00",
+          "tree_id": "b58bb91dfb3fa8258f8447ffac64222d5095eb6f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/99f71baf49c7a7f6f803e308bfada46f551b63c6"
+        },
+        "date": 1759355898751,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 542,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39499.8,
             "unit": "KiB"
           }
         ]
