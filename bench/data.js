@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759354824758,
+  "lastUpdate": 1759354869670,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,70 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bf0d8c81d85be59a9ec255aa3e78b18705f2372a",
-          "message": "Merge pull request #2463 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.4\n\nchore(deps): bump chrono-tz from 0.10.3 to 0.10.4",
-          "timestamp": "2025-07-12T19:08:54+08:00",
-          "tree_id": "f99787774553e8ebeba6a4dc866561ddf06834ef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bf0d8c81d85be59a9ec255aa3e78b18705f2372a"
-        },
-        "date": 1752318720761,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 188.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 18638,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 95266,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 188240,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 126.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 12524,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 62660,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 125140,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4",
           "message": "Merge pull request #2464 from f1shl3gs/deps/chrono-tz/remove_serde_feature\n\ndeps: remove serde feature of chrono-tz",
           "timestamp": "2025-07-12T19:34:37+08:00",
@@ -13203,6 +13139,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 121790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1c7175f53f6dbc633aa7f6a00c5994a6168147d1",
+          "message": "Merge pull request #2570 from f1shl3gs/lib/resolver/remove_unnecessary_bool_key\n\nlib/resolver: remove unnecessary bool",
+          "timestamp": "2025-10-02T05:37:27+08:00",
+          "tree_id": "8648c6f796ef6d30d68ce1495ab919c734891cb7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1c7175f53f6dbc633aa7f6a00c5994a6168147d1"
+        },
+        "date": 1759354848174,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 192.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 19477,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 95770,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 199270,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 123.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 12178,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 61054,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 121620,
             "unit": "ns/op"
           }
         ]
