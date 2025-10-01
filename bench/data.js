@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759355245196,
+  "lastUpdate": 1759355322618,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3f8a437dcc8884517b8e86164b76744acada7769",
-          "message": "Merge pull request #2462 from f1shl3gs/sources/kubernetes_logs/fix_default_nodename_env\n\nsources/kubernetes_logs: fix default node_name environment",
-          "timestamp": "2025-07-11T20:13:02+08:00",
-          "tree_id": "62a0a0012c7de957e7a551a35af394d31be82e5c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f8a437dcc8884517b8e86164b76744acada7769"
-        },
-        "date": 1752236563203,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 506,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37768.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bf0d8c81d85be59a9ec255aa3e78b18705f2372a",
           "message": "Merge pull request #2463 from f1shl3gs/dependabot/cargo/chrono-tz-0.10.4\n\nchore(deps): bump chrono-tz from 0.10.3 to 0.10.4",
           "timestamp": "2025-07-12T19:08:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39501.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1c7175f53f6dbc633aa7f6a00c5994a6168147d1",
+          "message": "Merge pull request #2570 from f1shl3gs/lib/resolver/remove_unnecessary_bool_key\n\nlib/resolver: remove unnecessary bool",
+          "timestamp": "2025-10-02T05:37:27+08:00",
+          "tree_id": "8648c6f796ef6d30d68ce1495ab919c734891cb7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1c7175f53f6dbc633aa7f6a00c5994a6168147d1"
+        },
+        "date": 1759355301458,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39498.5,
             "unit": "KiB"
           }
         ]
