@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759345297714,
+  "lastUpdate": 1759345327767,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bb312dc661a3b031f307ff4b27f59c22d473f821",
-          "message": "Merge pull request #2461 from f1shl3gs/misc/remove_buf_trait\n\nmisc: remove bytes::Buf if it's not necessary",
-          "timestamp": "2025-07-11T02:22:19+08:00",
-          "tree_id": "ba68a3341e750733c93d391dfdfdb602a40f65bd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bb312dc661a3b031f307ff4b27f59c22d473f821"
-        },
-        "date": 1752172360515,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 536,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37768.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3f8a437dcc8884517b8e86164b76744acada7769",
           "message": "Merge pull request #2462 from f1shl3gs/sources/kubernetes_logs/fix_default_nodename_env\n\nsources/kubernetes_logs: fix default node_name environment",
           "timestamp": "2025-07-11T20:13:02+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 552,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39501.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8616728c027e0493db1e3295dca4f6c3e90b65a2",
+          "message": "Merge pull request #2569 from f1shl3gs/lib/resolver/fix_record_type_of_ipv6_lookup\n\nlib/resolver: fix ipv6 lookup's RecordType",
+          "timestamp": "2025-10-02T02:51:23+08:00",
+          "tree_id": "722a35137e705e935e2778f9c3d84d115501e748",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8616728c027e0493db1e3295dca4f6c3e90b65a2"
+        },
+        "date": 1759345306533,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 547,
             "unit": "s"
           },
           {
