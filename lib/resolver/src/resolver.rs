@@ -122,7 +122,7 @@ impl Resolver {
         if let Ok(addr) = name.parse::<Ipv6Addr>() {
             return Ok(Lookup {
                 name: Vec::from(name.as_bytes()),
-                typ: RecordType::A,
+                typ: RecordType::AAAA,
                 class: RecordClass::INET,
                 records: Arc::from([Record {
                     name: Vec::from(name.as_bytes()),
@@ -138,7 +138,7 @@ impl Resolver {
         if let Some(records) = self.hosts.lookup_ipv6(name) {
             return Ok(Lookup {
                 name: name.as_bytes().to_vec(),
-                typ: RecordType::A,
+                typ: RecordType::AAAA,
                 class: RecordClass::INET,
                 records: Arc::from(records),
             });
