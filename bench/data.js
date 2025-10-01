@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759355434779,
+  "lastUpdate": 1759355450776,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4",
-          "message": "Merge pull request #2464 from f1shl3gs/deps/chrono-tz/remove_serde_feature\n\ndeps: remove serde feature of chrono-tz",
-          "timestamp": "2025-07-12T19:34:37+08:00",
-          "tree_id": "15e01a0c6a12937742577e807bc36e14be870845",
-          "url": "https://github.com/f1shl3gs/vertex/commit/94996f2ac7c8c0c3a00d85cf4faa8fc7f66e55c4"
-        },
-        "date": 1752320216455,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.371,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 162.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 296.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 659.77,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "76280666f998877a0811bae3dd3fc7179d3ca426",
           "message": "Merge pull request #2465 from f1shl3gs/dependabot/cargo/memmap2-0.9.7\n\nchore(deps): bump memmap2 from 0.9.5 to 0.9.7",
           "timestamp": "2025-07-13T20:12:24+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 675.85,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99f71baf49c7a7f6f803e308bfada46f551b63c6",
+          "message": "Merge pull request #2571 from f1shl3gs/lib/typesize/init\n\nlib/typesize: init",
+          "timestamp": "2025-10-02T05:48:04+08:00",
+          "tree_id": "b58bb91dfb3fa8258f8447ffac64222d5095eb6f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/99f71baf49c7a7f6f803e308bfada46f551b63c6"
+        },
+        "date": 1759355429478,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.359,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 170.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 303.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 660.8,
             "unit": "ns/op"
           }
         ]
