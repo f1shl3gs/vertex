@@ -82,5 +82,8 @@ ignore$
 ^\.github/actions/spelling/
 ^\Q.github/workflows/spelling.yml\E$
 
+# Embedded files
+^src\/extensions\/pprof\/jeprof.in$
+
 # Tests
 ^tests\/node\/.*
