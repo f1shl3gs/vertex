@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::net::{Ipv4Addr, Ipv6Addr};
 
 /// The type of the resource record
