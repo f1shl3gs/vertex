@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759515773878,
+  "lastUpdate": 1759515810445,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "76280666f998877a0811bae3dd3fc7179d3ca426",
-          "message": "Merge pull request #2465 from f1shl3gs/dependabot/cargo/memmap2-0.9.7\n\nchore(deps): bump memmap2 from 0.9.5 to 0.9.7",
-          "timestamp": "2025-07-13T20:12:24+08:00",
-          "tree_id": "3069a7598f13ea541e38417e085cd49e82b9bb78",
-          "url": "https://github.com/f1shl3gs/vertex/commit/76280666f998877a0811bae3dd3fc7179d3ca426"
-        },
-        "date": 1752408896028,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.364,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 319.05,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 669.44,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "baf9deeea5e332eaadbede5a6d9632984abe4753",
           "message": "Merge pull request #2466 from f1shl3gs/dependabot/cargo/crc32fast-1.5.0\n\nchore(deps): bump crc32fast from 1.4.2 to 1.5.0",
           "timestamp": "2025-07-13T23:24:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 660.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9ec1ab84947510bf2928e2452f044625668527c3",
+          "message": "Merge pull request #2573 from f1shl3gs/lib/resolver/remove_unused_lint\n\nlib/resolver: remove unused lint",
+          "timestamp": "2025-10-04T02:20:17+08:00",
+          "tree_id": "253421d74cdd5850bae1f04c8e7cbbff31536793",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9ec1ab84947510bf2928e2452f044625668527c3"
+        },
+        "date": 1759515789159,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 322.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 682.56,
             "unit": "ns/op"
           }
         ]
