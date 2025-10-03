@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759515753662,
+  "lastUpdate": 1759515773878,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "76280666f998877a0811bae3dd3fc7179d3ca426",
-          "message": "Merge pull request #2465 from f1shl3gs/dependabot/cargo/memmap2-0.9.7\n\nchore(deps): bump memmap2 from 0.9.5 to 0.9.7",
-          "timestamp": "2025-07-13T20:12:24+08:00",
-          "tree_id": "3069a7598f13ea541e38417e085cd49e82b9bb78",
-          "url": "https://github.com/f1shl3gs/vertex/commit/76280666f998877a0811bae3dd3fc7179d3ca426"
-        },
-        "date": 1752408873945,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.391,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.943,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 167.58,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9ec1ab84947510bf2928e2452f044625668527c3",
+          "message": "Merge pull request #2573 from f1shl3gs/lib/resolver/remove_unused_lint\n\nlib/resolver: remove unused lint",
+          "timestamp": "2025-10-04T02:20:17+08:00",
+          "tree_id": "253421d74cdd5850bae1f04c8e7cbbff31536793",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9ec1ab84947510bf2928e2452f044625668527c3"
+        },
+        "date": 1759515752744,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.333,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.268,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.34,
             "unit": "ns/op"
           }
         ]
