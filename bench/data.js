@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759516291549,
+  "lastUpdate": 1759573778940,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "baf9deeea5e332eaadbede5a6d9632984abe4753",
-          "message": "Merge pull request #2466 from f1shl3gs/dependabot/cargo/crc32fast-1.5.0\n\nchore(deps): bump crc32fast from 1.4.2 to 1.5.0",
-          "timestamp": "2025-07-13T23:24:39+08:00",
-          "tree_id": "c337329e3a057ef366663584602f7b669c175091",
-          "url": "https://github.com/f1shl3gs/vertex/commit/baf9deeea5e332eaadbede5a6d9632984abe4753"
-        },
-        "date": 1752420391601,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 494840,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 503960,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a37baabf1990b81f329498de1353d174ca17925",
+          "message": "Merge pull request #2576 from f1shl3gs/dependabot/cargo/parking_lot-0.12.5\n\nchore(deps): bump parking_lot from 0.12.4 to 0.12.5",
+          "timestamp": "2025-10-04T18:27:21+08:00",
+          "tree_id": "b0c918065f2bf0d513671035c39044aa355754ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a37baabf1990b81f329498de1353d174ca17925"
+        },
+        "date": 1759573757499,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 488800,
             "unit": "ns/op"
           }
         ]
