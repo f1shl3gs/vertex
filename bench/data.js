@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759573782475,
+  "lastUpdate": 1759573825408,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "baf9deeea5e332eaadbede5a6d9632984abe4753",
-          "message": "Merge pull request #2466 from f1shl3gs/dependabot/cargo/crc32fast-1.5.0\n\nchore(deps): bump crc32fast from 1.4.2 to 1.5.0",
-          "timestamp": "2025-07-13T23:24:39+08:00",
-          "tree_id": "c337329e3a057ef366663584602f7b669c175091",
-          "url": "https://github.com/f1shl3gs/vertex/commit/baf9deeea5e332eaadbede5a6d9632984abe4753"
-        },
-        "date": 1752420874882,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 516,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37783.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "66b2d8e9b35af11cd1b187821b30ab82bf4e10cb",
           "message": "Merge pull request #2467 from f1shl3gs/sources/kmsg/fix_checkpoint_loading\n\nsources/kmsg: fix checkpoint loading",
           "timestamp": "2025-07-16T18:31:02+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39499.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4a6871af4cfd0ed78f785e797c6a9b79553615e5",
+          "message": "Merge pull request #2575 from f1shl3gs/ci/remove_spelling_check\n\nci: remove spelling check",
+          "timestamp": "2025-10-04T18:19:07+08:00",
+          "tree_id": "41303fa84775cd4d168f54ce45646b05164a2cb9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4a6871af4cfd0ed78f785e797c6a9b79553615e5"
+        },
+        "date": 1759573803918,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
             "unit": "s"
           },
           {
