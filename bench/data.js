@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759664624139,
+  "lastUpdate": 1759665008973,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "66b2d8e9b35af11cd1b187821b30ab82bf4e10cb",
-          "message": "Merge pull request #2467 from f1shl3gs/sources/kmsg/fix_checkpoint_loading\n\nsources/kmsg: fix checkpoint loading",
-          "timestamp": "2025-07-16T18:31:02+08:00",
-          "tree_id": "e8e09e3c1d5a1b47192295e2f8266bf039a2fb43",
-          "url": "https://github.com/f1shl3gs/vertex/commit/66b2d8e9b35af11cd1b187821b30ab82bf4e10cb"
-        },
-        "date": 1752662428923,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14982000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 653970,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.981,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cd50e4e3770d87aa8ca8a28092e07c8e1e5daa70",
           "message": "Merge pull request #2468 from f1shl3gs/dependabot/cargo/serde_json-1.0.141\n\nchore(deps): bump serde_json from 1.0.140 to 1.0.141",
           "timestamp": "2025-07-20T18:21:39+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.527,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "73a83526ec0f399610f240185feb1f5fb5d07f53",
+          "message": "Merge pull request #2577 from f1shl3gs/dependabot/cargo/flate2-1.1.3\n\nchore(deps): bump flate2 from 1.1.2 to 1.1.3",
+          "timestamp": "2025-10-05T19:40:14+08:00",
+          "tree_id": "bbed12023016f256399d58269feb198cc365fa7b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/73a83526ec0f399610f240185feb1f5fb5d07f53"
+        },
+        "date": 1759664987041,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15880000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 635620,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.455,
             "unit": "ns/op"
           }
         ]
