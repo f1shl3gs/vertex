@@ -200,6 +200,7 @@ sources-node = []
 sources-ntp = ["dep:ntp"]
 sources-nvidia = ["tokio/process"]
 sources-ping = ["dep:socket2", "dep:parking_lot"]
+sources-podman = ["dep:hyper-unix"]
 sources-prometheus_pushgateway = ["dep:base64", "dep:prometheus"]
 sources-prometheus_scrape = ["dep:prometheus"]
 sources-prometheus_remote_write = ["dep:snap", "dep:prometheus"]
@@ -257,6 +258,7 @@ sources = [
     "sources-ntp",
     "sources-nvidia",
     "sources-ping",
+    "sources-podman",
     "sources-prometheus_pushgateway",
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",

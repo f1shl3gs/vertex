@@ -76,6 +76,8 @@ mod ntp;
 mod nvidia;
 #[cfg(feature = "sources-ping")]
 mod ping;
+#[cfg(feature = "sources-podman")]
+mod podman;
 #[cfg(feature = "sources-prometheus_pushgateway")]
 mod prometheus_pushgateway;
 #[cfg(feature = "sources-prometheus_remote_write")]
