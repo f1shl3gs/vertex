@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759829926953,
+  "lastUpdate": 1759829937672,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ad8a8110a7ed7e7f3a32f6fc3f25ad885fab5173",
-          "message": "Merge pull request #2469 from f1shl3gs/dependabot/cargo/rand-0.9.2\n\nchore(deps): bump rand from 0.9.1 to 0.9.2",
-          "timestamp": "2025-07-21T13:07:09+08:00",
-          "tree_id": "df40b990ca7679889036435f0738c4c3b7ed6a82",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ad8a8110a7ed7e7f3a32f6fc3f25ad885fab5173"
-        },
-        "date": 1753074620693,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.336,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.092,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 186.5,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d07cf33e4564271419a052b038a36d6f3889a773",
+          "message": "Merge pull request #2579 from f1shl3gs/dependabot/cargo/windows-0.62.2\n\nchore(deps): bump windows from 0.62.1 to 0.62.2",
+          "timestamp": "2025-10-07T17:36:10+08:00",
+          "tree_id": "7c22d2ff37571a6b499c1b7bf951371542eba7c0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d07cf33e4564271419a052b038a36d6f3889a773"
+        },
+        "date": 1759829915835,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.324,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 175.12,
             "unit": "ns/op"
           }
         ]
