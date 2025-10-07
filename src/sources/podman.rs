@@ -93,7 +93,7 @@ async fn run(
                 }
             }
             Ok(Err(err)) => {
-                warn!(message = "scrape metrics failed", ?err, ?elapsed);
+                warn!(message = "scrape metrics failed", %err, ?elapsed);
             }
             Err(_) => {
                 // timeout
@@ -112,10 +112,10 @@ async fn gather(client: &Client) -> Result<Vec<Metric>, Error> {
 
     let stats = client.stats(&ids).await?;
     let mut metrics = Vec::with_capacity(stats.len() * 16);
-    for stat in stats {
+    for (container, stat) in containers.into_iter().zip(stats.into_iter()) {
         let tags = tags!(
             "id" => stat.container_id.clone(),
-            // "image" =>
+            "image" => container.image.clone(),
             "name" => stat.name.clone(),
         );
 
@@ -180,7 +180,7 @@ async fn gather(client: &Client) -> Result<Vec<Metric>, Error> {
                     tags!(
                         "core" => core,
                         "id" => stat.container_id.clone(),
-                        // "image" =>
+                        "image" => container.image.clone(),
                         "name" => stat.name.clone(),
                     ),
                 ));
@@ -191,7 +191,7 @@ async fn gather(client: &Client) -> Result<Vec<Metric>, Error> {
         for (interface, network) in stat.network {
             let tags = tags!(
                 "id" => stat.container_id.clone(),
-                // "image" =>
+                "image" => container.image.clone(),
                 "name" => stat.name.clone(),
                 "interface" => interface,
             );
@@ -243,7 +243,7 @@ async fn gather(client: &Client) -> Result<Vec<Metric>, Error> {
                     "podman_container_network_sent_packets",
                     "Network sent packets",
                     network.tx_packets,
-                    tags.clone(),
+                    tags,
                 ),
             ]);
         }
@@ -280,6 +280,7 @@ impl From<hyper_util::client::legacy::Error> for Error {
 #[serde(rename_all = "PascalCase")]
 struct Container {
     id: String,
+    image: String,
 }
 
 #[derive(Debug, Deserialize)]
