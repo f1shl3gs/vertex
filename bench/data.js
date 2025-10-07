@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759864256733,
+  "lastUpdate": 1759864257628,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3d4cd89d15e04d7120ad1f1e58ac0cbfcfaa4c3b",
-          "message": "Merge pull request #2470 from f1shl3gs/dependabot/cargo/hyper-util-0.1.16\n\nchore(deps): bump hyper-util from 0.1.15 to 0.1.16",
-          "timestamp": "2025-07-23T07:31:37+08:00",
-          "tree_id": "da6fe668e16bc8bf859966933bac8f8fe04ac912",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3d4cd89d15e04d7120ad1f1e58ac0cbfcfaa4c3b"
-        },
-        "date": 1753227207216,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 500350,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 493420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc284ceb13fc94f8b085c2a6fa91476754589c79",
+          "message": "Merge pull request #2580 from f1shl3gs/sources/podman/init\n\nsources/podman: init",
+          "timestamp": "2025-10-08T03:08:28+08:00",
+          "tree_id": "0bcc67538ae82c9e5cd4e0755e544ec4b1c1d1b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cc284ceb13fc94f8b085c2a6fa91476754589c79"
+        },
+        "date": 1759864235277,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 490260,
             "unit": "ns/op"
           }
         ]
