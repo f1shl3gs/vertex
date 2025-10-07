@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1759830423234,
+  "lastUpdate": 1759864256733,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3d4cd89d15e04d7120ad1f1e58ac0cbfcfaa4c3b",
-          "message": "Merge pull request #2470 from f1shl3gs/dependabot/cargo/hyper-util-0.1.16\n\nchore(deps): bump hyper-util from 0.1.15 to 0.1.16",
-          "timestamp": "2025-07-23T07:31:37+08:00",
-          "tree_id": "da6fe668e16bc8bf859966933bac8f8fe04ac912",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3d4cd89d15e04d7120ad1f1e58ac0cbfcfaa4c3b"
-        },
-        "date": 1753227223797,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.372,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.042,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 175.12,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc284ceb13fc94f8b085c2a6fa91476754589c79",
+          "message": "Merge pull request #2580 from f1shl3gs/sources/podman/init\n\nsources/podman: init",
+          "timestamp": "2025-10-08T03:08:28+08:00",
+          "tree_id": "0bcc67538ae82c9e5cd4e0755e544ec4b1c1d1b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cc284ceb13fc94f8b085c2a6fa91476754589c79"
+        },
+        "date": 1759864235300,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.339,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.661,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.72,
             "unit": "ns/op"
           }
         ]
