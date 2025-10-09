@@ -50,7 +50,7 @@ indexmap = { version = "2.11.4", default-features = false, features = ["serde"] 
 inventory = { version = "0.3.21", default-features = false }
 ipnet = { version = "2.11.0", default-features = false }
 listenfd = { version = "1.0.2", default-features = false }
-libc = { version = "0.2.176", default-features = false }
+libc = { version = "0.2.177", default-features = false }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.7.6", default-features = false }
 metrics = { path = "../metrics" }
