@@ -4771,7 +4771,6 @@ name = "typesize"
 version = "0.1.0"
 dependencies = [
  "bytes",
- "value",
 ]
 
 [[package]]
@@ -4890,6 +4889,7 @@ dependencies = [
  "quickcheck",
  "serde",
  "serde_json",
+ "typesize",
 ]
 
 [[package]]

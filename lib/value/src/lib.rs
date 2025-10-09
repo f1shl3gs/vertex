@@ -82,6 +82,18 @@ impl Hash for Value {
     }
 }
 
+impl typesize::TypeSize for Value {
+    #[inline]
+    fn allocated_bytes(&self) -> usize {
+        match self {
+            Self::Array(a) => a.iter().fold(0, |acc, item| acc + item.size_of()),
+            Self::Bytes(b) => b.allocated_bytes(),
+            Self::Object(o) => o.allocated_bytes(),
+            _ => 0,
+        }
+    }
+}
+
 impl Value {
     /// Returns a reference to a field value specified by a path iter.
     pub fn get<'a>(&self, path: impl ValuePath<'a>) -> Option<&Self> {

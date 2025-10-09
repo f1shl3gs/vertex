@@ -94,15 +94,3 @@ impl TypeSize for bytes::BytesMut {
         self.len()
     }
 }
-
-impl TypeSize for value::Value {
-    #[inline]
-    fn allocated_bytes(&self) -> usize {
-        match self {
-            Self::Array(a) => a.iter().fold(0, |acc, item| acc + item.size_of()),
-            Self::Bytes(b) => b.allocated_bytes(),
-            Self::Object(o) => o.allocated_bytes(),
-            _ => 0,
-        }
-    }
-}
