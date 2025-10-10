@@ -22,7 +22,7 @@ tokio-util = { version = "0.7.16", default-features = false, features = ["codec"
 tracing = { version = "0.1.41", default-features = false }
 
 # TLS
-pem = { version = "3.0.5", default-features = false, features = ["std"] }
+pem = { version = "3.0.6", default-features = false, features = ["std"] }
 rustls = { version = "0.23.32", default-features = false, features = ["ring"] }
 rustls-native-certs = { version = "0.8.1", default-features = false }
 
