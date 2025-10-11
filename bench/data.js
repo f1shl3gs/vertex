@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760187867373,
+  "lastUpdate": 1760187868688,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5815abe2876ed128cb47d78e8342a72d4682b622",
-          "message": "Merge pull request #2472 from f1shl3gs/dependabot/cargo/tokio-1.47.0\n\nchore(deps): bump tokio from 1.46.1 to 1.47.0",
-          "timestamp": "2025-07-26T23:24:18+08:00",
-          "tree_id": "e0dcb56942347de66e01da64dd0116579b4df0ab",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5815abe2876ed128cb47d78e8342a72d4682b622"
-        },
-        "date": 1753543577818,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.324,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.231,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 170.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.93,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dbae02d8228a3de3a087fbfaf830c76195cb92e3",
+          "message": "Merge pull request #2583 from f1shl3gs/dependabot/cargo/pem-3.0.6\n\nchore(deps): bump pem from 3.0.5 to 3.0.6",
+          "timestamp": "2025-10-11T21:01:54+08:00",
+          "tree_id": "fef78aead8c153461a5e0aa592fedc67e786685b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dbae02d8228a3de3a087fbfaf830c76195cb92e3"
+        },
+        "date": 1760187846893,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.278,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 175.56,
             "unit": "ns/op"
           }
         ]
