@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760189955220,
+  "lastUpdate": 1760189961200,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e5efdd342d3e2e922f2d98effde785b7ec4c84dd",
-          "message": "Merge pull request #2473 from f1shl3gs/dependabot/cargo/rustls-0.23.30\n\nchore(deps): bump rustls from 0.23.29 to 0.23.30",
-          "timestamp": "2025-07-28T13:31:46+08:00",
-          "tree_id": "d5e88c65be04dc31902d657968ca193176bf4964",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e5efdd342d3e2e922f2d98effde785b7ec4c84dd"
-        },
-        "date": 1753680839231,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.35,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.138,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.74,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2823b63de668ed2fc5a61b885a659ea535b0c8ab",
+          "message": "Merge pull request #2584 from f1shl3gs/deps/update_humanize\n\ndep: update humanize to latest version",
+          "timestamp": "2025-10-11T21:36:48+08:00",
+          "tree_id": "448fc7d98d98ec7ce8d3ed94b6b582b2164134a0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2823b63de668ed2fc5a61b885a659ea535b0c8ab"
+        },
+        "date": 1760189939135,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.317,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.661,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176,
             "unit": "ns/op"
           }
         ]
