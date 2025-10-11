@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760190413654,
+  "lastUpdate": 1760190445088,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7",
-          "message": "Merge pull request #2474 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.20\n\nchore(deps): bump dyn-clone from 1.0.19 to 1.0.20",
-          "timestamp": "2025-07-28T13:32:21+08:00",
-          "tree_id": "a772f3cece58f0967c6310dc41534ec952239ce7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b68658b70ae469ffe4f1f7130c5e69ce7e4af1c7"
-        },
-        "date": 1753681338943,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 514,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37768.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e4c8366131c25fc4b9d0557da90554b768fee022",
           "message": "Merge pull request #2476 from f1shl3gs/dependabot/cargo/tonic-825aa02f21\n\nchore(deps): bump tonic-health from 0.13.1 to 0.14.0 in the tonic group",
           "timestamp": "2025-07-29T13:27:29+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39599.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2823b63de668ed2fc5a61b885a659ea535b0c8ab",
+          "message": "Merge pull request #2584 from f1shl3gs/deps/update_humanize\n\ndep: update humanize to latest version",
+          "timestamp": "2025-10-11T21:36:48+08:00",
+          "tree_id": "448fc7d98d98ec7ce8d3ed94b6b582b2164134a0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2823b63de668ed2fc5a61b885a659ea535b0c8ab"
+        },
+        "date": 1760190423784,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 542,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39597.9,
             "unit": "KiB"
           }
         ]
