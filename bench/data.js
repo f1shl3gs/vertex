@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760310935127,
+  "lastUpdate": 1760310961102,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e26513472ef596dab24a0f561349ab084c5891ce",
-          "message": "Merge pull request #2478 from f1shl3gs/sources/dnstap/refine_fstrm\n\nsources/dnstamp: move fstrm to an independent file",
-          "timestamp": "2025-07-31T22:53:23+08:00",
-          "tree_id": "1cce23261c3e18f50e0ebda6fd734202af5ddc83",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e26513472ef596dab24a0f561349ab084c5891ce"
-        },
-        "date": 1753973751710,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.065,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.78,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 338.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 692.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1a9ce143418ef21ff0fa6849e5893c988b24aabd",
           "message": "Merge pull request #2479 from f1shl3gs/dependabot/cargo/serde_json-1.0.142\n\nchore(deps): bump serde_json from 1.0.141 to 1.0.142",
           "timestamp": "2025-08-01T16:03:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 678.47,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "09932c6915d4cf0ad3bcfe7965df76badda29a26",
+          "message": "Merge pull request #2587 from f1shl3gs/lib/vtl/remove_serde_derive_for_target\n\nlib/vtl: remove serde from `TargetValue`",
+          "timestamp": "2025-10-13T07:13:07+08:00",
+          "tree_id": "558425e3bd3a25b1fd28954e21e4d31e5119d37b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/09932c6915d4cf0ad3bcfe7965df76badda29a26"
+        },
+        "date": 1760310939135,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.87,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 325.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 719.96,
             "unit": "ns/op"
           }
         ]
