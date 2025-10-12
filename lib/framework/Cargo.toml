@@ -39,7 +39,7 @@ flate2 = { version = "1.1.4" }
 futures = { version = "0.3.31", default-features = false, features = ["async-await"] }
 glob = { version = "0.3.3", default-features = false }
 headers = { version = "0.4.1", default-features = false }
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "0a339868275ad042c53e8802fc5b4564d216cce9" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "4b4d047d031337cc77a7d3637f9c6215098f9949" }
 hostname = { path = "../hostname" }
 http = { version = "1.3.1", default-features = false }
 http-body-util = { version = "0.1.3", default-features = false }
