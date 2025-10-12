@@ -40,8 +40,7 @@ impl Vtl {
         };
         match program.run(&mut target) {
             Ok(_result) => {
-                let output = serde_json::to_string_pretty(&target).expect("must success");
-                println!("{output}");
+                println!("{target:#?}");
             }
             Err(err) => {
                 let output = Diagnostic::new(script).snippets(err);
