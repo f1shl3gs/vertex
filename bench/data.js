@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760277953863,
+  "lastUpdate": 1760278035576,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e26513472ef596dab24a0f561349ab084c5891ce",
-          "message": "Merge pull request #2478 from f1shl3gs/sources/dnstap/refine_fstrm\n\nsources/dnstamp: move fstrm to an independent file",
-          "timestamp": "2025-07-31T22:53:23+08:00",
-          "tree_id": "1cce23261c3e18f50e0ebda6fd734202af5ddc83",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e26513472ef596dab24a0f561349ab084c5891ce"
-        },
-        "date": 1753974195110,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 517,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37763.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1a9ce143418ef21ff0fa6849e5893c988b24aabd",
           "message": "Merge pull request #2479 from f1shl3gs/dependabot/cargo/serde_json-1.0.142\n\nchore(deps): bump serde_json from 1.0.141 to 1.0.142",
           "timestamp": "2025-08-01T16:03:39+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39597.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e13ea971ecd3869d1cadf79a3bee2cd2364da3e5",
+          "message": "Merge pull request #2586 from f1shl3gs/deps/update_humanize\n\ndeps/humanize: update humanize to latest commit, which remove `alloc` feature of serde_core",
+          "timestamp": "2025-10-12T21:56:03+08:00",
+          "tree_id": "80d690d18381cf3ba5c94b12f435b08abf42e2c2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e13ea971ecd3869d1cadf79a3bee2cd2364da3e5"
+        },
+        "date": 1760278013830,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39601.9,
             "unit": "KiB"
           }
         ]
