@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760310934115,
+  "lastUpdate": 1760310935127,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e26513472ef596dab24a0f561349ab084c5891ce",
-          "message": "Merge pull request #2478 from f1shl3gs/sources/dnstap/refine_fstrm\n\nsources/dnstamp: move fstrm to an independent file",
-          "timestamp": "2025-07-31T22:53:23+08:00",
-          "tree_id": "1cce23261c3e18f50e0ebda6fd734202af5ddc83",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e26513472ef596dab24a0f561349ab084c5891ce"
-        },
-        "date": 1753973719944,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 487030,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 495410,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "09932c6915d4cf0ad3bcfe7965df76badda29a26",
+          "message": "Merge pull request #2587 from f1shl3gs/lib/vtl/remove_serde_derive_for_target\n\nlib/vtl: remove serde from `TargetValue`",
+          "timestamp": "2025-10-13T07:13:07+08:00",
+          "tree_id": "558425e3bd3a25b1fd28954e21e4d31e5119d37b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/09932c6915d4cf0ad3bcfe7965df76badda29a26"
+        },
+        "date": 1760310912741,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 495320,
             "unit": "ns/op"
           }
         ]
