@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760275931026,
+  "lastUpdate": 1760276010019,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f246b9b61e70e1d421549a203cd33a77b86651a0",
-          "message": "Merge pull request #2477 from f1shl3gs/dependabot/cargo/rustls-0.23.31\n\nchore(deps): bump rustls from 0.23.30 to 0.23.31",
-          "timestamp": "2025-07-30T11:24:10+08:00",
-          "tree_id": "274a77156ba93b41a10477b8d8dd1a756f11003a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f246b9b61e70e1d421549a203cd33a77b86651a0"
-        },
-        "date": 1753846455958,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 522,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37763.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e26513472ef596dab24a0f561349ab084c5891ce",
           "message": "Merge pull request #2478 from f1shl3gs/sources/dnstap/refine_fstrm\n\nsources/dnstamp: move fstrm to an independent file",
           "timestamp": "2025-07-31T22:53:23+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39596.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "3188a05dc38a0a4b962cb856da8a4361cc668f6d",
+          "message": "switch serde to serde_core",
+          "timestamp": "2025-10-12T21:21:59+08:00",
+          "tree_id": "00034d5b3844d0b77d18223a7c792dd44eaa4edf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3188a05dc38a0a4b962cb856da8a4361cc668f6d"
+        },
+        "date": 1760275987770,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39597.6,
             "unit": "KiB"
           }
         ]
