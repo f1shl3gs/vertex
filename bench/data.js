@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760277583215,
+  "lastUpdate": 1760277953863,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f246b9b61e70e1d421549a203cd33a77b86651a0",
-          "message": "Merge pull request #2477 from f1shl3gs/dependabot/cargo/rustls-0.23.31\n\nchore(deps): bump rustls from 0.23.30 to 0.23.31",
-          "timestamp": "2025-07-30T11:24:10+08:00",
-          "tree_id": "274a77156ba93b41a10477b8d8dd1a756f11003a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f246b9b61e70e1d421549a203cd33a77b86651a0"
-        },
-        "date": 1753846396288,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15162000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 603680,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e26513472ef596dab24a0f561349ab084c5891ce",
           "message": "Merge pull request #2478 from f1shl3gs/sources/dnstap/refine_fstrm\n\nsources/dnstamp: move fstrm to an independent file",
           "timestamp": "2025-07-31T22:53:23+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.446,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e13ea971ecd3869d1cadf79a3bee2cd2364da3e5",
+          "message": "Merge pull request #2586 from f1shl3gs/deps/update_humanize\n\ndeps/humanize: update humanize to latest commit, which remove `alloc` feature of serde_core",
+          "timestamp": "2025-10-12T21:56:03+08:00",
+          "tree_id": "80d690d18381cf3ba5c94b12f435b08abf42e2c2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e13ea971ecd3869d1cadf79a3bee2cd2364da3e5"
+        },
+        "date": 1760277931890,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14793000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 613880,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.891,
             "unit": "ns/op"
           }
         ]
