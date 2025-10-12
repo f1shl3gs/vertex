@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display, Formatter, Write};
 use std::str::FromStr;
 
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde_core::{Deserialize, Deserializer, Serialize, Serializer};
 
 use super::{BorrowedSegment, PathParseError, PathPrefix, ValuePath};
 use super::{parse_target_path, parse_value_path};
@@ -188,7 +188,7 @@ impl<'de> Deserialize<'de> for OwnedValuePath {
         D: Deserializer<'de>,
     {
         struct PathVisitor;
-        impl serde::de::Visitor<'_> for PathVisitor {
+        impl serde_core::de::Visitor<'_> for PathVisitor {
             type Value = OwnedValuePath;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
@@ -197,11 +197,11 @@ impl<'de> Deserialize<'de> for OwnedValuePath {
 
             fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde_core::de::Error,
             {
                 parse_value_path(v).map_err(|_err| {
-                    serde::de::Error::invalid_value(
-                        serde::de::Unexpected::Str(v),
+                    serde_core::de::Error::invalid_value(
+                        serde_core::de::Unexpected::Str(v),
                         &"valid event ValuePath",
                     )
                 })
@@ -209,7 +209,7 @@ impl<'de> Deserialize<'de> for OwnedValuePath {
 
             fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
             where
-                E: serde::de::Error,
+                E: serde_core::de::Error,
             {
                 self.visit_str(&v)
             }
@@ -220,12 +220,35 @@ impl<'de> Deserialize<'de> for OwnedValuePath {
 }
 
 /// An owned path that contains a target (pointing to either an Event or Metadata)
-#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-#[serde(try_from = "String", into = "String")]
+#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 #[cfg_attr(test, derive(proptest_derive::Arbitrary))]
 pub struct OwnedTargetPath {
     pub prefix: PathPrefix,
     pub path: OwnedValuePath,
+}
+
+impl<'de> Deserialize<'de> for OwnedTargetPath {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let src: &str = Deserialize::deserialize(deserializer)?;
+        parse_target_path(src).map_err(|err| serde_core::de::Error::custom(err.to_string()))
+    }
+}
+
+impl Serialize for OwnedTargetPath {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let s = match self.prefix {
+            PathPrefix::Event => format!(".{}", self.path),
+            PathPrefix::Metadata => format!("%{}", self.path),
+        };
+
+        serializer.serialize_str(&s)
+    }
 }
 
 impl OwnedTargetPath {

@@ -4887,7 +4887,7 @@ dependencies = [
  "proptest",
  "proptest-derive",
  "quickcheck",
- "serde",
+ "serde_core",
  "serde_json",
  "typesize",
 ]

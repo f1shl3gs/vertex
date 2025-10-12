@@ -4,8 +4,8 @@ use std::fmt::Formatter;
 
 use bytes::Bytes;
 use chrono::{DateTime, SecondsFormat, Utc};
-use serde::de::{Error, MapAccess, SeqAccess};
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde_core::de::{self, Error, MapAccess, SeqAccess};
+use serde_core::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::Value;
 
@@ -67,7 +67,7 @@ impl Serialize for Value {
             Value::Boolean(b) => serializer.serialize_bool(*b),
             Value::Timestamp(ts) => serializer.serialize_str(&timestamp_to_string(ts)),
             Value::Object(map) => {
-                use serde::ser::SerializeMap;
+                use serde_core::ser::SerializeMap;
                 let mut s = serializer.serialize_map(Some(map.len()))?;
                 for (key, value) in map {
                     s.serialize_entry(key, value)?;
@@ -87,7 +87,7 @@ impl<'de> Deserialize<'de> for Value {
     {
         struct ValueVisitor;
 
-        impl<'de> serde::de::Visitor<'de> for ValueVisitor {
+        impl<'de> de::Visitor<'de> for ValueVisitor {
             type Value = Value;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
