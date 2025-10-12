@@ -20,7 +20,7 @@ mod type_def;
 mod unary;
 
 use std::error::Error;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
 use dyn_clone::{DynClone, clone_trait_object};
 use state::TypeState;
@@ -49,7 +49,7 @@ pub struct Program {
 }
 
 impl Program {
-    pub fn run<T: Target>(&self, target: &mut T) -> Result<Value, ExpressionError> {
+    pub fn run<T: Debug + Target>(&self, target: &mut T) -> Result<Value, ExpressionError> {
         // TODO: find a better way to handle this
         let mut variables = vec![Value::Null; self.type_state.variables.len()];
 

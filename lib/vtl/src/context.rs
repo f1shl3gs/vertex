@@ -1,6 +1,5 @@
 use std::fmt::{Debug, Display, Formatter};
 
-use serde::Serialize;
 use value::path::{PathPrefix, TargetPath};
 use value::{OwnedTargetPath, Value};
 
@@ -48,7 +47,7 @@ pub trait Target: Debug {
     fn remove(&mut self, path: &OwnedTargetPath, compact: bool) -> Result<Option<Value>, Error>;
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug)]
 pub struct TargetValue {
     pub metadata: Value,
     pub value: Value,
