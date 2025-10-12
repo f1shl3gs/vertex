@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760275477547,
+  "lastUpdate": 1760275495865,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e4c8366131c25fc4b9d0557da90554b768fee022",
-          "message": "Merge pull request #2476 from f1shl3gs/dependabot/cargo/tonic-825aa02f21\n\nchore(deps): bump tonic-health from 0.13.1 to 0.14.0 in the tonic group",
-          "timestamp": "2025-07-29T13:27:29+08:00",
-          "tree_id": "cc53a57df3d4d1473dd4267f33e87f7cfdb54f3a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e4c8366131c25fc4b9d0557da90554b768fee022"
-        },
-        "date": 1753766988304,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.109,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.45,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 351.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 698.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f246b9b61e70e1d421549a203cd33a77b86651a0",
           "message": "Merge pull request #2477 from f1shl3gs/dependabot/cargo/rustls-0.23.31\n\nchore(deps): bump rustls from 0.23.30 to 0.23.31",
           "timestamp": "2025-07-30T11:24:10+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 684.85,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "3188a05dc38a0a4b962cb856da8a4361cc668f6d",
+          "message": "switch serde to serde_core",
+          "timestamp": "2025-10-12T21:21:59+08:00",
+          "tree_id": "00034d5b3844d0b77d18223a7c792dd44eaa4edf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3188a05dc38a0a4b962cb856da8a4361cc668f6d"
+        },
+        "date": 1760275474135,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.896,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 325.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 693.53,
             "unit": "ns/op"
           }
         ]
