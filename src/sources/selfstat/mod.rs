@@ -16,6 +16,7 @@ use framework::config::{OutputType, SourceConfig, SourceContext, default_interva
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 
+#[cfg(target_os = "linux")]
 fn default_proc_path() -> PathBuf {
     PathBuf::from("/proc")
 }
@@ -23,6 +24,7 @@ fn default_proc_path() -> PathBuf {
 #[configurable_component(source, name = "selfstat")]
 struct Config {
     /// The path of `/proc`
+    #[cfg(target_os = "linux")]
     #[serde(default = "default_proc_path")]
     proc_path: PathBuf,
 
@@ -97,6 +99,7 @@ async fn run(
 async fn gather(root: &Path) -> Result<Vec<Metric>, std::io::Error> {
     #[cfg(target_os = "linux")]
     let mut metrics = linux::proc_info(root);
+
     #[cfg(not(target_os = "linux"))]
     let mut metrics = vec![];
 
