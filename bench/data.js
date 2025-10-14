@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760467259724,
+  "lastUpdate": 1760467261078,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "39d58ba7b8e65bfad9bf3a0e39e473bec4e3a76f",
-          "message": "Merge pull request #2484 from f1shl3gs/dependabot/cargo/quick-xml-0.38.1\n\nchore(deps): bump quick-xml from 0.38.0 to 0.38.1",
-          "timestamp": "2025-08-05T00:18:37+08:00",
-          "tree_id": "3ebbcca419561a57afcd0d0965d850a11cf0e049",
-          "url": "https://github.com/f1shl3gs/vertex/commit/39d58ba7b8e65bfad9bf3a0e39e473bec4e3a76f"
-        },
-        "date": 1754324449640,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.34,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.539,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 162.89,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.04,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8f474181ba55d3a627e3eefcf90e2092535c9347",
+          "message": "Merge pull request #2594 from f1shl3gs/sources/selfstat/disable_proc_path_if_not_linux\n\nsources/selfstat: add target_os attr for `proc_path`",
+          "timestamp": "2025-10-15T02:38:36+08:00",
+          "tree_id": "d183d3c59353d0926ba618d569743f41e27d6b23",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8f474181ba55d3a627e3eefcf90e2092535c9347"
+        },
+        "date": 1760467239606,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.449,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.931,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.3,
             "unit": "ns/op"
           }
         ]
