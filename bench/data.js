@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760475065677,
+  "lastUpdate": 1760475078558,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4693252189d742ca0296f3f13a39b0eaf2871172",
-          "message": "Merge pull request #2487 from f1shl3gs/toolchain/1.89.0\n\ntoolchain: bump to 1.89.0",
-          "timestamp": "2025-08-07T23:21:08+08:00",
-          "tree_id": "2360703af9b47cfc6c280f7eb86ea902c64138ab",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4693252189d742ca0296f3f13a39b0eaf2871172"
-        },
-        "date": 1754580234682,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.317,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.83,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 682.04,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "72b24672aa00463dd6202da3a07ca46d7bc0ff59",
           "message": "Merge pull request #2488 from f1shl3gs/lib/framework/set_default_concurrency_to_adaptive\n\nlib/framework: set Concurrency::Adaptive as default value",
           "timestamp": "2025-08-07T23:59:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 660.54,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8ddfea108e6bf8902f78c8ee341b2dfe717c50fa",
+          "message": "Merge pull request #2599 from f1shl3gs/cargo/update\n\ncargo update",
+          "timestamp": "2025-10-15T04:48:34+08:00",
+          "tree_id": "f70546fbec00eb413418d8a6e2716cb2a65c4751",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8ddfea108e6bf8902f78c8ee341b2dfe717c50fa"
+        },
+        "date": 1760475057079,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.198,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 328.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 691.47,
             "unit": "ns/op"
           }
         ]
