@@ -380,8 +380,8 @@ impl SourceTemplate {
         };
 
         let config = interpolate::interpolate(&self.config, endpoint)?;
-        let source = serde_json::from_value::<Box<dyn SourceConfig>>(config.clone())
-            .map_err(|err| interpolate::Error::Deserialize(config, err))?
+        let source = serde_json::from_value::<Box<dyn SourceConfig>>(config)
+            .map_err(interpolate::Error::Deserialize)?
             .build(cx)
             .await?;
 
