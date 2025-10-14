@@ -118,12 +118,14 @@ struct Config {
 
     /// The frequency that the consumer offsets are committed(written) to
     /// offset storage.
-    #[serde(default = "default_commit_interval")]
-    #[serde(with = "humanize::duration::serde")]
+    #[serde(
+        default = "default_commit_interval",
+        with = "humanize::duration::serde"
+    )]
     commit_interval: Duration,
 
     /// Tell Kafka to wait until it has enough data to send before responding to the consumer.
-    #[serde(default = "default_fetch_wait_max")]
+    #[serde(default = "default_fetch_wait_max", with = "humanize::duration::serde")]
     fetch_wait_max: Duration,
 
     /// The log field name to use for the Kafka message key.
