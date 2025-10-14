@@ -16,9 +16,9 @@ use self::http::HttpSinkConfig;
 #[configurable_component(sink, name = "jaeger")]
 #[serde(rename_all = "lowercase", tag = "protocol")]
 enum Config {
-    Udp(UdpSinkConfig),
-
     Http(HttpSinkConfig),
+
+    Udp(UdpSinkConfig),
 }
 
 #[async_trait::async_trait]

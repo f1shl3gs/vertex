@@ -41,11 +41,11 @@ enum Operation {
         target: Option<Key>,
         modules: u64,
     },
-    LabelDrop {
+    Drop {
         #[serde(with = "serde_regex")]
         regex: Regex,
     },
-    LabelKeep {
+    Keep {
         #[serde(with = "serde_regex")]
         regex: Regex,
     },
@@ -96,12 +96,8 @@ impl Operation {
                     }
                 }
             }
-            Operation::LabelDrop { regex } => {
-                tags.retain(|key, _value| !regex.is_match(key.as_str()))
-            }
-            Operation::LabelKeep { regex } => {
-                tags.retain(|key, _value| regex.is_match(key.as_str()))
-            }
+            Operation::Drop { regex } => tags.retain(|key, _value| !regex.is_match(key.as_str())),
+            Operation::Keep { regex } => tags.retain(|key, _value| regex.is_match(key.as_str())),
         }
     }
 }
@@ -337,7 +333,7 @@ mod tests {
 
     #[test]
     fn labeldrop() {
-        let op = Operation::LabelDrop {
+        let op = Operation::Drop {
             regex: Regex::new(r#"(b.*)"#).unwrap(),
         };
         let input = tags!(

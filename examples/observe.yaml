@@ -12,8 +12,7 @@ sources:
         config:
           type: http_check
           targets:
-          - url: http://${{ target }}
-          interval: 15s
+          - http://${{ target }}
 
 sinks:
   prom:

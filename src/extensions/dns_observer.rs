@@ -32,6 +32,7 @@ struct Config {
     names: Vec<String>,
 
     /// The type of DNS query to perform.
+    #[serde(default)]
     query_type: QueryType,
 
     /// The port number used if the query type is not SRV

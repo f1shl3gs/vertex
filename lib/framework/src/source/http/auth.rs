@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::config::SecretString;
 
+/// HTTP basic auth
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct HttpSourceAuthConfig {
     /// The basic authentication username.
