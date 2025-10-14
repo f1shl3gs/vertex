@@ -23,7 +23,7 @@ struct Config {
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         let program = vtl::compile(&self.condition)
-            .map_err(|err| Diagnostic::new(self.condition.clone()).snippets(err))?;
+            .map_err(|err| Diagnostic::new(&self.condition).snippets(err))?;
 
         if !program.type_def().is_boolean() {
             return Err("vtl filter must return a bool".into());

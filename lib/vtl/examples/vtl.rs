@@ -27,17 +27,14 @@ fn main() {
     let program = match compile(&script) {
         Ok(program) => program,
         Err(err) => {
-            let diagnostic = Diagnostic::new(script);
-            let output = diagnostic.snippets(err);
+            let output = Diagnostic::new(&script).snippets(err);
             println!("{output}");
             exit(1);
         }
     };
 
     if let Err(err) = program.run(&mut target) {
-        let diagnostic = Diagnostic::new(script);
-        let output = diagnostic.snippets(err);
-        println!("{output}");
+        println!("{}", Diagnostic::new(&script).snippets(err));
         exit(1);
     }
 

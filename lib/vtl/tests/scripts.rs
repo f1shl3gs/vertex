@@ -13,8 +13,7 @@ fn run_scripts() {
         let program = match compile(&content) {
             Ok(program) => program,
             Err(err) => {
-                let diagnostic = Diagnostic::new(content);
-                let output = diagnostic.snippets(err);
+                let output = Diagnostic::new(&content).snippets(err);
                 panic!("{}", output);
             }
         };
@@ -38,9 +37,7 @@ fn run_scripts() {
 
         let start = Instant::now();
         if let Err(err) = program.run(&mut target) {
-            let diagnostic = Diagnostic::new(content);
-            let output = diagnostic.snippets(err);
-            panic!("{}", output);
+            panic!("{}", Diagnostic::new(&content).snippets(err));
         }
 
         println!("{:016?}{}", start.elapsed(), path.to_string_lossy());

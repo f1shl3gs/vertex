@@ -27,7 +27,7 @@ del(.array)
 
     "#;
 
-    let diagnostic = Diagnostic::new(script.to_string());
+    let diagnostic = Diagnostic::new(script);
 
     let program = match compile(script) {
         Ok(program) => program,

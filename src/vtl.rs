@@ -28,7 +28,7 @@ impl Vtl {
         let program = match vtl::compile(&script) {
             Ok(program) => program,
             Err(err) => {
-                let snippets = Diagnostic::new(script).snippets(err);
+                let snippets = Diagnostic::new(&script).snippets(err);
                 println!("{snippets}");
                 return Err(exitcode::SOFTWARE);
             }
@@ -43,8 +43,7 @@ impl Vtl {
                 println!("{target:#?}");
             }
             Err(err) => {
-                let output = Diagnostic::new(script).snippets(err);
-                println!("{output}");
+                println!("{}", Diagnostic::new(&script).snippets(err));
                 return Err(exitcode::SOFTWARE);
             }
         }
