@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760467244956,
+  "lastUpdate": 1760467248970,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ad345731aaed3c2c8a83689ffa65b12d14c1909d",
-          "message": "Merge pull request #2483 from f1shl3gs/dependabot/cargo/tokio-util-0.7.16\n\nchore(deps): bump tokio-util from 0.7.15 to 0.7.16",
-          "timestamp": "2025-08-03T21:11:40+08:00",
-          "tree_id": "c7a9854619df1b794b6f1ed94bc61dae506fe825",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ad345731aaed3c2c8a83689ffa65b12d14c1909d"
-        },
-        "date": 1754226812204,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 489320,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 500940,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fbada39da8ebce596241fd21cd7a04a5a1cbc877",
+          "message": "Merge pull request #2595 from f1shl3gs/dependabot/cargo/lru-0.16.2\n\nchore(deps): bump lru from 0.16.1 to 0.16.2",
+          "timestamp": "2025-10-15T02:38:16+08:00",
+          "tree_id": "66e4f438c6da679b7e3383a233752b104a4cb631",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fbada39da8ebce596241fd21cd7a04a5a1cbc877"
+        },
+        "date": 1760467227172,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 501760,
             "unit": "ns/op"
           }
         ]
