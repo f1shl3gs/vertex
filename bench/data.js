@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760471849210,
+  "lastUpdate": 1760471883111,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bd3c513402284de9a8b595633dd3362f3db23c9d",
-          "message": "Merge pull request #2485 from f1shl3gs/lib/tail/refactor\n\nlib/tail: refactor, full async",
-          "timestamp": "2025-08-06T19:40:50+08:00",
-          "tree_id": "4da2d82bac867e38edbc021e4fe611294e40a6da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bd3c513402284de9a8b595633dd3362f3db23c9d"
-        },
-        "date": 1754480611012,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.003,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 173.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 343.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 694.27,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7e840bde9dc448131a208318c79f33d4164a98ac",
           "message": "Merge pull request #2486 from f1shl3gs/sources/exec/refactor\n\nsources/exec: refactor",
           "timestamp": "2025-08-07T20:59:19+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 702.82,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ede5bde9f943da9a3b724b3336a0f430eed6c67",
+          "message": "Merge pull request #2596 from f1shl3gs/lib/vtl/avoid_alloc_when_diagnostic\n\nlib/vtl: avoid `alloc` when diagnostic",
+          "timestamp": "2025-10-15T03:55:03+08:00",
+          "tree_id": "2f4eb006cae00046fee4beb246e3251c7383f67b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ede5bde9f943da9a3b724b3336a0f430eed6c67"
+        },
+        "date": 1760471846127,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.443,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 322.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 662.55,
             "unit": "ns/op"
           }
         ]
