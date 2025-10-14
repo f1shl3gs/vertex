@@ -14,8 +14,8 @@ pub enum Error {
     InvalidPath(String),
     #[error("value not found {0}")]
     ValueNotFound(String),
-    #[error("deserialize config failed, config: {0}, err: {1}")]
-    Deserialize(serde_json::Value, serde_json::error::Error),
+    #[error("deserialize config failed, err: {0}")]
+    Deserialize(serde_json::error::Error),
 }
 
 /// build source interpolate the template value, and build the source
