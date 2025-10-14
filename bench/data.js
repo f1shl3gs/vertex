@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760456676717,
+  "lastUpdate": 1760456944917,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7db9779f5fedd27bfcea0d59c1e49cfe28920558",
-          "message": "Merge pull request #2482 from f1shl3gs/sinks/kafka/better_deserialize_error\n\nsinks/kafka: better deserialize error message",
-          "timestamp": "2025-08-02T13:46:53+08:00",
-          "tree_id": "46f9717bd94d79200ff9a35943a27875e2f741da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7db9779f5fedd27bfcea0d59c1e49cfe28920558"
-        },
-        "date": 1754114208711,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 514,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37763.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ad345731aaed3c2c8a83689ffa65b12d14c1909d",
           "message": "Merge pull request #2483 from f1shl3gs/dependabot/cargo/tokio-util-0.7.16\n\nchore(deps): bump tokio-util from 0.7.15 to 0.7.16",
           "timestamp": "2025-08-03T21:11:40+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39600.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "788f657f07c6190fe04a40f5930d57b40e14a491",
+          "message": "Merge pull request #2592 from f1shl3gs/dependabot/cargo/tokio-1.48.0\n\nchore(deps): bump tokio from 1.47.1 to 1.48.0",
+          "timestamp": "2025-10-14T23:37:56+08:00",
+          "tree_id": "14f670486aff767dd8829fcce3750dfa4031ae65",
+          "url": "https://github.com/f1shl3gs/vertex/commit/788f657f07c6190fe04a40f5930d57b40e14a491"
+        },
+        "date": 1760456922031,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 560,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39603,
             "unit": "KiB"
           }
         ]
