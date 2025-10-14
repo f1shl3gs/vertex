@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760467780107,
+  "lastUpdate": 1760471838228,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bd3c513402284de9a8b595633dd3362f3db23c9d",
-          "message": "Merge pull request #2485 from f1shl3gs/lib/tail/refactor\n\nlib/tail: refactor, full async",
-          "timestamp": "2025-08-06T19:40:50+08:00",
-          "tree_id": "4da2d82bac867e38edbc021e4fe611294e40a6da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bd3c513402284de9a8b595633dd3362f3db23c9d"
-        },
-        "date": 1754480572382,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 486960,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 504080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ede5bde9f943da9a3b724b3336a0f430eed6c67",
+          "message": "Merge pull request #2596 from f1shl3gs/lib/vtl/avoid_alloc_when_diagnostic\n\nlib/vtl: avoid `alloc` when diagnostic",
+          "timestamp": "2025-10-15T03:55:03+08:00",
+          "tree_id": "2f4eb006cae00046fee4beb246e3251c7383f67b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ede5bde9f943da9a3b724b3336a0f430eed6c67"
+        },
+        "date": 1760471816576,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 498640,
             "unit": "ns/op"
           }
         ]
