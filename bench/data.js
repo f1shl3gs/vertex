@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760467261821,
+  "lastUpdate": 1760467288241,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "39d58ba7b8e65bfad9bf3a0e39e473bec4e3a76f",
-          "message": "Merge pull request #2484 from f1shl3gs/dependabot/cargo/quick-xml-0.38.1\n\nchore(deps): bump quick-xml from 0.38.0 to 0.38.1",
-          "timestamp": "2025-08-05T00:18:37+08:00",
-          "tree_id": "3ebbcca419561a57afcd0d0965d850a11cf0e049",
-          "url": "https://github.com/f1shl3gs/vertex/commit/39d58ba7b8e65bfad9bf3a0e39e473bec4e3a76f"
-        },
-        "date": 1754324462649,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 33.303,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 177.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 669.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bd3c513402284de9a8b595633dd3362f3db23c9d",
           "message": "Merge pull request #2485 from f1shl3gs/lib/tail/refactor\n\nlib/tail: refactor, full async",
           "timestamp": "2025-08-06T19:40:50+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 577.09,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8f474181ba55d3a627e3eefcf90e2092535c9347",
+          "message": "Merge pull request #2594 from f1shl3gs/sources/selfstat/disable_proc_path_if_not_linux\n\nsources/selfstat: add target_os attr for `proc_path`",
+          "timestamp": "2025-10-15T02:38:36+08:00",
+          "tree_id": "d183d3c59353d0926ba618d569743f41e27d6b23",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8f474181ba55d3a627e3eefcf90e2092535c9347"
+        },
+        "date": 1760467266579,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.125,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 317.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 702.82,
             "unit": "ns/op"
           }
         ]
