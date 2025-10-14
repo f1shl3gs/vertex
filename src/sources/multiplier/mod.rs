@@ -60,11 +60,7 @@ impl SourceConfig for Config {
             let program = match &template.rule {
                 Some(rule) => {
                     let program = vtl::compile_with(rule, &["id", "type", "target", "details"])
-                        .map_err(|err| {
-                            let diagnostic = Diagnostic::new(rule.clone());
-
-                            diagnostic.snippets(err)
-                        })?;
+                        .map_err(|err| Diagnostic::new(rule).snippets(err))?;
 
                     Some(program)
                 }

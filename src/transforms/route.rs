@@ -38,8 +38,7 @@ impl TransformConfig for Config {
                     routes.push((route.to_string(), program));
                 }
                 Err(err) => {
-                    let diagnostic = Diagnostic::new(script.to_string());
-                    return Err(diagnostic.snippets(err).into());
+                    return Err(Diagnostic::new(script).snippets(err).into());
                 }
             }
         }

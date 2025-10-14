@@ -49,10 +49,7 @@ impl TransformConfig for Config {
 
                 Ok(Transform::synchronous(rewrite))
             }
-            Err(err) => {
-                let diagnostic = Diagnostic::new(script);
-                Err(diagnostic.snippets(err).into())
-            }
+            Err(err) => Err(Diagnostic::new(&script).snippets(err).into()),
         }
     }
 

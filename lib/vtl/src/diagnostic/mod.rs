@@ -14,12 +14,12 @@ pub trait DiagnosticMessage: Error {
     fn labels(&self) -> Vec<Label>;
 }
 
-pub struct Diagnostic {
-    source: String,
+pub struct Diagnostic<'a> {
+    source: &'a str,
 }
 
-impl Diagnostic {
-    pub fn new(source: String) -> Diagnostic {
+impl Diagnostic<'_> {
+    pub fn new(source: &str) -> Diagnostic<'_> {
         Diagnostic { source }
     }
 
