@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760475589703,
+  "lastUpdate": 1760475594761,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "957ea9f81864c36490797ee71f4df9ca8dd061ac",
-          "message": "Merge pull request #2489 from f1shl3gs/lib/codecs/rename_bytes_decoder\n\nlib/codecs: rename BytesDecoder",
-          "timestamp": "2025-08-08T01:27:06+08:00",
-          "tree_id": "d19cf419c80c526450b6bc1a9036f952155128e3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/957ea9f81864c36490797ee71f4df9ca8dd061ac"
-        },
-        "date": 1754588213235,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 505,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37476.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ce83ab7ca100f6249a2a55154375d1b407a0fcce",
           "message": "Merge pull request #2490 from f1shl3gs/dependabot/cargo/tonic-c76af55c48\n\nchore(deps): bump the tonic group with 4 updates",
           "timestamp": "2025-08-09T15:59:00+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39593.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "665b23d29a6252f3a58b259e0c7c1b4638945568",
+          "message": "Merge pull request #2598 from f1shl3gs/sources/kafka/fix_deserializing_for_fetch_wait_max\n\nsources/kafka: fix deserializing for fetch_wait_max",
+          "timestamp": "2025-10-15T04:49:04+08:00",
+          "tree_id": "2fed93ce92ee48ecacd1cc513a70ba45536d8b14",
+          "url": "https://github.com/f1shl3gs/vertex/commit/665b23d29a6252f3a58b259e0c7c1b4638945568"
+        },
+        "date": 1760475573107,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 550,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39550.6,
             "unit": "KiB"
           }
         ]
