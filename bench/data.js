@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760403041553,
+  "lastUpdate": 1760403066828,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "21ea80d72243e836ce608ed4820f6ec0c8a787ac",
-          "message": "Merge pull request #2480 from f1shl3gs/dependabot/cargo/tokio-1.47.1\n\nchore(deps): bump tokio from 1.47.0 to 1.47.1",
-          "timestamp": "2025-08-01T20:07:22+08:00",
-          "tree_id": "124fc4465c5221927013a4ab9e71b351c7e70230",
-          "url": "https://github.com/f1shl3gs/vertex/commit/21ea80d72243e836ce608ed4820f6ec0c8a787ac"
-        },
-        "date": 1754050601580,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14797000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 651910,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.549,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9bfdea90cde1f8e9176300ceb93dfaf7e66911d8",
           "message": "Merge pull request #2481 from f1shl3gs/deps/rskafka/bump_to_latest_version\n\ndeps/rskafka: bump to latest version",
           "timestamp": "2025-08-01T22:34:31+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.068,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef9ffe920bcb6b01ce04d10fe894175764863148",
+          "message": "Merge pull request #2589 from f1shl3gs/dependabot/cargo/regex-1.12.2\n\nchore(deps): bump regex from 1.12.1 to 1.12.2",
+          "timestamp": "2025-10-14T08:41:14+08:00",
+          "tree_id": "69a433507891afb8ee3a126a063a579677550f4d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef9ffe920bcb6b01ce04d10fe894175764863148"
+        },
+        "date": 1760403044485,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14524000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 612710,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.522,
             "unit": "ns/op"
           }
         ]
