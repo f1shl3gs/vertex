@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760467758988,
+  "lastUpdate": 1760467780107,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bd3c513402284de9a8b595633dd3362f3db23c9d",
-          "message": "Merge pull request #2485 from f1shl3gs/lib/tail/refactor\n\nlib/tail: refactor, full async",
-          "timestamp": "2025-08-06T19:40:50+08:00",
-          "tree_id": "4da2d82bac867e38edbc021e4fe611294e40a6da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bd3c513402284de9a8b595633dd3362f3db23c9d"
-        },
-        "date": 1754481078602,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 546,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37642.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7e840bde9dc448131a208318c79f33d4164a98ac",
           "message": "Merge pull request #2486 from f1shl3gs/sources/exec/refactor\n\nsources/exec: refactor",
           "timestamp": "2025-08-07T20:59:19+08:00",
@@ -16595,6 +16561,40 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/f1shl3gs/vertex/commit/fbada39da8ebce596241fd21cd7a04a5a1cbc877"
         },
         "date": 1760467736479,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 557,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39606.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8f474181ba55d3a627e3eefcf90e2092535c9347",
+          "message": "Merge pull request #2594 from f1shl3gs/sources/selfstat/disable_proc_path_if_not_linux\n\nsources/selfstat: add target_os attr for `proc_path`",
+          "timestamp": "2025-10-15T02:38:36+08:00",
+          "tree_id": "d183d3c59353d0926ba618d569743f41e27d6b23",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8f474181ba55d3a627e3eefcf90e2092535c9347"
+        },
+        "date": 1760467756858,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
