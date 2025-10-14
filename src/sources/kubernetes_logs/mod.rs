@@ -23,7 +23,7 @@ use tokio_util::codec::FramedRead;
 use value::{OwnedValuePath, Value, owned_value_path};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
-pub struct PodFieldsConfig {
+struct PodFieldsConfig {
     name: Option<OwnedValuePath>,
     namespace: Option<OwnedValuePath>,
     uid: Option<OwnedValuePath>,
@@ -50,7 +50,7 @@ impl Default for PodFieldsConfig {
 }
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
-pub struct ContainerFieldsConfig {
+struct ContainerFieldsConfig {
     name: Option<OwnedValuePath>,
     image: Option<OwnedValuePath>,
 }
@@ -65,7 +65,7 @@ impl Default for ContainerFieldsConfig {
 }
 
 #[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
-pub struct FieldsConfig {
+struct FieldsConfig {
     pod: PodFieldsConfig,
     container: ContainerFieldsConfig,
 }

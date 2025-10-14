@@ -36,7 +36,7 @@ struct Config {
     #[serde(default)]
     headers: BTreeMap<String, String>,
 
-    #[serde(default = "default_interval")]
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 }
 

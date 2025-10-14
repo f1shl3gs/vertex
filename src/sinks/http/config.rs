@@ -19,18 +19,22 @@ use super::request_builder::HttpRequestBuilder;
 use super::service::HttpSinkRequestBuilder;
 use super::sink::HttpSink;
 
+fn default_method() -> Method {
+    Method::POST
+}
+
 /// Configuration for the `http` sink
 #[configurable_component(sink, name = "http")]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     #[configurable(required)]
-    #[serde(with = "serde_http_method")]
+    #[serde(default = "default_method", with = "serde_http_method")]
     pub method: Method,
 
     /// The full URI to make HTTP requests to.
     #[configurable(required)]
     #[serde(with = "serde_uri")]
-    pub uri: Uri,
+    pub endpoint: Uri,
 
     /// Http auth
     pub auth: Option<Auth>,
@@ -84,7 +88,7 @@ impl SinkConfig for Config {
         let request_builder = HttpRequestBuilder::new(self.compression, encoder);
         let sink_request_builder = HttpSinkRequestBuilder::new(
             self.method.clone(),
-            self.uri.clone(),
+            self.endpoint.clone(),
             self.auth.clone(),
             self.request.header_map()?,
             content_type,

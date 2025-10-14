@@ -56,11 +56,11 @@ struct Config {
     headers: HashMap<String, String>,
 
     /// Timeout for HTTP request, it's value should be less than `interval`.
-    #[serde(with = "humanize::duration::serde", default = "default_timeout")]
+    #[serde(default = "default_timeout", with = "humanize::duration::serde")]
     timeout: Duration,
 
     /// This sources collects metrics on an interval.
-    #[serde(with = "humanize::duration::serde", default = "default_interval")]
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 }
 

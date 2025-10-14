@@ -85,7 +85,7 @@ enum Mode {
     Exact,
 }
 
-/// Rate limits one or more log streams to limit load on downstream services, or
+/// Rate limits one or more metric streams to limit load on downstream services, or
 /// to enforce usage quotas on users.
 #[configurable_component(transform, name = "cardinality")]
 #[serde(deny_unknown_fields)]

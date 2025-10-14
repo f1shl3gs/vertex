@@ -28,7 +28,7 @@ struct Config {
     targets: Vec<IpAddr>,
 
     /// The interval between each metrics sending
-    #[serde(default = "default_interval")]
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 
     /// TTL to the UDP socket

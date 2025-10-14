@@ -22,6 +22,7 @@ fn default_proc_path() -> PathBuf {
 
 #[configurable_component(source, name = "selfstat")]
 struct Config {
+    /// The path of `/proc`
     #[serde(default = "default_proc_path")]
     proc_path: PathBuf,
 

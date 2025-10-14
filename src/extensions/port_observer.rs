@@ -11,12 +11,20 @@ use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::observe::{Endpoint, Observer, run};
 use value::value;
 
+fn default_proc() -> PathBuf {
+    PathBuf::from("/proc")
+}
+
 const fn default_interval() -> Duration {
     Duration::from_secs(10)
 }
 
 #[configurable_component(extension, name = "port_observer")]
 struct Config {
+    /// Path to the `/proc`
+    #[serde(default = "default_proc")]
+    proc_path: PathBuf,
+
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 }
@@ -26,21 +34,18 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let observer = Observer::register(cx.key);
+        let root = self.proc_path.clone();
 
         Ok(Box::pin(run(
             observer,
             self.interval,
             cx.shutdown,
-            async move || {
-                let root = PathBuf::from("/proc");
-
-                list_endpoints(root).await
-            },
+            async move || list_endpoints(&root).await,
         )))
     }
 }
 
-async fn list_endpoints(root: PathBuf) -> crate::Result<Vec<Endpoint>> {
+async fn list_endpoints(root: &PathBuf) -> crate::Result<Vec<Endpoint>> {
     let infos = netstat(root)?;
 
     let endpoints = infos
@@ -154,7 +159,7 @@ fn parse_listen_inodes(path: PathBuf) -> io::Result<HashMap<String, SocketAddr>>
 ///```
 ///
 /// See: https://www.kernel.org/doc/Documentation/networking/proc_net_tcp.txt
-fn netstat(root: PathBuf) -> io::Result<Vec<ConnectionInfo>> {
+fn netstat(root: &PathBuf) -> io::Result<Vec<ConnectionInfo>> {
     let mut tcp = parse_listen_inodes(root.join("net/tcp"))?;
     let mut tcp6 = parse_listen_inodes(root.join("net/tcp6"))?;
     let mut udp = parse_listen_inodes(root.join("net/udp"))?;

@@ -22,7 +22,7 @@ fn default_locale() -> String {
 #[configurable_component(transform, name = "geoip")]
 #[serde(deny_unknown_fields)]
 struct Config {
-    /// Path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other
+    /// Absolute path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other
     /// databases, such as the country database, are not supported.
     ///
     /// GeoIP2: https://dev.maxmind.com/geoip/geoip2/downloadable
