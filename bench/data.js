@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760472524554,
+  "lastUpdate": 1760472550319,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7e840bde9dc448131a208318c79f33d4164a98ac",
-          "message": "Merge pull request #2486 from f1shl3gs/sources/exec/refactor\n\nsources/exec: refactor",
-          "timestamp": "2025-08-07T20:59:19+08:00",
-          "tree_id": "147bf677b87d3bb5a0c1a7dcef055ba3f8d79af7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7e840bde9dc448131a208318c79f33d4164a98ac"
-        },
-        "date": 1754571708944,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.448,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 340.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 693.41,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4693252189d742ca0296f3f13a39b0eaf2871172",
           "message": "Merge pull request #2487 from f1shl3gs/toolchain/1.89.0\n\ntoolchain: bump to 1.89.0",
           "timestamp": "2025-08-07T23:21:08+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 662.55,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "54b9ce48ee08a6053f75a10d481a86170faf1bf8",
+          "message": "Merge pull request #2597 from f1shl3gs/sources/multiplier/avoid_clone_when_build_sub_sources\n\nsources/multiplier: avoid clone when build sub sources",
+          "timestamp": "2025-10-15T04:06:16+08:00",
+          "tree_id": "959274dcd78ef467860fa26d89ae68ff0bae5232",
+          "url": "https://github.com/f1shl3gs/vertex/commit/54b9ce48ee08a6053f75a10d481a86170faf1bf8"
+        },
+        "date": 1760472528117,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.376,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 660.54,
             "unit": "ns/op"
           }
         ]
