@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760402622233,
+  "lastUpdate": 1760402645472,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "21ea80d72243e836ce608ed4820f6ec0c8a787ac",
-          "message": "Merge pull request #2480 from f1shl3gs/dependabot/cargo/tokio-1.47.1\n\nchore(deps): bump tokio from 1.47.0 to 1.47.1",
-          "timestamp": "2025-08-01T20:07:22+08:00",
-          "tree_id": "124fc4465c5221927013a4ab9e71b351c7e70230",
-          "url": "https://github.com/f1shl3gs/vertex/commit/21ea80d72243e836ce608ed4820f6ec0c8a787ac"
-        },
-        "date": 1754050176455,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.315,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 165.05,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 305.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 649.71,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9bfdea90cde1f8e9176300ceb93dfaf7e66911d8",
           "message": "Merge pull request #2481 from f1shl3gs/deps/rskafka/bump_to_latest_version\n\ndeps/rskafka: bump to latest version",
           "timestamp": "2025-08-01T22:34:31+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 671.75,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef9ffe920bcb6b01ce04d10fe894175764863148",
+          "message": "Merge pull request #2589 from f1shl3gs/dependabot/cargo/regex-1.12.2\n\nchore(deps): bump regex from 1.12.1 to 1.12.2",
+          "timestamp": "2025-10-14T08:41:14+08:00",
+          "tree_id": "69a433507891afb8ee3a126a063a579677550f4d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef9ffe920bcb6b01ce04d10fe894175764863148"
+        },
+        "date": 1760402623630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.276,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 152.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 305.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 620.85,
             "unit": "ns/op"
           }
         ]
