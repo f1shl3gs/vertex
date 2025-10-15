@@ -20,10 +20,8 @@ const fn default_interval() -> Duration {
 /// user to debug
 #[configurable_component(extension, name = "exec_observer")]
 struct Config {
-    command: PathBuf,
-
-    #[serde(default)]
-    args: Vec<String>,
+    #[configurable(required)]
+    command: Vec<String>,
 
     #[serde(default)]
     working_directory: Option<PathBuf>,
@@ -36,26 +34,32 @@ struct Config {
 #[typetag::serde(name = "exec_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
+        if self.command.is_empty() {
+            return Err("command is empty".into());
+        }
+
         let observer = Observer::register(cx.key);
-        let program = self.command.clone();
-        let args = self.args.clone();
+        let command = self.command.clone();
         let working_directory = self.working_directory.clone();
 
         Ok(Box::pin(run(
             observer,
             self.interval,
             cx.shutdown,
-            async move || list_endpoints(&program, &args, working_directory.as_ref()).await,
+            async move || list_endpoints(&command, working_directory.as_ref()).await,
         )))
     }
 }
 
 async fn list_endpoints(
-    command: &PathBuf,
-    args: &[String],
+    command: &[String],
     working_dir: Option<&PathBuf>,
 ) -> crate::Result<Vec<Endpoint>> {
-    let mut cmd = Command::new(command);
+    let [cmd, args @ ..] = command else {
+        // command is validate already
+        unreachable!();
+    };
+    let mut cmd = Command::new(cmd);
     if !args.is_empty() {
         cmd.args(args);
     }
@@ -74,7 +78,6 @@ async fn list_endpoints(
         warn!(
             message = "command exited with non-zero exit code",
             ?command,
-            ?args,
             ?working_dir,
             status = ?output.status,
             stderr = stderr.as_ref(),
