@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760547441983,
+  "lastUpdate": 1760547798619,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b8056922dd6db998e02869f7fb3331f3595521b3",
-          "message": "Merge pull request #2491 from f1shl3gs/sources/exec/reduce_task\n\nsources/exec: refactor & reduce tasks",
-          "timestamp": "2025-08-10T00:17:45+08:00",
-          "tree_id": "d7a354f38a7f80863e6f917911a246725cc61c19",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b8056922dd6db998e02869f7fb3331f3595521b3"
-        },
-        "date": 1754756827173,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14396000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 568620,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.29,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "caa1368b595a696b76f9fda9003135914d8d2a97",
           "message": "Merge pull request #2493 from f1shl3gs/sources/prometheus_textfile/add\n\nsources/prometheus_textfile: init",
           "timestamp": "2025-08-10T04:43:33+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.818,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "01e2958da5f4956d79520e2c51dbc845ba8d77db",
+          "message": "Merge pull request #2602 from f1shl3gs/extensions/exec_observer/remove_args\n\nextensions/exec_observer: remove args from config",
+          "timestamp": "2025-10-16T00:53:46+08:00",
+          "tree_id": "7f79d110c71bf0224178ba9926f68f0410a9b86a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/01e2958da5f4956d79520e2c51dbc845ba8d77db"
+        },
+        "date": 1760547775778,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14903000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 605980,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.774,
             "unit": "ns/op"
           }
         ]
