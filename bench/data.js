@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760526349944,
+  "lastUpdate": 1760526424067,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ce83ab7ca100f6249a2a55154375d1b407a0fcce",
-          "message": "Merge pull request #2490 from f1shl3gs/dependabot/cargo/tonic-c76af55c48\n\nchore(deps): bump the tonic group with 4 updates",
-          "timestamp": "2025-08-09T15:59:00+08:00",
-          "tree_id": "981ee522606363c3518aec98cfc16ae41ba10789",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ce83ab7ca100f6249a2a55154375d1b407a0fcce"
-        },
-        "date": 1754726928499,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 502,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37487.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b8056922dd6db998e02869f7fb3331f3595521b3",
           "message": "Merge pull request #2491 from f1shl3gs/sources/exec/reduce_task\n\nsources/exec: refactor & reduce tasks",
           "timestamp": "2025-08-10T00:17:45+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39550.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e30d6feeba340f901841db7e24610aa6808a14bc",
+          "message": "Merge pull request #2600 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.2\n\nchore(deps): bump rustls-native-certs from 0.8.1 to 0.8.2",
+          "timestamp": "2025-10-15T18:55:59+08:00",
+          "tree_id": "a2a9d1b7829dbf13189e02ac29ce4dd2a988f05e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e30d6feeba340f901841db7e24610aa6808a14bc"
+        },
+        "date": 1760526402518,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 558,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39552,
             "unit": "KiB"
           }
         ]
