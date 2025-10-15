@@ -5,6 +5,7 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
+use configurable::Configurable;
 use event::{Metric, tags, tags::Key};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
@@ -15,7 +16,7 @@ const DISK_SECTOR_SIZE: f64 = 512.0;
 
 const DEVICE_KEY: Key = Key::from_static("device");
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     #[serde(with = "serde_regex")]
     #[serde(default = "default_ignored")]

@@ -1,13 +1,14 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
+use configurable::Configurable;
 use event::Metric;
 use event::tags::Tags;
 use serde::{Deserialize, Serialize};
 
 use super::Error;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     #[serde(default = "default_labels")]
     labels: Vec<String>,

@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use configurable::Configurable;
 use event::tags::Key;
 use event::{Metric, tags};
 use framework::config::serde_regex;
@@ -7,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{Error, read_string};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     // Regexp of net devices to ignore for netclass collector
     #[serde(default = "default_ignores")]

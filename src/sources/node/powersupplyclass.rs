@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use configurable::Configurable;
 use event::tags::Key;
 use event::{Metric, tags};
 use framework::config::serde_regex;
@@ -993,7 +994,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
     Ok(ps)
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     #[serde(with = "serde_regex")]
     pub ignored: regex::Regex,
