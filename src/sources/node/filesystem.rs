@@ -1,13 +1,14 @@
 use std::ffi::CString;
 use std::path::PathBuf;
 
+use configurable::Configurable;
 use event::{Metric, tags, tags::Key};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
 use super::Error;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     #[serde(default = "default_mount_points_exclude")]
     #[serde(with = "serde_regex")]

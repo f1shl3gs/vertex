@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
+use configurable::Configurable;
 use event::Metric;
 use framework::config::serde_regex;
 use regex::Regex;
@@ -8,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use super::Error;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     #[serde(default = "default_fields")]
     #[serde(with = "serde_regex")]

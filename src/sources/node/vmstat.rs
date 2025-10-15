@@ -2,6 +2,7 @@
 
 use std::path::PathBuf;
 
+use configurable::Configurable;
 use event::Metric;
 use framework::config::serde_regex;
 use regex::Regex;
@@ -14,7 +15,7 @@ fn default_fields() -> Regex {
     Regex::new(DEFAULT_PATTERN).unwrap()
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     #[serde(default = "default_fields")]
     #[serde(with = "serde_regex")]

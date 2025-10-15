@@ -1,6 +1,7 @@
 use std::num::ParseIntError;
 use std::path::PathBuf;
 
+use configurable::Configurable;
 use event::{Metric, tags, tags::Key};
 use framework::config::serde_regex;
 use regex::Regex;
@@ -8,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use super::Error;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Config {
     #[serde(with = "serde_regex")]

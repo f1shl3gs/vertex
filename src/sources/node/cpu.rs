@@ -2,6 +2,7 @@
 
 use std::path::PathBuf;
 
+use configurable::Configurable;
 use event::{Metric, tags, tags::Key};
 use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
@@ -10,7 +11,7 @@ use super::Error;
 
 const USER_HZ: f64 = 100.0;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     #[serde(default = "default_true")]

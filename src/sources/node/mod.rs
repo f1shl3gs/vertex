@@ -65,7 +65,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 use std::time::Duration;
 
-use configurable::configurable_component;
+use configurable::{Configurable, configurable_component};
 use error::Error;
 use event::{Metric, tags, tags::Key};
 use framework::Source;
@@ -115,7 +115,7 @@ fn default_vmstat_config() -> Option<vmstat::Config> {
     Some(vmstat::Config::default())
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct Collectors {
     #[serde(default = "default_true")]
@@ -365,8 +365,7 @@ struct Config {
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 
-    #[serde(default, flatten)]
-    #[configurable(skip)]
+    #[serde(default)]
     collectors: Collectors,
 }
 
