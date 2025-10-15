@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760549009076,
+  "lastUpdate": 1760549381390,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "caa1368b595a696b76f9fda9003135914d8d2a97",
-          "message": "Merge pull request #2493 from f1shl3gs/sources/prometheus_textfile/add\n\nsources/prometheus_textfile: init",
-          "timestamp": "2025-08-10T04:43:33+08:00",
-          "tree_id": "98ddfbcde62d865080327cd41515c17411b42156",
-          "url": "https://github.com/f1shl3gs/vertex/commit/caa1368b595a696b76f9fda9003135914d8d2a97"
-        },
-        "date": 1754772773717,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14513000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 634860,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.199,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1e6b77f943ccb6fc72ced5ca26099b8c56ac3254",
           "message": "Merge pull request #2495 from f1shl3gs/sources/tail/add_multiline_support\n\nsources/tail: add multiline support",
           "timestamp": "2025-08-11T06:34:23+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.774,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7a29f401d1e8b49ee1e5cf555a334d6fd0b2a2f4",
+          "message": "Merge pull request #2603 from f1shl3gs/sources/exec/validate_command\n\nsources/exec: validate command value",
+          "timestamp": "2025-10-16T01:19:45+08:00",
+          "tree_id": "7c0a5fd993ea12683c260fce856a71af14a8cfb7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7a29f401d1e8b49ee1e5cf555a334d6fd0b2a2f4"
+        },
+        "date": 1760549359167,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15439000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 611290,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.128,
             "unit": "ns/op"
           }
         ]
