@@ -95,6 +95,7 @@ enum Mode {
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// The command to be run, plus any arguments if needed.
+    #[configurable(required)]
     command: Vec<String>,
 
     /// The directory in which to run the command.
@@ -122,6 +123,10 @@ pub struct Config {
 #[typetag::serde(name = "exec")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
+        if self.command.is_empty() {
+            return Err("command is required".into());
+        }
+
         let hostname = hostname::get()?;
         let framing = self
             .framing
