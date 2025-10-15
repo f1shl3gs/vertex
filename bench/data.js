@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760544574230,
+  "lastUpdate": 1760544949994,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ce83ab7ca100f6249a2a55154375d1b407a0fcce",
-          "message": "Merge pull request #2490 from f1shl3gs/dependabot/cargo/tonic-c76af55c48\n\nchore(deps): bump the tonic group with 4 updates",
-          "timestamp": "2025-08-09T15:59:00+08:00",
-          "tree_id": "981ee522606363c3518aec98cfc16ae41ba10789",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ce83ab7ca100f6249a2a55154375d1b407a0fcce"
-        },
-        "date": 1754726906647,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14696000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 649490,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.82,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b8056922dd6db998e02869f7fb3331f3595521b3",
           "message": "Merge pull request #2491 from f1shl3gs/sources/exec/reduce_task\n\nsources/exec: refactor & reduce tasks",
           "timestamp": "2025-08-10T00:17:45+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.293,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b29612ffe48084f2bed061780d0e4fbb14e89444",
+          "message": "Merge pull request #2601 from f1shl3gs/sources/node/implement_configurable_for_collectors\n\nsources/node: implement configurable for Collectors",
+          "timestamp": "2025-10-16T00:05:53+08:00",
+          "tree_id": "3174925dd2e37cf9e6aa22d91b4b31439811ecff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b29612ffe48084f2bed061780d0e4fbb14e89444"
+        },
+        "date": 1760544927004,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14630000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 630680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.818,
             "unit": "ns/op"
           }
         ]
