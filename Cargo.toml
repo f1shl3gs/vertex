@@ -413,7 +413,7 @@ vtl = { path = "lib/vtl" }
 mimalloc = { version = "0.1.48", default-features = false, optional = true }
 scudo = { git = "https://github.com/google/rust-scudo", rev = "0b2d15e4dce43c9dea1de55c5cf746130cb0849b", optional = true }
 snmalloc-rs = { version = "0.3.8", optional = true, default-features = false, features = ["build_cc"] }
-tikv-jemallocator = { version = "0.6.0", optional = true, features = ["unprefixed_malloc_on_supported_platforms"] }
+tikv-jemallocator = { version = "0.6.1", optional = true, features = ["unprefixed_malloc_on_supported_platforms"] }
 tikv-jemalloc-ctl = { version = "0.6.0", optional = true, features = ["use_std"] }
 
 # Futrures & Tokio
