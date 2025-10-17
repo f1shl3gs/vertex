@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760691933627,
+  "lastUpdate": 1760708782613,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fc301837664e738bc24f53cc4306644d421f4b63",
-          "message": "Merge pull request #2496 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.96\n\nchore(deps): bump proc-macro2 from 1.0.95 to 1.0.96",
-          "timestamp": "2025-08-11T17:29:45+08:00",
-          "tree_id": "7eb2b565a60fe936d99a7d0d42389396ec6ff5b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fc301837664e738bc24f53cc4306644d421f4b63"
-        },
-        "date": 1754904713293,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 488570,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 495840,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "80e44d5e591ccb72a3e50eb7b593b293c853af98",
+          "message": "Merge pull request #2605 from f1shl3gs/dependabot/cargo/tikv-jemallocator-0.6.1\n\nchore(deps): bump tikv-jemallocator from 0.6.0 to 0.6.1",
+          "timestamp": "2025-10-17T21:43:56+08:00",
+          "tree_id": "5c238f8d663b334a0dd16ce6b9afc997154b4ef8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/80e44d5e591ccb72a3e50eb7b593b293c853af98"
+        },
+        "date": 1760708760815,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 490260,
             "unit": "ns/op"
           }
         ]
