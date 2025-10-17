@@ -194,6 +194,7 @@ sources-mongodb = []
 sources-mqtt = []
 sources-multiplier = []
 sources-mysqld = ["dep:sqlx"]
+sources-nats_metrics = []
 sources-netflow = ["dep:parking_lot"]
 sources-nginx_stub = []
 sources-node = []
@@ -252,6 +253,7 @@ sources = [
     "sources-mqtt",
     "sources-multiplier",
     "sources-mysqld",
+    "sources-nats_metrics",
     "sources-netflow",
     "sources-nginx_stub",
     "sources-node",
