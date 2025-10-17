@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760691846811,
+  "lastUpdate": 1760691933627,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6ed3b3c7583c54484de235e625f350bc529d1918",
-          "message": "Merge pull request #2494 from f1shl3gs/misc/add_prometheus_textfile\n\nmisc: add prometheus_textfile",
-          "timestamp": "2025-08-10T23:11:29+08:00",
-          "tree_id": "1be66c1c5872028e81212db82cbfc6ee85c42649",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6ed3b3c7583c54484de235e625f350bc529d1918"
-        },
-        "date": 1754839290017,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 518,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37478,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1e6b77f943ccb6fc72ced5ca26099b8c56ac3254",
           "message": "Merge pull request #2495 from f1shl3gs/sources/tail/add_multiline_support\n\nsources/tail: add multiline support",
           "timestamp": "2025-08-11T06:34:23+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 597,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 39770.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9eefa68c59db5a3764383ed2571877f398206f23",
+          "message": "Merge pull request #2604 from f1shl3gs/dependabot/cargo/tikv-jemalloc-ctl-0.6.1\n\nchore(deps): bump tikv-jemalloc-ctl from 0.6.0 to 0.6.1",
+          "timestamp": "2025-10-17T16:54:19+08:00",
+          "tree_id": "b17dcf5f2acef80e1f5a411d76cadab45b66b1c1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9eefa68c59db5a3764383ed2571877f398206f23"
+        },
+        "date": 1760691911953,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
             "unit": "s"
           },
           {
