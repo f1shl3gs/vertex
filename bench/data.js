@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760691492731,
+  "lastUpdate": 1760691846811,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1e6b77f943ccb6fc72ced5ca26099b8c56ac3254",
-          "message": "Merge pull request #2495 from f1shl3gs/sources/tail/add_multiline_support\n\nsources/tail: add multiline support",
-          "timestamp": "2025-08-11T06:34:23+08:00",
-          "tree_id": "10f0ec2529a030f37790709bcc5f8f4d033b458a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1e6b77f943ccb6fc72ced5ca26099b8c56ac3254"
-        },
-        "date": 1754865819966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14826000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 566720,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.785,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fc301837664e738bc24f53cc4306644d421f4b63",
           "message": "Merge pull request #2496 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.96\n\nchore(deps): bump proc-macro2 from 1.0.95 to 1.0.96",
           "timestamp": "2025-08-11T17:29:45+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.128,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9eefa68c59db5a3764383ed2571877f398206f23",
+          "message": "Merge pull request #2604 from f1shl3gs/dependabot/cargo/tikv-jemalloc-ctl-0.6.1\n\nchore(deps): bump tikv-jemalloc-ctl from 0.6.0 to 0.6.1",
+          "timestamp": "2025-10-17T16:54:19+08:00",
+          "tree_id": "b17dcf5f2acef80e1f5a411d76cadab45b66b1c1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9eefa68c59db5a3764383ed2571877f398206f23"
+        },
+        "date": 1760691824032,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14601000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 623270,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.848,
             "unit": "ns/op"
           }
         ]
