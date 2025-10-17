@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760691411929,
+  "lastUpdate": 1760691422702,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1e6b77f943ccb6fc72ced5ca26099b8c56ac3254",
-          "message": "Merge pull request #2495 from f1shl3gs/sources/tail/add_multiline_support\n\nsources/tail: add multiline support",
-          "timestamp": "2025-08-11T06:34:23+08:00",
-          "tree_id": "10f0ec2529a030f37790709bcc5f8f4d033b458a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1e6b77f943ccb6fc72ced5ca26099b8c56ac3254"
-        },
-        "date": 1754865395597,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.345,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.488,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 176.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.22,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9eefa68c59db5a3764383ed2571877f398206f23",
+          "message": "Merge pull request #2604 from f1shl3gs/dependabot/cargo/tikv-jemalloc-ctl-0.6.1\n\nchore(deps): bump tikv-jemalloc-ctl from 0.6.0 to 0.6.1",
+          "timestamp": "2025-10-17T16:54:19+08:00",
+          "tree_id": "b17dcf5f2acef80e1f5a411d76cadab45b66b1c1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9eefa68c59db5a3764383ed2571877f398206f23"
+        },
+        "date": 1760691401326,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.404,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.867,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 175.33,
             "unit": "ns/op"
           }
         ]
