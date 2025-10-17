@@ -1,0 +1,20 @@
+services:
+  nats:
+    image: nats:2.12.1
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+
+  # exporter:
+  #   image: natsio/prometheus-nats-exporter:0.17.3
+  #   depends_on:
+  #     - nats
+  #   ports:
+  #     - 7777:7777
+  #   command:
+  #     - -varz
+  #     - -subz
+  #     - -routez
+  #     - -leafz
+  #     - http://nats:8222
