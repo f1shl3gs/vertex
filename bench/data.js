@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760793992498,
+  "lastUpdate": 1760794088098,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ee4c559592996ecfb820bccfaf0fe4fe7d5611f7",
-          "message": "Merge pull request #2498 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-08-11T18:55:18+08:00",
-          "tree_id": "69b61dc4cf74e4f1beaf384d368e1175703b0f63",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee4c559592996ecfb820bccfaf0fe4fe7d5611f7"
-        },
-        "date": 1754910329408,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 515,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37516.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9d3641ccdc2037e489bc8ae3897fea738aaff362",
           "message": "Merge pull request #2500 from f1shl3gs/dependabot/cargo/thiserror-2.0.14\n\nchore(deps): bump thiserror from 2.0.12 to 2.0.14",
           "timestamp": "2025-08-12T08:31:07+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 39766.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "14d5b7ee6710fa5d0895b6f3d854a32a395e322b",
+          "message": "Merge pull request #2608 from f1shl3gs/sources/nats_metrics/init\n\nsources/nats_metrics: init",
+          "timestamp": "2025-10-18T21:17:07+08:00",
+          "tree_id": "11673ac86db050e5cac25c5866fb708e016f63b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/14d5b7ee6710fa5d0895b6f3d854a32a395e322b"
+        },
+        "date": 1760794066441,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 557,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40134.7,
             "unit": "KiB"
           }
         ]
