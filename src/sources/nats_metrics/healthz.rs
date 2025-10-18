@@ -14,9 +14,9 @@ pub async fn collect(client: &HttpClient, endpoint: &str) -> Result<Vec<Metric>,
         Ok(resp) => resp,
         Err(_err) => {
             return Ok(vec![
-                Metric::gauge("gnatds_healthz_status", "", 0),
+                Metric::gauge("gnatsd_healthz_status", "", 0),
                 Metric::gauge_with_tags(
-                    "natds_healthz_status_value",
+                    "gnatsd_healthz_status_value",
                     "",
                     1,
                     tags!(
@@ -28,9 +28,9 @@ pub async fn collect(client: &HttpClient, endpoint: &str) -> Result<Vec<Metric>,
     };
 
     Ok(vec![
-        Metric::gauge("gnatds_healthz_status", "", resp.status == "ok"),
+        Metric::gauge("gnatsd_healthz_status", "", resp.status == "ok"),
         Metric::gauge_with_tags(
-            "natds_healthz_status_value",
+            "gnatsd_healthz_status_value",
             "",
             1,
             tags!(

@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use event::{Metric, tags};
+use event::Metric;
 use value::Value;
 
 const EXCLUDE_KEYS: [&str; 9] = [
@@ -32,20 +32,18 @@ pub fn object_to_metrics(prefix: &str, obj: BTreeMap<String, Value>, metrics: &m
             continue;
         }
 
+        let key = match key.strip_prefix('/') {
+            None => key.as_str(),
+            Some(stripped) => stripped,
+        };
+
         match value {
-            Value::Bytes(s) => {
-                if !LABELS.contains(&key.as_str()) {
+            Value::Bytes(_) => {
+                if !LABELS.contains(&key) {
                     continue;
                 }
 
-                metrics.push(Metric::gauge_with_tags(
-                    format!("{prefix}_{key}"),
-                    "",
-                    1,
-                    tags!(
-                        "value" => String::from_utf8_lossy(&s).to_string(),
-                    ),
-                ));
+                metrics.push(Metric::gauge(format!("{prefix}_{key}"), "", 1));
             }
             Value::Integer(i) => metrics.push(Metric::gauge(format!("{prefix}_{key}"), "", i)),
             Value::Float(f) => metrics.push(Metric::gauge(format!("{prefix}_{key}"), "", f)),

@@ -24,9 +24,9 @@ struct RemoteGateway {
 impl RemoteGateway {
     fn metrics(&self, typ: &str, gateway: &str, remote: &str) -> Vec<Metric> {
         let tags = tags!(
-            "name" => gateway,
             "cid" => self.connection.cid,
-            "remote" => remote,
+            "gateway" => gateway,
+            "remote_gateway" => remote,
         );
 
         let mut metrics = vec![

@@ -221,31 +221,31 @@ async fn collect_inner(
 
     metrics.extend([
         Metric::gauge_with_tags(
-            "gnatsd_jetstream_server_disabled",
+            "jetstream_server_disabled",
             "JetStream disabled or not",
             resp.disabled,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
-            "gnatsd_jetstream_server_streams",
+            "jetstream_server_streams",
             "Total number of streams in JetStream",
             resp.streams,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
-            "gnatsd_jetstream_server_consumers",
+            "jetstream_server_consumers",
             "Total number of consumers in JetStream",
             resp.consumers,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
-            "gnatsd_jetstream_server_messages_total",
+            "jetstream_server_messages_total",
             "Total number of stored messages in JetStream",
             resp.messages,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
-            "gnatsd_jetstream_server_messages_bytes",
+            "jetstream_server_messages_bytes",
             "Total number of bytes stored in JetStream",
             resp.bytes,
             tags.clone(),
@@ -255,13 +255,13 @@ async fn collect_inner(
     if let Some(config) = resp.config {
         metrics.extend([
             Metric::gauge_with_tags(
-                "gnatsd_jetstream_server_max_memory",
+                "jetstream_server_max_memory",
                 "JetStream max memory",
                 config.max_memory,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "gnatsd_jetstream_server_max_storage",
+                "jetstream_server_max_storage",
                 "JetStream Storage",
                 config.max_storage,
                 tags.clone(),
@@ -277,25 +277,25 @@ async fn collect_inner(
 
         metrics.extend([
             Metric::gauge_with_tags(
-                "gnatsd_jetstream_account_max_storage",
+                "jetstream_account_max_storage",
                 "JetStream max storage in bytes",
                 account.stats.reserved_storage,
                 account_tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "gnatsd_jetstream_account_storage_used",
+                "jetstream_account_storage_used",
                 "Total number of bytes used by JetStream storage",
                 account.stats.storage,
                 account_tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "gnatsd_jetstream_account_max_memory",
+                "jetstream_account_max_memory",
                 "JetStream max memory in bytes",
                 account.stats.reserved_memory,
                 account_tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "gnatsd_jetstream_account_memory_used",
+                "jetstream_account_memory_used",
                 "Total number of bytes used by JetStream memory",
                 account.stats.memory,
                 account_tags.clone(),
@@ -321,54 +321,57 @@ async fn collect_inner(
             if let Some(state) = stream.state {
                 metrics.extend([
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_messages_total",
+                        "jetstream_stream_messages_total",
                         "Total number of messages from a stream",
                         state.messages,
                         stream_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_bytes",
+                        "jetstream_stream_bytes",
                         "Total stored bytes from a stream",
                         state.bytes,
                         stream_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_first_seq",
+                        "jetstream_stream_first_seq",
                         "First sequence from a stream",
                         state.first_seq,
                         stream_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_last_seq",
+                        "jetstream_stream_last_seq",
                         "Last sequence from a stream",
                         state.last_seq,
                         stream_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_consumer_count",
+                        "jetstream_stream_consumer_count",
                         "Total number of consumers from a stream",
                         state.consumer_count,
                         stream_tags.clone(),
                     ),
-                    Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_subject_count",
-                        "Total number of subjects in a stream",
-                        state.num_subjects.unwrap_or(0),
-                        stream_tags.clone(),
-                    ),
                 ]);
+
+                if let Some(num_subjects) = state.num_subjects {
+                    metrics.push(Metric::gauge_with_tags(
+                        "jetstream_stream_subject_count",
+                        "Total number of subjects in a stream",
+                        num_subjects,
+                        stream_tags.clone(),
+                    ));
+                }
             }
 
             if let Some(config) = stream.config {
                 metrics.extend([
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_limit_bytes",
+                        "jetstream_stream_limit_bytes",
                         "The maximum configured storage limit (in bytes) for a JetStream stream. A value of -1 indicates no limit",
                         config.max_bytes,
                         stream_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_limit_messages",
+                        "jetstream_stream_limit_messages",
                         "The maximum number of messages allowed in a JetStream stream as per its configuration. A value of -1 indicates no limit",
                         config.max_msgs,
                         stream_tags.clone(),
@@ -388,13 +391,13 @@ async fn collect_inner(
 
                 metrics.extend([
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_source_lag",
+                        "jetstream_stream_source_lag",
                         "Number of messages a stream source is behind",
                         source.lag,
                         source_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_stream_source_active_duration_seconds",
+                        "jetstream_stream_source_active_duration_seconds",
                         "Stream source active duration in nanoseconds (-1 indicates inactive)",
                         source.active / 1000 / 1000 / 1000,
                         source_tags,
@@ -429,49 +432,49 @@ async fn collect_inner(
 
                 metrics.extend([
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_delivered_consumer_seq",
+                        "jetstream_consumer_delivered_consumer_seq",
                         "Latest sequence number of a stream consumer",
                         consumer.delivered.consumer_seq,
                         consumer_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_delivered_stream_seq",
+                        "jetstream_consumer_delivered_stream_seq",
                         "Latest sequence number of a stream",
                         consumer.delivered.stream_seq,
                         consumer_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_num_ack_pending",
+                        "jetstream_consumer_num_ack_pending",
                         "Number of pending acks from a consumer",
                         consumer.num_ack_pending,
                         consumer_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_redelivered",
+                        "jetstream_consumer_redelivered",
                         "Number of redelivered messages from a consumer",
                         consumer.num_redelivered,
                         consumer_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_num_waiting",
+                        "jetstream_consumer_num_waiting",
                         "Number of inflight fetch requests from a pull consumer",
                         consumer.num_waiting,
                         consumer_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_num_pending",
+                        "jetstream_consumer_num_pending",
                         "Number of pending messages from a consumer",
                         consumer.num_pending,
                         consumer_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_ack_floor_stream_seq",
+                        "jetstream_consumer_ack_floor_stream_seq",
                         "Number of ack floor stream seq from a consumer",
                         consumer.ack_floor.stream_seq,
                         consumer_tags.clone(),
                     ),
                     Metric::gauge_with_tags(
-                        "gnatsd_jetstream_consumer_ack_floor_consumer_seq",
+                        "jetstream_consumer_ack_floor_consumer_seq",
                         "Number of ack floor consumer seq from a consumer",
                         consumer.ack_floor.consumer_seq,
                         consumer_tags,

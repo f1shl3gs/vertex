@@ -42,6 +42,8 @@ struct Collectors {
     #[serde(default)]
     routez: bool,
     #[serde(default)]
+    subsz: bool,
+    #[serde(default)]
     gatewayz: bool,
 }
 
@@ -55,6 +57,7 @@ impl Default for Collectors {
             jsz: Default::default(),
             leafz: true,
             routez: true,
+            subsz: true,
             gatewayz: true,
         }
     }
@@ -238,6 +241,11 @@ async fn collect(
                 warn!(message = "routez collect failed", %endpoint, %err);
             }
         }
+    }
+
+    if collectors.subsz {
+        let resp = fetch::<BTreeMap<String, Value>>(client, &format!("{endpoint}/subsz")).await?;
+        object_to_metrics("gnatsd_subsz", resp, &mut metrics);
     }
 
     metrics

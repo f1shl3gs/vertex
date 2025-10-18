@@ -37,7 +37,7 @@ impl Leaf {
             .into_iter()
             .map(|sub| {
                 Metric::gauge_with_tags(
-                    "gnatds_leafz_conn_subscriptions",
+                    "gnatsd_leafz_conn_subscriptions",
                     "",
                     0,
                     tags!(
@@ -60,29 +60,29 @@ impl Leaf {
             "name" => self.name
         );
         metrics.extend([
-            Metric::gauge_with_tags("gnatds_leafz_info", "", 1, tags.clone()),
-            Metric::gauge_with_tags("gnatds_leafz_conn_rtt", "", self.rtt, tags.clone()),
-            Metric::gauge_with_tags("gnatds_leafz_conn_in_msgs", "", self.in_msgs, tags.clone()),
+            Metric::gauge_with_tags("gnatsd_leafz_info", "", 1, tags.clone()),
+            Metric::gauge_with_tags("gnatsd_leafz_conn_rtt", "", self.rtt, tags.clone()),
+            Metric::gauge_with_tags("gnatsd_leafz_conn_in_msgs", "", self.in_msgs, tags.clone()),
             Metric::gauge_with_tags(
-                "gnatds_leafz_conn_out_msgs",
+                "gnatsd_leafz_conn_out_msgs",
                 "",
                 self.out_msgs,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "gnatds_leafz_conn_in_bytes",
+                "gnatsd_leafz_conn_in_bytes",
                 "",
                 self.in_bytes,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "gnatds_leafz_conn_out_bytes",
+                "gnatsd_leafz_conn_out_bytes",
                 "",
                 self.out_bytes,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "gnatds_leafz_conn_subscriptions_total",
+                "gnatsd_leafz_conn_subscriptions_total",
                 "",
                 self.subscriptions,
                 tags,
@@ -99,7 +99,7 @@ pub async fn collect(client: &HttpClient, endpoint: &str) -> Result<Vec<Metric>,
     let mut metrics = Vec::with_capacity(1 + 7 * resp.leafs.len());
 
     metrics.push(Metric::gauge(
-        "gnatds_leafz_conn_nodes_total",
+        "gnatsd_leafz_conn_nodes_total",
         "",
         resp.leaf_nodes,
     ));
