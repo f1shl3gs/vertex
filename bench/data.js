@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760793568261,
+  "lastUpdate": 1760793591963,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9d3641ccdc2037e489bc8ae3897fea738aaff362",
-          "message": "Merge pull request #2500 from f1shl3gs/dependabot/cargo/thiserror-2.0.14\n\nchore(deps): bump thiserror from 2.0.12 to 2.0.14",
-          "timestamp": "2025-08-12T08:31:07+08:00",
-          "tree_id": "dcd7f260aad55e330bb7637e1f5ed23bf5309124",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9d3641ccdc2037e489bc8ae3897fea738aaff362"
-        },
-        "date": 1754958799761,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.357,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.65,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 169.49,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "14d5b7ee6710fa5d0895b6f3d854a32a395e322b",
+          "message": "Merge pull request #2608 from f1shl3gs/sources/nats_metrics/init\n\nsources/nats_metrics: init",
+          "timestamp": "2025-10-18T21:17:07+08:00",
+          "tree_id": "11673ac86db050e5cac25c5866fb708e016f63b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/14d5b7ee6710fa5d0895b6f3d854a32a395e322b"
+        },
+        "date": 1760793570008,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.479,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.419,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.12,
             "unit": "ns/op"
           }
         ]
