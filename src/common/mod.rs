@@ -1,5 +1,6 @@
-#[cfg(any(feature = "sources-http_check", feature = "sources-prometheus_scrape"))]
-pub mod offset;
+mod offset;
+pub use offset::*;
+
 #[cfg(any(
     feature = "sinks-prometheus_remote_write",
     feature = "sources-prometheus_remote_write"
