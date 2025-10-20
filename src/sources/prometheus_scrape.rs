@@ -13,7 +13,7 @@ use http_body_util::{BodyExt, Full};
 use thiserror::Error;
 use tokio::task::JoinSet;
 
-use crate::common::offset::offset;
+use crate::common::offset;
 use crate::common::prometheus::convert_metrics;
 
 /// Collect metrics from prometheus clients.

@@ -29,7 +29,7 @@ use tokio::net::TcpStream;
 use tokio::task::JoinSet;
 use url::Url;
 
-use crate::common::offset::offset;
+use crate::common::offset;
 
 const fn default_timeout() -> Duration {
     Duration::from_secs(5)

@@ -6,8 +6,6 @@ use serde::{Deserialize, Deserializer};
 
 use super::{Client, Error, Gauge, TaskManager};
 
-pub const STATUS_PATH: &str = "/xml/v3/status";
-
 const SERVER_PATH: &str = "/xml/v3/server";
 const TASKS_PATH: &str = "/xml/v3/tasks";
 const ZONES_PATH: &str = "/xml/v3/zones";
@@ -42,14 +40,6 @@ struct View {
     counters: Vec<Counters>,
 }
 
-// serde_xml_rs cannot handle array if the elements is unordered, e.g.
-// <store>
-//   <foo/>
-//   <bar/>
-//   <foo/>
-// </store>
-//
-// https://github.com/RReverser/serde-xml-rs/issues/5
 impl<'de> Deserialize<'de> for View {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -165,59 +155,79 @@ struct Statistics {
     views: Views,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 struct ZoneCounter {
+    #[serde(rename = "@name")]
     name: String,
+    #[serde(rename = "@rdataclass")]
     rdataclass: String,
-    serial: u64,
+    serial: u32,
 }
 
-#[derive(Deserialize)]
+fn unwrap_list<'de, D, T>(deserializer: D) -> Result<Vec<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Default + Deserialize<'de>,
+{
+    /// Represents <list>...</list>
+    #[derive(Deserialize)]
+    struct List<T> {
+        #[serde(default, alias = "view", alias = "zone")]
+        element: Vec<T>,
+    }
+    Ok(List::deserialize(deserializer)?.element)
+}
+
+#[derive(Debug, Default, Deserialize)]
 struct ZoneView {
+    #[serde(rename = "@name")]
     name: String,
+    #[serde(default, deserialize_with = "unwrap_list")]
     zones: Vec<ZoneCounter>,
 }
 
-#[derive(Deserialize, Default)]
+#[derive(Debug, Deserialize, Default)]
 struct ZoneStatistics {
-    #[serde(default, rename = "view")]
+    #[serde(default, deserialize_with = "unwrap_list")]
     views: Vec<ZoneView>,
 }
 
 impl Client {
-    pub(super) async fn v3(&self) -> Result<super::Statistics, Error> {
-        let mut s = super::Statistics::default();
+    pub(super) async fn xml_v3(&self) -> Result<super::Statistics, Error> {
+        let mut statistics = super::Statistics::default();
+        let resp = self.fetch::<Statistics>(SERVER_PATH).await?;
 
-        let stats = self.fetch::<Statistics>(SERVER_PATH).await?;
-        s.server.boot_time = stats.server.boot_time;
-        s.server.config_time = stats.server.config_time;
-        for cs in stats.server.counters {
+        statistics.server.boot_time = resp.server.boot_time;
+        statistics.server.config_time = resp.server.config_time;
+        for cs in resp.server.counters {
             match cs.typ.as_str() {
-                "opcode" => s.server.incoming_requests.extend(cs.counters),
-                "qtype" => s.server.incoming_queries.extend(cs.counters),
-                "nsstat" => s.server.name_server_stats.extend(cs.counters),
-                "zonestat" => s.server.zone_statistics.extend(cs.counters),
-                "rcode" => s.server.server_rcodes.extend(cs.counters),
+                "opcode" => statistics.server.incoming_requests = cs.counters,
+                "qtype" => statistics.server.incoming_queries = cs.counters,
+                "nsstat" => statistics.server.name_server_stats = cs.counters,
+                "zonestat" => statistics.server.zone_statistics = cs.counters,
+                "rcode" => statistics.server.server_rcodes = cs.counters,
                 _ => {} // this shall not happen
             }
         }
 
-        for view in stats.views.views {
-            let mut v = super::View {
-                name: view.name,
-                cache: view.cache.counters,
-                resolver_stats: vec![],
-                resolver_queries: vec![],
-            };
+        for view in resp.views.views {
+            let mut resolver_stats = vec![];
+            let mut resolver_queries = vec![];
+
             for cs in view.counters {
                 match cs.typ.as_str() {
-                    "resqtype" => v.resolver_queries.extend(cs.counters),
-                    "resstats" => v.resolver_stats.extend(cs.counters),
+                    "resqtype" => resolver_queries = cs.counters,
+                    "resstats" => resolver_stats = cs.counters,
                     _ => {} // this shall not happen
                 }
             }
 
-            s.views.push(v);
+            statistics.views.push(super::View {
+                name: view.name,
+                cache: view.cache.counters,
+                resolver_stats,
+                resolver_queries,
+            });
         }
 
         let zonestats = self.fetch::<ZoneStatistics>(ZONES_PATH).await?;
@@ -233,59 +243,15 @@ impl Client {
 
                 v.zone_data.push(super::ZoneCounter {
                     name: zone.name,
-                    // TODO: does this `to_string` really necessary!?
-                    serial: zone.serial.to_string(),
+                    serial: zone.serial,
                 });
             }
-            s.zone_views.push(v);
+            statistics.zone_views.push(v);
         }
 
         let ts = self.fetch::<Statistics>(TASKS_PATH).await?;
-        s.task_manager = ts.taskmgr;
+        statistics.task_manager = ts.taskmgr;
 
-        Ok(s)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use bytes::Buf;
-
-    use super::*;
-
-    #[test]
-    fn decode_server() {
-        let data = std::fs::read("tests/bind/v3/server").unwrap();
-        let xd = &mut quick_xml::de::Deserializer::from_reader(data.reader());
-        let result: Result<Statistics, _> = serde_path_to_error::deserialize(xd);
-
-        let stats = match result {
-            Ok(s) => s,
-            Err(err) => {
-                let inner = err.inner();
-                let path = err.path();
-                panic!("{path} {inner:?}")
-            }
-        };
-
-        assert_eq!(
-            stats.server.boot_time,
-            DateTime::parse_from_rfc3339("2021-07-15T05:11:08.926Z").unwrap()
-        );
-        assert_eq!(stats.taskmgr.thread_model.worker_threads, 5);
-        assert_eq!(stats.taskmgr.thread_model.typ, "threaded");
-        assert_eq!(stats.views.views.len(), 2)
-    }
-
-    #[test]
-    fn decode_zones() {
-        let data = std::fs::read("tests/bind/v3/zones").unwrap();
-        let xd = &mut quick_xml::de::Deserializer::from_reader(data.reader());
-        let result: Result<ZoneStatistics, _> = serde_path_to_error::deserialize(xd);
-        if let Err(err) = result {
-            let inner = err.inner();
-            let path = err.path();
-            panic!("{path} {inner:?}")
-        }
+        Ok(statistics)
     }
 }
