@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760994422580,
+  "lastUpdate": 1760994440381,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d846c42daf08cc1741252ac5ff4bd8a96d65e1e2",
-          "message": "Merge pull request #2506 from f1shl3gs/lib/vtl/unify_type_check_error_msg\n\nlib/vtl: unify type check error",
-          "timestamp": "2025-08-14T10:31:03+08:00",
-          "tree_id": "85b1f1de00eeddb3780f05362879b549391e8dd0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d846c42daf08cc1741252ac5ff4bd8a96d65e1e2"
-        },
-        "date": 1755139017843,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.245,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.489,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.63,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 173.38,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "afa551ccf8719f4d1e4d0a9864c13bfed44b863f",
+          "message": "Merge pull request #2615 from f1shl3gs/lib/vtl/fix_get_set_return_value\n\nlib/vtl: fix get & set return value",
+          "timestamp": "2025-10-21T05:04:28+08:00",
+          "tree_id": "bcaef62edc9aa873086856fbb5d28dcb45172575",
+          "url": "https://github.com/f1shl3gs/vertex/commit/afa551ccf8719f4d1e4d0a9864c13bfed44b863f"
+        },
+        "date": 1760994418213,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.384,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.856,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.26,
             "unit": "ns/op"
           }
         ]
