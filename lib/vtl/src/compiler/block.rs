@@ -28,10 +28,17 @@ impl Block {
 impl Expression for Block {
     #[inline]
     fn resolve(&self, cx: &mut Context) -> Result<Value, ExpressionError> {
-        let (last, others) = self.0.split_last().expect("at least one expression");
+        let [previous @ .., last] = self.0.as_slice() else {
+            unreachable!("checked already at compile time");
+        };
 
-        for statement in others {
-            statement.resolve(cx)?;
+        for statement in previous {
+            if let Err(err) = statement.resolve(cx) {
+                return match err {
+                    ExpressionError::Return { value } => Ok(value.unwrap_or(Value::Null)),
+                    err => Err(err),
+                };
+            }
         }
 
         last.resolve(cx)
