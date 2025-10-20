@@ -105,7 +105,7 @@ impl Expression for SetFunc {
             }
         }
 
-        Ok(Value::Null)
+        Ok(value)
     }
 
     fn type_def(&self, _state: &TypeState) -> TypeDef {
@@ -121,39 +121,43 @@ mod tests {
     use super::*;
     use crate::compiler::Span;
     use crate::compiler::function::compile_and_run;
-    use value::parse_target_path;
+    use value::value;
 
     #[test]
     fn set() {
-        let path = Expr::Array(vec![
-            Spanned::new(Expr::String("array".into()), Span::empty()),
-            Spanned::new(Expr::Integer(2), Span::empty()),
-        ]);
+        let path = Expr::Array(vec![Spanned::new(
+            Expr::String("foo".into()),
+            Span::empty(),
+        )]);
 
         compile_and_run(
             vec![
-                parse_target_path(".").unwrap().into(),
+                Expr::Object(Default::default()),
                 path,
                 Expr::String("bar".into()),
             ],
             Set,
             TypeDef::undefined(),
-            Ok(Value::Null),
+            Ok(value!({
+                "foo": "bar"
+            })),
         )
     }
 
     #[test]
     fn set_none() {
-        let path = Expr::Array(vec![
-            Spanned::new(Expr::String("array".into()), Span::empty()),
-            Spanned::new(Expr::Integer(2), Span::empty()),
-        ]);
+        let path = Expr::Array(vec![Spanned::new(
+            Expr::String("foo".into()),
+            Span::empty(),
+        )]);
 
         compile_and_run(
-            vec![parse_target_path(".").unwrap().into(), path],
+            vec![Expr::Object(Default::default()), path],
             Set,
             TypeDef::undefined(),
-            Ok(Value::Null),
+            Ok(value!({
+                "foo": null
+            })),
         )
     }
 }
