@@ -121,13 +121,14 @@ mod tests {
     use super::*;
     use crate::compiler::Span;
     use crate::compiler::function::compile_and_run;
-    use value::{value};
+    use value::value;
 
     #[test]
     fn set() {
-        let path = Expr::Array(vec![
-            Spanned::new(Expr::String("foo".into()), Span::empty()),
-        ]);
+        let path = Expr::Array(vec![Spanned::new(
+            Expr::String("foo".into()),
+            Span::empty(),
+        )]);
 
         compile_and_run(
             vec![
@@ -145,15 +146,13 @@ mod tests {
 
     #[test]
     fn set_none() {
-        let path = Expr::Array(vec![
-            Spanned::new(Expr::String("foo".into()), Span::empty()),
-        ]);
+        let path = Expr::Array(vec![Spanned::new(
+            Expr::String("foo".into()),
+            Span::empty(),
+        )]);
 
         compile_and_run(
-            vec![
-                Expr::Object(Default::default()),
-                path
-            ],
+            vec![Expr::Object(Default::default()), path],
             Set,
             TypeDef::undefined(),
             Ok(value!({
