@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-use super::{Client, Counter, Error, Gauge};
+use super::{Client, Counter, Error, Gauge, Statistics};
 
 // ServerPath is the HTTP path of the JSON v1 server resource.
 const SERVER_PATH: &str = "/json/v1/server";
@@ -28,7 +28,7 @@ struct View {
 }
 
 #[derive(Deserialize)]
-struct Statistics {
+struct Server {
     #[serde(rename = "boot-time")]
     boot_time: DateTime<Utc>,
     #[serde(rename = "config-time")]
@@ -78,10 +78,10 @@ struct TaskStatistics {
 }
 
 impl Client {
-    pub(super) async fn json_v1(&self) -> Result<super::Statistics, Error> {
-        let mut output = super::Statistics::default();
+    pub(super) async fn json_v1(&self) -> Result<Statistics, Error> {
+        let mut output = Statistics::default();
 
-        let server = self.fetch::<Statistics>(SERVER_PATH).await?;
+        let server = self.fetch::<Server>(SERVER_PATH).await?;
         output.server.boot_time = server.boot_time;
         output.server.config_time = server.config_time;
 

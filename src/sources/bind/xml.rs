@@ -155,22 +155,40 @@ struct Statistics {
     views: Views,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 struct ZoneCounter {
+    #[serde(rename = "@name")]
     name: String,
+    #[serde(rename = "@rdataclass")]
     rdataclass: String,
     serial: u32,
 }
 
-#[derive(Deserialize)]
+fn unwrap_list<'de, D, T>(deserializer: D) -> Result<Vec<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Default + Deserialize<'de>,
+{
+    /// Represents <list>...</list>
+    #[derive(Deserialize)]
+    struct List<T> {
+        #[serde(default, alias = "view", alias = "zone")]
+        element: Vec<T>,
+    }
+    Ok(List::deserialize(deserializer)?.element)
+}
+
+#[derive(Debug, Default, Deserialize)]
 struct ZoneView {
+    #[serde(rename = "@name")]
     name: String,
+    #[serde(default, deserialize_with = "unwrap_list")]
     zones: Vec<ZoneCounter>,
 }
 
-#[derive(Deserialize, Default)]
+#[derive(Debug, Deserialize, Default)]
 struct ZoneStatistics {
-    #[serde(default, rename = "view")]
+    #[serde(default, deserialize_with = "unwrap_list")]
     views: Vec<ZoneView>,
 }
 
@@ -183,31 +201,33 @@ impl Client {
         statistics.server.config_time = resp.server.config_time;
         for cs in resp.server.counters {
             match cs.typ.as_str() {
-                "opcode" => statistics.server.incoming_requests.extend(cs.counters),
-                "qtype" => statistics.server.incoming_queries.extend(cs.counters),
-                "nsstat" => statistics.server.name_server_stats.extend(cs.counters),
-                "zonestat" => statistics.server.zone_statistics.extend(cs.counters),
-                "rcode" => statistics.server.server_rcodes.extend(cs.counters),
+                "opcode" => statistics.server.incoming_requests = cs.counters,
+                "qtype" => statistics.server.incoming_queries = cs.counters,
+                "nsstat" => statistics.server.name_server_stats = cs.counters,
+                "zonestat" => statistics.server.zone_statistics = cs.counters,
+                "rcode" => statistics.server.server_rcodes = cs.counters,
                 _ => {} // this shall not happen
             }
         }
 
         for view in resp.views.views {
-            let mut v = super::View {
-                name: view.name,
-                cache: view.cache.counters,
-                resolver_stats: vec![],
-                resolver_queries: vec![],
-            };
+            let mut resolver_stats = vec![];
+            let mut resolver_queries = vec![];
+
             for cs in view.counters {
                 match cs.typ.as_str() {
-                    "resqtype" => v.resolver_queries.extend(cs.counters),
-                    "resstats" => v.resolver_stats.extend(cs.counters),
+                    "resqtype" => resolver_queries = cs.counters,
+                    "resstats" => resolver_stats = cs.counters,
                     _ => {} // this shall not happen
                 }
             }
 
-            statistics.views.push(v);
+            statistics.views.push(super::View {
+                name: view.name,
+                cache: view.cache.counters,
+                resolver_stats,
+                resolver_queries,
+            });
         }
 
         let zonestats = self.fetch::<ZoneStatistics>(ZONES_PATH).await?;

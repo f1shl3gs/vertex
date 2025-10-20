@@ -228,28 +228,30 @@ fn server_metrics(s: Server) -> Vec<Metric> {
 
 // TODO: maybe embed this
 fn histogram(stats: &Vec<Counter>) -> Result<(Vec<Bucket>, u64), ParseFloatError> {
-    let mut count = 0;
     let mut buckets = vec![];
 
     for c in stats {
-        if c.name.starts_with("QryRTT") {
-            let mut b = f64::INFINITY;
+        let Some(stripped) = c.name.strip_prefix("QryRTT") else {
+            continue;
+        };
 
-            if !c.name.ends_with('+')
-                && let Some(rtt) = c.name.strip_prefix("QryRTT")
-            {
-                b = rtt.parse()?;
-            }
+        let le = match stripped.strip_suffix("+") {
+            Some(_) => f64::INFINITY,
+            None => stripped.parse()?,
+        };
 
-            count += c.value;
-            buckets.push(Bucket {
-                upper: b / 1000.0,
-                count,
-            });
-        }
+        buckets.push(Bucket {
+            upper: le / 1000.0,
+            count: c.value,
+        });
     }
 
     buckets.sort_by(|a, b| a.upper.total_cmp(&b.upper));
+
+    let count = buckets.iter_mut().fold(0, |acc, item| {
+        item.count += acc;
+        item.count
+    });
 
     Ok((buckets, count))
 }
@@ -553,11 +555,7 @@ impl Client {
 
         match parts.headers.get(CONTENT_TYPE) {
             Some(value) => {
-                if value
-                    .as_bytes()
-                    .windows(4)
-                    .any(|w| w == b"application/json")
-                {
+                if value.as_bytes().windows(4).any(|w| w == b"json") {
                     serde_json::from_slice(&body).map_err(|err| Error::Decode(err.to_string()))
                 } else {
                     quick_xml::de::from_reader(body.reader())
@@ -643,7 +641,7 @@ mod tests {
     use hyper::server::conn::http1;
     use hyper::service::service_fn;
     use hyper_util::rt::TokioIo;
-    use testify::http::{file_send, not_found};
+    use testify::http::not_found;
     use tokio::net::TcpListener;
 
     use super::*;
@@ -690,22 +688,54 @@ mod tests {
         };
 
         let version = client.probe().await.unwrap();
-        let s = match version {
+        let statistics = match version {
             Version::XmlV3 => client.xml_v3().await.unwrap(),
             Version::JsonV1 => client.json_v1().await.unwrap(),
         };
-        let got = statistics_to_metrics(s)
+        let got = statistics_to_metrics(statistics)
             .into_iter()
             .map(|m| m.to_string())
             .flat_map(|s| s.lines().map(|s| s.to_string()).collect::<Vec<_>>())
             .collect::<Vec<_>>();
 
+        println!("got: {:#?}", got);
+
         for want in [
             // server
+            r#"bind_boot_time_seconds 1626325868"#,
+            r#"bind_incoming_queries_total{type="A"} 128417"#,
+            r#"bind_incoming_requests_total{opcode="QUERY"} 37634"#,
+            r#"bind_responses_total{result="Success"} 29313"#,
+            r#"bind_query_duplicates_total 216"#,
+            r#"bind_query_errors_total{error="Dropped"} 237"#,
+            r#"bind_query_errors_total{error="Failure"} 2950"#,
+            r#"bind_query_recursions_total 60946"#,
+            r#"bind_zone_transfer_rejected_total 3"#,
+            r#"bind_zone_transfer_success_total 25"#,
+            r#"bind_zone_transfer_failure_total 1"#,
+            r#"bind_recursive_clients 76"#,
             r#"bind_config_time_seconds 1626325868"#,
             r#"bind_response_rcodes_total{rcode="NOERROR"} 989812"#,
             r#"bind_response_rcodes_total{rcode="NXDOMAIN"} 33958"#,
             // view
+            r#"bind_resolver_cache_rrsets{type="A",view="_default"} 34324"#,
+            r#"bind_resolver_queries_total{type="CNAME",view="_default"} 28"#,
+            r#"bind_resolver_response_errors_total{error="FORMERR",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="FORMERR",view="_default"} 42906"#,
+            r#"bind_resolver_response_errors_total{error="NXDOMAIN",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="NXDOMAIN",view="_default"} 16707"#,
+            r#"bind_resolver_response_errors_total{error="OtherError",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="OtherError",view="_default"} 20660"#,
+            r#"bind_resolver_response_errors_total{error="SERVFAIL",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="SERVFAIL",view="_default"} 7596"#,
+            r#"bind_resolver_response_lame_total{view="_default"} 9108"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.01",view="_default"} 38334"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.1",view="_default"} 113122"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.5",view="_default"} 182658"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.8",view="_default"} 187375"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="1.6",view="_default"} 188409"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="+Inf",view="_default"} 227755"#,
+            r#"bind_zone_serial{view="_default",zone_name="TEST_ZONE"} 123"#,
             r#"bind_resolver_response_errors_total{error="REFUSED",view="_bind"} 17"#,
             r#"bind_resolver_response_errors_total{error="REFUSED",view="_default"} 5798"#,
             // task
@@ -729,7 +759,16 @@ mod tests {
                 return Ok(not_found());
             }
 
-            file_send(format!("tests/bind/{}.xml", req.uri().path())).await
+            match std::fs::read(format!("tests/bind/{}.xml", req.uri().path())) {
+                Ok(content) => {
+                    let resp = Response::builder()
+                        .header(CONTENT_TYPE, "application/xml")
+                        .body(Full::from(content))
+                        .unwrap();
+                    Ok(resp)
+                }
+                Err(_) => Ok(not_found()),
+            }
         }
 
         assert_statistics(handle).await;
@@ -748,7 +787,16 @@ mod tests {
                 return Ok(not_found());
             }
 
-            file_send(format!("tests/bind/{}.json", req.uri().path())).await
+            match std::fs::read(format!("tests/bind/{}.json", req.uri().path())) {
+                Ok(content) => {
+                    let resp = Response::builder()
+                        .header(CONTENT_TYPE, "application/json")
+                        .body(Full::from(content))
+                        .unwrap();
+                    Ok(resp)
+                }
+                Err(_) => Ok(not_found()),
+            }
         }
 
         assert_statistics(handle).await;
