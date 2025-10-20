@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760986324462,
+  "lastUpdate": 1760986702485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5c3e7802c4a879cd52dfa45139928e3c577466a2",
-          "message": "Merge pull request #2505 from f1shl3gs/dependabot/cargo/syslog_loose-0.23.0\n\nchore(deps): bump syslog_loose from 0.22.0 to 0.23.0",
-          "timestamp": "2025-08-14T05:05:55+08:00",
-          "tree_id": "8437ed7c365b7c7dfb75e24f0bbbd137fd9bc281",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5c3e7802c4a879cd52dfa45139928e3c577466a2"
-        },
-        "date": 1755119749104,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14705000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 569150,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.243,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "04dc097aafcd1b35c1cab19d6784e5ec77fe0fb7",
           "message": "Merge pull request #2504 from f1shl3gs/dependabot/cargo/syn-2.0.105\n\nchore(deps): bump syn from 2.0.104 to 2.0.105",
           "timestamp": "2025-08-14T05:06:08+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.287,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "501b5d3307f340a1e7c34865ce778cda27e9ed58",
+          "message": "Merge pull request #2613 from f1shl3gs/lib/event/add_alloc_feature_to_serde\n\nlib/event: add `alloc` feature to serde",
+          "timestamp": "2025-10-21T02:48:22+08:00",
+          "tree_id": "4d133cf7b888691afba77e8f7fff603c746edecb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/501b5d3307f340a1e7c34865ce778cda27e9ed58"
+        },
+        "date": 1760986680558,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15300000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 634600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.259,
             "unit": "ns/op"
           }
         ]
