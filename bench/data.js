@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760969042843,
+  "lastUpdate": 1760969162320,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2816c661164693466d775542c484ccaebd14d3b1",
-          "message": "Merge pull request #2499 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.97\n\nchore(deps): bump proc-macro2 from 1.0.96 to 1.0.97",
-          "timestamp": "2025-08-12T08:31:18+08:00",
-          "tree_id": "aad75aedcfc2cabc7a4311d400dfc55b3b015384",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2816c661164693466d775542c484ccaebd14d3b1"
-        },
-        "date": 1754959269140,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 506,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 37517.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "10890cb5c20721f76f308149811f00daf3f2155e",
           "message": "Merge pull request #2501 from f1shl3gs/deps/glob/bump_to_0.3.3\n\ndeps: bump glob to 0.3.3",
           "timestamp": "2025-08-12T13:09:48+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40133.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "328fd09af0c250a02e5becde67287bdc075046ff",
+          "message": "Merge pull request #2610 from f1shl3gs/sources/bind/drop_xml_v2_and_add_json_v1\n\nsources/bind: support multiple endpoints; add json v1 and remove xml v2",
+          "timestamp": "2025-10-20T21:54:35+08:00",
+          "tree_id": "4c866f2212138b341ad409aed223dba81705b92a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/328fd09af0c250a02e5becde67287bdc075046ff"
+        },
+        "date": 1760969140754,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40290.5,
             "unit": "KiB"
           }
         ]
