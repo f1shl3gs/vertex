@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760968607458,
+  "lastUpdate": 1760968617308,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "10890cb5c20721f76f308149811f00daf3f2155e",
-          "message": "Merge pull request #2501 from f1shl3gs/deps/glob/bump_to_0.3.3\n\ndeps: bump glob to 0.3.3",
-          "timestamp": "2025-08-12T13:09:48+08:00",
-          "tree_id": "cc2773913737fb7a19af53f1b2202b841f3b65ba",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10890cb5c20721f76f308149811f00daf3f2155e"
-        },
-        "date": 1754975515455,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.427,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.904,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.98,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 175.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "328fd09af0c250a02e5becde67287bdc075046ff",
+          "message": "Merge pull request #2610 from f1shl3gs/sources/bind/drop_xml_v2_and_add_json_v1\n\nsources/bind: support multiple endpoints; add json v1 and remove xml v2",
+          "timestamp": "2025-10-20T21:54:35+08:00",
+          "tree_id": "4c866f2212138b341ad409aed223dba81705b92a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/328fd09af0c250a02e5becde67287bdc075046ff"
+        },
+        "date": 1760968595862,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.276,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.733,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.24,
             "unit": "ns/op"
           }
         ]
