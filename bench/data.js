@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760986237405,
+  "lastUpdate": 1760986241921,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5c3e7802c4a879cd52dfa45139928e3c577466a2",
-          "message": "Merge pull request #2505 from f1shl3gs/dependabot/cargo/syslog_loose-0.23.0\n\nchore(deps): bump syslog_loose from 0.22.0 to 0.23.0",
-          "timestamp": "2025-08-14T05:05:55+08:00",
-          "tree_id": "8437ed7c365b7c7dfb75e24f0bbbd137fd9bc281",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5c3e7802c4a879cd52dfa45139928e3c577466a2"
-        },
-        "date": 1755119287747,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.073,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 183.58,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.09,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "501b5d3307f340a1e7c34865ce778cda27e9ed58",
+          "message": "Merge pull request #2613 from f1shl3gs/lib/event/add_alloc_feature_to_serde\n\nlib/event: add `alloc` feature to serde",
+          "timestamp": "2025-10-21T02:48:22+08:00",
+          "tree_id": "4d133cf7b888691afba77e8f7fff603c746edecb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/501b5d3307f340a1e7c34865ce778cda27e9ed58"
+        },
+        "date": 1760986220485,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.296,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 103.19,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 175.79,
             "unit": "ns/op"
           }
         ]
