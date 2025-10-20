@@ -429,7 +429,13 @@ impl Compiler<'_> {
                 Token::For => statements.push(self.parse_for()?),
                 Token::Return => {
                     self.lexer.next();
-                    statements.push(Statement::Return(None))
+
+                    if self.lexer.peek().is_none() {
+                        statements.push(Statement::Return(None));
+                    } else {
+                        let value = self.parse_expr()?;
+                        statements.push(Statement::Expression(value.node));
+                    }
                 }
                 // end of block
                 Token::RightBrace => {
@@ -452,8 +458,14 @@ impl Compiler<'_> {
                         }
                         None => {
                             // End of file
-                            let expr = self.parse_expr()?;
-                            Statement::Expression(expr.node)
+                            self.lexer.set_pos(span.end);
+                            if self.lexer.peek().is_none() {
+                                self.lexer.set_pos(span.start);
+                                Statement::Expression(self.parse_expr_primary()?.node)
+                            } else {
+                                let expr = self.parse_expr()?;
+                                Statement::Expression(expr.node)
+                            }
                         }
                     };
 
