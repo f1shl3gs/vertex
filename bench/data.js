@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760990981471,
+  "lastUpdate": 1760990982298,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "04dc097aafcd1b35c1cab19d6784e5ec77fe0fb7",
-          "message": "Merge pull request #2504 from f1shl3gs/dependabot/cargo/syn-2.0.105\n\nchore(deps): bump syn from 2.0.104 to 2.0.105",
-          "timestamp": "2025-08-14T05:06:08+08:00",
-          "tree_id": "e4dbc2add4121fb309151cdc2c52718b59022646",
-          "url": "https://github.com/f1shl3gs/vertex/commit/04dc097aafcd1b35c1cab19d6784e5ec77fe0fb7"
-        },
-        "date": 1755119307407,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 482110,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 503060,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3e0579ddb22e6e02817a0ee679508e6093e3aca9",
+          "message": "Merge pull request #2614 from f1shl3gs/sources/zookeeper/support_multiple_endpoints\n\nsources/zookeeper: support multiple endpoints",
+          "timestamp": "2025-10-21T04:07:09+08:00",
+          "tree_id": "390b6d8cdb1f9a60454685d4f2891a37efefa578",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3e0579ddb22e6e02817a0ee679508e6093e3aca9"
+        },
+        "date": 1760990960321,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 499750,
             "unit": "ns/op"
           }
         ]
