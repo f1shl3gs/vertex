@@ -95,7 +95,7 @@ impl Expression for GetFunc {
 
     fn type_def(&self, _state: &TypeState) -> TypeDef {
         TypeDef {
-            fallible: true,
+            fallible: false,
             kind: Kind::ANY,
         }
     }
@@ -118,7 +118,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".").unwrap().into(), path],
             Get,
-            TypeDef::any().fallible(),
+            TypeDef::any(),
             Ok(Value::Integer(3)),
         )
     }
@@ -133,7 +133,7 @@ mod tests {
         compile_and_run(
             vec![parse_target_path(".").unwrap().into(), path],
             Get,
-            TypeDef::any().fallible(),
+            TypeDef::any(),
             Ok(Value::Null),
         )
     }
