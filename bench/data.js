@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760991043942,
+  "lastUpdate": 1760991408700,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "04dc097aafcd1b35c1cab19d6784e5ec77fe0fb7",
-          "message": "Merge pull request #2504 from f1shl3gs/dependabot/cargo/syn-2.0.105\n\nchore(deps): bump syn from 2.0.104 to 2.0.105",
-          "timestamp": "2025-08-14T05:06:08+08:00",
-          "tree_id": "e4dbc2add4121fb309151cdc2c52718b59022646",
-          "url": "https://github.com/f1shl3gs/vertex/commit/04dc097aafcd1b35c1cab19d6784e5ec77fe0fb7"
-        },
-        "date": 1755119753410,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14762000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 632720,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.54,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d846c42daf08cc1741252ac5ff4bd8a96d65e1e2",
           "message": "Merge pull request #2506 from f1shl3gs/lib/vtl/unify_type_check_error_msg\n\nlib/vtl: unify type check error",
           "timestamp": "2025-08-14T10:31:03+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.259,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3e0579ddb22e6e02817a0ee679508e6093e3aca9",
+          "message": "Merge pull request #2614 from f1shl3gs/sources/zookeeper/support_multiple_endpoints\n\nsources/zookeeper: support multiple endpoints",
+          "timestamp": "2025-10-21T04:07:09+08:00",
+          "tree_id": "390b6d8cdb1f9a60454685d4f2891a37efefa578",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3e0579ddb22e6e02817a0ee679508e6093e3aca9"
+        },
+        "date": 1760991386754,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14739000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 612380,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.171,
             "unit": "ns/op"
           }
         ]
