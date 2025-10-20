@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760981860355,
+  "lastUpdate": 1760983363805,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8262ca41ad136965cef2601f6f4ec7fd472be10b",
-          "message": "Merge pull request #2502 from f1shl3gs/dependabot/github_actions/actions/checkout-5\n\nchore(ci): bump actions/checkout from 4 to 5",
-          "timestamp": "2025-08-13T00:36:23+08:00",
-          "tree_id": "8609cdea59e95a47d2be95e79dd3e8a204414c40",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8262ca41ad136965cef2601f6f4ec7fd472be10b"
-        },
-        "date": 1755016698126,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 499870,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 500010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a4605316f767baa91cded5319976e16a94bf4d2c",
+          "message": "Merge pull request #2612 from f1shl3gs/lib/configurable-derive/fix_required_of_no_attrs_fields\n\nlib/configurable-derive: fix required value of non-attributes field",
+          "timestamp": "2025-10-21T02:00:18+08:00",
+          "tree_id": "77a9b5e97f4bfb1ad980dada9122f8539458f277",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a4605316f767baa91cded5319976e16a94bf4d2c"
+        },
+        "date": 1760983341883,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 504090,
             "unit": "ns/op"
           }
         ]
