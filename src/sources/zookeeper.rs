@@ -12,13 +12,13 @@ use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{Error, Source};
 use tokio::net::TcpStream;
+use tokio::task::JoinSet;
 
 #[configurable_component(source, name = "zookeeper")]
-#[serde(deny_unknown_fields)]
 struct Config {
     /// The endpoints to connect to.
     #[configurable(required)]
-    target: SocketAddr,
+    endpoints: Vec<SocketAddr>,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -29,12 +29,22 @@ struct Config {
 #[typetag::serde(name = "zookeeper")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        Ok(Box::pin(run(
-            self.target,
-            self.interval,
-            cx.output,
-            cx.shutdown,
-        )))
+        let endpoints = self.endpoints.clone();
+        let interval = self.interval;
+        let output = cx.output.clone();
+        let shutdown = cx.shutdown.clone();
+
+        Ok(Box::pin(async move {
+            let mut tasks = JoinSet::from_iter(
+                endpoints
+                    .into_iter()
+                    .map(|endpoint| run(endpoint, interval, output.clone(), shutdown.clone())),
+            );
+
+            while tasks.join_next().await.is_some() {}
+
+            Ok(())
+        }))
     }
 
     fn outputs(&self) -> Vec<OutputType> {
@@ -52,14 +62,15 @@ async fn run(
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
-    let mut ticker = tokio::time::interval(interval);
     let mut scrapes = 0;
     let mut errors = 0;
+    let target_value = target.to_string();
+
+    let start = crate::common::calculate_start(&target, interval);
+    let mut ticker = tokio::time::interval_at(start.into(), interval);
 
     loop {
         tokio::select! {
-            biased;
-
             _ = &mut shutdown => break,
             _ = ticker.tick() => {}
         }
@@ -105,7 +116,10 @@ async fn run(
         ]);
 
         let now = chrono::Utc::now();
-        metrics.iter_mut().for_each(|m| m.timestamp = Some(now));
+        metrics.iter_mut().for_each(|metric| {
+            metric.timestamp = Some(now);
+            metric.tags_mut().insert("target", &target_value);
+        });
 
         if let Err(err) = output.send(metrics).await {
             error!(
