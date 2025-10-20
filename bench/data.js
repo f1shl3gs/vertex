@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760986702485,
+  "lastUpdate": 1760986763662,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8262ca41ad136965cef2601f6f4ec7fd472be10b",
-          "message": "Merge pull request #2502 from f1shl3gs/dependabot/github_actions/actions/checkout-5\n\nchore(ci): bump actions/checkout from 4 to 5",
-          "timestamp": "2025-08-13T00:36:23+08:00",
-          "tree_id": "8609cdea59e95a47d2be95e79dd3e8a204414c40",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8262ca41ad136965cef2601f6f4ec7fd472be10b"
-        },
-        "date": 1755017251844,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 576,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40363.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5c3e7802c4a879cd52dfa45139928e3c577466a2",
           "message": "Merge pull request #2505 from f1shl3gs/dependabot/cargo/syslog_loose-0.23.0\n\nchore(deps): bump syslog_loose from 0.22.0 to 0.23.0",
           "timestamp": "2025-08-14T05:05:55+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 567,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40339.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "501b5d3307f340a1e7c34865ce778cda27e9ed58",
+          "message": "Merge pull request #2613 from f1shl3gs/lib/event/add_alloc_feature_to_serde\n\nlib/event: add `alloc` feature to serde",
+          "timestamp": "2025-10-21T02:48:22+08:00",
+          "tree_id": "4d133cf7b888691afba77e8f7fff603c746edecb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/501b5d3307f340a1e7c34865ce778cda27e9ed58"
+        },
+        "date": 1760986742002,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
             "unit": "s"
           },
           {
