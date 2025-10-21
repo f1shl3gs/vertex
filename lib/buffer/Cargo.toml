@@ -18,7 +18,7 @@ crc32fast = { version = "1.5.0", default-features = false, features = ["std"] }
 finalize = { path = "../finalize" }
 futures = { version = "0.3.31", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "4b4d047d031337cc77a7d3637f9c6215098f9949" }
-memmap2 = { version = "0.9.8", default-features = false }
+memmap2 = { version = "0.9.9", default-features = false }
 pin-project-lite = { version = "0.2.16", default-features = false }
 serde = { version = "1.0.228", default-features = false }
 thiserror = { version = "2.0.17", default-features = false }
