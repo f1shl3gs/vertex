@@ -26,13 +26,13 @@ mod proto {
     include!(concat!(env!("OUT_DIR"), "/dnstap.rs"));
 }
 
-const fn default_max_frame_length() -> usize {
+const fn default_max_frame_size() -> usize {
     128 * 1024
 }
 
 /// Listening mode for the `dnstap` source
 #[derive(Configurable, Debug, Deserialize, Serialize)]
-#[serde(tag = "mode", rename_all = "snake_case")]
+#[serde(rename_all = "snake_case")]
 enum Mode {
     /// Listen on TCP
     Tcp(tcp::Config),
@@ -46,8 +46,8 @@ struct Config {
     /// Maximum DNSTAP frame length that the source accepts.
     ///
     /// If any frame is longer than this, it is discarded.
-    #[serde(default = "default_max_frame_length")]
-    max_frame_length: usize,
+    #[serde(default = "default_max_frame_size", with = "humanize::bytes::serde")]
+    max_frame_size: usize,
 
     // /// Whether to skip parsing or decoding of DNSTAP frames.
     // ///
@@ -63,8 +63,8 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         match &self.mode {
-            Mode::Tcp(config) => config.build(self.max_frame_length, cx).await,
-            Mode::Unix(config) => config.build(self.max_frame_length, cx).await,
+            Mode::Tcp(config) => config.build(self.max_frame_size, cx).await,
+            Mode::Unix(config) => config.build(self.max_frame_size, cx).await,
         }
     }
 
