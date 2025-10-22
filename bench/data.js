@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761164206126,
+  "lastUpdate": 1761164221151,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "35337c19a31b0de4f80ad945caf0cff88650a49c",
-          "message": "Merge pull request #2526 from f1shl3gs/dependabot/cargo/indexmap-2.11.0\n\nchore(deps): bump indexmap from 2.10.0 to 2.11.0",
-          "timestamp": "2025-08-23T11:49:10+08:00",
-          "tree_id": "5a00e2d94efc3bed72d681887928fdce04b280fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/35337c19a31b0de4f80ad945caf0cff88650a49c"
-        },
-        "date": 1755921105446,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.138,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 161.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 314.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 679.57,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "edb5278aad7332b27699aabc1b15c03a225946ba",
           "message": "Merge pull request #2525 from f1shl3gs/dependabot/cargo/memmap2-0.9.8\n\nchore(deps): bump memmap2 from 0.9.7 to 0.9.8",
           "timestamp": "2025-08-23T11:49:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 685.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2aeea0cb8078548cf98d016ae0f664c3357d163",
+          "message": "Merge pull request #2632 from f1shl3gs/sources/mysqld/unify_endpoint\n\nsources/mysqld: unify endpoint",
+          "timestamp": "2025-10-23T04:13:51+08:00",
+          "tree_id": "10e78cea0fa3f8647819050935d50f70016f71c3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2aeea0cb8078548cf98d016ae0f664c3357d163"
+        },
+        "date": 1761164199182,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.472,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 668.43,
             "unit": "ns/op"
           }
         ]
