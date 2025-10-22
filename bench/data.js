@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761164620215,
+  "lastUpdate": 1761164720256,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9500c93aa674d7458c67e77caee74e63bcae849a",
-          "message": "Merge pull request #2523 from f1shl3gs/dependabot/cargo/url-2.5.6\n\nchore(deps): bump url from 2.5.4 to 2.5.6",
-          "timestamp": "2025-08-22T13:49:41+08:00",
-          "tree_id": "e48715b3139c6118e0cf24c5540bced86af0b8ac",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9500c93aa674d7458c67e77caee74e63bcae849a"
-        },
-        "date": 1755842428348,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 553,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40352.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4791c224ceac822dd8e043b95d6ab0c22e4c13c6",
           "message": "Merge pull request #2522 from f1shl3gs/dependabot/cargo/percent-encoding-2.3.2\n\nchore(deps): bump percent-encoding from 2.3.1 to 2.3.2",
           "timestamp": "2025-08-22T13:49:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40355.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2aeea0cb8078548cf98d016ae0f664c3357d163",
+          "message": "Merge pull request #2632 from f1shl3gs/sources/mysqld/unify_endpoint\n\nsources/mysqld: unify endpoint",
+          "timestamp": "2025-10-23T04:13:51+08:00",
+          "tree_id": "10e78cea0fa3f8647819050935d50f70016f71c3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2aeea0cb8078548cf98d016ae0f664c3357d163"
+        },
+        "date": 1761164697745,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40350.5,
             "unit": "KiB"
           }
         ]
