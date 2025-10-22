@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761132400040,
+  "lastUpdate": 1761132416457,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8fd182d4d8319b3f20666819953ce3c45f40e9c2",
-          "message": "Merge pull request #2510 from f1shl3gs/dependabot/cargo/thiserror-2.0.15\n\nchore(deps): bump thiserror from 2.0.14 to 2.0.15",
-          "timestamp": "2025-08-17T11:18:56+08:00",
-          "tree_id": "26f48cd4d68ba0d3b8be387bbaad14634b4786ce",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8fd182d4d8319b3f20666819953ce3c45f40e9c2"
-        },
-        "date": 1755400927905,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.033,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 314.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 662.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3f2e7e6a39da5c7ca94ce67386a15c892d8896ad",
           "message": "Merge pull request #2511 from f1shl3gs/codecs/rename_framing_config_variant\n\nlib/codecs: unify framing config names",
           "timestamp": "2025-08-18T12:39:28+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 651.93,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eb84db66a347b76f38b2625b88c7703fac0afc99",
+          "message": "Merge pull request #2619 from f1shl3gs/misc/switch_to_calculate_start\n\nmisc: switch offset to calculate_start*",
+          "timestamp": "2025-10-22T19:23:52+08:00",
+          "tree_id": "56c59d549753220763896dfa38c5fb3df433f092",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eb84db66a347b76f38b2625b88c7703fac0afc99"
+        },
+        "date": 1761132394517,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.005,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.87,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 297.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 659.65,
             "unit": "ns/op"
           }
         ]
