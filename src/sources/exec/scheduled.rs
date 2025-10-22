@@ -13,7 +13,7 @@ pub struct ScheduledConfig {
     ///
     /// If the command takes longer than `exec_interval_secs` to run, it will be killed.
     #[serde(with = "humanize::duration::serde")]
-    #[configurable(required, example = "1m")]
+    #[configurable(example = "1m")]
     pub interval: Duration,
 }
 

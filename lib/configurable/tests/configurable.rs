@@ -24,7 +24,7 @@ struct External {
 /// blah blah
 #[derive(Deserialize, Configurable)]
 struct Foo {
-    #[configurable(required, description = "number field", default = 12)]
+    #[configurable(description = "number field", default = 12)]
     field_num: u32,
     #[configurable(default = "aaaaa")]
     filed_str: String,
@@ -46,7 +46,7 @@ struct Foo {
 enum Variant {
     None,
     Internal {
-        #[configurable(description = "first desc", required)]
+        #[configurable(description = "first desc")]
         first: String,
         #[configurable(default = 12)]
         second: u32,

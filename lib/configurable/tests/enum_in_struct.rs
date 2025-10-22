@@ -23,7 +23,6 @@ pub enum Encoding {
 
 #[derive(Configurable, Serialize, Debug, Deserialize)]
 struct EncodingConfig {
-    #[configurable(required)]
     encoding: Encoding,
 
     #[serde(flatten)]
