@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761141559219,
+  "lastUpdate": 1761141967122,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0d88063e8aeef6b2d91971793d28efb37189c87c",
-          "message": "Merge pull request #2515 from f1shl3gs/dependabot/cargo/hyper-1.7.0\n\nchore(deps): bump hyper from 1.6.0 to 1.7.0",
-          "timestamp": "2025-08-19T13:02:21+08:00",
-          "tree_id": "930f02519a604ea01370efc13ababce9cd839770",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0d88063e8aeef6b2d91971793d28efb37189c87c"
-        },
-        "date": 1755580293214,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14416000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 656590,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.227,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "553e741b374497af1eea7813bb3f291ddcd71e88",
           "message": "Merge pull request #2514 from f1shl3gs/dependabot/cargo/serde_json-1.0.143\n\nchore(deps): bump serde_json from 1.0.142 to 1.0.143",
           "timestamp": "2025-08-19T13:04:04+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.121,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18221739aeaa421b12b1aa28a1a0b65d2f92b146",
+          "message": "Merge pull request #2623 from f1shl3gs/cli/vtl/print_return_value_as_output\n\ncli/vtl: print returned value rather than target",
+          "timestamp": "2025-10-22T21:55:32+08:00",
+          "tree_id": "f50074b882a40d8ff339b90c315b6beb024101e5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18221739aeaa421b12b1aa28a1a0b65d2f92b146"
+        },
+        "date": 1761141944670,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15813000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 647920,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.464,
             "unit": "ns/op"
           }
         ]
