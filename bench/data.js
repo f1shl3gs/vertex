@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761155543320,
+  "lastUpdate": 1761155953524,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4179dac20d63dd911780d7714033f4127cb2fa0d",
-          "message": "Merge pull request #2518 from f1shl3gs/dependabot/cargo/thiserror-2.0.16\n\nchore(deps): bump thiserror from 2.0.15 to 2.0.16",
-          "timestamp": "2025-08-20T13:08:44+08:00",
-          "tree_id": "dab1011500924d06e5a3c674c95c25fb190cba81",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4179dac20d63dd911780d7714033f4127cb2fa0d"
-        },
-        "date": 1755666743350,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 494930,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 500840,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d7cca71ae4675d4bd2698a9430bad77a73d023e7",
+          "message": "Merge pull request #2627 from f1shl3gs/sources/jaeger/unify_listen\n\nsources/jaeger: unify listen",
+          "timestamp": "2025-10-23T01:56:44+08:00",
+          "tree_id": "067bc67f2114ae76954b448c7a30dfaab65435dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d7cca71ae4675d4bd2698a9430bad77a73d023e7"
+        },
+        "date": 1761155931711,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 503040,
             "unit": "ns/op"
           }
         ]
