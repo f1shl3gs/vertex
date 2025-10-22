@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761162165061,
+  "lastUpdate": 1761162168085,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9500c93aa674d7458c67e77caee74e63bcae849a",
-          "message": "Merge pull request #2523 from f1shl3gs/dependabot/cargo/url-2.5.6\n\nchore(deps): bump url from 2.5.4 to 2.5.6",
-          "timestamp": "2025-08-22T13:49:41+08:00",
-          "tree_id": "e48715b3139c6118e0cf24c5540bced86af0b8ac",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9500c93aa674d7458c67e77caee74e63bcae849a"
-        },
-        "date": 1755841956418,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 496440,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 502010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "17ba501ff93ea52336a6548c1a95097e62611f19",
+          "message": "Merge pull request #2631 from f1shl3gs/sources/grpc_check/reorder_config_field_option\n\nsources/grpc_check: re-order config field",
+          "timestamp": "2025-10-23T03:40:17+08:00",
+          "tree_id": "87ffe96434caf7d967cc8d8f5236fa8288ee4798",
+          "url": "https://github.com/f1shl3gs/vertex/commit/17ba501ff93ea52336a6548c1a95097e62611f19"
+        },
+        "date": 1761162144995,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 507130,
             "unit": "ns/op"
           }
         ]
