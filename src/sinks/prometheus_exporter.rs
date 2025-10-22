@@ -27,7 +27,7 @@ use parking_lot::RwLock;
 struct Config {
     /// The address the prometheus server will listen at
     #[serde(default = "default_endpoint")]
-    #[configurable(required, format = "ip-address", example = "0.0.0.0:9100")]
+    #[configurable(format = "ip-address", example = "0.0.0.0:9100")]
     endpoint: SocketAddr,
 
     tls: Option<TlsConfig>,

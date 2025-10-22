@@ -21,11 +21,10 @@ fn default_database() -> String {
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// The endpoint of the ClickHouse server.
-    #[configurable(required, format = "uri", example = "http://localhost:8123")]
+    #[configurable(format = "uri", example = "http://localhost:8123")]
     pub endpoint: Url,
 
     /// The table that data will be inserted into.
-    #[configurable(required)]
     pub table: String,
 
     /// The database that contains the table that data will be inserted into.

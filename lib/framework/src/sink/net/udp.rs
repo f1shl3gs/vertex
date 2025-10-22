@@ -39,7 +39,6 @@ pub enum UdpError {
 #[serde(deny_unknown_fields)]
 pub struct UdpSinkConfig {
     /// The address to connect to. The address must include a port.
-    #[configurable(required)]
     address: String,
 
     /// The size of the socket's send buffer.

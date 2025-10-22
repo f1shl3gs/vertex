@@ -103,7 +103,6 @@ struct Config {
     topics: Vec<String>,
 
     /// The consumer group name to be used to consume events from Kafka.
-    #[configurable(required)]
     group: String,
 
     /// If offsets for consumer group do not exist, set them using this

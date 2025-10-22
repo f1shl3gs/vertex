@@ -20,7 +20,7 @@ const fn default_timeout() -> Duration {
 #[configurable_component(source, name = "grpc_check")]
 struct Config {
     /// The service name to query for health status.
-    #[configurable(required, example = "grpc.health.v1.Health")]
+    #[configurable(example = "grpc.health.v1.Health")]
     service: String,
 
     /// Endpoint for gRPC service.

@@ -40,7 +40,6 @@ enum TcpError {
 #[serde(deny_unknown_fields)]
 pub struct TcpSinkConfig {
     /// The address to connect to. The address must include a port.
-    #[configurable(required)]
     address: String,
 
     keepalive: Option<TcpKeepaliveConfig>,

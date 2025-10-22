@@ -27,14 +27,12 @@ fn default_method() -> Method {
 #[configurable_component(sink, name = "http")]
 #[serde(deny_unknown_fields)]
 pub struct Config {
-    #[configurable(required)]
-    #[serde(default = "default_method", with = "serde_http_method")]
-    pub method: Method,
-
     /// The full URI to make HTTP requests to.
-    #[configurable(required)]
     #[serde(with = "serde_uri")]
     pub endpoint: Uri,
+
+    #[serde(default = "default_method", with = "serde_http_method")]
+    pub method: Method,
 
     /// Http auth
     pub auth: Option<Auth>,
@@ -51,7 +49,6 @@ pub struct Config {
     pub request: RequestConfig,
 
     #[serde(flatten)]
-    #[configurable(required)]
     pub encoding: EncodingConfigWithFraming,
 
     #[serde(default)]

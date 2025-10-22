@@ -77,7 +77,6 @@ pub struct Config {
     pub bootstrap_servers: Vec<String>,
 
     /// The Kafka topic name to write events to
-    #[configurable(required)]
     pub topic: Template,
 
     /// The log field name or tags key to use for the topic key. If the field

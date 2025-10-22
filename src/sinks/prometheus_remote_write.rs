@@ -35,7 +35,7 @@ impl SinkBatchSettings for PrometheusRemoteWriteDefaultBatchSettings {
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Endpoint of Prometheus's remote write API.
-    #[configurable(required, format = "uri", example = "http://10.1.1.1:8000")]
+    #[configurable(format = "uri", example = "http://10.1.1.1:8000")]
     #[serde(with = "serde_uri")]
     endpoint: Uri,
 

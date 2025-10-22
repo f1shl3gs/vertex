@@ -242,7 +242,7 @@ impl DataStreamConfig {
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// The Elasticsearch endpoint to send logs to. This should be full URL.
-    #[configurable(required, format = "uri")]
+    #[configurable(format = "uri")]
     pub endpoint: String,
 
     /// The `doc_type` for your index data, This is only relevant for Elasticsearch <= 6.X.

@@ -289,11 +289,9 @@ pub enum Auth {
     /// [base64]: https://en.wikipedia.org/wiki/Base64
     Basic {
         /// The basic authentication username.
-        #[configurable(required)]
         user: String,
 
         /// The basic authentication password.
-        #[configurable(required)]
         password: SecretString,
     },
 
@@ -302,7 +300,6 @@ pub enum Auth {
     /// The bearer token value (OAuth2, JWT, etc) is passed as-is.
     Bearer {
         /// The bearer authentication token.
-        #[configurable(required)]
         token: SecretString,
     },
 }

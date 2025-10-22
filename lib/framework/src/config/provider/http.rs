@@ -33,7 +33,7 @@ const fn default_interval() -> Duration {
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The URL to download config
-    #[configurable(required, format = "uri", example = "https://exampel.com/config")]
+    #[configurable(format = "uri", example = "https://exampel.com/config")]
     #[serde(with = "crate::config::serde_uri")]
     uri: Uri,
 

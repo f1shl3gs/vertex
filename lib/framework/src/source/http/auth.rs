@@ -10,11 +10,9 @@ use crate::config::SecretString;
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct HttpSourceAuthConfig {
     /// The basic authentication username.
-    #[configurable(required)]
     pub username: String,
 
     /// The basic authentication password.
-    #[configurable(required)]
     pub password: SecretString,
 }
 
