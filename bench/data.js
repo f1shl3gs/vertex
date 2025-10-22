@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761154998262,
+  "lastUpdate": 1761155012889,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4086e3d1603b4c341a673418d57dcfec65683033",
-          "message": "Merge pull request #2517 from f1shl3gs/dependabot/cargo/quick-xml-0.38.2\n\nchore(deps): bump quick-xml from 0.38.1 to 0.38.2",
-          "timestamp": "2025-08-20T11:51:41+08:00",
-          "tree_id": "0a57fccdd0d9796a9c0df9e55a524e7d9f14de9f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4086e3d1603b4c341a673418d57dcfec65683033"
-        },
-        "date": 1755662104073,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.057,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 162.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 711.24,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4179dac20d63dd911780d7714033f4127cb2fa0d",
           "message": "Merge pull request #2518 from f1shl3gs/dependabot/cargo/thiserror-2.0.16\n\nchore(deps): bump thiserror from 2.0.15 to 2.0.16",
           "timestamp": "2025-08-20T13:08:44+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 673.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ddc0147c4193c715da031908d80023bdbbc76a31",
+          "message": "Merge pull request #2626 from f1shl3gs/lib/configurable/remove_default\n\nlib/configurable: remove default support",
+          "timestamp": "2025-10-23T01:40:41+08:00",
+          "tree_id": "145c22b2dda328af931f10aab34a172cb230ca66",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ddc0147c4193c715da031908d80023bdbbc76a31"
+        },
+        "date": 1761154991180,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.294,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 180.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 325.01,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 662.38,
             "unit": "ns/op"
           }
         ]
