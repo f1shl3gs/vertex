@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761131807966,
+  "lastUpdate": 1761131826819,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3ff0ab8d514f1a962b75823e50ad6ae261f55ef1",
-          "message": "Merge pull request #2509 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.101\n\nchore(deps): bump proc-macro2 from 1.0.97 to 1.0.101",
-          "timestamp": "2025-08-17T11:14:30+08:00",
-          "tree_id": "a76b11ea8e1e157fb145c33bd439605bc81ef787",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ff0ab8d514f1a962b75823e50ad6ae261f55ef1"
-        },
-        "date": 1755400618440,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.304,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.52,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 322.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 651.01,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8fd182d4d8319b3f20666819953ce3c45f40e9c2",
           "message": "Merge pull request #2510 from f1shl3gs/dependabot/cargo/thiserror-2.0.15\n\nchore(deps): bump thiserror from 2.0.14 to 2.0.15",
           "timestamp": "2025-08-17T11:18:56+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 671.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d4717cf19ebe68cb4fbc5754e865aa8c54dd630e",
+          "message": "Merge pull request #2618 from f1shl3gs/dependabot/cargo/rustls-0.23.34\n\nchore(deps): bump rustls from 0.23.33 to 0.23.34",
+          "timestamp": "2025-10-22T19:14:00+08:00",
+          "tree_id": "0173bbc916a6b8f3b332f4efddcc5365090ae8ea",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d4717cf19ebe68cb4fbc5754e865aa8c54dd630e"
+        },
+        "date": 1761131805012,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.984,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 178.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 314.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 651.93,
             "unit": "ns/op"
           }
         ]
