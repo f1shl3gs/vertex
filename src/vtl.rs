@@ -39,8 +39,9 @@ impl Vtl {
             value: Value::Object(Default::default()),
         };
         match program.run(&mut target) {
-            Ok(_result) => {
-                println!("{target:#?}");
+            Ok(result) => {
+                let output = serde_json::to_string_pretty(&result).unwrap();
+                println!("{output:#?}");
             }
             Err(err) => {
                 println!("{}", Diagnostic::new(&script).snippets(err));
