@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761132322883,
+  "lastUpdate": 1761132394497,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8fd182d4d8319b3f20666819953ce3c45f40e9c2",
-          "message": "Merge pull request #2510 from f1shl3gs/dependabot/cargo/thiserror-2.0.15\n\nchore(deps): bump thiserror from 2.0.14 to 2.0.15",
-          "timestamp": "2025-08-17T11:18:56+08:00",
-          "tree_id": "26f48cd4d68ba0d3b8be387bbaad14634b4786ce",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8fd182d4d8319b3f20666819953ce3c45f40e9c2"
-        },
-        "date": 1755400859811,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 487860,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 501490,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eb84db66a347b76f38b2625b88c7703fac0afc99",
+          "message": "Merge pull request #2619 from f1shl3gs/misc/switch_to_calculate_start\n\nmisc: switch offset to calculate_start*",
+          "timestamp": "2025-10-22T19:23:52+08:00",
+          "tree_id": "56c59d549753220763896dfa38c5fb3df433f092",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eb84db66a347b76f38b2625b88c7703fac0afc99"
+        },
+        "date": 1761132372182,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 505570,
             "unit": "ns/op"
           }
         ]
