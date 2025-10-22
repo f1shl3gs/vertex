@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761155460959,
+  "lastUpdate": 1761155543320,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "56c6d425baa1488c5237272c3268182d5b368d53",
-          "message": "Merge pull request #2516 from f1shl3gs/sources/kubernetes_logs/fix_cri_merge_logic\n\nsources/kubernetes_logs: fix cri merge logic",
-          "timestamp": "2025-08-19T15:22:08+08:00",
-          "tree_id": "103b943fdc71c0eeb76a75dffc1d91a793e03635",
-          "url": "https://github.com/f1shl3gs/vertex/commit/56c6d425baa1488c5237272c3268182d5b368d53"
-        },
-        "date": 1755588785489,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 559,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40352.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4086e3d1603b4c341a673418d57dcfec65683033",
           "message": "Merge pull request #2517 from f1shl3gs/dependabot/cargo/quick-xml-0.38.2\n\nchore(deps): bump quick-xml from 0.38.1 to 0.38.2",
           "timestamp": "2025-08-20T11:51:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40354.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ddc0147c4193c715da031908d80023bdbbc76a31",
+          "message": "Merge pull request #2626 from f1shl3gs/lib/configurable/remove_default\n\nlib/configurable: remove default support",
+          "timestamp": "2025-10-23T01:40:41+08:00",
+          "tree_id": "145c22b2dda328af931f10aab34a172cb230ca66",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ddc0147c4193c715da031908d80023bdbbc76a31"
+        },
+        "date": 1761155516697,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40347.1,
             "unit": "KiB"
           }
         ]
