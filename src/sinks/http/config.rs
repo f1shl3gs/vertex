@@ -26,33 +26,33 @@ fn default_method() -> Method {
 /// Configuration for the `http` sink
 #[configurable_component(sink, name = "http")]
 #[serde(deny_unknown_fields)]
-pub struct Config {
+struct Config {
     /// The full URI to make HTTP requests to.
     #[serde(with = "serde_uri")]
-    pub endpoint: Uri,
+    endpoint: Uri,
 
     #[serde(default = "default_method", with = "serde_http_method")]
-    pub method: Method,
+    method: Method,
 
     /// Http auth
-    pub auth: Option<Auth>,
+    auth: Option<Auth>,
 
-    pub tls: Option<TlsConfig>,
-
-    #[serde(default)]
-    pub compression: Compression,
+    tls: Option<TlsConfig>,
 
     #[serde(default)]
-    pub batch: BatchConfig<RealtimeSizeBasedDefaultBatchSettings>,
+    compression: Compression,
 
     #[serde(default)]
-    pub request: RequestConfig,
+    batch: BatchConfig<RealtimeSizeBasedDefaultBatchSettings>,
+
+    #[serde(default)]
+    request: RequestConfig,
 
     #[serde(flatten)]
-    pub encoding: EncodingConfigWithFraming,
+    encoding: EncodingConfigWithFraming,
 
     #[serde(default)]
-    pub acknowledgements: bool,
+    acknowledgements: bool,
 }
 
 #[async_trait::async_trait]
