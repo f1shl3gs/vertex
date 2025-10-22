@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761154819783,
+  "lastUpdate": 1761154915608,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0d88063e8aeef6b2d91971793d28efb37189c87c",
-          "message": "Merge pull request #2515 from f1shl3gs/dependabot/cargo/hyper-1.7.0\n\nchore(deps): bump hyper from 1.6.0 to 1.7.0",
-          "timestamp": "2025-08-19T13:02:21+08:00",
-          "tree_id": "930f02519a604ea01370efc13ababce9cd839770",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0d88063e8aeef6b2d91971793d28efb37189c87c"
-        },
-        "date": 1755580453801,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 611,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40359.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "553e741b374497af1eea7813bb3f291ddcd71e88",
           "message": "Merge pull request #2514 from f1shl3gs/dependabot/cargo/serde_json-1.0.143\n\nchore(deps): bump serde_json from 1.0.142 to 1.0.143",
           "timestamp": "2025-08-19T13:04:04+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 584,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40354.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "30a0dfcaa7aef171b83ab5eab41e7726c1f14539",
+          "message": "Merge pull request #2624 from f1shl3gs/sinks/http/remove_unnecessary_pub\n\nsinks/http: remove unnecessary pub",
+          "timestamp": "2025-10-23T01:30:39+08:00",
+          "tree_id": "ddf4f0d709b4b860b96cb625d83e89f3cb2acad3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/30a0dfcaa7aef171b83ab5eab41e7726c1f14539"
+        },
+        "date": 1761154893339,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 564,
             "unit": "s"
           },
           {
