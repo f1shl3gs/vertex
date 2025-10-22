@@ -32,7 +32,7 @@ const fn default_max_frame_length() -> usize {
 
 /// Listening mode for the `dnstap` source
 #[derive(Configurable, Debug, Deserialize, Serialize)]
-#[serde(tag = "mode", rename_all = "snake_case")]
+#[serde(rename_all = "snake_case")]
 enum Mode {
     /// Listen on TCP
     Tcp(tcp::Config),

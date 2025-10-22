@@ -11,7 +11,8 @@ use super::serve_conn;
 
 #[derive(Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    address: SocketAddr,
+    /// Which address the DNSTAP server listen to
+    listen: SocketAddr,
 
     tls: Option<TlsConfig>,
 
@@ -30,7 +31,7 @@ pub struct Config {
 
 impl Config {
     pub async fn build(&self, max_frame_length: usize, cx: SourceContext) -> crate::Result<Source> {
-        let mut listener = MaybeTlsListener::bind(&self.address, self.tls.as_ref()).await?;
+        let mut listener = MaybeTlsListener::bind(&self.listen, self.tls.as_ref()).await?;
         let mut shutdown = cx.shutdown;
         let output = cx.output;
         let keepalive = self.keepalive;
@@ -43,8 +44,8 @@ impl Config {
                         Ok(stream) => stream,
                         Err(err) => {
                             warn!(
-                                message = "tcp listener accept error: {}",
-                                ?err
+                                message = "tcp listener accept error",
+                                %err
                             );
 
                             continue;
@@ -85,13 +86,13 @@ impl Config {
     }
 
     pub fn resource(&self) -> Resource {
-        Resource::tcp(self.address)
+        Resource::tcp(self.listen)
     }
 
     #[cfg(all(test, feature = "dnstap-integration-tests"))]
-    pub fn simple(address: SocketAddr) -> Self {
+    pub fn simple(listen: SocketAddr) -> Self {
         Self {
-            address,
+            listen,
             tls: None,
             keepalive: None,
             receive_buffer_bytes: None,

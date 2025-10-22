@@ -28,7 +28,7 @@ pub struct Config {
 
     /// The size, in bytes, of the receive buffer used for the socket.
     ///
-    /// This should not typically needed to be changed.
+    /// This should not typically need to be changed.
     receive_buffer_size: Option<usize>,
 }
 
