@@ -23,8 +23,8 @@ pub const fn default_max_length() -> usize {
 #[derive(Configurable, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Mode {
-    Udp(udp::Config),
     Tcp(tcp::Config),
+    Udp(udp::Config),
     #[cfg(unix)]
     Unix(unix::Config),
 }
@@ -45,6 +45,7 @@ pub struct Config {
     host_key: Option<OwnedValuePath>,
 
     /// The type of socket to use.
+    #[serde(flatten)]
     mode: Mode,
 }
 
@@ -139,8 +140,8 @@ mod tests {
     #[test]
     fn config_tcp() {
         let text = r#"
-mode: tcp
-address: 127.0.0.1:12345
+tcp:
+  listen: 127.0.0.1:12345
 "#;
         let config: Config = serde_yaml::from_str(text).unwrap();
 
