@@ -31,7 +31,7 @@ impl SourceConfig for Config {
         if let Some(config) = &self.thrift_compact {
             tasks.push(tokio::spawn(udp::serve(
                 source.clone(),
-                config.endpoint,
+                config.listen,
                 config.max_packet_size,
                 config.socket_buffer_size,
                 shutdown.clone(),
@@ -46,7 +46,7 @@ impl SourceConfig for Config {
         if let Some(config) = &self.thrift_binary {
             tasks.push(tokio::spawn(udp::serve(
                 source,
-                config.endpoint,
+                config.listen,
                 config.max_packet_size,
                 config.socket_buffer_size,
                 shutdown.clone(),
@@ -111,15 +111,15 @@ impl SourceConfig for Config {
         }
 
         if let Some(config) = &self.thrift_compact {
-            resources.push(Resource::udp(config.endpoint));
+            resources.push(Resource::udp(config.listen));
         }
 
         if let Some(config) = &self.thrift_binary {
-            resources.push(Resource::udp(config.endpoint))
+            resources.push(Resource::udp(config.listen))
         }
 
         if let Some(config) = &self.grpc {
-            resources.push(Resource::tcp(config.endpoint))
+            resources.push(Resource::tcp(config.listen))
         }
 
         resources

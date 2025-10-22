@@ -13,8 +13,8 @@ use hyper::service::service_fn;
 use jaeger::agent::deserialize_binary_batch;
 use serde::{Deserialize, Serialize};
 
-fn default_thrift_http_endpoint() -> SocketAddr {
-    SocketAddr::new([0, 0, 0, 0].into(), 14268)
+fn default_listen() -> SocketAddr {
+    SocketAddr::from(([0, 0, 0, 0], 14268))
 }
 
 /// In some cases it is not feasible to deploy Jaeger Agent next to the application,
@@ -26,7 +26,7 @@ fn default_thrift_http_endpoint() -> SocketAddr {
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ThriftHttpConfig {
-    #[serde(default = "default_thrift_http_endpoint")]
+    #[serde(default = "default_listen")]
     pub endpoint: SocketAddr,
 
     #[serde(default)]

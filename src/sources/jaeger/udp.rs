@@ -15,12 +15,12 @@ const fn default_max_packet_size() -> usize {
     65000
 }
 
-fn default_thrift_compact_socketaddr() -> SocketAddr {
-    SocketAddr::new([0, 0, 0, 0].into(), PROTOCOL_COMPACT_THRIFT_OVER_UDP_PORT)
+fn default_thrift_compact_listen() -> SocketAddr {
+    SocketAddr::from(([0, 0, 0, 0], PROTOCOL_COMPACT_THRIFT_OVER_UDP_PORT))
 }
 
-fn default_thrift_binary_socketaddr() -> SocketAddr {
-    SocketAddr::new([0, 0, 0, 0].into(), PROTOCOL_BINARY_THRIFT_OVER_UDP_PORT)
+fn default_thrift_binary_listen() -> SocketAddr {
+    SocketAddr::from(([0, 0, 0, 0], PROTOCOL_BINARY_THRIFT_OVER_UDP_PORT))
 }
 
 /// The Agent can only receive spans over UDP in Thrift format.
@@ -29,8 +29,8 @@ fn default_thrift_binary_socketaddr() -> SocketAddr {
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ThriftCompactConfig {
-    #[serde(default = "default_thrift_compact_socketaddr")]
-    pub endpoint: SocketAddr,
+    #[serde(default = "default_thrift_compact_listen")]
+    pub listen: SocketAddr,
 
     #[serde(default = "default_max_packet_size")]
     pub max_packet_size: usize,
@@ -46,8 +46,8 @@ pub struct ThriftCompactConfig {
 #[derive(Configurable, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ThriftBinaryConfig {
-    #[serde(default = "default_thrift_binary_socketaddr")]
-    pub endpoint: SocketAddr,
+    #[serde(default = "default_thrift_binary_listen")]
+    pub listen: SocketAddr,
 
     #[serde(default = "default_max_packet_size")]
     pub max_packet_size: usize,
