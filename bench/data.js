@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761162603555,
+  "lastUpdate": 1761162676972,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7261849d7f2852114b129fe23f2c15fbfe1cb582",
-          "message": "Merge pull request #2521 from f1shl3gs/lib/framework/remove_tracing-futures\n\nlib/framework: remove tracing-futures",
-          "timestamp": "2025-08-21T15:20:17+08:00",
-          "tree_id": "14fee03fec5822d737d85edd4f012c17a723b6bc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7261849d7f2852114b129fe23f2c15fbfe1cb582"
-        },
-        "date": 1755761513197,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 565,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40352.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a2fffd7dbf3bc03ffd16f861716f429144737836",
           "message": "Merge pull request #2520 from f1shl3gs/misc/save_bloat_result\n\nmisc: save bloat result",
           "timestamp": "2025-08-21T15:20:30+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 565,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40354.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "107c1dbb3ea6e766e85bd2c34cafdc8e9d46ca41",
+          "message": "Merge pull request #2630 from f1shl3gs/sources/chrony/unify_endpoint\n\nsources/chrony: unify endpoint",
+          "timestamp": "2025-10-23T03:40:04+08:00",
+          "tree_id": "941141e0171b9ad4ed1783ee5dff844a7384f7da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/107c1dbb3ea6e766e85bd2c34cafdc8e9d46ca41"
+        },
+        "date": 1761162653586,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 562,
             "unit": "s"
           },
           {
