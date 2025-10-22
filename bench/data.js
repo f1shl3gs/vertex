@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761167111965,
+  "lastUpdate": 1761167126121,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "edb5278aad7332b27699aabc1b15c03a225946ba",
-          "message": "Merge pull request #2525 from f1shl3gs/dependabot/cargo/memmap2-0.9.8\n\nchore(deps): bump memmap2 from 0.9.7 to 0.9.8",
-          "timestamp": "2025-08-23T11:49:30+08:00",
-          "tree_id": "5c6af45bf3008ee5f687880ef549205d73361292",
-          "url": "https://github.com/f1shl3gs/vertex/commit/edb5278aad7332b27699aabc1b15c03a225946ba"
-        },
-        "date": 1755921126829,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.505,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 150.83,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 323.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 672.79,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e561abad58cd37492d27fdb71782d8e1362023b0",
           "message": "Merge pull request #2527 from f1shl3gs/cargo/update\n\ncargo update",
           "timestamp": "2025-08-23T15:56:13+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 668.43,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f64b404180e27a2729e24eb0d12648170c208e13",
+          "message": "Merge pull request #2634 from f1shl3gs/sources/prometheus_remote_write/unify_listen\n\nsources/prometheus_remote_write: unify listen",
+          "timestamp": "2025-10-23T05:02:27+08:00",
+          "tree_id": "805223e686bc346fd5e390972d858e225e5d10ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f64b404180e27a2729e24eb0d12648170c208e13"
+        },
+        "date": 1761167104061,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.383,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 332.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 669.07,
             "unit": "ns/op"
           }
         ]
