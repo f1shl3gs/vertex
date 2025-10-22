@@ -1,7 +1,6 @@
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-use chrono::Utc;
 use configurable::configurable_component;
 use event::Metric;
 use framework::Source;
@@ -13,7 +12,7 @@ use http_body_util::{BodyExt, Full};
 use thiserror::Error;
 use tokio::task::JoinSet;
 
-use crate::common::offset;
+use crate::common::calculate_start_with_jitter;
 use crate::common::prometheus::convert_metrics;
 
 /// Collect metrics from prometheus clients.
@@ -83,13 +82,8 @@ impl SourceConfig for Config {
                 );
 
                 set.spawn(async move {
-                    let now = Utc::now()
-                        .timestamp_nanos_opt()
-                        .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
-                    let mut ticker = tokio::time::interval_at(
-                        tokio::time::Instant::now() + offset(&target, interval, jitter_seed, now),
-                        interval,
-                    );
+                    let start = calculate_start_with_jitter(&target, interval, jitter_seed);
+                    let mut ticker = tokio::time::interval_at(start.into(), interval);
 
                     loop {
                         tokio::select! {
@@ -137,9 +131,10 @@ impl SourceConfig for Config {
                             let tags = metric.tags_mut();
 
                             if let Some(value) = tags.remove("instance")
-                                && honor_labels {
-                                    tags.insert("instance", value)
-                                }
+                                && honor_labels
+                            {
+                                tags.insert("instance", value)
+                            }
 
                             metric.insert_tag("instance", instance.clone());
                         });
