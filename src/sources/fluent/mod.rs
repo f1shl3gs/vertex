@@ -20,15 +20,16 @@ use msgpack::{Error as MsgPackError, ReadExt, decode_string};
 use msgpack::{decode_binary, decode_entry, decode_options, decode_value};
 use value::path;
 
-fn default_address() -> SocketAddr {
+fn default_listen() -> SocketAddr {
     SocketAddr::from(([127, 0, 0, 1], 24224))
 }
 
 /// Collect logs from a Fluentd or Fluent Bit agent.
 #[configurable_component(source, name = "fluent")]
 struct Config {
-    #[serde(default = "default_address")]
-    address: SocketAddr,
+    /// The socket address to listen for connections
+    #[serde(default = "default_listen")]
+    listen: SocketAddr,
 
     tls: Option<TlsConfig>,
 
@@ -49,7 +50,7 @@ impl SourceConfig for Config {
         let source = ForwardSource;
 
         source.run(
-            SocketListenAddr::SocketAddr(self.address),
+            SocketListenAddr::SocketAddr(self.listen),
             self.keepalive,
             Duration::from_secs(30),
             self.tls.as_ref(),
@@ -64,7 +65,7 @@ impl SourceConfig for Config {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        vec![Resource::tcp(self.address)]
+        vec![Resource::tcp(self.listen)]
     }
 
     fn can_acknowledge(&self) -> bool {
@@ -855,11 +856,11 @@ mod integration_tests {
 
     async fn start_source(status: EventStatus) -> (SocketAddr, impl Stream<Item = Events> + Unpin) {
         let (pipeline, recv) = Pipeline::new_test_finalize(status);
-        let address = next_addr();
+        let listen = next_addr();
 
         tokio::spawn(async move {
             let config = Config {
-                address,
+                listen,
                 connection_limit: None,
                 keepalive: None,
                 receive_buffer: None,
@@ -874,9 +875,9 @@ mod integration_tests {
             source.await.unwrap();
         });
 
-        wait_for_tcp(address).await;
+        wait_for_tcp(listen).await;
 
-        (address, recv)
+        (listen, recv)
     }
 
     #[tokio::test]
