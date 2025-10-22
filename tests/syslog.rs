@@ -185,7 +185,7 @@ async fn tcp_syslog() {
         "in",
         SyslogConfig {
             mode: Mode::Tcp {
-                address: in_addr.into(),
+                listen: in_addr.into(),
                 keepalive: None,
                 tls: None,
                 receive_buffer_bytes: None,

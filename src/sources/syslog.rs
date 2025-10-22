@@ -36,7 +36,7 @@ pub enum Mode {
         /// socket passed by systemd socket activation. If an address is used it
         /// must include a port.
         #[configurable(format = "ip-address", example = "0.0.0.0:9000")]
-        address: SocketListenAddr,
+        listen: SocketListenAddr,
 
         /// Configures the TCP keepalive behavior for the connection to the source.
         keepalive: Option<TcpKeepaliveConfig>,
@@ -100,7 +100,7 @@ impl SourceConfig for Config {
 
         match self.mode.clone() {
             Mode::Tcp {
-                address,
+                listen: address,
                 keepalive,
                 tls,
                 receive_buffer_bytes,
@@ -159,7 +159,9 @@ impl SourceConfig for Config {
 
     fn resources(&self) -> Vec<Resource> {
         match self.mode.clone() {
-            Mode::Tcp { address, .. } => vec![address.into()],
+            Mode::Tcp {
+                listen: address, ..
+            } => vec![address.into()],
             Mode::Udp { address, .. } => vec![Resource::udp(address)],
             #[cfg(unix)]
             Mode::Unix { .. } => vec![],
