@@ -9,8 +9,8 @@ use jaeger::proto::{CollectorService, PostSpansRequest, PostSpansResponse};
 use serde::{Deserialize, Serialize};
 use tonic::{Request, Response, Status, transport::Server};
 
-fn default_grpc_endpoint() -> SocketAddr {
-    SocketAddr::new([0, 0, 0, 0].into(), 14250)
+fn default_listen() -> SocketAddr {
+    SocketAddr::from(([0, 0, 0, 0], 14250))
 }
 
 /// In a typical Jaeger deployment, Agents receive spans from Clients and forward them to Collectors
@@ -19,8 +19,8 @@ fn default_grpc_endpoint() -> SocketAddr {
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct GrpcServerConfig {
-    #[serde(default = "default_grpc_endpoint")]
-    pub endpoint: SocketAddr,
+    #[serde(default = "default_listen")]
+    pub listen: SocketAddr,
 }
 
 struct JaegerCollector {
@@ -77,7 +77,7 @@ pub(super) async fn serve(
 
     Server::builder()
         .add_service(service)
-        .serve_with_shutdown(config.endpoint, shutdown.map(|_| ()))
+        .serve_with_shutdown(config.listen, shutdown.map(|_| ()))
         .await
         .map_err(|err| {
             warn!(message = "Grpc server exit", %err);
