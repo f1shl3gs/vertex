@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761142042843,
+  "lastUpdate": 1761154386073,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "553e741b374497af1eea7813bb3f291ddcd71e88",
-          "message": "Merge pull request #2514 from f1shl3gs/dependabot/cargo/serde_json-1.0.143\n\nchore(deps): bump serde_json from 1.0.142 to 1.0.143",
-          "timestamp": "2025-08-19T13:04:04+08:00",
-          "tree_id": "4079ef5587e4773e9b08a2b67498d521633a005c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/553e741b374497af1eea7813bb3f291ddcd71e88"
-        },
-        "date": 1755579972220,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 509010,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 508850,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "30a0dfcaa7aef171b83ab5eab41e7726c1f14539",
+          "message": "Merge pull request #2624 from f1shl3gs/sinks/http/remove_unnecessary_pub\n\nsinks/http: remove unnecessary pub",
+          "timestamp": "2025-10-23T01:30:39+08:00",
+          "tree_id": "ddf4f0d709b4b860b96cb625d83e89f3cb2acad3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/30a0dfcaa7aef171b83ab5eab41e7726c1f14539"
+        },
+        "date": 1761154364239,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 503110,
             "unit": "ns/op"
           }
         ]
