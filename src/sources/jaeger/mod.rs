@@ -107,7 +107,7 @@ impl SourceConfig for Config {
         let mut resources = vec![];
 
         if let Some(config) = &self.thrift_http {
-            resources.push(Resource::tcp(config.endpoint));
+            resources.push(Resource::tcp(config.listen));
         }
 
         if let Some(config) = &self.thrift_compact {
