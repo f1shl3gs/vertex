@@ -19,13 +19,13 @@ const fn default_timeout() -> Duration {
 /// https://github.com/grpc/grpc/blob/master/doc/health-checking.md
 #[configurable_component(source, name = "grpc_check")]
 struct Config {
-    /// The service name to query for health status.
-    #[configurable(example = "grpc.health.v1.Health")]
-    service: String,
-
     /// Endpoint for gRPC service.
     #[configurable(required)]
     targets: Vec<String>,
+
+    /// The service name to query for health status.
+    #[configurable(example = "grpc.health.v1.Health")]
+    service: String,
 
     /// This sources collects metrics on an interval.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
