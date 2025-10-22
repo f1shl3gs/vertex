@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761161311626,
+  "lastUpdate": 1761161695847,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7261849d7f2852114b129fe23f2c15fbfe1cb582",
-          "message": "Merge pull request #2521 from f1shl3gs/lib/framework/remove_tracing-futures\n\nlib/framework: remove tracing-futures",
-          "timestamp": "2025-08-21T15:20:17+08:00",
-          "tree_id": "14fee03fec5822d737d85edd4f012c17a723b6bc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7261849d7f2852114b129fe23f2c15fbfe1cb582"
-        },
-        "date": 1755761421882,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14494000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 626880,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.065,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "47e12d13514a876fc6b712bd4b6429b656e1c4ea",
           "message": "Merge pull request #2524 from f1shl3gs/dependabot/cargo/form_urlencoded-1.2.2\n\nchore(deps): bump form_urlencoded from 1.2.1 to 1.2.2",
           "timestamp": "2025-08-22T13:49:21+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.794,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bb8907931a91a67d9a5b1f7c6d58ec739c256781",
+          "message": "Merge pull request #2629 from f1shl3gs/sources/dnsmasq/unify_endpoints\n\nsources/dnsmasq: unify endpoints",
+          "timestamp": "2025-10-23T03:24:42+08:00",
+          "tree_id": "62f7030a72ca5427c16fd10fa4a22d7c7df373af",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bb8907931a91a67d9a5b1f7c6d58ec739c256781"
+        },
+        "date": 1761161672490,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14324000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 641540,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.216,
             "unit": "ns/op"
           }
         ]
