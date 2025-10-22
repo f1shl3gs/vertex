@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761162596601,
+  "lastUpdate": 1761162603555,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9500c93aa674d7458c67e77caee74e63bcae849a",
-          "message": "Merge pull request #2523 from f1shl3gs/dependabot/cargo/url-2.5.6\n\nchore(deps): bump url from 2.5.4 to 2.5.6",
-          "timestamp": "2025-08-22T13:49:41+08:00",
-          "tree_id": "e48715b3139c6118e0cf24c5540bced86af0b8ac",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9500c93aa674d7458c67e77caee74e63bcae849a"
-        },
-        "date": 1755842376823,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14275000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 653920,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.134,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4791c224ceac822dd8e043b95d6ab0c22e4c13c6",
           "message": "Merge pull request #2522 from f1shl3gs/dependabot/cargo/percent-encoding-2.3.2\n\nchore(deps): bump percent-encoding from 2.3.1 to 2.3.2",
           "timestamp": "2025-08-22T13:49:54+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.364,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "17ba501ff93ea52336a6548c1a95097e62611f19",
+          "message": "Merge pull request #2631 from f1shl3gs/sources/grpc_check/reorder_config_field_option\n\nsources/grpc_check: re-order config field",
+          "timestamp": "2025-10-23T03:40:17+08:00",
+          "tree_id": "87ffe96434caf7d967cc8d8f5236fa8288ee4798",
+          "url": "https://github.com/f1shl3gs/vertex/commit/17ba501ff93ea52336a6548c1a95097e62611f19"
+        },
+        "date": 1761162580795,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14653000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 612390,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.939,
             "unit": "ns/op"
           }
         ]
