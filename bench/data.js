@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761130943717,
+  "lastUpdate": 1761130957221,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9e3ba0b3a10d02686dca0fd23090932524045e10",
-          "message": "Merge pull request #2508 from f1shl3gs/dependabot/cargo/syn-2.0.106\n\nchore(deps): bump syn from 2.0.105 to 2.0.106",
-          "timestamp": "2025-08-16T09:09:17+08:00",
-          "tree_id": "14d3fcd9ec0d442fee4d49784fa2ff48e94564cc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9e3ba0b3a10d02686dca0fd23090932524045e10"
-        },
-        "date": 1755306734696,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.45,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.895,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.71,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8cb71b843793878a0f6e511752f5ac62d45abdc3",
+          "message": "Merge pull request #2617 from f1shl3gs/dependabot/cargo/memmap2-0.9.9\n\nchore(deps): bump memmap2 from 0.9.8 to 0.9.9",
+          "timestamp": "2025-10-22T18:59:51+08:00",
+          "tree_id": "ff63cea9106d3857b4d07a310289d922dbeb6aed",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8cb71b843793878a0f6e511752f5ac62d45abdc3"
+        },
+        "date": 1761130935348,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.35,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.612,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.97,
             "unit": "ns/op"
           }
         ]
