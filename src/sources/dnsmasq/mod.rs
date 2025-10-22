@@ -24,7 +24,7 @@ fn default_leases_path() -> PathBuf {
 struct Config {
     /// Dnsmasq host:port addresses
     #[serde(default)]
-    name_servers: Vec<SocketAddr>,
+    endpoints: Vec<SocketAddr>,
 
     /// Path to the dnsmasq leases file, by default it is `/var/lib/misc/dnsmasq.leases`
     #[serde(default = "default_leases_path")]
@@ -46,13 +46,15 @@ struct Config {
 #[typetag::serde(name = "dnsmasq")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut config = resolver::Config {
+        if self.endpoints.is_empty() {
+            return Err("endpoints is required".into());
+        }
+
+        let config = resolver::Config {
             timeout: self.timeout,
+            servers: self.endpoints.clone(),
             ..Default::default()
         };
-        if !self.name_servers.is_empty() {
-            config.servers = self.name_servers.clone();
-        }
 
         let resolver = Resolver::new(config);
 
