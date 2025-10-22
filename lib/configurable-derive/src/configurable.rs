@@ -133,7 +133,7 @@ fn generate_named_struct_field(field: &syn::Field, field_attrs: FieldAttrs) -> T
 
     let maybe_required = if field_attrs.required {
         true
-    } else if field_attrs.default.is_none() && field_attrs.default_fn.is_none() {
+    } else if field_attrs.default_fn.is_none() {
         if let Type::Path(path) = &field.ty
             && path
                 .path
@@ -205,7 +205,7 @@ fn impl_from_enum(type_attrs: &TypeAttrs, de: &syn::DataEnum) -> Result<TokenStr
         .iter()
         .map(|variant| generate_enum_variant(type_attrs, variant))
         .collect::<Result<Vec<_>>>()?;
-
+    let capacity = mapped_variants.len();
     let maybe_description = match type_attrs.description.as_ref() {
         None => quote! { None },
         Some(desc) => quote! { Some( #desc ) },
@@ -215,7 +215,7 @@ fn impl_from_enum(type_attrs: &TypeAttrs, de: &syn::DataEnum) -> Result<TokenStr
         fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
             -> ::configurable::schema::SchemaObject
         {
-            let mut subschemas = ::std::vec::Vec::new();
+            let mut subschemas = ::std::vec::Vec::with_capacity( #capacity );
 
             #(#mapped_variants)*
 
