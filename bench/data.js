@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761163720394,
+  "lastUpdate": 1761163756298,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4791c224ceac822dd8e043b95d6ab0c22e4c13c6",
-          "message": "Merge pull request #2522 from f1shl3gs/dependabot/cargo/percent-encoding-2.3.2\n\nchore(deps): bump percent-encoding from 2.3.1 to 2.3.2",
-          "timestamp": "2025-08-22T13:49:54+08:00",
-          "tree_id": "45df751125eb9040a928067640df1e44ef7fcc16",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4791c224ceac822dd8e043b95d6ab0c22e4c13c6"
-        },
-        "date": 1755841949260,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.955,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 327.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 664.49,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "35337c19a31b0de4f80ad945caf0cff88650a49c",
           "message": "Merge pull request #2526 from f1shl3gs/dependabot/cargo/indexmap-2.11.0\n\nchore(deps): bump indexmap from 2.10.0 to 2.11.0",
           "timestamp": "2025-08-23T11:49:10+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 672.27,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ae3d84df868784bec61f47842f8533809405d4c8",
+          "message": "Merge pull request #2633 from f1shl3gs/sources/prometheus_pushgateway/unify_listen\n\nsources/prometheus_pushgateway: unify listen",
+          "timestamp": "2025-10-23T04:06:04+08:00",
+          "tree_id": "94b909996d2074714e1cf84e1a9096cc1caf7e2b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ae3d84df868784bec61f47842f8533809405d4c8"
+        },
+        "date": 1761163733812,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.942,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 166.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 332.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 685.67,
             "unit": "ns/op"
           }
         ]
