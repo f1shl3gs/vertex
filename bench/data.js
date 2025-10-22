@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761137950134,
+  "lastUpdate": 1761137954340,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3f2e7e6a39da5c7ca94ce67386a15c892d8896ad",
-          "message": "Merge pull request #2511 from f1shl3gs/codecs/rename_framing_config_variant\n\nlib/codecs: unify framing config names",
-          "timestamp": "2025-08-18T12:39:28+08:00",
-          "tree_id": "c8583886b9944e196008bf803170c230857ca895",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f2e7e6a39da5c7ca94ce67386a15c892d8896ad"
-        },
-        "date": 1755492113384,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.198,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 181.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 326,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 658.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b1cf41d9d61229ee478531f1f989ae830667e16b",
           "message": "Merge pull request #2512 from f1shl3gs/misc/re-organize-directories\n\nmisc: re-organize directories & cleanup",
           "timestamp": "2025-08-18T17:20:12+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 659.65,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "427948e6a429d138f06338247cb50efcd764ede1",
+          "message": "Merge pull request #2620 from f1shl3gs/sources/fluent/unify_listen_name\n\nsources/fluent: unify listen name",
+          "timestamp": "2025-10-22T20:56:20+08:00",
+          "tree_id": "ddc97d234bdad25598381543ed37ef58e138a598",
+          "url": "https://github.com/f1shl3gs/vertex/commit/427948e6a429d138f06338247cb50efcd764ede1"
+        },
+        "date": 1761137932572,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.438,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 163.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 307.97,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 668.05,
             "unit": "ns/op"
           }
         ]
