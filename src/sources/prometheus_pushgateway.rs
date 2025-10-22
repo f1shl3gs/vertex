@@ -13,11 +13,16 @@ use http::{HeaderMap, Method, StatusCode, Uri};
 
 use crate::common::prometheus::convert_metrics;
 
+fn default_listen() -> SocketAddr {
+    SocketAddr::from(([0, 0, 0, 0], 9091))
+}
+
 /// Configuration for the `prometheus_pushgateway` source.
 #[configurable_component(source, name = "prometheus_pushgateway")]
 struct Config {
     /// The address to accept connections on.
-    address: SocketAddr,
+    #[serde(default = "default_listen")]
+    listen: SocketAddr,
 
     tls: Option<TlsConfig>,
 
@@ -31,7 +36,7 @@ impl SourceConfig for Config {
         let source = PushgatewaySource;
 
         source.run(
-            self.address,
+            self.listen,
             Method::POST,
             "/metrics/job",
             false,
@@ -46,7 +51,7 @@ impl SourceConfig for Config {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        vec![Resource::tcp(self.address)]
+        vec![Resource::tcp(self.listen)]
     }
 
     fn can_acknowledge(&self) -> bool {
@@ -299,10 +304,10 @@ jobs_summary_count{type="a"} 1.0 1612411506789
 "#;
 
         // start server
-        let address = testify::next_addr();
+        let listen = testify::next_addr();
         let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
         let source = Config {
-            address,
+            listen,
             tls: tls.clone(),
             auth: None,
         };
@@ -322,7 +327,7 @@ jobs_summary_count{type="a"} 1.0 1612411506789
         let url = format!(
             "{}://localhost:{}/metrics/job/foo",
             if tls.is_some() { "https" } else { "http" },
-            address.port()
+            listen.port()
         );
         let req = Request::builder()
             .uri(url)
