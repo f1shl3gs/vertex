@@ -34,7 +34,7 @@ pub struct Config {
 
 impl Config {
     pub fn resource(&self) -> Resource {
-        Resource::UnixSocket(self.path.to_string_lossy().to_string())
+        Resource::UnixSocket(self.path.clone())
     }
 
     pub async fn build(&self, max_frame_length: usize, cx: SourceContext) -> crate::Result<Source> {

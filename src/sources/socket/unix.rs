@@ -38,7 +38,7 @@ pub struct Config {
 
 impl Config {
     pub fn resource(&self) -> Resource {
-        Resource::UnixSocket(self.path.to_string_lossy().to_string())
+        Resource::UnixSocket(self.path.clone())
     }
 
     pub fn run_stream(&self, decoder: Decoder, cx: SourceContext) -> crate::Result<Source> {

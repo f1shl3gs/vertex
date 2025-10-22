@@ -369,10 +369,6 @@ required-features = ["sources-haproxy"]
 name = "socket"
 required-features = ["sinks-socket"]
 
-[[test]]
-name = "syslog"
-required-features = ["sinks-socket"]
-
 [build-dependencies]
 prost-build = { version = "0.14.1", default-features = false }
 tonic-prost-build = { version = "0.14.2", default-features = false, features = ["transport"] }

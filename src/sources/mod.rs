@@ -103,7 +103,7 @@ pub mod socket;
 #[cfg(feature = "sources-static_metrics")]
 mod static_metrics;
 #[cfg(feature = "sources-syslog")]
-pub mod syslog;
+mod syslog;
 #[cfg(feature = "sources-systemd")]
 mod systemd;
 #[cfg(feature = "sources-tail")]
