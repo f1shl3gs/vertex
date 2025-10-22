@@ -77,7 +77,6 @@ pub struct FieldAttrs {
     pub flatten: bool,
 
     pub rename: Option<LitStr>,
-    pub default: Option<Lit>,
     // default_fn is set when #[serde(default)] is present
     pub default_fn: Option<LitStr>,
     pub format: Option<LitStr>,
@@ -147,11 +146,6 @@ impl FieldAttrs {
                             let value: LitStr = value.parse()?;
                             this.format = Some(value)
                         },
-                        "default" => {
-                            let value = meta.value()?;
-                            let value: Lit = value.parse()?;
-                            this.default = Some(value);
-                        },
                         _ => {
                             return Err(syn::Error::new(
                                 meta.path.span(),
@@ -216,26 +210,18 @@ impl FieldAttrs {
     }
 
     pub fn maybe_default(&self, field_typ: &Type) -> Option<TokenStream> {
-        // #[configurable(default = 1111)
-        // #[configurable(default = "abcd")
-        if let Some(value) = &self.default {
-            return Some(quote! {
-                subschema.set_default( #value.into() );
-            });
-        }
-
-        let default_value = if let Some(default_fn) = &self.default_fn {
-            if default_fn.value().is_empty() {
-                // handle something like `#[serde(default)]`
-                quote!( let value: #field_typ = Default::default(); )
-            } else {
-                let default_fn: Path = default_fn
-                    .parse()
-                    .expect("serde's default function cannot be transform to syn::Path");
-                quote!( let value = #default_fn(); )
-            }
-        } else {
+        let Some(default_fn) = &self.default_fn else {
             return None;
+        };
+
+        let default_value = if default_fn.value().is_empty() {
+            // handle something like `#[serde(default)]`
+            quote!( let value: #field_typ = Default::default(); )
+        } else {
+            let default_fn: Path = default_fn
+                .parse()
+                .expect("serde's default function cannot be transformed to syn::Path");
+            quote!( let value = #default_fn(); )
         };
 
         let json_value = match &self.serde_with {

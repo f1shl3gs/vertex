@@ -24,14 +24,12 @@ struct External {
 /// blah blah
 #[derive(Deserialize, Configurable)]
 struct Foo {
-    #[configurable(description = "number field", default = 12)]
+    #[configurable(description = "number field")]
     field_num: u32,
-    #[configurable(default = "aaaaa")]
     filed_str: String,
     non_num: NonZeroI64,
 
     /// filed bool is
-    #[configurable(default = true)]
     field_bool: bool,
 
     /// inner is inner type
@@ -48,7 +46,6 @@ enum Variant {
     Internal {
         #[configurable(description = "first desc")]
         first: String,
-        #[configurable(default = 12)]
         second: u32,
 
         /// uri for ....
