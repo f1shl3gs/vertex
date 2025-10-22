@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761162676972,
+  "lastUpdate": 1761162729195,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a2fffd7dbf3bc03ffd16f861716f429144737836",
-          "message": "Merge pull request #2520 from f1shl3gs/misc/save_bloat_result\n\nmisc: save bloat result",
-          "timestamp": "2025-08-21T15:20:30+08:00",
-          "tree_id": "f3d1bb5069155872867a18fad29102c8f37ce5cd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a2fffd7dbf3bc03ffd16f861716f429144737836"
-        },
-        "date": 1755761541534,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 556,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40352.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "47e12d13514a876fc6b712bd4b6429b656e1c4ea",
           "message": "Merge pull request #2524 from f1shl3gs/dependabot/cargo/form_urlencoded-1.2.2\n\nchore(deps): bump form_urlencoded from 1.2.1 to 1.2.2",
           "timestamp": "2025-08-22T13:49:21+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40354.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "17ba501ff93ea52336a6548c1a95097e62611f19",
+          "message": "Merge pull request #2631 from f1shl3gs/sources/grpc_check/reorder_config_field_option\n\nsources/grpc_check: re-order config field",
+          "timestamp": "2025-10-23T03:40:17+08:00",
+          "tree_id": "87ffe96434caf7d967cc8d8f5236fa8288ee4798",
+          "url": "https://github.com/f1shl3gs/vertex/commit/17ba501ff93ea52336a6548c1a95097e62611f19"
+        },
+        "date": 1761162707166,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40354.5,
             "unit": "KiB"
           }
         ]
