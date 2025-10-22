@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761162170201,
+  "lastUpdate": 1761162172344,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4791c224ceac822dd8e043b95d6ab0c22e4c13c6",
-          "message": "Merge pull request #2522 from f1shl3gs/dependabot/cargo/percent-encoding-2.3.2\n\nchore(deps): bump percent-encoding from 2.3.1 to 2.3.2",
-          "timestamp": "2025-08-22T13:49:54+08:00",
-          "tree_id": "45df751125eb9040a928067640df1e44ef7fcc16",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4791c224ceac822dd8e043b95d6ab0c22e4c13c6"
-        },
-        "date": 1755841971118,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.321,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.637,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 167.84,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 182.68,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "17ba501ff93ea52336a6548c1a95097e62611f19",
+          "message": "Merge pull request #2631 from f1shl3gs/sources/grpc_check/reorder_config_field_option\n\nsources/grpc_check: re-order config field",
+          "timestamp": "2025-10-23T03:40:17+08:00",
+          "tree_id": "87ffe96434caf7d967cc8d8f5236fa8288ee4798",
+          "url": "https://github.com/f1shl3gs/vertex/commit/17ba501ff93ea52336a6548c1a95097e62611f19"
+        },
+        "date": 1761162150225,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.312,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 227.4,
             "unit": "ns/op"
           }
         ]
