@@ -1,7 +1,7 @@
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::spanned::Spanned;
-use syn::{DeriveInput, Fields, LitStr, Result};
+use syn::{DeriveInput, Fields, LitStr, Result, Type};
 
 use crate::parse_attrs::{Description, FieldAttrs, TypeAttrs, is_doc_attr, parse_attr_doc};
 
@@ -133,8 +133,23 @@ fn generate_named_struct_field(field: &syn::Field, field_attrs: FieldAttrs) -> T
 
     let maybe_required = if field_attrs.required {
         true
+    } else if field_attrs.default.is_none() && field_attrs.default_fn.is_none() {
+        if let Type::Path(path) = &field.ty
+            && path
+                .path
+                .segments
+                .first()
+                .map(|segment| segment.ident == "Option")
+                .unwrap_or_default()
+        {
+            // no attributes and the type is `Option`
+            false
+        } else {
+            // no attributes but non `Option` file
+            true
+        }
     } else {
-        field_attrs.default.is_none() && field_attrs.default_fn.is_none()
+        false
     };
 
     let maybe_description = match field_attrs.description {
