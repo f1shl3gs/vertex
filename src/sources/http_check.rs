@@ -29,7 +29,7 @@ use tokio::net::TcpStream;
 use tokio::task::JoinSet;
 use url::Url;
 
-use crate::common::offset;
+use crate::common::calculate_start;
 
 const fn default_timeout() -> Duration {
     Duration::from_secs(5)
@@ -125,13 +125,8 @@ async fn run(
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) {
-    let now = Utc::now()
-        .timestamp_nanos_opt()
-        .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
-    let mut ticker = tokio::time::interval_at(
-        tokio::time::Instant::now() + offset(&target, interval, 0, now),
-        interval,
-    );
+    let start = calculate_start(&target, interval);
+    let mut ticker = tokio::time::interval_at(start.into(), interval);
 
     let instance = target.host_str().unwrap_or("");
 

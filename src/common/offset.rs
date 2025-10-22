@@ -12,7 +12,7 @@ fn calculate_hash<T: Hash>(t: &T) -> u64 {
 }
 
 // offset returns the time until the next scrape cycle for the target.
-pub fn offset<H: Hash>(h: &H, interval: Duration, jitter_seed: u64, now: i64) -> Duration {
+fn offset<H: Hash>(h: &H, interval: Duration, jitter_seed: u64, now: i64) -> Duration {
     let hv = calculate_hash(h);
     let base = interval.as_nanos() as i64 - now % interval.as_nanos() as i64;
     let offset = (hv ^ jitter_seed) % interval.as_nanos() as u64;
@@ -31,26 +31,16 @@ pub fn calculate_start<T: Hash>(target: &T, interval: Duration) -> Instant {
 }
 
 /// Return next `start` of the interval
+#[inline]
 pub fn calculate_start_with_jitter<T: Hash>(
     target: &T,
     interval: Duration,
     jitter: u64,
 ) -> Instant {
-    // Aaaaaaah, the time apis are so disgusting.
     let now = Utc::now()
         .timestamp_nanos_opt()
         .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
-    let hash = calculate_hash(target);
-
-    let base = interval.as_nanos() as i64 - now % interval.as_nanos() as i64;
-    let offset = (hash ^ jitter) % interval.as_nanos() as u64;
-
-    let mut next = base + offset as i64;
-    if next > interval.as_nanos() as i64 {
-        next -= interval.as_nanos() as i64
-    }
-
-    Instant::now() + Duration::from_nanos(next as u64)
+    Instant::now() + offset(target, interval, jitter, now)
 }
 
 #[cfg(test)]
