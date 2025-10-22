@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761162168085,
+  "lastUpdate": 1761162170201,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "47e12d13514a876fc6b712bd4b6429b656e1c4ea",
-          "message": "Merge pull request #2524 from f1shl3gs/dependabot/cargo/form_urlencoded-1.2.2\n\nchore(deps): bump form_urlencoded from 1.2.1 to 1.2.2",
-          "timestamp": "2025-08-22T13:49:21+08:00",
-          "tree_id": "69626a06a70f6b213191cf9fa8ae47b18fdf9bff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/47e12d13514a876fc6b712bd4b6429b656e1c4ea"
-        },
-        "date": 1755841900997,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.346,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.125,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 163.91,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.38,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "107c1dbb3ea6e766e85bd2c34cafdc8e9d46ca41",
+          "message": "Merge pull request #2630 from f1shl3gs/sources/chrony/unify_endpoint\n\nsources/chrony: unify endpoint",
+          "timestamp": "2025-10-23T03:40:04+08:00",
+          "tree_id": "941141e0171b9ad4ed1783ee5dff844a7384f7da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/107c1dbb3ea6e766e85bd2c34cafdc8e9d46ca41"
+        },
+        "date": 1761162147725,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.443,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 182.68,
             "unit": "ns/op"
           }
         ]
