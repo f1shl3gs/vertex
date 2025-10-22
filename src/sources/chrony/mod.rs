@@ -51,7 +51,7 @@ struct Config {
     ///
     /// Make sure vertex has the right permission to access this address.
     #[serde(default)]
-    address: ServerAddr,
+    endpoint: ServerAddr,
 
     /// How frequent this source should poll.
     #[serde(with = "humanize::duration::serde", default = "default_interval")]
@@ -82,7 +82,7 @@ impl SourceConfig for Config {
 }
 
 async fn run(config: Config, mut output: Pipeline, mut shutdown: ShutdownSignal) -> Result<(), ()> {
-    let client = Client::new(config.address);
+    let client = Client::new(config.endpoint);
     let mut ticker = tokio::time::interval(config.interval);
 
     loop {
