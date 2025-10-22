@@ -130,7 +130,7 @@ mod tests {
 
     #[test]
     fn config_udp() {
-        let config: Config = serde_yaml::from_str("address: 127.0.0.1:12345").unwrap();
+        let config: Config = serde_yaml::from_str("listen: 127.0.0.1:12345").unwrap();
 
         assert_eq!(config.listen.to_string(), "127.0.0.1:12345");
     }

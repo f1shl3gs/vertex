@@ -108,7 +108,7 @@ mod tests {
     #[test]
     fn config_tcp_with_receive_buffer_size() {
         let config: Config =
-            serde_yaml::from_str("address: 127.0.0.1:12345\nreceive_buffer_bytes: 1ki").unwrap();
+            serde_yaml::from_str("listen: 127.0.0.1:12345\nreceive_buffer_bytes: 1ki").unwrap();
 
         assert_eq!(config.receive_buffer_bytes, Some(1024usize));
     }
@@ -116,7 +116,7 @@ mod tests {
     #[test]
     fn config_tcp_with_keepalive() {
         let config: Config =
-            serde_yaml::from_str("address: 127.0.0.1:12345\nkeepalive:\n  timeout: 120s").unwrap();
+            serde_yaml::from_str("listen: 127.0.0.1:12345\nkeepalive:\n  timeout: 120s").unwrap();
 
         assert_eq!(
             config.keepalive.unwrap().timeout,
