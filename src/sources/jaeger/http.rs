@@ -27,7 +27,7 @@ fn default_listen() -> SocketAddr {
 #[serde(deny_unknown_fields)]
 pub struct ThriftHttpConfig {
     #[serde(default = "default_listen")]
-    pub endpoint: SocketAddr,
+    pub listen: SocketAddr,
 
     #[serde(default)]
     tls: Option<TlsConfig>,
@@ -40,7 +40,7 @@ pub async fn serve(
     output: Pipeline,
     acknowledgements: bool,
 ) -> crate::Result<()> {
-    let listener = MaybeTlsListener::bind(&config.endpoint, config.tls.as_ref()).await?;
+    let listener = MaybeTlsListener::bind(&config.listen, config.tls.as_ref()).await?;
 
     let service = service_fn(move |req: Request<Incoming>| {
         let output = output.clone();
