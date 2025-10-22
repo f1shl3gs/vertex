@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761131799468,
+  "lastUpdate": 1761131807966,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3ff0ab8d514f1a962b75823e50ad6ae261f55ef1",
-          "message": "Merge pull request #2509 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.101\n\nchore(deps): bump proc-macro2 from 1.0.97 to 1.0.101",
-          "timestamp": "2025-08-17T11:14:30+08:00",
-          "tree_id": "a76b11ea8e1e157fb145c33bd439605bc81ef787",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ff0ab8d514f1a962b75823e50ad6ae261f55ef1"
-        },
-        "date": 1755400634950,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.307,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 92.806,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 162.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d4717cf19ebe68cb4fbc5754e865aa8c54dd630e",
+          "message": "Merge pull request #2618 from f1shl3gs/dependabot/cargo/rustls-0.23.34\n\nchore(deps): bump rustls from 0.23.33 to 0.23.34",
+          "timestamp": "2025-10-22T19:14:00+08:00",
+          "tree_id": "0173bbc916a6b8f3b332f4efddcc5365090ae8ea",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d4717cf19ebe68cb4fbc5754e865aa8c54dd630e"
+        },
+        "date": 1761131785465,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.327,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.613,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 185.4,
             "unit": "ns/op"
           }
         ]
