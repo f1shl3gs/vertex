@@ -11,8 +11,8 @@ use std::time::{Duration, Instant};
 
 use configurable::{Configurable, configurable_component};
 use event::Metric;
+use framework::Source;
 use framework::config::{OutputType, SourceConfig, SourceContext, default_interval, default_true};
-use framework::{Source, tls::TlsConfig};
 use serde::{Deserialize, Serialize};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
@@ -64,9 +64,17 @@ const fn default_slave_status() -> bool {
     true
 }
 
+fn default_endpoint() -> String {
+    "localhost:3306".to_string()
+}
+
 #[configurable_component(source, name = "mysqld")]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// Endpoint to the MySQL/MariaDB instance
+    #[serde(default = "default_endpoint")]
+    endpoint: String,
+
     /// Since 5.1, Collect from SHOW GLOBAL STATUS (Enabled by default)
     #[serde(default = "default_global_status")]
     global_status: bool,
@@ -88,14 +96,6 @@ struct Config {
     #[serde(default = "default_info_schema")]
     info_schema: InfoSchemaConfig,
 
-    /// IP address to MySQL server.
-    #[serde(default = "default_host")]
-    host: String,
-
-    /// TCP port to MySQL server
-    #[serde(default = "default_port")]
-    port: u16,
-
     /// Username used to connect to MySQL instance
     #[serde(default)]
     username: Option<String>,
@@ -103,19 +103,11 @@ struct Config {
     /// Password used to connect to MySQL instance
     #[serde(default)]
     password: Option<String>,
-    ssl: Option<TlsConfig>,
 
+    // tls: Option<TlsConfig>,
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
-}
-
-fn default_host() -> String {
-    "localhost".to_string()
-}
-
-const fn default_port() -> u16 {
-    3306
 }
 
 const fn default_info_schema() -> InfoSchemaConfig {
@@ -127,11 +119,11 @@ const fn default_info_schema() -> InfoSchemaConfig {
 }
 
 impl Config {
-    fn connect_options(&self) -> MySqlConnectOptions {
+    fn connect_options(&self, host: &str, port: u16) -> MySqlConnectOptions {
         // TODO support ssl
         let mut options = MySqlConnectOptions::new()
-            .host(self.host.as_str())
-            .port(self.port)
+            .host(host)
+            .port(port)
             .ssl_mode(MySqlSslMode::Disabled);
 
         if let Some(username) = &self.username {
@@ -150,17 +142,20 @@ impl Config {
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = tokio::time::interval(self.interval);
-        let options = self.connect_options();
-        let instance = format!("{}:{}", self.host, self.port);
-        let SourceContext {
-            mut output,
-            mut shutdown,
-            ..
-        } = cx;
+        let (host, port) = match self.endpoint.split_once(':') {
+            Some((host, port)) => (host, port.parse()?),
+            None => (self.endpoint.as_str(), 3306),
+        };
+        let options = self.connect_options(host, port);
+
+        let instance = self.endpoint.to_string();
+        let interval = self.interval;
+        let mut output = cx.output;
+        let mut shutdown = cx.shutdown;
 
         Ok(Box::pin(async move {
             let pool = MySqlPool::connect_lazy_with(options);
+            let mut ticker = tokio::time::interval(interval);
 
             loop {
                 tokio::select! {
@@ -187,13 +182,8 @@ impl SourceConfig for Config {
                     m.insert_tag("instance", instance.clone());
                 });
 
-                if let Err(err) = output.send(metrics).await {
-                    error!(
-                        message = "Error sending mysqld metrics",
-                        %err
-                    );
-
-                    return Err(());
+                if let Err(_err) = output.send(metrics).await {
+                    break;
                 }
             }
 
