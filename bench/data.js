@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761167533714,
+  "lastUpdate": 1761167637100,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4791c224ceac822dd8e043b95d6ab0c22e4c13c6",
-          "message": "Merge pull request #2522 from f1shl3gs/dependabot/cargo/percent-encoding-2.3.2\n\nchore(deps): bump percent-encoding from 2.3.1 to 2.3.2",
-          "timestamp": "2025-08-22T13:49:54+08:00",
-          "tree_id": "45df751125eb9040a928067640df1e44ef7fcc16",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4791c224ceac822dd8e043b95d6ab0c22e4c13c6"
-        },
-        "date": 1755842441029,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 551,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40352.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "35337c19a31b0de4f80ad945caf0cff88650a49c",
           "message": "Merge pull request #2526 from f1shl3gs/dependabot/cargo/indexmap-2.11.0\n\nchore(deps): bump indexmap from 2.10.0 to 2.11.0",
           "timestamp": "2025-08-23T11:49:10+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40350.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f64b404180e27a2729e24eb0d12648170c208e13",
+          "message": "Merge pull request #2634 from f1shl3gs/sources/prometheus_remote_write/unify_listen\n\nsources/prometheus_remote_write: unify listen",
+          "timestamp": "2025-10-23T05:02:27+08:00",
+          "tree_id": "805223e686bc346fd5e390972d858e225e5d10ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f64b404180e27a2729e24eb0d12648170c208e13"
+        },
+        "date": 1761167610306,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 568,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40349.1,
             "unit": "KiB"
           }
         ]
