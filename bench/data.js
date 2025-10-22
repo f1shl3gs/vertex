@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761138233077,
+  "lastUpdate": 1761138410208,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3f2e7e6a39da5c7ca94ce67386a15c892d8896ad",
-          "message": "Merge pull request #2511 from f1shl3gs/codecs/rename_framing_config_variant\n\nlib/codecs: unify framing config names",
-          "timestamp": "2025-08-18T12:39:28+08:00",
-          "tree_id": "c8583886b9944e196008bf803170c230857ca895",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f2e7e6a39da5c7ca94ce67386a15c892d8896ad"
-        },
-        "date": 1755492557987,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14655000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 651760,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.544,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b1cf41d9d61229ee478531f1f989ae830667e16b",
           "message": "Merge pull request #2512 from f1shl3gs/misc/re-organize-directories\n\nmisc: re-organize directories & cleanup",
           "timestamp": "2025-08-18T17:20:12+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.064,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "427948e6a429d138f06338247cb50efcd764ede1",
+          "message": "Merge pull request #2620 from f1shl3gs/sources/fluent/unify_listen_name\n\nsources/fluent: unify listen name",
+          "timestamp": "2025-10-22T20:56:20+08:00",
+          "tree_id": "ddc97d234bdad25598381543ed37ef58e138a598",
+          "url": "https://github.com/f1shl3gs/vertex/commit/427948e6a429d138f06338247cb50efcd764ede1"
+        },
+        "date": 1761138386963,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15626000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 656310,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.574,
             "unit": "ns/op"
           }
         ]
