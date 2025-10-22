@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761161101864,
+  "lastUpdate": 1761161175215,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4179dac20d63dd911780d7714033f4127cb2fa0d",
-          "message": "Merge pull request #2518 from f1shl3gs/dependabot/cargo/thiserror-2.0.16\n\nchore(deps): bump thiserror from 2.0.15 to 2.0.16",
-          "timestamp": "2025-08-20T13:08:44+08:00",
-          "tree_id": "dab1011500924d06e5a3c674c95c25fb190cba81",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4179dac20d63dd911780d7714033f4127cb2fa0d"
-        },
-        "date": 1755667190303,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40348.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4d31f9e488ff4760f69831ee266c5266bf61df08",
           "message": "Merge pull request #2519 from f1shl3gs/dependabot/cargo/inventory-0.3.21\n\nchore(deps): bump inventory from 0.3.20 to 0.3.21",
           "timestamp": "2025-08-21T11:33:16+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40347.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "61a23b9494349b5fe0911155abea13f4d6a11396",
+          "message": "Merge pull request #2628 from f1shl3gs/sources/dnstap/unify_listen\n\nsources/dnstap: unify listen",
+          "timestamp": "2025-10-23T03:15:05+08:00",
+          "tree_id": "2e29ff2d8f3ff1df9f19a4c6dfaed005ae2d1f28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/61a23b9494349b5fe0911155abea13f4d6a11396"
+        },
+        "date": 1761161153307,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 558,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40354.5,
             "unit": "KiB"
           }
         ]
