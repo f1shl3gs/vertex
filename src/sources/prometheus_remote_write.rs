@@ -14,12 +14,12 @@ use http::{HeaderMap, Method, StatusCode, Uri};
 use prometheus::{GroupKind, MetricGroup, proto};
 use prost::Message;
 
-/// Start a HTTP server and receive Protobuf encoded metrics.
+/// Start an HTTP server and receive Protobuf encoded metrics.
 #[configurable_component(source, name = "prometheus_remote_write")]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The address to accept connections on. The address must include a port
-    address: SocketAddr,
+    listen: SocketAddr,
 
     /// HTTP Server TLS config
     tls: Option<TlsConfig>,
@@ -34,7 +34,7 @@ impl SourceConfig for Config {
         let source = RemoteWriteSource;
 
         source.run(
-            self.address,
+            self.listen,
             Method::POST,
             "/write",
             true,
@@ -49,7 +49,7 @@ impl SourceConfig for Config {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        vec![Resource::tcp(self.address)]
+        vec![Resource::tcp(self.listen)]
     }
 
     fn can_acknowledge(&self) -> bool {
@@ -270,11 +270,11 @@ mod tests {
     async fn run_and_receive(tls: Option<TlsConfig>) {
         components::init_test();
 
-        let address = testify::next_addr();
+        let listen = testify::next_addr();
         let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
 
         let source = Config {
-            address,
+            listen,
             auth: None,
             tls: tls.clone(),
         };
@@ -293,7 +293,7 @@ mod tests {
         let url = format!(
             "{}://localhost:{}/write",
             if tls.is_some() { "https" } else { "http" },
-            address.port()
+            listen.port()
         );
 
         let mut timeseries = TimeSeries::new();
