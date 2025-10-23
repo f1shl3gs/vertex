@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761243354635,
+  "lastUpdate": 1761243371284,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c773225c2b2e93fd05e197de0b95c77ad8205b4e",
-          "message": "Merge pull request #2532 from f1shl3gs/sinks/clickhouse/refine_sink\n\nsinks/clickhouse: refactor clickhouse's http sink",
-          "timestamp": "2025-08-27T13:45:18+08:00",
-          "tree_id": "9249eabbcd358c46f7df6b1875aaa789b1204c5f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c773225c2b2e93fd05e197de0b95c77ad8205b4e"
-        },
-        "date": 1756273653248,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.373,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.48,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4eedf7f336f0f6b20f676bca70776496396f2494",
+          "message": "Merge pull request #2640 from f1shl3gs/sinks/skywalking/fix_component_type\n\nsinks/skywalking: fix component type",
+          "timestamp": "2025-10-24T02:13:23+08:00",
+          "tree_id": "553566d7148ec3e98836b9b27fcc81ee45597f0b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4eedf7f336f0f6b20f676bca70776496396f2494"
+        },
+        "date": 1761243348947,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.429,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 187.25,
             "unit": "ns/op"
           }
         ]
