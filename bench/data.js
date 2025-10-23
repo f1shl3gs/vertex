@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761243871582,
+  "lastUpdate": 1761243894849,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c8c0e3299e30d89aef6ead73b693a2df9319370c",
-          "message": "Merge pull request #2529 from f1shl3gs/dependabot/cargo/quick-xml-0.38.3\n\nchore(deps): bump quick-xml from 0.38.2 to 0.38.3",
-          "timestamp": "2025-08-24T18:49:43+08:00",
-          "tree_id": "b7bb9163cd2b5ba9e2c57e78587ca430a39b7aff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c8c0e3299e30d89aef6ead73b693a2df9319370c"
-        },
-        "date": 1756033227843,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 555,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40352.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "33b49b719ddae27391819d0833fb20dbea094458",
           "message": "Merge pull request #2530 from f1shl3gs/dependabot/cargo/regex-1.11.2\n\nchore(deps): bump regex from 1.11.1 to 1.11.2",
           "timestamp": "2025-08-25T13:10:59+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40356.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4eedf7f336f0f6b20f676bca70776496396f2494",
+          "message": "Merge pull request #2640 from f1shl3gs/sinks/skywalking/fix_component_type\n\nsinks/skywalking: fix component type",
+          "timestamp": "2025-10-24T02:13:23+08:00",
+          "tree_id": "553566d7148ec3e98836b9b27fcc81ee45597f0b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4eedf7f336f0f6b20f676bca70776496396f2494"
+        },
+        "date": 1761243872492,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
             "unit": "s"
           },
           {
