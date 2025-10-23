@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761243371284,
+  "lastUpdate": 1761243399065,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b48dc6625b14d59cbf0f77656109c587ce0e1522",
-          "message": "Merge pull request #2531 from f1shl3gs/dependabot/cargo/mimalloc-0.1.48\n\nchore(deps): bump mimalloc from 0.1.47 to 0.1.48",
-          "timestamp": "2025-08-27T13:44:49+08:00",
-          "tree_id": "3cdcad2f1de75669cd52dee373c9ce2cbad80abc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b48dc6625b14d59cbf0f77656109c587ce0e1522"
-        },
-        "date": 1756273637089,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.318,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 178.35,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 330.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 700.57,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c773225c2b2e93fd05e197de0b95c77ad8205b4e",
           "message": "Merge pull request #2532 from f1shl3gs/sinks/clickhouse/refine_sink\n\nsinks/clickhouse: refactor clickhouse's http sink",
           "timestamp": "2025-08-27T13:45:18+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 668.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4eedf7f336f0f6b20f676bca70776496396f2494",
+          "message": "Merge pull request #2640 from f1shl3gs/sinks/skywalking/fix_component_type\n\nsinks/skywalking: fix component type",
+          "timestamp": "2025-10-24T02:13:23+08:00",
+          "tree_id": "553566d7148ec3e98836b9b27fcc81ee45597f0b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4eedf7f336f0f6b20f676bca70776496396f2494"
+        },
+        "date": 1761243377212,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.124,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 312.95,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 686.76,
             "unit": "ns/op"
           }
         ]
