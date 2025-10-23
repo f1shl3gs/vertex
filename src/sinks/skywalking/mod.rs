@@ -33,15 +33,19 @@ impl SinkBatchSettings for SkyWalkingBatchSettings {
     const TIMEOUT: Duration = Duration::from_secs(1);
 }
 
-#[configurable_component(source, name = "skywalking")]
+#[configurable_component(sink, name = "skywalking")]
 struct Config {
     /// The endpoint of SkyWalking
     endpoint: String,
 
+    /// Represents a set/group of workloads which provide the same behaviours
+    /// for requests.
     service: String,
 
+    /// Each individual workload in the Service group is known as an instance.
     service_instance: String,
 
+    /// Compression for GRPC connections.
     #[serde(default)]
     compression: Compression,
 
