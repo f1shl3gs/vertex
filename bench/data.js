@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761236586393,
+  "lastUpdate": 1761236674067,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cb89f0ca1384c5c2e1ea894a8686ef365f19238f",
-          "message": "Merge pull request #2528 from f1shl3gs/dependabot/cargo/url-2.5.7\n\nchore(deps): bump url from 2.5.6 to 2.5.7",
-          "timestamp": "2025-08-24T12:26:49+08:00",
-          "tree_id": "c1eec671804eecb6711b4c72dd8bf291b8531bf5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cb89f0ca1384c5c2e1ea894a8686ef365f19238f"
-        },
-        "date": 1756010312360,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40348.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c8c0e3299e30d89aef6ead73b693a2df9319370c",
           "message": "Merge pull request #2529 from f1shl3gs/dependabot/cargo/quick-xml-0.38.3\n\nchore(deps): bump quick-xml from 0.38.2 to 0.38.3",
           "timestamp": "2025-08-24T18:49:43+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 594,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40356.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2016618373defafa654cb04329176815d471f687",
+          "message": "Merge pull request #2639 from f1shl3gs/sinks/jaeger/unify_endpoint\n\nsinks/jaeger: unify endpoint",
+          "timestamp": "2025-10-24T00:12:58+08:00",
+          "tree_id": "588248a7a149078cf8359ab0bc27b78d26966879",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2016618373defafa654cb04329176815d471f687"
+        },
+        "date": 1761236652280,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
             "unit": "s"
           },
           {
