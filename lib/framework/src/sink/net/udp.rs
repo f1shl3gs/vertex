@@ -3,7 +3,6 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
-use async_trait::async_trait;
 use backoff::ExponentialBackoff;
 use bytes::BytesMut;
 use codecs::encoding::Transformer;
@@ -39,7 +38,7 @@ pub enum UdpError {
 #[serde(deny_unknown_fields)]
 pub struct UdpSinkConfig {
     /// The address to connect to. The address must include a port.
-    address: String,
+    endpoint: String,
 
     /// The size of the socket's send buffer.
     ///
@@ -48,15 +47,15 @@ pub struct UdpSinkConfig {
 }
 
 impl UdpSinkConfig {
-    pub const fn from_address(address: String) -> Self {
+    pub const fn from_address(endpoint: String) -> Self {
         Self {
-            address,
+            endpoint,
             send_buffer_bytes: None,
         }
     }
 
     fn build_connector(&self) -> crate::Result<UdpConnector> {
-        let uri = self.address.parse::<http::Uri>()?;
+        let uri = self.endpoint.parse::<http::Uri>()?;
         let host = uri.host().ok_or(SinkBuildError::MissingHost)?.to_string();
         let port = uri.port_u16().ok_or(SinkBuildError::MissingPort)?;
         Ok(UdpConnector::new(host, port, self.send_buffer_bytes))
@@ -261,7 +260,7 @@ where
     }
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl<E> StreamSink for UdpSink<E>
 where
     E: Encoder<Event, Error = codecs::encoding::EncodingError> + Clone + Send + Sync,

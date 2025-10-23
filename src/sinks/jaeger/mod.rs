@@ -1,7 +1,6 @@
 mod encoder;
 mod grpc;
 mod http;
-mod udp;
 
 use codecs::encoding::Transformer;
 use configurable::configurable_component;
@@ -16,9 +15,9 @@ use self::http::HttpSinkConfig;
 #[configurable_component(sink, name = "jaeger")]
 #[serde(rename_all = "lowercase", tag = "protocol")]
 enum Config {
-    Http(HttpSinkConfig),
-
     Udp(UdpSinkConfig),
+
+    Http(HttpSinkConfig),
 }
 
 #[async_trait::async_trait]
@@ -28,7 +27,7 @@ impl SinkConfig for Config {
         let transformer = Transformer::default();
 
         match &self {
-            Config::Udp(config) => config.build(transformer, ThriftEncoder::new()),
+            Config::Udp(config) => config.build(transformer, ThriftEncoder::default()),
 
             Config::Http(config) => config.build(cx.proxy),
         }

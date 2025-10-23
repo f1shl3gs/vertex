@@ -11,4 +11,4 @@ sinks:
     inputs:
       - hotrod
     protocol: udp
-    address: 127.0.0.1:7831
+    endpoint: 127.0.0.1:7831
