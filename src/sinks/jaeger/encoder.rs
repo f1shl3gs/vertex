@@ -5,14 +5,8 @@ use codecs::encoding::{EncodingError, SerializeError};
 use event::Event;
 use jaeger::agent::{BufferClient, UDP_PACKET_MAX_LENGTH, serialize_batch};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ThriftEncoder {}
-
-impl ThriftEncoder {
-    pub const fn new() -> Self {
-        Self {}
-    }
-}
 
 impl tokio_util::codec::Encoder<Event> for ThriftEncoder {
     type Error = EncodingError;
