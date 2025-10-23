@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761219019731,
+  "lastUpdate": 1761236155025,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33b49b719ddae27391819d0833fb20dbea094458",
-          "message": "Merge pull request #2530 from f1shl3gs/dependabot/cargo/regex-1.11.2\n\nchore(deps): bump regex from 1.11.1 to 1.11.2",
-          "timestamp": "2025-08-25T13:10:59+08:00",
-          "tree_id": "4af0ccadd232ed57851f0a7f8a3e356aeeb0e792",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33b49b719ddae27391819d0833fb20dbea094458"
-        },
-        "date": 1756098823872,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 493840,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 512600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2016618373defafa654cb04329176815d471f687",
+          "message": "Merge pull request #2639 from f1shl3gs/sinks/jaeger/unify_endpoint\n\nsinks/jaeger: unify endpoint",
+          "timestamp": "2025-10-24T00:12:58+08:00",
+          "tree_id": "588248a7a149078cf8359ab0bc27b78d26966879",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2016618373defafa654cb04329176815d471f687"
+        },
+        "date": 1761236132996,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 511840,
             "unit": "ns/op"
           }
         ]
