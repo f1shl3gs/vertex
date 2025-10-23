@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761236155025,
+  "lastUpdate": 1761236176205,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "33b49b719ddae27391819d0833fb20dbea094458",
-          "message": "Merge pull request #2530 from f1shl3gs/dependabot/cargo/regex-1.11.2\n\nchore(deps): bump regex from 1.11.1 to 1.11.2",
-          "timestamp": "2025-08-25T13:10:59+08:00",
-          "tree_id": "4af0ccadd232ed57851f0a7f8a3e356aeeb0e792",
-          "url": "https://github.com/f1shl3gs/vertex/commit/33b49b719ddae27391819d0833fb20dbea094458"
-        },
-        "date": 1756098831490,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.207,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 176.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 185.95,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2016618373defafa654cb04329176815d471f687",
+          "message": "Merge pull request #2639 from f1shl3gs/sinks/jaeger/unify_endpoint\n\nsinks/jaeger: unify endpoint",
+          "timestamp": "2025-10-24T00:12:58+08:00",
+          "tree_id": "588248a7a149078cf8359ab0bc27b78d26966879",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2016618373defafa654cb04329176815d471f687"
+        },
+        "date": 1761236149217,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 37.248,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 109.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 166.17,
             "unit": "ns/op"
           }
         ]
