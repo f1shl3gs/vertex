@@ -1,15 +1,12 @@
 use std::collections::HashMap;
 use std::fs::File;
 use std::path::{Path, PathBuf};
-use std::sync::Mutex;
 
 use tracing::error;
 
 use super::env::interpolate;
 use super::{Builder, Config, ConfigPath, Format, FormatHint, format, validation};
 use crate::signal;
-
-pub static CONFIG_PATHS: Mutex<Vec<ConfigPath>> = Mutex::new(Vec::new());
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider
@@ -57,29 +54,11 @@ pub fn load_builder_from_paths(
                 };
             }
 
-            ConfigPath::Dir(path) => match path.read_dir() {
-                Ok(readdir) => {
-                    for res in readdir {
-                        match res {
-                            Ok(ent) => {
-                                if let Some(file) = open_config(&ent.path()) {
-                                    // skip files who's format is unknown
-                                    if let Ok(format) = Format::from_path(ent.path()) {
-                                        inputs.push((file, Some(format)));
-                                    }
-                                }
-                            }
-                            Err(err) => errors.push(format!(
-                                "Could not read file in config dir: {path:?}, {err}"
-                            )),
-                        }
-                    }
+            ConfigPath::Dir(path) => {
+                if let Err(partial) = load_from_dir(path, &mut inputs) {
+                    errors.extend(partial);
                 }
-
-                Err(err) => {
-                    errors.push(format!("Could not read config dir: {path:?}, {err}"));
-                }
-            },
+            }
         }
     }
 
@@ -88,6 +67,54 @@ pub fn load_builder_from_paths(
     } else {
         Err(errors)
     }
+}
+
+fn load_from_dir(path: &Path, inputs: &mut Vec<(File, FormatHint)>) -> Result<(), Vec<String>> {
+    let dirs =
+        std::fs::read_dir(path).map_err(|err| vec![format!("Error reading config dir: {err}")])?;
+
+    let mut errs = Vec::new();
+    for result in dirs {
+        match result {
+            Ok(entry) => {
+                let path = entry.path();
+                if path.is_dir() {
+                    load_from_dir(&path, inputs)?;
+                    continue;
+                }
+
+                if !path.is_file() {
+                    continue;
+                }
+
+                let Some(extension) = path.extension() else {
+                    continue;
+                };
+
+                let hint = if extension == "json" {
+                    Format::JSON
+                } else if extension == "yaml" || extension == "yml" {
+                    Format::YAML
+                } else {
+                    continue;
+                };
+
+                match File::open(&path) {
+                    Ok(file) => {
+                        inputs.push((file, Some(hint)));
+                    }
+                    Err(err) => {
+                        errs.push(format!("Could not open config file: {path:?}, {err}"));
+                    }
+                }
+            }
+            Err(err) => {
+                errs.push(err.to_string());
+            }
+        }
+    }
+
+    Ok(())
 }
 
 fn open_config(path: &Path) -> Option<File> {
@@ -243,14 +270,6 @@ pub fn process_paths(paths: &[ConfigPath]) -> Option<Vec<ConfigPath>> {
 
     paths.sort();
     paths.dedup();
-
-    // Ignore poison error and let the current main thread continue
-    // running to do the cleanup
-    drop(
-        CONFIG_PATHS
-            .lock()
-            .map(|mut guard| guard.clone_from(&paths)),
-    );
 
     Some(paths)
 }
