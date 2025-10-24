@@ -12,7 +12,6 @@ mod loading;
 mod provider;
 mod proxy;
 mod resource;
-mod secret;
 mod sink;
 mod source;
 mod transform;
@@ -45,7 +44,6 @@ pub use loading::{
 };
 pub use proxy::ProxyConfig;
 pub use resource::{Protocol, Resource};
-pub use secret::SecretString;
 pub use sink::{SinkConfig, SinkContext, SinkOuter};
 pub use source::{SourceConfig, SourceContext, SourceOuter};
 pub use transform::{TransformConfig, TransformContext, TransformOuter};
