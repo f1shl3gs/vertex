@@ -111,7 +111,13 @@ impl RootCommand {
 
     fn config_paths_with_formats(&self) -> Vec<config::ConfigPath> {
         config::merge_path_lists(vec![(&self.configs, None)])
-            .map(|(path, hint)| config::ConfigPath::File(path, hint))
+            .map(|(path, hint)| {
+                if path.is_dir() {
+                    config::ConfigPath::Dir(path)
+                } else {
+                    config::ConfigPath::File(path, hint)
+                }
+            })
             .collect::<Vec<_>>()
     }
 
