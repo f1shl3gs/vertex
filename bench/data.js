@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761307238671,
+  "lastUpdate": 1761335587667,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "373a83fc6b705b7aeea47b2df52b223ffd9aa069",
-          "message": "Merge pull request #2534 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.20\n\nchore(deps): bump tracing-subscriber from 0.3.19 to 0.3.20",
-          "timestamp": "2025-08-30T13:04:16+08:00",
-          "tree_id": "af3f4c200c923d3a63b9bfe21d9c0163d363389b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/373a83fc6b705b7aeea47b2df52b223ffd9aa069"
-        },
-        "date": 1756530382222,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.503,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.755,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 170.33,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.54,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e5c104854e6140218e68a40c35a0a381a3cd39d3",
+          "message": "Merge pull request #2643 from f1shl3gs/lib/framework/fix_multiple_config\n\ncli: fix multiple configs",
+          "timestamp": "2025-10-25T03:50:23+08:00",
+          "tree_id": "2fd00d295b626eeca13c77d5a6e58acaad48ef25",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e5c104854e6140218e68a40c35a0a381a3cd39d3"
+        },
+        "date": 1761335565839,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.357,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 96.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.55,
             "unit": "ns/op"
           }
         ]
