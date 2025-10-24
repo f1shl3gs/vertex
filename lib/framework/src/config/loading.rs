@@ -96,7 +96,7 @@ fn load_from_dir(path: &Path, inputs: &mut Vec<(File, FormatHint)>) -> Result<()
                 } else if extension == "yaml" || extension == "yml" {
                     Format::YAML
                 } else {
-                    continue
+                    continue;
                 };
 
                 match File::open(&path) {
