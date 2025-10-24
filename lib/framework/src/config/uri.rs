@@ -180,11 +180,7 @@ fn get_basic_auth(authority: &Authority) -> (Authority, Option<Auth>) {
                 // http://username:password@example.com:123/path
                 Some((username, password)) => {
                     let authority = Authority::from_str(authority.host()).unwrap();
-
-                    let password = percent_decode_str(password)
-                        .decode_utf8_lossy()
-                        .to_string()
-                        .into();
+                    let password = percent_decode_str(password).decode_utf8_lossy().to_string();
 
                     (
                         authority,
@@ -234,7 +230,7 @@ mod tests {
                 want_auth.map(|(user, password)| {
                     Auth::Basic {
                         user: user.to_owned(),
-                        password: password.to_owned().into(),
+                        password: password.to_owned(),
                     }
                 }),
                 "input: {input}"

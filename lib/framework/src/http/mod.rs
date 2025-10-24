@@ -28,7 +28,7 @@ use thiserror::Error;
 use tracing::Instrument;
 use tracing_internal::SpanExt;
 
-use crate::config::{ProxyConfig, SecretString};
+use crate::config::ProxyConfig;
 use crate::dns::Resolver;
 use crate::tls::{TlsConfig, TlsError};
 pub use serve::{Serve, WithGracefulShutdown, serve};
@@ -292,7 +292,7 @@ pub enum Auth {
         user: String,
 
         /// The basic authentication password.
-        password: SecretString,
+        password: String,
     },
 
     /// Bearer authentication.
@@ -300,16 +300,13 @@ pub enum Auth {
     /// The bearer token value (OAuth2, JWT, etc) is passed as-is.
     Bearer {
         /// The bearer authentication token.
-        token: SecretString,
+        token: String,
     },
 }
 
 impl Auth {
     pub fn basic(user: String, password: String) -> Self {
-        Self::Basic {
-            user,
-            password: password.into(),
-        }
+        Self::Basic { user, password }
     }
 }
 

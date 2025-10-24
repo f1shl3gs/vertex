@@ -6,7 +6,7 @@ use codecs::{Decoder, DecodingConfig};
 use configurable::{Configurable, configurable_component};
 use event::Events;
 use finalize::{AddBatchNotifier, BatchNotifier, BatchStatus, OrderedFinalizer};
-use framework::config::{OutputType, SecretString, SourceConfig, SourceContext};
+use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::StreamExt;
 use pulsar::authentication::oauth2::{OAuth2Authentication, OAuth2Params};
@@ -53,7 +53,7 @@ enum AuthConfig {
         /// This can be used either for basic authentication (username/password) or
         /// JWT authentication. When used for JWT, the value should be the signed
         /// JWT, in the compact representation.
-        token: SecretString,
+        token: String,
     },
 
     /// OAuth authentication

@@ -13,7 +13,7 @@ use chrono::Utc;
 use configurable::{Configurable, configurable_component};
 use connection::{Connection, Error as ClientError};
 use event::Metric;
-use framework::config::{OutputType, SecretString, SourceConfig, SourceContext, default_interval};
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::{Pipeline, ShutdownSignal, Source};
 use serde::{Deserialize, Serialize};
 use tokio::task::JoinSet;
@@ -52,7 +52,7 @@ struct Auth {
     username: Option<String>,
 
     /// Password of the Redis instance to scrape
-    password: SecretString,
+    password: String,
 }
 
 #[configurable_component(source, name = "redis")]
