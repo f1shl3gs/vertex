@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761307208030,
+  "lastUpdate": 1761307238671,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b48dc6625b14d59cbf0f77656109c587ce0e1522",
-          "message": "Merge pull request #2531 from f1shl3gs/dependabot/cargo/mimalloc-0.1.48\n\nchore(deps): bump mimalloc from 0.1.47 to 0.1.48",
-          "timestamp": "2025-08-27T13:44:49+08:00",
-          "tree_id": "3cdcad2f1de75669cd52dee373c9ce2cbad80abc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b48dc6625b14d59cbf0f77656109c587ce0e1522"
-        },
-        "date": 1756274163686,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40352.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c773225c2b2e93fd05e197de0b95c77ad8205b4e",
           "message": "Merge pull request #2532 from f1shl3gs/sinks/clickhouse/refine_sink\n\nsinks/clickhouse: refactor clickhouse's http sink",
           "timestamp": "2025-08-27T13:45:18+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40370,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a69b04119f4d32625814f0f5b0761ea4f4b2233",
+          "message": "Merge pull request #2641 from f1shl3gs/dependabot/cargo/flate2-1.1.5\n\nchore(deps): bump flate2 from 1.1.4 to 1.1.5",
+          "timestamp": "2025-10-24T19:49:03+08:00",
+          "tree_id": "af6b9848e85fd1f71b38e88dd19960b7649da6ea",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a69b04119f4d32625814f0f5b0761ea4f4b2233"
+        },
+        "date": 1761307216762,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 577,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40362.8,
             "unit": "KiB"
           }
         ]
