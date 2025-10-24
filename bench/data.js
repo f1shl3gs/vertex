@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761335590944,
+  "lastUpdate": 1761335604281,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "373a83fc6b705b7aeea47b2df52b223ffd9aa069",
-          "message": "Merge pull request #2534 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.20\n\nchore(deps): bump tracing-subscriber from 0.3.19 to 0.3.20",
-          "timestamp": "2025-08-30T13:04:16+08:00",
-          "tree_id": "af3f4c200c923d3a63b9bfe21d9c0163d363389b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/373a83fc6b705b7aeea47b2df52b223ffd9aa069"
-        },
-        "date": 1756530406903,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.309,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 165.26,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 306.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 655.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4cd6c1425ec5550949b722c1248ee03b1aa656cb",
           "message": "Merge pull request #2535 from f1shl3gs/dependabot/cargo/tonic-b048c00cd4\n\nchore(deps): bump the tonic group with 4 updates",
           "timestamp": "2025-09-04T02:01:02+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 644.37,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e5c104854e6140218e68a40c35a0a381a3cd39d3",
+          "message": "Merge pull request #2643 from f1shl3gs/lib/framework/fix_multiple_config\n\ncli: fix multiple configs",
+          "timestamp": "2025-10-25T03:50:23+08:00",
+          "tree_id": "2fd00d295b626eeca13c77d5a6e58acaad48ef25",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e5c104854e6140218e68a40c35a0a381a3cd39d3"
+        },
+        "date": 1761335582325,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.794,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 162.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 324.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.97,
             "unit": "ns/op"
           }
         ]
