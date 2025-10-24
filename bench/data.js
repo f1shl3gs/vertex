@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761243894849,
+  "lastUpdate": 1761306663032,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c773225c2b2e93fd05e197de0b95c77ad8205b4e",
-          "message": "Merge pull request #2532 from f1shl3gs/sinks/clickhouse/refine_sink\n\nsinks/clickhouse: refactor clickhouse's http sink",
-          "timestamp": "2025-08-27T13:45:18+08:00",
-          "tree_id": "9249eabbcd358c46f7df6b1875aaa789b1204c5f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c773225c2b2e93fd05e197de0b95c77ad8205b4e"
-        },
-        "date": 1756273682105,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 495690,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 514150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca55932293994590bd148b78d785f335cf44ef99",
+          "message": "Merge pull request #2642 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.103\n\nchore(deps): bump proc-macro2 from 1.0.102 to 1.0.103",
+          "timestamp": "2025-10-24T19:48:36+08:00",
+          "tree_id": "8e6106f40d75b995dd0daac80e3de6321fa50571",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca55932293994590bd148b78d785f335cf44ef99"
+        },
+        "date": 1761306641275,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 517320,
             "unit": "ns/op"
           }
         ]
