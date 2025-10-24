@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761338381417,
+  "lastUpdate": 1761338488452,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4d1626e3182c3985d364bae36f26671d1ca8dd57",
-          "message": "Merge pull request #2533 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-08-29T19:00:24+08:00",
-          "tree_id": "e92e49e5e977d75743a582ba03f686bd059c16da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4d1626e3182c3985d364bae36f26671d1ca8dd57"
-        },
-        "date": 1756465881428,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 564,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40355.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "373a83fc6b705b7aeea47b2df52b223ffd9aa069",
           "message": "Merge pull request #2534 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.20\n\nchore(deps): bump tracing-subscriber from 0.3.19 to 0.3.20",
           "timestamp": "2025-08-30T13:04:16+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40361.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "57b8912d84d8aa850723e3837a50a6e6b382f97c",
+          "message": "Merge pull request #2644 from f1shl3gs/lib/framework/remove_secret_string\n\nlib/framework: remove SecretString",
+          "timestamp": "2025-10-25T04:30:00+08:00",
+          "tree_id": "7ec6c12b40d4431c10d0a7f53c18c8a3246c5871",
+          "url": "https://github.com/f1shl3gs/vertex/commit/57b8912d84d8aa850723e3837a50a6e6b382f97c"
+        },
+        "date": 1761338465919,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40354.9,
             "unit": "KiB"
           }
         ]
