@@ -149,7 +149,7 @@ fn load_from_inputs(
             builder.append(n)
         }) {
             // TODO; add back paths
-            errors.extend(errs.iter().map(|e| e.to_string()));
+            errors.extend(errs);
         }
     }
 
@@ -164,9 +164,9 @@ pub fn load(
     mut input: impl std::io::Read,
     format: FormatHint,
 ) -> Result<(Builder, Vec<String>), Vec<String>> {
-    let mut ss = String::new();
+    let mut content = String::new();
     input
-        .read_to_string(&mut ss)
+        .read_to_string(&mut content)
         .map_err(|err| vec![err.to_string()])?;
 
     let mut vars = std::env::vars().collect::<HashMap<_, _>>();
@@ -176,9 +176,9 @@ pub fn load(
         vars.insert("HOSTNAME".into(), hostname);
     }
 
-    let (with_vars, warnings) = interpolate(&ss, &vars, false)?;
+    let (with_vars, warnings) = interpolate(&content, &vars, false)?;
 
-    format::deserialize(&with_vars, format).map(|builder| (builder, warnings))
+    format::deserialize(with_vars.as_ref(), format).map(|builder| (builder, warnings))
 }
 
 pub fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String>> {

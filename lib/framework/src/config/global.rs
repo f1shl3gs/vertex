@@ -55,15 +55,7 @@ pub struct GlobalOptions {
     pub log_schema: LogSchema,
 
     /// Controls how acknowledgements are handled for all sinks by default.
-    ///
-    /// See [End-to-end Acknowledgements][e2e_acks] for more information on how Vertex handles event
-    /// acknowledgement.
-    ///
-    /// [e2e_acks]: https://vector.dev/docs/about/under-the-hood/architecture/end-to-end-acknowledgements/
-    #[serde(
-        default,
-        skip_serializing_if = "crate::config::skip_serializing_if_default"
-    )]
+    #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     pub acknowledgements: bool,
 }
 

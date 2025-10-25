@@ -2,8 +2,8 @@
 //! This contains all the functionality for the JIT (Just In Time) features of the lookup path.
 //! This allows parsing on the fly as it's needed.
 //!
-//! This contains a hand-written state machine to maximize performance of the parser.
-//! This is important since a lot of parsing happens at runtime. Eventually Vector
+//! This contains a handwritten state machine to maximize performance of the parser.
+//! This is important since a lot of parsing happens at runtime. Eventually Vertex
 //! should pre-compile all paths. Once that happens it might make sense to re-write in something
 //! more readable.
 
