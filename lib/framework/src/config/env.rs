@@ -29,6 +29,7 @@ pub fn interpolate<'a>(
     let mut errors = vec![];
     let mut warnings = vec![];
 
+    // https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Shell-Parameter-Expansion-1
     let interpolated = ENVIRONMENT_VARIABLE_INTERPOLATION_REGEX
         .replace_all(input, |caps: &Captures<'_>| {
             let flags = caps.get(3).map(|m| m.as_str()).unwrap_or_default();
@@ -40,11 +41,21 @@ pub fn interpolate<'a>(
                 .map(|name| {
                     let val = vars.get(name).map(|v| v.as_str());
                     match flags {
+                        // ${parameter:-word}
+                        // ${parameter-word}
+                        //
+                        // If parameter is unset or null, the expansion of word is substituted.
+                        // Otherwise, the value of parameter is substituted.
                         ":-" => match val {
                             Some(v) if !v.is_empty() => v,
                             _ => def_or_err,
                         },
                         "-" => val.unwrap_or(def_or_err),
+
+                        // ${parameter:?word}
+                        // ${parameter?word}
+                        //
+                        // if parameter is null or unset, an error is occurred
                         ":?" => match val {
                             Some(v) if !v.is_empty() => v,
                             _ => {
