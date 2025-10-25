@@ -1,7 +1,7 @@
 sources:
   prometheus:
     type: prometheus_pushgateway
-    address: 127.0.0.1:9092
+    listen: 127.0.0.1:9092
 
 sinks:
   stdout:

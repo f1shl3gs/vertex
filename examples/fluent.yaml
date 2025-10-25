@@ -2,7 +2,7 @@ sources:
   forward:
     type: fluent
     receive_buffer: 64k
-    address: 0.0.0.0:24424
+    listen: 0.0.0.0:24424
 
 sinks:
   stdout:
