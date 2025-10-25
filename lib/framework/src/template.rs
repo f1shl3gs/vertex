@@ -651,7 +651,7 @@ mod tests {
     //     let template = Template::try_from("namespace={{namespace}} name={{name}}").unwrap();
     //     let metric = sample_metric();
     //     assert_eq!(
-    //         Ok(Bytes::from("namespace=vector-test name=a-counter")),
+    //         Ok(Bytes::from("namespace=vertex-test name=a-counter")),
     //         template.render(&metric)
     //     );
     // }

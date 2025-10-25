@@ -1,10 +1,11 @@
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::sync::LazyLock;
 
 use regex::{Captures, Regex};
 
 // Environment variable names can have any characters from the Portable Character Set other
-// than NUL.  However, for Vector's interpolation, we are closer to what a shell supports which
+// than NUL.  However, for Vertex's interpolation, we are closer to what a shell supports which
 // is solely of uppercase letters, digits, and the '_' (that is, the `[:word:]` regex class).
 // In addition to these characters, we allow `.` as this commonly appears in environment
 // variable names when they come from a Java properties file.
@@ -20,11 +21,11 @@ static ENVIRONMENT_VARIABLE_INTERPOLATION_REGEX: LazyLock<Regex> = LazyLock::new
     .unwrap()
 });
 
-pub fn interpolate(
-    input: &str,
+pub fn interpolate<'a>(
+    input: &'a str,
     vars: &HashMap<String, String>,
     strict_vars: bool,
-) -> Result<(String, Vec<String>), Vec<String>> {
+) -> Result<(Cow<'a, str>, Vec<String>), Vec<String>> {
     let mut errors = vec![];
     let mut warnings = vec![];
 
@@ -78,7 +79,7 @@ pub fn interpolate(
                 })
                 .unwrap_or("$")
                 .to_string()
-        }).into_owned();
+        });
 
     if errors.is_empty() {
         Ok((interpolated, warnings))

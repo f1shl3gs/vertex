@@ -53,7 +53,7 @@ static ERROR_MESSAGES: [&str; 9] = [
     "You're not gonna believe what just happened",
     "#hugops to everyone who has to deal with this",
     "Take a breath, let it go, walk away",
-    "A bug was encountered but not in Vector, which doesn't have bugs",
+    "A bug was encountered but not in Vertex, which doesn't have bugs",
     "We're gonna need a bigger boat",
     "Maybe we just shouldn't use computers",
     "Pretty pretty pretty good",
