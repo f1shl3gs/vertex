@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761405834772,
+  "lastUpdate": 1761406191278,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b8e2d4f94e00a2569ddac1ef8e4020985970e86b",
-          "message": "Merge pull request #2536 from f1shl3gs/dependabot/cargo/twox-hash-2.1.2\n\nchore(deps): bump twox-hash from 2.1.1 to 2.1.2",
-          "timestamp": "2025-09-05T16:10:55+08:00",
-          "tree_id": "59dc8b99ae393acefa25016aad1327e4623b9e7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b8e2d4f94e00a2569ddac1ef8e4020985970e86b"
-        },
-        "date": 1757060397221,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14227000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 676920,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 50.859,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "29493a945500ccc5d1cf7ec202a4b8d925d5235d",
           "message": "Merge pull request #2538 from f1shl3gs/dependabot/cargo/chrono-0.4.42\n\nchore(deps): bump chrono from 0.4.41 to 0.4.42",
           "timestamp": "2025-09-09T14:26:45+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.094,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d7c91f47e5dbd04dc5c56cc1d5e7463db975f90",
+          "message": "Merge pull request #2645 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
+          "timestamp": "2025-10-25T23:20:12+08:00",
+          "tree_id": "707caf08e136fd8278ebdb48350a6a9ecb2abfd3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d7c91f47e5dbd04dc5c56cc1d5e7463db975f90"
+        },
+        "date": 1761406169007,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14645000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 602430,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.301,
             "unit": "ns/op"
           }
         ]
