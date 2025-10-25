@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761407398245,
+  "lastUpdate": 1761408187733,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b8e2d4f94e00a2569ddac1ef8e4020985970e86b",
-          "message": "Merge pull request #2536 from f1shl3gs/dependabot/cargo/twox-hash-2.1.2\n\nchore(deps): bump twox-hash from 2.1.1 to 2.1.2",
-          "timestamp": "2025-09-05T16:10:55+08:00",
-          "tree_id": "59dc8b99ae393acefa25016aad1327e4623b9e7c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b8e2d4f94e00a2569ddac1ef8e4020985970e86b"
-        },
-        "date": 1757060504640,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 560,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39873.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "85e84921ed3ad99e25dcb50f43714d5e991bb537",
           "message": "Merge pull request #2537 from f1shl3gs/dependabot/github_actions/actions/labeler-6\n\nchore(ci): bump actions/labeler from 5 to 6",
           "timestamp": "2025-09-05T16:11:33+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40354.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7a105144d112f1486a6a4acc0471babb5cc8e3ab",
+          "message": "Merge pull request #2647 from f1shl3gs/remove_docs\n\nmisc: remove docs",
+          "timestamp": "2025-10-25T23:51:35+08:00",
+          "tree_id": "6afa6b28bb243147c273e1d9f1e6d4236a8eadef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7a105144d112f1486a6a4acc0471babb5cc8e3ab"
+        },
+        "date": 1761408165896,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
             "unit": "s"
           },
           {
