@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761407280169,
+  "lastUpdate": 1761407398245,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4cd6c1425ec5550949b722c1248ee03b1aa656cb",
-          "message": "Merge pull request #2535 from f1shl3gs/dependabot/cargo/tonic-b048c00cd4\n\nchore(deps): bump the tonic group with 4 updates",
-          "timestamp": "2025-09-04T02:01:02+08:00",
-          "tree_id": "0c3854e75939370ac567fbe8d1218d57ac081a90",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4cd6c1425ec5550949b722c1248ee03b1aa656cb"
-        },
-        "date": 1756923095689,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 547,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39884,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b8e2d4f94e00a2569ddac1ef8e4020985970e86b",
           "message": "Merge pull request #2536 from f1shl3gs/dependabot/cargo/twox-hash-2.1.2\n\nchore(deps): bump twox-hash from 2.1.1 to 2.1.2",
           "timestamp": "2025-09-05T16:10:55+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 571,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40354.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "03a5642aa2e3c46ffebc39a262370381c6bc4f92",
+          "message": "Merge pull request #2646 from f1shl3gs/lib/framework/add_env_expansion_comment\n\nlib/framework: add env expansion comment",
+          "timestamp": "2025-10-25T23:38:05+08:00",
+          "tree_id": "0c38c7bf282f3ff6c3ee9c6a7370e15179f0ab4f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/03a5642aa2e3c46ffebc39a262370381c6bc4f92"
+        },
+        "date": 1761407371370,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
             "unit": "s"
           },
           {
