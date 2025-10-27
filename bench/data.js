@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761564299252,
+  "lastUpdate": 1761564318096,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "00b19277c98ae97bdc75c30bb332591b7dd2ccf1",
-          "message": "Merge pull request #2539 from f1shl3gs/dependabot/cargo/lru-0.16.1\n\nchore(deps): bump lru from 0.16.0 to 0.16.1",
-          "timestamp": "2025-09-10T06:10:23+08:00",
-          "tree_id": "98b443ef4ff082d1986a9aaf5ee68872c74d900e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/00b19277c98ae97bdc75c30bb332591b7dd2ccf1"
-        },
-        "date": 1757455968406,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.395,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 330.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 685.45,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b60b6ca061468d55c58dc4491ffaee54a9fe38eb",
           "message": "Merge pull request #2541 from f1shl3gs/dependabot/cargo/serde_json-1.0.144\n\nchore(deps): bump serde_json from 1.0.143 to 1.0.144",
           "timestamp": "2025-09-14T15:43:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 676.05,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "906f036f74616a7e4b9b8cae0c8f6dcb446d7843",
+          "message": "Merge pull request #2650 from f1shl3gs/dependabot/cargo/proptest-1.9.0\n\nchore(deps): bump proptest from 1.8.0 to 1.9.0",
+          "timestamp": "2025-10-27T19:22:11+08:00",
+          "tree_id": "31e0533e118efeb7290615abbf50a085b7324bfd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/906f036f74616a7e4b9b8cae0c8f6dcb446d7843"
+        },
+        "date": 1761564291170,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 18.513,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 149.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 274.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 624.17,
             "unit": "ns/op"
           }
         ]
