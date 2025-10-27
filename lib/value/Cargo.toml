@@ -10,7 +10,7 @@ string_path = []
 [dev-dependencies]
 chrono = { version = "0.4.42", default-features = false, features = ["now"] }
 proptest = { version = "1.8.0", default-features = false, features = ["std"] }
-proptest-derive = { version = "0.6.0", default-features = false }
+proptest-derive = { version = "0.7.0", default-features = false }
 quickcheck = { version = "1.0.3", default-features = false }
 
 [dependencies]
