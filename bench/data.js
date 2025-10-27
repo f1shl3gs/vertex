@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761563652027,
+  "lastUpdate": 1761563692278,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "310fa925219700cfd523fd1c7d10d238823f7515",
-          "message": "Merge pull request #2540 from f1shl3gs/dependabot/cargo/indexmap-2.11.1\n\nchore(deps): bump indexmap from 2.11.0 to 2.11.1",
-          "timestamp": "2025-09-10T06:09:57+08:00",
-          "tree_id": "bf22ad99b69958a0c5e092f61a7823b73836e2f4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/310fa925219700cfd523fd1c7d10d238823f7515"
-        },
-        "date": 1757455939045,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.191,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 178.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 330.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 687.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "00b19277c98ae97bdc75c30bb332591b7dd2ccf1",
           "message": "Merge pull request #2539 from f1shl3gs/dependabot/cargo/lru-0.16.1\n\nchore(deps): bump lru from 0.16.0 to 0.16.1",
           "timestamp": "2025-09-10T06:10:23+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 677.81,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "906faca7b2eb0cfb204f55d9549ef60f173456a1",
+          "message": "Merge pull request #2649 from f1shl3gs/dependabot/cargo/proptest-derive-0.7.0\n\nchore(deps): bump proptest-derive from 0.6.0 to 0.7.0",
+          "timestamp": "2025-10-27T19:11:14+08:00",
+          "tree_id": "ee030e83b4e4df805c38b619d8fbdee0afaada9c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/906faca7b2eb0cfb204f55d9549ef60f173456a1"
+        },
+        "date": 1761563670096,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.099,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 313.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 676.05,
             "unit": "ns/op"
           }
         ]
