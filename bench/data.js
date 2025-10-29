@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761770591554,
+  "lastUpdate": 1761772525549,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "aeeed04cb37f0f205dbf82399c39969b7a704c2f",
-          "message": "Merge pull request #2544 from f1shl3gs/dependabot/cargo/hyper-util-0.1.17\n\nchore(deps): bump hyper-util from 0.1.16 to 0.1.17",
-          "timestamp": "2025-09-16T04:14:26+08:00",
-          "tree_id": "dd98a492bfcb95163b7bf2b6ebadc2f28f49c91a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aeeed04cb37f0f205dbf82399c39969b7a704c2f"
-        },
-        "date": 1757967380448,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 493810,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 494610,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d786683a63f06b42acf799f82514975f13819acd",
+          "message": "Merge pull request #2653 from f1shl3gs/extensions/zpages/unify_listen\n\nextensions/zpages: unify listen",
+          "timestamp": "2025-10-30T05:12:30+08:00",
+          "tree_id": "724db2035bf6c969ec077617d4769fca198710e3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d786683a63f06b42acf799f82514975f13819acd"
+        },
+        "date": 1761772503453,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 494040,
             "unit": "ns/op"
           }
         ]
