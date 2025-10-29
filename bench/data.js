@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761772570062,
+  "lastUpdate": 1761772961849,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c0dd0095e0c3ba337afca000df25699375a03baa",
-          "message": "Merge pull request #2545 from f1shl3gs/dependabot/cargo/serde_json-1.0.145\n\nchore(deps): bump serde_json from 1.0.144 to 1.0.145",
-          "timestamp": "2025-09-16T04:14:35+08:00",
-          "tree_id": "e8c3d2efa416c0d9c433da01a89ad2ce6336f0b9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c0dd0095e0c3ba337afca000df25699375a03baa"
-        },
-        "date": 1757967843940,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15600000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 662270,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.753,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aeeed04cb37f0f205dbf82399c39969b7a704c2f",
           "message": "Merge pull request #2544 from f1shl3gs/dependabot/cargo/hyper-util-0.1.17\n\nchore(deps): bump hyper-util from 0.1.16 to 0.1.17",
           "timestamp": "2025-09-16T04:14:26+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.88,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d786683a63f06b42acf799f82514975f13819acd",
+          "message": "Merge pull request #2653 from f1shl3gs/extensions/zpages/unify_listen\n\nextensions/zpages: unify listen",
+          "timestamp": "2025-10-30T05:12:30+08:00",
+          "tree_id": "724db2035bf6c969ec077617d4769fca198710e3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d786683a63f06b42acf799f82514975f13819acd"
+        },
+        "date": 1761772934900,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15348000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 464710,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 48.391,
             "unit": "ns/op"
           }
         ]
