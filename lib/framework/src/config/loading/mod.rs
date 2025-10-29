@@ -165,7 +165,7 @@ pub async fn load_from_paths_with_provider_and_secrets(
     let secret_loader = process(&mut configs, secret::SecretLoader::default())?;
     let secrets = secret_loader.retrieve().await?;
 
-    let mut builder = process(&mut configs, config::ConfigLoader::new(secrets))?;
+    let mut builder = process(&mut configs, ConfigLoader::new(secrets))?;
     if let Some(provider) = &mut builder.provider {
         info!(message = "Provider configured", provider = ?provider.component_name());
         builder = provider.build(signal).await?;
