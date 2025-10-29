@@ -49,7 +49,7 @@ impl Parse for Args {
                     })?;
                     description = Some(value);
                 }
-
+                "secret" => component_type = ComponentType::Secret,
                 "extension" => component_type = ComponentType::Extension,
                 "provider" => component_type = ComponentType::Provider,
                 "source" => component_type = ComponentType::Source,
@@ -61,7 +61,7 @@ impl Parse for Args {
                 _ => {
                     return Err(syn::Error::new(
                         meta.span(),
-                        "Expect `name`, `description`, `extension`, `provider`, `source`, `transforms` or `sink`",
+                        "Expect `name`, `description`, `secret`, `provider`, `extension`, `source`, `transforms` or `sink`",
                     ));
                 }
             }
@@ -113,13 +113,14 @@ pub fn configurable_component_impl(
 
     // inventory staff
     let desc_type: syn::Type = match args.component_type {
+        ComponentType::Secret => parse_quote!(::configurable::component::SecretDescription),
+        ComponentType::Provider => parse_quote!(::configurable::component::ProviderDescription),
         ComponentType::Extension => parse_quote!(::configurable::component::ExtensionDescription),
-        ComponentType::Provider => parse_quote! { ::configurable::component::ProviderDescription },
-        ComponentType::Source => parse_quote! { ::configurable::component::SourceDescription },
+        ComponentType::Source => parse_quote!(::configurable::component::SourceDescription),
         ComponentType::Transform => {
-            parse_quote! { ::configurable::component::TransformDescription }
+            parse_quote!(::configurable::component::TransformDescription)
         }
-        ComponentType::Sink => parse_quote! { ::configurable::component::SinkDescription },
+        ComponentType::Sink => parse_quote!(::configurable::component::SinkDescription),
     };
 
     // Generate and apply all of the necessary derives.
@@ -172,6 +173,7 @@ pub fn configurable_component_impl(
 
 #[derive(Clone, Debug, Default)]
 pub enum ComponentType {
+    Secret,
     Extension,
     Provider,
     #[default]

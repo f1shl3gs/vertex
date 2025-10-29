@@ -83,14 +83,10 @@ impl Validate {
     }
 
     fn validate_config(&self, fmt: &mut Formatter) -> Option<Config> {
-        let paths = config::merge_path_lists(vec![(&self.configs, None)])
-            .map(|(path, hint)| ConfigPath::File(path, hint))
-            .collect::<Vec<_>>();
-
-        let paths = if let Some(paths) = config::process_paths(&paths) {
+        let paths = if let Some(paths) = config::process_paths(&self.configs) {
             paths
         } else {
-            fmt.error("No config file paths");
+            fmt.error("No valid config file paths");
             return None;
         };
 
@@ -105,21 +101,15 @@ impl Validate {
         init_log_schema(&paths, true)
             .map_err(&mut report_error)
             .ok()?;
-        let (builder, load_warnings) = load_builder_from_paths(&paths)
+        let builder = load_builder_from_paths(&paths)
             .map_err(&mut report_error)
             .ok()?;
 
         // Build
-        let (config, build_warnings) = builder
-            .build_with_warnings()
-            .map_err(&mut report_error)
-            .ok()?;
+        let config = builder.compile().map_err(&mut report_error).ok()?;
+        let warnings = config.warnings();
 
         // Warnings
-        let warnings = load_warnings
-            .into_iter()
-            .chain(build_warnings)
-            .collect::<Vec<_>>();
         if !warnings.is_empty() {
             if self.deny_warnings {
                 report_error(warnings);
@@ -207,7 +197,7 @@ impl Validate {
 fn init_log_schema(paths: &[ConfigPath], deny_if_set: bool) -> Result<(), Vec<String>> {
     log_schema::init_log_schema(
         || {
-            let (builder, _) = load_builder_from_paths(paths)?;
+            let builder = load_builder_from_paths(paths)?;
             Ok(builder.global.log_schema)
         },
         deny_if_set,

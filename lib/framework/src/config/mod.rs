@@ -1,14 +1,13 @@
-mod builder;
 mod diff;
-mod env;
 mod extension;
 mod format;
 mod global;
-mod graph;
+mod healthcheck;
 mod helper;
 pub mod http;
 mod id;
 mod loading;
+mod paths;
 mod provider;
 mod proxy;
 mod resource;
@@ -16,76 +15,36 @@ mod sink;
 mod source;
 mod transform;
 mod uri;
-mod validation;
 #[cfg(all(unix, not(target_os = "macos")))]
 pub mod watcher;
 
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::BitOr;
-use std::path::PathBuf;
 
-pub use builder::Builder;
 pub use diff::ConfigDiff;
 pub use extension::{ExtensionConfig, ExtensionContext, ExtensionOuter};
 pub use format::{Format, FormatHint};
 pub use global::GlobalOptions;
+pub use healthcheck::HealthcheckOptions;
 pub use helper::{
     default_interval, default_true, serde_http_method, serde_regex, serde_uri,
     skip_serializing_if_default,
 };
 pub use id::{ComponentKey, OutputId};
-use serde::{Deserialize, Serialize};
-// IndexMap preserves insertion order, allowing us to output errors in the
-// same order they are present in the file.
 use indexmap::IndexMap;
+#[cfg(feature = "test-util")]
+pub use loading::load_from_str;
 pub use loading::{
-    load, load_builder_from_paths, load_from_paths_with_provider, load_from_str, merge_path_lists,
-    process_paths,
+    Builder, load, load_builder_from_paths, load_from_paths_with_provider_and_secrets,
 };
+pub use paths::{ConfigPath, process_paths};
 pub use proxy::ProxyConfig;
 pub use resource::{Protocol, Resource};
+use serde::Serialize;
 pub use sink::{SinkConfig, SinkContext, SinkOuter};
 pub use source::{SourceConfig, SourceContext, SourceOuter};
-pub use transform::{TransformConfig, TransformContext, TransformOuter};
+pub use transform::{TransformConfig, TransformContext, TransformOuter, get_transform_output_ids};
 pub use uri::UriSerde;
-pub use validation::warnings;
-
-/// Healthcheck options
-#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
-pub struct HealthcheckOptions {
-    /// Whether healthcheck are enabled for all sinks
-    ///
-    /// Can be overridden on a per-sink basis.
-    pub enabled: bool,
-
-    /// Whether to require a sink to report as being healthy during startup.
-    ///
-    /// When enabled and a sink reports not being healthy, Vertex will exit during
-    /// start-up.
-    pub require_healthy: bool,
-}
-
-impl HealthcheckOptions {
-    pub fn set_require_healthy(&mut self, require_healthy: impl Into<Option<bool>>) {
-        if let Some(require_healthy) = require_healthy.into() {
-            self.require_healthy = require_healthy;
-        }
-    }
-
-    fn merge(&mut self, other: Self) {
-        self.enabled &= other.enabled;
-        self.require_healthy |= other.require_healthy;
-    }
-}
-
-impl Default for HealthcheckOptions {
-    fn default() -> Self {
-        Self {
-            enabled: true,
-            require_healthy: false,
-        }
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct DataType(u32);
@@ -244,21 +203,6 @@ impl InputType {
     }
 }
 
-#[derive(Debug, Clone, Ord, PartialOrd, PartialEq, Eq)]
-pub enum ConfigPath {
-    File(PathBuf, FormatHint),
-    Dir(PathBuf),
-}
-
-impl<'a> From<&'a ConfigPath> for &'a PathBuf {
-    fn from(path: &'a ConfigPath) -> Self {
-        match path {
-            ConfigPath::File(path, _) => path,
-            ConfigPath::Dir(path) => path,
-        }
-    }
-}
-
 #[derive(Debug, Default, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
@@ -322,12 +266,52 @@ impl Config {
             }
         }
     }
+
+    pub fn warnings(&self) -> Vec<String> {
+        let mut warnings = Vec::new();
+
+        let source_ids = self.sources.iter().flat_map(|(key, source)| {
+            source
+                .inner
+                .outputs()
+                .iter()
+                .map(|output| {
+                    if let Some(port) = &output.port {
+                        ("source", OutputId::from((key, port.clone())))
+                    } else {
+                        ("source", OutputId::from(key))
+                    }
+                })
+                .collect::<Vec<_>>()
+        });
+        let transform_ids = self.transforms.iter().flat_map(|(key, transform)| {
+            get_transform_output_ids(transform.inner.as_ref(), key.clone())
+                .map(|output| ("transform", output))
+                .collect::<Vec<_>>()
+        });
+
+        for (typ, id) in transform_ids.chain(source_ids) {
+            if !self
+                .transforms
+                .iter()
+                .any(|(_, transform)| transform.inputs.contains(&id))
+                && !self.sinks.iter().any(|(_, sink)| sink.inputs.contains(&id))
+            {
+                warnings.push(format!("{} {id:?} has no consumers", typ))
+            }
+        }
+
+        warnings
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::time::Duration;
+
+    use serde::Deserialize;
+
+    use super::*;
 
     #[test]
     fn data_type_contains() {
@@ -432,7 +416,7 @@ sinks:
 
         ";
 
-        let _b: Builder = format::deserialize(text, Some(Format::YAML)).unwrap();
+        let _b: Builder = Format::YAML.deserialize(text).unwrap();
     }
 
     #[test]

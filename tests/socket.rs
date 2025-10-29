@@ -22,9 +22,9 @@ async fn tcp_to_tcp() {
     let in_addr = next_addr();
     let out_addr = next_addr();
 
-    let mut config = framework::config::Config::builder();
-    config.add_source("in", SocketConfig::simple_tcp(in_addr));
-    config.add_sink(
+    let mut builder = framework::config::Config::builder();
+    builder.add_source("in", SocketConfig::simple_tcp(in_addr));
+    builder.add_sink(
         "out",
         &["in"],
         socket_sink::Config::new(socket_sink::Mode::Tcp {
@@ -39,7 +39,7 @@ async fn tcp_to_tcp() {
 
     let output_lines = CountReceiver::receive_lines(out_addr);
 
-    let (topology, _crash) = start_topology(config.build().unwrap(), false).await;
+    let (topology, _crash) = start_topology(builder.compile().unwrap(), false).await;
     // Wait for server to accept traffic
     wait_for_tcp(in_addr).await;
 

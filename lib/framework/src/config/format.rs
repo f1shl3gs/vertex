@@ -1,7 +1,9 @@
-use serde::de;
 use std::path::Path;
 
+pub type FormatHint = Option<Format>;
+
 /// The format used to represent the configuration data.
+/// YAML for human, JSON for program that all
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub enum Format {
     JSON,
@@ -11,25 +13,26 @@ pub enum Format {
 
 impl Format {
     pub fn from_path<T: AsRef<Path>>(path: T) -> Result<Self, T> {
-        match path.as_ref().extension().and_then(|ext| ext.to_str()) {
-            Some("yaml") | Some("yml") => Ok(Format::YAML),
-            Some("json") => Ok(Format::JSON),
-            _ => Err(path),
+        let Some(ext) = path.as_ref().extension() else {
+            return Err(path);
+        };
+
+        if ext == "json" {
+            Ok(Format::JSON)
+        } else if ext == "yaml" || ext == "yml" {
+            Ok(Format::YAML)
+        } else {
+            Err(path)
         }
     }
-}
 
-pub type FormatHint = Option<Format>;
-
-/// Parse the string represented in the specified format.
-/// If the format is unknown - fallback to the default format and attempt
-/// parsing using that.
-pub fn deserialize<T>(content: &str, format: FormatHint) -> Result<T, Vec<String>>
-where
-    T: de::DeserializeOwned,
-{
-    match format.unwrap_or_default() {
-        Format::YAML => serde_yaml::from_str(content).map_err(|e| vec![e.to_string()]),
-        Format::JSON => serde_json::from_str(content).map_err(|e| vec![e.to_string()]),
+    /// Parse the string represented in the specified format.
+    /// If the format is unknown - fallback to the default format and attempt
+    /// parsing using that.
+    pub fn deserialize<T: serde::de::DeserializeOwned>(&self, content: &str) -> Result<T, String> {
+        match self {
+            Format::JSON => serde_json::from_str(content).map_err(|err| err.to_string()),
+            Format::YAML => serde_json::from_str(content).map_err(|err| err.to_string()),
+        }
     }
 }

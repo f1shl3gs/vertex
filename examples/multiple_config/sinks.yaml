@@ -1,0 +1,6 @@
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - node
+      - selfstat

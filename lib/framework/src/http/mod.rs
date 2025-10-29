@@ -1,3 +1,4 @@
+mod auth;
 pub(crate) mod proxy;
 mod serve;
 mod trace;
@@ -7,13 +8,11 @@ use std::fmt;
 use std::task::{Context, Poll};
 
 use bytes::Bytes;
-use configurable::Configurable;
 use futures::future::BoxFuture;
-use headers::{Authorization, HeaderMapExt};
 use http::header::{
     ACCEPT_ENCODING, AUTHORIZATION, COOKIE, PROXY_AUTHORIZATION, SET_COOKIE, USER_AGENT,
 };
-use http::{HeaderMap, Request, header::HeaderValue, request::Builder, uri::InvalidUri};
+use http::{HeaderMap, Request, header::HeaderValue, uri::InvalidUri};
 use http_body_util::Full;
 use hyper::body::{Body, Incoming};
 use hyper_rustls::{ConfigBuilderExt, HttpsConnector};
@@ -23,7 +22,6 @@ use hyper_util::rt::TokioExecutor;
 use metrics::{Attributes, exponential_buckets};
 use proxy::ProxyConnector;
 use rustls::ClientConfig;
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing::Instrument;
 use tracing_internal::SpanExt;
@@ -31,6 +29,7 @@ use tracing_internal::SpanExt;
 use crate::config::ProxyConfig;
 use crate::dns::Resolver;
 use crate::tls::{TlsConfig, TlsError};
+pub use auth::{Auth, Authorizer, MaybeAuth};
 pub use serve::{Serve, WithGracefulShutdown, serve};
 
 #[derive(Debug, Error)]
@@ -274,78 +273,6 @@ impl<B> fmt::Debug for HttpClient<B> {
             .field("client", &self.client)
             .field("user_agent", &self.user_agent)
             .finish()
-    }
-}
-
-/// The authentication strategy for http request/response
-#[derive(Configurable, Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
-#[serde(deny_unknown_fields, rename_all = "snake_case", tag = "strategy")]
-pub enum Auth {
-    /// Basic authentication.
-    ///
-    /// The username and password are concatenated and encoded via [base64][base64].
-    ///
-    /// [base64]: https://en.wikipedia.org/wiki/Base64
-    Basic {
-        /// The basic authentication username.
-        user: String,
-
-        /// The basic authentication password.
-        password: String,
-    },
-
-    /// Bearer authentication.
-    ///
-    /// The bearer token value (OAuth2, JWT, etc) is passed as-is.
-    Bearer {
-        /// The bearer authentication token.
-        token: String,
-    },
-}
-
-impl Auth {
-    pub fn basic(user: String, password: String) -> Self {
-        Self::Basic { user, password }
-    }
-}
-
-pub trait MaybeAuth: Sized {
-    fn choose_one(&self, other: &Self) -> crate::Result<Self>;
-}
-
-impl MaybeAuth for Option<Auth> {
-    fn choose_one(&self, other: &Self) -> crate::Result<Self> {
-        if self.is_some() && other.is_some() {
-            Err("Two authorization credentials was provided.".into())
-        } else {
-            Ok(self.clone().or_else(|| other.clone()))
-        }
-    }
-}
-
-impl Auth {
-    pub fn apply<B>(&self, req: &mut Request<B>) {
-        self.apply_headers_map(req.headers_mut())
-    }
-
-    pub fn apply_builder(&self, mut builder: Builder) -> Builder {
-        if let Some(map) = builder.headers_mut() {
-            self.apply_headers_map(map)
-        }
-        builder
-    }
-
-    pub fn apply_headers_map(&self, map: &mut HeaderMap) {
-        match &self {
-            Auth::Basic { user, password } => {
-                let auth = Authorization::basic(user, password);
-                map.typed_insert(auth);
-            }
-            Auth::Bearer { token } => match Authorization::bearer(token) {
-                Ok(auth) => map.typed_insert(auth),
-                Err(err) => error!(message = "Invalid bearer token", token = %token, %err),
-            },
-        }
     }
 }
 

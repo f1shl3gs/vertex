@@ -360,7 +360,7 @@ impl TypeAttrs {
                                 content,
                             })
                         }
-                        "extension" | "provider" | "source" | "transform" | "sink" => {
+                        "extension" | "provider" | "source" | "transform" | "sink" | "secret" => {
                             this.component_type = Some(name.clone());
                         }
                         "rename_all" => {

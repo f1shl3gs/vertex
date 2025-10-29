@@ -1,12 +1,9 @@
-use std::{
-    cmp::{Ord, Ordering, PartialOrd},
-    fmt,
-};
+use std::cmp::{Ord, Ordering, PartialOrd};
+use std::fmt;
+use std::ops::Deref;
 
-use serde::{
-    Deserialize, Deserializer, Serialize, Serializer,
-    de::{self, Visitor},
-};
+use serde::de::{self, Visitor};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, Serialize, PartialEq)]
 pub struct OutputId {
@@ -75,6 +72,14 @@ impl ComponentKey {
         Self {
             id: format!("{}.{}", self.id, name),
         }
+    }
+}
+
+impl Deref for ComponentKey {
+    type Target = str;
+
+    fn deref(&self) -> &Self::Target {
+        self.id.as_ref()
     }
 }
 

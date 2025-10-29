@@ -20,7 +20,7 @@ pub enum SignalTo {
     ReloadFromConfigBuilder(Builder),
     /// Signal to reload config from the filesystem
     ReloadFromDisk,
-    /// Signal to shutdown process
+    /// Signal to shut down process
     Shutdown,
     /// Shutdown process immediately
     Quit,
@@ -68,6 +68,14 @@ impl SignalHandler {
                 }
             }
         });
+    }
+
+    /// Subscribe to the stream, and return a new receiver
+    pub fn subscribe(&mut self) -> broadcast::Receiver<()> {
+        let (tx, rx) = broadcast::channel::<()>(2);
+        self.shutdown_txs.push(tx);
+
+        rx
     }
 
     /// Takes a stream, sending to the underlying signal receiver. Returns

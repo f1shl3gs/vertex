@@ -2,25 +2,28 @@ mod description;
 
 pub use description::{ComponentDescription, ExampleError};
 
+pub struct SecretComponent;
 /// A provider component.
 pub struct ProviderComponent;
-/// A sink component.
-pub struct SinkComponent;
+/// An extension component;
+pub struct ExtensionComponent;
 /// A source component.
 pub struct SourceComponent;
 /// A transform component.
 pub struct TransformComponent;
-/// An extension component;
-pub struct ExtensionComponent;
+/// A sink component.
+pub struct SinkComponent;
 
+pub type SecretDescription = ComponentDescription<SecretComponent>;
+pub type ProviderDescription = ComponentDescription<ProviderComponent>;
+pub type ExtensionDescription = ComponentDescription<ExtensionComponent>;
 pub type SourceDescription = ComponentDescription<SourceComponent>;
 pub type TransformDescription = ComponentDescription<TransformComponent>;
 pub type SinkDescription = ComponentDescription<SinkComponent>;
-pub type ProviderDescription = ComponentDescription<ProviderComponent>;
-pub type ExtensionDescription = ComponentDescription<ExtensionComponent>;
 
+inventory::collect!(SecretDescription);
+inventory::collect!(ProviderDescription);
+inventory::collect!(ExtensionDescription);
 inventory::collect!(SourceDescription);
 inventory::collect!(TransformDescription);
 inventory::collect!(SinkDescription);
-inventory::collect!(ProviderDescription);
-inventory::collect!(ExtensionDescription);

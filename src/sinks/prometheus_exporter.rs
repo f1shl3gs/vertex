@@ -11,6 +11,7 @@ use configurable::configurable_component;
 use event::tags::Tags;
 use event::{Bucket, EventStatus, Events, MetricValue, Quantile};
 use framework::config::{InputType, Resource, SinkConfig, SinkContext};
+use framework::http::{Auth, Authorizer};
 use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, ShutdownSignal, Sink, StreamSink};
 use futures::stream::BoxStream;
@@ -26,9 +27,11 @@ use parking_lot::RwLock;
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The address the prometheus server will listen at
-    #[serde(default = "default_endpoint")]
+    #[serde(default = "default_listen")]
     #[configurable(format = "ip-address", example = "0.0.0.0:9100")]
-    endpoint: SocketAddr,
+    listen: SocketAddr,
+
+    auth: Option<Auth>,
 
     tls: Option<TlsConfig>,
 
@@ -46,7 +49,7 @@ struct Config {
     const_labels: BTreeMap<String, String>,
 }
 
-fn default_endpoint() -> SocketAddr {
+fn default_listen() -> SocketAddr {
     SocketAddr::from(([0, 0, 0, 0], 9100))
 }
 
@@ -59,7 +62,8 @@ const fn default_ttl() -> Duration {
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = PrometheusExporter::new(
-            self.endpoint,
+            self.listen,
+            self.auth.as_ref().map(|auth| auth.authorizer()),
             self.tls.clone(),
             self.ttl,
             self.const_labels.clone(),
@@ -74,7 +78,7 @@ impl SinkConfig for Config {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        vec![Resource::tcp(self.endpoint)]
+        vec![Resource::tcp(self.listen)]
     }
 }
 
@@ -134,7 +138,8 @@ struct Sets {
 }
 
 struct PrometheusExporter {
-    endpoint: SocketAddr,
+    listen: SocketAddr,
+    auth: Option<Authorizer>,
     tls: Option<TlsConfig>,
     ttl: Duration,
     const_labels: BTreeMap<String, String>,
@@ -142,13 +147,15 @@ struct PrometheusExporter {
 
 impl PrometheusExporter {
     fn new(
-        endpoint: SocketAddr,
+        listen: SocketAddr,
+        auth: Option<Authorizer>,
         tls: Option<TlsConfig>,
         ttl: Duration,
         const_labels: BTreeMap<String, String>,
     ) -> Self {
         Self {
-            endpoint,
+            listen,
+            auth,
             tls,
             ttl,
             const_labels,
@@ -435,18 +442,31 @@ impl StreamSink for PrometheusExporter {
         let (trigger_shutdown, shutdown, _shutdown_done) = ShutdownSignal::new_wired();
 
         // HTTP server routine
-        let listener = MaybeTlsListener::bind(&self.endpoint, self.tls.as_ref())
+        let listener = MaybeTlsListener::bind(&self.listen, self.tls.as_ref())
             .await
             .map_err(|err| error!(message = "Server TLS error", %err))?;
+        let auth = Arc::new(self.auth.clone());
         let http_states = Arc::clone(&states);
         let http_shutdown = shutdown.clone();
         let const_labels = self.const_labels.clone();
 
         let service = service_fn(move |req: Request<Incoming>| {
+            let auth = Arc::clone(&auth);
             let metrics = Arc::clone(&http_states);
             let const_labels = const_labels.clone();
 
             async move {
+                if let Some(auth) = auth.as_ref()
+                    && !auth.authorized(&req)
+                {
+                    let resp = Response::builder()
+                        .status(StatusCode::UNAUTHORIZED)
+                        .body(Full::new(Bytes::new()))
+                        .unwrap();
+
+                    return Ok(resp);
+                }
+
                 let resp = handle(req, metrics, const_labels);
 
                 Ok::<_, hyper::Error>(resp)
