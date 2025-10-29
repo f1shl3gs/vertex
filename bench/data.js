@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761767478271,
+  "lastUpdate": 1761767508438,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b60b6ca061468d55c58dc4491ffaee54a9fe38eb",
-          "message": "Merge pull request #2541 from f1shl3gs/dependabot/cargo/serde_json-1.0.144\n\nchore(deps): bump serde_json from 1.0.143 to 1.0.144",
-          "timestamp": "2025-09-14T15:43:30+08:00",
-          "tree_id": "4b2f79240479765f934826c7d72f2aed733d01bb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b60b6ca061468d55c58dc4491ffaee54a9fe38eb"
-        },
-        "date": 1757835976961,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.449,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 170.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 307.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 667.08,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0494fa1c55087b3cc00fe89e668ebff2ab660133",
           "message": "Merge pull request #2543 from f1shl3gs/dependabot/cargo/serde_path_to_error-0.1.20\n\nchore(deps): bump serde_path_to_error from 0.1.17 to 0.1.20",
           "timestamp": "2025-09-16T04:14:14+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 624.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e121725349111602d973d0eed85de28adc7d627a",
+          "message": "Merge pull request #2651 from f1shl3gs/secrets/init\n\nadding secrets support",
+          "timestamp": "2025-10-30T03:47:32+08:00",
+          "tree_id": "ac2fe469211a9cd24a65f22a3d82af17e41c03d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e121725349111602d973d0eed85de28adc7d627a"
+        },
+        "date": 1761767480876,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 19.846,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 138.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 268.39,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 572.75,
             "unit": "ns/op"
           }
         ]
