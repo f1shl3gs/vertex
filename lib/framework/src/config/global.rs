@@ -157,14 +157,14 @@ impl GlobalOptions {
                 if a != b {
                     errs.push("conflicting values for 'data_dir' found".to_string());
                 }
-            },
+            }
             (None, Some(_b)) => {
                 self.data_dir = other.data_dir;
-            },
+            }
             (None, None) => {
                 self.data_dir = default_data_dir();
-            },
-            (Some(_a), None) => {},
+            }
+            (Some(_a), None) => {}
         }
 
         // If the user has multiple config files, we must *merge* log schemas
