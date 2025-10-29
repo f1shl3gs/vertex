@@ -1,0 +1,9 @@
+sources:
+  selfstat:
+    type: selfstat
+---
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - selfstat

@@ -109,18 +109,6 @@ impl RootCommand {
         println!("rustc  {RUSTC_VERSION}");
     }
 
-    fn config_paths_with_formats(&self) -> Vec<config::ConfigPath> {
-        config::merge_path_lists(vec![(&self.configs, None)])
-            .map(|(path, hint)| {
-                if path.is_dir() {
-                    config::ConfigPath::Dir(path)
-                } else {
-                    config::ConfigPath::File(path, hint)
-                }
-            })
-            .collect::<Vec<_>>()
-    }
-
     pub fn run(&self) -> Result<(), ExitCode> {
         if self.version {
             self.show_version();
@@ -132,7 +120,10 @@ impl RootCommand {
             return Ok(());
         }
 
-        let config_paths = self.config_paths_with_formats();
+        let Some(mut config_paths) = config::process_paths(&self.configs) else {
+            return Err(exitcode::CONFIG);
+        };
+
         #[cfg(all(unix, not(target_os = "macos")))]
         let watch_config = self.watch;
 
@@ -158,8 +149,6 @@ impl RootCommand {
         // Note: `block_on` will spawn another worker thread too. so actual running
         // threads is always >= threads + 1.
         runtime.block_on(async move {
-            let mut config_paths = config::process_paths(&config_paths).ok_or(exitcode::CONFIG)?;
-
             let allocator = if cfg!(feature = "jemalloc") {
                 "jemalloc"
             } else if cfg!(feature = "snmalloc") {
@@ -183,7 +172,7 @@ impl RootCommand {
             let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
             signal_handler.forever(signal::os_signals());
 
-            let config = config::load_from_paths_with_provider(&config_paths, &mut signal_handler)
+            let config = config::load_from_paths_with_provider_and_secrets(&config_paths, &mut signal_handler)
                 .await
                 .map_err(handle_config_errors)?;
 
@@ -232,7 +221,7 @@ impl RootCommand {
                     Some(signal) = signal_rx.recv() => {
                         match signal {
                             SignalTo::ReloadFromConfigBuilder(builder) => {
-                                match builder.build().map_err(handle_config_errors) {
+                                match builder.compile().map_err(handle_config_errors) {
                                     Ok(mut new_config) => {
                                         new_config.healthcheck.set_require_healthy(true);
                                         match topology.reload_config_and_respawn(new_config).await {
@@ -262,8 +251,11 @@ impl RootCommand {
 
                             SignalTo::ReloadFromDisk => {
                                 // Reload paths
-                                config_paths = config::process_paths(&config_paths).unwrap_or(config_paths);
-                                let new_config = config::load_from_paths_with_provider(&config_paths, &mut signal_handler).await
+                                if let Some(new) = config::process_paths(&self.configs) {
+                                    config_paths = new;
+                                }
+
+                                let new_config = config::load_from_paths_with_provider_and_secrets(&config_paths, &mut signal_handler).await
                                     .map_err(handle_config_errors)
                                     .ok();
 
@@ -406,6 +398,18 @@ struct Providers {
     name: Option<String>,
 }
 
+#[derive(Debug, FromArgs)]
+#[argh(
+    subcommand,
+    name = "secrets",
+    description = "List secret stores",
+    help_triggers("-h", "--help")
+)]
+struct Secrets {
+    #[argh(positional, description = "secret store name")]
+    name: Option<String>,
+}
+
 macro_rules! list_or_example {
     ($name:expr, $desc:ident) => {
         match $name {
@@ -438,6 +442,7 @@ enum SubCommands {
     Transforms(Transforms),
     Sinks(Sinks),
     Extensions(Extensions),
+    Secrets(Secrets),
     Providers(Providers),
     Validate(validate::Validate),
     Top(top::Top),
@@ -457,6 +462,9 @@ impl SubCommands {
             }
             SubCommands::Providers(providers) => {
                 list_or_example!(&providers.name, ProviderDescription)
+            }
+            SubCommands::Secrets(secrets) => {
+                list_or_example!(&secrets.name, SecretDescription)
             }
             SubCommands::Validate(validate) => match validate.run() {
                 exitcode::OK => Ok(()),

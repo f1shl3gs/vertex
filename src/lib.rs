@@ -9,6 +9,7 @@
 
 pub mod common;
 pub mod extensions;
+mod secrets;
 pub mod sinks;
 pub mod sources;
 pub mod transforms;

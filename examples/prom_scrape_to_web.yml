@@ -9,4 +9,4 @@ sinks:
     type: prometheus_exporter
     inputs:
       - scrape
-    endpoint: 127.0.0.1:9101
+    listen: 127.0.0.1:9101

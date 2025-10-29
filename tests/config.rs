@@ -10,7 +10,7 @@ async fn load(config: &str, format: Format) -> Result<Vec<String>, Vec<String>> 
     let c2 = config::load_from_str(config, format).unwrap();
 
     match (
-        config::warnings(&c2),
+        c2.warnings(),
         topology::build_pieces(&c, &diff, HashMap::new()).await,
     ) {
         (warnings, Ok(_pieces)) => Ok(warnings),

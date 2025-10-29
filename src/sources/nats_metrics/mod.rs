@@ -129,8 +129,6 @@ async fn run(
 ) -> Result<(), ()> {
     let mut ticker = tokio::time::interval(interval);
 
-    println!("{collectors:#?}");
-
     loop {
         tokio::select! {
             _ = ticker.tick() => {},
