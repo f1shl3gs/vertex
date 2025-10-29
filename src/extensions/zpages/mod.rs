@@ -23,7 +23,7 @@ pub fn update_config(config: &framework::config::Config) {
     *CURRENT_CONFIG.write() = content;
 }
 
-fn default_endpoint() -> SocketAddr {
+fn default_listen() -> SocketAddr {
     SocketAddr::from((Ipv4Addr::UNSPECIFIED, 56888))
 }
 
@@ -34,8 +34,8 @@ fn default_endpoint() -> SocketAddr {
 #[configurable_component(extension, name = "zpages")]
 #[serde(deny_unknown_fields)]
 struct Config {
-    #[serde(default = "default_endpoint")]
-    endpoint: SocketAddr,
+    #[serde(default = "default_listen")]
+    listen: SocketAddr,
 }
 
 #[async_trait::async_trait]
@@ -43,7 +43,7 @@ struct Config {
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> framework::Result<Extension> {
         let shutdown = cx.shutdown;
-        let listener = MaybeTlsListener::bind(&self.endpoint, None).await?;
+        let listener = MaybeTlsListener::bind(&self.listen, None).await?;
 
         Ok(Box::pin(async move {
             framework::http::serve(listener, service_fn(http_handle))
@@ -54,7 +54,7 @@ impl ExtensionConfig for Config {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        vec![Resource::tcp(self.endpoint)]
+        vec![Resource::tcp(self.listen)]
     }
 }
 
