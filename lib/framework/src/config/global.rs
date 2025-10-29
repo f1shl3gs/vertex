@@ -152,24 +152,24 @@ impl GlobalOptions {
             errs.push("conflicting values for 'proxy.no_proxy' found".to_string());
         }
 
-        /*
-        if conflicts(self.timezone.as_ref(), other.timezone.as_ref()) {
-            errs.push("conflicting values for 'timezone' found".to_string());
-        }
-        */
-
-        if self.data_dir.is_none() || self.data_dir == default_data_dir() {
-            self.data_dir = other.data_dir;
-        } else if other.data_dir != default_data_dir() && self.data_dir != other.data_dir {
-            // if two configs both set 'data_dir' and have conflicting values,
-            // we consider this an error
-            errs.push("conflicting values for 'data_dir' found".to_string());
+        match (self.data_dir.as_ref(), other.data_dir.as_ref()) {
+            (Some(a), Some(b)) => {
+                if a != b {
+                    errs.push("conflicting values for 'data_dir' found".to_string());
+                }
+            },
+            (None, Some(_b)) => {
+                self.data_dir = other.data_dir;
+            },
+            (None, None) => {
+                self.data_dir = default_data_dir();
+            },
+            (Some(_a), None) => {},
         }
 
         // If the user has multiple config files, we must *merge* log schemas
         // until we meet a conflict, then we are allowed to error
-        let mut log_schema = self.log_schema.clone();
-        if let Err(partial) = log_schema.merge(&other.log_schema) {
+        if let Err(partial) = self.log_schema.merge(&other.log_schema) {
             errs.extend(partial);
         }
 
