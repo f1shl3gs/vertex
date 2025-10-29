@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761767477199,
+  "lastUpdate": 1761767478271,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b60b6ca061468d55c58dc4491ffaee54a9fe38eb",
-          "message": "Merge pull request #2541 from f1shl3gs/dependabot/cargo/serde_json-1.0.144\n\nchore(deps): bump serde_json from 1.0.143 to 1.0.144",
-          "timestamp": "2025-09-14T15:43:30+08:00",
-          "tree_id": "4b2f79240479765f934826c7d72f2aed733d01bb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b60b6ca061468d55c58dc4491ffaee54a9fe38eb"
-        },
-        "date": 1757835958688,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 491180,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 520950,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e121725349111602d973d0eed85de28adc7d627a",
+          "message": "Merge pull request #2651 from f1shl3gs/secrets/init\n\nadding secrets support",
+          "timestamp": "2025-10-30T03:47:32+08:00",
+          "tree_id": "ac2fe469211a9cd24a65f22a3d82af17e41c03d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e121725349111602d973d0eed85de28adc7d627a"
+        },
+        "date": 1761767455345,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 520310,
             "unit": "ns/op"
           }
         ]
