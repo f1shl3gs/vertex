@@ -110,7 +110,7 @@ pub fn load_builder_from_paths(paths: &[ConfigPath]) -> Result<Builder, Vec<Stri
     process(&mut configs, ConfigLoader::new(Default::default()))
 }
 
-#[cfg(any(test, feature = "test-util"))]
+#[cfg(feature = "test-util")]
 pub fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String>> {
     let mut configs = IndexMap::new();
     configs.insert((PathBuf::new(), format), content.to_string());
