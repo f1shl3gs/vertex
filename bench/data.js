@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761838544344,
+  "lastUpdate": 1761838557410,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "aeeed04cb37f0f205dbf82399c39969b7a704c2f",
-          "message": "Merge pull request #2544 from f1shl3gs/dependabot/cargo/hyper-util-0.1.17\n\nchore(deps): bump hyper-util from 0.1.16 to 0.1.17",
-          "timestamp": "2025-09-16T04:14:26+08:00",
-          "tree_id": "dd98a492bfcb95163b7bf2b6ebadc2f28f49c91a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aeeed04cb37f0f205dbf82399c39969b7a704c2f"
-        },
-        "date": 1757967417156,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.387,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 160.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 328.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 697.74,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c0dd0095e0c3ba337afca000df25699375a03baa",
           "message": "Merge pull request #2545 from f1shl3gs/dependabot/cargo/serde_json-1.0.145\n\nchore(deps): bump serde_json from 1.0.144 to 1.0.145",
           "timestamp": "2025-09-16T04:14:35+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 680.58,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99377939745bc31bd042e1ee28de9dced24481b9",
+          "message": "Merge pull request #2654 from f1shl3gs/extensions/remote_tap\n\nextensions/remote_tap: init & remove extensions/zpages",
+          "timestamp": "2025-10-30T23:33:02+08:00",
+          "tree_id": "8cd2b34a0f1d6d76f6231c964b85563e57fd9864",
+          "url": "https://github.com/f1shl3gs/vertex/commit/99377939745bc31bd042e1ee28de9dced24481b9"
+        },
+        "date": 1761838534524,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 29.378,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 335.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 674.58,
             "unit": "ns/op"
           }
         ]
