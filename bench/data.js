@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761868737057,
+  "lastUpdate": 1761868755288,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "66499c17ea6e18af1abb6882ea5308cca9dc2b19",
-          "message": "Merge pull request #2548 from f1shl3gs/dependabot/cargo/serde-1.0.225\n\nchore(deps): bump serde from 1.0.224 to 1.0.225",
-          "timestamp": "2025-09-17T19:17:42+08:00",
-          "tree_id": "3fbd234ea078e2fb67c8e69939e58861fa652938",
-          "url": "https://github.com/f1shl3gs/vertex/commit/66499c17ea6e18af1abb6882ea5308cca9dc2b19"
-        },
-        "date": 1758108011414,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.182,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 163.28,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 297.35,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 648.41,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3196c1403ab84142dfad7425d5f67527fd4125f6",
           "message": "Merge pull request #2549 from f1shl3gs/dependabot/cargo/tokio-rustls-0.26.3\n\nchore(deps): bump tokio-rustls from 0.26.2 to 0.26.3",
           "timestamp": "2025-09-18T15:43:35+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 676.86,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2200d08262fb66632fd279ce1fe3dd486a64edde",
+          "message": "Merge pull request #2658 from f1shl3gs/extensions/docker_observer\n\nextensions/docker_observer: init",
+          "timestamp": "2025-10-31T07:56:18+08:00",
+          "tree_id": "5703bbee246bfcebeaf94c3b1c082cb2bd3f0bda",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2200d08262fb66632fd279ce1fe3dd486a64edde"
+        },
+        "date": 1761868732636,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.011,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 306.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 674.44,
             "unit": "ns/op"
           }
         ]
