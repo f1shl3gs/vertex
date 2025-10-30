@@ -19,14 +19,19 @@ use vtl::{Diagnostic, Program, TargetValue};
 
 #[derive(Configurable, Debug, Deserialize, Serialize)]
 struct TemplateConfig {
+    /// VTL script to filter endpoints
     rule: Option<String>,
+
+    /// Source config to interpolate
     config: Value,
 }
 
 #[configurable_component(source, name = "multiplier")]
 struct Config {
+    /// The name of the observer extension to use
     observer: String,
 
+    /// The template of source config to interpolate
     templates: Vec<TemplateConfig>,
 }
 
