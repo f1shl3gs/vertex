@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761853987200,
+  "lastUpdate": 1761868724215,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3196c1403ab84142dfad7425d5f67527fd4125f6",
-          "message": "Merge pull request #2549 from f1shl3gs/dependabot/cargo/tokio-rustls-0.26.3\n\nchore(deps): bump tokio-rustls from 0.26.2 to 0.26.3",
-          "timestamp": "2025-09-18T15:43:35+08:00",
-          "tree_id": "f5d1ef40d8332d997742cd00fe813aa7223cc269",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3196c1403ab84142dfad7425d5f67527fd4125f6"
-        },
-        "date": 1758181537012,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 487730,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 494240,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2200d08262fb66632fd279ce1fe3dd486a64edde",
+          "message": "Merge pull request #2658 from f1shl3gs/extensions/docker_observer\n\nextensions/docker_observer: init",
+          "timestamp": "2025-10-31T07:56:18+08:00",
+          "tree_id": "5703bbee246bfcebeaf94c3b1c082cb2bd3f0bda",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2200d08262fb66632fd279ce1fe3dd486a64edde"
+        },
+        "date": 1761868702146,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 492030,
             "unit": "ns/op"
           }
         ]
