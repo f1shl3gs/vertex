@@ -68,6 +68,7 @@ members = [
 default = [
     # "snmalloc",
 
+    "secrets",
     "extensions",
     "sources",
     "transforms",
@@ -78,6 +79,7 @@ target-x86_64-unknown-linux-musl = [
     # The default allocator of musl will consume more cpu than jemalloc.
     "scudo",
 
+    "secrets",
     "extensions",
     "sinks",
     "sources",
@@ -85,6 +87,7 @@ target-x86_64-unknown-linux-musl = [
 ]
 
 target-x86_64-unknown-linux-gnu = [
+    "secrets",
     "extensions",
     "sinks",
     "sources",
@@ -132,6 +135,15 @@ all-integration-tests = [
     "clickhouse-integration-tests",
     "fluent-integration-tests",
     "redfish-integration-tests",
+]
+
+# Secrets
+secrets-directory = []
+secrets-unencrypted = []
+
+secrets = [
+    "secrets-directory",
+    "secrets-unencrypted"
 ]
 
 extensions-consul_observer = []
