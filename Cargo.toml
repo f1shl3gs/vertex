@@ -148,6 +148,7 @@ secrets = [
 
 extensions-consul_observer = []
 extensions-dns_observer = ["dep:resolver"]
+extensions-docker = ["dep:hyper-unix"]
 extensions-exec_observer = ["tokio/process"]
 extensions-healthcheck = ["tonic/router", "dep:tonic-health"]
 extensions-http_observer = []
@@ -160,6 +161,7 @@ extensions-remote_tap = []
 extensions = [
     "extensions-consul_observer",
     "extensions-dns_observer",
+    "extensions-docker",
     "extensions-exec_observer",
     "extensions-healthcheck",
     "extensions-http_observer",
