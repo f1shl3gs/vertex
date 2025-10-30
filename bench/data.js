@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761838593336,
+  "lastUpdate": 1761838971702,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "aeeed04cb37f0f205dbf82399c39969b7a704c2f",
-          "message": "Merge pull request #2544 from f1shl3gs/dependabot/cargo/hyper-util-0.1.17\n\nchore(deps): bump hyper-util from 0.1.16 to 0.1.17",
-          "timestamp": "2025-09-16T04:14:26+08:00",
-          "tree_id": "dd98a492bfcb95163b7bf2b6ebadc2f28f49c91a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aeeed04cb37f0f205dbf82399c39969b7a704c2f"
-        },
-        "date": 1757967847567,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 16482000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 676830,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.507,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "af95e36084220dc00d6508566ac4b157134ead4c",
           "message": "Merge pull request #2546 from f1shl3gs/dependabot/cargo/serde-1.0.224\n\nchore(deps): bump serde from 1.0.221 to 1.0.224",
           "timestamp": "2025-09-16T04:26:36+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 48.391,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99377939745bc31bd042e1ee28de9dced24481b9",
+          "message": "Merge pull request #2654 from f1shl3gs/extensions/remote_tap\n\nextensions/remote_tap: init & remove extensions/zpages",
+          "timestamp": "2025-10-30T23:33:02+08:00",
+          "tree_id": "8cd2b34a0f1d6d76f6231c964b85563e57fd9864",
+          "url": "https://github.com/f1shl3gs/vertex/commit/99377939745bc31bd042e1ee28de9dced24481b9"
+        },
+        "date": 1761838948802,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15071000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 642250,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.946,
             "unit": "ns/op"
           }
         ]
