@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761853418105,
+  "lastUpdate": 1761853444300,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "359805b269a5a462f371c07ca0ebd62db55184d3",
-          "message": "Merge pull request #2547 from f1shl3gs/dependabot/cargo/indexmap-2.11.3\n\nchore(deps): bump indexmap from 2.11.1 to 2.11.3",
-          "timestamp": "2025-09-17T16:18:03+08:00",
-          "tree_id": "d5c9a132dfd5919a7580b092707d0bd37892f706",
-          "url": "https://github.com/f1shl3gs/vertex/commit/359805b269a5a462f371c07ca0ebd62db55184d3"
-        },
-        "date": 1758097240586,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.015,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 345.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 696.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "66499c17ea6e18af1abb6882ea5308cca9dc2b19",
           "message": "Merge pull request #2548 from f1shl3gs/dependabot/cargo/serde-1.0.225\n\nchore(deps): bump serde from 1.0.224 to 1.0.225",
           "timestamp": "2025-09-17T19:17:42+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 717.59,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5c6776a200ff7319f7128ce540ab392d452cf82",
+          "message": "Merge pull request #2657 from f1shl3gs/sources/multiplier/add_comments\n\nsources/multiplier: add comments for config",
+          "timestamp": "2025-10-31T03:41:08+08:00",
+          "tree_id": "6fd1cf0e11dc167674f262e9d37e566be5065413",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b5c6776a200ff7319f7128ce540ab392d452cf82"
+        },
+        "date": 1761853422020,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.218,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 159.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 326.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 676.86,
             "unit": "ns/op"
           }
         ]
