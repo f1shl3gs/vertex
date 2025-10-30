@@ -10,8 +10,8 @@ use tracing::{error, info, warn};
 use vertex::built_info::{GIT_HASH, PKG_VERSION, RUSTC_VERSION, TARGET};
 #[cfg(feature = "extensions-healthcheck")]
 use vertex::extensions::healthcheck;
-#[cfg(feature = "extensions-zpages")]
-use vertex::extensions::zpages;
+#[cfg(feature = "extensions-remote_tap")]
+use vertex::extensions::remote_tap;
 
 use crate::{top, validate, vtl};
 
@@ -206,8 +206,8 @@ impl RootCommand {
 
             let (mut topology, mut graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
-            #[cfg(feature = "extensions-zpages")]
-            zpages::update_config(topology.config());
+            #[cfg(feature = "extensions-remote_tap")]
+            remote_tap::update_config(topology.config());
 
             // run
             let mut sources_finished = topology.sources_finished();
@@ -226,8 +226,8 @@ impl RootCommand {
                                         new_config.healthcheck.set_require_healthy(true);
                                         match topology.reload_config_and_respawn(new_config).await {
                                             Ok(true) => {
-                                                #[cfg(feature = "extensions-zpages")]
-                                                zpages::update_config(topology.config());
+                                                #[cfg(feature = "extensions-remote_tap")]
+                                                remote_tap::update_config(topology.config());
 
                                                 info!(message = "Vertex reloaded");
                                             },
@@ -263,8 +263,8 @@ impl RootCommand {
                                     new_config.healthcheck.set_require_healthy(true);
                                     match topology.reload_config_and_respawn(new_config).await {
                                         Ok(true) => {
-                                            #[cfg(feature = "extensions-zpages")]
-                                            zpages::update_config(topology.config());
+                                            #[cfg(feature = "extensions-remote_tap")]
+                                            remote_tap::update_config(topology.config());
 
                                             info!(message = "Reload config successes");
                                         },

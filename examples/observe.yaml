@@ -2,6 +2,8 @@ extensions:
   ports:
     type: port_observer
     interval: 3s
+  tap:
+    type: remote_tap
 
 sources:
   http:
@@ -13,6 +15,7 @@ sources:
           type: http_check
           targets:
           - http://${{ target }}
+          interval: 1s
 
 sinks:
   prom:

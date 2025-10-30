@@ -32,7 +32,7 @@ fn default_interval() -> String {
 }
 
 fn default_uri() -> String {
-    "http://127.0.0.1:56888/statsz".to_string()
+    "http://127.0.0.1:11000/stats".to_string()
 }
 
 #[derive(Debug, FromArgs)]
@@ -52,7 +52,7 @@ pub struct Top {
 
     #[argh(
         option,
-        description = "vertex zpages endpoint",
+        description = "vertex remote_tap endpoint",
         default = "default_uri()"
     )]
     uri: String,
@@ -190,14 +190,24 @@ struct PrevStats {
     stats: TopStats,
 }
 
-const MINIMUM_PADDING_RIGHT: usize = 1;
+const MINIMUM_PADDING: usize = 1;
 
 fn format_row(total: u64, throughput: u64) -> String {
     if total == 0 {
         return "N/A".to_string();
     }
 
-    format!("{total}/{throughput}ps")
+    let mut index = 0;
+    let mut value = total as f64;
+    let units = ["", "K", "M", "G", "T"];
+    while value > 1024.0 {
+        value /= 1024.0;
+        if index != 4 {
+            index += 1;
+        }
+    }
+
+    format!("{throughput}ps | {value:.2}{}", units[index])
 }
 
 struct Table {
@@ -300,17 +310,19 @@ impl Table {
             mut bytes_in_width,
             mut bytes_out_width,
         ) = rows.iter().fold((0, 0, 0, 0, 0, 0), |mut acc, row| {
-            acc.0 = acc.0.max(row.key.len() + MINIMUM_PADDING_RIGHT);
-            acc.1 = acc.1.max(row.typ.len() + MINIMUM_PADDING_RIGHT);
-            acc.2 = acc.2.max(row.events_in.len() + MINIMUM_PADDING_RIGHT);
-            acc.3 = acc.3.max(row.events_out.len() + MINIMUM_PADDING_RIGHT);
-            acc.4 = acc.4.max(row.bytes_in.len() + MINIMUM_PADDING_RIGHT);
-            acc.5 = acc.5.max(row.bytes_out.len() + MINIMUM_PADDING_RIGHT);
+            acc.0 = acc.0.max(row.key.len() + MINIMUM_PADDING);
+            acc.1 = acc.1.max(row.typ.len() + MINIMUM_PADDING);
+            acc.2 = acc.2.max(row.events_in.len() + MINIMUM_PADDING);
+            acc.3 = acc.3.max(row.events_out.len() + MINIMUM_PADDING);
+            acc.4 = acc.4.max(row.bytes_in.len() + MINIMUM_PADDING);
+            acc.5 = acc.5.max(row.bytes_out.len());
             acc
         });
 
-        if let Some((_max_height, max_width)) = termsize::get()
-            && let Some(mut n) = max_width.checked_sub(
+        // if total width less than the window width, then add some extra padding to each column
+        #[cfg(target_os = "linux")]
+        if let Some((_max_height, max_width)) = termsize()
+            && let Some(mut extra) = max_width.checked_sub(
                 key_width
                     + typ_width
                     + events_in_width
@@ -319,15 +331,15 @@ impl Table {
                     + bytes_out_width,
             )
         {
-            let padding = n % 6;
-            n /= 6;
+            let padding = extra % 6;
+            extra /= 6;
 
-            key_width += n;
-            typ_width += n;
-            events_in_width += n;
-            events_out_width += n;
-            bytes_in_width += n;
-            bytes_out_width += n + padding;
+            key_width += extra;
+            typ_width += extra;
+            events_in_width += extra;
+            events_out_width += extra;
+            bytes_in_width += extra;
+            bytes_out_width += extra + padding;
         }
 
         // header
@@ -379,40 +391,31 @@ impl Table {
     }
 }
 
-mod termsize {
+/// Gets the current terminal size
+#[cfg(target_os = "linux")]
+fn termsize() -> Option<(usize, usize)> {
     use std::io::IsTerminal;
 
-    use libc::{STDOUT_FILENO, TIOCGWINSZ, c_ushort, ioctl};
+    use libc::{STDOUT_FILENO, TIOCGWINSZ, ioctl};
 
-    /// A representation of the size of the current terminal
-    #[repr(C)]
-    #[derive(Debug)]
-    struct UnixSize {
-        /// number of rows
-        rows: c_ushort,
-        /// number of columns
-        cols: c_ushort,
-        x: c_ushort,
-        y: c_ushort,
+    // http://rosettacode.org/wiki/Terminal_control/Dimensions#Library:_BSD_libc
+    if !std::io::stdout().is_terminal() {
+        return None;
     }
 
-    /// Gets the current terminal size
-    pub fn get() -> Option<(usize, usize)> {
-        // http://rosettacode.org/wiki/Terminal_control/Dimensions#Library:_BSD_libc
-        if !std::io::stdout().is_terminal() {
-            return None;
-        }
-        let us = UnixSize {
-            rows: 0,
-            cols: 0,
-            x: 0,
-            y: 0,
-        };
-        let r = unsafe { ioctl(STDOUT_FILENO, TIOCGWINSZ, &us) };
-        if r == 0 {
-            Some((us.rows as usize, us.cols as usize))
-        } else {
-            None
-        }
+    // A representation of the size of the current terminal
+    //
+    // https://man7.org/linux/man-pages/man2/TIOCSWINSZ.2const.html
+    let mut us = libc::winsize {
+        ws_row: 0,
+        ws_col: 0,
+        ws_xpixel: 0,
+        ws_ypixel: 0,
+    };
+    let ret = unsafe { ioctl(STDOUT_FILENO, TIOCGWINSZ, &mut us) };
+    if ret == 0 {
+        Some((us.ws_row as usize, us.ws_col as usize))
+    } else {
+        None
     }
 }

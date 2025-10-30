@@ -142,7 +142,7 @@ extensions-http_observer = []
 extensions-kubernetes_observer = ["dep:kubernetes"]
 extensions-port_observer = []
 extensions-pprof = ["dep:pprof"]
-extensions-zpages = ["dep:parking_lot"]
+extensions-remote_tap = []
 
 # Extensions
 extensions = [
@@ -156,7 +156,7 @@ extensions = [
     # Musl does not provide "pthread_getname_np" in current release.
     # https://github.com/tikv/pprof-rs/issues/41
     "extensions-pprof",
-    "extensions-zpages"
+    "extensions-remote_tap",
 ]
 
 # Sources
@@ -392,7 +392,7 @@ event = { path = "lib/event" }
 finalize = { path = "lib/finalize", optional = true }
 framework = { path = "lib/framework" }
 hostname = { path = "lib/hostname" }
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "4b4d047d031337cc77a7d3637f9c6215098f9949" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "0a339868275ad042c53e8802fc5b4564d216cce9" }
 jaeger = { path = "lib/jaeger", optional = true }
 kubernetes = { path = "lib/kubernetes", optional = true }
 log_schema = { path = "lib/log_schema" }
