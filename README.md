@@ -102,11 +102,11 @@ the downstream service it interacts with.
 #### Extensions
 An extension is
 
-| Name        | Description                                                                                                                              |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| healthcheck | Start an HTTP server, and return 200 to represent Vertex is health                                                                       |
-| pprof       | Start an HTTP server to help user profile Vertex, implement by [pprof-rs](https://github.com/tikv/pprof-rs)                              |
-| zpages      | In-process web pages that display collected data from the process that they are attached to. See [zPages](https://opencensus.io/zpages/) |
+| Name        | Description                                                                                                 |
+|-------------|-------------------------------------------------------------------------------------------------------------|
+| healthcheck | Start an HTTP server, and return 200 to represent Vertex is health                                          |
+| pprof       | Start an HTTP server to help user profile Vertex, implement by [pprof-rs](https://github.com/tikv/pprof-rs) |
+| remote_tap  | In-process web pages that display collected data from the process that they are attached to.                |
 
 ## Build
 Note: Only x86_64-unknown-linux-gnu(or musl) is supported.

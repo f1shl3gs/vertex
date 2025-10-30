@@ -14,5 +14,5 @@ mod kubernetes_observer;
 mod port_observer;
 #[cfg(feature = "extensions-pprof")]
 mod pprof;
-#[cfg(feature = "extensions-zpages")]
-pub mod zpages;
+#[cfg(feature = "extensions-remote_tap")]
+pub mod remote_tap;

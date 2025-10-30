@@ -3,8 +3,8 @@ extensions:
     type: exec_observer
     path: ${PWD}/dummy.sh
 
-  zpages:
-    type: zpages
+  tap:
+    type: remote_tap
 
 sources:
   logs:

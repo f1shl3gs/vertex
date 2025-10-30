@@ -135,10 +135,7 @@ fn parse_listen_inodes(path: PathBuf) -> io::Result<HashMap<String, SocketAddr>>
         }
 
         // "0A" represent for LISTEN
-        //
-        // see: http://students.mimuw.edu.pl/lxr/source/include/net/tcp_states.h
-        let state = parts[3];
-        if state != "0A" {
+        if parts[3] != "0A" {
             continue;
         }
 

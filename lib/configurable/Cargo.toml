@@ -5,7 +5,7 @@ edition = "2024"
 publish = false
 
 [dev-dependencies]
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "4b4d047d031337cc77a7d3637f9c6215098f9949" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "0a339868275ad042c53e8802fc5b4564d216cce9" }
 serde_yaml = { version = "0.9.34", default-features = false }
 
 [dependencies]

@@ -1,6 +1,6 @@
 extensions:
-  zpages:
-    type: zpages
+  tap:
+    type: remote_tap
 
 sources:
   selfstat:
