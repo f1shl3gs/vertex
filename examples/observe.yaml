@@ -1,14 +1,15 @@
 extensions:
-  ports:
-    type: port_observer
-    interval: 3s
+  docker:
+    type: docker
+    exclude_images:
+      - ^kind
   tap:
     type: remote_tap
 
 sources:
   http:
     type: multiplier
-    observer: ports
+    observer: docker
     templates:
       - rule: details.port == 9100 # prometheus_exporter sink
         config:
