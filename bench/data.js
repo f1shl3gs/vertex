@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761842406686,
+  "lastUpdate": 1761853418105,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "66499c17ea6e18af1abb6882ea5308cca9dc2b19",
-          "message": "Merge pull request #2548 from f1shl3gs/dependabot/cargo/serde-1.0.225\n\nchore(deps): bump serde from 1.0.224 to 1.0.225",
-          "timestamp": "2025-09-17T19:17:42+08:00",
-          "tree_id": "3fbd234ea078e2fb67c8e69939e58861fa652938",
-          "url": "https://github.com/f1shl3gs/vertex/commit/66499c17ea6e18af1abb6882ea5308cca9dc2b19"
-        },
-        "date": 1758107978289,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 486240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 470710,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5c6776a200ff7319f7128ce540ab392d452cf82",
+          "message": "Merge pull request #2657 from f1shl3gs/sources/multiplier/add_comments\n\nsources/multiplier: add comments for config",
+          "timestamp": "2025-10-31T03:41:08+08:00",
+          "tree_id": "6fd1cf0e11dc167674f262e9d37e566be5065413",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b5c6776a200ff7319f7128ce540ab392d452cf82"
+        },
+        "date": 1761853395601,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 494240,
             "unit": "ns/op"
           }
         ]
