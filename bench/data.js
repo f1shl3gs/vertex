@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761946257393,
+  "lastUpdate": 1761946266934,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "689120be00e377b66003066ff4d4f52dd23c1536",
-          "message": "Merge pull request #2553 from f1shl3gs/dependabot/cargo/proptest-1.8.0\n\nchore(deps): bump proptest from 1.7.0 to 1.8.0",
-          "timestamp": "2025-09-21T20:14:23+08:00",
-          "tree_id": "5a1cc24fcbb8af0382bbe07fedb78d45ee374f5e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/689120be00e377b66003066ff4d4f52dd23c1536"
-        },
-        "date": 1758457007303,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 33.388,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.914,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.05,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.52,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5cec03c3450cf0d24a5cf686077eaf85f8fe15a6",
+          "message": "Merge pull request #2662 from f1shl3gs/extensions/docker_observer/fix_feature_name\n\nextensions/docker_observer: fix feature name",
+          "timestamp": "2025-11-01T05:28:19+08:00",
+          "tree_id": "9c188bf1f6a4604fc7b7337eef637c92a975a5fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5cec03c3450cf0d24a5cf686077eaf85f8fe15a6"
+        },
+        "date": 1761946245054,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.566,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 111.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.46,
             "unit": "ns/op"
           }
         ]
