@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761870888797,
+  "lastUpdate": 1761871015092,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3196c1403ab84142dfad7425d5f67527fd4125f6",
-          "message": "Merge pull request #2549 from f1shl3gs/dependabot/cargo/tokio-rustls-0.26.3\n\nchore(deps): bump tokio-rustls from 0.26.2 to 0.26.3",
-          "timestamp": "2025-09-18T15:43:35+08:00",
-          "tree_id": "f5d1ef40d8332d997742cd00fe813aa7223cc269",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3196c1403ab84142dfad7425d5f67527fd4125f6"
-        },
-        "date": 1758182068982,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39899.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b5669be4b8949111091024069e316fcc03cdb072",
           "message": "Merge pull request #2550 from f1shl3gs/dependabot/cargo/indexmap-2.11.4\n\nchore(deps): bump indexmap from 2.11.3 to 2.11.4",
           "timestamp": "2025-09-19T19:38:50+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41238.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc",
+          "message": "Merge pull request #2659 from f1shl3gs/extensions/docker_observer/fix_type_name\n\nextensions/docker_observer: fix type name",
+          "timestamp": "2025-10-31T08:25:08+08:00",
+          "tree_id": "335ab40cfc65ac2530ad584995ed08f3551610a5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc"
+        },
+        "date": 1761870993190,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 595,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41239.2,
             "unit": "KiB"
           }
         ]
