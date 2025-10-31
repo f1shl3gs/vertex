@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761934710971,
+  "lastUpdate": 1761935071860,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fe916bb29d593111341be59b2b7b26ca5e5ced18",
-          "message": "Merge pull request #2552 from f1shl3gs/dependabot/cargo/rustls-0.23.32\n\nchore(deps): bump rustls from 0.23.31 to 0.23.32",
-          "timestamp": "2025-09-19T22:23:14+08:00",
-          "tree_id": "79386fc803486c9aaab8e51b0a6b2a434930a44d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe916bb29d593111341be59b2b7b26ca5e5ced18"
-        },
-        "date": 1758292358249,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15307000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 648370,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.168,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "689120be00e377b66003066ff4d4f52dd23c1536",
           "message": "Merge pull request #2553 from f1shl3gs/dependabot/cargo/proptest-1.8.0\n\nchore(deps): bump proptest from 1.7.0 to 1.8.0",
           "timestamp": "2025-09-21T20:14:23+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.094,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0727fbc52e3acb226cc2d8d071fcbdbc1ff21914",
+          "message": "Merge pull request #2661 from f1shl3gs/lib/docker/init\n\nlib/docker: init",
+          "timestamp": "2025-11-01T02:14:16+08:00",
+          "tree_id": "e7b2676ac21e94b4f31465fe538fce53d8130149",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0727fbc52e3acb226cc2d8d071fcbdbc1ff21914"
+        },
+        "date": 1761935049549,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15643000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 621500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.96,
             "unit": "ns/op"
           }
         ]
