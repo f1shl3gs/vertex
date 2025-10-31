@@ -239,7 +239,7 @@ async fn duplicate_tag_values() {
     }])
     .await;
 
-    for (name, mut tags, value) in vec![
+    for (name, mut tags, value) in [
         (
             "consul_catalog_service_node_healthy",
             tags!(
@@ -313,7 +313,7 @@ async fn forward_slash_service_name() {
     ])
     .await;
 
-    for (name, mut tags, value) in vec![
+    for (name, mut tags, value) in [
         (
             "consul_catalog_service_node_healthy",
             tags!(
