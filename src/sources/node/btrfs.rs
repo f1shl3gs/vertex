@@ -478,7 +478,7 @@ mod tests {
             system: Alloc,
         }
 
-        let wants = vec![
+        let wants = [
             Expected {
                 uuid: "0abb23a9-579b-43e6-ad30-227ef47fcb9d".to_string(),
                 label: "fixture".to_string(),
