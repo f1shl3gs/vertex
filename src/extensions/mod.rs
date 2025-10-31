@@ -2,7 +2,7 @@
 mod consul_observer;
 #[cfg(feature = "extensions-dns_observer")]
 mod dns_observer;
-#[cfg(feature = "extensions-docker")]
+#[cfg(feature = "extensions-docker_observer")]
 mod docker_observer;
 #[cfg(feature = "extensions-exec_observer")]
 mod exec_observer;
