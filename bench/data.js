@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761870816319,
+  "lastUpdate": 1761870888797,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b5669be4b8949111091024069e316fcc03cdb072",
-          "message": "Merge pull request #2550 from f1shl3gs/dependabot/cargo/indexmap-2.11.4\n\nchore(deps): bump indexmap from 2.11.3 to 2.11.4",
-          "timestamp": "2025-09-19T19:38:50+08:00",
-          "tree_id": "2569c8e6bbbf24d9391447ad588bcd410e4305b9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b5669be4b8949111091024069e316fcc03cdb072"
-        },
-        "date": 1758282497643,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14544000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 593810,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.329,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8ea3ca47e2aee57b2806eb4e749415ecd717cd40",
           "message": "Merge pull request #2551 from f1shl3gs/toolchain/1.90.0\n\nbump to toolchain 1.90.0",
           "timestamp": "2025-09-19T22:20:45+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 48.193,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc",
+          "message": "Merge pull request #2659 from f1shl3gs/extensions/docker_observer/fix_type_name\n\nextensions/docker_observer: fix type name",
+          "timestamp": "2025-10-31T08:25:08+08:00",
+          "tree_id": "335ab40cfc65ac2530ad584995ed08f3551610a5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc"
+        },
+        "date": 1761870866704,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15073000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 652190,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.856,
             "unit": "ns/op"
           }
         ]
