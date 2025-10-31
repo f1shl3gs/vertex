@@ -879,6 +879,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "docker"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "chrono",
+ "futures",
+ "http",
+ "http-body-util",
+ "hyper",
+ "hyper-unix",
+ "hyper-util",
+ "percent-encoding",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-util",
+]
+
+[[package]]
 name = "dotenvy"
 version = "0.15.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4782,6 +4801,7 @@ dependencies = [
  "configurable",
  "criterion",
  "dashmap",
+ "docker",
  "encoding_rs",
  "event",
  "exitcode",
