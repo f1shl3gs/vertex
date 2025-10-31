@@ -26,13 +26,13 @@ fn default_timeout() -> Duration {
     Duration::from_secs(5)
 }
 
-#[configurable_component(extension, name = "docker")]
+#[configurable_component(extension, name = "docker_observer")]
 struct Config {
     /// The absolute path of docker socket
     #[serde(default = "default_path")]
     path: PathBuf,
 
-    /// The list of container image names to exclude
+    /// A list of filters whose matching images are to be excluded. Supports literals and regex
     #[serde(default)]
     exclude_images: Vec<String>,
 
@@ -42,7 +42,7 @@ struct Config {
 }
 
 #[async_trait::async_trait]
-#[typetag::serde(name = "docker")]
+#[typetag::serde(name = "docker_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let exclude_images = self
