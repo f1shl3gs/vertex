@@ -1,6 +1,6 @@
 extensions:
   docker:
-    type: docker
+    type: docker_observer
     exclude_images:
       - ^kind
   tap:
